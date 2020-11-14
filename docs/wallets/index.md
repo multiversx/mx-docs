@@ -1,6 +1,6 @@
 ---
-id: doc4
-title: Other Document
+id: index
+title: Manage a wallet
 ---
 
 this is another document

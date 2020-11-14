@@ -1,10 +1,19 @@
 {
   "docs": {
-    "Docusaurus": ["doc1"],
-    "First Category": ["doc2"],
-    "Second Category": ["doc3"]
-  },
-  "docs-other": {
-    "First Category": ["doc4", "doc5"]
+    "Technology": ["technology/index", "technology/page1", "technology/page2"],
+    "Build": [
+      "dapps/index",
+      {
+        "type": "subcategory",
+        "label": "dAPPs Subcategory",
+        "ids": ["dapps/child1", "dapps/child2"]
+      }
+    ],
+    "Integrate": ["integrations/index"],
+    "Tokens": ["tokens/index"],
+    "Wallets": ["wallets/index"],
+    "Validators": ["validators/index"],
+    "Toolkit": ["toolkit/index"],
+    "Economics": ["economics/index"]
   }
 }

@@ -9,45 +9,39 @@
 // site configuration options.
 
 const siteConfig = {
-  title: 'Docs', // Title for your website.
-  tagline: 'Welcome to Elrond',
-  url: 'https://docs.elrond.com', // Your website URL
-  baseUrl: '/', // Base URL for your project */
+  title: "Docs", // Title for your website.
+  tagline: "Welcome to Elrond",
+  url: "https://docs.elrond.com", // Your website URL
+  baseUrl: "/", // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'Elrond Docs',
-  organizationName: 'Elrond Network',
+  projectName: "Elrond Docs",
+  organizationName: "Elrond Network",
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
-  headerLinks: [
-    { search: true },
-    { href: "/", label: "" },
-  ],
+  headerLinks: [{ search: true }, { href: "/", label: "" }],
 
   /* path to images for header/footer */
-  headerIcon: 'img/logos/logo.svg',
-  footerIcon: 'img/logos/elrond.svg',
-  favicon: 'img/favicon/favicon-32x32.png',
+  headerIcon: "img/logos/logo.svg",
+  footerIcon: "img/logos/elrond.svg",
+  favicon: "img/favicon/favicon-32x32.png",
 
   /* Colors for website */
   colors: {
-    primaryColor: '#000',
-    secondaryColor: '#000',
+    primaryColor: "#000",
+    secondaryColor: "#000",
   },
 
   /* Custom fonts for website */
-  
+
   fonts: {
-    myFont: [
-      "Montserrat",
-      "sans-serif"
-    ]
+    myFont: ["Montserrat", "sans-serif"],
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
@@ -55,21 +49,20 @@ const siteConfig = {
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: 'default',
+    theme: "default",
   },
 
   // Add custom scripts here that would be placed in <script> tags.
   scripts: [],
 
   stylesheets: [
-    'https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap',
-    'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.css'
+    "https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap",
+    "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.css",
   ],
 
   // On page navigation for the current documentation page.
-  onPageNav: 'separate',
+  onPageNav: "separate",
   cleanUrl: true,
-
 
   algolia: {
     apiKey: "12345678",
@@ -80,42 +73,62 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: 'Latin-ish',
-      content: 'Check the documentation for how to use Docusaurus.',
-      docName: 'doc1',
-      image: 'symbol.svg',
+      title: "Learn how Elrond works",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "technology",
+      image: "symbol.svg",
     },
     {
-      title: 'Feature Two',
-      content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-      docName: 'doc2',
-      image: 'github.svg',
+      title: "Build an application",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "dapps",
+      image: "symbol.svg",
     },
     {
-      title: 'Feature Three',
-      content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
-      docName: 'doc3',
-      image: 'symbol.svg',
+      title: "Integrate a platform",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "integrations",
+      image: "symbol.svg",
     },
     {
-      title: 'Feature Four',
-      content: 'Since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-      docName: 'doc4',
-      image: 'symbol.svg',
+      title: "Create a token",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "tokens",
+      image: "symbol.svg",
     },
     {
-      title: 'Feature Five',
-      content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-      docName: 'doc5',
-      image: 'symbol.svg',
+      title: "Manage a wallet",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "wallets",
+      image: "symbol.svg",
     },
     {
-      title: 'Feature Six',
-      content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-      docName: 'doc1',
-      image: 'symbol.svg',
+      title: "Run a validator node",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "validators",
+      image: "symbol.svg",
     },
-  ]
+    {
+      title: "Explore the Elrond toolkit",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "toolkit",
+      image: "symbol.svg",
+    },
+    {
+      title: "Explore the eGold economics",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+      docName: "economics",
+      image: "symbol.svg",
+    },
+  ],
 };
 
 module.exports = siteConfig;
