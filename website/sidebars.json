@@ -1,19 +1,58 @@
 {
   "docs": {
-    "Technology": ["technology/index", "technology/page1", "technology/page2"],
-    "Build": [
-      "dapps/index",
-      {
-        "type": "subcategory",
-        "label": "dAPPs Subcategory",
-        "ids": ["dapps/child1", "dapps/child2"]
-      }
-    ],
-    "Integrate": ["integrations/index"],
-    "Tokens": ["tokens/index"],
-    "Wallets": ["wallets/index"],
-    "Validators": ["validators/index"],
-    "Toolkit": ["toolkit/index"],
-    "Economics": ["economics/index"]
+    "Welcome to elrond": ["welcome/welcome-to-elrond"],
+    "Technology": ["technology/architecture-overview", "technology/entities", "technology/chronology", "technology/secure-proof-of-stake", "technology/adaptive-state-sharding", "technology/the-arwen-wasm-vm", "technology/cross-shard-transactions"],
+    "Wallet": ["wallet/ledger"],
+    "Validators": ["validators/overview", "validators/system-requirements",
+                    {
+                      "type": "subcategory",
+                      "label": "Install a Mainnet Node",
+                      "ids": ["validators/mainnet/config-scripts", "validators/mainnet/install-update", "validators/mainnet/optional-configs", "validators/mainnet/use-docker"]
+                    },
+                    {
+                      "type": "subcategory",
+                      "label": "Install a Testnet Node",
+                      "ids": ["validators/testnet/config-scripts", "validators/testnet/install-update", "validators/testnet/manage-testnet-node"]
+                    },
+                    {
+                      "type": "subcategory",
+                      "label": "Manage your keys",
+                      "ids": ["key-management/validator-keys", "key-management/wallet-keys", "key-management/protect-keys"]
+                    },
+                    {
+                      "type": "subcategory",
+                      "label": "Staking, Unstaking, Unjailing",
+                      "ids": ["validators/staking/staking-unstaking-unjailing", "validators/staking/staking", "validators/staking/unjailing"]
+                    },
+                    "validators/rating", "validators/node-cli", "validators/useful-links", "validators/faq"],
+    "Developers": [
+                    {
+                      "type": "subcategory",
+                      "label": "Tutorials",
+                      "ids": ["developers/counter", "developer/crowdfunding-p1", "developer/crowdfunding-p2"]
+                    },
+                    {
+                      "type": "subcategory",
+                      "label": "Signing Transactions",
+                      "ids": ["signing-transactions/signing-transactions", "signing-transactions/tools-for-signing", "signing-transactions/signing-programmatically"]
+                    },
+                    "developers/esdt-tokens", "developers/staking-smart-contract", 
+                    {
+                      "type": "subcategory",
+                      "label": "Manage your keys",
+                      "ids": ["key-management/validator-keys", "key-management/wallet-keys", "key-management/protect-keys"]
+                    },
+                    {
+                      "type": "subcategory",
+                      "label": "Staking, Unstaking, Unjailing",
+                      "ids": ["validators/staking/staking-unstaking-unjailing", "validators/staking/staking", "validators/staking/unjailing"]
+                    },
+                    "validators/rating", "validators/node-cli", "validators/useful-links", "validators/faq",
+                    {
+                      "type": "subcategory",
+                      "label": "Developer reference",
+                      "ids": ["developer-reference/mandos-tests-reference", "developer-reference/elrond-serialization-format"]
+                    },
+                  "developers/setup-local-testnet", "developers/setup-local-testnet-advanced" , "developers/creating-wallets"]
   }
 }

@@ -1,4 +1,7 @@
-# Adaptive State Sharding
+---
+id: adaptive-state-sharding
+title: Adaptive State Sharding
+---
 
 Sharding was first used in databases and is a method for distributing data across multiple machines. This makes it a *scaling technique*, and can be used by blockchain networks to partition states and transaction processing, so that each node of the network would only need to process a fraction of all the transactions. Moreover, sharding allows for the parallel processing of transactions. As long as there is a sufficient number of nodes verifying each transaction, ensuring high reliability and security, then splitting a blockchain into shards will allow it to process far more transactions by means of parallelization, and thus greatly improving transaction throughput and efficiency. Moreover, sharding promises to increase the throughput of the network as it expands and the number of validator grows - a property called *horizontal scaling*.
 
@@ -30,7 +33,7 @@ Sharding in the Elrond network was designed from the ground up to address the co
 
 A trivial step-by-step example of how it works is depicted in the animation below: 
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-LiMx_Z3XpDcEH0BFN_V%2F-LiMxcf86qOUlJE2ctcI%2Fsharding.gif?alt=media&token=49a45e20-e13c-44e5-9475-a76262a41472)
+![img](/technology/sharding.gif)
 
 Adaptive State Sharding workflow
 
@@ -46,7 +49,7 @@ The unpredictability of the shuffling process is important for the security of t
 
 
 
-![img](https://lh6.googleusercontent.com/C76JgsK8BAbLpBn7QtGLqAwIoxs50seUOPyIOeXFcXOrgnVWvY-XvVOW8Y-wrFxmVtgd1kprxyfrN9DdZSE0WjWx8Y-z1WR7OkImrfDjXQz4hlqJnmT_9-INqQQRdocNZjd4f8nd)
+![img](/technology/sharding.gif)
 
 Node reshuffling diagram
 

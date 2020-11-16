@@ -1,10 +1,13 @@
-# Architecture overview
+---
+id: architecture-overview
+title: Architecture Overview
+---
 
 Elrond is a high-throughput public blockchain aimed at providing security, efficiency, scalability and interoperability, beyond the current state-of-the-art. The two most important features that set Elrond apart are Adaptive State Sharding and the Secure Proof of Stake consensus mechanism.
 
 Elrond is a complete redesign of blockchain architecture with the aim to achieve global scalability and near instant transaction speed.  Elrond's architecture rests on the following key innovations:
 
-1. [**Adaptive State Sharding**](https://docs.elrond.com/learn/adaptive-state-sharding) on all levels: transaction, data and network. The dynamically adaptive sharding mechanism will perform shard merging and shard splitting while taking into consideration both the number of available validator nodes and also the network usage.
+1. [**Adaptive State Sharding**](adaptive-state-sharding.md) on all levels: transaction, data and network. The dynamically adaptive sharding mechanism will perform shard merging and shard splitting while taking into consideration both the number of available validator nodes and also the network usage.
 2. [**Secure Proof of Stake**](https://docs.elrond.com/learn/secure-proof-of-stake) **Consensus**, completed in just two communication steps, using modified Boneh–Lynn–Shacham ("BLS") multi-signatures among the validators of the consensus group. Moreover, nodes inside the shard are randomly selected for the consensus group with no possibility of knowing the group's composition more than one round in advance. 
 3. **High resiliency** to malicious attacks due to periodical node reshuffling across shards. Every epoch, up to 1/3 of the nodes in every shard are reshuffled to other shards in order to prevent collusion.
 4. **Secure randomness source** with BLS signing, which makes it non-biasable and unpredictable.
