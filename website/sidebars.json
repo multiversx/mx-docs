@@ -1,6 +1,6 @@
 {
   "docs": {
-    "Welcome to elrond": ["welcome/welcome-to-elrond"],
+    "Welcome to Elrond": ["welcome/welcome-to-elrond"],
     "Technology": ["technology/architecture-overview", "technology/entities", "technology/chronology", "technology/secure-proof-of-stake", "technology/adaptive-state-sharding", "technology/the-arwen-wasm-vm", "technology/cross-shard-transactions"],
     "Wallet": ["wallet/ledger"],
     "Validators": ["validators/overview", "validators/system-requirements",
