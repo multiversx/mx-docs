@@ -16,7 +16,7 @@ class Index extends React.Component {
     const docUrl = (doc) => `${baseUrl}${docsPart}${langPart}${doc}`;
 
     const Panel = ({details}) => (
-      <a href={docUrl(details.docName)} className='col-12 col-sm-6 col-sm-4 mb-4'>
+      <a href={docUrl(details.docName)} className='col-12 col-sm-6 col-lg-4 mb-4'>
         <div className="highlightPanel">
           <div className="d-flex flex-row align-items-center mb-1">
             <img src={`${baseUrl}img/logos/${details.image}`}/>

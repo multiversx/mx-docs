@@ -25,7 +25,7 @@ const siteConfig = {
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
-  headerLinks: [{ search: true }, { href: "/", label: "" }],
+  headerLinks: [{ search: true }],
 
   /* path to images for header/footer */
   headerIcon: "img/logos/logo.svg",
@@ -63,6 +63,7 @@ const siteConfig = {
   // On page navigation for the current documentation page.
   onPageNav: "separate",
   cleanUrl: true,
+  docsSideNavCollapsible: true,
 
   algolia: {
     apiKey: "12345678",
