@@ -38,20 +38,27 @@
                     "developers/esdt-tokens", "developers/staking-smart-contract", 
                     {
                       "type": "subcategory",
-                      "label": "Manage your keys",
-                      "ids": ["key-management/validator-keys", "key-management/wallet-keys", "key-management/protect-keys"]
-                    },
-                    {
-                      "type": "subcategory",
-                      "label": "Staking, Unstaking, Unjailing",
-                      "ids": ["validators/staking/staking-unstaking-unjailing", "validators/staking/staking", "validators/staking/unjailing"]
-                    },
-                    "validators/rating", "validators/node-cli", "validators/useful-links", "validators/faq",
-                    {
-                      "type": "subcategory",
                       "label": "Developer reference",
                       "ids": ["developer-reference/mandos-tests-reference", "developer-reference/elrond-serialization-format"]
                     },
-                  "developers/setup-local-testnet", "developers/setup-local-testnet-advanced" , "developers/creating-wallets"]
+                  "developers/setup-local-testnet", "developers/setup-local-testnet-advanced" , "developers/creating-wallets"],
+    "SDK and Tools": [
+                    {
+                      "type": "subcategory",
+                      "label": "REST API",
+                      "ids": ["rest-api/addresses", "rest-api/transactions", "rest-api/network", "rest-api/nodes", "rest-api/blocks", "rest-api/virtual-machine", "rest-api/versions-and-changelog",]
+                    },
+                    "sdk-and-tools/proxy",
+                    {
+                      "type": "subcategory",
+                      "label": "erdpy",
+                      "ids": ["erdpy/installing-erdpy", "erdpy/configuring-erdpy", "erdpy/erdpy-cli", "erdpy/deriving-the-wallet-pem-file", "erdpy/sending-bulk-transactions", "erdpy/writing-and-running-erdpy-scripts"]
+                    },
+                    "sdk-and-tools/erdjs", "sdk-and-tools/erdgo", "sdk-and-tools/erdjava", "sdk-and-tools/erdwalletjs-cli"],
+    "Integrators": [                  
+                      "integrators/observing-squad", "integrators/accounts-management", "integrators/creating-transactions", "integrators/querying-the-blockchain"],
+    "Detailed comparison": [                  
+                        "detailed-comparison/overview", "detailed-comparison/elrond-vs-ethereum-serenity", "detailed-comparison/elrond-vs-zilliqa", "detailed-comparison/elrond-vs-dfinity", "detailed-comparison/elrond-vs-algorand", "detailed-comparison/elrond-vs-harmony", "detailed-comparison/elrond-vs-quarkchain", "detailed-comparison/elrond-vs-multivac"]
+                    
   }
 }
