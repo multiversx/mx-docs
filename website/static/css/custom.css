@@ -120,7 +120,7 @@ html {
 
 /* -------------------- Start App Switcher Dropdown ------------------- */
 #app-switcher-dropdown {
-	position: absolute;
+	position: fixed;
 	top: 18px;
 	margin: 0;
 	right: 10px;
