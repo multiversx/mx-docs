@@ -180,6 +180,167 @@ footer a.footer-text svg {
 }
 /* -------------------- End Footer ------------------- */
 
+/* -------------------- Start Tabs ------------------------- */
+
+.tabs {
+	border-top: none;
+}
+.nav-tabs {
+	border-bottom: none;
+	margin: 0 0 -1px
+}
+.tab-content {
+	border: 1px solid #e4e5e5;
+	margin: 0;
+	display: block;
+	padding: 24px 24px 0;
+	background: #fff;
+	border-radius: 0 3px 3px;
+}
+
+.tabs .nav-tabs > div {
+	color: #9daab6;
+	background: #f5f7f9;
+	border-width: 1px;
+	border-style: solid;
+	border-color:  #e4e5e5  #e4e5e5  #e4e5e5 transparent;
+}
+.tabs .nav-tabs > div.active {
+	border-bottom: none;
+	color: #242a57;
+}
+.nav-tabs .nav-link.active, 
+.nav-tabs .nav-item.show .nav-link {
+	color: #495057;
+	background: #fff;
+	border-color:  #e4e5e5  #e4e5e5  #e4e5e5 transparent;
+}
+.nav-tabs .nav-link {
+	border-radius: 0;
+}
+.nav-tabs .nav-link:last-child {
+	border-top-right-radius: 3px;
+}
+.nav-tabs .nav-link:first-child {
+	border-top-left-radius: 3px;
+	border-left-color: #e4e5e5;
+}
+.nav-tabs .nav-link:hover, 
+.nav-tabs .nav-link:focus {
+	color: #242a57;
+	border-color:  #e4e5e5  #e4e5e5  #e4e5e5 transparent;
+}
+.nav-tabs .nav-link:first-child:hover,
+.nav-tabs .nav-link:first-child:focus {
+	border-left-color: #e4e5e5;
+}
+
+/* -------------------- End Tabs ------------------------- */
+
+
+/**
+ Docusaurus-like styling for `remarkable-admonitions` blocks
+ */
+
+.admonition {
+	margin-bottom: 1em;
+	padding: 15px 30px 15px 15px;
+}
+
+.admonition h5 {
+	margin-top: 0;
+	margin-bottom: 8px;
+	text-transform: uppercase;
+}
+
+.admonition-icon {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 0.2em;
+}
+
+.admonition-icon svg {
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	stroke-width: 0;
+}
+
+.admonition-content > :last-child {
+	margin-bottom: 0;
+}
+
+/** Customization */
+.admonition-warning {
+	background-color: rgba(230, 126, 34, 0.1);
+	border-left: 8px solid #e67e22;
+}
+
+.admonition-warning h5 {
+	color: #e67e22;
+}
+
+.admonition-warning .admonition-icon svg {
+	stroke: #e67e22;
+	fill: #e67e22;
+}
+
+.admonition-tip {
+	background-color: rgba(46, 204, 113, 0.1);
+	border-left: 8px solid #2ecc71;
+}
+
+.admonition-tip h5 {
+	color: #2ecc71;
+}
+
+.admonition-tip .admonition-icon svg {
+	stroke: #2ecc71;
+	fill: #2ecc71;
+}
+
+.admonition-caution {
+	background-color: rgba(231, 76, 60, 0.1);
+	border-left: 8px solid #e74c3c;
+}
+
+.admonition-caution h5 {
+	color: #e74c3c;
+}
+
+.admonition-caution .admonition-icon svg {
+	stroke: #e74c3c;
+	fill: #e74c3c;
+}
+
+.admonition-important {
+	background-color: rgba(52, 152, 219, 0.1);
+	border-left: 8px solid #3498db;
+}
+
+.admonition-important h5 {
+	color: #3498db;
+}
+
+.admonition-important .admonition-icon svg {
+	stroke: #3498db;
+	fill: #3498db;
+}
+
+.admonition-note {
+	background-color: rgba(241, 196, 15, 0.1);
+	border-left: 8px solid #f1c40f;
+}
+
+.admonition-note h5 {
+	color: #f1c40f;
+}
+
+.admonition-note .admonition-icon svg {
+	stroke: #f1c40f;
+	fill: #f1c40f;
+}
+
 @media only screen and (max-device-width: 736px) {
 }
 

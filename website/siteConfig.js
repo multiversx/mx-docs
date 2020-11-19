@@ -49,7 +49,7 @@ const siteConfig = {
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: "default",
+    theme: "atom-one-dark",
   },
 
   // Add custom scripts here that would be placed in <script> tags.
@@ -58,6 +58,11 @@ const siteConfig = {
   stylesheets: [
     "https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap",
     "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.css",
+  ],
+
+  markdownPlugins: [
+    // Highlight admonitions.
+    require('remarkable-admonitions')({ icon: 'svg-inline' })
   ],
 
   // On page navigation for the current documentation page.
