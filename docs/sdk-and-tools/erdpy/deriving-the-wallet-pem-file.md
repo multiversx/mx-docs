@@ -1,4 +1,7 @@
-# Deriving the Wallet PEM file
+---
+id: deriving-the-wallet-pem-file
+title: Deriving the Wallet PEM file
+---
 
 **erdpy** can be used to simplify and automate the interaction with the Elrond network and can be easily used in scripts.
 
