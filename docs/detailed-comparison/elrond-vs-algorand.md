@@ -1,4 +1,7 @@
-# Elrond vs. Algorand
+---
+id: elrond-vs-algorand
+title: Elrond vs. Algorand
+---
 
 Elrond has Adaptive State Sharding, Algorand doesn’t have any kind of sharding.
 

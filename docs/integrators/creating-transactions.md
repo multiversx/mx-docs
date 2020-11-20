@@ -1,6 +1,7 @@
-# Creating Transactions
-
-
+---
+id: creating-transactions
+title: Creating Transactions
+---
 
 ## **Transaction structure**
 

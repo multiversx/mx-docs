@@ -1,4 +1,7 @@
-# erdgo
+---
+id: erdgo
+title: erdgo
+---
 
 Elrond SDK for Golang
 

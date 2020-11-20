@@ -1,4 +1,7 @@
-# Overview
+---
+id: overview
+title: Overview
+---
 
 Below you'll find a list of highlights and comparisons between Elrond and various blockchain networks. Each comparison has its own dedicated page.
 

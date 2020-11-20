@@ -1,4 +1,7 @@
-# Sending bulk transactions
+---
+id: sending-bulk-transactions
+title: Sending bulk transactions
+---
 
 It is easy to prepare a set of transaction and then send them all at once using `erdpy`. Here's how.
 

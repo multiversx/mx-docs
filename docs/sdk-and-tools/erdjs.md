@@ -1,4 +1,7 @@
-# erdjs
+---
+id: erdjs
+title: erdjs
+---
 
 Elrond SDK for TypeScript and JavaScript
 

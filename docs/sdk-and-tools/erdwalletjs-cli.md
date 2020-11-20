@@ -1,4 +1,7 @@
-# erdwalletjs-cli
+---
+id: erdwalletjs-cli
+title: erdwalletjs-cli
+---
 
 CLI wrapper over elrond-core-js
 

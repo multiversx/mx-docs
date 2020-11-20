@@ -113,6 +113,7 @@
 				"type":"subcategory",
 				"label":"erdpy",
 				"ids":[
+					"sdk-and-tools/erdpy/erdpy",
 					"sdk-and-tools/erdpy/installing-erdpy",
 					"sdk-and-tools/erdpy/configuring-erdpy",
 					"sdk-and-tools/erdpy/erdpy-cli",

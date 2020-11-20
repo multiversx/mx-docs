@@ -1,4 +1,7 @@
-# Writing and running erdpy scripts
+---
+id: writing-and-running-erdpy-scripts
+title: Writing and running erdpy scripts
+---
 
 Since **erdpy** is not only a CLI tool, but also a **Python SDK**, one can write Python modules or scripts based on erdpy in order to interact with the Blockchain.
 

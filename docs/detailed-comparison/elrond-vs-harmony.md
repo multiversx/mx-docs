@@ -1,6 +1,7 @@
-# Elrond vs. Harmony
-
-
+---
+id: elrond-vs-harmony
+title: Elrond vs. Harmony
+---
 
 (based on testnet, reviews and documentation)
 

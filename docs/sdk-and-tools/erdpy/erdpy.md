@@ -1,4 +1,7 @@
-# erdpy
+---
+id: erdpy
+title: erdpy
+---
 
 CLI and Python SDK
 

@@ -1,6 +1,7 @@
-# Elrond vs. Ethereum Serenity
-
-
+---
+id: elrond-vs-ethereum-serenity
+title: Elrond vs. Ethereum Serenity
+---
 
 (based on Ethereum 2.0’s available documentation)
 

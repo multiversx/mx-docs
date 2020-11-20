@@ -1,6 +1,7 @@
-# Observing Squad
-
-
+---
+id: observing-squad
+title: Observing Squad
+---
 
 The N+1 setup for connecting to the Elrond Network
 

@@ -1,4 +1,7 @@
-# Elrond vs. Dfinity
+---
+id: elrond-vs-dfinity
+title: Elrond vs. Dfinity
+---
 
 Dfinity are using the EVM machine for Smart Contracts, dApps can be written in Solidity only. Elrond has own VM built using K-framework for which a GO backend has been created in-house. Elrond will support Solidity, IELE, WASM and possibly other languages, with formal verification of Smart Contracts.
 

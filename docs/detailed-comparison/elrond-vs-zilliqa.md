@@ -1,4 +1,7 @@
-# Elrond vs. Zilliqa
+---
+id: elrond-vs-zilliqa
+title: Elrond vs. Zilliqa
+---
 
 Elrond does horizontal scaling with State Sharding.
 

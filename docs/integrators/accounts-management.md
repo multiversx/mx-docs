@@ -1,4 +1,7 @@
-# Accounts Management
+---
+id: accounts-management
+title: Accounts Management
+---
 
 Managing Wallets and Addresses
 

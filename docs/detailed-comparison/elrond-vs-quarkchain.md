@@ -1,4 +1,7 @@
-# Elrond vs. Quarkchain
+---
+id: elrond-vs-quarkchain
+title: Elrond vs. Quarkchain
+---
 
 First difference between Elrond and Quarkchain is secure-proof-of-stake vs hybrid-proof-of-work. Quarkchain uses proof-of-work to manage its blockchain, however because of their assumption model, a malicious group could attack the network if they have 25% of the network hash power. Their rootchain uses complete PoW to validate the headers from each shard, while each shard uses root-first-PoW to validate and build their own blockchain. 
 

@@ -1,4 +1,7 @@
-# erdjava
+---
+id: erdjava
+title: erdjava
+---
 
 Elrond SDK for Java
 

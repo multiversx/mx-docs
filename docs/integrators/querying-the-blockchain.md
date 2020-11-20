@@ -1,6 +1,7 @@
-# Querying the Blockchain
-
-
+---
+id: querying-the-blockchain
+title: Querying the Blockchain
+---
 
 ## **Querying broadcasted transactions**
 
