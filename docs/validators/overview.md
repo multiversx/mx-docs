@@ -1,4 +1,8 @@
-# Overview
+---
+id: overview
+title: Overview
+---
+
 
 The Elrond network is made up of nodes and their interconnectivity - balanced by virtue of its design, secured through its size and fast, *very* fast, because efficiency is what motivated its development. Every time a node joins the network, it adds more security and efficiency. The network, in turn, rewards the nodes for their contribution, generating a virtuous cycle.
 

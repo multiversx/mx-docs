@@ -1,4 +1,8 @@
-# Ledger
+---
+id: ledger
+title: Ledger
+---
+
 
 You can safely store your eGold by installing the Elrond eGold app on your Ledger Nano S or Ledger Nano X device. We recommend using a hardware wallet for managing large amounts of eGold.
 

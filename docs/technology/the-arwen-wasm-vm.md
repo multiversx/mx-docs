@@ -1,4 +1,8 @@
-# The Arwen WASM VM
+---
+id: the-arwen-wasm-vm
+title: The Arwen WASM VM
+---
+
 
 The execution of SmartContracts plays a central role in modern blockchain networks. Elrond built a fast and secure virtual machine for this purpose, called Arwen. 
 

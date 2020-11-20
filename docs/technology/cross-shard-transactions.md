@@ -1,4 +1,8 @@
-# Cross-shard transactions
+---
+id: cross-shard-transactions
+title: Cross Shard Transactions
+---
+
 
 For an in depth example of how the cross-shard transactions are being executed and how the communication between shards and the metachain occurs, we are simplifying the entire process to just two shards and the metachain. Assuming that a user generates a transaction from his wallet, which has an address in shard 0 and wants to send eGLD to another user that has a wallet with an address in shard 1, the steps depicted in the figure below are required for processing the cross-shard transaction.
 

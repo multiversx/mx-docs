@@ -1,4 +1,8 @@
-# Chronology
+---
+id: chronology
+title: Chronology
+---
+
 
 Following the common Proof-of-Stake principles, the Elrond network organizes time into rounds and epochs, where a fixed number of consecutive rounds form an epoch. The first round of the first epoch ever is called the *genesis round*, which contains the bootstrapping phase of the network.
 

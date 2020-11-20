@@ -1,4 +1,8 @@
-# Entities
+---
+id: entities
+title: Entities
+---
+
 
 There are two primary entities in Elrond: users and nodes. 
 
