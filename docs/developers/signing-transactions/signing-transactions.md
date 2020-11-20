@@ -1,4 +1,7 @@
-# Signing Transactions
+---
+id: signing-transactions
+title: Signing Transactions
+---
 
 How to serialize and sign the Transaction payload
 

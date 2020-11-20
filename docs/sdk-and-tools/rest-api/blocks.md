@@ -1,4 +1,7 @@
-# Blocks
+---
+id: blocks
+title: Blocks
+---
 
 Query blocks information.
 

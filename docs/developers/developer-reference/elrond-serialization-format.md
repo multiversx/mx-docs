@@ -1,4 +1,7 @@
-# The Elrond Serialization Format
+---
+id: elrond-serialization-format
+title: The Elrond Serialization Format
+---
 
 How Elrond smart contracts serialize arguments, results and storage
 

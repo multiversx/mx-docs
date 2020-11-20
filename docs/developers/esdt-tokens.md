@@ -1,4 +1,7 @@
-# ESDT Tokens
+---
+id: esdt-tokens
+title: ESDT tokens
+---
 
 Custom tokens at native speed and scalability, without ERC20
 

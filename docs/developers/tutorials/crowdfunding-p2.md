@@ -1,4 +1,7 @@
-# The Crowdfunding Smart Contract (part 2)
+---
+id: crowdfunding-p2
+title: The Crowdfunding Smart Contract (part 2)
+---
 
 Define contract arguments, handle storage, process payments, define new types, write better tests
 

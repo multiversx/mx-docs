@@ -1,4 +1,7 @@
-# Proxy
+---
+id: proxy
+title: Proxy
+---
 
 Overview of the Elrond Proxy
 

@@ -1,4 +1,7 @@
-# Staking, unstaking and unjailing
+---
+id: staking-unstaking-unjailing
+title: Staking, unstaking and unjailing
+---
 
 Before staking, a node is a mere observer. After staking, the node becomes a validator, which means that it will be eligible for consensus and will earn rewards. Validators play a central role in the operation of the network.
 

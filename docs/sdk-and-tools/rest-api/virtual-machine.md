@@ -1,4 +1,7 @@
-# Virtual Machine
+---
+id: virtual-machine
+title: Virtual Machine
+---
 
 Query values stored within Smart Contracts.
 

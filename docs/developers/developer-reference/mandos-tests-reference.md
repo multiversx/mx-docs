@@ -1,4 +1,7 @@
-# Mandos tests reference
+---
+id: mandos-tests-reference
+title: Mandos tests reference
+---
 
 Rationale, description and functionality of Mandos JSON tests
 

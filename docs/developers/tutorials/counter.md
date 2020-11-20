@@ -1,4 +1,7 @@
-# The Counter SmartContract
+---
+id: counter
+title: The Counter Smart Contract
+---
 
 Write, build and deploy a simple Smart Contract written in C
 

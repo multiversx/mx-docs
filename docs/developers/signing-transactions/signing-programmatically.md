@@ -1,4 +1,7 @@
-# Signing programmatically
+---
+id: signing-programmatically
+title: Signing programmatically
+---
 
 ## **Sign using [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js)**
 

@@ -1,4 +1,7 @@
-# Configuring erdpy
+---
+id: configuring-erdpy
+title: Configuring erdpy
+---
 
 **erdpy** can be configured using the `erdpy config` command.
 

@@ -1,4 +1,7 @@
-# Network
+---
+id: network
+title: Network
+---
 
 Query information about the Network.
 

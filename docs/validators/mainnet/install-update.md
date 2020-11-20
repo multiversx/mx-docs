@@ -1,4 +1,7 @@
-# 2. Installing & updating
+---
+id: install-update
+title: Installing & updating
+---
 
 **Node installation**
 

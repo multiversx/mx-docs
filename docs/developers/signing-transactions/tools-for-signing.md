@@ -1,4 +1,7 @@
-# Tools for signing
+---
+id: tools-for-signing
+title: Tools for signing
+---
 
 In order to sign a transaction without actually dispatching it, one can use [erdpy](https://docs.elrond.com/tools/erdpy) or [erdwalletjs-cli](https://docs.elrond.com/tools/erdwalletjs-cli).
 

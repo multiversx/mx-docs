@@ -1,4 +1,7 @@
-# Setup a Local Testnet (advanced)
+---
+id: setup-local-testnet-advanced
+title: Setup a Local Testnet (advanced)
+---
 
 How to setup a local Elrond Testnet on a workstation.
 

@@ -1,4 +1,7 @@
-# 3. Manage your testnet node
+---
+id: manage-testnet-node
+title: Manage your testnet node
+---
 
 Your node will start as an Observer. In order to make it into a Validator, you will need 2,500 xeGold tokens. An admin in our Telegram community will gladly help - https://t.me/ElrondValidators
 

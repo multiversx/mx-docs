@@ -1,4 +1,7 @@
-# Staking
+---
+id: staking
+title: Staking
+---
 
 # **Prerequisites**
 

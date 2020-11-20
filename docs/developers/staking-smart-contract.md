@@ -1,4 +1,7 @@
-# The Staking SmartContract
+---
+id: staking-smart-contract
+title: The Staking Smart Contract
+---
 
 # **Staking**
 

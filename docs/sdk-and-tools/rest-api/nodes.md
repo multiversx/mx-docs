@@ -1,4 +1,7 @@
-# Nodes
+---
+id: nodes
+title: Nodes
+---
 
 Query Nodes (Peers) information.
 

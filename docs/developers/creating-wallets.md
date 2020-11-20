@@ -1,4 +1,7 @@
-# Creating wallets
+---
+id: creating-wallets
+title: Creating Wallets
+---
 
 How to create wallets using the CLI or programmatically
 

@@ -1,4 +1,7 @@
-# REST API
+---
+id: rest-API
+title: REST API
+---
 
 Overview of Elrond REST API
 

@@ -1,4 +1,7 @@
-# Setup a Local Testnet
+---
+id: setup-local-testnet
+title: Setup a Local Testnet
+---
 
 This guide describes how to set up a local mini-testnet using **erdpy**. The purpose of a local mini-testnet is to allow developers to experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
 

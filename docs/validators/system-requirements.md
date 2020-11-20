@@ -1,4 +1,7 @@
-# System requirements
+---
+id: system-requirements
+title: System Requirements
+---
 
 # **Elrond Nodes explained**
 

@@ -1,4 +1,7 @@
-# Transactions
+---
+id: transactions
+title: Transactions
+---
 
 Send Transactions to the Blockchain and query information about them.
 

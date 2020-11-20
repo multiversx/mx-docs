@@ -1,4 +1,7 @@
-# How to use the Docker Image
+---
+id: use-docker
+title: How to use the Docker Image
+---
 
 As an alternative to the recommended installation flow, one could choose to run an Elrond Node using the official Docker image: [elrondnetwork/elrond-go-node](https://hub.docker.com/r/elrondnetwork/elrond-go-node).
 

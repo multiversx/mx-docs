@@ -1,4 +1,7 @@
-# Addresses
+---
+id: addresses
+title: Addresses
+---
 
 Get information about an Elrond Address.
 

@@ -1,4 +1,7 @@
-# 1. Scripts & User config
+---
+id: config-scripts
+title: Scripts & User config
+---
 
 Elrond provides scripts designed to streamline the process of installing an Elrond node. You will start by getting a copy of the latest version of the scripts from GitHub, and configure it to match your local setup.
 

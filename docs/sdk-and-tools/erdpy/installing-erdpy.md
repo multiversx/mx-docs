@@ -1,4 +1,7 @@
-# Installing erdpy
+---
+id: installing-erdpy
+title: Installing erdpy
+---
 
 How to install erdpy
 

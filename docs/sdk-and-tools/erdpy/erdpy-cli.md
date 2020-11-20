@@ -1,4 +1,7 @@
-# erdpy CLI
+---
+id: erdpy-cli
+title: erdpy CLI
+---
 
 erdpy's Command Line Interface
 

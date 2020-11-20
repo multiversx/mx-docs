@@ -1,4 +1,7 @@
-# Unjailing
+---
+id: unjailing
+title: Unjailing
+---
 
 In the unfortunate situation of losing too much **rating score**, a validator will be **jailed**, which means that they will be taken out of the shards, they will not participate in consensus, and thus they will not earn any more rewards. Currently, the rating limit at which a node will be jailed is `10`. Read more on the [Ratings](https://docs.elrond.com/validators/rating) page.
 

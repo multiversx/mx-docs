@@ -1,4 +1,7 @@
-# 3. Optional Configurations
+---
+id: optional-configs
+title: Optional Configurations
+---
 
 **Recommended: set up monitoring for your node**
 
