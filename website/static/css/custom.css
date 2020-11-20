@@ -17,6 +17,12 @@ html {
 .navSearchWrapper::before {
 	box-sizing: unset;
 }
+.docsNavContainer {
+	top: 60px;
+}
+.docsContainer a {
+	text-decoration: underline;
+}
 
 /* Main Page */
 .navPusher {
@@ -36,8 +42,8 @@ html {
 }
 .highlightPanel:hover,
 .highlightPanel:active {
-	box-shadow: 0 8px 24px 4px rgba(200, 200, 200, .75);
-	}
+	box-shadow: 0 8px 24px 4px rgba(200, 200, 200, .75), inset 0 4px 0 0 #1b46c2;
+}
 .highlightPanel img {
 	max-height: 24px;
 	margin-right: 1rem;
@@ -45,6 +51,12 @@ html {
 .highlightPanel h2,
 .highlightPanel p {
 	margin: 0;
+}
+.highlightPanel h2 {
+	font-weight: 500;
+}
+.highlightPanel p {
+	font-weight: 300;
 }
 
 /* -------------------- Start Header Container ------------------- */
@@ -345,10 +357,26 @@ footer a.footer-text svg {
 }
 
 @media only screen and (min-width: 1024px) {
+	.toc {
+		padding: 32px 0;
+	}
 }
 
 @media only screen and (max-width: 1023px) {
 	.navigationSlider .slidingNav ul li { margin: 2px 0 0; }
+	.docsNavContainer {
+		z-index: 3;
+	}
+	.docsNavContainer .toc .navBreadcrumb {
+		background-color: #fff;
+		box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.12);
+	}
+	.docMainWrapper .mainContainer {
+		padding: 60px 0;
+	}
+	.tocToggler {
+		display: none;
+	}
 }
 
 @media only screen and (min-width: 1400px) {

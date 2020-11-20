@@ -79,59 +79,59 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: "Learn how Elrond works",
+      title: "Welcome to Elrond",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "technology",
+      docName: "welcome/welcome-to-elrond",
       image: "symbol.svg",
     },
     {
-      title: "Build an application",
+      title: "Technology",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "dapps",
+      docName: "technology/architecture-overview",
       image: "symbol.svg",
     },
     {
-      title: "Integrate a platform",
+      title: "Wallet",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "integrations",
+      docName: "wallet/ledger",
       image: "symbol.svg",
     },
     {
-      title: "Create a token",
+      title: "Validators",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "tokens",
+      docName: "validators/overview",
       image: "symbol.svg",
     },
     {
-      title: "Manage a wallet",
+      title: "Developers",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "wallets",
+      docName: "developers/tutorials/counter",
       image: "symbol.svg",
     },
     {
-      title: "Run a validator node",
+      title: "SDK and Tools",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "validators",
+      docName: "sdk-and-tools/rest-api/rest-api",
       image: "symbol.svg",
     },
     {
-      title: "Explore the Elrond toolkit",
+      title: "Integrators",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "toolkit",
+      docName: "integrators/observing-squad",
       image: "symbol.svg",
     },
     {
-      title: "Explore the eGold economics",
+      title: "Detailed comparison",
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "economics",
+      docName: "detailed-comparison/overview",
       image: "symbol.svg",
     },
   ],
