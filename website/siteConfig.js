@@ -79,62 +79,62 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: "Welcome to Elrond",
+      title: "Discover Elrond",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+        "Meet the internet-scale blockchain.",
       docName: "welcome/welcome-to-elrond",
       image: "symbol.svg",
     },
     {
-      title: "Technology",
+      title: "Build an Application",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+        "Use the Elrond devkit to build a dApp.",
       docName: "technology/architecture-overview",
       image: "symbol.svg",
     },
     {
-      title: "Wallet",
+      title: "Manage a Wallet",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+        "Send, receive and store tokens.",
       docName: "wallet/ledger",
       image: "symbol.svg",
     },
     {
-      title: "Validators",
+      title: "Run a Validator Node",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+        "Earn rewards for producing blocks.",
       docName: "validators/overview",
       image: "symbol.svg",
     },
     {
-      title: "Developers",
+      title: "Integrate a Platform",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "developers/tutorials/counter",
-      image: "symbol.svg",
-    },
-    {
-      title: "SDK and Tools",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "sdk-and-tools/rest-api/rest-api",
-      image: "symbol.svg",
-    },
-    {
-      title: "Integrators",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
+        "Make Elrond a part of your tech stack.",
       docName: "integrators/observing-squad",
       image: "symbol.svg",
     },
     {
-      title: "Detailed comparison",
+      title: "Create a Token",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et tristique metus. Nulla bibendum consectetur pretium.",
-      docName: "detailed-comparison/overview",
+        "Issue your ESDT or NFT tokens.",
+      docName: "developers/esdt-tokens",
       image: "symbol.svg",
     },
-  ],
+    {
+      title: "Explore the Devkit",
+      content:
+        "Use the SDK & APIs.",
+      docName: "sdk-and-tools/erdpy/erdpy",
+      image: "symbol.svg",
+    },
+    {
+      title: "Learn how Elrond works",
+      content:
+        "Understand Adaptive State Sharding.",
+      docName: "technology/architecture-overview",
+      image: "symbol.svg",
+    },
+    ],
 };
 
 module.exports = siteConfig;
