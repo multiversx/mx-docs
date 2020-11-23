@@ -130,7 +130,7 @@ const siteConfig = {
     {
       title: "Learn how Elrond works",
       content:
-        "Understand Adaptive State Sharding.",
+        "Understand Adaptive State Sharding & SPoS.",
       docName: "technology/architecture-overview",
       image: "symbol.svg",
     },
