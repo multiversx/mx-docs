@@ -18,7 +18,7 @@ const siteConfig = {
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: "Elrond Docs",
+  projectName: "docs",
   organizationName: "Elrond Network",
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
@@ -62,7 +62,7 @@ const siteConfig = {
 
   markdownPlugins: [
     // Highlight admonitions.
-    require('remarkable-admonitions')({ icon: 'svg-inline' })
+    require("remarkable-admonitions")({ icon: "svg-inline" }),
   ],
 
   // On page navigation for the current documentation page.

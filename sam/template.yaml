@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Documentation Hosting
+
+Resources:
+  BucketProduction:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: docs.elrond.com
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        ErrorDocument: error.html
+        IndexDocument: index.html
+
+  BucketProductionPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BucketProduction
+      PolicyDocument:
+        Id: bucket-policy
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: 'arn:aws:s3:::docs.elrond.com/*'
+
+  CloudFrontProduction:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        PriceClass: PriceClass_100
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ErrorCachingMinTTL: 30
+            ResponseCode: 200
+            ResponsePagePath: '/index.html'
+        Aliases:
+        - docs.elrond.com
+        Origins:
+        - Id: s3-static-site
+          DomainName: docs.elrond.com.s3-website.us-east-1.amazonaws.com
+          CustomOriginConfig:
+            HTTPPort: '80'
+            HTTPSPort: '443'
+            OriginProtocolPolicy: http-only
+        ViewerCertificate:
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:777241893292:certificate/4fc48d4f-75c1-4bb9-983f-0c49b1fc44e1'
+          MinimumProtocolVersion: TLSv1
+          SslSupportMethod: sni-only
+        DefaultCacheBehavior:
+          MaxTTL: 0
+          MaxTTL: 60
+          DefaultTTL: 60
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: s3-static-site
+
+  BucketStaging:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: staging-docs.elrond.com
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+
+  BucketStagingPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BucketStaging
+      PolicyDocument:
+        Id: bucket-policy
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: 'arn:aws:s3:::staging-docs.elrond.com/*'
