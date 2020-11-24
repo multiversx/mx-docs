@@ -12,7 +12,7 @@ We will call a *node operator* any person or entity who manages one or more node
 
 # **Background**
 
-Elrond is a descentralized blockchain network. This means that its nodes collaborate to create sequential **blocks** with strict regularity - blocks which contain the results of operations that were requested by the users of the network. Such operations may be simple transfers of tokens, or may be calls to SmartContracts. Either way, *all* operations take the form of **transactions**. 
+Elrond is a decentralized blockchain network. This means that its nodes collaborate to create sequential **blocks** with strict regularity - blocks which contain the results of operations that were requested by the users of the network. Such operations may be simple transfers of tokens, or may be calls to SmartContracts. Either way, *all* operations take the form of **transactions**. 
 
 Any user who submits a transaction to the network must pay a fee, in EGLD tokens. These fees are what produces **rewards** for the nodes.
 

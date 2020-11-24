@@ -5,7 +5,7 @@ title: Scripts & User config
 
 Elrond provides scripts designed to streamline the process of installing an Elrond node. You will start by getting a copy of the latest version of the scripts from GitHub, and configure it to match your local setup.
 
-## ***\*Download the Elrond Scripts\****
+## **Download the Elrond Scripts**
 
 
 
@@ -14,7 +14,7 @@ cd ~
 git clone https://github.com/ElrondNetwork/elrond-go-scripts-mainnet
 ```
 
-## ***\*Configure the scripts correctly\****
+## **Configure the scripts correctly**
 
 The scripts need a few options to be set in order to work correctly. 
 
