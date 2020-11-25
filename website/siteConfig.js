@@ -95,7 +95,7 @@ const siteConfig = {
     {
       title: "🖥 Run a Validator Node",
       content: "Validate transactions, secure the network, earn rewards, and build a business around the Elrond ecosystem.",
-      docName: "validators/system-reuirements",
+      docName: "validators/system-requirements",
       image: "symbol.svg",
     },
     {

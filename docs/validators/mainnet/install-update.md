@@ -61,8 +61,7 @@ Repeat the above for all your “n” nodes. When complete, please refer to our 
 **Start the node(s)**
 
 ```
-cd ~/elrond-go-scripts-mainnet
-./script.sh start
+~/elrond-go-scripts-mainnet/script.sh start
 ```
 
 **Start the node visual interface**
@@ -97,6 +96,4 @@ Your private keys are needed to run your node. Losing them means losing control 
 
 Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your “`n`” nodes]
 
-
-
-Create a safe backup for them on storage outside of the server running your node(s).
+💡 *Create a safe backup for them on storage outside of the server running your node(s).*
