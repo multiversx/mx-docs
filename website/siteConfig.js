@@ -106,13 +106,13 @@ const siteConfig = {
     },
     {
       title: "Run a Validator Node",
-      content: "Validate transactions, secure the network, earn rewards, and build a business around Elrond.",
+      content: "Validate transactions, secure the network, and earn rewards.",
       docName: "validators/system-requirements",
       icon: "🖥",
     },
     {
       title: "Integrate a Platform",
-      content: "Follow our straightforward integration guide to integrate exchanges, wallets, and other platforms.",
+      content: "Follow our simple guide to integrate exchanges, wallets, and other platforms.",
       docName: "integrators/observing-squad",
       icon: "🏛",
     },
@@ -131,7 +131,7 @@ const siteConfig = {
     {
       title: "Learn How Elrond Works",
       content:
-        "Explore Elrond's architecture: Adaptive state sharding, Secure Proof of Stake, and the Arwen VM.",
+        "Explore Adaptive state sharding, Secure Proof of Stake, and the Arwen VM.",
       docName: "technology/architecture-overview",
       icon: "🔬",
     },
