@@ -120,7 +120,7 @@ const siteConfig = {
       title: "Manage a Wallet",
       content: "Create a wallet to send, receive and store Elrond tokens.",
       docName: "wallet/ledger",
-      icon: "🔑",
+      icon: "📱",
     },
     {
       title: "Create a Token",
