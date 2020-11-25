@@ -34,7 +34,7 @@ class Index extends React.Component {
     return (
       <div className="mainContainer">
         <div className="container">
-          <div className="row justify-content-center pt-md-2 pt-lg-5">
+          <div className="row justify-content-center pt-4 pt-lg-5">
             <Features siteConfig={siteConfig}/>
           </div>
         </div>

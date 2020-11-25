@@ -63,7 +63,6 @@ html {
 }
 .highlightPanel p {
 	font-weight: 300;
-	text-align: justify;
 }
 .highlightPanel:hover p,
 .highlightPanel:active p {
@@ -74,8 +73,6 @@ html {
 .fixedHeaderContainer {
 	background: #FFF;
 	height: 3.75rem;
-	border-bottom: 1px solid #e4e5e5 !important;
-	box-shadow: 0 0.125rem 0.625rem rgba(27, 70, 194, 0.12);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -103,13 +100,6 @@ html {
 	padding: 1rem;
 	width: 100%; 
 }
-.navigationSlider .slidingNav ul {
-	background-color: #fff;
-}
-input#search_input_react:focus, 
-input#search_input_react:active {
-	width: 170px;
-}
 .navigationSlider .slidingNav ul li > a {
 	color: #6c757d;
 	font-weight: 400;
@@ -130,6 +120,7 @@ input#search_input_react:active {
 .reactNavSearchWrapper input#search_input_react,
 .reactNavSearchWrapper input#search_input_react:focus,
 .reactNavSearchWrapper input#search_input_react:active {
+	width: 170px;
 	height: 100%;
 	border: 1px solid #e4e5e5;
 	padding-top: 6px;
@@ -384,9 +375,22 @@ footer a.footer-text svg {
 	.toc {
 		padding: 32px 0;
 	}
+	.navigationSlider {
+		margin-left: unset;
+		margin-right: auto;
+	}
+	.fixedHeaderContainer {
+		border-bottom: 1px solid #e4e5e5 !important;
+		box-shadow: 0 0.125rem 0.625rem rgba(27, 70, 194, 0.12);
+	}
 }
 
 @media only screen and (max-width: 1023px) {
+	.navigationSlider .slidingNav ul {
+		background-color: #fff;
+		border-bottom: 1px solid #e4e5e5 !important;
+		box-shadow: 0 0.625rem 0.625rem -0.625rem rgba(27, 70, 194, 0.12);
+	}
 	.navigationSlider .slidingNav ul li { margin: 2px 0 0; }
 	.docsNavContainer {
 		z-index: 3;
@@ -394,13 +398,6 @@ footer a.footer-text svg {
 	.docsNavContainer .toc .navBreadcrumb {
 		background-color: #fff;
 		box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.12);
-	}
-	.navigationSlider .slidingNav ul {
-		border-bottom: 1px solid #e4e5e5 !important;
-		box-shadow: 0 0.125rem 0.625rem rgba(27, 70, 194, 0.12);
-	}
-	.navigationSlider .slidingNav ul li:nth-child(1n+5):not(.navSearchWrapper) {
-		display: none;
 	}
 	.docMainWrapper .mainContainer {
 		padding: 60px 0;

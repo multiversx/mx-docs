@@ -32,13 +32,11 @@ const siteConfig = {
   ],
 
   headerLinks: [
+    { search: true },
     { href: "docs/welcome/welcome-to-elrond", label: "Develop" },
     { href: "docs/welcome/welcome-to-elrond", label: "Validate" },
     { href: "docs/welcome/welcome-to-elrond", label: "Integrate" },
-    { href: "docs/welcome/welcome-to-elrond", label: "Learn" },
-    { href: "docs/welcome/welcome-to-elrond", label: "Chat" },
-    { href: "docs/welcome/welcome-to-elrond", label: "GitHub" },
-    { search: true },
+    { href: "docs/welcome/welcome-to-elrond", label: "Learn" },  
   ],
 
   /* path to images for header/footer */
