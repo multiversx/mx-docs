@@ -112,7 +112,7 @@ const siteConfig = {
     },
     {
       title: "Integrate a Platform",
-      content: "Follow our simple guide to integrate exchanges, wallets, and other platforms.",
+      content: "Follow our guide to integrate exchanges, wallets, and other platforms.",
       docName: "integrators/observing-squad",
       icon: "🏛",
     },
