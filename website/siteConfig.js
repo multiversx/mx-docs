@@ -33,10 +33,10 @@ const siteConfig = {
 
   headerLinks: [
     { search: true },
-    { href: "docs/welcome/welcome-to-elrond", label: "Develop" },
-    { href: "docs/welcome/welcome-to-elrond", label: "Validate" },
-    { href: "docs/welcome/welcome-to-elrond", label: "Integrate" },
-    { href: "docs/welcome/welcome-to-elrond", label: "Learn" },  
+    { href: "/docs/technology/architecture-overview", label: "Develop" },
+    { href: "/docs/validators/system-requirements", label: "Validate" },
+    { href: "/docs/integrators/observing-squad", label: "Integrate" },
+    { href: "/docs/technology/architecture-overview", label: "Learn" },  
   ],
 
   /* path to images for header/footer */
@@ -106,7 +106,7 @@ const siteConfig = {
     },
     {
       title: "Run a Validator Node",
-      content: "Validate transactions, secure the network, earn rewards, and build a business around the Elrond ecosystem.",
+      content: "Validate transactions, secure the network, earn rewards, and build a business around Elrond.",
       docName: "validators/system-requirements",
       icon: "🖥",
     },
@@ -129,9 +129,9 @@ const siteConfig = {
       icon: "🔰",
     },
     {
-      title: "Explore How Elrond Works",
+      title: "Learn How Elrond Works",
       content:
-        "Get an overview of Elrond's architecture, Adaptive state sharding, Secure Proof of Stake, and the Arwen VM.",
+        "Explore Elrond's architecture: Adaptive state sharding, Secure Proof of Stake, and the Arwen VM.",
       docName: "technology/architecture-overview",
       icon: "🔬",
     },
