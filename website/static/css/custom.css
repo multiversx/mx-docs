@@ -45,9 +45,7 @@ html {
 }
 .highlightPanel:hover,
 .highlightPanel:active {
-	box-shadow: 0 8px 24px 4px rgba(200, 200, 200, .75), inset 0 4px 0 0 #1b46c2;
 	transform: translateY(4px);
-
 }
 .highlightPanel .icon {
 	font-size:1.5rem;
@@ -89,9 +87,9 @@ html {
 	font-weight: 300;
 	border-left: 1px solid #e4e5e5;
 	padding-left: 0.7rem;
-	color: #6c757d; 
+	color: #6c757d;
+	padding-bottom: 4px;
 }
-
 
 .headerWrapper.wrapper,
 .separateOnPageNav .headerWrapper.wrapper {
@@ -101,7 +99,7 @@ html {
 	width: 100%; 
 }
 .navigationSlider .slidingNav ul li > a {
-	color: #6c757d;
+	color: #444444;
 	font-weight: 400;
 }
 .navigationSlider .slidingNav ul li > a:focus,
@@ -141,20 +139,20 @@ html {
 /* -------------------- Start App Switcher Dropdown ------------------- */
 #app-links {
 	position: fixed;
-	top: 18px;
+	top: 21px;
 	margin: 0;
 	right: 10px;
 	z-index: 3;
 	display: flex;
 }
 #app-links .app-menu-entry {
-	color:  #cacbcc;
+	color:  #444444;
 	margin-left: .5rem;
 }
 #app-links .app-menu-entry .app-icon {
 	width: 16px;
 	height: 16px;
-	fill: #cacbcc;
+	fill: #444444;
 }
 #app-links .app-menu-entry:hover,
 #app-links .app-menu-entry:focus,
@@ -169,6 +167,11 @@ html {
 #app-links .app-switcher-icon {
 	cursor: pointer;
 }
+#app-links .app-switcher-icon.app-icon {
+	fill: #cacbcc;
+}
+#app-links .app-menu-entry:hover .app-switcher-icon.app-icon,
+#app-links .app-menu-entry:focus .app-switcher-icon.app-icon,
 #app-links .app-switcher-icon.active {
 	fill: #1b46c2
 }
@@ -200,7 +203,7 @@ html {
 .footer {
 	font-size: 0.925rem;
 	line-height: 1.155rem;
-	height: 5rem;
+	height: 4rem;
 	background: #1b46c2;
 }
 .footer a.footer-text {
@@ -385,7 +388,7 @@ footer a.footer-text svg {
 	.navigationSlider {
 		margin-left: unset;
 		margin-right: unset;
-		width: 49%;
+		width: 51%;
 	}
 	.navigationSlider .slidingNav ul li {
 		flex: 0 1 auto;
@@ -401,12 +404,18 @@ footer a.footer-text svg {
 	.navigationSlider .slidingNav ul li.reactNavSearchWrapper {
 		margin-left: 24px;
 	}
+	.navigationSlider .slidingNav ul li a {
+		padding: 6px 20px;
+	}
 	#app-links .app-menu-entry {
 		margin-left: 2rem;
 	}
 	.fixedHeaderContainer {
 		border-bottom: 1px solid #e4e5e5 !important;
 		box-shadow: 0 0.125rem 0.625rem rgba(27, 70, 194, 0.12);
+	}
+	.docsNavContainer {
+		height: calc(100vh - 124px);
 	}
 	.toc {
 		padding: 32px 0;
@@ -438,9 +447,6 @@ footer a.footer-text svg {
 	}
 	.tocToggler {
 		display: none;
-	}
-	#app-links {
-		top: 21px;
 	}
 	#app-links .menu-text { 
 		display: none; 
