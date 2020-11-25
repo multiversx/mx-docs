@@ -93,54 +93,50 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: "Brief Intro to Elrond",
+      title: "💡 Brief Intro to Elrond",
       content:
         "Meet the blockchain that can offer true internet-scale performance.",
       docName: "welcome/welcome-to-elrond",
       icon: "💡",
     },
     {
-      title: "Start Building",
+      title: "🛠 Start Building",
       content:
         "Build your decentralized application in minutes.",
       docName: "technology/architecture-overview",
       icon: "🛠️",
     },
     {
-      title: "Run a Validator Node",
-      content:
-        "Validate transactions, secure the network, earn rewards, and build a business around the Elrond ecosystem.",
-      docName: "wallet/ledger",
-      icon: "💻",
+      title: "🖥 Run a Validator Node",
+      content: "Validate transactions, secure the network, earn rewards, and build a business around the Elrond ecosystem.",
+      docName: "validators/system-requirements",
+      image: "symbol.svg",
     },
     {
-      title: "Integrate a Platform",
-      content:
-        "Follow our straightforward integration guide to integrate exchanges, wallets, and other platforms.",
-      docName: "validators/overview",
-      icon: "🏦",
-    },
-    {
-      title: "Manage a Wallet",
-      content:
-        "Create a wallet to send, receive and store Elrond tokens.",
+      title: "🏛 Integrate a Platform",
+      content: "Follow our straightforward integration guide to integrate exchanges, wallets, and other platforms.",
       docName: "integrators/observing-squad",
       icon: "📱",
     },
     {
-      title: "Create a Token",
-      content:
-        "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
-      docName: "developers/esdt-tokens",
-      icon: "🏛️",
+      title: "🔑 Manage a Wallet",
+      content: "Create a wallet to send, receive and store Elrond tokens.",
+      docName: "wallet/ledger",
+      image: "symbol.svg",
     },
     {
-      title: "Learn How Elrond Works",
+      title: "🔰 Create a Token",
+      content: "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
+      docName: "developers/esdt-tokens",
+      image: "symbol.svg",
+    },
+    {
+      title: "🔬 Explore How Elrond Works",
       content:
-        "Get an overview of Elrond's architecture, Adaptive state sharding, Secure Proof of Stake, and the Arwen VM. ",
-      docName: "sdk-and-tools/erdpy/erdpy",
-      icon: "🔬",
-    }
+        "Get an overview of Elrond's architecture, Adaptive state sharding, Secure Proof of Stake, and the Arwen VM.",
+      docName: "technology/architecture-overview",
+      image: "symbol.svg",
+    },
     ],
 };
 

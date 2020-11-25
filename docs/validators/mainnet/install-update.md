@@ -1,19 +1,38 @@
 ---
 id: install-update
-title: Installing & updating
+title: Installing a Validator Node
 ---
+
+An Elrond node requires a host (computer) with the aforementioned specifications, with the OS - preferably Ubuntu 18.04 - installed. First you will deploy the Elrond scripts, tune its parameters and ensure proper user permissions. Then you will install the node, backup its private keys and start it. Further steps include optional configurations, such as setting up monitoring.
+
+Let's dig in.
 
 **Node installation**
 
-After preparing the user permissions, the script configurations and the keys, the actual node installation can begin.
+After preparing the user permissions, the script configurations and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node. For installation use`1 - install`.
+
+
 
 ```
-cd ~/elrond-go-scripts-mainnet
-./script.sh install
+ ~/elrond-go-scripts-mainnet/script.sh
+ 1) install
+ 2) observing_squad
+ 3) upgrade
+ 4) upgrade_proxy
+ 5) upgrade_squad
+ 6) remove_db
+ 7) start
+ 8) stop
+ 9) cleanup
+ 10) github_pull
+ 11) get_logs
+ 12) quit
+ Please select an action:1
 ```
 
 - When asked, indicate the number of nodes you want to run, i.e. `1`
 - When asked, indicate the name for your validator, i.e. `Valar`
+- Quit the menu without starting (we need keys first) by using `12 - quit`
 
 **Prepare your keys**
 
@@ -42,8 +61,7 @@ Repeat the above for all your “n” nodes. When complete, please refer to our 
 **Start the node(s)**
 
 ```
-cd ~/elrond-go-scripts-mainnet
-./script.sh start
+~/elrond-go-scripts-mainnet/script.sh start
 ```
 
 **Start the node visual interface**
@@ -59,10 +77,15 @@ Your first node is called `node-0` and it its REST API will run on port `8080` b
 
 **Update your node**
 
-Run the following command to upgrade your node with the latest GitHub release. 
+Upgrade your node by running the script and selecting options:
+
+- `10 - github_pull` downloads the latest version of the scripts
+- `3 - upgrade`
+- `7 - start`
+- `12 - quit`
 
 ```
-./script.sh upgrade
+~/elrond-go-scripts-mainnet/script.sh
 ```
 
 Those are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts-mainnet/blob/master/README.md) and make sure to ask any questions in the Elrond [Validators chat](https://t.me/ElrondValidators).
@@ -71,8 +94,6 @@ Those are the basic steps. Please carefully read the on-screen instructions, ref
 
 Your private keys are needed to run your node. Losing them means losing control of your node. A 3rd party gaining access to them could result in lost funds.
 
-Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your “`**n**`” nodes]
+Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your “`n`” nodes]
 
-
-
-Create a safe backup for them on storage outside of the server running your node(s).
+💡 *Create a safe backup for them on storage outside of the server running your node(s).*
