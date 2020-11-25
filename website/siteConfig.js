@@ -25,7 +25,21 @@ const siteConfig = {
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
-  headerLinks: [{ search: true }],
+
+  headerLinks: [
+    { search: true },
+    { href: "/", label: "" },
+  ],
+
+  headerLinks: [
+    { href: "docs/welcome/welcome-to-elrond", label: "Develop" },
+    { href: "docs/welcome/welcome-to-elrond", label: "Validate" },
+    { href: "docs/welcome/welcome-to-elrond", label: "Integrate" },
+    { href: "docs/welcome/welcome-to-elrond", label: "Learn" },
+    { href: "docs/welcome/welcome-to-elrond", label: "Chat" },
+    { href: "docs/welcome/welcome-to-elrond", label: "GitHub" },
+    { search: true },
+  ],
 
   /* path to images for header/footer */
   headerIcon: "img/logos/logo.svg",
@@ -79,61 +93,54 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: "Discover Elrond",
+      title: "Brief Intro to Elrond",
       content:
-        "Meet the internet-scale blockchain.",
+        "Meet the blockchain that can offer true internet-scale performance.",
       docName: "welcome/welcome-to-elrond",
-      image: "symbol.svg",
+      icon: "💡",
     },
     {
-      title: "Build an Application",
+      title: "Start Building",
       content:
-        "Use the Elrond devkit to build a dApp.",
+        "Build your decentralized application in minutes.",
       docName: "technology/architecture-overview",
-      image: "symbol.svg",
-    },
-    {
-      title: "Manage a Wallet",
-      content:
-        "Send, receive and store tokens.",
-      docName: "wallet/ledger",
-      image: "symbol.svg",
+      icon: "🛠️",
     },
     {
       title: "Run a Validator Node",
       content:
-        "Earn rewards for producing blocks.",
-      docName: "validators/overview",
-      image: "symbol.svg",
+        "Validate transactions, secure the network, earn rewards, and build a business around the Elrond ecosystem.",
+      docName: "wallet/ledger",
+      icon: "💻",
     },
     {
       title: "Integrate a Platform",
       content:
-        "Make Elrond a part of your tech stack.",
+        "Follow our straightforward integration guide to integrate exchanges, wallets, and other platforms.",
+      docName: "validators/overview",
+      icon: "🏦",
+    },
+    {
+      title: "Manage a Wallet",
+      content:
+        "Create a wallet to send, receive and store Elrond tokens.",
       docName: "integrators/observing-squad",
-      image: "symbol.svg",
+      icon: "📱",
     },
     {
       title: "Create a Token",
       content:
-        "Issue your ESDT or NFT tokens.",
+        "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
       docName: "developers/esdt-tokens",
-      image: "symbol.svg",
+      icon: "🏛️",
     },
     {
-      title: "Explore the Devkit",
+      title: "Learn How Elrond Works",
       content:
-        "Use the SDK & APIs.",
+        "Get an overview of Elrond's architecture, Adaptive state sharding, Secure Proof of Stake, and the Arwen VM. ",
       docName: "sdk-and-tools/erdpy/erdpy",
-      image: "symbol.svg",
-    },
-    {
-      title: "Learn how Elrond works",
-      content:
-        "Understand Adaptive State Sharding & SPoS.",
-      docName: "technology/architecture-overview",
-      image: "symbol.svg",
-    },
+      icon: "🔬",
+    }
     ],
 };
 

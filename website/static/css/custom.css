@@ -24,6 +24,7 @@ html {
 	text-decoration: underline;
 }
 
+
 /* Main Page */
 .navPusher {
 	padding-top: 60px;
@@ -34,30 +35,39 @@ html {
 .highlightPanel {
 	height: 100%;
 	background-color: #fff;
-	padding: 1rem;
+	padding: 1.5rem 2.2rem;
 	border: none;
 	border-radius: 0.65rem;
 	border: 1px solid rgba(228, 229, 229, .30);
 	box-shadow: 0 8px 24px 4px rgba(228, 229, 229, .85);
+	transition-property: all;
+	transition-duration: .2s;
 }
 .highlightPanel:hover,
 .highlightPanel:active {
 	box-shadow: 0 8px 24px 4px rgba(200, 200, 200, .75), inset 0 4px 0 0 #1b46c2;
+	transform: translateY(4px);
+
 }
-.highlightPanel img {
-	width: 24px;
-	height: 24px;
-	margin-right: 1rem;
+.highlightPanel .icon {
+	font-size:1.5rem;
+	margin-right: .5rem;
 }
-.highlightPanel h2,
+.highlightPanel h3,
 .highlightPanel p {
 	margin: 0;
 }
-.highlightPanel h2 {
-	font-weight: 500;
+.highlightPanel h3 {
+	font-weight: 700;
+	color: #1b46c2;
 }
 .highlightPanel p {
 	font-weight: 300;
+	text-align: justify;
+}
+.highlightPanel:hover p,
+.highlightPanel:active p {
+	color: #1b46c2
 }
 
 /* -------------------- Start Header Container ------------------- */
@@ -93,15 +103,22 @@ html {
 	padding: 1rem;
 	width: 100%; 
 }
-
 .navigationSlider .slidingNav ul {
-	background: transparent;
+	background-color: #fff;
+}
+input#search_input_react:focus, 
+input#search_input_react:active {
+	width: 170px;
+}
+.navigationSlider .slidingNav ul li > a {
+	color: #6c757d;
+	font-weight: 400;
 }
 .navigationSlider .slidingNav ul li > a:focus,
 .navigationSlider .slidingNav ul li > a:hover,
 .navigationSlider .slidingNav ul li.siteNavItemActive > a,
 .navigationSlider .slidingNav ul li.siteNavGroupActive > a {
-	color: #000;
+	color: #1b46c2;
 	background: #fff;
 }
 /* -------------------- End Header Container ------------------- */
@@ -183,6 +200,10 @@ html {
 	font-size: 0.925rem;
 	line-height: 1.155rem;
 	height: 5rem;
+	background: #1b46c2;
+}
+.footer a.footer-text {
+	color: #fff;
 }
 .footer a.footer-text:hover {
 	text-decoration: underline;
@@ -191,7 +212,7 @@ footer a.footer-text svg {
 	width: 1em;
 }
 .separateOnPageNav .footer {
-	background: #FFF;
+	background: #1b46c2;
 }
 /* -------------------- End Footer ------------------- */
 
@@ -373,6 +394,13 @@ footer a.footer-text svg {
 	.docsNavContainer .toc .navBreadcrumb {
 		background-color: #fff;
 		box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.12);
+	}
+	.navigationSlider .slidingNav ul {
+		border-bottom: 1px solid #e4e5e5 !important;
+		box-shadow: 0 0.125rem 0.625rem rgba(27, 70, 194, 0.12);
+	}
+	.navigationSlider .slidingNav ul li:nth-child(1n+5):not(.navSearchWrapper) {
+		display: none;
 	}
 	.docMainWrapper .mainContainer {
 		padding: 60px 0;
