@@ -13,6 +13,7 @@
 			"technology/cross-shard-transactions"
 		],
 		"Wallet":[
+			"wallet/web-wallet",
 			"wallet/ledger"
 		],
 		"Validators":[

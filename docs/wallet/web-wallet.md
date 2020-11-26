@@ -1,10 +1,20 @@
-# Web Wallet
+---
+id: web-wallet
+title: Web Wallet
+---
+
 
 Use the wallet to send, receive and store eGold in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
 
 ## **Create a new wallet**
 
-Go to [https://wallet.elrond.com](https://wallet.elrond.com/) & carefully acknowledge the instructions provided. Click on <Create Wallet> and acknowledge the information provided:
+Go to [https://wallet.elrond.com](https://wallet.elrond.com/) & carefully acknowledge the instructions provided. 
+
+Click on <Create Wallet>:
+
+![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN56ZUWCpoBOb62Cw5S%2F-MN58QUJW4SDl4KHuWMs%2Fimage.png?alt=media&token=1c1a1d47-e5f1-4c11-8700-642f86506b83)
+
+Carefully read and acknowledge the information, then click <Continue>
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwZzp7ogHdlTGeMJfS%2Fimage.png?alt=media&token=1bfb4aaa-f100-42bc-8c67-c88a6696621b)
 
@@ -57,11 +67,11 @@ After logging into your wallet, your eGold balances are immediately visible and 
 
 ## **Send a transaction** 
 
-In the Elrond web wallet:
+Click "Send" on the left-hand section of the wallet:
 
-- Click "Send"
-- Input the destination address & amount
-- Click Send
+![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN58eBinRmW5e6LVAG-%2F-MN59AGOnxN4jI64a7uH%2Fimage.png?alt=media&token=3f8c82f3-17eb-4be6-946b-1078e3cee773)
+
+Input the destination address & amount, and the click <Send>
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN54l80sMnQ48eunmLY%2Fimage.png?alt=media&token=04d0986b-b102-4e86-bd17-510265cac43a)
 
