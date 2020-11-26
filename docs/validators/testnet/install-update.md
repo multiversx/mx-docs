@@ -81,8 +81,9 @@ $HOME/elrond-utils/termui -address localhost:8080
 ```
 
 
-
+:::tip
 Your first node is called `node-0` and it its REST API will run on port `8080` by default. The next node is `node-1 `on port `8081`, and so on.
+:::
 
 **Update your node**
 
