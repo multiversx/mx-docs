@@ -283,8 +283,9 @@ It doesn't make sense  to fund after the deadline has passed, so fund transactio
 To return the error version of the SCResult, the easiest way is to use the macro `sc_error!` In case of success, we must explicitly return  an `Ok(...)` expression.
 
 
-
+:::tip
 `sc_error!("message")` is just syntactic sugar for `SCResult::Err(SCError::Static(b"message"[..]))`. Only static messages for now, some error formatting is on our to-do list.
+:::
 
 Note: `panic!` works in contracts, but it is highly discouraged.
 

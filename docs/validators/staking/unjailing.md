@@ -140,8 +140,9 @@ erdpy --verbose validator unjail --pem=walletKey.pem --value="250000000000000000
 ```
 
 
-
+:::note important
 You must take **denomination** into account when specifying the `value` parameter in **erdpy**.
+:::
 
 For two validators, the command becomes this one:
 

@@ -219,8 +219,9 @@ erdpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000
 ```
 
 
-
+:::note important
 You must take **denomination** into account when specifying the `value` parameter in **erdpy**.
+:::
 
 For two nodes, it becomes this:
 

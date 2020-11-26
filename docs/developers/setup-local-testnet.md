@@ -19,8 +19,9 @@ If not specified otherwise, the mini-testnet starts with one Shard plus the Meta
 In order to install erdpy, follow the instructions at [install erdpy](https://docs.elrond.com/tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended).
 
 
-
+:::note erdpy version
 Make sure your erdpy version is `0.8.7` or higher.
+:::
 
 ## **Prerequisites: Node and Proxy**
 
@@ -70,8 +71,9 @@ port_proxy = 7950
 ```
 
 
-
+:::tip
 erdpy allows you to customize the configuration of the local mini-testnet in much greater detail, but for the sake of simplicity, in the example above we've only set the TCP port of the Elrond Proxy.
+:::
 
 Then, configure and build the local testnet as follows:
 
@@ -85,8 +87,9 @@ $ erdpy testnet config
 Upon running this command, a new folder called `testnet` will be added in the current directory. This folder contains the Node & Proxy binaries, their configurations, plus the **development wallets**.
 
 
-
+:::warning
 The development wallets (Alice, Bob, Carol, ..., Mike) **are publicly known** - they should only be used for development and testing purpose.
+:::
 
 The development wallets are minted at genesis and their keys (both PEM files and Wallet JSON files) can be found in the folder `testnet/wallets/users`.
 
@@ -101,8 +104,9 @@ erdpy testnet start
 This will start the Seednode, the Validators, the Observers and the Proxy.
 
 
-
+:::important
 Note that the Proxy starts with a delay of about 30 seconds.
+:::
 
 ## **Sending transactions**
 

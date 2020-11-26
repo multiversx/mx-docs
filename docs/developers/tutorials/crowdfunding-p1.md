@@ -8,12 +8,13 @@ Write, build and deploy a simple smart contract written in Rust
 This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the Elrond Network, written in Rust.
 
 
-
+:::important
 The Elrond Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
+:::
 
-
-
+:::important
 The current tutorial revolves around **elrond-wasm-rs** version **0.7.1**, and will get updated as new versions of elrond-wasm are released.
+:::
 
 # **Introduction**
 
@@ -41,9 +42,9 @@ Four methods, then: `init`, `fund`, `claim` and `status`.
 
 This tutorial will firstly focus on the `init` method, to get you acquainted with the development process and tools. You will implement `init` and also *write unit tests* for it.
 
-
-
+:::note testing
 Automated testing is exceptionally important for the development of smart contracts, due to the sensitive nature of the information they must handle. 
+:::
 
 # **Prerequisites**
 
