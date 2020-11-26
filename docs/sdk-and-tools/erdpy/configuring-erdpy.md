@@ -29,6 +29,6 @@ $ erdpy config set chainID 1...
 $ erdpy config set proxy https://api.elrond.com
 ```
 
-
-
+:::tip
 erdpy's configuration is stored in the file `~/elrondsdk/erdpy.json`.
+:::

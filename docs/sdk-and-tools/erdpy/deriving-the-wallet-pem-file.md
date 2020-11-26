@@ -8,8 +8,9 @@ title: Deriving the Wallet PEM file
 While **erdpy** has features that do not need a Wallet, submitting any sort of transaction with **erdpy** does require one. And to automate submitting transactions to the Elrond network, **erdpy** needs a so-called PEM file, associated with a specific Wallet. This is needed because **erdpy** must be able to sign transactions on your behalf, without your help. Having a PEM file obviates the need for manually entering a password, like on [https://wallet.elrond.com](https://wallet.elrond.com/). However, one might choose to use a JSON keyfile Wallet instead. erdpy has support for these as well - the associated password has to be provided by means of a separate file.
 
 
-
-A PEM file generated from a Wallet should be kept very safe, because **it contains the secret key** of that Wallet.
+:::warning
+A PEM file generated from a Wallet should be kept very safe, because **it contains the private key** of that Wallet.
+:::
 
 To derive a PEM file for a Wallet, the mnemonic words of that account are needed. Make sure you have them before continuing. Also, make sure **erdpy** is installed on your system:
 
@@ -45,9 +46,10 @@ The command above will generate a file called `walletKey.pem` in the current fol
 Now, whenever you want to submit a transaction from the command-line, you can tell **erdpy** to use this generated PEM file to sign the transaction with.
 
 
-
+:::tip
 The Elrond network makes no distinction between manually submitting a transaction, and submitting a transaction through **erdpy**. This means that every transaction you send with **erdpy** will appear on [https://wallet.elrond.com](https://wallet.elrond.com/) when you open the Wallet which you generated the PEM for. 
+:::
 
-
-
+:::warning
 Always safeguard any PEM files you have. Anyone who has them can submit transactions and perform actions in the Elrond network as if they were you, so make sure nobody can get to them.
+:::

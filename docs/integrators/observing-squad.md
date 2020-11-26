@@ -10,8 +10,9 @@ In order to integrate with the Elrond Network and be able to [broadcast transact
 An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](https://docs.elrond.com/tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
 
 
-
+:::tip
 Currently the Elrond Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
+:::
 
 By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of Elrond's sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
 

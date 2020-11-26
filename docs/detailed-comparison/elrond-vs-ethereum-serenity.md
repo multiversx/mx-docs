@@ -5,13 +5,13 @@ title: Elrond vs. Ethereum Serenity
 
 (based on Ethereum 2.0’s available documentation)
 
-## ***\*Validators shuffling cost\****
+## **Validators shuffling cost**
 
 Regarding the way validators are assigned to shards, Elrond is doing random shuffling of validators, but in order to optimize communication and storage cost, only up to 1/3 validators are shuffled from every shard at the end of each epoch. Because the allocation of nodes to shards is also buffered, there is actually no liveness penalty. Serenity could achieve the same effect of continuous liveness with gradual reshuffling of older validators, if the number of slots per cycle/epoch (time until next reshuffle) is large enough. Serenity overlooks the communication cost in case of reshuffling. They have smaller epochs and for each epoch, if a validator / attesters is reshuffled to another shard, than their last, it needs to synchronize with that blockchain. This synchronization brings a communication overhead into the network. It will be hard for a validator which is assigned to a new shard to do correct work before it is synchronized.
 
 Serenity defines the duration of one epoch as a fixed number of slots considered for proposer assignment, each lasting for 6 seconds. There is one proposer assigned per slot in each shard, and the configuration of these slots is known for the entire epoch in advance, so proposers are D Globally predictable, where D is the number of slots in the epoch. The same happens also for the attesters, although these are exposed, the predictability could be less than for the block proposers. Elrond employs random sampling of validators and block proposer every round from the shard nodes. This way the time the validators are exposed is limited to one round (5 seconds), so only 1 Globally Predictable, which increases the security of Elrond against bribing and DDoS compared to Ethereum.
 
-## ***\*Staking role in consensus group selection\****
+## **Staking role in consensus group selection**
 
 Elrond has a selection of validators for consensus groups based on their rating. The stake is fixed and the rating can give a node slightly higher chances of being selected in the consensus group, but never more than one seat at a time. This requirement could help with the creation of extra nodes to secure and scale the network. Another reason for this is again to optimize the communication and storage, as it is only possible to be a validator in one shard at a time per validator/machine. Serenity allows multiple seats for validators which may cause a selection of a validator as attester in multiple shards at the same time, with penalties on communication and storage (communication and storage requirements proportional with the number of seats).
 
@@ -21,7 +21,7 @@ While in Serenity there are some trust assumptions and higher hw requirements fo
 
 The target clients for validators in Elrond are the consumer grade computers so compared to a beacon node, the entry barrier is much lower. There is also the intention of adding another role, that could be filled by smartphones, but this is still in research so it will be left out of this analysis.
 
-## ***\*Sharding model\****
+## **Sharding model**
 
 Elrond implements an adaptive solution including transaction, network and state sharding. Serenity has no adaptivity in this regard and runs with a fixed setting of 1024 shards, so it cannot react well for the case where nodes are leaving the network. Maintaining the security of a shard means that the minimum number of nodes inside the shard is kept. Not adapting the number of shards to the actual number of nodes can become problematic. The direction for Serenity to overcome this seems to be to enforce nodes that want to leave, to remain in the network for prolonged time, until new nodes can take their place. 
 
@@ -29,7 +29,7 @@ With Elrond we have a clear model of how the network reacts to the cases of addi
 
 Moreover, because in Elrond the communication cost of shard splits is zero, there is no reason to delay adding new shards, we can leverage the linear scalability sharding can provide, so shard splits can occur fast, whenever a new shard can be created. For example, if we need at least N nodes per shard, then whenever we have X*N(1 +(1/10)) we could already form X shards through splitting, and in case we go below X*N nodes do a shard merge.
 
-## ***\*Forking\****
+## **Forking**
 
 In Serenity forks are likely to happen in the shard chains, while in the beacon chain the blocks are finalized with a high probability (for finality there is still a dependency on the PoW blocks referenced by the beacon blocks). Forking in the shard chains could add more complexity for cross shard transactions, which are the majority in a sharded system.
 

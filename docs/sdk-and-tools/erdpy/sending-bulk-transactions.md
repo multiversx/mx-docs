@@ -6,9 +6,6 @@ title: Sending bulk transactions
 It is easy to prepare a set of transaction and then send them all at once using `erdpy`. Here's how.
 
 
-
-The example in this guide is tailored for missions on the Battle of Nodes.
-
 Requirements:
 
 - You must have `erdpy` installed on your computer. See [Installing erdpy](https://docs.elrond.com/tools/erdpy/installing-erdpy) for details.
@@ -21,7 +18,7 @@ There will be 3 steps to fulfill:
 3. Execute the command that sends all the transactions in the prepared set.
 
 
-
+:::warning
 Make sure your terminal is running `bash`, and not `zsh` or any other shell. Run the following command:
 
 
@@ -46,6 +43,7 @@ The word  under the  `CMD `keyword must be `bash`, otherwise the script provided
 ```
 exec /bin/bash
 ```
+:::
 
 ## **Step 1: Prepare the PEM file**
 

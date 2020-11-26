@@ -55,9 +55,9 @@ The account nonce can be fetched from the API: [Get Address Nonce](https://docs.
 
 Broadcasted transactions that reach the *mempool* having the same sender address and the same nonce are *competing transactions*, and only one of them will be processed (the one providing a higher gas price or, if they have the same gas price, the one that arrived the second - but keep in mind that arrival time is less manageable).
 
-
-
+:::tip
 Avoid competing transactions by maintaining an strictly increasing nonce sequence when broadcasting transactions of the same sender address.
+:::
 
 Although an explicit *transaction cancellation trigger* is not yet available in the Network, cancellation of a transaction T1 with nonce 42 could be *possible* if one broadcasts a second transaction T2 with same nonce 42, with higher gas price (and without a value to transfer) **immediately** (e.g. 1 second) after broadcasting T1.
 
@@ -65,9 +65,9 @@ Although an explicit *transaction cancellation trigger* is not yet available in 
 
 If broadcasted transactions have their nonces higher than the current account nonce of the sender, this is considered a *nonce gap*, and the transactions will remain in the mempool unprocessed, until new transactions from the same sender arrive *to resolve the nonce gap -* or until the transactions are swept from the mempool (sweeping takes place regularly).
 
-
-
+:::tip
 Avoid nonce gaps by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
+:::
 
 ### **Issue: fetching a stale account nonce**
 
@@ -81,10 +81,11 @@ Example:
 4. Time 12:00:04 - the sender broadcasts T2 with nonce 42, which will compete with T1, as they have the same nonce.
 
 
-
+:::tip
 Avoid fetching stale account nonces by **periodically recalling the nonce.**
 
 Avoid recalling the nonce in between **rapidly sequenced transactions from the same sender** . For rapidly sequenced transactions, you have to programmatically manage, keep track of the account nonce using a **local mirror (copy) of the account nonce** and increment it appropriately.
+:::
 
 ## **Gas limit computation**
 
@@ -103,8 +104,9 @@ gasLimit = erd_min_gas_limit + erd_gas_per_data_byte * lengthOf(data)
 ### **Smart contract calls**
 
 
-
+:::important
 Documentation about properly setting a gas limit for smart contract transactions is preliminary and subject to change.
+:::
 
 ## **Signing transactions**
 
@@ -113,5 +115,6 @@ Please follow [Signing Transactions](https://docs.elrond.com/developers/signing-
 ## **Simulate transaction execution**
 
 
-
+:::important
 Documentation about transaction simulation is preliminary and subject to change.
+:::

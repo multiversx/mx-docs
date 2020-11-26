@@ -6,8 +6,9 @@ title: Accounts Management
 Managing Wallets and Addresses
 
 
-
+:::tip
 If integrating a **system** with the **Network** involves transfers between different users (accounts) - a good example for this case is the integration between an **exchange system** and the **Network** - the recommended approach is to have **an Elrond Account (Address) for each user of the system**.
+:::
 
 Accounts creation can be achieved through different approaches:
 
