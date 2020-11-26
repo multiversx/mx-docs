@@ -151,3 +151,73 @@ Lorem ipsum dolor sit amet !
 :::warning
 Oh, no ! Lorem ipsum dolor sit amet 
 :::
+
+
+-----------------
+
+### `GET` API Call
+
+
+### <span class="badge badge-primary">GET</span> API Call
+### <span class="badge badge-success">POST</span> API Call
+
+:::important Custom Title
+The content and title *can* include markdown.
+For example:
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--First Tab-->
+
+Path Parameters
+
+`https://api.elrond.com/transaction/*param*`
+
+
+| Param   | Required | Type | Description |  
+| -----------   | ----------- | ----------- |-----------     |   
+| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |              
+| gasPrice    | <span class="text-muted">OPTIONAL</span>     | `number`    | The desired Gas Price (per Gas Unit). | 
+| storageKey    | <span class="text-danger">REQUIRED</span>    | `string`    | The storage entry to fetch. | 
+| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Second Tab-->
+
+```js
+console.log('Hello, world!');
+```
+
+<!--Third Tab-->
+
+🟢 200 OK
+
+Value (hex-encoded) successfully retrieved.
+
+```json
+{
+    "status": {
+        "key0": 0,
+        "key1": 1,
+        "key2": 123,
+        "key3": 1234,
+        "key4": 123456
+    }
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+:::

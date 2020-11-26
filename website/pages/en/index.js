@@ -16,11 +16,11 @@ class Index extends React.Component {
     const docUrl = (doc) => `${baseUrl}${docsPart}${langPart}${doc}`;
 
     const Panel = ({details}) => (
-      <a href={docUrl(details.docName)} className='col-12 col-sm-6 col-lg-4 mb-4'>
+      <a href={docUrl(details.docName)} className='col-12 col-md-6 col-lg-4 mb-4 mb-lg-5'>
         <div className="highlightPanel">
-          <div className="d-flex flex-row align-items-center mb-1">
-            <img src={`${baseUrl}img/logos/${details.image}`}/>
-            <h2>{details.title}</h2>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <span className="icon" role="img" aria-label="icon">{details.icon}</span>
+            <h3>{details.title}</h3>
           </div>
           <p>{details.content}</p>
         </div>
@@ -34,7 +34,7 @@ class Index extends React.Component {
     return (
       <div className="mainContainer">
         <div className="container">
-          <div className="row">
+          <div className="row justify-content-center pt-4">
             <Features siteConfig={siteConfig}/>
           </div>
         </div>
