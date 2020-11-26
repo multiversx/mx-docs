@@ -49,7 +49,7 @@ The unpredictability of the shuffling process is important for the security of t
 
 
 
-![img](/technology/sharding.gif)
+![img](/technology/node-shuffling.png)
 
 Node reshuffling diagram
 
