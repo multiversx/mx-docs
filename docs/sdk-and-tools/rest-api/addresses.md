@@ -5,27 +5,27 @@ title: Addresses
 
 Get information about an Elrond Address.
 
-## **Get Address**
+## <span class="badge badge-primary">GET</span> **Get Address**
 
-https://api.elrond.com**/address/:bech32Address**
+`https://api.elrond.com/address/:bech32Address`
 
 This endpoint allows one to retrieve basic information about an Address (Account).
 
-**Request**
+<!--DOCUSAURUS_CODE_TABS-->
 
-Path Parameters:
+<!--Request-->
 
-```
-bech32Address    string    The Address to query.
-```
+Path Parameters
 
-**Response**
+| Param   | Required | Type | Description |  
+| -----------   | ----------- | ----------- |-----------     |   
+| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
+
+<!--Response-->
 
 🟢 200: OK
 
 Address information successfully retrieved.
-
-
 
 ```
 {
@@ -37,100 +37,175 @@ Address information successfully retrieved.
 }
 ```
 
-## **Get Address Nonce**
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+## <span class="badge badge-primary">GET</span> **Get Address Nonce**
 
 https://api.elrond.com**/address/:bech32Address/nonce**
 
 This endpoint allows one to retrieve the nonce of an Address.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Path Parameters
 
-bech32Address
+| Param   | Required | Type | Description |  
+| -----------   | ----------- | ----------- |-----------     |   
+| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-The Address to query.
+Nonce successfully retrieved.
 
-## **Get Address Balance**
+```
+{
+  "nonce": 5
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+## <span class="badge badge-primary">GET</span> **Get Address Balance**
 
 https://api.elrond.com**/address/:bech32Address/balance**
 
 This endpoint allows one to retrieve the balance of an Address.
 
+<!--DOCUSAURUS_CODE_TABS-->
 
-
-Request
-
-Response
+<!--Request-->
 
 Path Parameters
 
-bech32Address
+| Param   | Required | Type | Description |  
+| -----------   | ----------- | ----------- |-----------     |   
+| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-The Address to query.
+Balance successfully retrieved.
 
-## **Get Address Transactions**
+```
+{
+  "balance": "100000000000000000000"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+## <span class="badge badge-primary">GET</span> **Get Address Transactions**
 
 https://api.elrond.com**/address/:bech32Address/transactions**
 
 This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Path Parameters
 
-bech32Address
+| Param   | Required | Type | Description |  
+| -----------   | ----------- | ----------- |-----------     |   
+| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-The Address to query.
+Transactions successfully retrieved.
 
+```
+{
+  "transactions": [
+    {
+      "hash": "1a3e...",
+      "fee": "10000000000000000",
+      "miniBlockHash": "9673...",
+      "nonce": 68,
+      "round": 33688,
+      "value": "1000000000000000000",
+      "receiver": "erd1...",
+      "sender": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
+      "receiverShard": 0,
+      "senderShard": 0,
+      "gasPrice": 200000000000,
+      "gasLimit": 50000,
+      "gasUsed": 50000,
+      "data": "",
+      "signature": "ed75...",
+      "timestamp": 1591258128,
+      "status": "Success",
+      "scResults": null
+    },
+    {
+      "hash": "d72d...",
+      "fee": "10000000000000000",
+      "miniBlockHash": "fd45...",
+      "nonce": 67,
+      "round": 27353,
+      "value": "100000000000000000000000000",
+      "receiver": "erd1...",
+      "sender": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
+      "receiverShard": 1,
+      "senderShard": 0,
+      "gasPrice": 200000000000,
+      "gasLimit": 50000,
+      "gasUsed": 50000,
+      "data": "",
+      "signature": "bb98...",
+      "timestamp": 1591220142,
+      "status": "Success",
+      "scResults": null
+    },
+    ...
+  ]
+}
+```
 
+<!--END_DOCUSAURUS_CODE_TABS-->
 
+:::warning
 This endpoint is not available on Observer Nodes. It is only available on Elrond Proxy. 
 
 **Currently, this endpoint is only available on the Official Elrond Proxy instance.**
 
 This endpoint requires the presence of an Elastic Search instance (populated through Observers) as well. 
+:::
 
-## **Get Storage Value for Address**
+## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**
 
 https://api.elrond.com**/address/:bech32Address/storage/:storageKey**
 
 This endpoint allows one to retrieve a value stored within the Blockchain for a given Address.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Path Parameters
 
-bech32Address
+| Param   | Required | Type | Description |  
+| -----------   | ----------- | ----------- |-----------     |   
+| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
+| storageKey | <span class="text-danger">REQUIRED</span>    | `string`    | The storage entry to fetch.       |  
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-The Address to query.
+Value (hex-encoded) successfully retrieved.
 
-storageKey
+```
+{
+    "value": "abba"
+}
+```
 
-REQUIRED
-
-string
-
-The storage entry to fetch.
+<!--END_DOCUSAURUS_CODE_TABS-->
