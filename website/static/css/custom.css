@@ -20,11 +20,11 @@ html {
 .docsNavContainer {
   top: 60px;
 }
-.docsContainer a {
+.docsContainer .post a {
   color: #1b46c2;
 }
-.docsContainer a:hover,
-.docsContainer a:active {
+.docsContainer .post a:hover,
+.docsContainer .post a:active {
   text-decoration: underline;
 }
 
