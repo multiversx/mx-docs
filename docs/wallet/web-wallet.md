@@ -3,12 +3,11 @@ id: web-wallet
 title: Web Wallet
 ---
 
-
 Use the wallet to send, receive and store eGold in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
 
 ## **Create a new wallet**
 
-Go to [https://wallet.elrond.com](https://wallet.elrond.com/) & carefully acknowledge the instructions provided. 
+Go to [https://wallet.elrond.com](https://wallet.elrond.com/) & carefully acknowledge the instructions provided.
 
 Click on <Create Wallet>:
 
@@ -50,8 +49,6 @@ And you’re in! Your EGLD address is on top, you can use the “copy” button 
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwbFt_D472wfHJBEMY%2Fimage.png?alt=media&token=ebd64bce-707b-4c26-bbe0-b87c3400edd4)
 
-
-
 ## **Overview of your eGold balance**
 
 After logging into your wallet, your eGold balances are immediately visible and displayed in easy to follow boxes.
@@ -63,9 +60,7 @@ After logging into your wallet, your eGold balances are immediately visible and 
 - **Delegated:** Amount of eGold delegated towards a Staking Services provider
 - **Total:** the total amount of eGold associated with this address, sum of the above
 
-
-
-## **Send a transaction** 
+## **Send a transaction**
 
 Click "Send" on the left-hand section of the wallet:
 
@@ -91,7 +86,7 @@ You can always review your transaction history in the "Transactions" menu on the
 
 After logging into your wallet, as described above, you will be able to see your wallet address and share it with others so they can send you eGold.
 
-Your address is immediately visible on the top part of the wallet, as "Address erd1... ". You can copy the address by pressing the copy button (two overlapping squares). 
+Your address is immediately visible on the top part of the wallet, as "Address erd1... ". You can copy the address by pressing the copy button (two overlapping squares).
 
 You can also click "Receive" on the left-hand side to see a QR code for the address, which can be scanned to reveal the public address.
 

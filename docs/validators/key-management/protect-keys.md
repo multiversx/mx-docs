@@ -22,7 +22,6 @@ Wallet Keys are extremely sensitive because:‌
   - distributed cloud storage, etc
   - [some hints](https://coinsutra.com/bitcoin-private-key/)
 
-
 :::tip
 Wallet Keys are not required on host running the Node. Store them on a different location.
 :::
@@ -31,5 +30,5 @@ Secure your Elrond node
 
 - no ports should open in the firewall
 - don't run the node as `root`
-- use encryption, all other measures 
-- [some hints ](https://www.liquidweb.com/kb/security-for-your-linux-server/) 
+- use encryption, all other measures
+- [some hints ](https://www.liquidweb.com/kb/security-for-your-linux-server/)

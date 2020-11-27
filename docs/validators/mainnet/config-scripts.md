@@ -7,8 +7,6 @@ Elrond provides scripts designed to streamline the process of installing an Elro
 
 ## **Download the Elrond Scripts**
 
-
-
 ```
 cd ~
 git clone https://github.com/ElrondNetwork/elrond-go-scripts-mainnet
@@ -16,11 +14,9 @@ git clone https://github.com/ElrondNetwork/elrond-go-scripts-mainnet
 
 ## **Configure the scripts correctly**
 
-The scripts need a few options to be set in order to work correctly. 
+The scripts need a few options to be set in order to work correctly.
 
-First and foremost, you need your exact username on the machine.  You can find out your current username by using the `whoami` command, which will print it out:
-
-
+First and foremost, you need your exact username on the machine. You can find out your current username by using the `whoami` command, which will print it out:
 
 ```
 whoami
@@ -32,8 +28,6 @@ Next, we need to edit the `variables.cfg` file and add your username in the foll
 - `CUSTOM_USER`, which is the username on the computer under which you will run the install, upgrade and other processes
 
 Open `variables.cfg` in the `nano` editor:
-
-
 
 ```
 cd ~/elrond-go-scripts-mainnet/config
@@ -48,8 +42,8 @@ Replace <yourusername> with the returned output of the "whoami" command
 
 Save the file and exit :
 
-- if you’re editing with **nano**, press `Ctrl+X`, then `y`and then `Enter` 
-- if you’re editing with **vi** or **vim**, hold down `Shift`  and press `z` twice
+- if you’re editing with **nano**, press `Ctrl+X`, then `y`and then `Enter`
+- if you’re editing with **vi** or **vim**, hold down `Shift` and press `z` twice
 
 ## **Ensure user privileges**
 
@@ -57,15 +51,11 @@ Your user should be `sudo` capable, so that it doesn't ask a password every time
 
 So let's add it to the overrides:
 
-
-
 ```
 sudo visudo -f /etc/sudoers.d/myOverrides
 ```
 
 Now navigate to the end of the file, by pressing `Shift + G`. Now press `o` to add a new empty line, and type the following, replacing `username` with what you got from running the `whoami` command:
-
-
 
 ```
 yourusername ALL=(ALL) NOPASSWD:ALL

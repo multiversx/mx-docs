@@ -11,8 +11,6 @@ Let's dig in.
 
 After preparing the user permissions, the script configurations and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node. For installation use`1 - install`.
 
-
-
 ```
  ~/elrond-go-scripts-mainnet/script.sh
  1) install
@@ -66,7 +64,7 @@ Repeat the above for all your “n” nodes. When complete, please refer to our 
 
 **Start the node visual interface**
 
-Once the node has started, you can check how it’s doing, using the `TermUI` interface. Navigate to your `$HOME/elrond-utils` folder and start the `TermUI`  , one for each of your nodes:
+Once the node has started, you can check how it’s doing, using the `TermUI` interface. Navigate to your `$HOME/elrond-utils` folder and start the `TermUI` , one for each of your nodes:
 
 ```
 cd $HOME/elrond-utils

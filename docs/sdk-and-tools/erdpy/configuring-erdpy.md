@@ -7,8 +7,6 @@ title: Configuring erdpy
 
 In order to view the current configuration, one can issue the command `erdpy config dump`. Output example:
 
-
-
 ```
 {
     "proxy": "https://api.elrond.com",
@@ -21,8 +19,6 @@ In order to view the current configuration, one can issue the command `erdpy con
 ```
 
 One can alter the current configuration using the command `erdpy config set`. For example, in order to set the proxy URL or the chain ID, one would do the following:
-
-
 
 ```
 $ erdpy config set chainID 1...

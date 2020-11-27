@@ -17,9 +17,9 @@ This endpoint allows one to retrieve basic information about an Address (Account
 
 Path Parameters
 
-| Param   | Required | Type | Description |  
-| -----------   | ----------- | ----------- |-----------     |   
-| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
 
@@ -51,9 +51,9 @@ This endpoint allows one to retrieve the nonce of an Address.
 
 Path Parameters
 
-| Param   | Required | Type | Description |  
-| -----------   | ----------- | ----------- |-----------     |   
-| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
 
@@ -81,9 +81,9 @@ This endpoint allows one to retrieve the balance of an Address.
 
 Path Parameters
 
-| Param   | Required | Type | Description |  
-| -----------   | ----------- | ----------- |-----------     |   
-| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
 
@@ -111,9 +111,9 @@ This endpoint allows one to retrieve the latest 20 Transactions sent from an Add
 
 Path Parameters
 
-| Param   | Required | Type | Description |  
-| -----------   | ----------- | ----------- |-----------     |   
-| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
 
@@ -172,11 +172,11 @@ Transactions successfully retrieved.
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 :::warning
-This endpoint is not available on Observer Nodes. It is only available on Elrond Proxy. 
+This endpoint is not available on Observer Nodes. It is only available on Elrond Proxy.
 
 **Currently, this endpoint is only available on the Official Elrond Proxy instance.**
 
-This endpoint requires the presence of an Elastic Search instance (populated through Observers) as well. 
+This endpoint requires the presence of an Elastic Search instance (populated through Observers) as well.
 :::
 
 ## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**
@@ -191,10 +191,10 @@ This endpoint allows one to retrieve a value stored within the Blockchain for a 
 
 Path Parameters
 
-| Param   | Required | Type | Description |  
-| -----------   | ----------- | ----------- |-----------     |   
-| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |   
-| storageKey | <span class="text-danger">REQUIRED</span>    | `string`    | The storage entry to fetch.       |  
+| Param         | Required                                  | Type     | Description                 |
+| ------------- | ----------------------------------------- | -------- | --------------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query.       |
+| storageKey    | <span class="text-danger">REQUIRED</span> | `string` | The storage entry to fetch. |
 
 <!--Response-->
 

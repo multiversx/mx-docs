@@ -3,7 +3,7 @@ id: elrond-vs-multivac
 title: Elrond vs. Multivac
 ---
 
-One of the main differences between Elrond and Multivac, is how Multivac manages cross shard operations, there is a larger overhead in communication compared to the Elrond architecture, as it is required to broadcast all shard headers to all shards. This also makes the processing harder for any shard and every node. If a node wants to validate a given header from another shard, it needs the relevant data from that shard. Whereas Elrond has the metachain shard aggregating this information and broadcasting only the aggregation, which leads to less communication. 
+One of the main differences between Elrond and Multivac, is how Multivac manages cross shard operations, there is a larger overhead in communication compared to the Elrond architecture, as it is required to broadcast all shard headers to all shards. This also makes the processing harder for any shard and every node. If a node wants to validate a given header from another shard, it needs the relevant data from that shard. Whereas Elrond has the metachain shard aggregating this information and broadcasting only the aggregation, which leads to less communication.
 
 Multivac employs an UTXO model, while Elrond uses an account model. Multivac seems to not even mention about shard merges, which in fact is harder to solve than shard splits, Elrond already has a solution designed for this. For consensus group sampling Multivac employs VRFs, which would lead to slower consensus, because forming the groups will be harder.
 

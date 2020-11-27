@@ -7,8 +7,6 @@ title: Signing programmatically
 
 Upon installing **elrond-core-js**, a transaction can be signed as follows:
 
-
-
 ```
 const fs = require("fs");
 const core = require("@elrondnetwork/elrond-core-js");
@@ -41,8 +39,6 @@ Above, the content of `signedTransactionJson` can be submitted to Elrond API in 
 
 ## **Sign using erdpy**
 
-
-
 ```
 from erdpy.accounts import Account
 from erdpy.transactions import Transaction
@@ -66,8 +62,6 @@ print(payload)
 ```
 
 Above, `payload` can be submitted to Elrond API in order to broadcast the transaction. Alternatively, the `send` function can be used:
-
-
 
 ```
 from erdpy.proxy import ElrondProxy

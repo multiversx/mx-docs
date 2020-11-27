@@ -3,12 +3,11 @@ id: secure-proof-of-stake
 title: Secure Proof of Stake
 ---
 
-
 Elrond's approach for consensus is called Secure Proof of Stake (SPoS). It innovates in the manner in which validator nodes are selected for consensus out of a shard and also in the steps taken by the validators to complete the consensus process as efficiently as possible. Let's take a look.
 
-At the beginning of each round, SPoS selects validators for consensus using a **randomness source** that can be neither predicted, nor influenced. It is surprisingly simple, requiring only to be calculated from the previous block and to be signed by the consensus leader of the current round (also known as the *block proposer*). The resulting signature will be the randomness source for the next round, and due to its reliance on the immediately preceding block, it cannot be known more than a round in advance.
+At the beginning of each round, SPoS selects validators for consensus using a **randomness source** that can be neither predicted, nor influenced. It is surprisingly simple, requiring only to be calculated from the previous block and to be signed by the consensus leader of the current round (also known as the _block proposer_). The resulting signature will be the randomness source for the next round, and due to its reliance on the immediately preceding block, it cannot be known more than a round in advance.
 
-In each round, a new consensus group is selected to propose a block. But only one validator in the group will be the **block proposer**. This is the validator in the consensus group which has the hash of the public key and randomness source is the smallest, numerically. The block proposer will produce the block for the round, and the rest of the consensus group will validate and sign it. 
+In each round, a new consensus group is selected to propose a block. But only one validator in the group will be the **block proposer**. This is the validator in the consensus group which has the hash of the public key and randomness source is the smallest, numerically. The block proposer will produce the block for the round, and the rest of the consensus group will validate and sign it.
 
 The time necessary for random selection of the consensus group is exceptionally short (around 100 ms, often less). This efficiency is a consequence of the fact that consensus selection is deterministic once the randomness source is known, thus there is no communication requirement. This allows total round times on the order of mere seconds.
 

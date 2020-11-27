@@ -15,8 +15,6 @@ Request
 
 Response
 
-
-
 ## **Get Statistics**
 
 http://localhost:8080**/node/statistics**
@@ -32,10 +30,6 @@ Path Parameters
 OPTIONAL
 
 string
-
-
-
-
 
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.
 
@@ -55,10 +49,6 @@ OPTIONAL
 
 string
 
-
-
-
-
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.
 
 ## **Get Peer Information**
@@ -76,9 +66,5 @@ Path Parameters
 OPTIONAL
 
 string
-
-
-
-
 
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.

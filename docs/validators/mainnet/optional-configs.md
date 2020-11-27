@@ -11,4 +11,4 @@ Things break. Make sure you know when so you can fix them. Check out this [Commu
 
 **Optional: register your mainnet node with the Elrond Nodes Monitor bot.**
 
-It will help you to get relevant notifications and stats directly into Telegram.  You can find it [here](https://t.me/ElrondMonitorBot) or by typing @ElrondMonitorBot into Telegram.
+It will help you to get relevant notifications and stats directly into Telegram. You can find it [here](https://t.me/ElrondMonitorBot) or by typing @ElrondMonitorBot into Telegram.

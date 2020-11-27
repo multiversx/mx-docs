@@ -6,7 +6,7 @@ title: Welcome to Elrond
 # **At a glance:**
 
 - **What**: Sharded Smart Contracts execution platform with a PoS consensus mechanism
-- **When:**  Mainnet live, project started in 2018
+- **When:** Mainnet live, project started in 2018
 - **How:** Scales via Adaptive State Sharding, consensus via Secure Proof of Stake
 - **Highlights:**
   - Performance: 15.000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100k (263k TPS in testnet)
@@ -17,9 +17,9 @@ title: Welcome to Elrond
 
 # **What is Elrond?**
 
-Elrond is a distributed transactional computation protocol which relies on a sharded state architecture  and a secure Proof of Stake consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, Elrond runs on average computers. 
+Elrond is a distributed transactional computation protocol which relies on a sharded state architecture and a secure Proof of Stake consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, Elrond runs on average computers.
 
-By employing *sharding*, a method of parallelizing data & transactions processing, Elrond’s performance will scale up with the number of computers joining the network, reaching more than 100.000 transactions per second while growing increasingly decentralized.
+By employing _sharding_, a method of parallelizing data & transactions processing, Elrond’s performance will scale up with the number of computers joining the network, reaching more than 100.000 transactions per second while growing increasingly decentralized.
 
 # **How is Elrond different?**
 

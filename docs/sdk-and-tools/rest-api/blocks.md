@@ -25,13 +25,9 @@ number
 
 The Block nonce (height).
 
-
-
 This endpoint is only is only defined by the Proxy. The Observer does not expose this endpoint.
 
-
-
-A **Hyperblock** is a block-like abstraction that reunites the data from all shards, and contains only **fully-executed transactions** (that is, transactions executed both in *source* and in *destination* shard).
+A **Hyperblock** is a block-like abstraction that reunites the data from all shards, and contains only **fully-executed transactions** (that is, transactions executed both in _source_ and in _destination_ shard).
 
 A **hyperblock** is composed using a **metablock** as a starting point - therefore, the `nonce` or `hash` of a hyperblock is the same as the `nonce` or `hash` of the base metablock.
 
@@ -54,8 +50,6 @@ OPTIONAL
 string
 
 The Block hash.
-
-
 
 This endpoint is only is only defined by the Proxy. The Observer does not expose this endpoint.
 
@@ -97,8 +91,6 @@ boolean
 
 Whether to include the transactions in the response.
 
-
-
 For Observers, the `shard` parameter should not be set.
 
 ## **Get Block by Hash**
@@ -138,7 +130,5 @@ OPTIONAL
 boolean
 
 Whether to include the transactions in the response.
-
-
 
 For Observers, the `shard` parameter should not be set.

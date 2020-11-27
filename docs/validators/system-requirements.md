@@ -21,15 +21,13 @@ Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pend
 
 ### **Networking**
 
-In order for a node to be reachable by other nodes several conditions have to be met: 
+In order for a node to be reachable by other nodes several conditions have to be met:
 
 1. The port opened by the node on the interfaces must not be blocked by a firewall that denies inbound connections on it
 2. If behind a NAT device, the node must be able to use the UPnP protocol to successfully negotiate a port that the NAT device will forward the incoming connections to (in other words, the router should be UPnP compatible)
 3. There must be maximum 1 NAT device between the node and the Internet at large. Otherwise, the node will not be reachable by other nodes, even if it can connect itself to them.
 
 To make sure the required ports are open, use the following command before continuing:
-
-
 
 ```
 sudo ufw allow 37373:38383/tcp

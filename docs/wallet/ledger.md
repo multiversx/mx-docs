@@ -3,7 +3,6 @@ id: ledger
 title: Ledger
 ---
 
-
 You can safely store your eGold by installing the Elrond eGold app on your Ledger Nano S or Ledger Nano X device. We recommend using a hardware wallet for managing large amounts of eGold.
 
 ## Before you begin‌
@@ -24,8 +23,6 @@ Teach your Ledger device to work with eGold by installing the Elrond app on it.�
 - Click the “Install” button next to the Elrond app
 - Your Ledger device will display “Processing” as the app installs
 
-
-
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJ_-qiYVWEus-jzmZK%2F-MIJ_axFeyPBUDa-t7Qq%2Fimage.png?alt=media&token=eb949ec0-6ca2-4f5e-be17-eaf0c39597a6)
 
 Awesome, you did everything perfectly!
@@ -36,13 +33,11 @@ Awesome, you did everything perfectly!
 - Log into your Ledger device
 - Navigate to the Elrond Network app & open it by pushing both buttons on your device
 - In your web browser navigate to https://wallet.elrond.com
-- Select "Ledger" from the Login options 
+- Select "Ledger" from the Login options
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MI5JAYXn9jokqVnl7aI%2F-MI5JifH2jrhG3rIhfg2%2Fimage.png?alt=media&token=40c6f537-d40b-4978-9541-9d77fb28bffc)
 
-- A pop-up will notify you that your Ledger wants to connect. Allow it by clicking "Connect" 
-
-
+- A pop-up will notify you that your Ledger wants to connect. Allow it by clicking "Connect"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJYD3eLB-qPT94-W4_%2F-MIJYe-r2OH3LpNU-jiT%2Fimage.png?alt=media&token=76c1200c-bd7f-43f1-9f90-9b601281e0ce)
 
@@ -74,12 +69,6 @@ On your Ledger device:‌
 - Sign the transaction by pressing both buttons‌
 
 Awesome, your transaction is now sent using your Ledger device.
-
-
-
-
-
-
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MI5JAYXn9jokqVnl7aI%2F-MI5McKfmRDXK9_8Bkn2%2Fimage.png?alt=media&token=f2809457-70ed-48fc-9036-d86a625da01a)
 

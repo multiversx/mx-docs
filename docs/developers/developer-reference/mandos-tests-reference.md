@@ -7,7 +7,7 @@ Rationale, description and functionality of Mandos JSON tests
 
 # **Who is Mandos?**
 
-According to the Lord of the Rings wiki: «[**Mandos**](https://lotr.fandom.com/wiki/Mandos) ("Prison-Fortress") was an [Ainu](https://lotr.fandom.com/wiki/Ainu), one of the [Aratar](https://lotr.fandom.com/wiki/Aratar), and a [Vala](https://lotr.fandom.com/wiki/Vala) who was responsible for the judgement of the Spirits (or [Fëa](https://lotr.fandom.com/wiki/Fëa)) of all Elven dead. He also had responsibility for pronouncing the dooms and judgments of [Eru Ilúvatar](https://lotr.fandom.com/wiki/Eru_Ilúvatar) under [Manwë](https://lotr.fandom.com/wiki/Manwë). His real name was **Námo** ("Ordainer" or "Judge") but was later known to the [Elves](https://lotr.fandom.com/wiki/Elves) as Mandos after his sacred [Halls of Mandos](https://lotr.fandom.com/wiki/Halls_of_Mandos), over which he presided, and where Elves would go when slain.» It is only fitting that Mandos is also the name of a framework for *judging* smart contracts, especially since they are in many ways *immortal* too.
+According to the Lord of the Rings wiki: «[**Mandos**](https://lotr.fandom.com/wiki/Mandos) ("Prison-Fortress") was an [Ainu](https://lotr.fandom.com/wiki/Ainu), one of the [Aratar](https://lotr.fandom.com/wiki/Aratar), and a [Vala](https://lotr.fandom.com/wiki/Vala) who was responsible for the judgement of the Spirits (or [Fëa](https://lotr.fandom.com/wiki/Fëa)) of all Elven dead. He also had responsibility for pronouncing the dooms and judgments of [Eru Ilúvatar](https://lotr.fandom.com/wiki/Eru_Ilúvatar) under [Manwë](https://lotr.fandom.com/wiki/Manwë). His real name was **Námo** ("Ordainer" or "Judge") but was later known to the [Elves](https://lotr.fandom.com/wiki/Elves) as Mandos after his sacred [Halls of Mandos](https://lotr.fandom.com/wiki/Halls_of_Mandos), over which he presided, and where Elves would go when slain.» It is only fitting that Mandos is also the name of a framework for _judging_ smart contracts, especially since they are in many ways _immortal_ too.
 
 # **Rationale**
 
@@ -37,8 +37,6 @@ On a side note, there is also an older format that is now deprecated, where test
 
 A scenario test file is essentially a collection of steps to be performed on a mock blockchain. The simplest such file looks like this:
 
-
-
 ```
 {
     "name": "example scenario file",
@@ -56,8 +54,6 @@ The top-level fields are as follows:
 
 ## **Step type: `externalSteps`**
 
-
-
 ```
 {
     "steps": [
@@ -66,7 +62,7 @@ The top-level fields are as follows:
             "path": "other.json"
         }
     ]
-}        
+}
 ```
 
 This step type is very useful for splitting, composing and reusing scenario steps. It is possible to have scenario bifurcation, to do so simply reuse the common part in 2 different tests.
@@ -78,8 +74,6 @@ The imported steps will be run or re-run every time they are imported. There is 
 Also beware that there is currently no protection against cyclic imports.
 
 ## **Step type: `setState`**
-
-
 
 ```
 {
@@ -129,7 +123,7 @@ Also beware that there is currently no protection against cyclic imports.
             }
         }
     ]
-}        
+}
 ```
 
 This step type is used to initialize the blockchain mock, or reconfigure it during execution.
@@ -160,8 +154,6 @@ Not all of its sections are required each time. These sections are:
 This step checks the state of the blockchain mock at a certain point. It can check the entire state or just part of it.
 
 Is allowed anywhere, not just as the end of tests, so progressive changes can be verified.
-
-
 
 ```
 {
@@ -211,8 +203,6 @@ Fields:
 
 ## **Step type: `scCall`**
 
-
-
 ```
 {
     "steps": [
@@ -256,7 +246,7 @@ Fields:
             }
         }
     ]
-}        
+}
 ```
 
 This step simulates a transaction to an existing smart contract. Fields:
@@ -286,8 +276,6 @@ This step simulates a transaction to an existing smart contract. Fields:
 ## **Step type: `scDeploy`**
 
 It is very similar to `scCall`, but it is used specifically for simulating deployment of new smart contracts.
-
-
 
 ```
 {
@@ -334,8 +322,6 @@ The fields are:
 
 Lesser used step type. Simulates a simple transfer of eGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
 
-
-
 ```
 {
     "steps": [
@@ -365,8 +351,6 @@ The fields are:
 ## **Step type: `validatorReward`**
 
 Lesser used step type. Simulates a validator reward being sent by the protocol. This transaction has no sender, and beside increasing the recipient balance, it also increments the `ELRONDrewards` field in the smart contract storage. Useful when building delegation of other staking contracts.
-
-
 
 ```
 {
@@ -398,7 +382,7 @@ We went through the structure of a Mandos test, but you might have noticed that 
 
 Almost all values in the JSON file end up being sent to the VM as raw bytes. This is why we have developed a consistent format to express all raw values everywhere. The same format is used for expressing addresses, balances, transaction and block nonces, keys, contract code, storage keys and values, log identifiers, topics and data, gas limits, gas costs, etc.
 
-Exceptions: `txId`, `comment` and `asyncCallData` are  simple strings. `asyncCallData` might be changed to the default value format in the future and/or reworked.
+Exceptions: `txId`, `comment` and `asyncCallData` are simple strings. `asyncCallData` might be changed to the default value format in the future and/or reworked.
 
 The format is as follows
 
@@ -412,16 +396,14 @@ The format is as follows
   - `“+1”` is still represented as `“0x01”`, here the leading 0 is not necessary. Still, it is good practice to add the `+` if we know the argument is expected to be signed.
   - `“-1”` is represented as `“0xff”`. Negative numbers are also represented in the minimum number of bytes possible.
 - Boolean values: `"true"` = `"1"` = `"0x01"`; `"false"` = `"0"` = `""`.
-- String representation, starting with `''` or ````. Mandos steps can be embedded in Go code now; in Go ``` is reserved for multi-line strings, so `''` is preferred now. In this representation, each character gets converted to a single byte, based on its ASCII code. It is especially useful for making the dummy account addresses readable. Storage keys are also commonly readable as ASCII. E.g. `“``some string argument”`, `"``node_address__________________s1"`, `"storage_key_1"`
-- Concatenate multiple values (possibly of different formats) using the pipe (`|`) separator. E.g. `“0x1234|``abcd|-1”` gets interpreted as `“0x123461626364ff”`
+- String representation, starting with `''` or ``. Mandos steps can be embedded in Go code now; in Go ` is reserved for multi-line strings, so `''` is preferred now. In this representation, each character gets converted to a single byte, based on its ASCII code. It is especially useful for making the dummy account addresses readable. Storage keys are also commonly readable as ASCII. E.g. ` “``some string argument” `, ` "``node_address__________________s1" `, `"storage_key_1"`
+- Concatenate multiple values (possibly of different formats) using the pipe (`|`) separator. E.g. ` “0x1234|``abcd|-1” ` gets interpreted as `“0x123461626364ff”`
 - Load file, starting with `file:`. This will replace the field with the entire contents of the file, given as relative path with respect to the JSON file we are executing. E.g. `“file:contracts/erc20-c.wasm”`
 - Keccak hash, starting with `keccak256:`. E.g. `“keccak256:1|0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000”` gets interpreted as `“0x648147902a606bf61e05b8b9d828540be393187d2c12a271b45315628f8b05b9”`. Note that the argument can contain concatenation, but this is not a full parser yet, only very primitive syntax trees are possible for now.
 
 # **Embedding in Go**
 
 Mandos steps can be embedded in Go, in order to program for more flexible behavior. One can even save dynamically generated Mandos scenarios. For a comprehensive example on how to do that, check out the [delegation contract fuzzer in Arwen](https://github.com/ElrondNetwork/arwen-wasm-vm/tree/master/fuzz/delegation) or the [DNS contract deployment scenario test generator](https://github.com/ElrondNetwork/arwen-wasm-vm/tree/master/cmd/testgen/dns). Just a snippet from the fuzzer:
-
-
 
 ```
 _, err = pfe.executeTxStep(fmt.Sprintf(`

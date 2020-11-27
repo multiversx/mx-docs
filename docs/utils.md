@@ -13,7 +13,7 @@ Example text with nothing specific
 
 ### Italic
 
-*italicized text*
+_italicized text_
 
 ### Blockquote
 
@@ -51,10 +51,10 @@ Example text with nothing specific
 
 ### Table
 
-| Syntax | Description |
-| ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
+| Syntax    | Description |
+| --------- | ----------- |
+| Header    | Title       |
+| Paragraph | Text        |
 
 ### Fenced Code Block
 
@@ -91,34 +91,33 @@ term
 - [ ] Update the website
 - [ ] Contact the media
 
-
 ### Tabs
 
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--First Tab-->
 
-Example text with an emoji 
+Example text with an emoji
 🟢 Good info
 🔴 Bad info
 
 <!--Second Tab-->
 
 ```js
-console.log('Hello, world!');
+console.log("Hello, world!");
 ```
 
 <!--Third Tab-->
 
 ```json
 {
-    "status": {
-        "key0": 0,
-        "key1": 1,
-        "key2": 123,
-        "key3": 1234,
-        "key4": 123456
-    }
+  "status": {
+    "key0": 0,
+    "key1": 1,
+    "key2": 123,
+    "key3": 1234,
+    "key4": 123456
+  }
 }
 ```
 
@@ -133,11 +132,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in turpis dignissim
 :::
 
 :::note Custom Title
-The content and title *can* include markdown.
+The content and title _can_ include markdown.
 For example:
+
 ```js
-console.log('Hello, world!');
+console.log("Hello, world!");
 ```
+
 :::
 
 :::important
@@ -149,20 +150,19 @@ Lorem ipsum dolor sit amet !
 :::
 
 :::warning
-Oh, no ! Lorem ipsum dolor sit amet 
+Oh, no ! Lorem ipsum dolor sit amet
 :::
 
-
------------------
+---
 
 ### `GET` API Call
 
-
 ### <span class="badge badge-primary">GET</span> API Call
+
 ### <span class="badge badge-success">POST</span> API Call
 
 :::important Custom Title
-The content and title *can* include markdown.
+The content and title _can_ include markdown.
 For example:
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -173,32 +173,17 @@ Path Parameters
 
 `https://api.elrond.com/transaction/*param*`
 
-
-| Param   | Required | Type | Description |  
-| -----------   | ----------- | ----------- |-----------     |   
-| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |              
-| gasPrice    | <span class="text-muted">OPTIONAL</span>     | `number`    | The desired Gas Price (per Gas Unit). | 
-| storageKey    | <span class="text-danger">REQUIRED</span>    | `string`    | The storage entry to fetch. | 
-| bech32Address | <span class="text-danger">REQUIRED</span>    | `string`    | The Address to query.       |  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query.                 |
+| gasPrice      | <span class="text-muted">OPTIONAL</span>  | `number` | The desired Gas Price (per Gas Unit). |
+| storageKey    | <span class="text-danger">REQUIRED</span> | `string` | The storage entry to fetch.           |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query.                 |
 
 <!--Second Tab-->
 
 ```js
-console.log('Hello, world!');
+console.log("Hello, world!");
 ```
 
 <!--Third Tab-->
@@ -209,15 +194,16 @@ Value (hex-encoded) successfully retrieved.
 
 ```json
 {
-    "status": {
-        "key0": 0,
-        "key1": 1,
-        "key2": 123,
-        "key3": 1234,
-        "key4": 123456
-    }
+  "status": {
+    "key0": 0,
+    "key1": 1,
+    "key2": 123,
+    "key3": 1234,
+    "key4": 123456
+  }
 }
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
+
 :::

@@ -9,8 +9,7 @@ The Elrond REST API can be used by any application - dApp, desktop or server app
 
 ## **Proxy API vs. Observer API**
 
-Both the **Elrond Proxy** and the **Node (Observer)** are designed to expose the same HTTP endpoints, though **this doesn't always hold due to architectural constraints**. When describing each HTTP endpoint on the following pages, if there is any discrepancy or mismatch between the *Proxy endpoint* and the *Observer endpoint*, this will be captured in a note as the one below:
-
+Both the **Elrond Proxy** and the **Node (Observer)** are designed to expose the same HTTP endpoints, though **this doesn't always hold due to architectural constraints**. When describing each HTTP endpoint on the following pages, if there is any discrepancy or mismatch between the _Proxy endpoint_ and the _Observer endpoint_, this will be captured in a note as the one below:
 
 :::important
 `**example/endpoint**` is only available on the Elrond Proxy.
@@ -24,12 +23,10 @@ Currently, authentication is not needed to access the API.
 
 Each request against the Elrond API will resolve to a JSON response having the following structure:
 
-
-
 ```
 {
   "data": {
-    ...  
+    ...
   },
   "error": "...",
   "code": "..."
@@ -38,9 +35,7 @@ Each request against the Elrond API will resolve to a JSON response having the f
 
 That is, all responses will contain the fields `data`, `error` and `code`.
 
-In case of a **success**, the `data` field is populated, the `error` field is empty, while the `code` field is set to `**successful**`.  For example:
-
-
+In case of a **success**, the `data` field is populated, the `error` field is empty, while the `code` field is set to `**successful**`. For example:
 
 ```
 {
@@ -57,9 +52,7 @@ In case of a **success**, the `data` field is populated, the `error` field is em
 }
 ```
 
-In the case of an **error**, the `data` field is unset, the `error` field contains a *human-readable* description of the issue, while the `code` field is set to a both *machine* and *human-readable* error code. For example:
-
-
+In the case of an **error**, the `data` field is unset, the `error` field contains a _human-readable_ description of the issue, while the `code` field is set to a both _machine_ and _human-readable_ error code. For example:
 
 ```
 {
@@ -68,7 +61,6 @@ In the case of an **error**, the `data` field is unset, the `error` field contai
   "code": "internal_issue"
 }
 ```
-
 
 :::important
 When describing each HTTP endpoint on the following pages, the basic structure of the response is **simplified for brevity,** and, in general, only the actual payload of the response is depicted.

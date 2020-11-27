@@ -43,8 +43,6 @@ The arguments of the Pure Function, as hex-encoded strings. The array can be emp
 
 Here's an example of a request:
 
-
-
 ```
 POST https://api.elrond.com/vm-values/query HTTP/1.1
 Content-Type: application/json
@@ -73,8 +71,6 @@ ScAddress
 REQUIRED
 
 string
-
-
 
 FuncName
 
@@ -110,8 +106,6 @@ REQUIRED
 
 string
 
-
-
 FuncName
 
 REQUIRED
@@ -145,8 +139,6 @@ ScAddress
 REQUIRED
 
 string
-
-
 
 FuncName
 

@@ -14,13 +14,12 @@ Get started with a few popular VPS choices:
 - Google Cloud - https://cloud.google.com/products/calculator
 - Microsoft Azure - https://azure.microsoft.com/en-us/pricing/calculator/
 
-Find more via a comparison calculator - https://www.vpsbenchmarks.com/screener****
+Find more via a comparison calculator - https://www.vpsbenchmarks.com/screener
 
 Recommendations from experienced validators:
 
 - Jose - https://medium.com/@josefcoap/elrond-vps-guide-ebfa6655cb9f
 - Sebastian - https://medium.com/@SebastianJ/elrond-a-comparison-of-node-hosting-options-ca9268da7d72
-
 
 :::warning
 Warning about **Contabo**: while ok for testing, it has shown unique errors for testnets. Consider the price of "cheap" when running a validator - the protocol dynamically phases out low performance nodes, which will lead to less returns for operators.

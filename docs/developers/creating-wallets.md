@@ -5,21 +5,17 @@ title: Creating Wallets
 
 How to create wallets using the CLI or programmatically
 
-Although wallets are commonly created through the [Elrond Web Wallet](https://wallet.elrond.com/) or the [Elrond Ledger App](https://github.com/ElrondNetwork/ledger-elrond), one can also use the CLI or the SDK. 
+Although wallets are commonly created through the [Elrond Web Wallet](https://wallet.elrond.com/) or the [Elrond Ledger App](https://github.com/ElrondNetwork/ledger-elrond), one can also use the CLI or the SDK.
 
 ## **Generate a new mnemonic**
 
 Using [erdwalletjs-cli](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli), a mnemonic phrase (24 words) can be generated as follows:
-
-
 
 ```
 erdwalletjs new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
 ```
 
 Programmatically using [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js), the same can be achieved through:
-
-
 
 ```
 const core = require("@elrondnetwork/elrond-core-js");
@@ -33,8 +29,6 @@ console.log(mnemonic);
 
 Using [erdwalletjs-cli](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli), a JSON key-file can be obtained as follows:
 
-
-
 ```
 erdwalletjs derive-key --mnemonic-file=mnemonicOfAlice.txt \
  --account-index=0 \
@@ -42,8 +36,6 @@ erdwalletjs derive-key --mnemonic-file=mnemonicOfAlice.txt \
 ```
 
 Programmatically using [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js), the same can be achieved through:
-
-
 
 ```
 const fs = require("fs");

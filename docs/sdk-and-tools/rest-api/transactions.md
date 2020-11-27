@@ -97,13 +97,9 @@ string
 
 The Signature (hex-encoded) of the Transaction.
 
-
-
 For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **only accepts transactions whose sender is in the Node's Shard**.
 
 Here's an example of a request:
-
-
 
 ```
 POST https://api.elrond.com/transaction/send HTTP/1.1
@@ -215,13 +211,9 @@ string
 
 The Signature, for each Transaction.
 
-
-
 For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **only accepts transactions whose sender is in the Node's Shard**.
 
 Here's an example of a request:
-
-
 
 ```
 POST https://api.elrond.com/transaction/send-multiple HTTP/1.1
@@ -259,7 +251,7 @@ Content-Type: application/json
 
 https://api.elrond.com**/transaction/cost**
 
-This endpoint allows one to estimate the cost of a transaction. 
+This endpoint allows one to estimate the cost of a transaction.
 
 Request
 
@@ -297,7 +289,7 @@ REQUIRED
 
 string
 
-The Address of the Sender. 
+The Address of the Sender.
 
 receiver
 
@@ -316,8 +308,6 @@ string
 The message (data) of the Transaction.
 
 Here's an example of a request:
-
-
 
 ```
 POST https://api.elrond.com/transaction/cost HTTP/1.1
@@ -363,8 +353,6 @@ string
 
 The Address of the sender - a hint to optimize the request.
 
-
-
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
 
 ## **Get Transaction Status**
@@ -396,7 +384,5 @@ OPTIONAL
 string
 
 The Address of the sender - a hint to optimize the request.
-
-
 
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
