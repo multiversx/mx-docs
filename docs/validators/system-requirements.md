@@ -15,7 +15,9 @@ Nodes are computers running the Elrond software, so they contribute to the Elron
 - 100 Mbit/s always-on internet connection
 - Linux OS (Ubuntu 18.04 recommended) / MacOS
 
-`Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pending third-party issues.`
+:::tip
+Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pending third-party issues.
+:::
 
 ### **Networking**
 

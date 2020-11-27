@@ -24,7 +24,6 @@ In the snippet above, make sure you adjust the path to a valid configuration fol
 - `elrondnetwork/elrond-go-node:devlatest`
 - `elrondnetwork/elrond-go-node:<tag>`, in general form
 
-
-
-`**Mainnet** validators **should carefully** specify the precise tag when using the Docker setup, always test the new releases themselves, and only deploy them once they understand and agree with the changes.`
-
+:::note Attention required
+**Mainnet** validators **should carefully** specify the precise tag when using the Docker setup, always test the new releases themselves, and only deploy them once they understand and agree with the changes.
+:::

@@ -73,7 +73,9 @@ cd $HOME/elrond-utils
 ./termui -address localhost:8080
 ```
 
+:::tip
 Your first node is called `node-0` and it its REST API will run on port `8080` by default. The next node is `node-1 `on port `8081`, and so on.
+:::
 
 **Update your node**
 
@@ -96,4 +98,6 @@ Your private keys are needed to run your node. Losing them means losing control 
 
 Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your “`n`” nodes]
 
-💡 *Create a safe backup for them on storage outside of the server running your node(s).*
+:::important
+Create a safe backup for them on storage outside of the server running your node(s).
+:::

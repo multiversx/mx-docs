@@ -11,11 +11,13 @@ Because the Arwen VM executes [WebAssembly](https://en.wikipedia.org/wiki/WebAss
 Developers are encouraged to use Rust for their smart contracts, however. Elrond provides a [Rust framework ](https://github.com/ElrondNetwork/elrond-wasm-rs)which allows for unusually clean and efficient code in smart contracts, a rarity in the blockchain field. A declarative testing framework is bundled as well. For the best coding experience, developers have the [Elrond IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide) at their disposal.
 
 
+:::note Important
+Executing smart contracts written in Solidity is also possible, if a mature Solidity → WASM third-party compiler is used. At this time, though, the Solidity compilers known to produce WASM appear to be still under development and not ready for production, a fact which Elrond does not have control over.
+:::
 
-[^Executing smart contracts written in Solidity is also possible, if a mature Solidity → WASM third-party compiler is used. At this time, though, the Solidity compilers known to produce WASM appear to be still under development and not ready for production, a fact which Elrond does not have control over.]: 
-[^Instructions on how to migrate Ethereum smart contracts to the Elrond Network will be provided in the near future.]: 
-
-
+:::important
+Instructions on how to migrate Ethereum smart contracts to the Elrond Network will be provided in the near future.
+:::
 
 # **Features**
 

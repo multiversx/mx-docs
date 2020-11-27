@@ -23,8 +23,9 @@ Wallet Keys are extremely sensitive because:‌
   - [some hints](https://coinsutra.com/bitcoin-private-key/)
 
 
-
-Wallet Keys are not required on the Node, store them somewhere else.
+:::tip
+Wallet Keys are not required on host running the Node. Store them on a different location.
+:::
 
 Secure your Elrond node
 

@@ -1,5 +1,5 @@
 ---
-id: rest-API
+id: rest-api
 title: REST API
 ---
 
@@ -12,8 +12,9 @@ The Elrond REST API can be used by any application - dApp, desktop or server app
 Both the **Elrond Proxy** and the **Node (Observer)** are designed to expose the same HTTP endpoints, though **this doesn't always hold due to architectural constraints**. When describing each HTTP endpoint on the following pages, if there is any discrepancy or mismatch between the *Proxy endpoint* and the *Observer endpoint*, this will be captured in a note as the one below:
 
 
-
+:::important
 `**example/endpoint**` is only available on the Elrond Proxy.
+:::
 
 ## **Authentication**
 
@@ -69,8 +70,9 @@ In the case of an **error**, the `data` field is unset, the `error` field contai
 ```
 
 
-
+:::important
 When describing each HTTP endpoint on the following pages, the basic structure of the response is **simplified for brevity,** and, in general, only the actual payload of the response is depicted.
+:::
 
 ## **REST Client playground**
 

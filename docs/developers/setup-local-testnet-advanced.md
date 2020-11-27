@@ -160,8 +160,9 @@ In order to destroy the Testnet, run the `clean` command:
 ```
 
 
-
+:::note Run config after clean
 After running **clean,** you need to run **config** before **start**, in order to start the Testnet again.
+:::
 
 If you need to recreate a Testnet from scratch, use the `reset` command (which also executes `clean` under the hood):
 

@@ -32,8 +32,9 @@ The official instance of the Elrond Proxy is located at [https://api.elrond.com]
 ## **Setup a Proxy Instance**
 
 
-
-**Documentation for setting up a Proxy is preliminary and subject to change**
+:::warning
+Documentation for setting up a Proxy is preliminary and subject to change
+:::
 
 In order to host a Proxy instance on a web server, one has to first clone and build the repository:
 
@@ -55,8 +56,8 @@ The Proxy holds its configuration within the `config` folder:
 
 ## **Dependency on Elastic Search**
 
-
-
-**Only the default (official) Proxy instance connects to the official Elastic Search instance. Documentation from this section is preliminary and subject to change.**
+:::warning
+Only the default (official) Proxy instance connects to the official Elastic Search instance. Documentation from this section is preliminary and subject to change.
+:::
 
 Currently, two routes provided by the REST API - namely [Get Address Transactions](https://docs.elrond.com/tools/proxy/proxy-api-overview/addresses#get-address-transactions) and [Get Block](https://docs.elrond.com/tools/proxy/proxy-api-overview/blocks#get-block) - resolve the requested resources by querying an Elastic Search instance. This is **subject to change**. Therefore, if one desires to host a separate Elrond Proxy instance instead of using the official (default) instance, we recommend disabling the Elastic Search Connector by adjusting the configuration file `external.toml` - the previously mentioned routes will not work, but the rest of Proxy's functionality is unaffected.

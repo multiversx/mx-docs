@@ -20,5 +20,6 @@ You can check the status of your Stake transaction and other information about t
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MKj4PGWn3kQ197_YcJQ%2F-MKjCya_zwNCJWCZ4ryI%2Fimage.png?alt=media&token=7a1a0e1c-dc77-41ef-afcd-296dd23da18b)
 
 
-
+:::important
 To distinguish between the mainnet and testnet, we have carefully created different addresses for the testnet tools, which are also presented in a predominantly black theme. Stay safe and know the difference, to avoid mistakes involving your mainnet validators and real eGold tokens.
+:::

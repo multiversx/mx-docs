@@ -76,12 +76,13 @@ export PATH=$HOME/Library/Python/3.8/bin:${PATH}
 ```
 
 
-
+:::note add the right version
 In the snippet above, replace `3.8` with your actual `MAJOR.MINOR` version of Python. This can be found by running:
 
 ```
 python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"
 ```
+:::
 
 You may need to restart your user session for this changes to take effect.
 

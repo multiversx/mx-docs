@@ -8,8 +8,9 @@ title: Versions and Changelog
 This page offers a high level overview of the important releases of the Elrond Proxy API, along with recommendations (such as upgrade or transitioning recommendations) for API consumers.
 
 
-
+:::warning
 Documentation in this section is preliminary and subject to change.
+:::
 
 ## **Elrond Proxy HTTP API [v1.1.0](https://github.com/ElrondNetwork/elrond-proxy-go/releases/tag/v1.1.0)**
 
@@ -28,10 +29,11 @@ There are **no breaking changes** between API **v1.1.0** and API **v1.1.1** - ne
 - `GET transaction` endpoint has been fixed to report the appropriate status **invalid** for actually *invalid transactions* (e.g. not enough balance). In v1.1.0, the reported status was imprecise: **partially-executed**.
 
 
-
+:::warning
 As of November 2020, new API consumers are recommended to use a newer version of the API. 
 
 **v1.1.0 and v1.1.1 will be deprecated** once all existing API consumers are known to have been upgraded to a more recent version.
+:::
 
 ## **Elrond Proxy HTTP API [v1.1.3](https://github.com/ElrondNetwork/elrond-proxy-go/releases/tag/v1.1.3)**
 
@@ -45,7 +47,8 @@ Between API **v1.1.1** and API **v1.1.3**, the API consumer would observe the fo
 - The possible set of values for the transaction statuses has been changed: **executed** has been renamed to **success.** The statuses **received** and **partially-executed** have been merged under the status **pending**, while the status **not-executed** has been renamed to **fail**. For API consumers to not be affected by this change, they should follow the recommendations in [Querying the Blockchain](https://docs.elrond.com/querying-the-blockchain).
 
 
-
+:::important
 As of November 2020, new API consumers are recommended to switch to this version (or a more recent one) of the API. An Elrond Proxy instance providing this API is already available in the **staging environment** [api-backup.elrond.com](https://api-backup.elrond.com/).
 
 For API consumers that use **on-premises Observing Squads**, an updated installer will be provided (on this matter, the work is in progress).
+:::

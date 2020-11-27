@@ -29,6 +29,6 @@ deactivate
 
 
 
-```
+:::tip
 erdpy-activate` is a symlink that points to `~/elrondsdk/erdpy-venv/bin/activate.
-```
+:::
