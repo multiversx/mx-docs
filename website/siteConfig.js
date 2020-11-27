@@ -33,7 +33,7 @@ const siteConfig = {
 
   headerLinks: [
     { search: true },
-    { href: "/docs/technology/architecture-overview", label: "Develop" },
+    { href: "/docs/developers/tutorials/crowdfunding-p1", label: "Develop" },
     { href: "/docs/validators/system-requirements", label: "Validate" },
     { href: "/docs/integrators/observing-squad", label: "Integrate" },
     { href: "/docs/technology/architecture-overview", label: "Learn" },  
@@ -101,7 +101,7 @@ const siteConfig = {
       title: "Start Building",
       content:
         "Build your decentralized application in minutes.",
-      docName: "technology/architecture-overview",
+      docName: "developers/tutorials/crowdfunding-p1",
       icon: "🛠️",
     },
     {

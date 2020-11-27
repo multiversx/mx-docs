@@ -1,11 +1,13 @@
 ---
 id: crowdfunding-p1
-title: The Crowdfunding Smart Contract (part 1)
+title: Start Building - Crowdfunding Tutorial
 ---
 
 Write, build and deploy a simple smart contract written in Rust
 
 This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the Elrond Network, written in Rust.
+
+
 
 :::important
 The Elrond Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
@@ -47,11 +49,20 @@ Automated testing is exceptionally important for the development of smart contra
 
 # **Prerequisites**
 
-SmartContract development is currently supported on Linux and MacOS, with Windows support coming in the future. Make sure you have access to a machine running either of the two supported platforms before continuing.
+The best way to build on Elrond is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
 
-You'll need a basic text editor and a terminal emulator at the moment. Elrond is currently developing the Elrond IDE, based on Visual Studio Code, which will become available in the near future.
+Elrond IDE is an extension for Visual Studio Code that offers development support for Elrond Smart Contracts.
 
-The primary tool you'll be using to compile, test and deploy the smart contract is `erdpy`. For instructions on how to install it, see [Installing erdpy](/docs/sdk-and-tools/erdpy/installing-erdpy).
+Elrond IDE supports the following programming languages:
+
+- Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via elrond-wasm-debug and CodeLLDB.
+- C / C++
+
+Follow the video guide for a detailed explanation about how to get started.
+
+[![](http://img.youtube.com/vi/bXbBfJCRVqE/0.jpg)](http://www.youtube.com/watch?v=bXbBfJCRVqE "Elrond IDE")
+
+The steps are covered in detail below.
 
 # **Step 1: the workspace**
 
