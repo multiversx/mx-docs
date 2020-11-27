@@ -5,10 +5,9 @@ title: Observing Squad
 
 The N+1 setup for connecting to the Elrond Network
 
-In order to integrate with the Elrond Network and be able to [broadcast transactions](https://docs.elrond.com/creating-transactions) and [query blockchain data](https://docs.elrond.com/querying-the-blockchain) in an *optimized* approach, one needs to setup an **on-premises Observing Squad**.
+In order to integrate with the Elrond Network and be able to [broadcast transactions](/docs/integrators/creating-transactions) and [query blockchain data](/docs/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to setup an **on-premises Observing Squad**.
 
-An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](https://docs.elrond.com/tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
-
+An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](/docs/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
 
 :::tip
 Currently the Elrond Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
@@ -32,19 +31,15 @@ In case of a single machine, our recommendation is as follows:
 
 ## **Installation and Configuration**
 
-The Observing Squad can be setup using the [installation scripts](https://docs.elrond.com/validators/install). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
+The Observing Squad can be setup using the [installation scripts](/docs/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
 
 Clone the installer repository:
-
-
 
 ```
 git clone https://github.com/ElrondNetwork/elrond-go-scripts-mainnet.git
 ```
 
 Edit `config/variables.cfg` accordingly. For example:
-
-
 
 ```
 CUSTOM_HOME="/home/ubuntu/ObservingSquad"
@@ -53,15 +48,11 @@ CUSTOM_USER="ubuntu"
 
 Additionally, you might want to set the following option, so that the logs are saved within the `logs` folder of the node:
 
-
-
 ```
 NODE_EXTRA_FLAGS="-log-save"
 ```
 
 Run the installation script as follows:
-
-
 
 ```
 ./script.sh observing-squad
@@ -70,8 +61,6 @@ Run the installation script as follows:
 After installation, 5 new `systemd` units will be available (and enabled).
 
 Start the nodes and the Proxy using the command:
-
-
 
 ```
 ./script.sh start
@@ -88,8 +77,6 @@ The Observing Squad can be updated using the Mainnet installation scripts.
 Observing Squads set up before November 2020 have been installed using a special branch of the Mainnet installation scripts: **exchanges-integration**. This special branch has been removed, in favor of the main branch of the installation scripts.
 
 In order to upgrade an Observing Squad set up before November 2020, **one has to first follow these steps**:
-
-
 
 ```
 $ cd ~/elrond-go-scripts-mainnet
@@ -109,8 +96,6 @@ After following the steps above, the upgrade procedure shall continue as describ
 
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
-
-
 ```
 $ cd ~/elrond-go-scripts-mainnet
 $ ./script.sh github_pull
@@ -126,8 +111,6 @@ After running the commands above, the upgraded Observing Squad will start again.
 
 One can monitor the running Observers using the **termui** utility (installed during the setup process itself), as follows:
 
-
-
 ```
 ~/elrond-utils/termui --address localhost:8080    # Shard 0
 ~/elrond-utils/termui --address localhost:8081    # Shard 1
@@ -136,8 +119,6 @@ One can monitor the running Observers using the **termui** utility (installed du
 ```
 
 Alternatively, one can query the status of the Observers by performing GET requests using **curl**:
-
-
 
 ```
 curl http://localhost:8080/node/status | jq    # Shard 0
@@ -148,15 +129,11 @@ curl http://localhost:8083/node/status | jq    # Metachain
 
 The Proxy does not offer a **termui** monitor, but its activity can be inspected using **journalctl**:
 
-
-
 ```
 journalctl -f -u elrond-proxy.service
 ```
 
 Optionally, one can perform the following smoke test in order to fetch the latest synchronized hyperblock:
-
-
 
 ```
 export NONCE=$(curl http://localhost:8079/network/status/4294967295 | jq '.data["status"]["erd_highest_final_nonce"]')

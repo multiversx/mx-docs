@@ -5,22 +5,21 @@ title: Rating
 
 Each individual validator has a **rating score**, which expresses its overall reliability, performance and responsiveness. It is an important value, and node operators should be always mindful of the rating of their validators.
 
-Rating influences the probability of a validator to be selected for consensus in each round. A performant validator will be preferred in consensus, as opposed to a validator which sometimes fails to contribute or which is not always online. 
-
+Rating influences the probability of a validator to be selected for consensus in each round. A performant validator will be preferred in consensus, as opposed to a validator which sometimes fails to contribute or which is not always online.
 
 :::tip
 Observer nodes do not have a rating score. Only validator nodes do.
 :::
 
-When validators join the network immediately after staking, they start with an initial score of `50` points. 
+When validators join the network immediately after staking, they start with an initial score of `50` points.
 
-Validators gain or lose rating points in a round depending on their role in that round (consensus proposer vs. consensus validator) and on their behavior within that role. Rating penalties are currently set to be `4` times as large as the corresponding gains. This means that a validator has to perform an action correctly 4 times in order to compensate for performing it once incorrectly. Moreover, consecutive losses are *compounding*, which means that the rating penalty increases with each transgression. See [Rating shard validators](https://docs.elrond.com/validators/rating#rating-shard-validators) and [Rating metashard validators](https://docs.elrond.com/validators/rating#rating-metashard-validators) for details on the calculations.
+Validators gain or lose rating points in a round depending on their role in that round (consensus proposer vs. consensus validator) and on their behavior within that role. Rating penalties are currently set to be `4` times as large as the corresponding gains. This means that a validator has to perform an action correctly 4 times in order to compensate for performing it once incorrectly. Moreover, consecutive losses are _compounding_, which means that the rating penalty increases with each transgression. See [Rating shard validators](/docs/validators/rating#rating-shard-validators) and [Rating metashard validators](/docs/validators/rating#rating-metashard-validators) for details on the calculations.
 
 :::tip
 Rating gains and losses on the metashard are different from the gains and losses on the normal shards.
 :::
 
-The past and current rating of an individual validator can be found in the Elrond Network Explorer at https://explorer.elrond.com/validators/nodes. Use the "Search" box to find a validator and click on its entry in the list. The "Node Details" page opens, which contains status information about the validator. 
+The past and current rating of an individual validator can be found in the Elrond Network Explorer at https://explorer.elrond.com/validators/nodes. Use the "Search" box to find a validator and click on its entry in the list. The "Node Details" page opens, which contains status information about the validator.
 
 The "Node Details" page displays a plot of the validator rating during the past epochs:
 
@@ -34,12 +33,11 @@ For the overall health of the network, if the rating of a validator drops below 
 
 There is an exception to jailing, though. If the network finds itself in a situation where jailing a validator would reduce the size of a shard below an allowed limit, the validator will not be jailed.
 
-
 :::important
 Jailing only occurs at the end of an epoch. This means that a validator with low rating still has until the end of the epoch to recover. If the validator fails to recover, and its rating remains below `10` at the end of the epoch, then it will start the new epoch in jail.
 :::
 
-To reinstate a jailed validator, its operator must submit an **unjail** transaction to the Staking SmartContract. This causes the validator to be taken out of the "jail" and added to the network as if it were a new validator. 
+To reinstate a jailed validator, its operator must submit an **unjail** transaction to the Staking SmartContract. This causes the validator to be taken out of the "jail" and added to the network as if it were a new validator.
 
 A reinstated validator will be passive during the epoch of its unjailing. In the immediately following epoch, the validator will be assigned to a shard, where it must wait the entire epoch and spend it to synchronize with its new shard.
 
@@ -48,11 +46,11 @@ Rating is **not** reset to 50 due to shard shuffling. The rating of a validator 
 :::
 
 :::tip
-The only way to increase the rating of a validator is to keep it up-to-date, keep it well-connected and make sure it is running on hardware that conforms to the [System requirements](https://docs.elrond.com/validators/system-requirements).
+The only way to increase the rating of a validator is to keep it up-to-date, keep it well-connected and make sure it is running on hardware that conforms to the [System requirements](/docs/validators/system-requirements).
 :::
 
 :::note multiple validators on the same machine
-Running **multiple validators on a single machine** will impact your rating and consequently *your rewards,* if the machine doesn't have the as many times the minimum requirements as there are validators running on it.
+Running **multiple validators on a single machine** will impact your rating and consequently _your rewards,_ if the machine doesn't have the as many times the minimum requirements as there are validators running on it.
 :::
 
 # **Consensus probabilities**
@@ -76,7 +74,6 @@ The following table shows how the rating of a validator influences its probabili
 | 80-90           | +15%     |
 | 90-100          | +20%     |
 
-
 :::important
 The algorithm that selects validators for consensus treats these modified selection probabilities as being relative to each other.
 :::
@@ -99,7 +96,7 @@ The node chosen to propose the block for a specific round will:
 
 Observe that the loss is 4 times larger than the gain, which means that a proposer must succeed 4 times to gain the points lost for a single missed block.
 
-Rating for proposers is even stricter: there is a compounding penalty rule, which makes the rating of a node drop even faster when it proposes unsuccessfuly.  
+Rating for proposers is even stricter: there is a compounding penalty rule, which makes the rating of a node drop even faster when it proposes unsuccessfuly.
 
 The amount of `0.92592` points is deducted from the rating of the proposer on the first unsuccesful proposal, but the second unsuccessful proposal will be penalized by `0.92592 × 1.1`. The third, by `0.92592 × 1.1 × 1.1`. The general formula is:
 
@@ -116,9 +113,9 @@ The nodes that take part in the consensus of a round (other than the proposer) w
 - Gain `0.00367` points for a successful validation: (1) the proposer has built and proposed a block, (2) the validator appears as a "signer" on that block; being a "signer" of a block means that the validator has approved of the block and was fast enough to be among the first ⅔ + 1 validators to have its signature received by the block proposer;
 - Lose `0.01469` points for an unsuccessful proposal.
 
-Observe that the first bulled mentions "the proposer has built and proposed a block". This sentence implies that *all validators will lose rating* if the proposer fails to propose in the respective round.
+Observe that the first bulled mentions "the proposer has built and proposed a block". This sentence implies that _all validators will lose rating_ if the proposer fails to propose in the respective round.
 
-Moreover, the validator must have been a "signer" in at least 1% of the previous blocks, otherwise it will not gain rating. In other words: if the validator has been performing poorly in the past, it will have to perform well for a while until it can start receiving any gains. 
+Moreover, the validator must have been a "signer" in at least 1% of the previous blocks, otherwise it will not gain rating. In other words: if the validator has been performing poorly in the past, it will have to perform well for a while until it can start receiving any gains.
 
 # **Rating metashard validators**
 
@@ -140,4 +137,4 @@ A validator taking part in consensus on the metachain will:
 - Gain `0.00057` points for a successful validation;
 - Lose `0.00231` points for an unsuccesful validation.
 
-The rules from [Rating the shard block validator](#rating-the-shard-block-validator)  apply for the metashard validators as well.
+The rules from [Rating the shard block validator](#rating-the-shard-block-validator) apply for the metashard validators as well.

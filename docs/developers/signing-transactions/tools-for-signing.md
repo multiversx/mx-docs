@@ -3,24 +3,20 @@ id: tools-for-signing
 title: Tools for signing
 ---
 
-In order to sign a transaction without actually dispatching it, one can use [erdpy](https://docs.elrond.com/tools/erdpy) or [erdwalletjs-cli](https://docs.elrond.com/tools/erdwalletjs-cli).
+In order to sign a transaction without actually dispatching it, one can use [erdpy](/docs/sdk-and-tools/erdpy/erdpy) or [erdwalletjs-cli](/docs/sdk-and-tools/erdwalletjs-cli).
 
-## **Sign using [erdpy](https://docs.elrond.com/tools/erdpy) (Command Line Interface)**
+## **Sign using [erdpy](/docs/sdk-and-tools/erdpy/erdpy) (Command Line Interface)**
 
 Using a **pem** file:
 
-
-
 ```
-$ erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \ 
+$ erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz \
  --pem=aliceKey.pem --pem-index=0 --outfile=myTransaction.json
 
 ```
 
 Using a JSON wallet key (and its password):
-
-
 
 ```
 erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
@@ -31,8 +27,6 @@ erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
 ```
 
 In either case, the output file looks like this:
-
-
 
 ```
 {
@@ -53,11 +47,9 @@ In either case, the output file looks like this:
 }
 ```
 
-## **Sign using [erdwalletjs-cli](https://docs.elrond.com/tools/erdwalletjs-cli)**
+## **Sign using [erdwalletjs-cli](/docs/sdk-and-tools/erdwalletjs-cli)**
 
 Given an unsigned transaction in a JSON file:
-
-
 
 ```
 {
@@ -74,16 +66,12 @@ Given an unsigned transaction in a JSON file:
 
 You can sign it as follows:
 
-
-
 ```
 $ erdwalletjs sign -i ./aliceToBob.json -o ./aliceToBobSigned.json \
  -k walletKeyOfAlice.json -p passwordOfAlice.txt
 ```
 
 The signed transaction looks like this:
-
-
 
 ```
 {

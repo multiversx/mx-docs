@@ -5,13 +5,11 @@ title: The Crowdfunding Smart Contract (part 2)
 
 Define contract arguments, handle storage, process payments, define new types, write better tests
 
-# **Configuring the contract** 
+# **Configuring the contract**
 
 The previous chapter left us with a minimal contract as a starting point.
 
 The first thing we need to do is to configure the desired target amount and the deadline. The deadline will be expressed as the block nonce after which the contract can no longer be funded. We will be adding 2 more storage fields and arguments to the constructor.
-
-
 
 ```
     #[storage_set("target")]
@@ -44,8 +42,6 @@ Try to avoid the signed version as much as possible (unless negative values are 
 Also note that BigUint logic does not reside in the contract, but is built into Arwen's API, so as to not bloat the contract code.
 
 Let's test that initialization works.
-
-
 
 ```
 {
@@ -113,16 +109,12 @@ Note the added `"arguments"`field in `scDeploy` and the added fields in storage.
 
 Run the following commands:
 
-
-
 ```
 erdpy contract build
 erdpy contract test
 ```
 
 You should once again see this:
-
-
 
 ```
 Scenario: test-init.scen.json ...   ok
@@ -133,8 +125,6 @@ SUCCESS
 # **Funding the contract**
 
 It is not enough to receive the funds, the contract also needs to keep track of who donated how much.
-
-
 
 ```
     #[storage_set("deposit")]
@@ -163,8 +153,6 @@ A few things to unpack:
 To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `test-fund.scen.json` .
 
 To avoid duplicating the deployment code, we import it from `test-init.scen.json` .
-
-
 
 ```
 {
@@ -239,16 +227,12 @@ Explanation:
 
 Test it by running the commands again:
 
-
-
 ```
 erdpy contract build
 erdpy contract test
 ```
 
 You should then see that both tests pass:
-
-
 
 ```
 Scenario: test-fund.scen.json ...   ok
@@ -259,9 +243,7 @@ SUCCESS
 
 # **Validation**
 
-It doesn't make sense  to fund after the deadline has passed, so fund transactions after a certain block nonce must be rejected. The idiomatic way to do this is:
-
-
+It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block nonce must be rejected. The idiomatic way to do this is:
 
 ```
     #[payable]
@@ -280,8 +262,7 @@ It doesn't make sense  to fund after the deadline has passed, so fund transactio
 
 `SCResult<T>` is a type specific to elrond-wasm that can contain either a result, or an error. It is the smart contract equivalent of Rust's `Result<T, E>`. In principle the type parameter can be almost anything (more on that later). However, we don't need to return anything here in case of success, so we uset he unit type`()` , which doesn't contain any data.
 
-To return the error version of the SCResult, the easiest way is to use the macro `sc_error!` In case of success, we must explicitly return  an `Ok(...)` expression.
-
+To return the error version of the SCResult, the easiest way is to use the macro `sc_error!` In case of success, we must explicitly return an `Ok(...)` expression.
 
 :::tip
 `sc_error!("message")` is just syntactic sugar for `SCResult::Err(SCError::Static(b"message"[..]))`. Only static messages for now, some error formatting is on our to-do list.
@@ -290,8 +271,6 @@ To return the error version of the SCResult, the easiest way is to use the macro
 Note: `panic!` works in contracts, but it is highly discouraged.
 
 We'll create another test file to verify that the validation works: `test-fund-too-late.scen.json` .
-
-
 
 ```
 {
@@ -334,8 +313,6 @@ We branch this time from `test-fund.scen.json`, where we already had a donor. No
 
 By building and testing the contract again, you should see that all three tests pass:
 
-
-
 ```
 Scenario: test-fund-too-late.scen.json ...   ok
 Scenario: test-fund.scen.json ...   ok
@@ -350,8 +327,6 @@ The contract status can be known by anyone by looking into the storage and on th
 
 This is the enum:
 
-
-
 ```
 #[derive(PartialEq, Clone, Copy)]
 pub enum Status {
@@ -363,9 +338,7 @@ pub enum Status {
 
 Make sure to add it outside the contract trait.
 
-Making it serializable will be as simple as replacing the first line with #[derive(Encode, Decode, PartialEq, Clone, Copy)]  but this is work in progress, until then it has to be done manually. Just paste the bit below at the end of `lib.rs`: 
-
-
+Making it serializable will be as simple as replacing the first line with #[derive(Encode, Decode, PartialEq, Clone, Copy)] but this is work in progress, until then it has to be done manually. Just paste the bit below at the end of `lib.rs`:
 
 ```
 use elrond_wasm::elrond_codec::*;
@@ -405,10 +378,8 @@ impl Decode for Status {
 
 We can now use the type Status just like we use the other types, so we can write the following method in the contract trait:
 
-
-
 ```
-    #[view]    
+    #[view]
     fn status(&self) -> Status {
         if self.get_block_nonce() <= self.get_deadline() {
             Status::FundingPeriod
@@ -421,8 +392,6 @@ We can now use the type Status just like we use the other types, so we can write
 ```
 
 To test this method, we append one more step to the last test we worked on, `test-fund-too-late.scen.json` :
-
-
 
 ```
 {
@@ -510,8 +479,6 @@ Note the call to "status" at the end and the result `"out": [ "2" ]` , which is 
 
 Finally, let's add the `claim` method. The `status` method we just implemented helps us keep the code tidy:
 
-
-
 ```
     #[endpoint]
     fn claim(&self) -> SCResult<()> {
@@ -545,8 +512,6 @@ The only new function here is `send_tx`, which simply forwards funds from the co
 # **The final contract code**
 
 If you followed all the steps presented until now, you should have ended up with a contract that looks something like:
-
-
 
 ```
 #![no_std]
@@ -605,7 +570,7 @@ pub trait Crowdfunding {
         Ok(())
     }
 
-    #[view]    
+    #[view]
     fn status(&self) -> Status {
         if self.get_block_nonce() <= self.get_deadline() {
             Status::FundingPeriod
@@ -699,4 +664,4 @@ Coming soon:
 - Writing the same crowdfunding contract with an ESDT token.
 
 [
-  ](https://docs.elrond.com/developers/dev-tutorials/the-crowdfund-smartcontract)
+](/docs/developers/tutorials/crowdfunding-p1)

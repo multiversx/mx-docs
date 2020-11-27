@@ -5,19 +5,17 @@ title: ESDT tokens
 
 Custom tokens at native speed and scalability, without ERC20
 
-The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are ***as fast and as scalable as the native eGLD token itself.*** 
+The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **_as fast and as scalable as the native eGLD token itself._**
 
 Users also do not need to worry about sharding when transacting custom tokens, because the protocol employs the same handling mechanisms for ESDT transactions across shards as the mechanisms used for the eGLD token. Sharding is therefore automatically handled and invisible to the user.
 
-Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of *any number of custom tokens*, in addition to the native eGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
+Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of _any number of custom tokens_, in addition to the native eGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
 
-ESDT tokens can be issued, owned and held by any Account on the Elrond network, which means that both users *and smart contracts* have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
+ESDT tokens can be issued, owned and held by any Account on the Elrond network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
 # **Issuance of ESDT tokens**
 
 ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will own and manage the tokens. This transaction has the form:
-
-
 
 ```
 IssuanceTransaction {
@@ -33,14 +31,12 @@ IssuanceTransaction {
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 
- There are two restrictions imposed on the name of the token to be issued:
+There are two restrictions imposed on the name of the token to be issued:
 
 - its length must be between 10 and 20 characters
 - all characters must be alphanumeric
 
-For example, a user named Alice wants to issue 4091 tokens called "AliceTokens".  The issuance transaction would be:
-
-
+For example, a user named Alice wants to issue 4091 tokens called "AliceTokens". The issuance transaction would be:
 
 ```
 IssuanceTransaction {
@@ -54,13 +50,11 @@ IssuanceTransaction {
 }
 ```
 
-Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time, if needed. For more operations available to ESDT token owners, see [Token management](https://docs.elrond.com/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time, if needed. For more operations available to ESDT token owners, see [Token management](/docs/developers/esdt-tokens#token-management).
 
 # **Transfers**
 
 Performing an ESDT transfer is done by sending a transaction directly to the desired receiver Account, but specifying some extra pieces of information in its Data field. An ESDT transfer transaction has the following form:
-
-
 
 ```
 TransferTransaction {
@@ -76,13 +70,11 @@ TransferTransaction {
 
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 
--  the receiver can be any account (which may or may not be a smart contract)
+- the receiver can be any account (which may or may not be a smart contract)
 - the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely 250000
 - the Data field contains what appears to be a smart contract method invocation with arguments, but this invocation never reaches the VM: the string `ESDTTransfer` is reserved by the protocol and is handled as a built-in function, not as a smart contract call
 
 Following the example from earlier, a transfer from Alice to another user, Bob, would look like this:
-
-
 
 ```
 TransferTransaction {
@@ -102,11 +94,9 @@ Using the transaction in the example above, Alice will transfer 12 AliceTokens t
 
 Smart contracts may hold ESDT tokens and perform any kind of transactions with them, just like any Account. However, there are a few extra ESDT features dedicated to smart contracts:
 
-**Payable versus non-payable contract**: upon deployment, a smart contract may be marked as *payable*, which means that it can receive either eGLD or ESDT tokens without calling any of its methods (i.e. a simple transfer). But by default, all contracts are *non-payable*, which means that simple transfers of eGLD or ESDT tokens will be rejected, unless they are method calls.
+**Payable versus non-payable contract**: upon deployment, a smart contract may be marked as _payable_, which means that it can receive either eGLD or ESDT tokens without calling any of its methods (i.e. a simple transfer). But by default, all contracts are _non-payable_, which means that simple transfers of eGLD or ESDT tokens will be rejected, unless they are method calls.
 
-**ESDT transfer with method invocation**: it is possible to send ESDT tokens to a contract *as part of a method call*, just like sending eGLD as part of a method call. A transaction that sends ESDT tokens to a contract while also calling one of its methods has the following form:
-
-
+**ESDT transfer with method invocation**: it is possible to send ESDT tokens to a contract _as part of a method call_, just like sending eGLD as part of a method call. A transaction that sends ESDT tokens to a contract while also calling one of its methods has the following form:
 
 ```
 TransferWithCallTransaction {
@@ -124,15 +114,15 @@ TransferWithCallTransaction {
 }
 ```
 
-Sending a transaction containing both an ESDT transfer *and a method call* allows non-payable smart contracts to receive tokens as part of the call, as if it were eGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
+Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were eGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
 # **Token management**
 
-The Account which submitted the issuance request for a custom token automatically becomes the owner of the token (see [Issuance of ESDT tokens](https://docs.elrond.com/developers/esdt-tokens#issuance-of-esdt-tokens)). The owner of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
+The Account which submitted the issuance request for a custom token automatically becomes the owner of the token (see [Issuance of ESDT tokens](/docs/developers/esdt-tokens#issuance-of-esdt-tokens)). The owner of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
 
 ## **Configuration properties of an ESDT token**
 
-Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](https://docs.elrond.com/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
+Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/docs/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
 - `canMint` - more units of this token can be minted by the owner after initial issuance, increasing the supply
 - `canBurn` - users may "burn" some of their tokens, reducing the supply
@@ -149,8 +139,6 @@ The owner of an ESDT token has a number of operations at their disposal, which c
 ### **Minting**
 
 The owner of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
-
-
 
 ```
 MintTransaction {
@@ -172,8 +160,6 @@ This operation requires that the option `canMint` is set to `true` for the token
 
 Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token owner mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
 
-
-
 ```
 BurnTransaction {
     Sender: <account address of a token holder>
@@ -194,8 +180,6 @@ This operation requires that the option `canBurn` is set to `true` for the token
 
 The owner of an ESDT token may choose to suspend all transactions of the token, except minting and burning. The transaction form is as follows:
 
-
-
 ```
 PauseTransaction {
     Sender: <account address of the token owner>
@@ -208,8 +192,6 @@ PauseTransaction {
 ```
 
 The reverse operation, unpausing, will allow transactions of the token again:
-
-
 
 ```
 UnpauseTransaction {
@@ -228,8 +210,6 @@ These two operations require that the option `canPause` is set to `true`.
 
 The owner of an ESDT token may freeze the tokens held by a specific Account. As a consequence, no tokens may be transferred to or from the frozen Account. Freezing and unfreezing the tokens of an Account are operations designed to help token owners to comply with regulations. The transaction that freezes the tokens of an Account has the form:
 
-
-
 ```
 FreezeTransaction {
     Sender: <account address of the token owner>
@@ -243,8 +223,6 @@ FreezeTransaction {
 ```
 
 The reverse operation, unfreezing, will allow further transfers to and from the Account:
-
-
 
 ```
 UnfreezeTransaction {
@@ -264,8 +242,6 @@ These two operations require that the option `canFreeze` is set to `true`.
 
 The owner of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token owner. Wiping the tokens of an Account is an operation designed to help token owners to comply with regulations.Such a transaction has the form:
 
-
-
 ```
 WipeTransaction {
     Sender: <account address of the token owner>
@@ -283,8 +259,6 @@ This operation requires that the option `canWipe` is set to `true`.
 ### **Transferring ownership**
 
 The owner of an ESDT token may transfer the ownership to another Account. This can be done with a transaction of the form:
-
-
 
 ```
 TransferOwnershipTransaction {
@@ -306,8 +280,6 @@ This operation requires that the option `canChangeOwner` is set to `true`.
 
 The owner of an ESDT token may individually change any of the properties of the token, or multiple properties at once. Such an operation is performed by a transaction of the form:
 
-
-
 ```
 UpgradingTransaction {
     Sender: <account address of the token owner>
@@ -324,9 +296,7 @@ UpgradingTransaction {
 }
 ```
 
-As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`,  but Alice, the token owner, wants to change these property to `false` and `true`, respectively. The transaction that would achieve this change is:
-
-
+As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token owner, wants to change these property to `false` and `true`, respectively. The transaction that would achieve this change is:
 
 ```
 UpgradingTransaction {
@@ -336,7 +306,7 @@ UpgradingTransaction {
     GasLimit: 50000000
     Data: "esdtControlChanges" +
           "@416c696365546f6b656e73" +
-          "@63616e57697065" + 
+          "@63616e57697065" +
           "@66616c7365" +
           "@63616e4275726e" +
           "@74727565"
