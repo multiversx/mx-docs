@@ -207,3 +207,13 @@ Value (hex-encoded) successfully retrieved.
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 :::
+
+### Youtube Embed
+
+## First Version
+
+[![Elrond IDE](https://img.youtube.com/vi/bXbBfJCRVqE/maxresdefault.jpg)](http://www.youtube.com/watch?v=bXbBfJCRVqE "Elrond IDE")
+
+## Second version
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bXbBfJCRVqE?playlist=bXbBfJCRVqE&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
