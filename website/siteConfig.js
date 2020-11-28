@@ -36,8 +36,8 @@ const siteConfig = {
     { href: "/docs/technology/architecture-overview", label: "Learn" },
   ],
 
-  ogImage: "https://docs.elrond.com/img/share.png",
-  twitterImage: "https://docs.elrond.com/img/share.png",
+  ogImage: "img/share.png",
+  twitterImage: "img/share.png",
 
   /* path to images for header/footer */
   headerIcon: "img/logos/logo.svg",
