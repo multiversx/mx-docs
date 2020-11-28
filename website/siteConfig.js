@@ -82,10 +82,10 @@ const siteConfig = {
   cleanUrl: true,
   docsSideNavCollapsible: true,
 
-  algolia: {
-    apiKey: "12345678",
-    indexName: "test",
-  },
+  // algolia: {
+  //   apiKey: "12345678",
+  //   indexName: "test",
+  // },
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
