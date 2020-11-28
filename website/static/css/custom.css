@@ -37,6 +37,13 @@ html {
   z-index: unset;
 }
 
+.title-container h1 {
+  color: #1b46c2;
+}
+.title-container {
+  color: #727272;
+}
+
 /* Highlight Panel */
 .highlightPanel {
   height: 100%;

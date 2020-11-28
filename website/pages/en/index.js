@@ -33,12 +33,16 @@ class Index extends React.Component {
 
     return (
       <div className="mainContainer">
+        <meta property="og:image" content="/img/share.jpg" />
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col col-lg-68 text-center">
+            <div className="col text-center title-container mt-5 mt-lg-0">
               <h1 className="m-0 font-montserrat">
-                Welcome to the Elrond docs!<br/>Choose your path you must. <img src="https://emoji.slack-edge.com/TA53T6X71/yoda/6dababa51d56febe.png" style={{marginBottom: "-7px",}}/>
+                Welcome to the Elrond docs!<br/>
               </h1>
+              <h3 className="m-0 font-montserrat">
+                Choose your path you must.
+              </h3>
             </div>
           </div>
           <div className="row justify-content-center pt-5">
