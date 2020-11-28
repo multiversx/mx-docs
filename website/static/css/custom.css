@@ -32,11 +32,13 @@ html {
 }
 
 /* Main Page */
+.landing-page.mainContainer {
+  background: #f8f9ff;
+}
 .navPusher {
   padding-top: 60px;
   z-index: unset;
 }
-
 .title-container h1 {
   color: #1b46c2;
 }

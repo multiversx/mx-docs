@@ -32,7 +32,7 @@ class Index extends React.Component {
     );
 
     return (
-      <div className="mainContainer">
+      <div className="mainContainer landing-page">
         <meta property="og:image" content="/img/share.jpg" />
         <div className="container">
           <div className="row justify-content-center">
