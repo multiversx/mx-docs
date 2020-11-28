@@ -9,8 +9,8 @@
 // site configuration options.
 
 const siteConfig = {
-  title: "Docs", // Title for your website.
-  tagline: "Welcome to Elrond",
+  title: "Elrond Docs", // Title for your website.
+  tagline: "The Internet Scale Blockchain",
   url: "https://docs.elrond.com", // Your website URL
   baseUrl: "/", // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
