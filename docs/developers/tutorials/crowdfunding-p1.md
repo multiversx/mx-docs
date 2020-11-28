@@ -60,7 +60,9 @@ Elrond IDE supports the following programming languages:
 
 Follow the video guide for a detailed explanation about how to get started.
 
-[![](http://img.youtube.com/vi/bXbBfJCRVqE/0.jpg)](http://www.youtube.com/watch?v=bXbBfJCRVqE "Elrond IDE")
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bXbBfJCRVqE?playlist=bXbBfJCRVqE&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 
 The steps are covered in detail below.
 

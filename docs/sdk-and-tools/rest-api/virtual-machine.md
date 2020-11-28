@@ -5,41 +5,62 @@ title: Virtual Machine
 
 Query values stored within Smart Contracts.
 
-## **Compute Output of Pure Function**
+### <span class="badge badge-success">POST</span> Compute Output of Pure Function
 
-https://api.elrond.com**/vm-values/query**
+`https://api.elrond.com/vm-values/query`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the execution results (the Virtual Machine Output).
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Body Parameters
 
-ScAddress
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.          |
+| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
+| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-The Address (bech32) of the Smart Contract.
+The VM Output is retrieved successfully.
 
-FuncName
+```
+{
+  "data": {
+    "ReturnData": [
+      "eyJSZ... (base64)"
+    ],
+    "ReturnCode": 0,
+    "ReturnMessage": "",
+    "GasRemaining": 1500000000,
+    "GasRefund": 0,
+    "OutputAccounts": {
+      "...": {
+        "Address": "... (base64)",
+        "Nonce": 0,
+        "Balance": null,
+        "BalanceDelta": 0,
+        "StorageUpdates": null,
+        "Code": null,
+        "CodeMetadata": null,
+        "Data": null,
+        "GasLimit": 0,
+        "CallType": 0
+      }
+    },
+    "DeletedAccounts": null,
+    "TouchedAccounts": null,
+    "Logs": null
+  }
+}
+```
 
-REQUIRED
-
-string
-
-The name of the Pure Function to execute.
-
-Args
-
-REQUIRED
-
-array
-
-The arguments of the Pure Function, as hex-encoded strings. The array can be empty.
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Here's an example of a request:
 
@@ -54,104 +75,98 @@ Content-Type: application/json
 }
 ```
 
-## **Compute Hex Output of Pure Function**
+### <span class="badge badge-success">POST</span> Compute Hex Output of Pure Function
 
-https://api.elrond.com**/vm-values/hex**
+`https://api.elrond.com/vm-values/hex`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as a hex-encoded string.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Body Parameters
 
-ScAddress
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.           |
+| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
+| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-FuncName
+The output value is retrieved successfully.
 
-REQUIRED
+```
+{
+  "data": "7b22..."
+}
+```
 
-string
+<!--END_DOCUSAURUS_CODE_TABS-->
 
-The name of the Pure Function to execute.
+### <span class="badge badge-success">POST</span> Compute String Output of Pure Function
 
-Args
-
-REQUIRED
-
-array
-
-The arguments of the Pure Function, as hex-encoded strings. The array can be empty.
-
-## **Compute String Output of Pure Function**
-
-https://api.elrond.com**/vm-values/string**
+`https://api.elrond.com/vm-values/string`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as a string.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Body Parameters
 
-ScAddress
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.           |
+| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
+| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-FuncName
+The output value is retrieved successfully.
 
-REQUIRED
+```
+{
+  "data": "foobar"
+}
+```
 
-string
+<!--END_DOCUSAURUS_CODE_TABS-->
 
-The name of the Pure Function to execute.
+### <span class="badge badge-success">POST</span> Get Integer Output of Pure Function
 
-Args
-
-REQUIRED
-
-array
-
-The arguments of the Pure Function, as hex-encoded strings. The array can be empty.
-
-## **Get Integer Output of Pure Function**
-
-https://api.elrond.com**/vm-values/int**
+`https://api.elrond.com/vm-values/int`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as an integer.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Body Parameters
 
-ScAddress
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.           |
+| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
+| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
 
-REQUIRED
+<!--Response-->
 
-string
+🟢 200: OK
 
-FuncName
+The output value is retrieved successfully.
 
-REQUIRED
+```
+{
+    "data": "2020"
+}
+```
 
-string
-
-The name of the Pure Function to execute.
-
-Args
-
-REQUIRED
-
-array
-
-The arguments of the Pure Function, as hex-encoded strings. The array can be empty.
+<!--END_DOCUSAURUS_CODE_TABS-->

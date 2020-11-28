@@ -5,99 +5,58 @@ title: Transactions
 
 Send Transactions to the Blockchain and query information about them.
 
-## **Send Transaction**
+### <span class="badge badge-success">POST</span> Send Transaction
 
-https://api.elrond.com**/transaction/send**
+`https://api.elrond.com/transaction/send`
 
 This endpoint allows one to send a signed Transaction to the Blockchain.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Body Parameters
 
-version
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| version | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).               |
+| chainID      | <span class="text-danger">REQUIRED</span>  | `string` | The Chain identifier. |
+| nonce    | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.           |
+| value | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer (can be zero).               |
+| sender | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.              |
+| receiver      | <span class="text-danger">REQUIRED</span>  | `string` | The Address (bech32) of the Receiver. |
+| gasPrice    | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).         |
+| gasLimit | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.             |
+| data    | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.         |
+| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.              |
 
-REQUIRED
+<!--Response-->
 
-number
+🟢 200: OK
 
-The Version of the Transaction (e.g. `1`).
+Transaction sent with success. A Transaction Hash is returned.
 
-chainID
+```json
+{
+  "txHash": "6c41c71946b5b428c2cfb560e3ea425f8a00345de4bb2eb1b784387790914277"
+}
+```
 
-REQUIRED
+🔴 400: Bad request
 
-string
+Invalid Transaction signature.
 
-The Chain identifier.
+```json
+{
+    "error": "transaction generation failed: ed25519: invalid signature"
+}
+```
 
-nonce
+<!--END_DOCUSAURUS_CODE_TABS-->
 
-REQUIRED
-
-number
-
-The Nonce of the Sender.
-
-value
-
-REQUIRED
-
-string
-
-The Value to transfer (can be zero).
-
-sender
-
-REQUIRED
-
-string
-
-The Address (bech32) of the Sender.
-
-receiver
-
-REQUIRED
-
-string
-
-The Address (bech32) of the Receiver.
-
-gasPrice
-
-REQUIRED
-
-number
-
-The desired Gas Price (per Gas Unit).
-
-gasLimit
-
-REQUIRED
-
-number
-
-The maximum amount of Gas Units to consume.
-
-data
-
-OPTIONAL
-
-string
-
-The message (data) of the Transaction.
-
-signature
-
-REQUIRED
-
-string
-
-The Signature (hex-encoded) of the Transaction.
-
+:::warning
 For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **only accepts transactions whose sender is in the Node's Shard**.
+:::
 
 Here's an example of a request:
 
@@ -118,100 +77,52 @@ Content-Type: application/json
     "signature": "93207c579bf57be03add632b0e1624a73576eeda8a1687e0fa286f03eb1a17ffb125ccdb008a264c402f074a360442c7a034e237679322f62268b614e926d10f"
 }
 ```
+### <span class="badge badge-success">POST</span> Send Multiple Transactions
 
-## **Send Multiple Transactions**
-
-https://api.elrond.com**/transaction/send-multiple**
+`https://api.elrond.com/transaction/send-multiple`
 
 This endpoint allows one to send a bulk of Transactions to the Blockchain.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Body Parameters
 
-version
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| version | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).               |
+| chainID      | <span class="text-danger">REQUIRED</span>  | `string` | The Chain identifier. |
+| nonce    | <span class="text-danger">REQUIRED</span> | `number` | The Nonce, for each Transaction.           |
+| value | <span class="text-danger">REQUIRED</span> | `string` | The Value, for each Transaction.             |
+| sender | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Sender, for each Transaction.           |
+| receiver      | <span class="text-danger">REQUIRED</span>  | `string` | The Address of the Receiver, for each Transaction. |
+| gasPrice    | <span class="text-danger">REQUIRED</span> | `number` | The Gas Price, for each Transaction.        |
+| gasLimit | <span class="text-danger">REQUIRED</span> | `number` | The Gas Limit, for each Transaction.             |
+| data    | <span class="text-normal">OPTIONAL</span> | `string` | The message (data), for each Transaction.      |
+| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature, for each Transaction.            |
 
-REQUIRED
+<!--Response-->
 
-number
+🟢 200: OK
 
-The Version of the Transaction (e.g. `1`).
+A bulk of Transactions were successfully sent.
 
-chainID
+```json
+{
+  "numOfSentTxs": 2,
+  "txsHashes": {
+    "0": "6c41c71946b5b428c2cfb560e3ea425f8a00345de4bb2eb1b784387790914277",
+    "1": "fa8195bae93d4609a6fc5972a7a6176feece39a6c4821acae2276701aee12fb0"
+  }
+}
+```
 
-REQUIRED
+<!--END_DOCUSAURUS_CODE_TABS-->
 
-string
-
-The Chain identifier.
-
-nonce
-
-REQUIRED
-
-number
-
-The Nonce, for each Transaction.
-
-value
-
-REQUIRED
-
-string
-
-The Value, for each Transaction.
-
-sender
-
-REQUIRED
-
-string
-
-The Address of the Sender, for each Transaction.
-
-receiver
-
-REQUIRED
-
-string
-
-The Address of the Receiver, for each Transaction.
-
-gasPrice
-
-REQUIRED
-
-number
-
-The Gas Price, for each Transaction.
-
-gasLimit
-
-REQUIRED
-
-number
-
-The Gas Limit, for each Transaction.
-
-data
-
-OPTIONAL
-
-string
-
-The message (data), for each Transaction.
-
-signature
-
-REQUIRED
-
-string
-
-The Signature, for each Transaction.
-
+:::warning
 For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **only accepts transactions whose sender is in the Node's Shard**.
+:::
 
 Here's an example of a request:
 
@@ -247,65 +158,40 @@ Content-Type: application/json
 ]
 ```
 
-## **Estimate Cost of Transaction**
+### <span class="badge badge-success">POST</span> Estimate Cost of Transaction
 
-https://api.elrond.com**/transaction/cost**
+`https://api.elrond.com/transaction/cost`
 
-This endpoint allows one to estimate the cost of a transaction.
+This endpoint allows one to estimate the cost of a transaction. 
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Body Parameters
 
-version
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| version | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).               |
+| chainID      | <span class="text-danger">REQUIRED</span>  | `string` | The Chain identifier. |
+| value | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer.            |
+| sender | <span class="text-danger">REQUIRED</span> | `string` | TThe Address of the Sender.          |
+| receiver      | <span class="text-danger">REQUIRED</span>  | `string` | The Address of the Receiver. |
+| data    | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.    |
 
-REQUIRED
+<!--Response-->
 
-number
+🟢 200: OK
 
-The Version of the Transaction (e.g. `1`).
+The cost is estimated successfully.
 
-chainID
+```json
+{
+  "txGasUnits": "77000"
+}
+```
 
-REQUIRED
-
-string
-
-The Chain identifier.
-
-value
-
-REQUIRED
-
-string
-
-The Value to transfer.
-
-sender
-
-REQUIRED
-
-string
-
-The Address of the Sender.
-
-receiver
-
-REQUIRED
-
-string
-
-The Address of the Receiver.
-
-data
-
-OPTIONAL
-
-string
-
-The message (data) of the Transaction.
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Here's an example of a request:
 
@@ -322,67 +208,100 @@ Content-Type: application/json
     "version": 1
 }
 ```
+## <span class="badge badge-primary">GET</span> **Get Transaction**
 
-## **Get Transaction**
-
-https://api.elrond.com**/transaction/:txHash**
+`https://api.elrond.com/transaction/:txHash`
 
 This endpoint allows one to query the details of a Transaction.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Path Parameters
 
-txHash
-
-REQUIRED
-
-string
-
-The hash (identifier) of the Transaction.
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
-sender
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| sender | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
 
-OPTIONAL
+<!--Response-->
 
-string
+🟢 200: OK
 
-The Address of the sender - a hint to optimize the request.
+Transaction details retrieved successfully.
 
+```
+{
+    "transaction": {
+        "type": "normal",
+        "nonce": 3,
+        "round": 186580,
+        "epoch": 12,
+        "value": "1000000000000000000",
+        "receiver": "erd1...",
+        "sender": "erd1...",
+        "gasPrice": 1000000000,
+        "gasLimit": 70000,
+        "data": "Zm9yIHRlc3Rz",
+        "signature": "1047...",
+        "sourceShard": 2,
+        "destinationShard": 1,
+        "blockNonce": 186535,
+        "miniblockHash": "e927...",
+        "blockHash": "50a1...",
+        "status": "executed"
+    }
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+:::important
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
+:::
 
-## **Get Transaction Status**
+## <span class="badge badge-primary">GET</span> **Get Transaction Status**
 
-https://api.elrond.com**/transaction/:txHash/status**
+`https://api.elrond.com/transaction/:txHash/status`
 
 This endpoint allows one to query the Status of a Transaction.
 
-Request
+<!--DOCUSAURUS_CODE_TABS-->
 
-Response
+<!--Request-->
 
 Path Parameters
 
-txHash
-
-REQUIRED
-
-string
-
-The hash (identifier) of the Transaction.
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
-sender
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| sender | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
 
-OPTIONAL
+<!--Response-->
 
-string
+🟢 200: OK
 
-The Address of the sender - a hint to optimize the request.
+Transaction status retrieved successfully.
 
+```
+{
+    "status": "executed"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+:::important
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
+:::
