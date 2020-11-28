@@ -39,6 +39,8 @@ const siteConfig = {
   ogImage: "img/share.png",
   twitterImage: "img/share.png",
 
+  gaTrackingId: "UA-143242606-1",
+
   /* path to images for header/footer */
   headerIcon: "img/logos/logo.svg",
   footerIcon: "img/logos/elrond.svg",
