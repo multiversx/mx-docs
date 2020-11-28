@@ -91,7 +91,7 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: "Brief Intro to Elrond",
+      title: "Discover Elrond",
       content:
         "Meet the blockchain that can offer true internet-scale performance.",
       docName: "welcome/welcome-to-elrond",
