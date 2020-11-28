@@ -26,18 +26,18 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
 
-  headerLinks: [
-    { search: true },
-    { href: "/", label: "" },
-  ],
+  headerLinks: [{ search: true }, { href: "/", label: "" }],
 
   headerLinks: [
     { search: true },
     { href: "/docs/developers/tutorials/crowdfunding-p1", label: "Develop" },
     { href: "/docs/validators/system-requirements", label: "Validate" },
     { href: "/docs/integrators/observing-squad", label: "Integrate" },
-    { href: "/docs/technology/architecture-overview", label: "Learn" },  
+    { href: "/docs/technology/architecture-overview", label: "Learn" },
   ],
+
+  ogImage: "https://docs.elrond.com/img/share.png",
+  twitterImage: "https://docs.elrond.com/img/share.png",
 
   /* path to images for header/footer */
   headerIcon: "img/logos/logo.svg",
@@ -99,8 +99,7 @@ const siteConfig = {
     },
     {
       title: "Start Building",
-      content:
-        "Build your decentralized application in minutes.",
+      content: "Build your decentralized application in minutes.",
       docName: "developers/tutorials/crowdfunding-p1",
       icon: "🛠️",
     },
@@ -112,7 +111,8 @@ const siteConfig = {
     },
     {
       title: "Integrate a Platform",
-      content: "Follow our guide to integrate exchanges, wallets, and other platforms.",
+      content:
+        "Follow our guide to integrate exchanges, wallets, and other platforms.",
       docName: "integrators/observing-squad",
       icon: "🏛",
     },
@@ -124,7 +124,8 @@ const siteConfig = {
     },
     {
       title: "Create a Token",
-      content: "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
+      content:
+        "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
       docName: "developers/esdt-tokens",
       icon: "🔷",
     },
@@ -135,7 +136,7 @@ const siteConfig = {
       docName: "technology/architecture-overview",
       icon: "🔬",
     },
-    ],
+  ],
 };
 
 module.exports = siteConfig;
