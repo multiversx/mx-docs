@@ -32,9 +32,20 @@ class Index extends React.Component {
     );
 
     return (
-      <div className="mainContainer">
+      <div className="mainContainer landing-page">
+        <meta property="og:image" content="/img/share.jpg" />
         <div className="container">
-          <div className="row justify-content-center pt-4">
+          <div className="row justify-content-center">
+            <div className="col text-center title-container mt-5 mt-lg-0">
+              <h1 className="m-0 font-montserrat">
+                Welcome to the Elrond docs!<br/>
+              </h1>
+              <h3 className="m-0 font-montserrat">
+                Choose your path you must.
+              </h3>
+            </div>
+          </div>
+          <div className="row justify-content-center pt-5">
             <Features siteConfig={siteConfig}/>
           </div>
         </div>

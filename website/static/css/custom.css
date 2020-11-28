@@ -12,6 +12,9 @@
 html {
   font-size: 16px;
 }
+.font-montserrat {
+  font-family: Montserrat, sans-serif;
+}
 
 /* Bootstrap 4 Conflict */
 .navSearchWrapper::before {
@@ -29,9 +32,18 @@ html {
 }
 
 /* Main Page */
+.landing-page.mainContainer {
+  background: #f8f9ff;
+}
 .navPusher {
   padding-top: 60px;
   z-index: unset;
+}
+.title-container h1 {
+  color: #1b46c2;
+}
+.title-container {
+  color: #727272;
 }
 
 /* Highlight Panel */

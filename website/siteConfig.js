@@ -126,7 +126,7 @@ const siteConfig = {
       title: "Create a Token",
       content: "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
       docName: "developers/esdt-tokens",
-      icon: "🔰",
+      icon: "🔷",
     },
     {
       title: "Learn How Elrond Works",
