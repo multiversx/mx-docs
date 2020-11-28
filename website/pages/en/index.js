@@ -34,7 +34,14 @@ class Index extends React.Component {
     return (
       <div className="mainContainer">
         <div className="container">
-          <div className="row justify-content-center pt-4">
+          <div className="row justify-content-center">
+            <div className="col col-lg-68 text-center">
+              <h1 className="m-0 font-montserrat">
+                Welcome to the Elrond docs!<br/>Choose your path you must. <img src="https://emoji.slack-edge.com/TA53T6X71/yoda/6dababa51d56febe.png" style={{marginBottom: "-7px",}}/>
+              </h1>
+            </div>
+          </div>
+          <div className="row justify-content-center pt-5">
             <Features siteConfig={siteConfig}/>
           </div>
         </div>

@@ -12,6 +12,9 @@
 html {
   font-size: 16px;
 }
+.font-montserrat {
+  font-family: Montserrat, sans-serif;
+}
 
 /* Bootstrap 4 Conflict */
 .navSearchWrapper::before {
