@@ -18,7 +18,7 @@ You have the option of staking through the online Wallet at [https://wallet.elro
 2. Go to the Validate section
 3. Press "Stake now"
 
-![staking1](validators\staking1.png)
+![staking1](validators/staking1.png)
 
 4. Navigate to the location of the .pem file or drag & drop it
 5. Press "Continue"
