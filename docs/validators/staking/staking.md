@@ -18,32 +18,31 @@ You have the option of staking through the online Wallet at [https://wallet.elro
 2. Go to the Validate section
 3. Press "Stake now"
 
-![staking1](validators/staking1.png)
+![staking1](/validators/staking1.png)
 
 4. Navigate to the location of the .pem file or drag & drop it
 5. Press "Continue"
 
-![staking2](validators\staking2.png)
+![staking2](/validators/staking2.png)
 
 6. The staking transaction data is automatically populated using the public key in the .pem certificate you provided. The private key is not touched and the data does not leave your browser. Only the transaction with this public information will be sent to the network once you press Confirm
 7. Press "Confirm"
 
-![staking3](validators\staking3.png)
+![staking3](/validators/staking3.png)
 
 8. The status of the transaction will be displayed on screen, together with a success message. Click "Done" once you see the Success message.
 
-![staking4](validators\staking4.png)
+![staking4](/validators/staking4.png)
 
 
 9. You can review the transaction in your history. Based on the current staking capacity of the network, you will get an OK message indicating that your node has become a validator, or a response indicating that the network staking is at capacity and your node has been put in the Queue.
 
-![staking5](validators\staking5.png)
+![staking5](/validators/staking5.png)
 
 10. The information about the staked nodes from the current wallet will be updated
 11. You can further interact with your node(s) by clicking on the three vertical dots next to the public key, which brings up a menu for performing actions such as Unjail, Unstake and Unbond.
 
-![staking6](validators\staking6.png)
-
+![staking6](/validators/staking6.png)
 
 
 # **Staking through erdpy**
