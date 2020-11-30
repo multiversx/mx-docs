@@ -32,6 +32,20 @@ export default function CustomFooter() {
 				}
 			}
 		}
+		var goBackButton = document.getElementById("go-back");
+		if (goBackButton) {
+			goBackButton.onclick = function(event) {
+				if (document.referrer.indexOf(window.location.host) !== -1) {
+					history.back(-1);
+				} else {
+					window.location.pathname = "/";
+				}
+			}
+		}
+		var pagename = document.getElementById("pagename");
+		if (pagename && window.location) {
+			pagename.innerHTML = window.location.pathname;
+		}
 	`;
 
 	return (
@@ -74,7 +88,7 @@ export default function CustomFooter() {
 					</svg>
 					<span className="pl-1 menu-text">Chat</span>
 				</a>
-				<div id="app-switcher-dropdown" className='app-menu-entry d-flex align-items-center'>
+				<div id="app-switcher-dropdown" className="app-menu-entry d-flex align-items-center">
 					<svg className="app-icon app-switcher-icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-labelledby="Menu">
 						<path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path>
 					</svg>
