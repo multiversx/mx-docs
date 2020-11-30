@@ -7,16 +7,20 @@ title: Staking
 
 In order to submit a staking transaction, you must have the following:
 
+<<<<<<< Updated upstream
 - A wallet with a sufficiently high amount of eGLD: you'll need 2500 eGLD for each node you want to stake for. You will submit the staking transaction from this wallet, so make sure you can access it.
 - The `validatorKey.pem` files of _each node_ you want to stake for. Each of these files contains the **BLS public key** of a node, along with its **secret key**. For staking, you'll only need the public keys of your nodes. Remember that the BLS public key consists of exactly 192 hexadecimal characters (that is, `0` to `9` and `a` to `f` only).
 - An optional, second wallet, where the rewards produced by the validators will be gathered. You only need this second wallet if you do not want the rewards to go into the same wallet from which you submitted the staking transaction. You will have to use the `erdpy` command-line tool to decode the address of this account. See the section "[Specifying an optional reward address](/validators/staking/staking#specifying-an-optional-reward-address)" for details. The reward address can be changed later as well.
+=======
+- 2500 eGLD for each node and 0.006 eGold per node as transaction fee
+- A unique `validatorKey.pem` files of each node
+>>>>>>> Stashed changes
 
-You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`. This page describes both approaches. However, it is recommended to use `erdpy` if possible, because it is less error-prone and builds the staking transaction automatically.
-
-You'll see some BLS public keys in the examples on this page. Make sure you don't copy-paste them into your staking transaction. These BLS keys have been randomly generated and do not belong to any real node.
+You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`.
 
 # **Staking through the Wallet**
 
+<<<<<<< Updated upstream
 Open your wallet on [https://wallet.elrond.com](https://wallet.elrond.com/) and click the "Send" button. Carefully fill the form with the following information. Make sure it is clear to you what this information is, and where to adjust it with your own information.
 
 In the "To" field, paste the address of the Staking SmartContract: `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l`
@@ -92,15 +96,26 @@ Notice how the `@` character separates the pieces of information. It makes it ea
 ### **The general format**
 
 You can write the text for the "Data" field for _any_ number of nodes. The general format looks like this:
+=======
+Adding a node as a Validator will be done in the "Validate" section of the wallet. The dedicated GUI securely automates all relevant tasks, such as staking, unstaking, unjailing or changing the rewards address.
+>>>>>>> Stashed changes
 
-stake@<number>@<BLS1>@67656e65736973@<BLS2>@67656e65736973@…@<BLS99>@67656e65736973
+1. Go to https://wallet.elrond.com and log into your wallet
+2. Go to the Validate section
+3. Press "Stake now"
 
-Remember to replace `<number>` with the number of nodes you want to stake for, with leading zeros, so that there is an even number of characters. If you stake for one node, replace with `01`. If you stake for 15 nodes, replace with `0F`. If you stake for 243 nodes, replace with `F3`.
+![image-20201130205859133](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130205859133.png)
 
+<<<<<<< Updated upstream
 Also remember to update the "Amount" and "Gas Limit" according to the number of nodes you are staking for. See the first few paragraphs of the section [Staking through the wallet](/validators/staking/staking#staking-through-the-wallett) to see how.
+=======
+4. Navigate to the location of the .pem file or drag & drop it
+5. Press "Continue"
+>>>>>>> Stashed changes
 
-## **Specifying an optional reward address**
+![image-20201130210324826](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130210324826.png)
 
+<<<<<<< Updated upstream
 When you submit a staking transaction, the Staking SmartContract remembers the Wallet you sent it from, and the rewards from your staked validators will go to that Wallet. This is the _default_ behavior.
 
 However, if you wish to have your rewards sent to a _different_ Wallet, you can add an extra part to the "Data" field, before submitting the staking transaction.
@@ -120,28 +135,29 @@ Once you're sure `erdpy` is installed and has the correct version, you can decod
 ```
 erdpy wallet bech32 --decode erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 ```
+=======
+6. The staking transaction data is automatically populated using the public key in the .pem certificate you provided. The private key is not touched and the data does not leave your browser. Only the transaction with this public information will be sent to the network once you press Confirm
+7. Press "Confirm"
+>>>>>>> Stashed changes
 
-The above command gives the result `822bcd2be2622d9e55039fdd3f5d502a86049fbaa8aa70fcb8f7211f764c2f0e`, but do not copy-paste it from this page. It is not a real address. Don't forget to **replace this example address with your real Wallet address**.
+![image-20201130211101909](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130211101909.png)
 
-After you run the decoding command with your real address, take the result and append it to the "Data" field, but only _after_ you added all the BLS public keys you wanted, and _after_ you added an extra `@` character.
+8. The status of the transaction will be displayed on screen, together with a success message. Click "Done" once you see the Success message.
 
-Here are some examples. For one node:
+![image-20201130211729357](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130211729357.png)
 
-stake@01@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27@67656e65736973@822bcd2be2622d9e55039fdd3f5d502a86049fbaa8aa70fcb8f7211f764c2f0e
 
-Notice how this example includes the part `@822bcd2be2622d9e55039fdd3f5d502a86049fbaa8aa70fcb8f7211f764c2f0e` at the end. This part is just an `@` character followed by the result of the `erdpy` decoding command on the example address above.
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M9NpOqGa_t-XucylYWc%2F-M9O3Pq32b8MqqmTi1d_%2Fstaking-single-node-reward-addr.png?alt=media&token=431f611a-5d1b-4f46-a158-47e84f75e308)
+9. You can review the transaction in your history. Based on the current staking capacity of the network, you will get an OK message indicating that your node has become a validator, or a response indicating that the network staking is at capacity and your node has been put in the Queue.
 
-For two nodes:
+![image-20201130212630100](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130212630100.png)
 
-stake@02@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27@67656e65736973@f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d@67656e65736973@822bcd2be2622d9e55039fdd3f5d502a86049fbaa8aa70fcb8f7211f764c2f0e
+10. The information about the staked nodes from the current wallet will be updated
+11. You can further interact with your node(s) by clicking on the three vertical dots next to the public key, which brings up a menu for performing actions such as Unjail, Unstake and Unbond.
 
-For three nodes:
+![image-20201130213907457](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130213907457.png)
 
-stake@03@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27@67656e65736973@f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d@67656e65736973@fbfc0b43b146d8c809a489aa2aeeaf5c33557c969a97f866748f52f01c4e930415953136f674d4449753eff460894714b245217954783d35cdaa6fb28b6cedea109246099d9bbabebfe10420745acd899bc2f28ec225a649301dec59ee4497f1@67656e65736973@822bcd2be2622d9e55039fdd3f5d502a86049fbaa8aa70fcb8f7211f764c2f0e
 
-Again, the examples above use fictious BLS public keys and a fictitious reward address. **Do not copy-paste these examples** when filling up the "Send" form on [https://wallet.elrond.com](https://wallet.elrond.com/).
 
 # **Staking through erdpy**
 
