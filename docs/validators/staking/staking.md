@@ -8,7 +8,7 @@ title: Staking
 In order to submit a staking transaction, you must have the following:
 
 - 2500 eGLD for each node and 0.006 eGold per node as transaction fee
-- A unique `validatorKey.pem` files of each node
+- A unique `validatorKey.pem` file of each node
 
 You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`.
 
