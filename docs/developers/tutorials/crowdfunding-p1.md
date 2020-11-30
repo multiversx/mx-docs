@@ -7,8 +7,6 @@ Write, build and deploy a simple smart contract written in Rust
 
 This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the Elrond Network, written in Rust.
 
-
-
 :::important
 The Elrond Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
 :::
@@ -61,8 +59,6 @@ Elrond IDE supports the following programming languages:
 Follow the video guide for a detailed explanation about how to get started.
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bXbBfJCRVqE?playlist=bXbBfJCRVqE&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
 
 The steps are covered in detail below.
 
@@ -192,7 +188,7 @@ The `init` method of the Crowdfunding smart contract is currently empty. We'll a
 
 # **Step 3: the build**
 
-After creating the file `src/lib.rs` with the content described in [the previous step](/docs/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
+After creating the file `src/lib.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
 
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 

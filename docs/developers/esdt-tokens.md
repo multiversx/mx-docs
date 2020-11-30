@@ -50,7 +50,7 @@ IssuanceTransaction {
 }
 ```
 
-Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time, if needed. For more operations available to ESDT token owners, see [Token management](/docs/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time, if needed. For more operations available to ESDT token owners, see [Token management](/developers/esdt-tokens#token-management).
 
 # **Transfers**
 
@@ -118,11 +118,11 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 
 # **Token management**
 
-The Account which submitted the issuance request for a custom token automatically becomes the owner of the token (see [Issuance of ESDT tokens](/docs/developers/esdt-tokens#issuance-of-esdt-tokens)). The owner of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
+The Account which submitted the issuance request for a custom token automatically becomes the owner of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The owner of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
 
 ## **Configuration properties of an ESDT token**
 
-Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/docs/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
+Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
 - `canMint` - more units of this token can be minted by the owner after initial issuance, increasing the supply
 - `canBurn` - users may "burn" some of their tokens, reducing the supply

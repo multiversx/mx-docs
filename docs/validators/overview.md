@@ -15,7 +15,7 @@ Elrond is a decentralized blockchain network. This means that its nodes collabor
 
 Any user who submits a transaction to the network must pay a fee, in EGLD tokens. These fees are what produces **rewards** for the nodes.
 
-Note that not all nodes earn rewards from these fees. Only **validator nodes** qualify, because they are the nodes which are allowed to take part in [consensus](/docs/technology/secure-proof-of-stake), to produce and validate blocks and to earn rewards.
+Note that not all nodes earn rewards from these fees. Only **validator nodes** qualify, because they are the nodes which are allowed to take part in [consensus](/technology/secure-proof-of-stake), to produce and validate blocks and to earn rewards.
 
 Because of the influence they have in the network, validator nodes are required to have a **stake**, which is a significant amount of EGLD locked as collateral for the good behavior of the validator. Currently, the stake amount is set to 2 500 EGLD. Nodes without a stake are called **observer nodes** - they don't participate in consensus and do not earn rewards, but they support the network in different ways.
 

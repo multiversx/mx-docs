@@ -13,6 +13,7 @@ const siteConfig = {
   tagline: "The Internet Scale Blockchain",
   url: "https://docs.elrond.com", // Your website URL
   baseUrl: "/", // Base URL for your project */
+  docsUrl: '',
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
@@ -28,10 +29,10 @@ const siteConfig = {
 
   headerLinks: [
     { search: true },
-    { href: "/docs/developers/tutorials/crowdfunding-p1", label: "Develop" },
-    { href: "/docs/validators/system-requirements", label: "Validate" },
-    { href: "/docs/integrators/observing-squad", label: "Integrate" },
-    { href: "/docs/technology/architecture-overview", label: "Learn" },
+    { href: "/developers/tutorials/crowdfunding-p1", label: "Develop" },
+    { href: "/validators/system-requirements", label: "Validate" },
+    { href: "/integrators/observing-squad", label: "Integrate" },
+    { href: "/technology/architecture-overview", label: "Learn" },
   ],
 
   ogImage: "img/share.png",

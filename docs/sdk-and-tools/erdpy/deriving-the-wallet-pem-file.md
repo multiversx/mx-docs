@@ -17,7 +17,7 @@ To derive a PEM file for a Wallet, the mnemonic words of that account are needed
 erdpy --version
 ```
 
-If you see `command not found` it means you need to install **erdpy** first. See [Installing erdpy](/docs/sdk-and-tools/erdpy/installing-erdpy) for how to do that.
+If you see `command not found` it means you need to install **erdpy** first. See [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy) for how to do that.
 
 The command for generating the PEM file from mnemonic words is:
 

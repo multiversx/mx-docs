@@ -7,7 +7,7 @@ It is easy to prepare a set of transaction and then send them all at once using 
 
 Requirements:
 
-- You must have `erdpy` installed on your computer. See [Installing erdpy](/docs/sdk-and-tools/erdpy/installing-erdpy) for details.
+- You must have `erdpy` installed on your computer. See [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy) for details.
 - You need a wallet that contains sufficient eGLD. We will use the mnemonics you have for this wallet to generate a PEM file that `erdpy` needs.
 
 There will be 3 steps to fulfill:
@@ -40,7 +40,7 @@ exec /bin/bash
 
 ## **Step 1: Prepare the PEM file**
 
-See the page [Deriving the Wallet PEM](/docs/sdk-and-tools/erdpy/deriving-the-wallet-pem-file) file for how to prepare a PEM file. Make sure you know exactly where `erdpy` saved it for you.
+See the page [Deriving the Wallet PEM](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file) file for how to prepare a PEM file. Make sure you know exactly where `erdpy` saved it for you.
 
 ## **Step 2: Prepare the transaction set**
 

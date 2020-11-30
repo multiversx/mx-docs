@@ -5,9 +5,9 @@ title: Observing Squad
 
 The N+1 setup for connecting to the Elrond Network
 
-In order to integrate with the Elrond Network and be able to [broadcast transactions](/docs/integrators/creating-transactions) and [query blockchain data](/docs/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to setup an **on-premises Observing Squad**.
+In order to integrate with the Elrond Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to setup an **on-premises Observing Squad**.
 
-An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](/docs/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
+An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
 
 :::tip
 Currently the Elrond Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
@@ -31,7 +31,7 @@ In case of a single machine, our recommendation is as follows:
 
 ## **Installation and Configuration**
 
-The Observing Squad can be setup using the [installation scripts](/docs/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
+The Observing Squad can be setup using the [installation scripts](/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
 
 Clone the installer repository:
 

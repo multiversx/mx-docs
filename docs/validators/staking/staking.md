@@ -9,7 +9,7 @@ In order to submit a staking transaction, you must have the following:
 
 - A wallet with a sufficiently high amount of eGLD: you'll need 2500 eGLD for each node you want to stake for. You will submit the staking transaction from this wallet, so make sure you can access it.
 - The `validatorKey.pem` files of _each node_ you want to stake for. Each of these files contains the **BLS public key** of a node, along with its **secret key**. For staking, you'll only need the public keys of your nodes. Remember that the BLS public key consists of exactly 192 hexadecimal characters (that is, `0` to `9` and `a` to `f` only).
-- An optional, second wallet, where the rewards produced by the validators will be gathered. You only need this second wallet if you do not want the rewards to go into the same wallet from which you submitted the staking transaction. You will have to use the `erdpy` command-line tool to decode the address of this account. See the section "[Specifying an optional reward address](/docs/validators/staking/staking#specifying-an-optional-reward-address)" for details. The reward address can be changed later as well.
+- An optional, second wallet, where the rewards produced by the validators will be gathered. You only need this second wallet if you do not want the rewards to go into the same wallet from which you submitted the staking transaction. You will have to use the `erdpy` command-line tool to decode the address of this account. See the section "[Specifying an optional reward address](/validators/staking/staking#specifying-an-optional-reward-address)" for details. The reward address can be changed later as well.
 
 You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`. This page describes both approaches. However, it is recommended to use `erdpy` if possible, because it is less error-prone and builds the staking transaction automatically.
 
@@ -39,7 +39,7 @@ If you want to stake for a single node, the format of the "Data" field is simple
 stake@01@<BLS1>@67656e65736973
 ```
 
-Do not copy-paste the above format as-is into the "Data". Instead, you must **replace** `<BLS1>` with the **BLS public key** of the node you want to stake for. You can find the BLS public key in the `validatorKey.pem` file of that node. Read the page [Validator Keys](/docs/validators/key-management/validator-keys) to help you interpret the contents of the file and locate the BLS public key.
+Do not copy-paste the above format as-is into the "Data". Instead, you must **replace** `<BLS1>` with the **BLS public key** of the node you want to stake for. You can find the BLS public key in the `validatorKey.pem` file of that node. Read the page [Validator Keys](/validators/key-management/validator-keys) to help you interpret the contents of the file and locate the BLS public key.
 
 Make sure you do not remove the `@` characters. They are used to separate the pieces of information in the "Data" field. Only replace `<number>` and `<BLS1>`. The angle-brackets `<` and `>` must be removed.
 
@@ -53,7 +53,7 @@ stake@01@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855
 
 ### **Staking for multiple nodes at once**
 
-Staking for more than one node at a time isn't very different. You only need to append the information for your remaining nodes, after the information of the first node. Please read the previous section "Staking for a single node" before continuing. Also, _do not forget_ to update the "Amount" and "Gas Limit" fields according to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/docs/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
+Staking for more than one node at a time isn't very different. You only need to append the information for your remaining nodes, after the information of the first node. Please read the previous section "Staking for a single node" before continuing. Also, _do not forget_ to update the "Amount" and "Gas Limit" fields according to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
 
 For a _single_ node, as explained in the previous subsection, the format is this one:
 
@@ -73,7 +73,7 @@ And for _three_ nodes, the format is:
 stake@03@<BLS1>@67656e65736973@<BLS2>@67656e65736973@<BLS3>@67656e65736973
 ```
 
-Notice how each extra node adds the part `@<BLS…>@67656e65736973` to the previous format. You need to replace with `<BLS…>` with the actual **BLS public keys** of your nodes, which you can find inside their individual `validatorKey.pem` files. Make sure you **do not write the BLS secret keys**! Read the page [Validator Keys](/docs/validators/key-management/validator-keys) to see how to interpret the `validatorKey.pem` files.
+Notice how each extra node adds the part `@<BLS…>@67656e65736973` to the previous format. You need to replace with `<BLS…>` with the actual **BLS public keys** of your nodes, which you can find inside their individual `validatorKey.pem` files. Make sure you **do not write the BLS secret keys**! Read the page [Validator Keys](/validators/key-management/validator-keys) to see how to interpret the `validatorKey.pem` files.
 
 Moreover, with each extra BLS public key added, the first part of the format changes as well: `stake@01@…`, then `stake@02@…` and then `stake@03@…` . The number after `stake@` is the **number of nodes** you are staking for.
 
@@ -97,7 +97,7 @@ stake@<number>@<BLS1>@67656e65736973@<BLS2>@67656e65736973@…@<BLS99>@67656e657
 
 Remember to replace `<number>` with the number of nodes you want to stake for, with leading zeros, so that there is an even number of characters. If you stake for one node, replace with `01`. If you stake for 15 nodes, replace with `0F`. If you stake for 243 nodes, replace with `F3`.
 
-Also remember to update the "Amount" and "Gas Limit" according to the number of nodes you are staking for. See the first few paragraphs of the section [Staking through the wallet](/docs/validators/staking/staking#staking-through-the-wallett) to see how.
+Also remember to update the "Amount" and "Gas Limit" according to the number of nodes you are staking for. See the first few paragraphs of the section [Staking through the wallet](/validators/staking/staking#staking-through-the-wallett) to see how.
 
 ## **Specifying an optional reward address**
 
@@ -113,7 +113,7 @@ Make sure `erdpy` is installed by issuing this command on a terminal:
 erdpy --version
 ```
 
-The version reported by this command must be at least `erdpy 0.8.0`, or higher. If `erdpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/docs/sdk-and-tools/erdpy/installing-erdpy).
+The version reported by this command must be at least `erdpy 0.8.0`, or higher. If `erdpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/sdk-and-tools/erdpy/installing-erdpy).
 
 Once you're sure `erdpy` is installed and has the correct version, you can decode the address of your reward Wallet. For example, if this address is `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg`, you can decode it with:
 
@@ -153,7 +153,7 @@ Make sure `erdpy` is installed by issuing this command on a terminal:
 erdpy --version
 ```
 
-The version reported by this command must be at least `erdpy 0.8.0`, or higher. If `erdpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/docs/sdk-and-tools/erdpy/installing-erdpy).
+The version reported by this command must be at least `erdpy 0.8.0`, or higher. If `erdpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/sdk-and-tools/erdpy/installing-erdpy).
 
 Make sure `erdpy` is installed and has the latest version before continuing.
 
@@ -161,7 +161,7 @@ Make sure `erdpy` is installed and has the latest version before continuing.
 
 To send transactions on your behalf _without_ using the online Elrond Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
-Please follow the guide [Deriving the Wallet PEM file](/docs/sdk-and-tools/erdpy/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `erdpy` commands.
+Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `erdpy` commands.
 
 After the PEM file was generated, you can issue transactions from `erdpy`directly.
 
@@ -177,7 +177,7 @@ erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --va
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
 
-- Replace `<stake-value>` with the amount you are staking. You need to calculate this value with respect to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/docs/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
+- Replace `<stake-value>` with the amount you are staking. You need to calculate this value with respect to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
 - Replace `<validators-json-file>` with the a JSON file that lists the nodes you are staking for. This JSON file should look like this:
 
 ```
@@ -220,7 +220,7 @@ Notice that the two BLS public keys are separated by a comma, with no extra spac
 
 ## **The --reward-address parameter**
 
-When you submit a staking transaction, the Staking SmartContract remembers the wallet you sent it from, and the rewards from your staked validators will go to that wallet. This is the _default_ behavior. In this case, it will be the wallet which you used to generate the `walletKey.pem` file in the earlier subsection ["Your Wallet PEM file"](/docs/validators/staking/staking#your-wallet-pem-file).
+When you submit a staking transaction, the Staking SmartContract remembers the wallet you sent it from, and the rewards from your staked validators will go to that wallet. This is the _default_ behavior. In this case, it will be the wallet which you used to generate the `walletKey.pem` file in the earlier subsection ["Your Wallet PEM file"](/validators/staking/staking#your-wallet-pem-file).
 
 Alternatively, you can tell `erdpy` to specify another wallet to which your rewards should be transferred. You will need the **address of your reward wallet** (it looks like `erd1xxxxx…`) for this, which you will pass to `erdpy` using the `--reward-address` parameter.
 

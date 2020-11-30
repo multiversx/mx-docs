@@ -5,7 +5,7 @@ title: Creating Transactions
 
 ## **Transaction structure**
 
-As described in section [Signing Transactions](/docs/developers/signing-transactions/signing-transactions), a ready-to-broadcast transaction is structured as follows:
+As described in section [Signing Transactions](/developers/signing-transactions/signing-transactions), a ready-to-broadcast transaction is structured as follows:
 
 ```
 {
@@ -24,7 +24,7 @@ As described in section [Signing Transactions](/docs/developers/signing-transact
 
 ## **General network parameters**
 
-General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/docs/sdk-and-tools/rest-api/network#get-network-configuration).
+General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/sdk-and-tools/rest-api/network#get-network-configuration).
 
 ```
 {
@@ -43,7 +43,7 @@ General network parameters, such as the **chain ID**, **the minimum gas price**,
 
 Each transaction broadcasted to the Network must have the **nonce** field set consistently with the **account nonce**. In the Network, transactions of a given sender address are processed in order, with respect to the transaction nonce.
 
-The account nonce can be fetched from the API: [Get Address Nonce](/docs/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-nonce).
+The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-nonce).
 
 **The nonce must be a strictly increasing number, scoped to a given sender.** The sections below describe common issues and possible solutions when managing the nonce for transaction construction.
 
@@ -102,7 +102,7 @@ Documentation about properly setting a gas limit for smart contract transactions
 
 ## **Signing transactions**
 
-Please follow [Signing Transactions](/docs/developers/signing-transactions/signing-transactions).
+Please follow [Signing Transactions](/developers/signing-transactions/signing-transactions).
 
 ## **Simulate transaction execution**
 

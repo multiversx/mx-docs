@@ -98,12 +98,11 @@ html {
 }
 .fixedHeaderContainer header .headerTitleWithLogo {
   font-size: 1.2rem;
-  line-height: 28.8px;
+  line-height: 1.8rem;
   font-weight: 300;
   border-left: 1px solid #e4e5e5;
   padding-left: 0.7rem;
   color: #6c757d;
-  padding-bottom: 4px;
 }
 
 .headerWrapper.wrapper,

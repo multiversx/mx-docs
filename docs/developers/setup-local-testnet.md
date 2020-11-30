@@ -16,7 +16,7 @@ If not specified otherwise, the mini-testnet starts with one Shard plus the Meta
 
 ## **Prerequisites: erdpy**
 
-In order to install erdpy, follow the instructions at [install erdpy](/docs/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended).
+In order to install erdpy, follow the instructions at [install erdpy](/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended).
 
 :::note erdpy version
 Make sure your erdpy version is `0.8.7` or higher.

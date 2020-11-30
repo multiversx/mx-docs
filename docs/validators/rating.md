@@ -13,7 +13,7 @@ Observer nodes do not have a rating score. Only validator nodes do.
 
 When validators join the network immediately after staking, they start with an initial score of `50` points.
 
-Validators gain or lose rating points in a round depending on their role in that round (consensus proposer vs. consensus validator) and on their behavior within that role. Rating penalties are currently set to be `4` times as large as the corresponding gains. This means that a validator has to perform an action correctly 4 times in order to compensate for performing it once incorrectly. Moreover, consecutive losses are _compounding_, which means that the rating penalty increases with each transgression. See [Rating shard validators](/docs/validators/rating#rating-shard-validators) and [Rating metashard validators](/docs/validators/rating#rating-metashard-validators) for details on the calculations.
+Validators gain or lose rating points in a round depending on their role in that round (consensus proposer vs. consensus validator) and on their behavior within that role. Rating penalties are currently set to be `4` times as large as the corresponding gains. This means that a validator has to perform an action correctly 4 times in order to compensate for performing it once incorrectly. Moreover, consecutive losses are _compounding_, which means that the rating penalty increases with each transgression. See [Rating shard validators](/validators/rating#rating-shard-validators) and [Rating metashard validators](/validators/rating#rating-metashard-validators) for details on the calculations.
 
 :::tip
 Rating gains and losses on the metashard are different from the gains and losses on the normal shards.
@@ -46,7 +46,7 @@ Rating is **not** reset to 50 due to shard shuffling. The rating of a validator 
 :::
 
 :::tip
-The only way to increase the rating of a validator is to keep it up-to-date, keep it well-connected and make sure it is running on hardware that conforms to the [System requirements](/docs/validators/system-requirements).
+The only way to increase the rating of a validator is to keep it up-to-date, keep it well-connected and make sure it is running on hardware that conforms to the [System requirements](/validators/system-requirements).
 :::
 
 :::note multiple validators on the same machine

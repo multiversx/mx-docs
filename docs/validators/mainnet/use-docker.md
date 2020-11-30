@@ -14,7 +14,7 @@ docker run -d -v /absolute/path/to/config/:/data/ elrondnetwork/elrond-go-node:l
  --validator-key-pem-file="/data/keys/validatorKey.pem"
 ```
 
-In the snippet above, make sure you adjust the path to a valid configuration folder and also provide the appropriate command line arguments to the Node. For more details go to [Node CLI](/docs/validators/node-cli).
+In the snippet above, make sure you adjust the path to a valid configuration folder and also provide the appropriate command line arguments to the Node. For more details go to [Node CLI](/validators/node-cli).
 
 **Testnet** Validators may switch between different versions of the Node using the following Docker tags:
 

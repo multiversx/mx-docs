@@ -3,9 +3,9 @@ id: tools-for-signing
 title: Tools for signing
 ---
 
-In order to sign a transaction without actually dispatching it, one can use [erdpy](/docs/sdk-and-tools/erdpy/erdpy) or [erdwalletjs-cli](/docs/sdk-and-tools/erdwalletjs-cli).
+In order to sign a transaction without actually dispatching it, one can use [erdpy](/sdk-and-tools/erdpy/erdpy) or [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli).
 
-## **Sign using [erdpy](/docs/sdk-and-tools/erdpy/erdpy) (Command Line Interface)**
+## **Sign using [erdpy](/sdk-and-tools/erdpy/erdpy) (Command Line Interface)**
 
 Using a **pem** file:
 
@@ -47,7 +47,7 @@ In either case, the output file looks like this:
 }
 ```
 
-## **Sign using [erdwalletjs-cli](/docs/sdk-and-tools/erdwalletjs-cli)**
+## **Sign using [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli)**
 
 Given an unsigned transaction in a JSON file:
 

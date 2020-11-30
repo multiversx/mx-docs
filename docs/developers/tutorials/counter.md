@@ -7,7 +7,7 @@ Write, build and deploy a simple Smart Contract written in C
 
 ## **Prerequisites**
 
-You need to have [erdpy](/docs/sdk-and-tools/erdpy/installing-erdpy) installed.
+You need to have [erdpy](/sdk-and-tools/erdpy/installing-erdpy) installed.
 
 ## **Create the contract**
 

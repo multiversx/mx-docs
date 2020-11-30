@@ -17,7 +17,7 @@ The examples include scenarios such as:
 - deploying and upgrading Smart Contracts
 - interacting with Smart Contracts
 
-In order to run a script (Python module) that relies on erdpy, it is recommended to use the Python Virtual Environment set up by [erdpy-up](/docs/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended). Prior to the actual execution, the Virtual Environment has to be activated:
+In order to run a script (Python module) that relies on erdpy, it is recommended to use the Python Virtual Environment set up by [erdpy-up](/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended). Prior to the actual execution, the Virtual Environment has to be activated:
 
 ```
 source erdpy-activate

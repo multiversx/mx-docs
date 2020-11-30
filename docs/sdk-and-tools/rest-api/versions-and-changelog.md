@@ -17,9 +17,9 @@ This is the API launched at the Genesis.
 
 ## **Elrond Proxy HTTP API [v1.1.1](https://github.com/ElrondNetwork/elrond-proxy-go/releases/tag/v1.1.1)**
 
-This API version brought new features such as the [_hyperblock_-related endpoints](/docs/sdk-and-tools/rest-api/blocks#get-hyperblock-by-nonce), useful for monitoring the blockchain. Furthermore, the `GET transaction` endpoint has been adjusted to include extra fields - for example, the so-called _hyperblock coordinates_ (the _nonce_ and the _hash_ of the containing hyperblock).
+This API version brought new features such as the [_hyperblock_-related endpoints](/sdk-and-tools/rest-api/blocks#get-hyperblock-by-nonce), useful for monitoring the blockchain. Furthermore, the `GET transaction` endpoint has been adjusted to include extra fields - for example, the so-called _hyperblock coordinates_ (the _nonce_ and the _hash_ of the containing hyperblock).
 
-This API **has never been deployed to the central instance** of the Elrond Proxy, available at [api.elrond.com](https://api.elrond.com/). However, until November 2020, **this API has been deployed on-premises** to several partners and 3rd party services (such as Exchange systems) - in the shape of [Observing Squads](/docs/integrators/observing-squad), set up via the Mainnet installation scripts - version [e1.0.0](https://github.com/ElrondNetwork/elrond-go-scripts-mainnet/releases/tag/e1.0.0).
+This API **has never been deployed to the central instance** of the Elrond Proxy, available at [api.elrond.com](https://api.elrond.com/). However, until November 2020, **this API has been deployed on-premises** to several partners and 3rd party services (such as Exchange systems) - in the shape of [Observing Squads](/integrators/observing-squad), set up via the Mainnet installation scripts - version [e1.0.0](https://github.com/ElrondNetwork/elrond-go-scripts-mainnet/releases/tag/e1.0.0).
 
 This version of the API requires Observer Nodes with tag [e1.1.0](https://github.com/ElrondNetwork/elrond-go/releases/tag/e1.1.0) or greater.
 
@@ -42,7 +42,7 @@ This version of the API requires Observer Nodes with tag [v1.1.6](https://github
 Between API **v1.1.1** and API **v1.1.3**, the API consumer would observe the following **breaking changes**:
 
 - All fields of `vm-values` endpoints has been renamed (changed casing, among others).
-- The possible set of values for the transaction statuses has been changed: **executed** has been renamed to **success.** The statuses **received** and **partially-executed** have been merged under the status **pending**, while the status **not-executed** has been renamed to **fail**. For API consumers to not be affected by this change, they should follow the recommendations in [Querying the Blockchain](/docs/integrators/querying-the-blockchain).
+- The possible set of values for the transaction statuses has been changed: **executed** has been renamed to **success.** The statuses **received** and **partially-executed** have been merged under the status **pending**, while the status **not-executed** has been renamed to **fail**. For API consumers to not be affected by this change, they should follow the recommendations in [Querying the Blockchain](/integrators/querying-the-blockchain).
 
 :::important
 As of November 2020, new API consumers are recommended to switch to this version (or a more recent one) of the API. An Elrond Proxy instance providing this API is already available in the **staging environment** [api-backup.elrond.com](https://api-backup.elrond.com/).

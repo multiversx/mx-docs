@@ -664,4 +664,4 @@ Coming soon:
 - Writing the same crowdfunding contract with an ESDT token.
 
 [
-](/docs/developers/tutorials/crowdfunding-p1)
+](/developers/tutorials/crowdfunding-p1)
