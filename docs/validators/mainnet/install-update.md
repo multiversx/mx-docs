@@ -7,7 +7,7 @@ An Elrond node requires a host (computer) with the aforementioned specifications
 
 Let's dig in.
 
-**Node installation**
+## **Install your node(s)**
 
 After preparing the user permissions, the script configurations and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node. For installation use`1 - install`.
 
@@ -85,7 +85,7 @@ cd $HOME/elrond-utils
 Your first node is called `node-0` and it its REST API will run on port `8080` by default. The next node is `node-1 `on port `8081`, and so on.
 :::
 
-**Update your node**
+## **Update your node(s)**
 
 Upgrade your node by running the script and selecting options:
 
@@ -100,7 +100,7 @@ Upgrade your node by running the script and selecting options:
 
 Those are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts-mainnet/blob/master/README.md) and make sure to ask any questions in the Elrond [Validators chat](https://t.me/ElrondValidators).
 
-**Mandatory: Backup your keys**
+## **Mandatory: Backup your keys**
 
 Your private keys are needed to run your node. Losing them means losing control of your node. A 3rd party gaining access to them could result in lost funds.
 
