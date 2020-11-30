@@ -7,98 +7,12 @@ title: Staking
 
 In order to submit a staking transaction, you must have the following:
 
-<<<<<<< Updated upstream
-- A wallet with a sufficiently high amount of eGLD: you'll need 2500 eGLD for each node you want to stake for. You will submit the staking transaction from this wallet, so make sure you can access it.
-- The `validatorKey.pem` files of _each node_ you want to stake for. Each of these files contains the **BLS public key** of a node, along with its **secret key**. For staking, you'll only need the public keys of your nodes. Remember that the BLS public key consists of exactly 192 hexadecimal characters (that is, `0` to `9` and `a` to `f` only).
-- An optional, second wallet, where the rewards produced by the validators will be gathered. You only need this second wallet if you do not want the rewards to go into the same wallet from which you submitted the staking transaction. You will have to use the `erdpy` command-line tool to decode the address of this account. See the section "[Specifying an optional reward address](/validators/staking/staking#specifying-an-optional-reward-address)" for details. The reward address can be changed later as well.
-=======
 - 2500 eGLD for each node and 0.006 eGold per node as transaction fee
 - A unique `validatorKey.pem` files of each node
->>>>>>> Stashed changes
 
 You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`.
 
 # **Staking through the Wallet**
-
-<<<<<<< Updated upstream
-Open your wallet on [https://wallet.elrond.com](https://wallet.elrond.com/) and click the "Send" button. Carefully fill the form with the following information. Make sure it is clear to you what this information is, and where to adjust it with your own information.
-
-In the "To" field, paste the address of the Staking SmartContract: `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l`
-
-For the "Amount" field, you first need to calculate the amount of eGLD that needs to be staked. This is done by multiplying 2500 eGLD by the _number of nodes_ you want to stake. For example, if you want to stake for a single node, you need to enter `2500` (2500 eGLD). For two nodes, it's `5000` and for three nodes it is `7500`.
-
-Next, expand the "Fee limit" section of the form. You'll see the "Gas limit" field appear. The value that needs to be entered here also depends on the _number of nodes_ you want to stake. To calculate the "Gas limit" value, mulitply `6000000` by the number of nodes. For example, if you want to stake for a single node, enter `6000000`. For two nodes, enter `12000000`, for three nodes enter `18000000` and so on. Observe how the "Fee limit" field automatically calculates the cost of this transaction.
-
-## **The "Data" field**
-
-Next, you must fill the "Data" field. The text you will write here will be read by the Staking SmartContract to find out what nodes you want to stake for. Remember, you can stake for any number of nodes at once, if you have the funds.
-
-When writing in the "Data" field, you must adhere to a strict format, described in the following subsections.
-
-### **Staking for a single node**
-
-If you want to stake for a single node, the format of the "Data" field is simpler:
-
-```
-stake@01@<BLS1>@67656e65736973
-```
-
-Do not copy-paste the above format as-is into the "Data". Instead, you must **replace** `<BLS1>` with the **BLS public key** of the node you want to stake for. You can find the BLS public key in the `validatorKey.pem` file of that node. Read the page [Validator Keys](/validators/key-management/validator-keys) to help you interpret the contents of the file and locate the BLS public key.
-
-Make sure you do not remove the `@` characters. They are used to separate the pieces of information in the "Data" field. Only replace `<number>` and `<BLS1>`. The angle-brackets `<` and `>` must be removed.
-
-You must also make sure that the part `@67656e65736973` remains in place and is not deleted. It is a reserved placeholder and it must exist in the "Data" field after each BLS public key you add.
-
-As an example, the "Data" field of a staking transaction for a single node, _without_ specifying an optional reward address, looks like this:
-
-stake@01@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27@67656e65736973
-
-![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M9NpOqGa_t-XucylYWc%2F-M9O39oKgkM4DGWncS6M%2Fstaking-single-node.png?alt=media&token=04d3f9b2-d895-4f9f-87f7-19cd5dc91943)
-
-### **Staking for multiple nodes at once**
-
-Staking for more than one node at a time isn't very different. You only need to append the information for your remaining nodes, after the information of the first node. Please read the previous section "Staking for a single node" before continuing. Also, _do not forget_ to update the "Amount" and "Gas Limit" fields according to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
-
-For a _single_ node, as explained in the previous subsection, the format is this one:
-
-```
-stake@01@<BLS1>@67656e65736973
-```
-
-For _two_ nodes, the format is as follows:
-
-```
-stake@02@<BLS1>@67656e65736973@<BLS2>@67656e65736973
-```
-
-And for _three_ nodes, the format is:
-
-```
-stake@03@<BLS1>@67656e65736973@<BLS2>@67656e65736973@<BLS3>@67656e65736973
-```
-
-Notice how each extra node adds the part `@<BLS…>@67656e65736973` to the previous format. You need to replace with `<BLS…>` with the actual **BLS public keys** of your nodes, which you can find inside their individual `validatorKey.pem` files. Make sure you **do not write the BLS secret keys**! Read the page [Validator Keys](/validators/key-management/validator-keys) to see how to interpret the `validatorKey.pem` files.
-
-Moreover, with each extra BLS public key added, the first part of the format changes as well: `stake@01@…`, then `stake@02@…` and then `stake@03@…` . The number after `stake@` is the **number of nodes** you are staking for.
-
-For example, the "Data" field for a staking transaction for two nodes looks like this:
-
-stake@02@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27@67656e65736973@f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d@67656e65736973
-
-![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M9NpOqGa_t-XucylYWc%2F-M9O3Hws-5rwP264XN1X%2Fstaking-two-nodes.png?alt=media&token=16b347fa-4552-4ec0-8f4e-89b71783c31e)
-
-For three nodes, it's like this:
-
-stake@03@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27@67656e65736973@f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d@67656e65736973@fbfc0b43b146d8c809a489aa2aeeaf5c33557c969a97f866748f52f01c4e930415953136f674d4449753eff460894714b245217954783d35cdaa6fb28b6cedea109246099d9bbabebfe10420745acd899bc2f28ec225a649301dec59ee4497f1@67656e65736973
-
-Notice how the `@` character separates the pieces of information. It makes it easier to check for mistakes if you look for them.
-
-### **The general format**
-
-You can write the text for the "Data" field for _any_ number of nodes. The general format looks like this:
-=======
-Adding a node as a Validator will be done in the "Validate" section of the wallet. The dedicated GUI securely automates all relevant tasks, such as staking, unstaking, unjailing or changing the rewards address.
->>>>>>> Stashed changes
 
 1. Go to https://wallet.elrond.com and log into your wallet
 2. Go to the Validate section
@@ -106,42 +20,13 @@ Adding a node as a Validator will be done in the "Validate" section of the walle
 
 ![image-20201130205859133](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130205859133.png)
 
-<<<<<<< Updated upstream
-Also remember to update the "Amount" and "Gas Limit" according to the number of nodes you are staking for. See the first few paragraphs of the section [Staking through the wallet](/validators/staking/staking#staking-through-the-wallett) to see how.
-=======
 4. Navigate to the location of the .pem file or drag & drop it
 5. Press "Continue"
->>>>>>> Stashed changes
 
 ![image-20201130210324826](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130210324826.png)
 
-<<<<<<< Updated upstream
-When you submit a staking transaction, the Staking SmartContract remembers the Wallet you sent it from, and the rewards from your staked validators will go to that Wallet. This is the _default_ behavior.
-
-However, if you wish to have your rewards sent to a _different_ Wallet, you can add an extra part to the "Data" field, before submitting the staking transaction.
-
-You need the **address of your reward Wallet** (it looks like `erd1xxxxx…`), which you'll have to decode it using `erdpy`.
-
-Make sure `erdpy` is installed by issuing this command on a terminal:
-
-```
-erdpy --version
-```
-
-The version reported by this command must be at least `erdpy 0.8.0`, or higher. If `erdpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/sdk-and-tools/erdpy/installing-erdpy).
-
-Once you're sure `erdpy` is installed and has the correct version, you can decode the address of your reward Wallet. For example, if this address is `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg`, you can decode it with:
-
-```
-erdpy wallet bech32 --decode erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
-```
-=======
 6. The staking transaction data is automatically populated using the public key in the .pem certificate you provided. The private key is not touched and the data does not leave your browser. Only the transaction with this public information will be sent to the network once you press Confirm
-7. Press "Confirm"
->>>>>>> Stashed changes
-
-![image-20201130211101909](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130211101909.png)
-
+7. Press "Confirm"![image-20201130211101909](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130211101909.png)
 8. The status of the transaction will be displayed on screen, together with a success message. Click "Done" once you see the Success message.
 
 ![image-20201130211729357](C:\Users\Mldvs\AppData\Roaming\Typora\typora-user-images\image-20201130211729357.png)
