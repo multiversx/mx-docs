@@ -12,7 +12,7 @@ In order to submit a staking transaction, you must have the following:
 
 You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`.
 
-# **Staking through the Wallet**
+## **Staking through the Wallet**
 
 1. Go to https://wallet.elrond.com and log into your wallet
 2. Go to the Validate section
@@ -45,7 +45,7 @@ You have the option of staking through the online Wallet at [https://wallet.elro
 ![staking6](/validators/staking6.png)
 
 
-# **Staking through erdpy**
+## **Staking through erdpy**
 
 Submitting the staking transaction using `erdpy` avoids having to write the "Data" field manually. Instead, the staking transaction is constructed automatically by `erdpy` and submitted to the network directly, in a single command.
 
@@ -59,7 +59,7 @@ The version reported by this command must be at least `erdpy 0.8.0`, or higher. 
 
 Make sure `erdpy` is installed and has the latest version before continuing.
 
-## **Your Wallet PEM file**
+# **Your Wallet PEM file**
 
 To send transactions on your behalf _without_ using the online Elrond Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
@@ -67,7 +67,7 @@ Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deri
 
 After the PEM file was generated, you can issue transactions from `erdpy`directly.
 
-## **The staking transaction**
+# **The staking transaction**
 
 The following commands assume that the PEM file for your Wallet was saved with the name `walletKey.pem` in the current folder, where you are issuing the commands from.
 
@@ -120,7 +120,7 @@ erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000
 
 Notice that the two BLS public keys are separated by a comma, with no extra space between them.
 
-## **The --reward-address parameter**
+# **The --reward-address parameter**
 
 When you submit a staking transaction, the Staking SmartContract remembers the wallet you sent it from, and the rewards from your staked validators will go to that wallet. This is the _default_ behavior. In this case, it will be the wallet which you used to generate the `walletKey.pem` file in the earlier subsection ["Your Wallet PEM file"](/validators/staking/staking#your-wallet-pem-file).
 
