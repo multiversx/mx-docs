@@ -43,7 +43,17 @@ Generate a certificate file containing your Validator key by running the `keygen
 ./elrond-utils/keygenerator
 ```
 
-Copy the generated `validatorKey.pem` file - in ZIP form - to the `$HOME/VALIDATOR_KEYS/` folder . This is important for your node to be able to restart correctly after an upgrade.
+Copy the generated `validatorKey.pem` file to the `config` folder of your node(s), repeat for each node. 
+
+```
+cp validatorKey.pem ~/elrond-nodes/node-0/config/
+```
+
+:::tip
+Each node needs its unique `validatorKey.pem` file
+:::
+
+Then copy the `validatorKey.pem` file - in ZIP form - to the `$HOME/VALIDATOR_KEYS/` folder . This is important for your node to be able to restart correctly after an upgrade.
 
 ```
 zip node-0.zip validatorKey.pem

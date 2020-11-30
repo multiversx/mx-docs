@@ -118,8 +118,6 @@ For two nodes, it becomes this:
 erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://api.elrond.com --estimate-gas --recall-nonce
 ```
 
-Notice that the two BLS public keys are separated by a comma, with no extra space between them.
-
 # **The --reward-address parameter**
 
 When you submit a staking transaction, the Staking SmartContract remembers the wallet you sent it from, and the rewards from your staked validators will go to that wallet. This is the _default_ behavior. In this case, it will be the wallet which you used to generate the `walletKey.pem` file in the earlier subsection ["Your Wallet PEM file"](/validators/staking/staking#your-wallet-pem-file).
