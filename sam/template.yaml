@@ -32,20 +32,15 @@ Resources:
       DistributionConfig:
         Enabled: true
         PriceClass: PriceClass_100
-        CustomErrorResponses:
-          - ErrorCode: 404
-            ErrorCachingMinTTL: 30
-            ResponseCode: 200
-            ResponsePagePath: '/index.html'
         Aliases:
-        - docs.elrond.com
+          - docs.elrond.com
         Origins:
-        - Id: s3-static-site
-          DomainName: docs.elrond.com.s3-website.us-east-1.amazonaws.com
-          CustomOriginConfig:
-            HTTPPort: '80'
-            HTTPSPort: '443'
-            OriginProtocolPolicy: http-only
+          - Id: s3-static-site
+            DomainName: docs.elrond.com.s3-website.us-east-1.amazonaws.com
+            CustomOriginConfig:
+              HTTPPort: '80'
+              HTTPSPort: '443'
+              OriginProtocolPolicy: http-only
         ViewerCertificate:
           AcmCertificateArn: 'arn:aws:acm:us-east-1:777241893292:certificate/4fc48d4f-75c1-4bb9-983f-0c49b1fc44e1'
           MinimumProtocolVersion: TLSv1
