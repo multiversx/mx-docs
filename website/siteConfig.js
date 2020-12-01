@@ -28,7 +28,7 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
 
   headerLinks: [
-    { search: true },
+    // { search: true },
     { href: "/developers/tutorials/crowdfunding-p1", label: "Develop" },
     { href: "/validators/system-requirements", label: "Validate" },
     { href: "/integrators/observing-squad", label: "Integrate" },

@@ -174,19 +174,12 @@ html {
 }
 #app-links .app-menu-entry:hover .app-icon,
 #app-links .app-menu-entry:focus .app-icon,
-#app-links .app-menu-entry.active .app-icon {
+#app-links .app-menu-entry.active .app-icon,
+#app-links .app-switcher-icon.active {
   fill: #1b46c2;
 }
 #app-links .app-switcher-icon {
   cursor: pointer;
-}
-#app-links .app-switcher-icon.app-icon {
-  fill: #cacbcc;
-}
-#app-links .app-menu-entry:hover .app-switcher-icon.app-icon,
-#app-links .app-menu-entry:focus .app-switcher-icon.app-icon,
-#app-links .app-switcher-icon.active {
-  fill: #1b46c2;
 }
 #app-links .app-switcher-icon > * {
   pointer-events: none;
@@ -441,11 +434,15 @@ footer a.footer-text svg {
   .navigationSlider .slidingNav ul li {
     flex: 0 1 auto;
   }
-  .navigationSlider .slidingNav ul li:nth-child(2) {
+
+  .navigationSlider .slidingNav ul li:not(.navSearchWrapper) {
     flex: 1 1 10%;
     text-align: right;
   }
-  .navigationSlider .slidingNav ul li:nth-child(2) > a {
+  .navigationSlider .slidingNav ul li:not(.navSearchWrapper) ~ li {
+    flex: 0 0 auto;
+  }
+  .navigationSlider .slidingNav ul li:not(.navSearchWrapper) > a {
     display: inline-block;
     text-align: right;
   }
@@ -455,8 +452,14 @@ footer a.footer-text svg {
   .navigationSlider .slidingNav ul li a {
     padding: 6px 20px;
   }
+  .reactNavSearchWrapper input#search_input_react,
+  .reactNavSearchWrapper input#search_input_react:focus,
+  .reactNavSearchWrapper input#search_input_react:active {
+    width: 170px;
+  }
   #app-links .app-menu-entry {
-    margin-left: 2rem;
+    margin: 0 8px;
+    padding: 0 4px;
   }
   .fixedHeaderContainer {
     border-bottom: 1px solid #e4e5e5 !important;
