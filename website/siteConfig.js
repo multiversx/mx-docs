@@ -13,7 +13,7 @@ const siteConfig = {
   tagline: "The Internet Scale Blockchain",
   url: "https://docs.elrond.com", // Your website URL
   baseUrl: "/", // Base URL for your project */
-  docsUrl: '',
+  docsUrl: "",
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
@@ -44,6 +44,8 @@ const siteConfig = {
   headerIcon: "img/logos/logo.svg",
   footerIcon: "img/logos/elrond.svg",
   favicon: "img/favicon/favicon-32x32.png",
+
+  manifest: "manifest/manifest.json",
 
   /* Colors for website */
   colors: {

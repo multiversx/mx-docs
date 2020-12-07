@@ -42,8 +42,11 @@ html {
 .title-container h1 {
   color: #1b46c2;
 }
-.title-container {
+.title-container h2 {
   color: #727272;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 /* Highlight Panel */

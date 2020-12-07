@@ -45,9 +45,9 @@ class Index extends React.Component {
                 Welcome to the Elrond docs!
                 <br />
               </h1>
-              <h3 className="m-0 font-montserrat">
+              <h2 className="m-0 font-montserrat">
                 Choose your path you must.
-              </h3>
+              </h2>
             </div>
           </div>
           <div className="row justify-content-center pt-5">
