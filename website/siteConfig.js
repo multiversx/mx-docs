@@ -78,6 +78,7 @@ const siteConfig = {
   markdownPlugins: [
     // Highlight admonitions.
     require("remarkable-admonitions")({ icon: "svg-inline" }),
+    require("remarkable-katex"),
   ],
 
   // On page navigation for the current documentation page.
