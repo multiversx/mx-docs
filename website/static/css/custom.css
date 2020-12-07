@@ -30,6 +30,9 @@ html {
 .docsContainer .post a:active {
   text-decoration: underline;
 }
+.docsContainer .katex-html {
+  display: none;
+}
 
 /* Main Page */
 .landing-page.mainContainer {

@@ -208,6 +208,38 @@ Value (hex-encoded) successfully retrieved.
 
 :::
 
+# LaTeX
+
+## LaTeX Example
+
+### Inline
+
+Text that contains a function $ f(a,b,c) = (a^2+b^2+c^2)^3 $ and continues after that function.
+
+Text that contains an integral $\int_{a}^{b} x^2 \,dx$ and continues after that $\binom{n}{k}$
+
+### Block
+
+$$
+f(a,b,c) = (a^2+b^2+c^2)^3
+$$
+
+Example text
+
+$$
+\binom{n}{k} = \frac{n!}{k!(n-k)!}
+$$
+
+$$
+\relax{y} = \int_{-\infty}^\infty
+    \hat\xi\,e^{2 \pi i \xi x}
+    \,d\xi
+$$
+
+$$
+|x| = \begin{Bmatrix} x  & {if } x \geq 0 \\ -x & {if } x < 0 \end{Bmatrix}
+$$
+
 ### Youtube Embed
 
 ## First Version
@@ -217,3 +249,4 @@ Value (hex-encoded) successfully retrieved.
 ## Second version
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bXbBfJCRVqE?playlist=bXbBfJCRVqE&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+$$

@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "docusaurus": "^1.14.6",
-    "remarkable-admonitions": "^0.2.2"
+    "remarkable-admonitions": "^0.2.2",
+    "remarkable-katex": "^1.1.7"
   }
 }
