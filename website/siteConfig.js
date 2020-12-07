@@ -73,6 +73,7 @@ const siteConfig = {
   stylesheets: [
     "https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap",
     "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.css",
+    "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css",
   ],
 
   markdownPlugins: [
