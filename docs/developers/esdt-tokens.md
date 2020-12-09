@@ -25,6 +25,7 @@ IssuanceTransaction {
     GasLimit: 50000000
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
           "@" + <initial supply in hexadecimal encoding>
 }
 ```
