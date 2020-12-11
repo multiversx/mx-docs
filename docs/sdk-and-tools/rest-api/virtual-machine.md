@@ -5,7 +5,7 @@ title: Virtual Machine
 
 Query values stored within Smart Contracts.
 
-### <span class="badge badge-success">POST</span> Compute Output of Pure Function
+## <span class="badge badge-success">POST</span> Compute Output of Pure Function
 
 `https://api.elrond.com/vm-values/query`
 
@@ -17,11 +17,11 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param         | Required                                  | Type     | Description                           |
-| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.          |
-| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
-| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
+| Param     | Required                                  | Type     | Description                                                                         |
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
 
 <!--Response-->
 
@@ -75,7 +75,7 @@ Content-Type: application/json
 }
 ```
 
-### <span class="badge badge-success">POST</span> Compute Hex Output of Pure Function
+## <span class="badge badge-success">POST</span> Compute Hex Output of Pure Function
 
 `https://api.elrond.com/vm-values/hex`
 
@@ -87,11 +87,11 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param         | Required                                  | Type     | Description                           |
-| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.           |
-| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
-| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
+| Param     | Required                                  | Type     | Description                                                                         |
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
 
 <!--Response-->
 
@@ -107,7 +107,7 @@ The output value is retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Compute String Output of Pure Function
+## <span class="badge badge-success">POST</span> Compute String Output of Pure Function
 
 `https://api.elrond.com/vm-values/string`
 
@@ -119,11 +119,11 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param         | Required                                  | Type     | Description                           |
-| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.           |
-| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
-| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
+| Param     | Required                                  | Type     | Description                                                                         |
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
 
 <!--Response-->
 
@@ -139,7 +139,7 @@ The output value is retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Get Integer Output of Pure Function
+## <span class="badge badge-success">POST</span> Get Integer Output of Pure Function
 
 `https://api.elrond.com/vm-values/int`
 
@@ -151,11 +151,11 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param         | Required                                  | Type     | Description                           |
-| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.           |
-| FuncName      | <span class="text-danger">REQUIRED</span>  | `string` | The name of the Pure Function to execute. |
-| Args | <span class="text-danger">REQUIRED</span> | `array` | The arguments of the Pure Function, as hex-encoded strings. The array can be empty.        |
+| Param     | Required                                  | Type     | Description                                                                         |
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
 
 <!--Response-->
 
