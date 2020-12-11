@@ -15,7 +15,7 @@ ESDT tokens can be issued, owned and held by any Account on the Elrond network, 
 
 # **Issuance of ESDT tokens**
 
-ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will own and manage the tokens. This transaction has the form:
+ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will own and manage the tokens. When issuing a token, one must provide a valid token name and a valid ticker. This transaction has the form:
 
 ```
 IssuanceTransaction {
@@ -30,6 +30,25 @@ IssuanceTransaction {
 }
 ```
 
+Optionally, the properties can be set when issuing a contract. Example:
+```
+IssuanceTransaction {
+    Sender: <account address of the token owner>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 5000000000000000000 (5 eGLD)
+    GasLimit: 50000000
+    Data: "issue" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
+          "@" + <initial supply in hexadecimal encoding> +
+          "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canMint" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canBurn" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+}
+```
+
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 
 There are two restrictions imposed on the name of the token to be issued:
@@ -37,7 +56,14 @@ There are two restrictions imposed on the name of the token to be issued:
 - its length must be between 10 and 20 characters
 - all characters must be alphanumeric
 
-For example, a user named Alice wants to issue 4091 tokens called "AliceTokens". The issuance transaction would be:
+Also, the ticker has to respect the following:
+
+- its length must be between 3 and 8 chacarters
+- all characters must be uppercase letters
+
+The contract will add a random string to the ticker thus creating the token identfier. The random string starts with “-” and has 6 more random characters.
+
+For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". The issuance transaction would be:
 
 ```
 IssuanceTransaction {
@@ -47,15 +73,19 @@ IssuanceTransaction {
     GasLimit: 50000000
     Data: "issue" +
           "@416c696365546f6b656e73" +
+          "@414c43" +
           "@0ffb"
 }
 ```
 
 Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time, if needed. For more operations available to ESDT token owners, see [Token management](/developers/esdt-tokens#token-management).
 
+If the issue transaction is successful, a smart contract result will mint the owner with the provided total supply will be generated. In that smart contract result, the `data` field will contain a transfer sintax which is explained below. What is important to note is that the token identifier can be fetched from
+here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explaind also below).
+
 # **Transfers**
 
-Performing an ESDT transfer is done by sending a transaction directly to the desired receiver Account, but specifying some extra pieces of information in its Data field. An ESDT transfer transaction has the following form:
+Performing an ESDT transfer is done by sending a transaction directly to the desired receiver Account, but specifying some extra pieces of information in its `Data` field. An ESDT transfer transaction has the following form:
 
 ```
 TransferTransaction {
@@ -64,7 +94,7 @@ TransferTransaction {
     Value: 0
     GasLimit: 250000
     Data: "ESDTTransfer" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <value to transfer in hexadecimal encoding>
 }
 ```
@@ -72,10 +102,10 @@ TransferTransaction {
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 
 - the receiver can be any account (which may or may not be a smart contract)
-- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely 250000
+- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `250000`
 - the Data field contains what appears to be a smart contract method invocation with arguments, but this invocation never reaches the VM: the string `ESDTTransfer` is reserved by the protocol and is handled as a built-in function, not as a smart contract call
 
-Following the example from earlier, a transfer from Alice to another user, Bob, would look like this:
+Following the example from earlier, assuming that the token identifier is `414c432d363235386432`, a transfer from Alice to another user, Bob, would look like this:
 
 ```
 TransferTransaction {
@@ -84,7 +114,7 @@ TransferTransaction {
     Value: 0
     GasLimit: 250000
     Data: "ESDTTransfer" +
-          "@416c696365546f6b656e73" +
+          "@414c432d363235386432" +
           "@0c"
 }
 ```
@@ -106,7 +136,7 @@ TransferWithCallTransaction {
     Value: 0
     GasLimit: 250000 + <an appropriate amount for the method call>
     Data: "ESDTTransfer" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <value to transfer in hexadecimal encoding> +
           "@" + <name of method to call in hexadecimal encoding> +
           "@" + <first argument of the method in hexadecimal encoding> +
@@ -148,7 +178,7 @@ MintTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "mint" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <new supply in hexadecimal encoding>
 }
 ```
@@ -168,7 +198,7 @@ BurnTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "ESDTburn" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <supply to burn in hexadecimal encoding>
 }
 ```
@@ -188,7 +218,7 @@ PauseTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "pause" +
-          "@" + <token name in hexadecimal encoding>
+          "@" + <token identifier in hexadecimal encoding>
 }
 ```
 
@@ -201,7 +231,7 @@ UnpauseTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "unPause" +
-          "@" + <token name in hexadecimal encoding>
+          "@" + <token identifier in hexadecimal encoding>
 }
 ```
 
@@ -218,7 +248,7 @@ FreezeTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "freeze" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
@@ -232,7 +262,7 @@ UnfreezeTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "unFreeze" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
@@ -250,7 +280,7 @@ WipeTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "wipe" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
@@ -268,7 +298,7 @@ TransferOwnershipTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "transferOwnership" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to transfer ownership to in hexadecimal encoding>
 }
 ```
@@ -288,7 +318,7 @@ UpgradingTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "esdtControlChanges" +
-          "@" + <token name in hexadecimal encoding> +
+          "@" + <token identifier in hexadecimal encoding> +
           "@" + <property name in hexadecimal encoding> +
           "@" + <"true" or "false" in hexadecimal encoding> +
           "@" + <property name in hexadecimal encoding> +
@@ -306,7 +336,7 @@ UpgradingTransaction {
     Value: 0
     GasLimit: 50000000
     Data: "esdtControlChanges" +
-          "@416c696365546f6b656e73" +
+          "@414c432d363235386432" +
           "@63616e57697065" +
           "@66616c7365" +
           "@63616e4275726e" +
@@ -316,8 +346,239 @@ UpgradingTransaction {
 
 In the example above, the encodings mean the following (decoded to ASCII):
 
-- `416c696365546f6b656e73` = `AliceTokens`
+- `414c432d363235386432` = `ALC-6258d2`
 - `63616e57697065` = `canWipe`
 - `66616c7365` = `false`
 - `63616e4275726e` = `canBurn`
 - `74727565` = `true`
+
+## Rest API
+
+There are a number of API endpoints that one can use to interact with ESDT data. These are:
+
+### <span class="badge badge-primary">GET</span> Get all ESDT tokens for an address
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+Returns an array of ESDT Tokens that the specified address has interacted with (issued, sent or received).
+
+```
+https://api.elrond.com/address/*bech32Address*/esdt
+```
+
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
+
+<!--Response-->
+
+```json
+{
+  "data": {
+    "tokens": [
+      "ABC-0d0060",
+      "DEF-d00600"
+    ]
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-primary">GET</span> Get balance for an address and an ESDT token
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+Returns the balance of an address for a specific ESDT Tokens.
+
+```
+https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
+```
+
+| Param           | Required                                  | Type     | Description                           |
+| -------------   | ----------------------------------------- | -------- | ------------------------------------- |
+| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
+| tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier.                 |
+
+<!--Response-->
+
+```json
+{
+  "data": {
+    "tokenData": {
+      "balance": "99502603",
+      "properties": "",
+      "tokenIdentifier": "GLD-0d0060"
+    }
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Get all issued ESDT tokens
+
+This involves a `vm query` request to the `ESDT` address.
+For example:
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://api.elrond.com/vm-values/query
+```
+
+```json
+{
+	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+	"funcName": "getAllESDTTokens",
+	"args": []
+}
+
+```
+
+<!--Response-->
+
+```json
+{
+  "data": {
+    "data": {
+      "returnData": [
+        "VEdELWE1Y2NlYg=="
+      ],
+      "returnCode": "ok",
+      "returnMessage": "",
+      "gasRemaining": 18446744073659541615,
+      "gasRefund": 0,
+      "outputAccounts": {
+        "000000000000000000010000000000000000000000000000000000000002ffff": {
+          "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+          "nonce": 0,
+          "balance": null,
+          "balanceDelta": 0,
+          "storageUpdates": {},
+          "code": null,
+          "codeMetaData": null,
+          "outputTransfers": [],
+          "callType": 0
+        }
+      },
+      "deletedAccounts": null,
+      "touchedAccounts": null,
+      "logs": []
+    }
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+What is important in this section is the `returnData` member that will contain the bytes of a list of token identifiers, separated by `@`.
+In the example response, `returnData` contains a single element `VEdELWE1Y2NlYg==` which represents the bytes for a single token identifier. In JSON, bytes fields are encoded as base64. `base64decode("VEdELWE1Y2NlYg==") = TGD-a5cceb`.
+
+If multiple tokens exist, the `returnData` will contains also a single element. Example:
+```
+....
+ "data": {
+      "returnData": [
+        "VEdELWE1Y2NlYkBBTEMtYjIzNDE1"
+      ],
+      "returnCode": "ok",
+...      
+```
+where `VEdELWE1Y2NlYkBBTEMtYjIzNDE1` is translated to `TGD-a5cceb@ALC-b23415` (2 token identifier separated by `@`)
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Get ESDT token properties
+
+This involves a `vm query` request to the `ESDT` address.
+For example:
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://api.elrond.com/vm-values/query
+```
+
+```json
+{
+	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+	"funcName": "getTokenProperties",
+	"args": ["474c442d306430303630"]
+}
+```
+The argument must be the token identifier, hexadecimal encoded. In the example, `474c442d306430303630` = `GLD-0d0060`.
+
+<!--Response-->
+
+```json
+{
+  "data": {
+    "data": {
+      "returnData": [
+        "QWxpY2VUb2tlbnM=",
+        "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=",
+        "MTAwMDAwMDAwMDA=",
+        "MA==",
+        "SXNQYXVzZWQtZmFsc2U=",
+        "Q2FuVXBncmFkZS10cnVl",
+        "Q2FuTWludC10cnVl",
+        "Q2FuQnVybi10cnVl",
+        "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",
+        "Q2FuUGF1c2UtdHJ1ZQ==",
+        "Q2FuRnJlZXplLXRydWU=",
+        "Q2FuV2lwZS10cnVl"
+      ],
+      "returnCode": "ok",
+      "returnMessage": "",
+      "gasRemaining": 18446744073659551615,
+      "gasRefund": 0,
+      "outputAccounts": {
+        "000000000000000000010000000000000000000000000000000000000002ffff": {
+          "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+          "nonce": 0,
+          "balance": null,
+          "balanceDelta": 0,
+          "storageUpdates": {},
+          "code": null,
+          "codeMetaData": null,
+          "outputTransfers": [],
+          "callType": 0
+        }
+      },
+      "deletedAccounts": null,
+      "touchedAccounts": null,
+      "logs": []
+    }
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+The `returnData` member will contain an array of the properties in a fixed order (base64 encoded). For the example response, the meaning is:
+```
+"returnData": [
+  "QWxpY2VUb2tlbnM=",                             | token name                | AliceTokens
+  "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=", | bytes of a bech32 addres  | erd1mq6gn3yngzdgh0zdfa07zepga6a8yf7dkeue24zp3snknvjvucvs37hmrq after decoding
+  "MTAwMDAwMDAwMDA=",                             | total supply              | 10000000000
+  "MA==",                                         | burnt value               | 0
+  "SXNQYXVzZWQtZmFsc2U=",                         | is paused                 | IsPaused-false
+  "Q2FuVXBncmFkZS10cnVl",                         | can upgrade               | CanUpgrade-true
+  "Q2FuTWludC10cnVl",                             | can mint                  | CanMint-true
+  "Q2FuQnVybi10cnVl",                             | can burn                  | CanBurn-true
+  "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",                 | can change owner address  | CanChangeOwner-true
+  "Q2FuUGF1c2UtdHJ1ZQ==",                         | can pause                 | CanPause-true
+  "Q2FuRnJlZXplLXRydWU=",                         | can freeze                | CanFreeze-true
+  "Q2FuV2lwZS10cnVl"                              | can wipe                  | CanWipe-true
+],
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
