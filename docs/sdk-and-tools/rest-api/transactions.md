@@ -5,7 +5,7 @@ title: Transactions
 
 Send Transactions to the Blockchain and query information about them.
 
-### <span class="badge badge-success">POST</span> Send Transaction
+## <span class="badge badge-success">POST</span> Send Transaction
 
 `https://api.elrond.com/transaction/send`
 
@@ -17,18 +17,18 @@ This endpoint allows one to send a signed Transaction to the Blockchain.
 
 Body Parameters
 
-| Param         | Required                                  | Type     | Description                           |
-| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
-| version | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).               |
-| chainID      | <span class="text-danger">REQUIRED</span>  | `string` | The Chain identifier. |
-| nonce    | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.           |
-| value | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer (can be zero).               |
-| sender | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.              |
-| receiver      | <span class="text-danger">REQUIRED</span>  | `string` | The Address (bech32) of the Receiver. |
-| gasPrice    | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).         |
-| gasLimit | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.             |
-| data    | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.         |
-| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.              |
+| Param     | Required                                  | Type     | Description                                     |
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------- |
+| version   | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).        |
+| chainID   | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                           |
+| nonce     | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                        |
+| value     | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer (can be zero).            |
+| sender    | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.             |
+| receiver  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.           |
+| gasPrice  | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).           |
+| gasLimit  | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.     |
+| data      | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.          |
+| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction. |
 
 <!--Response-->
 
@@ -48,7 +48,7 @@ Invalid Transaction signature.
 
 ```json
 {
-    "error": "transaction generation failed: ed25519: invalid signature"
+  "error": "transaction generation failed: ed25519: invalid signature"
 }
 ```
 
@@ -77,7 +77,8 @@ Content-Type: application/json
     "signature": "93207c579bf57be03add632b0e1624a73576eeda8a1687e0fa286f03eb1a17ffb125ccdb008a264c402f074a360442c7a034e237679322f62268b614e926d10f"
 }
 ```
-### <span class="badge badge-success">POST</span> Send Multiple Transactions
+
+## <span class="badge badge-success">POST</span> Send Multiple Transactions
 
 `https://api.elrond.com/transaction/send-multiple`
 
@@ -89,18 +90,18 @@ This endpoint allows one to send a bulk of Transactions to the Blockchain.
 
 Body Parameters
 
-| Param         | Required                                  | Type     | Description                           |
-| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
-| version | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).               |
-| chainID      | <span class="text-danger">REQUIRED</span>  | `string` | The Chain identifier. |
-| nonce    | <span class="text-danger">REQUIRED</span> | `number` | The Nonce, for each Transaction.           |
-| value | <span class="text-danger">REQUIRED</span> | `string` | The Value, for each Transaction.             |
-| sender | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Sender, for each Transaction.           |
-| receiver      | <span class="text-danger">REQUIRED</span>  | `string` | The Address of the Receiver, for each Transaction. |
-| gasPrice    | <span class="text-danger">REQUIRED</span> | `number` | The Gas Price, for each Transaction.        |
-| gasLimit | <span class="text-danger">REQUIRED</span> | `number` | The Gas Limit, for each Transaction.             |
-| data    | <span class="text-normal">OPTIONAL</span> | `string` | The message (data), for each Transaction.      |
-| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature, for each Transaction.            |
+| Param     | Required                                  | Type     | Description                                        |
+| --------- | ----------------------------------------- | -------- | -------------------------------------------------- |
+| version   | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).           |
+| chainID   | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                              |
+| nonce     | <span class="text-danger">REQUIRED</span> | `number` | The Nonce, for each Transaction.                   |
+| value     | <span class="text-danger">REQUIRED</span> | `string` | The Value, for each Transaction.                   |
+| sender    | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Sender, for each Transaction.   |
+| receiver  | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Receiver, for each Transaction. |
+| gasPrice  | <span class="text-danger">REQUIRED</span> | `number` | The Gas Price, for each Transaction.               |
+| gasLimit  | <span class="text-danger">REQUIRED</span> | `number` | The Gas Limit, for each Transaction.               |
+| data      | <span class="text-normal">OPTIONAL</span> | `string` | The message (data), for each Transaction.          |
+| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature, for each Transaction.               |
 
 <!--Response-->
 
@@ -158,11 +159,11 @@ Content-Type: application/json
 ]
 ```
 
-### <span class="badge badge-success">POST</span> Estimate Cost of Transaction
+## <span class="badge badge-success">POST</span> Estimate Cost of Transaction
 
 `https://api.elrond.com/transaction/cost`
 
-This endpoint allows one to estimate the cost of a transaction. 
+This endpoint allows one to estimate the cost of a transaction.
 
 <!--DOCUSAURUS_CODE_TABS-->
 
@@ -170,14 +171,14 @@ This endpoint allows one to estimate the cost of a transaction.
 
 Body Parameters
 
-| Param         | Required                                  | Type     | Description                           |
-| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
-| version | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).               |
-| chainID      | <span class="text-danger">REQUIRED</span>  | `string` | The Chain identifier. |
-| value | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer.            |
-| sender | <span class="text-danger">REQUIRED</span> | `string` | TThe Address of the Sender.          |
-| receiver      | <span class="text-danger">REQUIRED</span>  | `string` | The Address of the Receiver. |
-| data    | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.    |
+| Param    | Required                                  | Type     | Description                              |
+| -------- | ----------------------------------------- | -------- | ---------------------------------------- |
+| version  | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1). |
+| chainID  | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                    |
+| value    | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer.                   |
+| sender   | <span class="text-danger">REQUIRED</span> | `string` | TThe Address of the Sender.              |
+| receiver | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Receiver.             |
+| data     | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.   |
 
 <!--Response-->
 
@@ -208,6 +209,7 @@ Content-Type: application/json
     "version": 1
 }
 ```
+
 ## <span class="badge badge-primary">GET</span> **Get Transaction**
 
 `https://api.elrond.com/transaction/:txHash`
@@ -220,14 +222,14 @@ This endpoint allows one to query the details of a Transaction.
 
 Path Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
+| Param  | Required                                  | Type     | Description                               |
+| ------ | ----------------------------------------- | -------- | ----------------------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
+| Param  | Required                                  | Type     | Description                                                 |
+| ------ | ----------------------------------------- | -------- | ----------------------------------------------------------- |
 | sender | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
 
 <!--Response-->
@@ -278,14 +280,14 @@ This endpoint allows one to query the Status of a Transaction.
 
 Path Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
+| Param  | Required                                  | Type     | Description                               |
+| ------ | ----------------------------------------- | -------- | ----------------------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
+| Param  | Required                                  | Type     | Description                                                 |
+| ------ | ----------------------------------------- | -------- | ----------------------------------------------------------- |
 | sender | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
 
 <!--Response-->
