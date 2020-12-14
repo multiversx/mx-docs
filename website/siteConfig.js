@@ -28,7 +28,7 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
 
   headerLinks: [
-    // { search: true },
+    { search: true },
     { href: "/developers/tutorials/crowdfunding-p1", label: "Develop" },
     { href: "/validators/system-requirements", label: "Validate" },
     { href: "/integrators/observing-squad", label: "Integrate" },
@@ -87,10 +87,10 @@ const siteConfig = {
   cleanUrl: true,
   docsSideNavCollapsible: true,
 
-  // algolia: {
-  //   apiKey: "12345678",
-  //   indexName: "test",
-  // },
+  algolia: {
+    apiKey: "9be00cecf9fc7dfcddd6828f1dcad056",
+    indexName: "elrond",
+  },
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
