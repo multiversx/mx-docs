@@ -194,8 +194,8 @@ The cost is estimated successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-:::warning
-This api route returns the cost on the transaction in gas units. The returned value can be used to complete the **gasLimit** field of the transaction
+:::tip
+This endpoint returns the cost on the transaction in **gas units**. The returned value can be used to fill in **gasLimit** field of the transaction.
 :::
 
 Here's an example of a request:
