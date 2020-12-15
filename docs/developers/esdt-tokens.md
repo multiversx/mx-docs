@@ -59,7 +59,7 @@ There are two restrictions imposed on the name of the token to be issued:
 Also, the ticker has to respect the following:
 
 - its length must be between 3 and 8 chacarters
-- all characters must be uppercase letters
+- alphanumeric only and letters must be uppercase
 
 The contract will add a random string to the ticker thus creating the token identfier. The random string starts with “-” and has 6 more random characters.
 
@@ -165,7 +165,7 @@ Every ESDT token has a set of properties which control what operations are possi
 
 ## **Management operations**
 
-The owner of an ESDT token has a number of operations at their disposal, which control how the token is used by other users. All of these operations require ownership of the token - no other account may perform them. One special exception is the `ESDTburn` operation, which is available to any Account which holds units of the token in cause.
+The owner of an ESDT token has a number of operations at their disposal, which control how the token is used by other users. All of these operations require ownership of the token - no other account may perform them. One special exception is the `ESDTBurn` operation, which is available to any Account which holds units of the token in cause.
 
 ### **Minting**
 
@@ -197,7 +197,7 @@ BurnTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
-    Data: "ESDTburn" +
+    Data: "ESDTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <supply to burn in hexadecimal encoding>
 }
@@ -317,7 +317,7 @@ UpgradingTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
-    Data: "esdtControlChanges" +
+    Data: "controlChanges" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <property name in hexadecimal encoding> +
           "@" + <"true" or "false" in hexadecimal encoding> +
@@ -335,7 +335,7 @@ UpgradingTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
-    Data: "esdtControlChanges" +
+    Data: "controlChanges" +
           "@414c432d363235386432" +
           "@63616e57697065" +
           "@66616c7365" +
