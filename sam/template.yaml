@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: Documentation Hosting
 
@@ -18,13 +18,13 @@ Resources:
       Bucket: !Ref BucketProduction
       PolicyDocument:
         Id: bucket-policy
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Sid: PublicReadForGetBucketObjects
             Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource: 'arn:aws:s3:::docs.elrond.com/*'
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: "arn:aws:s3:::docs.elrond.com/*"
 
   CloudFrontProduction:
     Type: AWS::CloudFront::Distribution
@@ -38,15 +38,14 @@ Resources:
           - Id: s3-static-site
             DomainName: docs.elrond.com.s3-website.us-east-1.amazonaws.com
             CustomOriginConfig:
-              HTTPPort: '80'
-              HTTPSPort: '443'
+              HTTPPort: "80"
+              HTTPSPort: "443"
               OriginProtocolPolicy: http-only
         ViewerCertificate:
-          AcmCertificateArn: 'arn:aws:acm:us-east-1:777241893292:certificate/4fc48d4f-75c1-4bb9-983f-0c49b1fc44e1'
+          AcmCertificateArn: "arn:aws:acm:us-east-1:777241893292:certificate/4fc48d4f-75c1-4bb9-983f-0c49b1fc44e1"
           MinimumProtocolVersion: TLSv1
           SslSupportMethod: sni-only
         DefaultCacheBehavior:
-          MaxTTL: 0
           MaxTTL: 60
           DefaultTTL: 60
           Compress: true
@@ -70,10 +69,38 @@ Resources:
       Bucket: !Ref BucketStaging
       PolicyDocument:
         Id: bucket-policy
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Sid: PublicReadForGetBucketObjects
             Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource: 'arn:aws:s3:::staging-docs.elrond.com/*'
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: "arn:aws:s3:::staging-docs.elrond.com/*"
+
+  CloudFrontStaging:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        PriceClass: PriceClass_100
+        Aliases:
+          - staging-docs.elrond.com
+        Origins:
+          - Id: s3-static-site
+            DomainName: staging-docs.elrond.com.s3-website.us-east-1.amazonaws.com
+            CustomOriginConfig:
+              HTTPPort: "80"
+              HTTPSPort: "443"
+              OriginProtocolPolicy: http-only
+        ViewerCertificate:
+          AcmCertificateArn: "arn:aws:acm:us-east-1:777241893292:certificate/4fc48d4f-75c1-4bb9-983f-0c49b1fc44e1"
+          MinimumProtocolVersion: TLSv1
+          SslSupportMethod: sni-only
+        DefaultCacheBehavior:
+          MaxTTL: 60
+          DefaultTTL: 60
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: s3-static-site
