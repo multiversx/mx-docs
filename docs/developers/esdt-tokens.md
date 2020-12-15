@@ -209,7 +209,7 @@ This operation requires that the option `canBurn` is set to `true` for the token
 
 ### **Pausing and Unpausing**
 
-The owner of an ESDT token may choose to suspend all transactions of the token, except minting and burning. The transaction form is as follows:
+The owner of an ESDT token may choose to suspend all transactions of the token, except minting, freezing/unfreezing and wiping. The transaction form is as follows:
 
 ```
 PauseTransaction {
@@ -479,7 +479,7 @@ https://api.elrond.com/vm-values/query
 What is important in this section is the `returnData` member that will contain the bytes of a list of token identifiers, separated by `@`.
 In the example response, `returnData` contains a single element `VEdELWE1Y2NlYg==` which represents the bytes for a single token identifier. In JSON, bytes fields are encoded as base64. `base64decode("VEdELWE1Y2NlYg==") = TGD-a5cceb`.
 
-If multiple tokens exist, the `returnData` will contains also a single element. Example:
+If multiple tokens exist, the `returnData` will still contain a single element. Example:
 ```
 ....
  "data": {
