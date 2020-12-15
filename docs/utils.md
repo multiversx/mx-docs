@@ -157,9 +157,9 @@ Oh, no ! Lorem ipsum dolor sit amet
 
 ### `GET` API Call
 
-### <span class="badge badge-primary">GET</span> API Call
+## <span class="badge badge-primary">GET</span> API Call
 
-### <span class="badge badge-success">POST</span> API Call
+## <span class="badge badge-success">POST</span> API Call
 
 :::important Custom Title
 The content and title _can_ include markdown.

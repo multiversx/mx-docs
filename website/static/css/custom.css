@@ -30,9 +30,6 @@ html {
 .docsContainer .post a:active {
   text-decoration: underline;
 }
-.docsContainer .katex-html {
-  display: none;
-}
 
 /* Main Page */
 .landing-page.mainContainer {
@@ -119,7 +116,7 @@ html {
   width: 100%;
 }
 .navigationSlider .slidingNav ul li > a {
-  color: #444444;
+  color: #444;
   font-weight: 400;
 }
 .navigationSlider .slidingNav ul li > a:focus,
@@ -153,6 +150,50 @@ html {
 .reactNavSearchWrapper input#search_input_react::placeholder {
   color: #6c757d;
 }
+.reactNavSearchWrapper .aa-dropdown-menu {
+  background: #fff;
+  border: 1px solid #e4e5e5;
+}
+.reactNavSearchWrapper
+  .aa-dropdown-menu
+  .algolia-docsearch-suggestion--category-header {
+  background: #f8f9ff;
+  color: #444;
+  border-bottom: 1px solid #e4e5e5;
+}
+.reactNavSearchWrapper .algolia-docsearch-footer {
+  border-top: 1px solid #e4e5e5;
+  color: #444;
+}
+.aa-cursor .algolia-docsearch-suggestion {
+  background: #f8f9ff;
+}
+.reactNavSearchWrapper
+  .aa-dropdown-menu
+  .algolia-docsearch-suggestion__secondary,
+.reactNavSearchWrapper
+  .aa-dropdown-menu
+  .algolia-docsearch-suggestion--subcategory-column {
+  border-color: #e4e5e5;
+}
+.aa-cursor .algolia-docsearch-suggestion--content,
+.reactNavSearchWrapper
+  .aa-dropdown-menu
+  .algolia-docsearch-suggestion--title
+  .algolia-docsearch-suggestion--highlight,
+.reactNavSearchWrapper
+  .aa-dropdown-menu
+  .algolia-docsearch-suggestion--subcategory-column
+  .algolia-docsearch-suggestion--highlight {
+  color: #1b46c2;
+}
+@media (min-width: 768px) {
+  .reactNavSearchWrapper .algolia-docsearch-suggestion--subcategory-column {
+    background: #f8f9ff;
+    color: #444;
+  }
+}
+
 /* -------------------- End Search Box ------------------- */
 
 /* -------------------- Start App Switcher Dropdown ------------------- */
@@ -165,13 +206,13 @@ html {
   display: flex;
 }
 #app-links .app-menu-entry {
-  color: #444444;
+  color: #444;
   margin-left: 0.5rem;
 }
 #app-links .app-menu-entry .app-icon {
   width: 16px;
   height: 16px;
-  fill: #444444;
+  fill: #444;
 }
 #app-links .app-menu-entry:hover,
 #app-links .app-menu-entry:focus,
@@ -429,6 +470,11 @@ footer a.footer-text svg {
 }
 
 @media only screen and (max-device-width: 736px) {
+  .reactNavSearchWrapper .aa-dropdown-menu {
+    min-width: 296px;
+    left: -110px !important;
+    right: -70px !important;
+  }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -462,6 +508,9 @@ footer a.footer-text svg {
   .reactNavSearchWrapper input#search_input_react:focus,
   .reactNavSearchWrapper input#search_input_react:active {
     width: 170px;
+  }
+  .reactNavSearchWrapper .aa-dropdown-menu {
+    left: 0 !important;
   }
   #app-links .app-menu-entry {
     margin: 0 8px;
