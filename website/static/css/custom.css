@@ -34,6 +34,7 @@ html {
 /* Main Page */
 .landing-page.mainContainer {
   background: #f8f9ff;
+  padding-bottom: 0;
 }
 .navPusher {
   padding-top: 60px;
