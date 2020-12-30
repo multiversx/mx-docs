@@ -97,8 +97,8 @@ Resources:
           MinimumProtocolVersion: TLSv1
           SslSupportMethod: sni-only
         DefaultCacheBehavior:
-          MaxTTL: 60
-          DefaultTTL: 60
+          MaxTTL: 0
+          DefaultTTL: 0
           Compress: true
           ForwardedValues:
             QueryString: false

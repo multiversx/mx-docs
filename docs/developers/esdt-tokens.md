@@ -3,6 +3,7 @@ id: esdt-tokens
 title: ESDT tokens
 ---
 
+## **Introduction**
 Custom tokens at native speed and scalability, without ERC20
 
 The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native eGLD token itself.**
@@ -13,9 +14,9 @@ Technically, the balances of ESDT tokens held by an Account are stored directly 
 
 ESDT tokens can be issued, owned and held by any Account on the Elrond network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
-# **Issuance of ESDT tokens**
+## **Issuance of ESDT tokens**
 
-ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a valid token name and a valid ticker. This transaction has the form:
+ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will own and manage the tokens. When issuing a token, one must provide a token name, a ticker, the initial supply, the number of decimals for display purpose and optionally additional properties. This transaction has the form:
 
 ```
 IssuanceTransaction {
@@ -26,7 +27,8 @@ IssuanceTransaction {
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
-          "@" + <initial supply in hexadecimal encoding>
+          "@" + <initial supply in hexadecimal encoding> +
+          "@" + <number of decimals in hexadecimal encoding>
 }
 ```
 
@@ -41,6 +43,7 @@ IssuanceTransaction {
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
           "@" + <initial supply in hexadecimal encoding> +
+          "@" + <number of decimals in hexadecimal encoding> +
           "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
@@ -50,20 +53,30 @@ IssuanceTransaction {
 ```
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
+The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
 
-Token Name:
+### **Parameters format**
 
-- length between 3 and 20 characters
-- alphanumeric characters only
+There are two restrictions imposed on the name of the token to be issued:
+- its length must be between 10 and 20 characters
+- all characters must be alphanumeric
 
-Token Ticker:
+Also, the ticker has to respect the following:
+- its length must be between 3 and 8 characters
+- alphanumeric only and letters must be uppercase
 
-- length between 3 and 10 chacarters
-- alphanumeric UPPERCASE only
+The number of decimals:
+- should be between _0_ and _18_
+- hexadecimal encoded
 
-The contract will add a random string to the ticker thus creating the token identfier. The random string starts with “-” and has 6 more random characters.
+Numerical values, such as initial supply or number of decimals, should be the hexadecimal encoding of the decimal numbers representing them. Additionally, they should have an even number of characters. Examples:
+- **10** _decimal_      => **0a** _hex encoded_
+- **48** _decimal_      => **30** _hex encoded_
+- **1000000** _decimal_ => **f4240** _hex encoded_
 
-For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". The issuance transaction would be:
+### **Issuance examples**
+
+For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6. The issuance transaction would be:
 
 ```
 IssuanceTransaction {
@@ -74,17 +87,16 @@ IssuanceTransaction {
     Data: "issue" +
           "@416c696365546f6b656e73" +
           "@414c43" +
-          "@0ffb"
+          "@0ffb" +
+          "@06"
 }
 ```
+Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token owners, see [Token management](/developers/esdt-tokens#token-management).
 
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time, if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+If the issue transaction is successful, a smart contract result will mint the owner with the provided total supply will be generated. In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
+here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also below).
 
-If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager. 
-
-In that smart contract result, the `data` field will contain a transfer sintax which is explained below. What is important to note is that the token identifier can be fetched from here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explaind also below).
-
-# **Transfers**
+## **Transfers**
 
 Performing an ESDT transfer is done by sending a transaction directly to the desired receiver Account, but specifying some extra pieces of information in its `Data` field. An ESDT transfer transaction has the following form:
 
@@ -124,7 +136,7 @@ Using the transaction in the example above, Alice will transfer 12 AliceTokens t
 
 ## **Transfers to a smart contract**
 
-Smart contracts may hold ESDT tokens and perform any kind of transactions with them, just like any Account. However, there are a few extra ESDT features dedicated to smart contracts:
+Smart contracts may hold ESDT tokens and perform any kind of transaction with them, just like any Account. However, there are a few extra ESDT features dedicated to smart contracts:
 
 **Payable versus non-payable contract**: upon deployment, a smart contract may be marked as _payable_, which means that it can receive either eGLD or ESDT tokens without calling any of its methods (i.e. a simple transfer). But by default, all contracts are _non-payable_, which means that simple transfers of eGLD or ESDT tokens will be rejected, unless they are method calls.
 
@@ -148,7 +160,7 @@ TransferWithCallTransaction {
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were eGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
-# **Token management**
+## **Token management**
 
 The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
 
@@ -264,7 +276,7 @@ UnfreezeTransaction {
     GasLimit: 50000000
     Data: "unFreeze" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <account address to freeze in hexadecimal encoding>
+          "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
 
@@ -328,7 +340,7 @@ UpgradingTransaction {
 }
 ```
 
-As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token manager, wants to change these property to `false` and `true`, respectively. The transaction that would achieve this change is:
+As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token owner, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
 
 ```
 UpgradingTransaction {
@@ -353,11 +365,11 @@ In the example above, the encodings mean the following (decoded to ASCII):
 - `63616e4275726e` = `canBurn`
 - `74727565` = `true`
 
-## Rest API
+## **Rest API**
 
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
 
-### <span class="badge badge-primary">GET</span> Get all ESDT tokens for an address
+### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
@@ -387,11 +399,11 @@ https://api.elrond.com/address/*bech32Address*/esdt
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-primary">GET</span> Get balance for an address and an ESDT token
+### <span class="badge badge-primary">GET</span> **Get balance for an address and an ESDT token**
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
-Returns the balance of an address for a specific ESDT Tokens.
+Returns the balance of an address for specific ESDT Tokens.
 
 ```
 https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
@@ -419,7 +431,7 @@ https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Get all issued ESDT tokens
+### <span class="badge badge-success">POST</span> **Get all issued ESDT tokens**
 
 This involves a `vm query` request to the `ESDT` address.
 For example:
@@ -494,7 +506,7 @@ where `VEdELWE1Y2NlYkBBTEMtYjIzNDE1` is translated to `TGD-a5cceb@ALC-b23415` (2
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Get ESDT token properties
+### <span class="badge badge-success">POST</span> **Get ESDT token properties**
 
 This involves a `vm query` request to the `ESDT` address.
 For example:
@@ -527,6 +539,7 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
         "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=",
         "MTAwMDAwMDAwMDA=",
         "MA==",
+        "TnVtRGVjaW1hbHMtNg==",
         "SXNQYXVzZWQtZmFsc2U=",
         "Q2FuVXBncmFkZS10cnVl",
         "Q2FuTWludC10cnVl",
@@ -570,6 +583,7 @@ The `returnData` member will contain an array of the properties in a fixed order
   "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=", | bytes of a bech32 addres  | erd1mq6gn3yngzdgh0zdfa07zepga6a8yf7dkeue24zp3snknvjvucvs37hmrq after decoding
   "MTAwMDAwMDAwMDA=",                             | total supply              | 10000000000
   "MA==",                                         | burnt value               | 0
+  "TnVtRGVjaW1hbHMtNg==",                         | number of decimals        | NumDecimals-6
   "SXNQYXVzZWQtZmFsc2U=",                         | is paused                 | IsPaused-false
   "Q2FuVXBncmFkZS10cnVl",                         | can upgrade               | CanUpgrade-true
   "Q2FuTWludC10cnVl",                             | can mint                  | CanMint-true
