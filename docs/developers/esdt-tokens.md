@@ -26,7 +26,8 @@ IssuanceTransaction {
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
-          "@" + <initial supply in hexadecimal encoding>
+          "@" + <initial supply in hexadecimal encoding> +
+          "@" + <number of decimals in hexadecimal encoding>
 }
 ```
 
@@ -41,6 +42,7 @@ IssuanceTransaction {
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
           "@" + <initial supply in hexadecimal encoding> +
+          "@" + <number of decimals in hexadecimal encoding>
           "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
@@ -63,7 +65,7 @@ Token Ticker:
 
 The contract will add a random string to the ticker thus creating the token identfier. The random string starts with “-” and has 6 more random characters.
 
-For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". The issuance transaction would be:
+For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC" and 12 digits. The issuance transaction would be:
 
 ```
 IssuanceTransaction {
@@ -74,7 +76,8 @@ IssuanceTransaction {
     Data: "issue" +
           "@416c696365546f6b656e73" +
           "@414c43" +
-          "@0ffb"
+          "@0ffb" +
+          "@0C"
 }
 ```
 
