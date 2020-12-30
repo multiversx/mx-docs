@@ -194,6 +194,10 @@ The cost is estimated successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
+:::tip
+This endpoint returns the cost on the transaction in **gas units**. The returned value can be used to fill in **gasLimit** field of the transaction.
+:::
+
 Here's an example of a request:
 
 ```

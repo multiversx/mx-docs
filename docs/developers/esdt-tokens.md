@@ -20,7 +20,7 @@ ESDT tokens are issued via a request to the Metachain, which is a transaction su
 
 ```
 IssuanceTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 5000000000000000000 (5 eGLD)
     GasLimit: 50000000
@@ -35,7 +35,7 @@ IssuanceTransaction {
 Optionally, the properties can be set when issuing a contract. Example:
 ```
 IssuanceTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 5000000000000000000 (5 eGLD)
     GasLimit: 50000000
@@ -91,7 +91,6 @@ IssuanceTransaction {
           "@06"
 }
 ```
-
 Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token owners, see [Token management](/developers/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the owner with the provided total supply will be generated. In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
@@ -163,31 +162,31 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 
 ## **Token management**
 
-The Account which submitted the issuance request for a custom token automatically becomes the owner of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The owner of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
+The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
 
 ## **Configuration properties of an ESDT token**
 
 Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
-- `canMint` - more units of this token can be minted by the owner after initial issuance, increasing the supply
+- `canMint` - more units of this token can be minted by the token manager after initial issuance, increasing the supply
 - `canBurn` - users may "burn" some of their tokens, reducing the supply
-- `canPause` - the owner may prevent all transactions of the token, apart from minting and burning
-- `canFreeze` - the owner may freeze a specific account, preventing transfers to and from that account
-- `canWipe` - the owner may wipe out the tokens held by a frozen account, reducing the supply
-- `canChangeOwner` - ownership of the token can be transferred to a different account
-- `canUpgrade` - the owner may change these properties
+- `canPause` - the token manager may prevent all transactions of the token, apart from minting and burning
+- `canFreeze` - the token manager may freeze the token balance in a specific account, preventing transfers to and from that account
+- `canWipe` - the token manager may wipe out the tokens held by a frozen account, reducing the supply
+- `canChangeOwner` - token management can be transferred to a different account
+- `canUpgrade` - the token manager may change these properties
 
 ## **Management operations**
 
-The owner of an ESDT token has a number of operations at their disposal, which control how the token is used by other users. All of these operations require ownership of the token - no other account may perform them. One special exception is the `ESDTBurn` operation, which is available to any Account which holds units of the token in cause.
+The manager of an ESDT token has a number of operations at their disposal, which control how the token is used by other users. These operations can only be performed by the token manager - no other account may perform them. One special exception is the `ESDTBurn` operation, which is available to any Account which holds units of the token in cause.
 
 ### **Minting**
 
-The owner of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
+The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
 
 ```
 MintTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
@@ -197,13 +196,13 @@ MintTransaction {
 }
 ```
 
-Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the owner receives that amount of tokens into their balance.
+Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the manager receives that amount of tokens into their balance.
 
 This operation requires that the option `canMint` is set to `true` for the token.
 
 ### **Burning**
 
-Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token owner mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
+Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
 
 ```
 BurnTransaction {
@@ -223,11 +222,11 @@ This operation requires that the option `canBurn` is set to `true` for the token
 
 ### **Pausing and Unpausing**
 
-The owner of an ESDT token may choose to suspend all transactions of the token, except minting, freezing/unfreezing and wiping. The transaction form is as follows:
+The manager of an ESDT token may choose to suspend all transactions of the token, except minting, freezing/unfreezing and wiping. The transaction form is as follows:
 
 ```
 PauseTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
@@ -240,7 +239,7 @@ The reverse operation, unpausing, will allow transactions of the token again:
 
 ```
 UnpauseTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
@@ -253,11 +252,11 @@ These two operations require that the option `canPause` is set to `true`.
 
 ### **Freezing and Unfreezing**
 
-The owner of an ESDT token may freeze the tokens held by a specific Account. As a consequence, no tokens may be transferred to or from the frozen Account. Freezing and unfreezing the tokens of an Account are operations designed to help token owners to comply with regulations. The transaction that freezes the tokens of an Account has the form:
+The manager of an ESDT token may freeze the tokens held by a specific Account. As a consequence, no tokens may be transferred to or from the frozen Account. Freezing and unfreezing the tokens of an Account are operations designed to help token managers to comply with regulations. The transaction that freezes the tokens of an Account has the form:
 
 ```
 FreezeTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
@@ -271,7 +270,7 @@ The reverse operation, unfreezing, will allow further transfers to and from the 
 
 ```
 UnfreezeTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
@@ -285,11 +284,11 @@ These two operations require that the option `canFreeze` is set to `true`.
 
 ### **Wiping**
 
-The owner of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token owner. Wiping the tokens of an Account is an operation designed to help token owners to comply with regulations.Such a transaction has the form:
+The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations.Such a transaction has the form:
 
 ```
 WipeTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token managers>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
@@ -301,19 +300,19 @@ WipeTransaction {
 
 This operation requires that the option `canWipe` is set to `true`.
 
-### **Transferring ownership**
+### **Transferring token management rights**
 
-The owner of an ESDT token may transfer the ownership to another Account. This can be done with a transaction of the form:
+The manager of an ESDT token may transfer the management rights to another Account. This can be done with a transaction of the form:
 
 ```
 TransferOwnershipTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
     Data: "transferOwnership" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <account address to transfer ownership to in hexadecimal encoding>
+          "@" + <account address of the new token manager in hexadecimal encoding>
 }
 ```
 
@@ -323,11 +322,11 @@ This operation requires that the option `canChangeOwner` is set to `true`.
 
 ### **Upgrading (changing properties)**
 
-The owner of an ESDT token may individually change any of the properties of the token, or multiple properties at once. Such an operation is performed by a transaction of the form:
+The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once. Such an operation is performed by a transaction of the form:
 
 ```
 UpgradingTransaction {
-    Sender: <account address of the token owner>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 50000000
@@ -589,7 +588,7 @@ The `returnData` member will contain an array of the properties in a fixed order
   "Q2FuVXBncmFkZS10cnVl",                         | can upgrade               | CanUpgrade-true
   "Q2FuTWludC10cnVl",                             | can mint                  | CanMint-true
   "Q2FuQnVybi10cnVl",                             | can burn                  | CanBurn-true
-  "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",                 | can change owner address  | CanChangeOwner-true
+  "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",                 | can change token management address  | CanChangeOwner-true
   "Q2FuUGF1c2UtdHJ1ZQ==",                         | can pause                 | CanPause-true
   "Q2FuRnJlZXplLXRydWU=",                         | can freeze                | CanFreeze-true
   "Q2FuV2lwZS10cnVl"                              | can wipe                  | CanWipe-true
