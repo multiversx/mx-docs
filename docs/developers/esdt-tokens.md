@@ -77,7 +77,7 @@ IssuanceTransaction {
           "@416c696365546f6b656e73" +
           "@414c43" +
           "@0ffb" +
-          "@0C"
+          "@0c"
 }
 ```
 
