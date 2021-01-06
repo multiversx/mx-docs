@@ -23,7 +23,7 @@ IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 5000000000000000000 (5 eGLD)
-    GasLimit: 50000000
+    GasLimit: 100000000
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
@@ -38,7 +38,7 @@ IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 5000000000000000000 (5 eGLD)
-    GasLimit: 50000000
+    GasLimit: 100000000
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
@@ -88,7 +88,7 @@ IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 5000000000000000000
-    GasLimit: 50000000
+    GasLimit: 100000000
     Data: "issue" +
           "@416c696365546f6b656e73" +
           "@414c43" +
