@@ -17,11 +17,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param     | Required                                  | Type     | Description                                                                         |
-| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| Param      | Required                                  | Type     | Description                                                                         |
+| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -71,7 +73,9 @@ Content-Type: application/json
 {
     "ScAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqllls0lczs7",
     "FuncName": "get",
-    "Args": ["d98d..."]
+    "Args": ["d98d..."],
+    "CallerAddr": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
+    "CallValue": "0"
 }
 ```
 
@@ -87,11 +91,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param     | Required                                  | Type     | Description                                                                         |
-| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| Param      | Required                                  | Type     | Description                                                                         |
+| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -119,11 +125,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param     | Required                                  | Type     | Description                                                                         |
-| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| Param      | Required                                  | Type     | Description                                                                         |
+| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -151,11 +159,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param     | Required                                  | Type     | Description                                                                         |
-| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| Param      | Required                                  | Type     | Description                                                                         |
+| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
