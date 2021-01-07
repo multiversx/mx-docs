@@ -19,11 +19,11 @@ Body Parameters
 
 | Param      | Required                                  | Type     | Description                                                                         |
 | ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -93,11 +93,11 @@ Body Parameters
 
 | Param      | Required                                  | Type     | Description                                                                         |
 | ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -127,11 +127,11 @@ Body Parameters
 
 | Param      | Required                                  | Type     | Description                                                                         |
 | ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -161,11 +161,11 @@ Body Parameters
 
 | Param      | Required                                  | Type     | Description                                                                         |
 | ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| ScAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| FuncName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| Args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| CallerAddr | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| CallValue  | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
