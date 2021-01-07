@@ -71,11 +71,11 @@ POST https://api.elrond.com/vm-values/query HTTP/1.1
 Content-Type: application/json
 
 {
-    "ScAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqllls0lczs7",
-    "FuncName": "get",
-    "Args": ["d98d..."],
-    "CallerAddr": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
-    "CallValue": "0"
+    "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqllls0lczs7",
+    "funcName": "get",
+    "args": ["d98d..."],
+    "caller": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
+    "value": "0"
 }
 ```
 
