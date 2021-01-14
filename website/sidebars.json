@@ -40,6 +40,15 @@
 			},
 			{
 				"type":"subcategory",
+				"label":"Install a Devnet Node",
+				"ids":[
+					"validators/devnet/config-scripts-devnet",
+					"validators/devnet/install-update-devnet",
+					"validators/devnet/manage-devnet-node"
+				]
+			},
+			{
+				"type":"subcategory",
 				"label":"Manage your keys",
 				"ids":[
 					"validators/key-management/validator-keys",
