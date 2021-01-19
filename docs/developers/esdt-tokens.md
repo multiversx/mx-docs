@@ -16,7 +16,7 @@ ESDT tokens can be issued, owned and held by any Account on the Elrond network, 
 
 ## **Issuance of ESDT tokens**
 
-ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will own and manage the tokens. When issuing a token, one must provide a token name, a ticker, the initial supply, the number of decimals for display purpose and optionally additional properties. This transaction has the form:
+ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker, the initial supply, the number of decimals for display purpose and optionally additional properties. This transaction has the form:
 
 ```
 IssuanceTransaction {
@@ -49,6 +49,8 @@ IssuanceTransaction {
           "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canMint" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canBurn" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
 }
 ```
 
@@ -57,16 +59,19 @@ The contract will add a random string to the ticker thus creating the **token id
 
 ### **Parameters format**
 
-There are two restrictions imposed on the name of the token to be issued:
-- its length must be between 10 and 20 characters
-- all characters must be alphanumeric
+Token Name:
 
-Also, the ticker has to respect the following:
-- its length must be between 3 and 8 characters
-- alphanumeric only and letters must be uppercase
+- length between 3 and 20 characters
+- alphanumeric characters only
 
-The number of decimals:
-- should be between _0_ and _18_
+
+Token Ticker:
+
+- length between 3 and 10 characters
+- alphanumeric UPPERCASE only
+
+Number of decimals:
+- should be a numerical value between _0_ and _18_
 - hexadecimal encoded
 
 Numerical values, such as initial supply or number of decimals, should be the hexadecimal encoding of the decimal numbers representing them. Additionally, they should have an even number of characters. Examples:
@@ -91,9 +96,10 @@ IssuanceTransaction {
           "@06"
 }
 ```
-Once this transaction is processed by the Metachain, Alice becomes the designated **owner of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token owners, see [Token management](/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
-If the issue transaction is successful, a smart contract result will mint the owner with the provided total supply will be generated. In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
+If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
+ In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also below).
 
 ## **Transfers**
@@ -216,7 +222,7 @@ BurnTransaction {
 }
 ```
 
-Following this transaction, the token holder loses from the balance the amount of tokens specifed by the Data.
+Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
 This operation requires that the option `canBurn` is set to `true` for the token.
 
@@ -340,7 +346,7 @@ UpgradingTransaction {
 }
 ```
 
-As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token owner, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
+As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token manager, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
 
 ```
 UpgradingTransaction {
