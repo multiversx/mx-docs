@@ -72,6 +72,22 @@ In order to check the status of the Observing Squad, please see the section **Mo
 
 The Observing Squad can be updated using the Mainnet installation scripts.
 
+### **January 2021 upgrade**
+
+In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
+
+```
+$ cd ~/elrond-go-scripts-mainnet
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
+:::important
+The observing squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync.
+:::
+
 ### **Prerequisites for the November 2020 upgrade**
 
 Observing Squads set up before November 2020 have been installed using a special branch of the Mainnet installation scripts: **exchanges-integration**. This special branch has been removed, in favor of the main branch of the installation scripts.
