@@ -84,7 +84,9 @@ $ ./script.sh upgrade_squad
 $ ./script.sh upgrade_proxy
 $ ./script.sh start
 ```
-:::important The observing squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync :::
+:::important
+The observing squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync.
+:::
 
 ### **Prerequisites for the November 2020 upgrade**
 
