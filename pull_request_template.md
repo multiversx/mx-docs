@@ -7,7 +7,7 @@
 - [ ] yes
 - [ ] no
 
-#### Which category does this pull request belong to?
+#### Which category(categories) does this pull request belong to?
 - [ ] document new feature
 - [ ] update documentation that is not relevant anymore
 - [ ] add examples or more information about a component

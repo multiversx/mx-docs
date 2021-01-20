@@ -9,7 +9,7 @@ This repository also has GitHub actions that will trigger the real-time updating
 
 ## How to use locally
 
-In order to ensure that the new added content is correctly aligned and every Mark Down feature is working as intended, one can run on a local machine the project.
+In order to ensure that the new added content is correctly aligned and every Mark Down feature is working as intended, one can run the project on a local machine.
 
 ### Requirements:
 
@@ -26,13 +26,13 @@ In order to ensure that the new added content is correctly aligned and every Mar
 - run `npm start`
 - access `http://localhost:3000` to view your local version of the docs
 
-Live reloading is supported, so you can view in real time the changes by saving the file and going back to the browser.
+Live reloading is supported, so you can view the changes in real time by saving the file and going back to the browser.
 
 ## Contributions
 
 ### Audience
 
-Anyone can contribute to the docs. Any help is welcomed and here are some reasons for one can contribute:
+Anyone can contribute to the docs. Any help is appreciated. Here are some ways in which you can contribute:
 - update parts of the documentation that no longer match the actual behaviour.
 - document features that aren't documented yet.  
 - add additional information about a component.  
