@@ -43,6 +43,8 @@ Anyone can contribute to the docs. Any help is welcomed and here are some reason
 
 - external contributions will be made to the `external` branch.
 - you can contribute from GitHub directly (not recommended) or by working locally and pushing the changes (recommended).
+- the documentation pages are to be found inside the `docs` directory at the corresponding category.
+- please follow `docs/utils.md` for mark down examples
 
 ### Opening a `pull request`
 
