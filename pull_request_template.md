@@ -3,7 +3,7 @@
 #### Description of the pull request (what is new / what has changed)
 
 
-#### Did you test locally the changes?
+#### Did you test the changes locally ?
 - [ ] yes
 - [ ] no
 
