@@ -48,7 +48,9 @@ Anyone can contribute to the docs. Any help is appreciated. Here are some ways i
 - external contributions will be made to the `external` branch.
 - you can contribute from GitHub directly (not recommended) or by working locally and pushing the changes (recommended).
 - the documentation pages are to be found inside the `docs` directory at the corresponding category.
-- please follow `docs/utils.md` for mark down examples
+- please follow `docs/utils.md` for mark down examples.
+
+A web version of the mark down examples is available [here](https://docs.elrond.com/utils/).
 
 ### Opening a `pull request`
 
