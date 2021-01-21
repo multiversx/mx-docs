@@ -5,7 +5,7 @@ The repository containing the [documentation](https://docs.elrond.com) for the E
 ## About
 
 The documentation is built over a custom [docusaurus](https://docusaurus.io/) solution and relies on MarkDown files.
-This repository also has GitHub actions that will trigger the real-time updating of the official documentation website by merging into the `master` branch. 
+This repository also has GitHub actions that will trigger the real-time updating of the official documentation website by merging into the `master` branch.
 
 ## How to use locally
 
@@ -30,7 +30,7 @@ Live reloading is supported, so you can view the changes in real time by saving 
 
 ## Contributions
 
-### About 
+### About
 
 Once a proposal to update the documentation is submitted, it will be subject to an internal review process for merging into the core repository.
 
@@ -38,8 +38,8 @@ Once a proposal to update the documentation is submitted, it will be subject to 
 
 Anyone can contribute to the docs. Any help is appreciated. Here are some ways in which you can contribute:
 - update parts of the documentation that no longer match the actual behaviour.
-- document features that aren't documented yet.  
-- add additional information about a component.  
+- document features that aren't documented yet.
+- add additional information about a component.
 - fix grammar issues.
 - and so on...
 
