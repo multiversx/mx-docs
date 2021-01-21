@@ -9,11 +9,11 @@ title: Welcome to Elrond
 - **When:** Mainnet live, project started in 2018
 - **How:** Scales via Adaptive State Sharding, consensus via Secure Proof of Stake
 - **Highlights:**
-  - Performance: 15.000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100k (263k TPS in testnet)
+  - Performance: 15.000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100k (263,000 TPS in testnet)
   - Maiar money app with progressive security, social recovery, embedded DeFi
   - Developers: royalties - 30% SC gas returned to authors, full IDE, Rust framework with debugger
   - Validators: 36% APR for running nodes, low system requirements
-  - Network setup: 2.169 nodes, with 4 shards (adaptivity allows throughput to increase with demand)
+  - Network setup: over 2,000 nodes, with 4 shards (adaptivity allows throughput to increase with demand)
 
 # **What is Elrond?**
 
@@ -36,7 +36,7 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 - First live blockchain architecture with state sharding
 - Mainnet launched in July 2020
 - 15,000 TPS, 6s latency, $0.001/tx
-- 263k TPS in public testnet
+- 263,000 TPS in public testnet
 - IDE with debugger and Rust framework for SCs
 - Validated through multiple audits from Trial of Bits & others
 
@@ -48,10 +48,10 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 - Staking: direct & delegation
 - Elrond Governance: Voting system
 - Development Toolkit
-- Maiar launch
 
 **Q1 2021**
 
+- Maiar launch
 - Maiar: staking, DeFi
 - Decentralized Exchange
 - DeFi 2.0 module
