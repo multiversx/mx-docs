@@ -9,7 +9,7 @@ title: Welcome to Elrond
 - **When:** Mainnet live, project started in 2018
 - **How:** Scales via Adaptive State Sharding, consensus via Secure Proof of Stake
 - **Highlights:**
-  - Performance: 15.000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100k (263,000 TPS in testnet)
+  - Performance: 15,000 current TPS, 6s block time, $0.001 tx cost, up to 100,000 (263,000 TPS in testnet)
   - Maiar money app with progressive security, social recovery, embedded DeFi
   - Developers: royalties - 30% SC gas returned to authors, full IDE, Rust framework with debugger
   - Validators: 36% APR for running nodes, low system requirements
