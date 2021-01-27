@@ -506,7 +506,7 @@ If multiple tokens exist, the `returnData` will still contain a single element. 
         "VEdELWE1Y2NlYkBBTEMtYjIzNDE1"
       ],
       "returnCode": "ok",
-...      
+...
 ```
 where `VEdELWE1Y2NlYkBBTEMtYjIzNDE1` is translated to `TGD-a5cceb@ALC-b23415` (2 token identifier separated by `@`)
 

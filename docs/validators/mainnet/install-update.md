@@ -47,7 +47,7 @@ Generate a certificate file containing your Validator key by running the `keygen
 ./elrond-utils/keygenerator
 ```
 
-Copy the generated `validatorKey.pem` file to the `config` folder of your node(s), repeat for each node. 
+Copy the generated `validatorKey.pem` file to the `config` folder of your node(s), repeat for each node.
 
 ```
 cp validatorKey.pem ~/elrond-nodes/node-0/config/
