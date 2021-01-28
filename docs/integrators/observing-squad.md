@@ -42,7 +42,7 @@ git clone https://github.com/ElrondNetwork/elrond-go-scripts-mainnet.git
 Edit `config/variables.cfg` accordingly. For example:
 
 ```
-CUSTOM_HOME="/home/ubuntu/ObservingSquad"
+CUSTOM_HOME="/home/ubuntu"
 CUSTOM_USER="ubuntu"
 ```
 
@@ -55,7 +55,7 @@ NODE_EXTRA_FLAGS="-log-save"
 Run the installation script as follows:
 
 ```
-./script.sh observing-squad
+./script.sh observing_squad
 ```
 
 After installation, 5 new `systemd` units will be available (and enabled).
