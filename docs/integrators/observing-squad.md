@@ -85,7 +85,7 @@ $ ./script.sh upgrade_proxy
 $ ./script.sh start
 ```
 :::important
-The observing squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync.
+The Observing Squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync.
 :::
 
 ### **Prerequisites for the November 2020 upgrade**
@@ -162,7 +162,7 @@ curl http://localhost:8079/hyperblock/by-nonce/$NONCE | jq
 
 The Observing Squad can be also set up using Docker.
 
-Clone the observing squad repository:
+Clone the Observing Squad repository:
 
 ```
 git clone https://github.com/ElrondNetwork/observing-squad.git
@@ -174,7 +174,7 @@ Install docker-compose if not already installed:
 apt install docker-compose
 ```
 
-Install and run the whole observing squad using the `./start_stack.sh` script from the mainnet folder:
+Install and run the whole Observing Squad using the `./start_stack.sh` script from the mainnet folder:
 
 ```
 cd mainnet
