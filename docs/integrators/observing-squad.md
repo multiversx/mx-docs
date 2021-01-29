@@ -52,7 +52,7 @@ Additionally, you might want to set the following option, so that the logs are s
 NODE_EXTRA_FLAGS="-log-save"
 ```
 
-Run the installation script as follows:
+Please check that the `CUSTOM_HOME` directory exists. Run the installation script as follows:
 
 ```
 ./script.sh observing_squad
@@ -125,7 +125,8 @@ After running the commands above, the upgraded Observing Squad will start again.
 
 ## **Monitoring and trivial checks**
 
-One can monitor the running Observers using the **termui** utility (installed during the setup process itself), as follows:
+One can monitor the running Observers using the **termui** utility (installed during the setup process itself in the `CUSTOM_HOME="/home/ubuntu"
+` folder), as follows:
 
 ```
 ~/elrond-utils/termui --address localhost:8080    # Shard 0
