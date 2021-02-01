@@ -31,7 +31,7 @@ In case of a single machine, our recommendation is as follows:
 
 ## **Installation and Configuration**
 
-The Observing Squad can be setup using the [installation scripts](/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
+The Observing Squad can be set up using the [installation scripts](/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
 
 Clone the installer repository:
 
@@ -85,7 +85,7 @@ $ ./script.sh upgrade_proxy
 $ ./script.sh start
 ```
 :::important
-The observing squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync.
+The Observing Squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync.
 :::
 
 ### **Prerequisites for the November 2020 upgrade**
@@ -160,4 +160,36 @@ curl http://localhost:8079/hyperblock/by-nonce/$NONCE | jq
 
 # **Setup via Docker**
 
-One can set up an Observing Squad using Docker, as described [here](https://github.com/ElrondNetwork/observing-squad). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).
+The Observing Squad can be also set up using Docker.
+
+Clone the Observing Squad repository:
+
+```
+git clone https://github.com/ElrondNetwork/observing-squad.git
+```
+
+Install docker-compose if not already installed:
+
+```
+apt install docker-compose
+```
+
+Install and run the whole Observing Squad using the `./start_stack.sh` script from the mainnet folder:
+
+```
+cd mainnet
+./start_stack.sh
+```
+
+In order to check if the Observing Squad is running, you can list the running containers:
+```
+docker ps
+```
+
+In order to check the status inside a container, you can check the logs on the machine for the last synchronized block nonce:
+```
+docker exec -it 'CONTAINER ID' /bin/bash
+cat logs/elrond-go-.......log
+```
+
+More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/ElrondNetwork/observing-squad). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).
