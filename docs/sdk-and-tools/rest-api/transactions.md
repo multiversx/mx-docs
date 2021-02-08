@@ -159,6 +159,110 @@ Content-Type: application/json
 ]
 ```
 
+## <span class="badge badge-success">POST</span> Simulate Transaction
+
+**Nodes and observers**
+
+`https://api.elrond.com/transaction/simulate`
+
+This endpoint allows one to send a signed Transaction to the Blockchain in order to simulate its execution.
+This can be useful in order to check if the transaction will be successfully executed before actually sending it.
+It receives the same request as the `/transaction/send` endpoint.
+
+Move balance successful transaction simulation
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+Body Parameters
+
+| Param     | Required                                  | Type     | Description                                     |
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------- |
+| version   | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).        |
+| chainID   | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                           |
+| nonce     | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                        |
+| value     | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer (can be zero).            |
+| sender    | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.             |
+| receiver  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.           |
+| gasPrice  | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).           |
+| gasLimit  | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.     |
+| data      | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.          |
+| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction. |
+
+<!--Response-->
+
+A full response contains the fields above:
+*SimulationResults*
+| Field      | Type                      | Description       |
+|------------|---------------------------|-------------------|
+| status     | string                    | success, fail ... |
+| failReason | string                    | the error message |
+| scResults  | []ApiSmartContractResult  | an array of smart contract results (if any) |
+| receipts   | []ApiReceipt              | an array of the receipts (if any) |
+| hash       | string                    | the hash of the transaction |
+
+
+❕ Note that fields that are empty won't be included in the response. This can be seen in the examples below
+
+---
+
+🟢 200: OK
+
+Transaction would be successful.
+
+```json
+{
+ "status": "success",
+ "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+}
+```
+
+---
+
+🟢 200: Simulation was successful, but the transaction wouldn't be executed.
+
+Invalid Transaction signature.
+
+```json
+{
+    "status": "fail",
+    "failReason": "higher nonce in transaction",
+    "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+}
+```
+---
+
+🔴 400: Bad request
+
+```json
+{
+  "error": "transaction generation failed: invalid chain ID"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+---
+
+**Proxy**
+
+On the Proxy side, if the transaction to simulate is a cross-shard one, then the response format will contain two elements called `senderShard` and `receiverShard` which are of type `SimulationResults` explained above.
+
+Example response for cross-shard transactions:
+
+```
+{
+ "receiverShard": {
+  "status": "success",
+  "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+ },
+ "senderShard": {
+  "status": "success",
+  "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+ }
+}
+```
+
 ## <span class="badge badge-success">POST</span> Estimate Cost of Transaction
 
 `https://api.elrond.com/transaction/cost`
