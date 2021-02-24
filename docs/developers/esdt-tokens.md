@@ -166,6 +166,13 @@ TransferWithCallTransaction {
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were eGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
+## **Transfers done programatically**
+The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
+
+```
+self.send().direct_esdt(&address, &esdt_token_name, &amount, &[]);
+```
+
 ## **Token management**
 
 The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
