@@ -100,6 +100,8 @@ TODO describe returned data
 
 The owner of the delegation contract has a number of operations at their disposal.
 
+TODO expand?
+
 ## Delegation cap
 
 The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the delegation contract will reject any subsequent funds.
@@ -122,6 +124,8 @@ The fully denominated total delegation cap must then be encoded hexadecimally. M
 
 Setting the total delegation cap to 0 (`"00"` in hexadecimal) will result in an unlimited total delegation amount. It can always be modified later.
 
+For example, a `Data` field containing `"modifyTotalDelegationCap@c405abdb8467a04000"` will change the total delegation cap to 3615.9705 eGLD.
+
 
 ## Service fee
 
@@ -143,12 +147,14 @@ The only argument passed to `changeServiceFee` is the new value of the service f
 
 Setting the service fee to 0 (`"00"` in hexadecimal) will result in no rewards reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later.
 
+For example, a `Data` field containing `changeServiceFee@0dc2` will change the service fee to 35.22%.
+
 
 ## Automatic activation
 
 When automatic activation is enabled, the delegation contract will stake inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/protocol/delegation-manager#delegating-funds) can potentially trigger the staking of inactive nodes.
 
-Enabling or disabling automatic activation:
+Automatic activation can be enabled or disabled using a transaction of the form:
 ```
 SetAutomaticActivationTransaction {
     Sender: <account address of the delegation contract owner>
@@ -159,6 +165,10 @@ SetAutomaticActivationTransaction {
           "@" + <"true" or "false" in hexadecimal encoding>
 }
 ```
+
+The only argument passed to `setAutomaticActivation` is either `true` or `false`, as ASCII strings encoded hexadecimally. For reference, `true` is `"74727565"` and `false` is `"66616c7365"`.
+
+For example, a `Data` field containing `"setAutomaticActivation@74727565"` enables automatic activation.
 
 
 ## Metadata
