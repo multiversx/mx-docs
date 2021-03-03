@@ -111,3 +111,19 @@ SetAutomaticActivationTransaction {
           "@" + <"true" or "false" in hexadecimal encoding>
 }
 ```
+
+# Views
+
+-> query own observers... 
+
+## Number of nodes
+
+```
+GetNumNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 0
+    Data: "getNumNodes"          
+}
+```
