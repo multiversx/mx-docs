@@ -32,7 +32,7 @@ Note that the Delegation Manager is not required to set up delegation. For examp
 * delegators claim their share of the validator rewards
 
 
-## Node operator actions
+# Node operator actions
 
 * `createNewDelegationContract` (only sent to the Delegation Manager, once)
 * `setAutomaticActivation`
@@ -50,7 +50,7 @@ Note that the Delegation Manager is not required to set up delegation. For examp
 * `unJailNodes`
 
 
-## Creating a new Delegation Contract
+# Creating a new Delegation Contract
 
 ```
 NewDelegationContractTransaction {
@@ -68,9 +68,9 @@ TODO describe argument encoding, with examples
 TODO describe what happens with the 1250 eGLD
 
 
-## Configuring the Delegation Contract
+# Configuring the Delegation Contract
 
-### Delegation cap
+## Delegation cap
 
 Modifying the total delegation cap:
 ```
@@ -84,7 +84,7 @@ ModifyTotalDelegationCapTransaction {
 }
 ```
 
-### Service fee
+## Service fee
 
 Changing the service fee:
 ```
@@ -98,7 +98,7 @@ ChangeServiceFeeTransaction {
 }
 ```
 
-### Automatic activation
+## Automatic activation
 
 Enabling or disabling automatic activation:
 ```
@@ -109,6 +109,126 @@ SetAutomaticActivationTransaction {
     GasLimit: 6000000
     Data: "setAutomaticActivation" +
           "@" + <"true" or "false" in hexadecimal encoding>
+}
+```
+
+
+# Managing nodes
+
+## Adding nodes
+
+This step requires the BLS key pairs of each node to be added into the delegation contract.
+```
+AddNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 6000000
+    Data: "addNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <address of the delegation contract signed with the secret BLS key of the first node, in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          "@" + <address of the delegation contract signed with the secret BLS key of the second node, in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+          "@" + <address of the delegation contract signed with the secret BLS key of the Nth node, in hexadecimal encoding>
+}
+```
+
+## Removing nodes
+
+This step does not require the BLS key pairs of the nodes.
+```
+RemoveNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 12000000
+    Data: "removeNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+}
+```
+
+## Staking nodes
+
+```
+StakeNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 12000000
+    Data: "stakeNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+}
+```
+
+## Unstaking nodes
+
+```
+UnstakeNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 12000000
+    Data: "unStakeNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+}
+```
+
+## Restaking nodes
+
+```
+RestakeNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 12000000
+    Data: "reStakeUnStakedNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+}
+```
+
+## Unbonding nodes
+
+```
+UnbondNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 12000000
+    Data: "unBondNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+}
+```
+
+## Unjailing nodes
+
+```
+UnjailNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 2.5 eGLD × <number of nodes to be unjailed>
+    GasLimit: 12000000
+    Data: "unJailNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
 
