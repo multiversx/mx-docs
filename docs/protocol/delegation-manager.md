@@ -11,13 +11,10 @@ The goal of the Delegation Manager is to simplify the whole process of setting u
 
 Note that the Delegation Manager is not required to set up delegation. For example, it is also possible to set up delegation using a regular smart contract, although that is a more complex process and is not discussed here.
 
-* how
-* who
-
-**Workflow overview**
+**TODO Workflow overview**
 
 * node operator requests a new Delegation Contract from the Delegation Manager
-  * pays a lot of eGLD for it 
+  * transfers eGLD for it
   * but the eGLD is then used as initially delegated funds
   * node operator is now the owner of the new Delegation Contract
 * node operator registers their nodes into the new Delegation Contract
