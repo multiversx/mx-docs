@@ -32,7 +32,7 @@ IssuanceTransaction {
 }
 ```
 
-Optionally, the properties can be set when issuing a contract. Example:
+Optionally, the properties can be set when issuing a token. Example:
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
