@@ -79,8 +79,8 @@ ModifyTotalDelegationCapTransaction {
     Receiver: <address of the delegation contract>
     Value: 0
     GasLimit: 6000000
-    Data: "setAutomaticActivation" +
-          "@" + <"true" or "false" in hexadecimal encoding>
+    Data: "modifyTotalDelegationCap" +
+          "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding>
 }
 ```
 
@@ -93,7 +93,8 @@ ChangeServiceFeeTransaction {
     Receiver: <address of the delegation contract>
     Value: 0
     GasLimit: 6000000
-    Data: "changeServiceFee"
+    Data: "changeServiceFee" +
+          "@" + <service fee as hundredths of percents, in hexadecimal encoding>
 }
 ```
 
@@ -102,5 +103,11 @@ ChangeServiceFeeTransaction {
 Enabling or disabling automatic activation:
 ```
 SetAutomaticActivationTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 6000000
+    Data: "setAutomaticActivation" +
+          "@" + <"true" or "false" in hexadecimal encoding>
 }
 ```
