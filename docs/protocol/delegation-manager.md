@@ -69,17 +69,17 @@ The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqq
 
 The `Value` is set to 1250 eGLD, which will be automatically added into the staking pool of the newly created delegation contract. This amount always belongs to the owner of the delegation contract.
 
-The first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form for 7231.941 eGLD the amount must be multiplied by $10^{18}$ resulting in 7231941000000000000000.
+The first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by $10^{18}$ resulting in 7231941000000000000000.
 
-The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap. Following the example above, do not encode the ASCII string "7231941000000000000000", but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
+The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap. Following the example above, do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in `"01880b57b708cf408000"`.
 
 Setting the total delegation cap to 0 ("00" in hexadecimal) will result in an unlimited total delegation amount. It can always be modified later (see [Delegation cap](/protocol/delegation-manager#delegation-cap)).
 
 The second argument passed to `createNewDelegationContract` is the service fee that will be reserved for the owner of the delegation contract. It is computed as a proportion of the total rewards earned by the validator nodes. The remaining rewards apart from this proportion will be available to delegators to either claim or redelegate.
 
-The service fee is expressed as hundredths of a percent. For example, a service fee of 37.45% becomes the integer 3745. This integer must then be encoded hexadecimally (3745 becomes "0EA1").
+The service fee is expressed as hundredths of a percent. For example, a service fee of 37.45% becomes the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0EA1"`).
 
-Setting the service fee to 0 ("00" in hexadecimal) will result in no rewards reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/protocol/delegation-manager#service-fee)).
+Setting the service fee to 0 (`"00"` in hexadecimal) will result in no rewards reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/protocol/delegation-manager#service-fee)).
 
 The following is a complete example of a transaction requesting the creation of a new delegation contract:
 ```
@@ -99,11 +99,15 @@ The above transaction creates a new delegation contract owned by the sender, wit
 TODO describe returned data
 
 
-# Configuring the Delegation Contract
+# Configuring the delegation contract
+
+The owner of the delegation contract has a number of operations at their disposal.
 
 ## Delegation cap
 
-Modifying the total delegation cap:
+The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the delegation contract will reject any subsequent funds.
+
+The total delegation cap can be modified at any time using a transaction of the form:
 ```
 ModifyTotalDelegationCapTransaction {
     Sender: <account address of the delegation contract owner>
@@ -115,10 +119,18 @@ ModifyTotalDelegationCapTransaction {
 }
 ```
 
+The only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by the denomination factor $10^{18}$, resulting in 7231941000000000000000.
+
+The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap. Following the example above, do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
+
+Setting the total delegation cap to 0 (`"00"` in hexadecimal) will result in an unlimited total delegation amount. It can always be modified later.
+
 
 ## Service fee
 
-Changing the service fee:
+The service fee is a percentage of the validator rewards that will be reserved for the owner of the delegation contract. The rest of the rewards will be available to delegators to either claim or redelegate.
+
+The service fee can be changed at any time using a transaction of the form:
 ```
 ChangeServiceFeeTransaction {
     Sender: <account address of the delegation contract owner>
@@ -130,8 +142,14 @@ ChangeServiceFeeTransaction {
 }
 ```
 
+The only argument passed to `changeServiceFee` is the new value of the service fee, expressed as hundredths of a percent. For example, a service fee of 37.45% becomes the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0EA1"`).
+
+Setting the service fee to 0 (`"00"` in hexadecimal) will result in no rewards reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later.
+
 
 ## Automatic activation
+
+When automatic activation is enabled, the delegation contract will stake inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/protocol/delegation-manager#delegating-funds) can potentially trigger the staking of inactive nodes.
 
 Enabling or disabling automatic activation:
 ```
