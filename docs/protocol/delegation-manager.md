@@ -50,8 +50,9 @@ Note that the Delegation Manager is not required to set up delegation. For examp
 * `unJailNodes`
 
 
-# Creating a new Delegation Contract
+# Creating a new delegation contract
 
+A new delegation contract can be instantiated by issuing a request to the Delegation Manager using a transaction of the following form:
 ```
 NewDelegationContractTransaction {
     Sender: <account address of the node operator>
@@ -64,8 +65,15 @@ NewDelegationContractTransaction {
 }
 ```
 
+The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`, which is the fixed address of the Delegation Manager, located on the Metashard.
+
+The `Value` is set to 1250 eGLD, which will be automatically added into the staking pool of the newly created delegation contract. This amount always belongs to the owner of the delegation contract.
+
+The first argument passed to `createNewDelegationContract` is the maximum total delegation amount (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form for 7231.941 eGLD the amount must be multiplied by $10^{18}$ resulting in 7231941000000000000000. The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap (e.g. do not encode the ASCII string "7231941000000000000000", but encode the integer 7231941000000000000000 itself).
+
+
 TODO describe argument encoding, with examples
-TODO describe what happens with the 1250 eGLD
+TODO describe returned data
 
 
 # Configuring the Delegation Contract
@@ -84,6 +92,7 @@ ModifyTotalDelegationCapTransaction {
 }
 ```
 
+
 ## Service fee
 
 Changing the service fee:
@@ -98,6 +107,7 @@ ChangeServiceFeeTransaction {
 }
 ```
 
+
 ## Automatic activation
 
 Enabling or disabling automatic activation:
@@ -109,6 +119,22 @@ SetAutomaticActivationTransaction {
     GasLimit: 6000000
     Data: "setAutomaticActivation" +
           "@" + <"true" or "false" in hexadecimal encoding>
+}
+```
+
+
+## Metadata
+
+```
+SetMetadataTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: TODO
+    Data: "setMetaData"
+          "@" + < TODO > +
+          "@" + < TODO > +
+          "@" + < TODO >
 }
 ```
 
@@ -231,6 +257,79 @@ UnjailNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+
+# Delegating and managing delegated funds
+
+Accounts that delegate their own funds to the staking pool are called **delegators**. The delegation contract offers them a set of actions.
+
+
+## Delegating funds
+
+```
+DelegateTransaction {
+    Sender: <account address of funds holder>
+    Receiver: <address of the delegation contract>
+    Value: minimum 10 eGLD
+    GasLimit: 12000000
+    Data: "delegate"
+}
+```
+
+If the transaction is successful, the funds holder has become a delegator.
+
+
+## Claiming rewards
+
+```
+ClaimRewardsTransaction {
+    Sender: <account address of existing delegator>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    Gas: 6000000
+    Data: "claimRewards"
+}
+```
+
+## Redelegating rewards
+
+Current delegation rewards can also be immediately delegated instead of claimed.
+```
+RedelegateRewardsTransaction {
+    Sender: <account address of existing delegator>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    Gas: 12000000
+    Data: "reDelegateRewards"
+}
+```
+
+
+## Undelegating funds
+
+```
+UndelegateTransaction {
+    Sender: <account address of existing delegator>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    Gas: 12000000
+    Data: "unDelegate"
+          "@" + <amount to undelegate in eGLD, fully denominated, in hexadecimal encoding>
+}
+```
+
+
+## Withdrawing
+
+```
+WithdrawTransaction {
+    Sender: <account address of existing delegator>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 12000000
+    Data: "withdraw"
+}
+```
+
 
 # Views
 
