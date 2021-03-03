@@ -69,10 +69,33 @@ The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqq
 
 The `Value` is set to 1250 eGLD, which will be automatically added into the staking pool of the newly created delegation contract. This amount always belongs to the owner of the delegation contract.
 
-The first argument passed to `createNewDelegationContract` is the maximum total delegation amount (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form for 7231.941 eGLD the amount must be multiplied by $10^{18}$ resulting in 7231941000000000000000. The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap (e.g. do not encode the ASCII string "7231941000000000000000", but encode the integer 7231941000000000000000 itself).
+The first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form for 7231.941 eGLD the amount must be multiplied by $10^{18}$ resulting in 7231941000000000000000.
 
+The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap. Following the example above, do not encode the ASCII string "7231941000000000000000", but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
 
-TODO describe argument encoding, with examples
+Setting the total delegation cap to 0 ("00" in hexadecimal) will result in an unlimited total delegation amount. It can always be modified later (see [Delegation cap](/protocol/delegation-manager#delegation-cap)).
+
+The second argument passed to `createNewDelegationContract` is the service fee that will be reserved for the owner of the delegation contract. It is computed as a proportion of the total rewards earned by the validator nodes. The remaining rewards apart from this proportion will be available to delegators to either claim or redelegate.
+
+The service fee is expressed as hundredths of a percent. For example, a service fee of 37.45% becomes the integer 3745. This integer must then be encoded hexadecimally (3745 becomes "0EA1").
+
+Setting the service fee to 0 ("00" in hexadecimal) will result in no rewards reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/protocol/delegation-manager#service-fee)).
+
+The following is a complete example of a transaction requesting the creation of a new delegation contract:
+```
+NewDelegationContractTransaction {
+    Sender: <account address of the node operator>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
+    Value: 1250000000000000000000
+    GasLimit: 60000000
+    Data: "createNewDelegationContract" +
+          "@01880b57b708cf408000" +
+          "@0EA1"
+}
+```
+
+The above transaction creates a new delegation contract owned by the sender, with total delegation cap of 7231.941 eGLD and service fee of 37.45% from the rewards. Moreover, the newly created delegation contract will start with a staking pool of 1250 eGLD (the owner has delegated 1250 eGLD themselves at creation).
+
 TODO describe returned data
 
 
