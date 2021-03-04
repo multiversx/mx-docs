@@ -170,7 +170,7 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
 
 ```
-self.send().direct_esdt(&address, &esdt_token_name, &amount, &[]);
+self.send().direct_esdt_via_transf_exec(&address, &esdt_token_name, &amount, &[]);
 ```
 
 ## **Token management**
