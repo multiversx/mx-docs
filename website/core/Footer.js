@@ -177,6 +177,14 @@ export default function CustomFooter() {
             >
               Growth
             </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://maiar.com/"
+              className="dropdown-item"
+            >
+              Maiar
+            </a>
           </nav>
         </div>
       </div>
