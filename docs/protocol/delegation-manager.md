@@ -382,18 +382,77 @@ WithdrawTransaction {
 ```
 
 
-# Views
+# *Views*
 
--> query own observers... 
+-> query own observers or proxy with postman
+  returnData will be presented in the next paragraphs
 
-## Number of nodes
-
-```
-GetNumNodesTransaction {
-    Sender: <account address of the delegation contract owner>
-    Receiver: <address of the delegation contract>
-    Value: 0
-    GasLimit: 0
-    Data: "getNumNodes"          
+```json
+{
+  "data": {
+    "data": {
+      "returnData": [
+      ],
+      "returnCode": "ok",
+      "returnMessage": "",
+      "gasRemaining": 0,
+      "gasRefund": 0,
+      "outputAccounts": null,
+      "deletedAccounts": null,
+      "touchedAccounts": null,
+      "logs": []
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
+
+### <span class="badge badge-success">POST</span> All contract addresses
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6",
+  "funcName": "getAllContractAddresses"
+}
+```
+
+
+<!--Response-->
+
+```json
+{
+  "returnData": [
+    "<address bytes of the system delegation smart contract in base64 encoding>"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+
+### <span class="badge badge-success">POST</span> Number of nodes
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getNumNodes"
+}
+```
+
+
+<!--Response-->
+
+```json
+{
+  "returnData": [
+    "<number of nodes in base64 encoding of the hex enconding>"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
