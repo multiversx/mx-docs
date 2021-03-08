@@ -7,7 +7,7 @@ title: The Delegation Manager
 
 ### Introducing staking pools
 
-A **staking pool** is defined as a custom delegation smart contract, the associated notes and the funds staked in the pool by participants. **Node operators** may wish to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
+A **staking pool** is defined as a custom delegation smart contract, the associated nodes and the funds staked in the pool by participants. **Node operators** may wish to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
 
 Staking pools bridge the gap between node operators, who need funds to stake for their nodes, and fund holders who wish to earn rewards by staking their funds, but are not interested in managing validator nodes.
 
