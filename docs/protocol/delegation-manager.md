@@ -403,6 +403,12 @@ If the transaction is successful, the delegator does not receive any eGLD at the
 
 ### Undelegating funds
 
+Delegators may express the intent to withdraw a specific amount of eGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal.
+
+If the amount to undelegate requested by the delegator will cause the staking pool to drop below the sufficient amount required to keep all the current validators active, some validators will inevitably end up unstaked. The owner of the delegation contract may intervene and add extra funds to prevent such situations.
+
+To express the intention of future withdrawal of funds from the staking pool, a delegator may submit the following transaction:
+
 ```
 UndelegateTransaction {
     Sender: <account address of existing delegator>
@@ -417,6 +423,10 @@ UndelegateTransaction {
 
 ### Withdrawing
 
+After an `X` number of epochs have passed since submitting an [undelegation transaction](/protocol/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool. This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
+
+using a transaction of the following form:
+
 ```
 WithdrawTransaction {
     Sender: <account address of existing delegator>
@@ -426,6 +436,8 @@ WithdrawTransaction {
     Data: "withdraw"
 }
 ```
+
+If the transaction is successful, the delegator receives all the eGLD they have previously requested to undelegate. The amount is removed from the staking pool.
 
 
 ## Delegation contract view functions
