@@ -6,40 +6,43 @@ title: The Delegation Manager
 :::note
 For reviewers:
 * Gas limits for transactions that do not involve nodes, but only require the base cost of `DelegationOps`, have been set to `1100000`, where the extra `100000` is for the transaction itself. If there's a better way, please propose it and it will be added instead.
-* Gas limits for transactions that involve nodes (e.g. `addNodes`, `removeNodes`)have been documented as `1000000 + N·1100000`, where `1000000` is the base cost of `DelegationOps`, `N` is the number of nodes involved and `1100000` is the `DelegationOps` cost plus `100000` gas for whatever extra gas is required by the individual node to appear in the `Data` field of the transaction. This way of defining `GasLimit` is only tentative. If there's a better way, please propose it and it will be added instead.
+* Gas limits for transactions that involve nodes (e.g. `addNodes`, `removeNodes`) have been documented as `1000000 + N·1100000`, where `1000000` is the base cost of `DelegationOps`, `N` is the number of nodes involved and `1100000` is the `DelegationOps` cost plus `100000` gas for whatever extra gas is required by the individual node to appear in the `Data` field of the transaction. This way of defining `GasLimit` is only tentative. If there's a better way, please propose it and it will be added instead.
 :::
 
-# Introduction
+## Introduction
 
-The Delegation Manager is a smart contract that is built into the Elrond Protocol. It allows **node operators** to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
+**Node operators** may wish to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
 
-The goal of the Delegation Manager is to simplify the whole process of setting up the delegation, to manage the status of validator nodes with delegated stake and to provide an easy way for anyone to delegate their funds.
+For this purpose, node operators may use the **delegation manager** built into the Elrond Protocol to create their own **delegation contract**. A delegation contract automates certain tasks required for the management of a staking pool, such as keeping track of every account that has funded the staking pool, keeping track of the nodes themselves, as well as providing information to the delegators.
 
-Note that the Delegation Manager is not required to set up delegation. For example, it is also possible to set up delegation using a regular smart contract, although that is a more complex process and is not discussed here.
+Note that the delegation manager is not required to set up a staking pool. For example, it is also possible to set up delegation using a regular smart contract, although that is a more complex process and is not discussed here.
+
+Node operators may also choose set up a delegation dashboard, although they may use any user interface or none whatsoever. As an example, the boilerplate for such a delegation dashboard can be found here: https://github.com/ElrondNetwork/starter-dapp/tree/master/react-delegationdashboard.
+
 
 **TODO Workflow overview**
 
-* node operator requests a new Delegation Contract from the Delegation Manager
+* node operator requests a new delegation contract from the delegation manager
   * transfers eGLD for it
   * but the eGLD is then used as initially delegated funds
-  * node operator is now the owner of the new Delegation Contract
-* node operator registers their nodes into the new Delegation Contract
+  * node operator is now the owner of the new delegation contract
+* node operator registers their nodes into the new delegation contract
   * node operator must have the BLS keys of the nodes
-  * the Delegation Contract becomes the "owner" of the nodes
+  * the delegation contract becomes the "owner" of the nodes
   * registered nodes are not yet delegated
-* node operator configures the Delegation Contract with the following:
+* node operator configures the delegation contract with the following:
   * service fee as percentage
-  * maximum size of the delegation pool (the Delegation Contract will refuse funds above this limit)
+  * maximum size of the delegation pool (the delegation contract will refuse funds above this limit)
   * automatic activation (on/off)
-* third parties invoke the Delegation Contract to deposit funds into the staking pool, thus becoming **delegators**
+* third parties invoke the delegation contract to deposit funds into the staking pool, thus becoming **delegators**
 * delegators claim their share of the validator rewards
 
 TODO describe node statuses (active / inactive, staked / not-staked / unstaked etc)
 
 
-# Creating a new delegation contract
+## Creating a new delegation contract
 
-A new delegation contract can be instantiated by issuing a request to the Delegation Manager using a transaction of the following form:
+The delegation contract for a new staking pool can be created by issuing a request to the delegation manager. This is done by submitting a transaction of the following form:
 ```
 NewDelegationContractTransaction {
     Sender: <account address of the node operator>
@@ -52,9 +55,9 @@ NewDelegationContractTransaction {
 }
 ```
 
-The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`, which is the fixed address of the Delegation Manager, located on the Metashard.
+The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`, which is the fixed address of the delegation manager, located on the Metashard.
 
-The `Value` is set to 1250 eGLD, which will be automatically added into the staking pool of the newly created delegation contract. This amount of eGLD always belongs to the owner of the delegation contract.
+The `Value` is set to 1250 eGLD, which will be automatically added into the funds of the newly created delegation contract, i.e. this is the initial amount of eGLD in the staking pool. This amount of eGLD always belongs to the owner of the delegation contract.
 
 In the `Data field`, the first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by $10^{18}$, resulting in 7231941000000000000000.
 
@@ -86,13 +89,13 @@ The above transaction creates a new delegation contract owned by the sender, wit
 TODO describe returned data
 
 
-# Configuring the delegation contract
+## Configuring the delegation contract
 
 The owner of the delegation contract has a number of operations at their disposal.
 
 TODO expand?
 
-## Delegation cap
+### Delegation cap
 
 The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
 
@@ -117,7 +120,7 @@ Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlim
 For example, a `Data` field containing `"modifyTotalDelegationCap@c405abdb8467a04000"` will change the total delegation cap to 3615.9705 eGLD.
 
 
-## Service fee
+### Service fee
 
 The service fee is a percentage of the validator rewards that will be reserved for the owner of the delegation contract. The rest of the rewards will be available to delegators to either claim or redelegate.
 
@@ -140,7 +143,7 @@ Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards a
 For example, a `Data` field containing `changeServiceFee@0dc2` will change the service fee to 35.22%.
 
 
-## Automatic activation
+### Automatic activation
 
 When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/protocol/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes.
 
@@ -161,7 +164,7 @@ The only argument passed to `setAutomaticActivation` is either `true` or `false`
 For example, a `Data` field containing `"setAutomaticActivation@74727565"` enables automatic activation.
 
 
-## Metadata
+### Metadata
 
 ```
 SetMetadataTransaction {
@@ -177,9 +180,9 @@ SetMetadataTransaction {
 ```
 
 
-# Managing nodes
+## Managing nodes
 
-## Adding nodes
+### Adding nodes
 
 When a delegation contract is first created, it contains no information about nodes. The owner of the contract must then register nodes into the contract, so that they can be later activated. Any newly added node is "inactive" by default.
 
@@ -205,7 +208,8 @@ AddNodesTransaction {
 
 As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pair consists of the public BLS key of a node along with the message produced by signing the address of the delegation contract with the secret BLS key of the respective node. There are as many pairs as there are nodes to add.
 
-## Removing nodes
+
+### Removing nodes
 
 Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
 
@@ -227,9 +231,14 @@ RemoveNodesTransaction {
 ```
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
 
-## Staking nodes
+
+### Staking nodes
 
 When the staking pool held by the delegation contract contains a sufficient amount of eGLD, the inactive (non-staked) nodes can be staked (activated). This promotes the nodes to the status of **validator**, which means they participate in consensus and earn rewards.
+
+This subsection describes the _manual_ staking (activation) of nodes. To automatically stake (activate) nodes when funds become available, [automatic activation](/protocol/delegation-manager#automatic-activation) can be enabled.
+
+To stake specific nodes manually, a transaction of the following form can be submitted:
 
 ```
 StakeNodesTransaction {
@@ -245,8 +254,18 @@ StakeNodesTransaction {
 }
 ```
 
-## Unstaking nodes
+The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be staked.
 
+
+### Unstaking nodes
+
+Validator nodes that are already staked (active) can be manually unstaked. This _does not_ mean that the validators are instantly demoted to normal node status, nor does it mean that the staked amount returns to the staking pool. The validators will still spend a number of `X` epochs as validators.
+
+After that period expires, another manual step is required, [unbonding](/protocol/delegation-manager#unbonding-nodes), which completes their deactivation and the staked amount is returned to the staking pool.
+
+To cancel the deactivation of validators before their unstaking is complete, they can be [restaked](/protocol/delegation-manager#restaking-nodes).
+
+To begin the deactivation process for a selection of nodes, a transaction of the following form is used:
 ```
 UnstakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
@@ -260,9 +279,12 @@ UnstakeNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unstaked.
 
-## Restaking nodes
 
+### Restaking nodes
+
+Validator nodes that have been unstaked can be restaked (reactivated) before their deactivation is complete. To cancel their deactivation, a transaction of the following form is used:
 ```
 RestakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
@@ -276,8 +298,14 @@ RestakeNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be restaked.
 
-## Unbonding nodes
+
+### Unbonding nodes
+
+Validator nodes that have been unstaked can be completely deactivated after a period of `X` epochs. Complete deactivation is called **unbonding** and it involves the demotion of validators to the status of regular nodes and also the return of the staked amount of eGLD back to the staking pool.
+
+Validator nodes that have been unbonded cannot be restaked (reactivated). They must be staked anew.
 
 ```
 UnbondNodesTransaction {
@@ -292,8 +320,10 @@ UnbondNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unbonded.
 
-## Unjailing nodes
+
+### Unjailing nodes
 
 ```
 UnjailNodesTransaction {
@@ -309,12 +339,18 @@ UnjailNodesTransaction {
 }
 ```
 
-# Delegating and managing delegated funds
+## Delegating and managing delegated funds
 
-Accounts that delegate their own funds to the staking pool are called **delegators**. The delegation contract offers them a set of actions.
+Accounts that delegate their own funds to the staking pool are called **delegators**. The delegation contract offers them a set of actions as well.
 
 
-## Delegating funds
+### Delegating funds
+
+Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes.
+
+Submitting a delegation transaction takes into account the status of [automatic activation](/protocol/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+
+Funds can be delegated by submitting a transaction of the following form:
 
 ```
 DelegateTransaction {
@@ -329,8 +365,9 @@ DelegateTransaction {
 If the transaction is successful, the funds holder has become a delegator.
 
 
-## Claiming rewards
+### Claiming rewards
 
+A portion of the rewards earned by validator nodes is reserved for each delegator. To claim the rewards, a delegator may issue a transaction of the following form:
 ```
 ClaimRewardsTransaction {
     Sender: <account address of existing delegator>
@@ -341,9 +378,16 @@ ClaimRewardsTransaction {
 }
 ```
 
-## Redelegating rewards
+If the transaction is successful, the delegator receives the proportion of rewards they are entitled to.
 
-Current delegation rewards can also be immediately delegated instead of claimed.
+### Redelegating rewards
+
+Current delegation rewards can also be immediately delegated instead of [claimed](/protocol/delegation-manager#claiming-rewards).
+
+This makes it an operation very similar to [delegation](/protocol/delegation-manager#delegating-funds). Just like delegation, it takes into account the status of [automatic activation](/protocol/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+
+
+Rewards are redelegated using a transaction of the form:
 ```
 RedelegateRewardsTransaction {
     Sender: <account address of existing delegator>
@@ -354,8 +398,16 @@ RedelegateRewardsTransaction {
 }
 ```
 
+If the transaction is successful, the delegator does not receive any eGLD at the moment, but the rewards they were entitled to will be added to their delegated amount.
 
-## Undelegating funds
+
+### Undelegating funds
+
+Delegators may express the intent to withdraw a specific amount of eGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal.
+
+If the amount to undelegate requested by the delegator will cause the staking pool to drop below the sufficient amount required to keep all the current validators active, some validators will inevitably end up unstaked. The owner of the delegation contract may intervene and add extra funds to prevent such situations.
+
+To express the intention of future withdrawal of funds from the staking pool, a delegator may submit the following transaction:
 
 ```
 UndelegateTransaction {
@@ -369,7 +421,11 @@ UndelegateTransaction {
 ```
 
 
-## Withdrawing
+### Withdrawing
+
+After an `X` number of epochs have passed since submitting an [undelegation transaction](/protocol/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool. This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
+
+using a transaction of the following form:
 
 ```
 WithdrawTransaction {
@@ -380,6 +436,8 @@ WithdrawTransaction {
     Data: "withdraw"
 }
 ```
+
+If the transaction is successful, the delegator receives all the eGLD they have previously requested to undelegate. The amount is removed from the staking pool.
 
 
 ## Delegation contract view functions
