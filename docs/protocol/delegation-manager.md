@@ -475,6 +475,9 @@ The response contains an array of the properties in a fixed order (base64 encode
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -483,11 +486,12 @@ The response contains an array of the properties in a fixed order (base64 encode
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
     "<owner address bytes in base64 encoding of the hexadecimal encoding>",
-    "<service fee as hundredths of percents in hexadecimal encoding>",
+    "<service fee as hundredths of percents base64 of the hexadecimal encoding>",
     "<maximum delegation cap in base64 of the hexadecimal encoding>",
     "<initial owner funds in base64 of the hexadecimal encoding>",
     "<has automatic activation - true/false in base64 encoding",
@@ -504,12 +508,12 @@ The response contains an array of the properties in a fixed order (base64 encode
 Request
 ```json
 {
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getContractConfig"
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -537,6 +541,9 @@ The response contains an array of the properties in a fixed order (base64 encode
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -545,6 +552,7 @@ The response contains an array of the properties in a fixed order (base64 encode
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -560,12 +568,12 @@ The response contains an array of the properties in a fixed order (base64 encode
 Request
 ```json
 {
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getMetaData"
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -585,7 +593,11 @@ The response contains a value representing the number of delegators in base64 en
 
 
 <!--DOCUSAURUS_CODE_TABS-->
+
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -594,6 +606,7 @@ The response contains a value representing the number of delegators in base64 en
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -606,12 +619,12 @@ The response contains a value representing the number of delegators in base64 en
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getNumUsers"
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -631,6 +644,9 @@ The response contains the number of nodes in base64 encoding of the hex encoding
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -639,6 +655,7 @@ The response contains the number of nodes in base64 encoding of the hex encoding
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -651,13 +668,12 @@ The response contains the number of nodes in base64 encoding of the hex encoding
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlllllskf06ky",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getNumNodes"
 }
 ``` 
 
-Response
-
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -677,6 +693,9 @@ The response contains an enumeration of alternating status codes and BLS keys. E
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -685,6 +704,7 @@ The response contains an enumeration of alternating status codes and BLS keys. E
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -698,12 +718,12 @@ The response contains an enumeration of alternating status codes and BLS keys. E
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getAllNodeStates"
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -728,6 +748,9 @@ The response contains a value representing the total active stake in base64 enco
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -736,6 +759,7 @@ The response contains a value representing the total active stake in base64 enco
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -748,12 +772,12 @@ The response contains a value representing the total active stake in base64 enco
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getTotalActiveStake"
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -773,6 +797,9 @@ The response contains a value representing the total unstaked stake in base64 en
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -781,6 +808,7 @@ The response contains a value representing the total unstaked stake in base64 en
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -793,12 +821,12 @@ The response contains a value representing the total unstaked stake in base64 en
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getTotalUnStaked"
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -818,6 +846,9 @@ The response contains a value representing the sum of all accumulated rewards in
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -827,6 +858,7 @@ The response contains a value representing the sum of all accumulated rewards in
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -839,13 +871,13 @@ The response contains a value representing the sum of all accumulated rewards in
 Request
 ```json
 {
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getTotalCumulatedRewards",
   "caller": "erd1qqqqqqqqqqqqqqqpqqqqqqqqlllllllllllllllllllllllllllsr9gav8"
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -865,6 +897,9 @@ The response contains a value representing the total claimable rewards for the d
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -874,7 +909,7 @@ The response contains a value representing the total claimable rewards for the d
 ```
 
 <!--Response-->
-
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -887,13 +922,13 @@ The response contains a value representing the total claimable rewards for the d
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getClaimableRewards",
   "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -913,6 +948,9 @@ The response contains a value representing the total accumulated rewards for the
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -922,6 +960,7 @@ The response contains a value representing the total accumulated rewards for the
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -934,13 +973,13 @@ The response contains a value representing the total accumulated rewards for the
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getTotalCumulatedRewardsForUser",
   "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -960,6 +999,9 @@ The response contains a value representing the active stake for the delegator in
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -969,6 +1011,7 @@ The response contains a value representing the active stake for the delegator in
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -981,13 +1024,13 @@ The response contains a value representing the active stake for the delegator in
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getUserActiveStake",
   "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1007,6 +1050,9 @@ The response contains a value representing the unstaked stake for the delegator 
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -1016,6 +1062,7 @@ The response contains a value representing the unstaked stake for the delegator 
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1028,13 +1075,13 @@ The response contains a value representing the unstaked stake for the delegator 
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getUserUnStakedValue",
   "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1053,6 +1100,9 @@ The response contains a value representing the unbondable stake in base64 encodi
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -1062,6 +1112,7 @@ The response contains a value representing the unbondable stake in base64 encodi
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1074,13 +1125,13 @@ The response contains a value representing the unbondable stake in base64 encodi
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getUserUnBondable",
   "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1100,6 +1151,9 @@ The response contains an enumeration representing the different undelegated stak
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -1109,6 +1163,7 @@ The response contains an enumeration representing the different undelegated stak
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1121,13 +1176,13 @@ The response contains an enumeration representing the different undelegated stak
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getUserUnDelegatedList",
   "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
 }
 ```
 
-Response (only `returnData` shown below; see linkSection for complete response)
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1148,6 +1203,9 @@ The response contains an enumeration for the delegator encoded base64 of the hex
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -1157,6 +1215,7 @@ The response contains an enumeration for the delegator encoded base64 of the hex
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1172,13 +1231,13 @@ The response contains an enumeration for the delegator encoded base64 of the hex
 Request
 ```json
 {
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getUserUnDelegatedList",
   "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
 }
 ```
 
-Response (only `returnData` shown below; see linkSection for complete response)
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1201,6 +1260,9 @@ The response contains an enumeration for the specified epoch representing the ba
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "<address of the delegation contract in bech32 encoding>",
@@ -1210,6 +1272,7 @@ The response contains an enumeration for the specified epoch representing the ba
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1229,7 +1292,7 @@ The response contains an enumeration for the specified epoch representing the ba
 }
 ```
 
-Response (only `returnData` shown below; see linkSection for complete response)
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1254,6 +1317,9 @@ The response contains an enumeration of bech32 keys bytes in base64 encoding.
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6",
@@ -1263,6 +1329,7 @@ The response contains an enumeration of bech32 keys bytes in base64 encoding.
 
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -1280,7 +1347,7 @@ Request
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1308,6 +1375,9 @@ The response contains an enumeration of the properties in a fixed order (base64 
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+```
+https://proxy:port/vm-values/query
+```
 ```json
 {
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6",
@@ -1316,6 +1386,7 @@ The response contains an enumeration of the properties in a fixed order (base64 
 ```
 
 <!--Response-->
+Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -1339,7 +1410,7 @@ Request
 }
 ```
 
-Response
+Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
