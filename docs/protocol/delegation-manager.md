@@ -408,6 +408,116 @@ The following documentation sections only show the relevant `returnData` and omi
 }
 ```
 
+### <span class="badge badge-success">POST</span> Contract config
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getContractConfig"
+}
+```
+
+
+<!--Response-->
+The returnData member will contain an array of the properties in a fixed order (base64 encoded): owner address, service fee, maximum delegation cap, initial owner funds, automatic activation, with delegation cap, can change service fee, check cap on redelegate, nonce on creation and unbond period
+```json
+{
+  "returnData": [
+    "<owner address bytes in base64 encoding of the hexadecimal encoding>",
+    "<service fee as hundredths of percents in hexadecimal encoding>",
+    "<maximum delegation cap in base64 of the hexadecimal encoding>",
+    "<initial owner funds in base64 of the hexadecimal encoding>",
+    "<has automatic activation - true/false in base64 encoding",
+    "<has delegation cap - true/false in base64 encoding",
+    "<changeable service fee - true/false in base64 encoding",
+    "<check cap on redelegate - true/false in base64 encoding",
+    "<blockchain nonce at creation in base64 of the hexadecimal encoding>",
+    "<unbond period in rounds in base64 of the hexadecimal encoding>"
+  ]
+}
+```
+
+<!--Example-->
+
+Request
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getContractConfig"
+}
+```
+
+Response
+
+```json
+{
+  "returnData": [
+    "gKzHUD288mzScNX6nEmkGm4CHneMdrrPhJyPET9iGA8=",
+    null, 
+    "", 
+    "Q8M8GTdWSAAA",
+    "dHJ1ZQ==", 
+    "ZmFsc2U=", 
+    "dHJ1ZQ==", 
+    "AuU=", 
+    "+g=="
+  ]
+
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Contract metadata
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getMetaData"
+}
+```
+
+
+<!--Response-->
+The returnData member will contain an array of the properties in a fixed order (base64 encoded):
+```json
+{
+  "returnData": [
+    "<staking provider name in base64 encoding>",
+    "<staking provider website in base64 encoding>",
+    "<staking provider identifier in base64 encoding>"
+  ]
+}
+```
+
+<!--Example-->
+
+Request
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getMetaData"
+}
+```
+
+Response
+
+```json
+{
+  "returnData": [
+    "U3Rha2luZyBwcm92aWRlciB0ZXN0",
+    "d3d3LmVscm9uZHN0YWtpbmcuY29t", 
+    "dGVzdEtleWJhc2VJZGVudGlmaWVy"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 ### <span class="badge badge-success">POST</span> Number of delegators
 
 The result is a value representing the number of delegators in base64 encoding of the hex encoding.
@@ -728,6 +838,51 @@ Response
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
+### <span class="badge badge-success">POST</span> Delegator total accumulated rewards
+The result is a value representing the total accumulated rewards for the delegator in base64 encoding of the hex encoding.
+
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getTotalCumulatedRewardsForUser",
+  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
+}
+```
+
+<!--Response-->
+
+```json
+ {
+  "returnData": [
+    "<delegator total cumulated rewards in base64 encoding of the hex encoding>"
+  ]
+}
+```
+
+<!--Example-->
+Request
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getTotalCumulatedRewardsForUser",
+  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
+}
+```
+
+Response
+```json
+ {
+  "returnData": [
+    "Ft9RZzF7Dyc"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 ### <span class="badge badge-success">POST</span> Delegator active stake
 
 The result is a value representing the active stake for the delegator in base64 encoding of the hex encoding.
@@ -906,6 +1061,104 @@ Response (only `returnData` shown below; see linkSection for complete response)
   "returnData": [
     "Q8M8GTdWSAAA",
     "iscjBInoAAA="
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Delegator funds data
+
+The result is an enumeration for the delegator encoded base64 of the hexadecimal encoding of the following: active stake, unclaimed rewards, unstaked stake and unbondable stake.
+
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getDelegatorFundsData",
+  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
+}
+```
+
+<!--Response-->
+
+```json
+ {
+  "returnData": [
+    "<active stake in base64 encoding of the hex encoding>",
+    "<unclaimed rewards in base64 encoding of the hex encoding>",
+    "<unstaked stake in base64 encoding of the hex encoding>",
+    "<unbondable stake in base64 encoding of the hex encoding>"
+  ]
+}
+```
+
+<!--Example-->
+Request
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getUserUnDelegatedList",
+  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
+}
+```
+
+Response (only `returnData` shown below; see linkSection for complete response)
+```json
+{
+  "returnData": [
+    "REAihYg4zAAA",
+    "Q8M8GTdWSAAA",
+    "REAihYg4zAAA",
+    "Q8M8GTdWSAAA"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Get reward data for epoch
+
+The result is an enumeration for the specified epoch representing the base64 encoding of the hexadecimal encoding for the rewards to distribute, total active stake and service fee.
+
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+ 
+}
+```
+
+<!--Response-->
+```json
+ {
+  "returnData": [
+    "<rewards to distribute in base64 encoding of the hexadecimal encoding>",
+    "<total active stake in base64 encoding of the hexadecimal encoding>",
+    "<service fee in base64 encoding of the hexadecimal encoding>"
+  ]
+}
+```
+
+<!--Example-->
+```json
+{ 
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getRewardData",
+  "args" : ["fc2b"]
+}
+```
+
+Response (only `returnData` shown below; see linkSection for complete response)
+```json
+{
+  "returnData": [
+    "REAihYg4zAAA",
+    "Q8M8GTdWSAAA",
+    "REAihYg4zAAA"
   ]
 }
 ```
