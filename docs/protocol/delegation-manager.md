@@ -9,7 +9,7 @@ For reviewers:
 * Gas limits for transactions that involve nodes (e.g. `addNodes`, `removeNodes`)have been documented as `1000000 + N·1100000`, where `1000000` is the base cost of `DelegationOps`, `N` is the number of nodes involved and `1100000` is the `DelegationOps` cost plus `100000` gas for whatever extra gas is required by the individual node to appear in the `Data` field of the transaction. This way of defining `GasLimit` is only tentative. If there's a better way, please propose it and it will be added instead.
 :::
 
-# Introduction
+## Introduction
 
 The Delegation Manager is a smart contract that is built into the Elrond Protocol. It allows **node operators** to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
 
@@ -37,7 +37,7 @@ Note that the Delegation Manager is not required to set up delegation. For examp
 TODO describe node statuses (active / inactive, staked / not-staked / unstaked etc)
 
 
-# Creating a new delegation contract
+## Creating a new delegation contract
 
 A new delegation contract can be instantiated by issuing a request to the Delegation Manager using a transaction of the following form:
 ```
@@ -86,13 +86,13 @@ The above transaction creates a new delegation contract owned by the sender, wit
 TODO describe returned data
 
 
-# Configuring the delegation contract
+## Configuring the delegation contract
 
 The owner of the delegation contract has a number of operations at their disposal.
 
 TODO expand?
 
-## Delegation cap
+### Delegation cap
 
 The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
 
@@ -117,7 +117,7 @@ Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlim
 For example, a `Data` field containing `"modifyTotalDelegationCap@c405abdb8467a04000"` will change the total delegation cap to 3615.9705 eGLD.
 
 
-## Service fee
+### Service fee
 
 The service fee is a percentage of the validator rewards that will be reserved for the owner of the delegation contract. The rest of the rewards will be available to delegators to either claim or redelegate.
 
@@ -140,7 +140,7 @@ Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards a
 For example, a `Data` field containing `changeServiceFee@0dc2` will change the service fee to 35.22%.
 
 
-## Automatic activation
+### Automatic activation
 
 When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/protocol/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes.
 
@@ -161,7 +161,7 @@ The only argument passed to `setAutomaticActivation` is either `true` or `false`
 For example, a `Data` field containing `"setAutomaticActivation@74727565"` enables automatic activation.
 
 
-## Metadata
+### Metadata
 
 ```
 SetMetadataTransaction {
@@ -177,9 +177,9 @@ SetMetadataTransaction {
 ```
 
 
-# Managing nodes
+## Managing nodes
 
-## Adding nodes
+### Adding nodes
 
 When a delegation contract is first created, it contains no information about nodes. The owner of the contract must then register nodes into the contract, so that they can be later activated. Any newly added node is "inactive" by default.
 
@@ -205,7 +205,7 @@ AddNodesTransaction {
 
 As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pair consists of the public BLS key of a node along with the message produced by signing the address of the delegation contract with the secret BLS key of the respective node. There are as many pairs as there are nodes to add.
 
-## Removing nodes
+### Removing nodes
 
 Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
 
@@ -227,7 +227,7 @@ RemoveNodesTransaction {
 ```
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
 
-## Staking nodes
+### Staking nodes
 
 When the staking pool held by the delegation contract contains a sufficient amount of eGLD, the inactive (non-staked) nodes can be staked (activated). This promotes the nodes to the status of **validator**, which means they participate in consensus and earn rewards.
 
@@ -245,7 +245,7 @@ StakeNodesTransaction {
 }
 ```
 
-## Unstaking nodes
+### Unstaking nodes
 
 ```
 UnstakeNodesTransaction {
@@ -261,7 +261,7 @@ UnstakeNodesTransaction {
 }
 ```
 
-## Restaking nodes
+### Restaking nodes
 
 ```
 RestakeNodesTransaction {
@@ -277,7 +277,7 @@ RestakeNodesTransaction {
 }
 ```
 
-## Unbonding nodes
+### Unbonding nodes
 
 ```
 UnbondNodesTransaction {
@@ -293,7 +293,7 @@ UnbondNodesTransaction {
 }
 ```
 
-## Unjailing nodes
+### Unjailing nodes
 
 ```
 UnjailNodesTransaction {
@@ -309,12 +309,12 @@ UnjailNodesTransaction {
 }
 ```
 
-# Delegating and managing delegated funds
+## Delegating and managing delegated funds
 
 Accounts that delegate their own funds to the staking pool are called **delegators**. The delegation contract offers them a set of actions.
 
 
-## Delegating funds
+### Delegating funds
 
 ```
 DelegateTransaction {
@@ -329,7 +329,7 @@ DelegateTransaction {
 If the transaction is successful, the funds holder has become a delegator.
 
 
-## Claiming rewards
+### Claiming rewards
 
 ```
 ClaimRewardsTransaction {
@@ -341,7 +341,7 @@ ClaimRewardsTransaction {
 }
 ```
 
-## Redelegating rewards
+### Redelegating rewards
 
 Current delegation rewards can also be immediately delegated instead of claimed.
 ```
@@ -355,7 +355,7 @@ RedelegateRewardsTransaction {
 ```
 
 
-## Undelegating funds
+### Undelegating funds
 
 ```
 UndelegateTransaction {
@@ -369,7 +369,7 @@ UndelegateTransaction {
 ```
 
 
-## Withdrawing
+### Withdrawing
 
 ```
 WithdrawTransaction {
