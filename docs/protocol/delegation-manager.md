@@ -379,7 +379,7 @@ WithdrawTransaction {
 ```
 
 
-# *Views*
+## *Views*
 
 The following documentation sections only show the relevant returnData and omit the other fields for simplicity
 
@@ -405,7 +405,7 @@ The following documentation sections only show the relevant returnData and omit 
 }
 ```
 
-### <span class="badge badge-success">POST</span> All contract addresses
+### <span class="badge badge-success">POST</span> Delegation manager all contract addresses
 <!--DOCUSAURUS_CODE_TABS-->
 <!--Request-->
 
@@ -457,6 +457,48 @@ Response
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
+### <span class="badge badge-success">POST</span> Number of delegators
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getNumUsers"
+}
+```
+
+<!--Response-->
+
+The result is a value representing the number of delegators in base64 encoding of the hex encoding.
+
+```json
+ {
+  "returnData": [
+    "<total active stake in base64 encoding of the hex encoding>"
+  ]
+}
+```
+
+<!--Example-->
+Request
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getNumUsers"
+}
+```
+
+Response
+```json
+ {
+  "returnData": [
+    "BQ=="
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-success">POST</span> Number of nodes
 <!--DOCUSAURUS_CODE_TABS-->
@@ -513,7 +555,6 @@ Response
 }
 ```
 
-
 <!--Response-->
 
 The result is an enumeration of alternating status codes and BLS keys. Each status code is followed by the BLS key of the node it describes. Both status codes and BLS keys are encoded in base64.
@@ -546,187 +587,6 @@ Response
     "7gJzQ3GQ4htSx6CYvOkXPDdwGfzdahuDY4agZkGhIAMfB44K08FP6z3wLQEnn2IULfZ8/Hds38LEu3Xq+mJZ4FktF0vm8C1T34b5uAEpZWtDZLICAEFCuQZrqS5Qb1CR",
     "vTyNQ/vDxg0L8LmoGuKP+4/wsbyWv8RaqeQ+WH+xrMvk1m7Q3wjheOpjYtQPz80YZ1CrwKj6ObsCUejP4uuvi3MQ1oMEGKg5yh3kRgybRb4TXAWEpAPszYMLIQhrIn2P",
     "9TbGQCcrbyXH9HBAhzIWOuH/cdSNO1dwxO5foM2L28tWU0p9Kos6DKsPMtKMx4sAeRal08K3Dk0gQxeTSAvC2fb3DAQt01rmPSAqCSXZetSX12BVcTi+pYGUHaXKJ/OW"
-  ]
-}
-```
-
-<!--END_DOCUSAURUS_CODE_TABS-->
-
-### <span class="badge badge-success">POST</span> Delegator unbondable stake
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Request-->
-
-```json
-{
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
-  "funcName": "getUserUnBondable",
-  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
-}
-```
-
-<!--Response-->
-
-The result is a value representing the unbondable stake in base64 encoding of the hex encoding.
-
-```json
- {
-  "returnData": [
-    "<unbondable stake in base64 encoding of the hex encoding>"
-  ]
-}
-```
-
-<!--Example-->
-Request
-```json
-{
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
-  "funcName": "getUserUnBondable",
-  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
-}
-```
-
-Response
-```json
- {
-  "returnData": [
-    "ARWORgkT0AAA"
-  ]
-}
-```
-
-<!--END_DOCUSAURUS_CODE_TABS-->
-
-### <span class="badge badge-success">POST</span> Delegator active stake
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Request-->
-
-```json
-{
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
-  "funcName": "getUserActiveStake",
-  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
-}
-```
-
-<!--Response-->
-
-The result is a value representing the active stake for the delegator in base64 encoding of the hex encoding.
-
-```json
- {
-  "returnData": [
-    "<active stake in base64 encoding of the hex encoding>"
-  ]
-}
-```
-
-<!--Example-->
-Request
-```json
-{
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
-  "funcName": "getUserActiveStake",
-  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
-}
-```
-
-Response
-```json
- {
-  "returnData": [
-    "slsrv1so8QAA"
-  ]
-}
-```
-
-<!--END_DOCUSAURUS_CODE_TABS-->
-
-### <span class="badge badge-success">POST</span> Delegator undelegated stake
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Request-->
-
-```json
-{
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
-  "funcName": "getUserUnDelegatedList",
-  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
-}
-```
-
-<!--Response-->
-
-The result is an enumeration representing the different undelegated stake values in base64 encoding of the hex encoding.
-
-```json
- {
-  "returnData": [
-    "<undelegated stake in base64 encoding of the hex encoding>"
-  ]
-}
-```
-
-<!--Example-->
-Request
-```json
-{
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
-  "funcName": "getUserUnDelegatedList",
-  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
-}
-```
-
-Response
-```json
- {
-  "returnData": [
-    "Q8M8GTdWSAAA",
-    "iscjBInoAAA="
-  ]
-}
-```
-
-<!--END_DOCUSAURUS_CODE_TABS-->
-
-### <span class="badge badge-success">POST</span> Delegator unstaked stake
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Request-->
-
-```json
-{
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
-  "funcName": "getUserUnStakedValue",
-  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
-}
-```
-
-<!--Response-->
-
-The result is a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding.
-
-```json
- {
-  "returnData": [
-    "<delegator unstaked stake in base64 encoding of the hex encoding>"
-  ]
-}
-```
-
-<!--Example-->
-Request
-```json
-{
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
-  "funcName": "getUserUnStakedValue",
-  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
-}
-```
-
-Response
-```json
- {
-  "returnData": [
-    "ARWORgkT0AAA"
   ]
 }
 ```
@@ -770,49 +630,6 @@ Response
  {
   "returnData": [
     "ArXjrxaxiAAA"
-  ]
-}
-```
-
-<!--END_DOCUSAURUS_CODE_TABS-->
-
-### <span class="badge badge-success">POST</span> Number of delegators
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Request-->
-
-```json
-{
-  "scAddress": "<address of the delegation contract in bech32 encoding>",
-  "funcName": "getNumUsers"
-}
-```
-
-<!--Response-->
-
-The result is a value representing the number of delegators in base64 encoding of the hex encoding.
-
-```json
- {
-  "returnData": [
-    "<total active stake in base64 encoding of the hex encoding>"
-  ]
-}
-```
-
-<!--Example-->
-Request
-```json
-{
-  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
-  "funcName": "getNumUsers"
-}
-```
-
-Response
-```json
- {
-  "returnData": [
-    "BQ=="
   ]
 }
 ```
@@ -903,6 +720,186 @@ Response
  {
   "returnData": [
     "Ft9RZzF7Dyc"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Delegator active stake
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getUserActiveStake",
+  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
+}
+```
+
+<!--Response-->
+
+The result is a value representing the active stake for the delegator in base64 encoding of the hex encoding.
+
+```json
+ {
+  "returnData": [
+    "<active stake in base64 encoding of the hex encoding>"
+  ]
+}
+```
+
+<!--Example-->
+Request
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getUserActiveStake",
+  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
+}
+```
+
+Response
+```json
+ {
+  "returnData": [
+    "slsrv1so8QAA"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Delegator unstaked stake
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getUserUnStakedValue",
+  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
+}
+```
+
+<!--Response-->
+
+The result is a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding.
+
+```json
+ {
+  "returnData": [
+    "<delegator unstaked stake in base64 encoding of the hex encoding>"
+  ]
+}
+```
+
+<!--Example-->
+Request
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getUserUnStakedValue",
+  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
+}
+```
+
+Response
+```json
+ {
+  "returnData": [
+    "ARWORgkT0AAA"
+  ]
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Delegator unbondable stake
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getUserUnBondable",
+  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
+}
+```
+
+<!--Response-->
+
+The result is a value representing the unbondable stake in base64 encoding of the hex encoding.
+
+```json
+ {
+  "returnData": [
+    "<unbondable stake in base64 encoding of the hex encoding>"
+  ]
+}
+```
+
+<!--Example-->
+Request
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getUserUnBondable",
+  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
+}
+```
+
+Response
+```json
+ {
+  "returnData": [
+    "ARWORgkT0AAA"
+  ]
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-success">POST</span> Delegator undelegated stake
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Request-->
+
+```json
+{
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getUserUnDelegatedList",
+  "args" : ["<delegator address in hexadecimal encoding of the bech32 decoded value>"]
+}
+```
+
+<!--Response-->
+
+The result is an enumeration representing the different undelegated stake values in base64 encoding of the hex encoding.
+
+```json
+ {
+  "returnData": [
+    "<undelegated stake in base64 encoding of the hex encoding>"
+  ]
+}
+```
+
+<!--Example-->
+Request
+```json
+{
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
+  "funcName": "getUserUnDelegatedList",
+  "args":["ebfd923cd251f857ed7639e87143ac83f12f423827abc4a0cdde0119c3e37915"]
+}
+```
+
+Response
+```json
+ {
+  "returnData": [
+    "Q8M8GTdWSAAA",
+    "iscjBInoAAA="
   ]
 }
 ```
