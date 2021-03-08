@@ -3,17 +3,19 @@ id: delegation-manager
 title: The Delegation Manager
 ---
 
-:::note
-For reviewers:
-* Gas limits for transactions that do not involve nodes, but only require the base cost of `DelegationOps`, have been set to `1100000`, where the extra `100000` is for the transaction itself. If there's a better way, please propose it and it will be added instead.
-* Gas limits for transactions that involve nodes (e.g. `addNodes`, `removeNodes`) have been documented as `1000000 + N·1100000`, where `1000000` is the base cost of `DelegationOps`, `N` is the number of nodes involved and `1100000` is the `DelegationOps` cost plus `100000` gas for whatever extra gas is required by the individual node to appear in the `Data` field of the transaction. This way of defining `GasLimit` is only tentative. If there's a better way, please propose it and it will be added instead.
-:::
-
 ## Introduction
 
-**Node operators** may wish to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
+### Introducing staking pools
 
-For this purpose, node operators may use the **delegation manager** built into the Elrond Protocol to create their own **delegation contract**. A delegation contract automates certain tasks required for the management of a staking pool, such as keeping track of every account that has funded the staking pool, keeping track of the nodes themselves, as well as providing information to the delegators.
+A **staking pool** is defined as a custom delegation smart contract, the associated notes and the funds staked in the pool by participants. **Node operators** may wish to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
+
+Staking pools bridge the gap between node operators, who need funds to stake for their nodes, and fund holders who wish to earn rewards by staking their funds, but are not interested in managing validator nodes.
+
+Node operators can set up a staking pool to manage one or more validator nodes. For this purpose, they may use the **delegation manager** built into the Elrond Protocol to create their own **delegation contract**. A delegation contract automates certain tasks required for the management of a staking pool, such as keeping track of every account that has funded the staking pool, keeping track of the nodes themselves, as well as providing information to the delegators.
+
+:::important
+A staking pool requires 1250 eGLD deposited by the node operator at the moment of its creation. However, 2500 eGLD is required to stake a single validator node and start earning rewards.
+:::
 
 This page describes how to request a new delegation contract from the delegation manager and how to use it. It will focus on the delegation _contract_ more than the delegation _manager_, but the two concepts are intimately linked. However, it is important to remember that it is the delegation _contract_ which handles the staking pool and the nodes associated with it.
 
@@ -21,25 +23,6 @@ Note that the delegation manager is not required to set up a staking pool. For e
 
 Node operators may also choose to set up a delegation dashboard, although they may use any user interface or none whatsoever. As an example, the boilerplate for such a delegation dashboard can be found here: https://github.com/ElrondNetwork/starter-dapp/tree/master/react-delegationdashboard.
 
-
-**TODO Workflow overview**
-
-* node operator requests a new delegation contract from the delegation manager
-  * transfers eGLD for it
-  * but the eGLD is then used as initially delegated funds
-  * node operator is now the owner of the new delegation contract
-* node operator registers their nodes into the new delegation contract
-  * node operator must have the BLS keys of the nodes
-  * the delegation contract becomes the "owner" of the nodes
-  * registered nodes are not yet delegated
-* node operator configures the delegation contract with the following:
-  * service fee as percentage
-  * maximum size of the delegation pool (the delegation contract will refuse funds above this limit)
-  * automatic activation (on/off)
-* third parties invoke the delegation contract to deposit funds into the staking pool, thus becoming **delegators**
-* delegators claim their share of the validator rewards
-
-TODO describe node statuses (active / inactive, staked / not-staked / unstaked etc)
 
 A detailed description of the delegation process can be consulted at https://github.com/ElrondNetwork/elrond-specs/blob/main/sc-delegation-specs.md.
 
@@ -89,14 +72,10 @@ NewDelegationContractTransaction {
 
 The above transaction creates a new delegation contract owned by the sender, with total delegation cap of 7231.941 eGLD and service fee of 37.45% from the rewards. Moreover, the newly created delegation contract will start with a staking pool of 1250 eGLD.
 
-TODO describe returned data
-
 
 ## Configuring the delegation contract
 
 The owner of the delegation contract has a number of operations at their disposal.
-
-TODO expand?
 
 ### Delegation cap
 
@@ -165,22 +144,6 @@ SetAutomaticActivationTransaction {
 The only argument passed to `setAutomaticActivation` is either `true` or `false`, as an ASCII string encoded hexadecimally. For reference, `true` is `"74727565"` and `false` is `"66616c7365"`.
 
 For example, a `Data` field containing `"setAutomaticActivation@74727565"` enables automatic activation.
-
-
-### Metadata
-
-```
-SetMetadataTransaction {
-    Sender: <account address of the delegation contract owner>
-    Receiver: <address of the delegation contract>
-    Value: 0
-    GasLimit: TODO
-    Data: "setMetaData"
-          "@" + < TODO > +
-          "@" + < TODO > +
-          "@" + < TODO >
-}
-```
 
 
 ## Managing nodes
