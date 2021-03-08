@@ -16,6 +16,11 @@
 			"wallet/web-wallet",
 			"wallet/ledger"
 		],
+    "Protocol":[
+			"protocol/staking-smart-contract",
+			"protocol/delegation-manager",
+			"protocol/esdt-tokens"
+    ],
 		"Validators":[
 			"validators/overview",
 			"validators/system-requirements",
@@ -89,8 +94,6 @@
 					"developers/signing-transactions/signing-programmatically"
 				]
 			},
-			"developers/esdt-tokens",
-			"developers/staking-smart-contract",
 			{
 				"type":"subcategory",
 				"label":"Developer reference",
