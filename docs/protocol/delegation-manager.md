@@ -1203,7 +1203,9 @@ The response contains an enumeration for the specified epoch representing the ba
 <!--Request-->
 ```json
 {
- 
+  "scAddress": "<address of the delegation contract in bech32 encoding>",
+  "funcName": "getRewardData",
+  "args" :["<epoch number in hexadecimal encoding>"]
 }
 ```
 
