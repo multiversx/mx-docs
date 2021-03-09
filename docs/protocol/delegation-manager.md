@@ -419,7 +419,7 @@ If the transaction is successful, the delegator receives all the eGLD they have 
 
 The delegation contract can be queried using the following view functions. These queries should be done on a local proxy on the `/vm-values/query` endpoint.
 
-The following documentation sections only show the relevant `returnData` and omit the other fields for simplicity.
+The following documentation sections only show the value of the relevant `returnData` field and omit the other fields for simplicity.
 
 ```json
 {
