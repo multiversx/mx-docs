@@ -54,7 +54,7 @@ Setting the total delegation cap to 0 ("00" in hexadecimal) specifies an unlimit
 The second argument passed to `createNewDelegationContract` is the service fee that will be reserved for the owner of the delegation contract. It is computed as a proportion of the total rewards earned by the validator nodes. The remaining rewards apart from this proportion will be available to delegators to either claim or redelegate. The service fee is expressed as hundredths of a percent.
 
 :::tip
-For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0EA1"`).
+For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0ea1"`).
 :::
 
 Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards are reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/validators/delegation-manager#service-fee)).
@@ -68,7 +68,7 @@ NewDelegationContractTransaction {
     GasLimit: 60000000
     Data: "createNewDelegationContract" +
           "@01880b57b708cf408000" +
-          "@0EA1"
+          "@0ea1"
 }
 ```
 
@@ -88,7 +88,7 @@ SetMetadataTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1100000
+    GasLimit: 2000000
     Data: "setMetaData"
           "@" + <name of the staking pool, in hexadecimal encoding> +
           "@" + <website of the staking pool, in hexadecimal encoding > +
@@ -107,7 +107,7 @@ ChangeServiceFeeTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1100000
+    GasLimit: 2000000
     Data: "changeServiceFee" +
           "@" + <service fee as hundredths of percents, in hexadecimal encoding>
 }
@@ -134,7 +134,7 @@ SetAutomaticActivationTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1100000
+    GasLimit: 2000000
     Data: "setAutomaticActivation" +
           "@" + <"true" or "false" in hexadecimal encoding>
 }
@@ -157,7 +157,7 @@ ModifyTotalDelegationCapTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1100000
+    GasLimit: 2000000
     Data: "modifyTotalDelegationCap" +
           "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding>
 }
@@ -188,7 +188,7 @@ AddNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1000000 + N·1100000
+    GasLimit: 1000000 + N·6000000
     Data: "addNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <address of the delegation contract signed with the secret BLS key of the first node, in hexadecimal encoding> +
@@ -216,7 +216,7 @@ StakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "stakeNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -250,7 +250,7 @@ UnstakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "unStakeNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -269,7 +269,7 @@ RestakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "reStakeUnStakedNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -295,7 +295,7 @@ UnbondNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "unBondNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -318,7 +318,7 @@ RemoveNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1000000 + N·1100000
+    GasLimit: 1000000 + N·6000000
     Data: "removeNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -336,7 +336,7 @@ UnjailNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 2.5 eGLD × <number of nodes to be unjailed>
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "unJailNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -356,6 +356,10 @@ Accounts that delegate their own funds to the staking pool are called **delegato
 Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes.
 
 Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+
+:::important
+If all the nodes are already active validators (staked), then all the extra funds received from delegators will be used to top-up the stake of the nodes. Otherwise, the delegation contract will keep accumulating the funds until all validators are staked.
+:::
 
 Funds can be delegated by submitting a transaction of the following form:
 
@@ -389,10 +393,11 @@ If the transaction is successful, the delegator receives the proportion of rewar
 
 ### Redelegating rewards
 
-Current delegation rewards can also be immediately delegated instead of [claimed](/validators/delegation-manager#claiming-rewards).
+Current delegation rewards can also be immediately delegated instead of [claimed](/validators/delegation-manager#claiming-rewards). This makes it an operation very similar to [delegation](/validators/delegation-manager#delegating-funds).
 
-This makes it an operation very similar to [delegation](/validators/delegation-manager#delegating-funds). Just like delegation, it takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
-
+:::important
+Just like delegation, redelegation of rewards takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+:::
 
 Rewards are redelegated using a transaction of the form:
 ```
@@ -412,7 +417,9 @@ If the transaction is successful, the delegator does not receive any eGLD at the
 
 Delegators may express the intent to withdraw a specific amount of eGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal.
 
+:::important
 If the amount to undelegate requested by the delegator will cause the staking pool to drop below the sufficient amount required to keep all the current validators active, some validators will inevitably end up unstaked. The owner of the delegation contract may intervene and add extra funds to prevent such situations.
+:::
 
 To express the intention of future withdrawal of funds from the staking pool, a delegator may submit the following transaction:
 
@@ -430,7 +437,13 @@ UndelegateTransaction {
 
 ### Withdrawing
 
-After an `X` number of epochs have passed since submitting an [undelegation transaction](/validators/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool. This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
+After submitting an [undelegation transaction](/validators/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool.
+
+:::important
+The delegation contract will only allow immediate withdrawal if it has enough funds at the moment. Otherwise, the delegator must wait until such funds are either returned to the staking pool via [unbonding](/validators/delegation-manager#unbonding-nodes) or other delegators add funds to the staking pool (including the owner themselves).
+:::
+
+This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
 
 Withdrawing funds is done using a transaction of the following form:
 
