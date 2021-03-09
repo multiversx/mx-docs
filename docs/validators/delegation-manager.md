@@ -49,7 +49,7 @@ In the `Data field`, the first argument passed to `createNewDelegationContract` 
 For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in `"01880b57b708cf408000"`.
 :::
 
-Setting the total delegation cap to 0 ("00" in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later (see [Delegation cap](/validators/staking/delegation-manager#delegation-cap)).
+Setting the total delegation cap to 0 ("00" in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later (see [Delegation cap](/validators/delegation-manager#delegation-cap)).
 
 The second argument passed to `createNewDelegationContract` is the service fee that will be reserved for the owner of the delegation contract. It is computed as a proportion of the total rewards earned by the validator nodes. The remaining rewards apart from this proportion will be available to delegators to either claim or redelegate. The service fee is expressed as hundredths of a percent.
 
@@ -57,7 +57,7 @@ The second argument passed to `createNewDelegationContract` is the service fee t
 For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0EA1"`).
 :::
 
-Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards are reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/validators/staking/delegation-manager#service-fee)).
+Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards are reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/validators/delegation-manager#service-fee)).
 
 The following is a complete example of a transaction requesting the creation of a new delegation contract:
 ```
@@ -126,7 +126,7 @@ Finally, a `Data` field containing `changeServiceFee@0ea1` will change the servi
 
 ### Automatic activation
 
-When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/validators/staking/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes.
+When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/validators/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes.
 
 Automatic activation can be enabled or disabled using a transaction of the form:
 ```
@@ -207,7 +207,7 @@ As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pa
 
 When the staking pool held by the delegation contract contains a sufficient amount of eGLD, the inactive (non-staked) nodes can be staked (activated). This promotes the nodes to the status of **validator**, which means they participate in consensus and earn rewards.
 
-This subsection describes the _manual_ staking (activation) of nodes. To automatically stake (activate) nodes when funds become available, [automatic activation](/validators/staking/delegation-manager#automatic-activation) can be enabled.
+This subsection describes the _manual_ staking (activation) of nodes. To automatically stake (activate) nodes when funds become available, [automatic activation](/validators/delegation-manager#automatic-activation) can be enabled.
 
 To stake specific nodes manually, a transaction of the following form can be submitted:
 
@@ -240,9 +240,9 @@ Validators are demoted to validator status at the beginning of the next epoch _a
 Unstaking _does not_ mean that the staked amount returns to the staking pool. The staked amount can be retrieved only after another 144000 blocks have been built (a little over 10 chronological epochs).
 :::
 
-After that period expires, another manual step is required, [unbonding](/validators/staking/delegation-manager#unbonding-nodes), which completes their deactivation and the staked amount is returned to the staking pool.
+After that period expires, another manual step is required, [unbonding](/validators/delegation-manager#unbonding-nodes), which completes their deactivation and the staked amount is returned to the staking pool.
 
-To cancel the deactivation before the unstaking is complete, the nodes can be [restaked](/validators/staking/delegation-manager#restaking-nodes).
+To cancel the deactivation before the unstaking is complete, the nodes can be [restaked](/validators/delegation-manager#restaking-nodes).
 
 To begin the deactivation process for a selection of validator nodes, a transaction of the following form is used:
 ```
@@ -282,7 +282,7 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Unbonding nodes
 
-Nodes that have been [unstaked](/validators/staking/delegation-manager#unstaking-nodes) can be completely deactivated after 144000 blocks have been built since unstaking (a little over 10 chronological epochs). Complete deactivation is called **unbonding** and it returns the staked amount of eGLD back to the staking pool.
+Nodes that have been [unstaked](/validators/delegation-manager#unstaking-nodes) can be completely deactivated after 144000 blocks have been built since unstaking (a little over 10 chronological epochs). Complete deactivation is called **unbonding** and it returns the staked amount of eGLD back to the staking pool.
 
 :::important
 Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they have been observers for 10 epochs or more and have not received any rewards in the meantime.
@@ -310,7 +310,7 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
 
-Unlike [adding nodes](/validators/staking/delegation-manager#adding-nodes), this step does not require the BLS key pairs of the nodes.
+Unlike [adding nodes](/validators/delegation-manager#adding-nodes), this step does not require the BLS key pairs of the nodes.
 
 Removing `N` nodes from the delegation contract is done by submitting a transaction with the values set as follows:
 ```
@@ -355,7 +355,7 @@ Accounts that delegate their own funds to the staking pool are called **delegato
 
 Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes.
 
-Submitting a delegation transaction takes into account the status of [automatic activation](/validators/staking/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
 
 Funds can be delegated by submitting a transaction of the following form:
 
@@ -389,9 +389,9 @@ If the transaction is successful, the delegator receives the proportion of rewar
 
 ### Redelegating rewards
 
-Current delegation rewards can also be immediately delegated instead of [claimed](/validators/staking/delegation-manager#claiming-rewards).
+Current delegation rewards can also be immediately delegated instead of [claimed](/validators/delegation-manager#claiming-rewards).
 
-This makes it an operation very similar to [delegation](/validators/staking/delegation-manager#delegating-funds). Just like delegation, it takes into account the status of [automatic activation](/validators/staking/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+This makes it an operation very similar to [delegation](/validators/delegation-manager#delegating-funds). Just like delegation, it takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
 
 
 Rewards are redelegated using a transaction of the form:
@@ -430,7 +430,7 @@ UndelegateTransaction {
 
 ### Withdrawing
 
-After an `X` number of epochs have passed since submitting an [undelegation transaction](/validators/staking/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool. This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
+After an `X` number of epochs have passed since submitting an [undelegation transaction](/validators/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool. This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
 
 Withdrawing funds is done using a transaction of the following form:
 
@@ -493,7 +493,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -520,7 +520,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -559,7 +559,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -580,7 +580,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -613,7 +613,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -631,7 +631,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -662,7 +662,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -680,7 +680,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -711,7 +711,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -730,7 +730,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -766,7 +766,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -784,7 +784,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -815,7 +815,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -833,7 +833,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -865,7 +865,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -884,7 +884,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -916,7 +916,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -935,7 +935,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -967,7 +967,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -986,7 +986,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1018,7 +1018,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1037,7 +1037,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1069,7 +1069,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1088,7 +1088,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1119,7 +1119,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1138,7 +1138,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1170,7 +1170,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1189,7 +1189,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1222,7 +1222,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1244,7 +1244,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1279,7 +1279,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1299,7 +1299,7 @@ Only `returnData` shown below; see [view functions](/validators/staking/delegati
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1336,7 +1336,7 @@ https://proxy:port/vm-values/query
 
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -1354,7 +1354,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1393,7 +1393,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -1417,7 +1417,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/validators/staking/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
