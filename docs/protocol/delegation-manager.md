@@ -81,7 +81,7 @@ The owner of the delegation contract has a number of operations at their disposa
 
 ### Metadata
 
-The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated keybase.io link.
+The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated keybase.io identity.
 
 ```
 SetMetadataTransaction {
@@ -92,7 +92,7 @@ SetMetadataTransaction {
     Data: "setMetaData"
           "@" + <name of the staking pool, in hexadecimal encoding> +
           "@" + <website of the staking pool, in hexadecimal encoding > +
-          "@" + <keybase.io link of the staking pool, in hexadecimal encoding>
+          "@" + <keybase.io identity of the staking pool, in hexadecimal encoding>
 }
 ```
 
