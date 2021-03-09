@@ -79,6 +79,23 @@ The above transaction creates a new delegation contract owned by the sender, wit
 
 The owner of the delegation contract has a number of operations at their disposal.
 
+### Metadata
+
+The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated keybase.io link.
+
+```
+SetMetadataTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 1100000
+    Data: "setMetaData"
+          "@" + <name of the staking pool, in hexadecimal encoding> +
+          "@" + <website of the staking pool, in hexadecimal encoding > +
+          "@" + <keybase.io link of the staking pool, in hexadecimal encoding>
+}
+```
+
 ### Delegation cap
 
 The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
@@ -234,13 +251,21 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Unstaking nodes
 
-Validator nodes that are already staked (active) can be manually unstaked. This _does not_ mean that the validators are instantly demoted to normal node status, nor does it mean that the staked amount returns to the staking pool. The validators will still spend a number of `X` epochs as validators.
+Validator nodes that are already staked (active) can be manually unstaked.
+
+:::important
+Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they stop receiving rewards.
+:::
+
+:::important
+Unstaking _does not_ mean that the staked amount returns to the staking pool. The staked amount can be retrieved only after another 144000 blocks have been built (a little over 10 chronological epochs).
+:::
 
 After that period expires, another manual step is required, [unbonding](/protocol/delegation-manager#unbonding-nodes), which completes their deactivation and the staked amount is returned to the staking pool.
 
-To cancel the deactivation of validators before their unstaking is complete, they can be [restaked](/protocol/delegation-manager#restaking-nodes).
+To cancel the deactivation before the unstaking is complete, the nodes can be [restaked](/protocol/delegation-manager#restaking-nodes).
 
-To begin the deactivation process for a selection of nodes, a transaction of the following form is used:
+To begin the deactivation process for a selection of validator nodes, a transaction of the following form is used:
 ```
 UnstakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
@@ -278,7 +303,11 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Unbonding nodes
 
-Validator nodes that have been unstaked can be completely deactivated after a period of `X` epochs. Complete deactivation is called **unbonding** and it involves the demotion of validators to the status of regular nodes and also the return of the staked amount of eGLD back to the staking pool.
+Nodes that have been [unstaked](/protocol/delegation-manager#unstaking-nodes) can be completely deactivated after 144000 blocks have been built since unstaking (a little over 10 chronological epochs). Complete deactivation is called **unbonding** and it returns the staked amount of eGLD back to the staking pool.
+
+:::important
+Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they have been observers for 10 epochs or more and have not received any rewards in the meantime.
+:::
 
 Validator nodes that have been unbonded cannot be restaked (reactivated). They must be staked anew.
 
