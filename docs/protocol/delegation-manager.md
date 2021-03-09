@@ -493,13 +493,13 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 {
   "returnData": [
     "gKzHUD288mzScNX6nEmkGm4CHneMdrrPhJyPET9iGA8=",
-    null, 
-    "", 
+    null,
+    "",
     "Q8M8GTdWSAAA",
-    "dHJ1ZQ==", 
-    "ZmFsc2U=", 
-    "dHJ1ZQ==", 
-    "AuU=", 
+    "dHJ1ZQ==",
+    "ZmFsc2U=",
+    "dHJ1ZQ==",
+    "AuU=",
     "+g=="
   ]
 
@@ -553,7 +553,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 {
   "returnData": [
     "U3Rha2luZyBwcm92aWRlciB0ZXN0",
-    "d3d3LmVscm9uZHN0YWtpbmcuY29t", 
+    "d3d3LmVscm9uZHN0YWtpbmcuY29t",
     "dGVzdEtleWJhc2VJZGVudGlmaWVy"
   ]
 }
@@ -646,7 +646,7 @@ Request
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getNumNodes"
 }
-``` 
+```
 
 Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
@@ -655,7 +655,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
     "Dg=="
   ]
 }
-```  
+```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
@@ -717,7 +717,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 
 ### <span class="badge badge-success">POST</span> Total active stake
 
-The response contains a value representing the total active stake in base64 encoding of the hex encoding. 
+The response contains a value representing the total active stake in base64 encoding of the hex encoding.
 
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -1019,7 +1019,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 
 ### <span class="badge badge-success">POST</span> Delegator unstaked stake
 
-The response contains a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding. 
+The response contains a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding.
 
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -1260,7 +1260,7 @@ Only `returnData` shown below; see [view functions](/protocol/delegation-manager
 
 <!--Example-->
 ```json
-{ 
+{
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
   "funcName": "getRewardData",
   "args" : ["fc2b"]
@@ -1344,7 +1344,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 
 ### <span class="badge badge-success">POST</span> Contract config
 
-The response contains an enumeration of the properties in a fixed order (base64 encoded): current number of contracts, last created contract address, minimum and maximum service fee, minimum deposit and delegation. 
+The response contains an enumeration of the properties in a fixed order (base64 encoded): current number of contracts, last created contract address, minimum and maximum service fee, minimum deposit and delegation.
 
 
 <!--DOCUSAURUS_CODE_TABS-->
