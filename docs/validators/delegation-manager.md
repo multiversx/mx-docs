@@ -358,7 +358,7 @@ Accounts become delegators by funding the staking pool, i.e. they delegate their
 Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
 
 :::important
-If all the nodes are already active validators (staked), then all the extra funds received from delegators will be used to top-up the stake of the nodes. Otherwise, the delegation contract will keep accummulating the funds until all validators are staked.
+If all the nodes are already active validators (staked), then all the extra funds received from delegators will be used to top-up the stake of the nodes. Otherwise, the delegation contract will keep accumulating the funds until all validators are staked.
 :::
 
 Funds can be delegated by submitting a transaction of the following form:
