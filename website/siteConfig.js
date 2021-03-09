@@ -131,7 +131,7 @@ const siteConfig = {
       title: "Create a Token",
       content:
         "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
-      docName: "developers/esdt-tokens",
+      docName: "protocol/esdt-tokens",
       icon: "🔷",
     },
     {
@@ -143,7 +143,7 @@ const siteConfig = {
     },
   ],
   slugPreprocessor: (slugBase) => {
-    return slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '');
+    return slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, "");
   },
 };
 
