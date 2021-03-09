@@ -96,31 +96,6 @@ SetMetadataTransaction {
 }
 ```
 
-### Delegation cap
-
-The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
-
-The total delegation cap can be modified at any time using a transaction of the form:
-```
-ModifyTotalDelegationCapTransaction {
-    Sender: <account address of the delegation contract owner>
-    Receiver: <address of the delegation contract>
-    Value: 0
-    GasLimit: 1100000
-    Data: "modifyTotalDelegationCap" +
-          "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding>
-}
-```
-
-In the `Data` field, the only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. Take sure not to encode the ASCII string representing the total delegation cap.
-
-:::tip
-For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by the denomination factor $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
-
-Finally, a `Data` field containing `"modifyTotalDelegationCap@01880b57b708cf408000"` will change the total delegation cap to 7231.941 eGLD.
-:::
-
-Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later.
 
 ### Service fee
 
@@ -172,6 +147,33 @@ For example, a `Data` field containing `"setAutomaticActivation@74727565"` enabl
 :::
 
 
+### Delegation cap
+
+The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
+
+The total delegation cap can be modified at any time using a transaction of the form:
+```
+ModifyTotalDelegationCapTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 1100000
+    Data: "modifyTotalDelegationCap" +
+          "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding>
+}
+```
+
+In the `Data` field, the only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. Take sure not to encode the ASCII string representing the total delegation cap.
+
+:::tip
+For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by the denomination factor $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
+
+Finally, a `Data` field containing `"modifyTotalDelegationCap@01880b57b708cf408000"` will change the total delegation cap to 7231.941 eGLD.
+:::
+
+Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later.
+
+
 ## Managing nodes
 
 ### Adding nodes
@@ -199,29 +201,6 @@ AddNodesTransaction {
 ```
 
 As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pair consists of the public BLS key of a node along with the message produced by signing the address of the delegation contract with the secret BLS key of the respective node. There are as many pairs as there are nodes to add.
-
-
-### Removing nodes
-
-Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
-
-Unlike [adding nodes](/protocol/delegation-manager#adding-nodes), this step does not require the BLS key pairs of the nodes.
-
-Removing `N` nodes from the delegation contract is done by submitting a transaction with the values set as follows:
-```
-RemoveNodesTransaction {
-    Sender: <account address of the delegation contract owner>
-    Receiver: <address of the delegation contract>
-    Value: 0
-    GasLimit: 1000000 + N·1100000
-    Data: "removeNodes" +
-          "@" + <public BLS key of the first node in hexadecimal encoding> +
-          "@" + <public BLS key of the second node in hexadecimal encoding> +
-          <...> +
-          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
-}
-```
-The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
 
 
 ### Staking nodes
@@ -327,6 +306,29 @@ UnbondNodesTransaction {
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unbonded.
 
 
+### Removing nodes
+
+Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
+
+Unlike [adding nodes](/protocol/delegation-manager#adding-nodes), this step does not require the BLS key pairs of the nodes.
+
+Removing `N` nodes from the delegation contract is done by submitting a transaction with the values set as follows:
+```
+RemoveNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 1000000 + N·1100000
+    Data: "removeNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+}
+```
+The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
+
+
 ### Unjailing nodes
 
 ```
@@ -342,6 +344,7 @@ UnjailNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+
 
 ## Delegating and managing delegated funds
 
