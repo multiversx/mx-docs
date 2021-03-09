@@ -3,9 +3,7 @@ id: delegation-manager
 title: The Delegation Manager
 ---
 
-## Introduction
-
-### Introducing staking pools
+## Introducing staking pools
 
 A **staking pool** is defined as a custom delegation smart contract, the associated nodes and the funds staked in the pool by participants. **Node operators** may wish to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
 
@@ -45,17 +43,21 @@ The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqq
 
 The `Value` is set to 1250 eGLD, which will be automatically added into the funds of the newly created delegation contract, i.e. this is the initial amount of eGLD in the staking pool. This amount of eGLD always belongs to the owner of the delegation contract.
 
-In the `Data field`, the first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by $10^{18}$, resulting in 7231941000000000000000.
+In the `Data field`, the first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap.
 
-The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap. Following the example above, do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in `"01880b57b708cf408000"`.
+:::tip
+For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in `"01880b57b708cf408000"`.
+:::
 
-Setting the total delegation cap to 0 ("00" in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later (see [Delegation cap](/protocol/delegation-manager#delegation-cap)).
+Setting the total delegation cap to 0 ("00" in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later (see [Delegation cap](/validators/delegation-manager#delegation-cap)).
 
-The second argument passed to `createNewDelegationContract` is the service fee that will be reserved for the owner of the delegation contract. It is computed as a proportion of the total rewards earned by the validator nodes. The remaining rewards apart from this proportion will be available to delegators to either claim or redelegate.
+The second argument passed to `createNewDelegationContract` is the service fee that will be reserved for the owner of the delegation contract. It is computed as a proportion of the total rewards earned by the validator nodes. The remaining rewards apart from this proportion will be available to delegators to either claim or redelegate. The service fee is expressed as hundredths of a percent.
 
-The service fee is expressed as hundredths of a percent. For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0EA1"`).
+:::tip
+For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0ea1"`).
+:::
 
-Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards are reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/protocol/delegation-manager#service-fee)).
+Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards are reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later (see [Service fee](/validators/delegation-manager#service-fee)).
 
 The following is a complete example of a transaction requesting the creation of a new delegation contract:
 ```
@@ -66,7 +68,7 @@ NewDelegationContractTransaction {
     GasLimit: 60000000
     Data: "createNewDelegationContract" +
           "@01880b57b708cf408000" +
-          "@0EA1"
+          "@0ea1"
 }
 ```
 
@@ -77,29 +79,22 @@ The above transaction creates a new delegation contract owned by the sender, wit
 
 The owner of the delegation contract has a number of operations at their disposal.
 
-### Delegation cap
+### Metadata
 
-The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
+The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated keybase.io identity.
 
-The total delegation cap can be modified at any time using a transaction of the form:
 ```
-ModifyTotalDelegationCapTransaction {
+SetMetadataTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1100000
-    Data: "modifyTotalDelegationCap" +
-          "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding>
+    GasLimit: 2000000
+    Data: "setMetaData"
+          "@" + <name of the staking pool, in hexadecimal encoding> +
+          "@" + <website of the staking pool, in hexadecimal encoding > +
+          "@" + <keybase.io identity of the staking pool, in hexadecimal encoding>
 }
 ```
-
-In the `Data` field, the only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of eGLD. For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by the denomination factor $10^{18}$, resulting in 7231941000000000000000.
-
-The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap. Following the example above, do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
-
-Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later.
-
-For example, a `Data` field containing `"modifyTotalDelegationCap@c405abdb8467a04000"` will change the total delegation cap to 3615.9705 eGLD.
 
 
 ### Service fee
@@ -112,22 +107,26 @@ ChangeServiceFeeTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1100000
+    GasLimit: 2000000
     Data: "changeServiceFee" +
           "@" + <service fee as hundredths of percents, in hexadecimal encoding>
 }
 ```
 
-In the `Data` field, the only argument passed to `changeServiceFee` is the new value of the service fee, expressed as hundredths of a percent. For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0EA1"`).
+In the `Data` field, the only argument passed to `changeServiceFee` is the new value of the service fee, expressed as hundredths of a percent.
 
 Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards are reserved for the owner of the delegation contract - all rewards will be available to the delegators. The service fee can always be modified later.
 
-For example, a `Data` field containing `changeServiceFee@0dc2` will change the service fee to 35.22%.
+:::tip
+For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes `"0ea1"`).
+
+Finally, a `Data` field containing `changeServiceFee@0ea1` will change the service fee to 37.45%.
+:::
 
 
 ### Automatic activation
 
-When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/protocol/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes.
+When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/validators/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes.
 
 Automatic activation can be enabled or disabled using a transaction of the form:
 ```
@@ -135,7 +134,7 @@ SetAutomaticActivationTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1100000
+    GasLimit: 2000000
     Data: "setAutomaticActivation" +
           "@" + <"true" or "false" in hexadecimal encoding>
 }
@@ -143,7 +142,36 @@ SetAutomaticActivationTransaction {
 
 The only argument passed to `setAutomaticActivation` is either `true` or `false`, as an ASCII string encoded hexadecimally. For reference, `true` is `"74727565"` and `false` is `"66616c7365"`.
 
+:::tip
 For example, a `Data` field containing `"setAutomaticActivation@74727565"` enables automatic activation.
+:::
+
+
+### Delegation cap
+
+The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
+
+The total delegation cap can be modified at any time using a transaction of the form:
+```
+ModifyTotalDelegationCapTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 2000000
+    Data: "modifyTotalDelegationCap" +
+          "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding>
+}
+```
+
+In the `Data` field, the only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. Take sure not to encode the ASCII string representing the total delegation cap.
+
+:::tip
+For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by the denomination factor $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
+
+Finally, a `Data` field containing `"modifyTotalDelegationCap@01880b57b708cf408000"` will change the total delegation cap to 7231.941 eGLD.
+:::
+
+Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later.
 
 
 ## Managing nodes
@@ -160,7 +188,7 @@ AddNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 1000000 + N·1100000
+    GasLimit: 1000000 + N·6000000
     Data: "addNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <address of the delegation contract signed with the secret BLS key of the first node, in hexadecimal encoding> +
@@ -175,34 +203,11 @@ AddNodesTransaction {
 As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pair consists of the public BLS key of a node along with the message produced by signing the address of the delegation contract with the secret BLS key of the respective node. There are as many pairs as there are nodes to add.
 
 
-### Removing nodes
-
-Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
-
-Unlike [adding nodes](/protocol/delegation-manager#adding-nodes), this step does not require the BLS key pairs of the nodes.
-
-Removing `N` nodes from the delegation contract is done by submitting a transaction with the values set as follows:
-```
-RemoveNodesTransaction {
-    Sender: <account address of the delegation contract owner>
-    Receiver: <address of the delegation contract>
-    Value: 0
-    GasLimit: 1000000 + N·1100000
-    Data: "removeNodes" +
-          "@" + <public BLS key of the first node in hexadecimal encoding> +
-          "@" + <public BLS key of the second node in hexadecimal encoding> +
-          <...> +
-          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
-}
-```
-The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
-
-
 ### Staking nodes
 
 When the staking pool held by the delegation contract contains a sufficient amount of eGLD, the inactive (non-staked) nodes can be staked (activated). This promotes the nodes to the status of **validator**, which means they participate in consensus and earn rewards.
 
-This subsection describes the _manual_ staking (activation) of nodes. To automatically stake (activate) nodes when funds become available, [automatic activation](/protocol/delegation-manager#automatic-activation) can be enabled.
+This subsection describes the _manual_ staking (activation) of nodes. To automatically stake (activate) nodes when funds become available, [automatic activation](/validators/delegation-manager#automatic-activation) can be enabled.
 
 To stake specific nodes manually, a transaction of the following form can be submitted:
 
@@ -211,7 +216,7 @@ StakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "stakeNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -225,19 +230,27 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Unstaking nodes
 
-Validator nodes that are already staked (active) can be manually unstaked. This _does not_ mean that the validators are instantly demoted to normal node status, nor does it mean that the staked amount returns to the staking pool. The validators will still spend a number of `X` epochs as validators.
+Validator nodes that are already staked (active) can be manually unstaked.
 
-After that period expires, another manual step is required, [unbonding](/protocol/delegation-manager#unbonding-nodes), which completes their deactivation and the staked amount is returned to the staking pool.
+:::important
+Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they stop receiving rewards.
+:::
 
-To cancel the deactivation of validators before their unstaking is complete, they can be [restaked](/protocol/delegation-manager#restaking-nodes).
+:::important
+Unstaking _does not_ mean that the staked amount returns to the staking pool. The staked amount can be retrieved only after another 144000 blocks have been built (a little over 10 chronological epochs).
+:::
 
-To begin the deactivation process for a selection of nodes, a transaction of the following form is used:
+After that period expires, another manual step is required, [unbonding](/validators/delegation-manager#unbonding-nodes), which completes their deactivation and the staked amount is returned to the staking pool.
+
+To cancel the deactivation before the unstaking is complete, the nodes can be [restaked](/validators/delegation-manager#restaking-nodes).
+
+To begin the deactivation process for a selection of validator nodes, a transaction of the following form is used:
 ```
 UnstakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "unStakeNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -256,7 +269,7 @@ RestakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "reStakeUnStakedNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -269,7 +282,11 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Unbonding nodes
 
-Validator nodes that have been unstaked can be completely deactivated after a period of `X` epochs. Complete deactivation is called **unbonding** and it involves the demotion of validators to the status of regular nodes and also the return of the staked amount of eGLD back to the staking pool.
+Nodes that have been [unstaked](/validators/delegation-manager#unstaking-nodes) can be completely deactivated after 144000 blocks have been built since unstaking (a little over 10 chronological epochs). Complete deactivation is called **unbonding** and it returns the staked amount of eGLD back to the staking pool.
+
+:::important
+Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they have been observers for 10 epochs or more and have not received any rewards in the meantime.
+:::
 
 Validator nodes that have been unbonded cannot be restaked (reactivated). They must be staked anew.
 
@@ -278,7 +295,7 @@ UnbondNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 0
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "unBondNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -289,6 +306,29 @@ UnbondNodesTransaction {
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unbonded.
 
 
+### Removing nodes
+
+Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
+
+Unlike [adding nodes](/validators/delegation-manager#adding-nodes), this step does not require the BLS key pairs of the nodes.
+
+Removing `N` nodes from the delegation contract is done by submitting a transaction with the values set as follows:
+```
+RemoveNodesTransaction {
+    Sender: <account address of the delegation contract owner>
+    Receiver: <address of the delegation contract>
+    Value: 0
+    GasLimit: 1000000 + N·6000000
+    Data: "removeNodes" +
+          "@" + <public BLS key of the first node in hexadecimal encoding> +
+          "@" + <public BLS key of the second node in hexadecimal encoding> +
+          <...> +
+          "@" + <public BLS key of the Nth node in hexadecimal encoding> +
+}
+```
+The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
+
+
 ### Unjailing nodes
 
 ```
@@ -296,7 +336,7 @@ UnjailNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
     Value: 2.5 eGLD × <number of nodes to be unjailed>
-    GasLimit: 12000000
+    GasLimit: 1000000 + N·6000000
     Data: "unJailNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
           "@" + <public BLS key of the second node in hexadecimal encoding> +
@@ -304,6 +344,7 @@ UnjailNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+
 
 ## Delegating and managing delegated funds
 
@@ -314,7 +355,11 @@ Accounts that delegate their own funds to the staking pool are called **delegato
 
 Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes.
 
-Submitting a delegation transaction takes into account the status of [automatic activation](/protocol/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+
+:::important
+If all the nodes are already active validators (staked), then all the extra funds received from delegators will be used to top-up the stake of the nodes. Otherwise, the delegation contract will keep accumulating the funds until all validators are staked.
+:::
 
 Funds can be delegated by submitting a transaction of the following form:
 
@@ -348,10 +393,11 @@ If the transaction is successful, the delegator receives the proportion of rewar
 
 ### Redelegating rewards
 
-Current delegation rewards can also be immediately delegated instead of [claimed](/protocol/delegation-manager#claiming-rewards).
+Current delegation rewards can also be immediately delegated instead of [claimed](/validators/delegation-manager#claiming-rewards). This makes it an operation very similar to [delegation](/validators/delegation-manager#delegating-funds).
 
-This makes it an operation very similar to [delegation](/protocol/delegation-manager#delegating-funds). Just like delegation, it takes into account the status of [automatic activation](/protocol/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
-
+:::important
+Just like delegation, redelegation of rewards takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+:::
 
 Rewards are redelegated using a transaction of the form:
 ```
@@ -371,7 +417,9 @@ If the transaction is successful, the delegator does not receive any eGLD at the
 
 Delegators may express the intent to withdraw a specific amount of eGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal.
 
+:::important
 If the amount to undelegate requested by the delegator will cause the staking pool to drop below the sufficient amount required to keep all the current validators active, some validators will inevitably end up unstaked. The owner of the delegation contract may intervene and add extra funds to prevent such situations.
+:::
 
 To express the intention of future withdrawal of funds from the staking pool, a delegator may submit the following transaction:
 
@@ -389,9 +437,15 @@ UndelegateTransaction {
 
 ### Withdrawing
 
-After an `X` number of epochs have passed since submitting an [undelegation transaction](/protocol/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool. This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
+After submitting an [undelegation transaction](/validators/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool.
 
-using a transaction of the following form:
+:::important
+The delegation contract will only allow immediate withdrawal if it has enough funds at the moment. Otherwise, the delegator must wait until such funds are either returned to the staking pool via [unbonding](/validators/delegation-manager#unbonding-nodes) or other delegators add funds to the staking pool (including the owner themselves).
+:::
+
+This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
+
+Withdrawing funds is done using a transaction of the following form:
 
 ```
 WithdrawTransaction {
@@ -410,7 +464,7 @@ If the transaction is successful, the delegator receives all the eGLD they have 
 
 The delegation contract can be queried using the following view functions. These queries should be done on a local proxy on the `/vm-values/query` endpoint.
 
-The following documentation sections only show the relevant `returnData` and omit the other fields for simplicity.
+The following documentation sections only show the value of the relevant `returnData` field and omit the other fields for simplicity.
 
 ```json
 {
@@ -452,7 +506,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -479,18 +533,18 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
     "gKzHUD288mzScNX6nEmkGm4CHneMdrrPhJyPET9iGA8=",
-    null, 
-    "", 
+    null,
+    "",
     "Q8M8GTdWSAAA",
-    "dHJ1ZQ==", 
-    "ZmFsc2U=", 
-    "dHJ1ZQ==", 
-    "AuU=", 
+    "dHJ1ZQ==",
+    "ZmFsc2U=",
+    "dHJ1ZQ==",
+    "AuU=",
     "+g=="
   ]
 
@@ -518,7 +572,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -539,12 +593,12 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
     "U3Rha2luZyBwcm92aWRlciB0ZXN0",
-    "d3d3LmVscm9uZHN0YWtpbmcuY29t", 
+    "d3d3LmVscm9uZHN0YWtpbmcuY29t",
     "dGVzdEtleWJhc2VJZGVudGlmaWVy"
   ]
 }
@@ -572,7 +626,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -590,7 +644,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -621,7 +675,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -637,16 +691,16 @@ Request
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat",
   "funcName": "getNumNodes"
 }
-``` 
+```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
     "Dg=="
   ]
 }
-```  
+```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
@@ -670,7 +724,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -689,7 +743,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -708,7 +762,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 
 ### <span class="badge badge-success">POST</span> Total active stake
 
-The response contains a value representing the total active stake in base64 encoding of the hex encoding. 
+The response contains a value representing the total active stake in base64 encoding of the hex encoding.
 
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -725,7 +779,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -743,7 +797,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -774,7 +828,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -792,7 +846,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -824,7 +878,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -843,7 +897,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -875,7 +929,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -894,7 +948,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -926,7 +980,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -945,7 +999,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -977,7 +1031,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -996,7 +1050,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1010,7 +1064,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 
 ### <span class="badge badge-success">POST</span> Delegator unstaked stake
 
-The response contains a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding. 
+The response contains a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding.
 
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -1028,7 +1082,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1047,7 +1101,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1078,7 +1132,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1097,7 +1151,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
  {
   "returnData": [
@@ -1129,7 +1183,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1148,7 +1202,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1181,7 +1235,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1203,7 +1257,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1238,7 +1292,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
  {
   "returnData": [
@@ -1251,14 +1305,14 @@ Only `returnData` shown below; see [view functions](/protocol/delegation-manager
 
 <!--Example-->
 ```json
-{ 
+{
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs",
   "funcName": "getRewardData",
   "args" : ["fc2b"]
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1295,7 +1349,7 @@ https://proxy:port/vm-values/query
 
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -1313,7 +1367,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [
@@ -1335,7 +1389,7 @@ Response (only `returnData` shown below; see [view functions](/protocol/delegati
 
 ### <span class="badge badge-success">POST</span> Contract config
 
-The response contains an enumeration of the properties in a fixed order (base64 encoded): current number of contracts, last created contract address, minimum and maximum service fee, minimum deposit and delegation. 
+The response contains an enumeration of the properties in a fixed order (base64 encoded): current number of contracts, last created contract address, minimum and maximum service fee, minimum deposit and delegation.
 
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -1352,7 +1406,7 @@ https://proxy:port/vm-values/query
 ```
 
 <!--Response-->
-Only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response
+Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 ```json
 {
   "returnData": [
@@ -1376,7 +1430,7 @@ Request
 }
 ```
 
-Response (only `returnData` shown below; see [view functions](/protocol/delegation-manager#delegation-contract-view-functions) for complete response)
+Response (only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response)
 ```json
 {
   "returnData": [

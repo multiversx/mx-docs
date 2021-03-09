@@ -16,11 +16,6 @@
 			"wallet/web-wallet",
 			"wallet/ledger"
 		],
-    "Protocol":[
-			"protocol/staking-smart-contract",
-			"protocol/delegation-manager",
-			"protocol/esdt-tokens"
-    ],
 		"Validators":[
 			"validators/overview",
 			"validators/system-requirements",
@@ -67,9 +62,11 @@
 				"ids":[
 					"validators/staking/staking-unstaking-unjailing",
 					"validators/staking/staking",
-					"validators/staking/unjailing"
+					"validators/staking/unjailing",
+					"validators/staking/staking-smart-contract"
 				]
 			},
+			"validators/delegation-manager",
 			"validators/rating",
 			"validators/node-cli",
 			"validators/useful-links",
@@ -102,6 +99,7 @@
 					"developers/developer-reference/elrond-serialization-format"
 				]
 			},
+			"developers/esdt-tokens",
 			"developers/setup-local-testnet",
 			"developers/setup-local-testnet-advanced",
 			"developers/creating-wallets"
