@@ -342,7 +342,7 @@ When active validator nodes perform poorly or to the detriment of the network, t
 However, it can happen that rating of a validator might drop under the acceptable threshold. As a consequence, the validator will begin its next epoch **jailed**, which prevents it from participating in consensus.
 
 :::important
-A jailed validator does not lose its stake nor its status. It remains active, but it cannot earn rewards while in hail.
+A jailed validator does not lose its stake nor its status. It remains active, but it cannot earn rewards while in jail.
 :::
 
 Recovering a validator from jail and restoring it is called **unjailing**, for which a fine of 2.5 eGLD must be paid. Multiple validators can be recovered from jail at the same time by paying 2.5 eGLD for each validator. The format of the unjailing transaction is as follows:
