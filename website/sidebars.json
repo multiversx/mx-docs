@@ -99,6 +99,7 @@
 					"developers/developer-reference/elrond-serialization-format"
 				]
 			},
+			"developers/multisig-contract",
 			"developers/esdt-tokens",
 			"developers/setup-local-testnet",
 			"developers/setup-local-testnet-advanced",
