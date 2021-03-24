@@ -119,7 +119,7 @@ The second and final step in connecting the delegation contract and the keybase.
 :::
 
 :::tip
-To be able to connect a **testnet** or **devnet** contract to a keybase.io identity a new folder named `"testnet"` for the testnet or `"devnet"` for the devnet has to be created inside the `"elrond"` folder. An example for the same delegation contract would be `"public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py"`.
+To be able to connect a **testnet** or **devnet** contract to a keybase.io identity a new folder named `"testnet"` for the testnet or `"devnet"` for the devnet has to be created inside the `/elrond` folder. An example for the same delegation contract would be `public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py`.
 :::
 
 An example of how the delegation contract will be displayed based on the information provided in the keybase.io is provided below.
@@ -127,7 +127,15 @@ An example of how the delegation contract will be displayed based on the informa
 ![stakingpool](/img/stakingpool.png)
 
 :::important
-To be able to connect also the validators to a specific keybase.io staking pool identity, for every validator an empty file with the name set to the BLS key has to be created and added to the `/elrond` folder. Also the `"identity"` of the validator has to be set to the keybase.io staking pool identity.  
+To be able to connect also the validators to a specific keybase.io staking pool identity, for every validator an empty file with the name set to the BLS key has to be created and added to the `/elrond` folder. Also the `Identity` of the validator has to be configured in the `config/prefs.toml` file to the keybase.io staking pool identity.
+
+```
+[Preferences]
+   # Identity represents the keybase's identity
+   Identity = ""
+```
+
+
 :::
 
 ### Service fee
