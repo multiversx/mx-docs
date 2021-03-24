@@ -39,9 +39,15 @@ NewDelegationContractTransaction {
 }
 ```
 
-The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`, which is the fixed address of the delegation manager, located on the Metashard.
+The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`, which is the fixed address of the delegation manager, located on the Metachain.
 
 The `Value` is set to 1250 eGLD, which will be automatically added into the funds of the newly created delegation contract, i.e. this is the initial amount of eGLD in the staking pool. This amount of eGLD always belongs to the owner of the delegation contract.
+
+:::important
+The initial 1250 eGLD count towards the total delegation cap, like all the funds in the staking pool.
+
+The initial amount of 1250 eGLD added to the pool makes the owner the first delegator of the staking pool. This means that the owner is also entitled to a proportion of the rewards, which can be claimed like any other delegator.
+:::
 
 In the `Data field`, the first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap.
 
@@ -96,6 +102,55 @@ SetMetadataTransaction {
 }
 ```
 
+An example for the `Data` field that sets the name to `"Elrond Staking"`, the website to `"elrond.staking"` and the keybase.io identifier to `"elrondstaking"` is: 
+```
+    "setMetaData" + 
+    "@456c726f6e64205374616b696e67"     //Elrond Staking
+    "@656c726f6e642e7374616b696e67"     //elrond.staking     
+    "@656c726f6e647374616b696e67"       //elrondstaking
+```
+
+:::important
+Setting the keybase.io identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a keybase.io identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the keybase.io identity to the delegation contract address. 
+:::
+
+### Display information
+
+To customize the information for your delegation contract that will be available in the lists displayed on the delegation pages both in Maiar and the web wallet some aditional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and Maiar. If these information cannot be found a generic logo and the delegation contract's address is displayed.
+
+In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/elrond/` folder.
+
+An example for the path to the empty file for the `"elrondstaking"` keybase.io identity would be:
+
+```
+ public/elrondstaking/elrond/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+```
+
+:::important
+The **second step** in connecting the delegation contract and the keybase.io identity is finalized by adding the empty file that has the name equal to the delegation contract's address and certifying that the referenced keybase.io identity set in the [metadata](/validators/delegation-manager#metadata) also references the delegation contract address. This way the connection from both directions is sealed.
+:::
+
+:::tip
+To be able to connect a **testnet** or **devnet** contract to a keybase.io identity a new folder named `"testnet"` for the testnet or `"devnet"` for the devnet has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` would be `public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py`.
+:::
+
+An example of how the delegation contract will be displayed based on the information provided in the keybase.io is provided below.
+
+![stakingpool](/img/stakingpool.png)
+
+:::important
+To also connect the validators themselves to a specific keybase.io staking pool identity, two additional steps have to be completed:
+1. Create an empty file with the name set to the `"<BLS key>"` for every validator and add the empty file to the `/elrond` folder on your keybase.io identity: `public/<keybase.io identity>/elrond/<BLS key>`
+2. Set the `Identity` of each validator in the `config/prefs.toml` file to the keybase.io staking pool identity.
+
+```
+[Preferences]
+   # Identity represents the keybase's identity
+   Identity = "<keybase.io identity>"    // e.g.  Identity = "elrondstaking"
+```
+
+
+:::
 
 ### Service fee
 
@@ -126,7 +181,7 @@ Finally, a `Data` field containing `changeServiceFee@0ea1` will change the servi
 
 ### Automatic activation
 
-When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/validators/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes.
+When automatic activation is enabled, the delegation contract will activate (stake) inactive nodes as soon as funds have become available in sufficient amount. Consequently, any [delegation transaction](/validators/delegation-manager#delegating-funds) can potentially trigger the activation of inactive nodes, assuming the transaction has sufficient gas.
 
 Automatic activation can be enabled or disabled using a transaction of the form:
 ```
@@ -172,6 +227,10 @@ Finally, a `Data` field containing `"modifyTotalDelegationCap@01880b57b708cf4080
 :::
 
 Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later.
+
+:::important
+The total delegation cap cannot be set to a value lower than the amount staked for currently active nodes. It must be either higher than that amount or set to 0 (infinite cap).
+:::
 
 
 ## Managing nodes
@@ -234,13 +293,9 @@ Validator nodes that are already staked (active) can be manually unstaked.
 
 :::important
 Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they stop receiving rewards.
-:::
 
-:::important
-Unstaking _does not_ mean that the staked amount returns to the staking pool. The staked amount can be retrieved only after another 144000 blocks have been built (a little over 10 chronological epochs).
+Unstaking _does not_ mean that the staked amount returns to the staking pool (see [undelegating](/validators/delegation-manager#undelegating-funds) and [withdrawing](/validators/delegation-manager#withdrawing)).
 :::
-
-After that period expires, another manual step is required, [unbonding](/validators/delegation-manager#unbonding-nodes), which completes their deactivation and the staked amount is returned to the staking pool.
 
 To cancel the deactivation before the unstaking is complete, the nodes can be [restaked](/validators/delegation-manager#restaking-nodes).
 
@@ -282,10 +337,10 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Unbonding nodes
 
-Nodes that have been [unstaked](/validators/delegation-manager#unstaking-nodes) can be completely deactivated after 144000 blocks have been built since unstaking (a little over 10 chronological epochs). Complete deactivation is called **unbonding** and it returns the staked amount of eGLD back to the staking pool.
+Nodes that have been [unstaked](/validators/delegation-manager#unstaking-nodes) can be completely deactivated, a process called **unbonding**.
 
 :::important
-Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they have been observers for 10 epochs or more and have not received any rewards in the meantime.
+Validators are demoted to observer status at the beginning of the next epoch _after unstaking_, not unbonding. See [unstaking](/validators/delegation-manager#unstaking-nodes) above.
 :::
 
 Validator nodes that have been unbonded cannot be restaked (reactivated). They must be staked anew.
@@ -308,7 +363,7 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Removing nodes
 
-Inactive (not staked) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
+Inactive (not staked, unbonded) nodes can be removed from the delegation contract by the owner at any time. Neither active (staked) nor unstaked nodes cannot be removed.
 
 Unlike [adding nodes](/validators/delegation-manager#adding-nodes), this step does not require the BLS key pairs of the nodes.
 
@@ -331,6 +386,15 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 ### Unjailing nodes
 
+When active validator nodes perform poorly or to the detriment of the network, they are penalized by having their rating reduced. Rating is essential to earning rewards, because it directly determines the likelihood of a validator to be [selected for consensus](/technology/secure-proof-of-stake).
+
+However, it can happen that rating of a validator might drop under the acceptable threshold. As a consequence, the validator will begin its next epoch **jailed**, which prevents it from participating in consensus.
+
+:::important
+A jailed validator does not lose its stake nor its status. It remains active, but it cannot earn rewards while in jail.
+:::
+
+Recovering a validator from jail and restoring it is called **unjailing**, for which a fine of 2.5 eGLD must be paid. Multiple validators can be recovered from jail at the same time by paying 2.5 eGLD for each validator. The format of the unjailing transaction is as follows:
 ```
 UnjailNodesTransaction {
     Sender: <account address of the delegation contract owner>
@@ -345,35 +409,40 @@ UnjailNodesTransaction {
 }
 ```
 
+Note that the `Value` field depends on `N`, the number of validators to unjail.
+
+The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unjailed.
+
 
 ## Delegating and managing delegated funds
 
-Accounts that delegate their own funds to the staking pool are called **delegators**. The delegation contract offers them a set of actions as well.
+Accounts that delegate their own funds to the staking pool are called **delegators**. The delegation contract offers them a set of actions as well. This means that these actions are available to the owner of the delegation contract as well.
 
 
 ### Delegating funds
 
-Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes.
-
-Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes. By default, the owner of the delegation contract is the first delegator, having already contributed 1250 eGLD to the staking pool at its creation.
 
 :::important
-If all the nodes are already active validators (staked), then all the extra funds received from delegators will be used to top-up the stake of the nodes. Otherwise, the delegation contract will keep accumulating the funds until all validators are staked.
+Extra funds received by the delegation contract from delegators will be immediately used to top-up the stake of the existing active validators, consequently increasing their rewards.
 :::
 
-Funds can be delegated by submitting a transaction of the following form:
+Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated funds cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically. This happens only if the transaction contains enough gas. 
 
+But if gas is insufficient, or if automatic activation is disabled, the amount received through the delegation transaction simply becomes top-up for the stake of already active validators. Subsequent [manual staking](/validators/delegation-manager#staking-nodes) will be necessary to use the funds for staking, assuming they are sufficient.
+
+Funds can be delegated by any fund holder by submitting a transaction of the following form:
 ```
 DelegateTransaction {
     Sender: <account address of funds holder>
     Receiver: <address of the delegation contract>
-    Value: minimum 10 eGLD
+    Value: minimum 1 eGLD
     GasLimit: 12000000
     Data: "delegate"
 }
 ```
 
-If the transaction is successful, the funds holder has become a delegator.
+If the transaction is successful, the funds holder has become a delegator and the funds either become a top-up amount for the stake of active validators, or may trigger the staking of inactive nodes, as described above.
 
 
 ### Claiming rewards
@@ -396,7 +465,7 @@ If the transaction is successful, the delegator receives the proportion of rewar
 Current delegation rewards can also be immediately delegated instead of [claimed](/validators/delegation-manager#claiming-rewards). This makes it an operation very similar to [delegation](/validators/delegation-manager#delegating-funds).
 
 :::important
-Just like delegation, redelegation of rewards takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically.
+Just like delegation, redelegation of rewards takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the redelegated rewards cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically (requires sufficient gas in the redelegation transaction).
 :::
 
 Rewards are redelegated using a transaction of the form:
@@ -415,10 +484,22 @@ If the transaction is successful, the delegator does not receive any eGLD at the
 
 ### Undelegating funds
 
-Delegators may express the intent to withdraw a specific amount of eGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal.
+Delegators may express the intent to withdraw a specific amount of eGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal, because the funds may already be used to stake for active validators and this means that unstaking of nodes may be necessary.
 
 :::important
 If the amount to undelegate requested by the delegator will cause the staking pool to drop below the sufficient amount required to keep all the current validators active, some validators will inevitably end up unstaked. The owner of the delegation contract may intervene and add extra funds to prevent such situations.
+:::
+
+Funds that have been previously used as stake for validators have been transferred into a separate system smart contract at the moment of staking, therefore the delegation contract itself does not hold these funds. But submitting an undelegation request will cause the delegation contract to attempt their retrieval.
+
+The delegation contract may receive the funds immediately if they're not currently used as stake; this makes them available for subsequent [withdrawal](/validators/delegation-manager#withdrawing). This is the case where previously delegated funds acted as top-up to the stake of existing validators.
+
+On the other hand, if the requested funds are currently in use as stake, the delegation contract cannot receive them yet. 
+
+:::important
+Funds used as stake can only be retrieved after 144000 blocks have been built on the Metachain (a little over 10 chronological epochs). It doesn't matter whether the validator was already demoted to observer, or whether it has been decomissioned entirely - the funds may not return until the aforementioned time has passed.
+
+After 144000 blocks, the funds can be [withdrawn](/validators/delegation-manager#withdrawing) normally by their rightful owner.
 :::
 
 To express the intention of future withdrawal of funds from the staking pool, a delegator may submit the following transaction:
@@ -430,9 +511,11 @@ UndelegateTransaction {
     Value: 0
     Gas: 12000000
     Data: "unDelegate"
-          "@" + <amount to undelegate in eGLD, fully denominated, in hexadecimal encoding>
+          "@" + <amount to undelegate in eGLD, minimum 1 EGLD, fully denominated, in hexadecimal encoding>
 }
 ```
+
+In the `Data` field, the only argument passed to `unDelegate` is the desired amount of eGLD to undelegate and later withdraw. It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. The fully denominated amount must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the amount.
 
 
 ### Withdrawing
@@ -440,7 +523,7 @@ UndelegateTransaction {
 After submitting an [undelegation transaction](/validators/delegation-manager#undelegating-funds), a delegator may finally withdraw funds from the staking pool.
 
 :::important
-The delegation contract will only allow immediate withdrawal if it has enough funds at the moment. Otherwise, the delegator must wait until such funds are either returned to the staking pool via [unbonding](/validators/delegation-manager#unbonding-nodes) or other delegators add funds to the staking pool (including the owner themselves).
+Funds must always be [undelegated](/validators/delegation-manager#undelegating-funds) first. They cannot be directly withdrawn.
 :::
 
 This action withdraws _all the currently undelegated funds_ belonging to the specific delegator.
