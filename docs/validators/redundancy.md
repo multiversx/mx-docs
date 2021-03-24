@@ -19,7 +19,7 @@ The value 0 will be the default, if the option is missing (as we do not re-write
   backwards compatibility holds.
 - a positive value will represent the "order of the hot-standby node" in the automatic fail-over sequence. 
   Example: suppose we have 3 nodes running with the same BLS key. One has the redundancy level set to 0,
-  one with 1 and one with 3. The node with level 0 will propose and sign blocks. The other 2 will
+  another has 1 and another with 3. The node with level 0 will propose and sign blocks. The other 2 will
   sync data with the same shard as the Main Validator (and shuffle in and out of the same shards) but will
   not sign anything. If the Main Validator fails, the hot-standby node 
   with level 1 will start producing/signing blocks after `level*5` missed rounds. So, after 5 
