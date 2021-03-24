@@ -132,7 +132,7 @@ To be able to connect also the validators to a specific keybase.io staking pool 
 ```
 [Preferences]
    # Identity represents the keybase's identity
-   Identity = ""
+   Identity = "elrondstaking"
 ```
 
 
