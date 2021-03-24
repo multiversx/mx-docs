@@ -68,6 +68,7 @@
 			},
 			"validators/delegation-manager",
 			"validators/rating",
+			"validators/redundancy",
 			"validators/node-cli",
 			"validators/useful-links",
 			"validators/faq"
