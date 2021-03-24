@@ -410,7 +410,7 @@ Funds can be delegated by submitting a transaction of the following form:
 DelegateTransaction {
     Sender: <account address of funds holder>
     Receiver: <address of the delegation contract>
-    Value: minimum 10 eGLD
+    Value: minimum 1 eGLD
     GasLimit: 12000000
     Data: "delegate"
 }
@@ -473,7 +473,7 @@ UndelegateTransaction {
     Value: 0
     Gas: 12000000
     Data: "unDelegate"
-          "@" + <amount to undelegate in eGLD, fully denominated, in hexadecimal encoding>
+          "@" + <amount to undelegate in eGLD, minimum 1 EGLD, fully denominated, in hexadecimal encoding>
 }
 ```
 
