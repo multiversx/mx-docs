@@ -111,16 +111,14 @@ An example for the `Data` field that sets the name to `"Elrond Staking"`, the we
 ```
 
 :::important
-Setting the keybase.io identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a keybase.io identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the keybase.io identity to the delegation contract address. 
+Setting the keybase.io identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a keybase.io identity. The second step is explained in the next section, [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the keybase.io identity to the delegation contract address. 
 :::
 
 ### Display information
 
 To customize the information for your delegation contract that will be available in the lists displayed on the delegation pages both in Maiar and the web wallet some aditional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and Maiar. If these information cannot be found a generic logo and the delegation contract's address is displayed.
 
-In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/elrond/` folder.
-
-An example for the path to the empty file for the `"elrondstaking"` keybase.io identity would be:
+In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/elrond/` folder. An example for the path to the empty file for the `"elrondstaking"` keybase.io identity is presented below.
 
 ```
  public/elrondstaking/elrond/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
@@ -131,7 +129,10 @@ The **second step** in connecting the delegation contract and the keybase.io ide
 :::
 
 :::tip
-To be able to connect a **testnet** or **devnet** contract to a keybase.io identity a new folder named `"testnet"` for the testnet or `"devnet"` for the devnet has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` would be `public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py`.
+To be able to connect a **testnet** or **devnet** contract to a keybase.io identity a new folder named `"testnet"` for the testnet or `"devnet"` for the devnet has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` is presented below.
+```
+public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+```
 :::
 
 An example of how the delegation contract will be displayed based on the information provided in the keybase.io is provided below.
