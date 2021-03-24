@@ -14,9 +14,9 @@ configurations consists on an option inside the `prefs.toml` file.
 Hot standby nodes are configured using the 'RedundancyLevel' option in the 'prefs.toml' configuration file:
 
 - a 0 value will represent that the node is the Main Validator.
-The value 0 will be the default, if the option is missing (as we do not re-write the `prefs.toml` 
-  files during the node's upgrade) will still make that node the Main Validator: 
-  backwards compatibility holds.
+The value 0 will be the default, therefore if the option is missing it will still make that node the Main Validator by default. With consideration to backwards compatibility, the already-running Validators are not affected by the addition of this option. Moreover, we never overwrite the `prefs.toml` files during the node's upgrade.
+
+The values of `RedundancyLevel` are interpreted as follows:
 - a positive value will represent the "order of the hot-standby node" in the automatic fail-over sequence. 
   Example: suppose we have 3 nodes running with the same BLS key. One has the redundancy level set to 0,
   another has 1 and another with 3. The node with level 0 will propose and sign blocks. The other 2 will
