@@ -40,7 +40,7 @@ If the Main Validator (RedundancyLevel 0) gets back online, the hot-standby node
 :::
 
 :::warning
-Do not use the same redundancy level on more than one node as the nodes with the same `RedundancyLevel` value will start signing blocks in parallel in the same time. The protocol can withstand this kind of things safely but in the near future the BLS key that will perform double signing can get slashed.
+Do not use the same redundancy level on more than one node. Otherwise, the nodes with the same `RedundancyLevel` value will start signing blocks in parallel in the same time. Although the protocol is not negatively affected by double signing, in the near future the BLS key that will perform double signing will have its stake slashed.
 :::
 
 The random BLS key on hot-standby nodes has the following purposes:
