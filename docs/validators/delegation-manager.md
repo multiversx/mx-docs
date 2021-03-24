@@ -139,9 +139,9 @@ An example of how the delegation contract will be displayed based on the informa
 ![stakingpool](/img/stakingpool.png)
 
 :::important
-To be able to connect also the validators to a specific keybase.io staking pool identity, two steps have to be completed as well:
+To also connect the validators themselves to a specific keybase.io staking pool identity, two additional steps have to be completed:
 1. Create an empty file with the name set to the `"<BLS key>"` for every validator and add the empty file to the `/elrond` folder on your keybase.io identity: `public/<keybase.io identity>/elrond/<BLS key>`
-2. Set the `Identity` of the validator in the `config/prefs.toml` file to the keybase.io staking pool identity.
+2. Set the `Identity` of each validator in the `config/prefs.toml` file to the keybase.io staking pool identity.
 
 ```
 [Preferences]
