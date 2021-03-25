@@ -124,7 +124,7 @@ Let's see what this means:
 
 With the structure in place, you can now write the code and build it. Open `src/lib.rs` , remove the existing `Adder` code and insert the following:
 
-```
+```Rust
 src/lib.rs
 #![no_std]
 
@@ -161,7 +161,7 @@ The generated code will contain a structure called `CrowdfundingImpl`, as the li
 
 Your smart contract effectively starts at line 9. We could have gotten here quicker, but you wanted to know what the code means and it took a little while to explain. We're finally here, though. Let's look at the code again:
 
-```
+```Rust
 src/lib.rs (revisited)
 #![no_std]
 
@@ -262,7 +262,7 @@ The owner of a smart contract is the account which deployed it (you). By design,
 
 Here's how the `init` method looks like, with the code that saves the address of the owner (guess who):
 
-```
+```Rust
 #![no_std]
 
 imports!();
