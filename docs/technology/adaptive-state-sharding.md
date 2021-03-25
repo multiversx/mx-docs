@@ -13,7 +13,7 @@ We emphasize the three main types of sharding: network sharding, transaction sha
 
 **Transaction sharding** handles the way the transactions are mapped to the shards where they will be processed. In an account-based system, the transactions could be assigned to shards based on the sender's address.
 
-**State sharding** is the most challenging approach. In contrast to the previously described sharding mechanisms, where all nodes store the entire state, in state-sharded blockchains, each shard maintains only a portion of the state. Every transaction handling accounts that are in different shards, would need to exchange messages and update states in different shards. In order to increase resiliency to malicious attacks, the nodes in the shards have to be reshuffled from time to time. However, moving nodes between shards introduces synchronization overheads, that is, the time taken for the newly added nodes to download the latest state. Thus, it is imperative that only a subset of all nodes should be redistributed during each epoch, to prevent down times during the synchronization process.
+**State sharding** is the most challenging approach. In contrast to the previously described sharding mechanisms, where all nodes store the entire state, in the case of state-sharded blockchains each shard maintains only a portion of the state. If the accounts involved in a transaction reside in different shards, executing that transaction will require the state to be updated in both shards and will involve the exchange of messages between the nodes of the two shards. In order to increase resiliency to malicious attacks, the nodes in the shards have to be reshuffled from time to time. However, moving nodes between shards introduces synchronization overheads, that is, the time taken for the newly added nodes to download the latest state from their new shard. Thus, it is imperative that only a subset of all nodes should be redistributed during each epoch, to prevent down times during the synchronization process.
 
 ## **Sharding directions**
 
@@ -37,11 +37,11 @@ A trivial step-by-step example of how it works is depicted in the animation belo
 
 Adaptive State Sharding workflow
 
-## Node shuffling‌
+## Node shuffling
 
-To prevent collusion, the configuration of each shard needs to change regularily. The Elrond network does this by shuffling nodes between shards at the end of each epoch. While reshuffling all of the nodes in every epoch would provide the highest security level, it would have a non-neglijible impact on the liveness of the system, due to additional latencies that appear when nodes are resynchronizing with their new shards. To avoid these latencies, a carefully controlled proportion of eligible validators belonging to a shard will be redistributed non-deterministically and uniformly to the other shards at the end of each epoch. ‌
+To prevent collusion, the configuration of each shard needs to change regularily. The Elrond network does this by shuffling nodes between shards at the end of each epoch. While reshuffling all of the nodes in every epoch would provide the highest security level, it would have a non-neglijible impact on the liveness of the system, due to additional latencies that appear when nodes are resynchronizing with their new shards. To avoid these latencies, a carefully controlled proportion of eligible validators belonging to a shard will be redistributed non-deterministically and uniformly to the other shards at the end of each epoch.
 
-Shuffled nodes will be placed in the new shards in a _waiting list_, meaning that they must spend this epoch performing resynchronization with the new shard. Only after spending an entire epoch in the waiting list of the new shard is the node allowed to become an _eligible validator_ and join the shard in full.‌
+Shuffled nodes will be placed in the new shards in a _waiting list_, meaning that they must spend this epoch performing resynchronization with the new shard. Only after spending an entire epoch in the waiting list of the new shard is the node allowed to become an _eligible validator_ and join the shard in full.
 
 The unpredictability of the shuffling process is important for the security of the network. For this reason, at the end of each epoch, it is the metachain which computes a list of nodes which must leave their shards and move to new ones. These nodes are selected using the randomness source calculated in the preceding metachain block, which means that the selection and redistribution cannot be known in advance. This computation is deterministic, therefore it requires no additional communication.
 
@@ -57,13 +57,13 @@ The node shuffling process must take multiple aspects into account:
 - Nodes that have already spent an epoch synchronizing inside the waiting list of a shard must be promoted to _eligible validator_ status in the respective shard.
 - There may be new nodes that have registered to the network and are waiting to join. They have been placed into a _network-wide waiting list_ and remain unassigned to shards until the end of the current epoch.
 - There may be nodes that have signaled their intention to leave
-- The network topology might need changes. If processing load has been uneven across shards, or if many nodes are joining or exiting the network, then the number of shards must change. ‌
+- The network topology might need changes. If processing load has been uneven across shards, or if many nodes are joining or exiting the network, then the number of shards must change.
 
-To produce a shard configuration for the new epoch, the metachain performs the following steps:‌
+To produce a shard configuration for the new epoch, the metachain performs the following steps:
 
 1. The number of nodes that must be shuffled out of each shard is calculated, then these nodes are _unassigned_ from their shards;
 2. The new number of shards for the entire network is computed, based on the processing load in shards and number of nodes that will form the network in the upcoming epoch, and also taking into account nodes that are joining or leaving;
 3. For each shard, the nodes that have previously spent an epoch synchronizing in the waiting list are promoted to _eligible validators_ in that shard;
-4. The nodes in the network-wide waiting list (including those that have been unassigned from their shards at step 1) are redistributed randomly and uniformly to all shards and put into their waiting lists, where they'll spend the next epoch synchronizing with the new shard.‌
+4. The nodes in the network-wide waiting list (including those that have been unassigned from their shards at step 1) are redistributed randomly and uniformly to all shards and put into their waiting lists, where they'll spend the next epoch synchronizing with the new shard.
 
 As described before, the reconfiguration of shards at the start of epochs and the [arbitrary selection of validators]() within rounds both discourage the creation of unfair coalitions and diminish the possibility of DDoS and bribery attacks, while maintaining decentralization and a high transactions throughput.
