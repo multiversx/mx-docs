@@ -102,7 +102,7 @@ SetMetadataTransaction {
 }
 ```
 
-An example for the `Data` field that sets the name to `"Elrond Staking"`, the website to `"elrond.staking"` and the keybase.io identifier to `"elrondstaking"` is: 
+An example for the `Data` field that sets the name to `"Elrond Staking"`, the website to `"elrond.staking"` and the keybase.io identifier to `"elrondstaking"` is:
 ```
     "setMetaData" + 
     "@456c726f6e64205374616b696e67"     //Elrond Staking
@@ -111,12 +111,12 @@ An example for the `Data` field that sets the name to `"Elrond Staking"`, the we
 ```
 
 :::important
-Setting the keybase.io identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a keybase.io identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the keybase.io identity to the delegation contract address. 
+Setting the keybase.io identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a keybase.io identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the keybase.io identity to the delegation contract address.
 :::
 
 ### Display information
 
-To customize the information for your delegation contract that will be available in the lists displayed on the delegation pages both in Maiar and the web wallet some aditional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and Maiar. If these information cannot be found a generic logo and the delegation contract's address is displayed.
+To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in Maiar and the web wallet, some additional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and Maiar. If these information cannot be found a generic logo and the delegation contract's address is displayed.
 
 In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/elrond/` folder.
 
@@ -127,11 +127,15 @@ An example for the path to the empty file for the `"elrondstaking"` keybase.io i
 ```
 
 :::important
-The **second step** in connecting the delegation contract and the keybase.io identity is finalized by adding the empty file that has the name equal to the delegation contract's address and certifying that the referenced keybase.io identity set in the [metadata](/validators/delegation-manager#metadata) also references the delegation contract address. This way the connection from both directions is sealed.
+The **second step** in connecting the delegation contract and the keybase.io identity is finalized by adding the empty file, which has the name equal to the delegation contract's address, and certifying that the referenced keybase.io identity, set in the [metadata](/validators/delegation-manager#metadata), also references the delegation contract address. This way the connection from both directions is sealed.
 :::
 
 :::tip
-To be able to connect a **testnet** or **devnet** contract to a keybase.io identity a new folder named `"testnet"` for the testnet or `"devnet"` for the devnet has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` would be `public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py`.
+To be able to connect a **testnet** or **devnet** contract to a keybase.io identity, a new folder - named `"testnet"` for the testnet, or `"devnet"` for the devnet, has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` would be:
+
+```
+public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+```
 :::
 
 An example of how the delegation contract will be displayed based on the information provided in the keybase.io is provided below.
@@ -427,7 +431,7 @@ Accounts become delegators by funding the staking pool, i.e. they delegate their
 Extra funds received by the delegation contract from delegators will be immediately used to top-up the stake of the existing active validators, consequently increasing their rewards.
 :::
 
-Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated funds cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically. This happens only if the transaction contains enough gas. 
+Submitting a delegation transaction takes into account the status of [automatic activation](/validators/delegation-manager#automatic-activation): if the delegated funds cause the amount in the staking pool to become sufficient for the staking of extra nodes, it can trigger their activation automatically. This happens only if the transaction contains enough gas.
 
 But if gas is insufficient, or if automatic activation is disabled, the amount received through the delegation transaction simply becomes top-up for the stake of already active validators. Subsequent [manual staking](/validators/delegation-manager#staking-nodes) will be necessary to use the funds for staking, assuming they are sufficient.
 
@@ -494,7 +498,7 @@ Funds that have been previously used as stake for validators have been transferr
 
 The delegation contract may receive the funds immediately if they're not currently used as stake; this makes them available for subsequent [withdrawal](/validators/delegation-manager#withdrawing). This is the case where previously delegated funds acted as top-up to the stake of existing validators.
 
-On the other hand, if the requested funds are currently in use as stake, the delegation contract cannot receive them yet. 
+On the other hand, if the requested funds are currently in use as stake, the delegation contract cannot receive them yet.
 
 :::important
 Funds used as stake can only be retrieved after 144000 blocks have been built on the Metachain (a little over 10 chronological epochs). It doesn't matter whether the validator was already demoted to observer, or whether it has been decomissioned entirely - the funds may not return until the aforementioned time has passed.
