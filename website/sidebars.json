@@ -101,6 +101,7 @@
 				]
 			},
 			"developers/esdt-tokens",
+			"developers/nft-tokens",
 			"developers/setup-local-testnet",
 			"developers/setup-local-testnet-advanced",
 			"developers/creating-wallets"
