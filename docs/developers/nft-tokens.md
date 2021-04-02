@@ -235,6 +235,28 @@ TransferTransaction {
 }
 ```
 
+## **Transfers to a Smart Contract**
+
+To perform the transfer from your account to the smart contract, you have to use the following transaction format:
+
+```
+TransferTransaction {
+    Sender: <account address of the sender>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 500000 + extra for smart contract call
+    Data: "ESDTNFTTransfer" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <the nonce after the NFT creation in hexadecimal encoding> + 
+          "@" + <quantity to transfer in hexadecimal encoding> +
+          "@" + <destination address in hexadecimal encoding> + 
+          "@" + <name of method to call in hexadecimal encoding> +
+          "@" + <first argument of the method in hexadecimal encoding> +
+          "@" + <second argument of the method in hexadecimal encoding> + 
+          <...>
+}
+```
+
 ## **Example flow**
 
 Let's see a complete flow of creating and transferring a Semi Fungible Token.
