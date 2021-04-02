@@ -31,7 +31,7 @@ Once owning a quantity of a NFT/SFT, users will have their data store directly u
 
 ## **Issuance of Non Fungible Tokens**
 
-One has to perform an issuance transaction in order to register the token. 
+One has to perform an issuance transaction in order to register a non fungible token. 
 Non Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
 ```
@@ -68,7 +68,7 @@ The contract will add a random string to the ticker thus creating the **token id
 
 ## **Issuance of Semi Fungible Tokens**
 
-One has to perform an issuance transaction in order to register the token.
+One has to perform an issuance transaction in order to register a semi fungible token.
 Semi Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi fungible token, one must provide a token name, a ticker, the initial quantity and optionally additional properties. This transaction has the form:
 
 ```
@@ -90,7 +90,7 @@ IssuanceTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 5000000000000000000 (5 eGLD)
     GasLimit: 60000000
-    Data: "issueNonFungible" +
+    Data: "issueSemiFungible" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
           "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
@@ -131,11 +131,11 @@ IssuanceTransaction {
           "@414c43" +
 }
 ```
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of 4091 AliceTokens. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
-here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also below).
+here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [Rest API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
 
 ## **Roles** ##
 
@@ -146,7 +146,7 @@ The existing roles are:
 - ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific NFT/SFT
 - ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT/SFT
 
-To see how roles can be assigned, please here to [this](/developers/nft-tokens#assigning-roles) section.
+To see how roles can be assigned, please refer to [this](/developers/nft-tokens#assigning-roles) section.
 
 
 ## **Assigning roles** ##
@@ -209,7 +209,7 @@ TransferCreationRoleTransaction {
     Sender: <address of the current creation role owner>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 500000 + length of Data field
+    GasLimit: 500000 + length of Data field in bytes * 1500
     Data: "ESDTNFTCreateRoleTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <the address to transfer the role from in hexadecimal encoding> + 
@@ -226,7 +226,7 @@ TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 500000 + length of Data field
+    GasLimit: 500000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <the nonce after the NFT creation in hexadecimal encoding> + 
@@ -333,7 +333,7 @@ Also, the `nonce` can be fetched by viewing all the tokens for the address via A
     Sender: <your address>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 500000 + length of Data field
+    GasLimit: 500000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@414c432d317132773365" +   # previously fetched token identifier
           "@" + <the nonce saved above in hexadecimal encoding> + 
@@ -353,7 +353,7 @@ There are a number of API endpoints that one can use to interact with ESDT NFT d
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
-https://api.elrond.com/address/*bech32Address*/nft/*tokenIdentifier*/nonce/*creation-nonce*
+https://api.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 ```
 
 | Param           | Required                                  | Type     | Description                           |
@@ -391,7 +391,7 @@ https://api.elrond.com/address/*bech32Address*/nft/*tokenIdentifier*/nonce/*crea
 
 One can use [get all esdt tokens for an address endpoint](/developers/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
 
-### <span class="badge badge-success">GET</span> **Get all issued ESDT tokens**
+### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
 
 One can use [get all issued esdt tokens endpoint](/developers/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
 
