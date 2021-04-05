@@ -3,6 +3,10 @@ id: esdt-tokens
 title: ESDT tokens
 ---
 
+:::important
+ESDTs aren't enabled yet on Elrond Mainnet. See testnet or devnet
+:::
+
 ## **Introduction**
 Custom tokens at native speed and scalability, without ERC20
 
@@ -437,7 +441,7 @@ https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> **Get all issued ESDT tokens**
+### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
 
 This involves a `vm query` request to the `ESDT` address.
 For example:
@@ -447,68 +451,23 @@ For example:
 <!--Request-->
 
 ```
-https://api.elrond.com/vm-values/query
-```
-
-```json
-{
-	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-	"funcName": "getAllESDTTokens",
-	"args": []
-}
-
+https://api.elrond.com/network/esdts
 ```
 
 <!--Response-->
 
-```json
+```
 {
   "data": {
-    "data": {
-      "returnData": [
-        "VEdELWE1Y2NlYg=="
-      ],
-      "returnCode": "ok",
-      "returnMessage": "",
-      "gasRemaining": 18446744073659541615,
-      "gasRefund": 0,
-      "outputAccounts": {
-        "000000000000000000010000000000000000000000000000000000000002ffff": {
-          "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-          "nonce": 0,
-          "balance": null,
-          "balanceDelta": 0,
-          "storageUpdates": {},
-          "code": null,
-          "codeMetaData": null,
-          "outputTransfers": [],
-          "callType": 0
-        }
-      },
-      "deletedAccounts": null,
-      "touchedAccounts": null,
-      "logs": []
-    }
-  },
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
   "error": "",
   "code": "successful"
 }
 ```
-
-What is important in this section is the `returnData` member that will contain the bytes of a list of token identifiers, separated by `@`.
-In the example response, `returnData` contains a single element `VEdELWE1Y2NlYg==` which represents the bytes for a single token identifier. In JSON, bytes fields are encoded as base64. `base64decode("VEdELWE1Y2NlYg==") = TGD-a5cceb`.
-
-If multiple tokens exist, the `returnData` will still contain a single element. Example:
-```
-....
- "data": {
-      "returnData": [
-        "VEdELWE1Y2NlYkBBTEMtYjIzNDE1"
-      ],
-      "returnCode": "ok",
-...
-```
-where `VEdELWE1Y2NlYkBBTEMtYjIzNDE1` is translated to `TGD-a5cceb@ALC-b23415` (2 token identifier separated by `@`)
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
