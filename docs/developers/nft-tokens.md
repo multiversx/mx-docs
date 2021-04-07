@@ -131,9 +131,8 @@ IssuanceTransaction {
           "@414c43" +
 }
 ```
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of 4091 AliceTokens. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
-If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [Rest API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
 
