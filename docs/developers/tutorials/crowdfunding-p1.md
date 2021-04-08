@@ -186,6 +186,37 @@ Every smart contract must define a constructor method, which is run _once and on
 
 The `init` method of the Crowdfunding smart contract is currently empty. We'll add the actual code later. First, you want to build the whole project, to make sure everything has worked well so far, even if the smart contract does nothing right now.
 
+### **Update the Abi trait**
+
+As we have just renamed the trait from the template `Adder` to `Crowdfunding`, the `abi` package should also be updated to use the new implementation name. The file we need to update is in `abi/src/main.rs` and it should contain the following code:
+
+```
+use crowdfunding::*;
+use elrond_wasm_debug::*;
+
+fn main() {
+	let contract = CrowdfundingImpl::new(TxContext::dummy());
+	print!("{}", abi_json::contract_abi(&contract));
+}
+```
+
+Unless we do this, we would run into an error like this:
+```
+error[E0433]: failed to resolve: use of undeclared type `AdderImlp`
+--> src/main.rs:5:17
+|
+5 |     let contract = AdderImlp::new(TxContext::dummy());
+|                    ^^^^^^^^^ use of undeclared type `AdderImlp`
+
+warning: unused import: `crowdfunding::*`
+--> src/main.rs:1:5
+|
+1 | use crowdfunding::*;
+|     ^^^^^^^^^^^^^^^
+|
+= note: `#[warn(unused_imports)]` on by default
+```
+
 # **Step 3: the build**
 
 After creating the file `src/lib.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
