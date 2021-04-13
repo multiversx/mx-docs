@@ -22,7 +22,7 @@ Recommendations from experienced validators:
 - Sebastian - https://medium.com/@SebastianJ/elrond-a-comparison-of-node-hosting-options-ca9268da7d72
 
 :::warning
-Warning about **Contabo**: while ok for testing, it has shown unique errors for testnets. Consider the price of "cheap" when running a validator - the protocol dynamically phases out low performance nodes, which will lead to less returns for operators.
+Warning about **Contabo**: do not attempt to use this provider, not even for the testnet/devnet. Consider the price of "cheap" when running a validator - the protocol dynamically phases out low performance nodes, which will lead to less returns for operators.
 :::
 
 **What if I have Windows?**
