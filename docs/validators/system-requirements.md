@@ -12,7 +12,7 @@ Nodes are computers running the Elrond software, so they contribute to the Elron
 - 2 x dedicated/physical CPUs, either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 4 GB RAM
 - 200 GB SSD
-- 100 Mbit/s always-on internet connection
+- 100 Mbit/s always-on internet connection, at least 4TB/month data plan
 - Linux OS (Ubuntu 20.04 recommended) / MacOS
 
 :::tip
