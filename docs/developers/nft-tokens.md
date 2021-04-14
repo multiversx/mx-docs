@@ -11,17 +11,7 @@ NFTs aren't enabled yet on Elrond Mainnet. See testnet or devnet
 
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
 This way, one can issue a semi fungible token or a non fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
-Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token are:
-
-- attributes
-- balance
-- creator
-- hash
-- name
-- properties
-- royalties
-- tokenIdentifier
-- URIs
+Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
 - register/issue the token
@@ -38,7 +28,7 @@ Non Fungible Tokens are issued via a request to the Metachain, which is a transa
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
+    Value: 50000000000000000 # (0.05 EGLD)
     GasLimit: 60000000
     Data: "issueNonFungible" +
           "@" + <token name in hexadecimal encoding> +
@@ -51,7 +41,7 @@ Optionally, the properties can be set when issuing a token. Example:
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
+    Value: 50000000000000000 # (0.05 EGLD)
     GasLimit: 60000000
     Data: "issueNonFungible" +
           "@" + <token name in hexadecimal encoding> +
@@ -75,7 +65,7 @@ Semi Fungible Tokens are issued via a request to the Metachain, which is a trans
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
+    Value: 50000000000000000 # (0.05 EGLD)
     GasLimit: 60000000
     Data: "issueSemiFungible" +
           "@" + <token name in hexadecimal encoding> +
@@ -88,7 +78,7 @@ Optionally, the properties can be set when issuing a token. Example:
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
+    Value: 50000000000000000 # (0.05 EGLD)
     GasLimit: 60000000
     Data: "issueSemiFungible" +
           "@" + <token name in hexadecimal encoding> +
@@ -124,7 +114,7 @@ For example, a user named Alice wants to issue an ESDT called "AliceTokens" with
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000
+    Value: 50000000000000000 # (0.05 EGLD)
     GasLimit: 60000000
     Data: "issueSemiFungible" +
           "@416c696365546f6b656e73" +
@@ -141,9 +131,14 @@ here in order to use it for transfers. Alternatively, the token identifier can b
 In order to be able to perform actions over a token, one needs to have roles assigned.
 The existing roles are:
 
-- ESDTRoleNFTCreate : this role allows one to create a new NFT/SFT
-- ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific NFT/SFT
-- ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT/SFT
+For NFT:
+* ESDTRoleNFTCreate : this role allows one to create a new NFT
+* ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
+
+For SFT:
+* ESDTRoleNFTCreate : this role allows one to create a new SFT
+* ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
+* ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
 
 To see how roles can be assigned, please refer to [this](/developers/nft-tokens#assigning-roles) section.
 
@@ -170,8 +165,50 @@ RolesAssigningTransaction {
 
 For example, `ESDTRoleNFTCreate` = `45534454526f6c654e4654437265617465`
 
-## **Creation of an NFT**
+Unset transactions are very similar. You can find an example [here](/developers/esdt-tokens#unset-special-role).
 
+## **NFT/SFT fields**
+
+Below you can find the fields involved when creating an NFT.
+
+**NFT Name**
+- The name of the NFT or SFT
+
+**Quantity**
+- The quantity of the token. If NFT, it must be `1`
+
+**Royalties**
+- Allows the creator to receive royalties for any transaction involving their NFT
+- Base format is a numeric value between 0 an 10000 (0 meaning 0% and 10000 meaning 100%)
+
+**Hash**
+- Arbitrary field that should contain the hash of the NFT metadata.
+
+**Attributes**
+- Arbitrary field that should contain a set of attributes in the format desired by the creator
+
+**URI(s)**
+- Minimum one field that should contain the `Uniform Resource Identifier`. Can be a URL to a media file or something similar.
+
+:::important
+Please note that each argument must be encoded in hexadecimal format with an even number of characters.
+:::
+
+### **Example**
+Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
+| Property | Plain value | Encoded value |
+|----------|-------------|---------------|
+|**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 | 
+|**Quantity**| 1 | 01|
+|**Royalties**| 7500 *=75%* | 1d4c |
+|**Hash** | 5589...03a6 | 5589...03a6 |
+|**Attributes**| Artist:Famous artist;Duration:03.17|  4172746973743a46616d6f7573206172746973743b4475726174696f6e3a30332e3137 |
+|**URI**| *URL_to_decentralized_storage/song.mp3* | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
+
+As stated above, `hash` and `attributes` fields are arbitrary and the creator or the marketplace can use them in the way they want.
+
+In this example, the hash represents the hash of the `.mp3` file. Also the attributes follow a `attribute_name:attribute_value;attribute_name:attribute_value` format.
+## **Creation of an NFT**
 A single address can own the role of creating an NFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
 
 An NFT can be created on top of an existing ESDT by sending a transaction to self that contains the function call that triggers the creation.
@@ -182,11 +219,11 @@ NFTCreationTransaction {
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 60000000
+    GasLimit: 6000000 + Additional gas
     Data: "ESDTNFTCreate" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <initial quantity in hexadecimal encoding> +
-          "@" + <NFT name in hexadecimal econding> +
+          "@" + <NFT name in hexadecimal encoding> +
           "@" + <Royalties in hexadecimal encoding> +
           "@" + <Hash in hexadecimal encoding> +
           "@" + <Attributes in hexadecimal encoding> +
@@ -195,6 +232,14 @@ NFTCreationTransaction {
           ...
 }
 ```
+
+Additional gas refers to:
+- Transaction payload cost: Data field length * 1500 (GasPerDataByte = 1500)
+- Storage cost: Size of NFT data * 50000 (StorePerByte = 50000)
+
+:::tip
+Please note that because NFTs are stored in accounts trie, every transaction involving the NFT will require higher gas depending on NFT data size.
+:::
 
 ### **Transfer NFT Creation Role** 
 
@@ -208,8 +253,8 @@ TransferCreationRoleTransaction {
     Sender: <address of the current creation role owner>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 500000 + length of Data field in bytes * 1500
-    Data: "ESDTNFTCreateRoleTransfer" +
+    GasLimit: 60000000 + length of Data field in bytes * 1500
+    Data: "transferNFTCreateRole" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <the address to transfer the role from in hexadecimal encoding> + 
           "@" + <the address to transfer the role to in hexadecimal encoding> 
@@ -372,6 +417,7 @@ https://api.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<crea
       "creator": "erd1ukn0tukrdhuv0zzxn0zlr53g7h0fr68dz9dd56mkksev59nwuvnswnlyuy",
       "hash": "aGFzaA==",
       "name": "H",
+      "nonce": 1,
       "properties": "",
       "royalties": "9000",
       "tokenIdentifier": "4W97C-32b5ce",
