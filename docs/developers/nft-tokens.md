@@ -330,7 +330,7 @@ WipeTransaction {
 
 ### **Upgrading (changing properties)**
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable. 
-Check the [ESDT - Upgrading (changing properties)](/esdt-tokens#upgrading-changing-properties) section for more details.
+Check the [ESDT - Upgrading (changing properties)](/developers/esdt-tokens#upgrading-changing-properties) section for more details.
 
 
 ## **Transfers**
