@@ -238,7 +238,7 @@ Additional gas refers to:
 - Storage cost: Size of NFT data * 50000 (StorePerByte = 50000)
 
 :::tip
-Please note that because NFTs are stored in accounts trie, every transaction involving the NFT will require higher gas depending on NFT data size.
+Note that because NFTs are stored in accounts trie, every transaction involving the NFT will require a gas limit depending on NFT data size.
 :::
 
 ### **Transfer NFT Creation Role** 
