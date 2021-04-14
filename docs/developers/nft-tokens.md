@@ -241,6 +241,8 @@ Additional gas refers to:
 Note that because NFTs are stored in accounts trie, every transaction involving the NFT will require a gas limit depending on NFT data size.
 :::
 
+## **Other management operations**
+
 ### **Transfer NFT Creation Role** 
 
 :::tip
@@ -261,6 +263,76 @@ TransferCreationRoleTransaction {
 }
 ```
 
+### **Stop NFT creation**
+
+The ESDT manager can stop the creation of an NFT for the given ESDT forever, by removing the only `ESDTRoleNFTCreate` role available.
+This is done by performing a transaction like this:
+
+```
+StopNFTCreationTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 500000 + length of Data field in bytes * 1500
+    Data: "stopNFTCreate" +
+          "@" + <token identifier in hexadecimal encoding> +
+}
+```
+
+### **Freezing and Unfreezing a single NFT**
+
+The manager of an ESDT token may freeze the NFT held by a specific Account. As a consequence, no NFT can be transferred to or from the frozen Account. Freezing and unfreezing a single NFT of an Account are operations designed to help token managers to comply with regulations. The transaction that freezes a single NFT of an Account has the form:
+
+```
+FreezeTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "freezeSingleNFT" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <creation nonce in hexadecimal encoding>
+          "@" + <account address to freeze in hexadecimal encoding>
+}
+```
+
+The reverse operation, unfreezing, will allow further transfers to and from the Account:
+
+```
+UnfreezeTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "unFreezeSingleNFT" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <creation nonce in hexadecimal encoding> +
+          "@" + <account address to unfreeze in hexadecimal encoding>
+}
+```
+
+### **Wiping a single NFT**
+
+The manager of an ESDT token may wipe out a single NFT held by a frozen Account. This operation is similar to burning the quantity, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
+
+```
+WipeTransaction {
+    Sender: <account address of the token managers>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "wipeSingleNFT" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <creation nonce in hexadecimal encoding> +
+          "@" + <account address to wipe in hexadecimal encoding>
+}
+```
+
+### **Upgrading (changing properties)**
+The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable. 
+Check the [ESDT - Upgrading (changing properties)](/esdt-tokens#upgrading-changing-properties) section for more details.
+
+
 ## **Transfers**
 
 Performing an ESDT NFT transfer is done by specifying the receiver's address inside the `Data` field, alongside other details. An ESDT NFT transfer transaction has the following form:
@@ -270,7 +342,7 @@ TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 500000 + length of Data field in bytes * 1500
+    GasLimit: 1000000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <the nonce after the NFT creation in hexadecimal encoding> + 
@@ -288,7 +360,7 @@ TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 500000 + extra for smart contract call
+    GasLimit: 1000000 + extra for smart contract call
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <the nonce after the NFT creation in hexadecimal encoding> + 
