@@ -18,7 +18,7 @@ Technically, the balances of ESDT tokens held by an Account are stored directly 
 
 ESDT tokens can be issued, owned and held by any Account on the Elrond network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
-## **Issuance of ESDT tokens**
+## **Issuance of fungible ESDT tokens**
 
 ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker, the initial supply, the number of decimals for display purpose and optionally additional properties. This transaction has the form:
 
@@ -26,8 +26,8 @@ ESDT tokens are issued via a request to the Metachain, which is a transaction su
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
-    GasLimit: 50000000
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
@@ -36,13 +36,15 @@ IssuanceTransaction {
 }
 ```
 
+Our initial proposal is the issuance cost to be 0.05 EGLD. Feedback and suggestions from the community is more than welcome.
+
 Optionally, the properties can be set when issuing a token. Example:
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
-    GasLimit: 50000000
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
@@ -54,7 +56,8 @@ IssuanceTransaction {
           "@" + <"canMint" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canBurn" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
-          "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
+          "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
 }
 ```
 
@@ -91,8 +94,8 @@ For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" 
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000
-    GasLimit: 50000000
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
     Data: "issue" +
           "@416c696365546f6b656e73" +
           "@414c43" +
@@ -115,7 +118,7 @@ TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <account address of the receiver>
     Value: 0
-    GasLimit: 250000
+    GasLimit: 500000
     Data: "ESDTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <value to transfer in hexadecimal encoding>
@@ -135,7 +138,7 @@ TransferTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
     Value: 0
-    GasLimit: 250000
+    GasLimit: 500000
     Data: "ESDTTransfer" +
           "@414c432d363235386432" +
           "@0c"
@@ -157,7 +160,7 @@ TransferWithCallTransaction {
     Sender: <account address of the sender>
     Receiver: <account address of the smart contract>
     Value: 0
-    GasLimit: 250000 + <an appropriate amount for the method call>
+    GasLimit: 500000 + <an appropriate amount for the method call>
     Data: "ESDTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <value to transfer in hexadecimal encoding> +
@@ -185,6 +188,7 @@ Every ESDT token has a set of properties which control what operations are possi
 - `canWipe` - the token manager may wipe out the tokens held by a frozen account, reducing the supply
 - `canChangeOwner` - token management can be transferred to a different account
 - `canUpgrade` - the token manager may change these properties
+- `canAddSpecialRoles` - the token manager can assign a specific role(s)
 
 ## **Management operations**
 
@@ -199,7 +203,7 @@ MintTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "mint" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <new supply in hexadecimal encoding>
@@ -219,7 +223,7 @@ BurnTransaction {
     Sender: <account address of a token holder>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "ESDTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <supply to burn in hexadecimal encoding>
@@ -239,7 +243,7 @@ PauseTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "pause" +
           "@" + <token identifier in hexadecimal encoding>
 }
@@ -252,7 +256,7 @@ UnpauseTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "unPause" +
           "@" + <token identifier in hexadecimal encoding>
 }
@@ -269,7 +273,7 @@ FreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "freeze" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to freeze in hexadecimal encoding>
@@ -283,7 +287,7 @@ UnfreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "unFreeze" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to unfreeze in hexadecimal encoding>
@@ -301,14 +305,59 @@ WipeTransaction {
     Sender: <account address of the token managers>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "wipe" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
 
-This operation requires that the option `canWipe` is set to `true`.
+### **Setting and unsetting special roles**
+
+The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
+The special roles available for basic ESDT tokens are:
+
+- **ESDTRoleLocalBurn** # an address with this role can burn tokens
+  
+- **ESDTRoleLocalMint** # an address with this role can mint new tokens
+
+For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
+
+#### **Set special role**
+
+One or more roles for an address can be set by the owner by performing a transaction like:
+```
+RolesAssigningTransaction {
+    Sender: <address of the ESDT manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "setSpecialRole" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <address to assign the role(s) in a hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          ...
+}
+```
+
+#### **Unset special role**
+
+One or more roles for an address can be unset by the owner by performing a transaction like:
+```
+RolesAssigningTransaction {
+    Sender: <address of the ESDT manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "unSetSpecialRole" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <address to unset the role(s) in a hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          ...
+}
+```
 
 ### **Transferring token management rights**
 
@@ -319,7 +368,7 @@ TransferOwnershipTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "transferOwnership" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address of the new token manager in hexadecimal encoding>
@@ -339,7 +388,7 @@ UpgradingTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "controlChanges" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <property name in hexadecimal encoding> +
@@ -357,7 +406,7 @@ UpgradingTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "controlChanges" +
           "@414c432d363235386432" +
           "@63616e57697065" +
