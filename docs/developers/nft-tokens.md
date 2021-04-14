@@ -265,7 +265,7 @@ TransferCreationRoleTransaction {
 
 ### **Stop NFT creation**
 
-The ESDT manager can stop the creation of an NFT for the given ESDT forever, by removing the only `ESDTRoleNFTCreate` role available.
+The ESDT manager can stop the creation of an NFT for the given ESDT forever by removing the only `ESDTRoleNFTCreate` role available.
 This is done by performing a transaction like this:
 
 ```
