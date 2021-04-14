@@ -273,7 +273,7 @@ StopNFTCreationTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 500000 + length of Data field in bytes * 1500
+    GasLimit: 60000000
     Data: "stopNFTCreate" +
           "@" + <token identifier in hexadecimal encoding> +
 }
