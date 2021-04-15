@@ -518,4 +518,4 @@ One can use [get esdt properties endpoint](/developers/esdt-tokens#get-esdt-toke
 
 ### <span class="badge badge-success">POST</span> **Get special roles**
 
-One can use [get special roles endpoint](/developers/esdt-tokens#get-special-roles-for-a-token) used for ESDT.
+Special roles can be queried via the [getSpecialRoles function](/developers/esdt-tokens#get-special-roles-for-a-token) provided by ESDT.
