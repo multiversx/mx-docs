@@ -550,6 +550,7 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
     "data": {
       "returnData": [
         "QWxpY2VUb2tlbnM=",
+        "RnVuZ2libGVFU0RU",
         "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=",
         "MTAwMDAwMDAwMDA=",
         "MA==",
@@ -561,7 +562,11 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
         "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",
         "Q2FuUGF1c2UtdHJ1ZQ==",
         "Q2FuRnJlZXplLXRydWU=",
-        "Q2FuV2lwZS10cnVl"
+        "Q2FuV2lwZS10cnVl",
+        "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",
+        "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",
+        "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",
+        "TnVtV2lwZWQtMA=="
       ],
       "returnCode": "ok",
       "returnMessage": "",
@@ -593,21 +598,69 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
 The `returnData` member will contain an array of the properties in a fixed order (base64 encoded). For the example response, the meaning is:
 ```
 "returnData": [
-  "QWxpY2VUb2tlbnM=",                             | token name                | AliceTokens
-  "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=", | bytes of a bech32 addres  | erd1mq6gn3yngzdgh0zdfa07zepga6a8yf7dkeue24zp3snknvjvucvs37hmrq after decoding
-  "MTAwMDAwMDAwMDA=",                             | total supply              | 10000000000
-  "MA==",                                         | burnt value               | 0
-  "TnVtRGVjaW1hbHMtNg==",                         | number of decimals        | NumDecimals-6
-  "SXNQYXVzZWQtZmFsc2U=",                         | is paused                 | IsPaused-false
-  "Q2FuVXBncmFkZS10cnVl",                         | can upgrade               | CanUpgrade-true
-  "Q2FuTWludC10cnVl",                             | can mint                  | CanMint-true
-  "Q2FuQnVybi10cnVl",                             | can burn                  | CanBurn-true
+  "QWxpY2VUb2tlbnM=",                             | token name                   | AliceTokens
+  "RnVuZ2libGVFU0RU",                             | token type                   | FungibleESDT
+  "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=", | bytes of a bech32 addres     | erd1mq6gn3yngzdgh0zdfa07zepga6a8yf7dkeue24zp3snknvjvucvs37hmrq after decoding
+  "MTAwMDAwMDAwMDA=",                             | total supply                 | 10000000000
+  "MA==",                                         | burnt value                  | 0
+  "TnVtRGVjaW1hbHMtNg==",                         | number of decimals           | NumDecimals-6
+  "SXNQYXVzZWQtZmFsc2U=",                         | is paused                    | IsPaused-false
+  "Q2FuVXBncmFkZS10cnVl",                         | can upgrade                  | CanUpgrade-true
+  "Q2FuTWludC10cnVl",                             | can mint                     | CanMint-true
+  "Q2FuQnVybi10cnVl",                             | can burn                     | CanBurn-true
   "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",                 | can change token management address  | CanChangeOwner-true
-  "Q2FuUGF1c2UtdHJ1ZQ==",                         | can pause                 | CanPause-true
-  "Q2FuRnJlZXplLXRydWU=",                         | can freeze                | CanFreeze-true
-  "Q2FuV2lwZS10cnVl"                              | can wipe                  | CanWipe-true
+  "Q2FuUGF1c2UtdHJ1ZQ==",                         | can pause                    | CanPause-true
+  "Q2FuRnJlZXplLXRydWU=",                         | can freeze                   | CanFreeze-true
+  "Q2FuV2lwZS10cnVl",                             | can wipe                     | CanWipe-true
+  "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",             | can add special roles        | CanAddSpecialRoles-true 
+  "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",     | can transfer nft create role | CanTransferNFTCreateRole-false 
+  "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",             | nft creation stopped         | NFTCreateStopped-false  
+  "TnVtV2lwZWQtMA=="                              | number of wiped quantity     | NumWiped-0                              
 ],
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
+### <span class="badge badge-success">POST</span> **Get special roles for a token**
+
+This involves a `vm query` request to the `ESDT` address. It will return all addresses that have roles assigned for the token
+with the provided identifier.
+For example:
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+```
+https://api.elrond.com/vm-values/query
+```
+
+```json
+{
+	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+	"funcName": "getSpecialRoles",
+	"args": ["474c442d306430303630"]
+}
+```
+
+The argument must be the token identifier, hexadecimal encoded. In the example, `474c442d306430303630` = `GLD-0d0060`.
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "data": {
+      "returnData": [
+        "ZXJkMTM2cmw4NzhqMDltZXYyNGd6cHk3MGsyd2ZtM3htdmo1dWN3eGZmczl2NXQ1c2sza3NodHN6ejI1ejk6RVNEVFJvbGVMb2NhbEJ1cm4=",
+        "ZXJkMWt6enYydXc5N3E1azltdDQ1OHFrM3E5dTNjd2h3cXlrdnlrNTk4cTJmNnd3eDdndnJkOXM4a3N6eGs6RVNEVFJvbGVORlRBZGRRdWFudGl0eSxFU0RUUm9sZU5GVEJ1cm4=" 
+      ],
+      "returnCode": "ok",
+      ........
+}
+```
+
+In this example, converting the 2 messages from base64 to string would result in:
+* `erd136rl878j09mev24gzpy70k2wfm3xmvj5ucwxffs9v5t5sk3kshtszz25z9:ESDTRoleLocalBurn`
+* `erd1kzzv2uw97q5k9mt458qk3q9u3cwhwqykvyk598q2f6wwx7gvrd9s8kszxk:ESDTRoleNFTAddQuantity,ESDTRoleNFTBurn`
+
+<!--END_DOCUSAURUS_CODE_TABS-->

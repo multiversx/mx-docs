@@ -515,3 +515,7 @@ One can use [get all issued esdt tokens endpoint](/developers/esdt-tokens#get-al
 ### <span class="badge badge-success">POST</span> **Get ESDT properties**
 
 One can use [get esdt properties endpoint](/developers/esdt-tokens#get-esdt-token-properties) used for ESDT.
+
+### <span class="badge badge-success">POST</span> **Get special roles**
+
+One can use [get special roles endpoint](/developers/esdt-tokens#get-special-roles-for-a-token) used for ESDT.
