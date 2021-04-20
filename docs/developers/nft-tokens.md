@@ -208,6 +208,7 @@ Below you can find a table representing an example of the fields for a non-fungi
 As stated above, `hash` and `attributes` fields are arbitrary and the creator or the marketplace can use them in the way they want.
 
 In this example, the hash represents the hash of the `.mp3` file. Also the attributes follow a `attribute_name:attribute_value;attribute_name:attribute_value` format.
+
 ## **Creation of an NFT**
 A single address can own the role of creating an NFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
 
@@ -291,7 +292,7 @@ FreezeTransaction {
     GasLimit: 60000000
     Data: "freezeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <creation nonce in hexadecimal encoding>
+          "@" + <NFT nonce in hexadecimal encoding>
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
@@ -306,7 +307,7 @@ UnfreezeTransaction {
     GasLimit: 60000000
     Data: "unFreezeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <creation nonce in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
@@ -323,7 +324,7 @@ WipeTransaction {
     GasLimit: 60000000
     Data: "wipeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <creation nonce in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
@@ -345,7 +346,7 @@ TransferTransaction {
     GasLimit: 1000000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the nonce after the NFT creation in hexadecimal encoding> + 
+          "@" + <the NFT nonce in hexadecimal encoding> + 
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding>
 }
@@ -438,8 +439,10 @@ Fill all the attributes as you think.
 
 :::tip
 Note that the nonce is very important when creating an NFT. You must save the nonce after NFT creation because you will need it for further actions.
-For example, if Alice has nonce `5` before sending the nft creation transaction, nonce `6` must be used in further actions.
-Also, the `nonce` can be fetched by viewing all the tokens for the address via API.
+
+The `NFT nonce` is different from the creator's nonce.
+
+It can be fetched by viewing all the tokens for the address via API.
 :::
 
 **Step 5: Transfer**

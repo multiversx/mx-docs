@@ -86,6 +86,20 @@ Numerical values, such as initial supply or number of decimals, should be the he
 - **48** _decimal_      => **30** _hex encoded_
 - **1000000** _decimal_ => **f4240** _hex encoded_
 
+### **Number of decimals usage**
+Front-end applications will use the number of decimals in order to display balances. 
+Therefore, you must adapt the supply according to the number of decimals parameter. 
+
+For example, if you would like to create a token `ALC` with a total supply of 100 and number of decimals = 2, then you should set
+the initial supply to `10000` ($100 * 10^2$). 
+Also, when transferring/burning/minting tokens, you should keep in mind there is also the denomination involved. 
+
+Therefore, if you own some above-mentioned ALC tokens and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
+
+:::tip
+This is only relevant when performing operations via manual transactions over ESDT tokens. The Web Wallet for example already has this feature in place, so you don't have to take care of the number of decimals.
+:::
+
 ### **Issuance examples**
 
 For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6. The issuance transaction would be:
