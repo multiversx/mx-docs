@@ -25,7 +25,7 @@ In case of a single machine, our recommendation is as follows:
 - 32 GB RAM
 - HDD that can grow up to 5TB
 - 100 Mbit/s always-on Internet connection
-- Linux OS (Ubuntu 18.04 recommended)
+- Linux OS (Ubuntu 20.04 recommended)
 
 The recommended number of CPUs has been updated from `8` to `16` in April 2021, considering the increasing load over the network.
 
