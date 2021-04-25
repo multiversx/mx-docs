@@ -21,11 +21,17 @@ The Observing Squad can be installed on multiple machines or on a single, but mo
 
 In case of a single machine, our recommendation is as follows:
 
-- 8 x CPU
+- 16 x CPU
 - 32 GB RAM
 - HDD that can grow up to 5TB
 - 100 Mbit/s always-on Internet connection
-- Linux OS (Ubuntu 18.04 recommended)
+- Linux OS (Ubuntu 20.04 recommended)
+
+The recommended number of CPUs has been updated from `8` to `16` in April 2021, considering the increasing load over the network.
+
+:::tip
+These specs are only a recommendation. Depending on the load over the API or the observers, one should upgrade the machine as to keep the squad synced and with good performance.
+:::
 
 # **Setup via the Mainnet scripts**
 
@@ -72,6 +78,32 @@ In order to check the status of the Observing Squad, please see the section **Mo
 
 The Observing Squad can be updated using the Mainnet installation scripts.
 
+### **April 2021 upgrade**
+
+In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
+
+```
+$ cd ~/elrond-go-scripts-mainnet
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
+
+### **March 2021 upgrade**
+
+In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
+
+```
+$ cd ~/elrond-go-scripts-mainnet
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
+
 ### **January 2021 upgrade**
 
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
@@ -84,9 +116,6 @@ $ ./script.sh upgrade_squad
 $ ./script.sh upgrade_proxy
 $ ./script.sh start
 ```
-:::important
-The Observing Squad must be upgraded before 26th of January 14:20 UTC. Otherwise, the nodes will lose sync.
-:::
 
 ### **Prerequisites for the November 2020 upgrade**
 

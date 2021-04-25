@@ -54,7 +54,7 @@ The reward address can also be changed at a later time, with a special transacti
 For example, changing the reward address for two nodes requires the following transaction:
 
 ```
-ClaimTransaction {
+ChangeRewardAddressTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
     Value: 0 EGLD

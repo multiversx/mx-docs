@@ -169,6 +169,22 @@ export default function CustomFooter() {
             <a href="/" className="dropdown-item active">
               Docs
             </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://growth.elrond.com/"
+              className="dropdown-item"
+            >
+              Growth
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://maiar.com/"
+              className="dropdown-item"
+            >
+              Maiar
+            </a>
           </nav>
         </div>
       </div>

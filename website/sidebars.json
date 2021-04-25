@@ -62,10 +62,13 @@
 				"ids":[
 					"validators/staking/staking-unstaking-unjailing",
 					"validators/staking/staking",
-					"validators/staking/unjailing"
+					"validators/staking/unjailing",
+					"validators/staking/staking-smart-contract"
 				]
 			},
+			"validators/delegation-manager",
 			"validators/rating",
+			"validators/redundancy",
 			"validators/node-cli",
 			"validators/useful-links",
 			"validators/faq"
@@ -89,8 +92,6 @@
 					"developers/signing-transactions/signing-programmatically"
 				]
 			},
-			"developers/esdt-tokens",
-			"developers/staking-smart-contract",
 			{
 				"type":"subcategory",
 				"label":"Developer reference",
@@ -99,6 +100,8 @@
 					"developers/developer-reference/elrond-serialization-format"
 				]
 			},
+			"developers/esdt-tokens",
+			"developers/nft-tokens",
 			"developers/setup-local-testnet",
 			"developers/setup-local-testnet-advanced",
 			"developers/creating-wallets"
