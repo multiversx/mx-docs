@@ -112,7 +112,7 @@ IssuanceTransaction {
     Value: 50000000000000000 # (0.05 EGLD)
     GasLimit: 60000000
     Data: "issue" +
-          "@416c696365546f6b656e73" +  // "AliceTokens"
+          "@416c696365546f6b656e73" +  // "AliceTokens" hex encoded
           "@414c43" +                  // "ALC" hex encoded
           "@f3d7b4c0" +                // 4091000000 hex encoded
           "@06"                        // 6 hex encoded  
