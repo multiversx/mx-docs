@@ -102,8 +102,9 @@ This is only relevant when performing operations via manual transactions over ES
 
 ### **Issuance examples**
 
-For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6. The issuance transaction would be:
+For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6.
 
+As stated above, if the user wants 4091 tokens with 6 decimals, then the initial supply has to be $4091 * 10^6$ tokens so a total of `4091000000`. 
 ```
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
@@ -111,13 +112,14 @@ IssuanceTransaction {
     Value: 50000000000000000 # (0.05 EGLD)
     GasLimit: 60000000
     Data: "issue" +
-          "@416c696365546f6b656e73" +
-          "@414c43" +
-          "@0ffb" +
-          "@06"
+          "@416c696365546f6b656e73" +  // "AliceTokens" hex encoded
+          "@414c43" +                  // "ALC" hex encoded
+          "@f3d7b4c0" +                // 4091000000 hex encoded
+          "@06"                        // 6 hex encoded  
 }
 ```
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
  In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
