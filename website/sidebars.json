@@ -69,6 +69,7 @@
 			"validators/delegation-manager",
 			"validators/rating",
 			"validators/redundancy",
+			"validators/import-db",
 			"validators/node-cli",
 			"validators/useful-links",
 			"validators/faq"
