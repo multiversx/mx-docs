@@ -3,8 +3,18 @@ id: import-db
 title: Import DB
 ---
 
+# Introduction
 The node is able to reprocess a previously produced database by providing the database and starting 
-the node with several flags explained in the section below. <br>
+the node with the import-db related flags explained in the section below. <br>
+Possible use cases for the import-db process:
+- index in ElasticSearch (or something similar) all the data from genesis to present time;
+- validate the blockchain state;
+- make sure there aren't backwards compatibility issues with a new software version;
+- check the blockchain state at a specified time (this includes additional code changes, but for example if you are 
+  interested in the result of an API endpoint at the block 255255, you could use import db and force the node to stop 
+  at the block corresponding to that date).
+  
+# How to start the process
 Let's suppose we have the following data structure:
 ```
   ~/elrond-go/cmd/node
@@ -16,7 +26,25 @@ genesis and never switched the shards). This database will be placed in a direct
 we will place it near the node's binary, yielding a data structure as follows:
 
 ```
-  ~/elrond-go/cmd/node/import-db/db/1/Epoch_0/....
+.
+├── config
+│    ├── api.toml
+│    ├── config.toml
+│    ...
+├── import-db
+│    └── db
+│        └── 1
+│            ├── Epoch_0
+│            │     └── Shard_1
+│            │         ├── BlockHeaders
+│            │         │   ...
+│            │         ├── BootstrapData
+│            │         │   ...
+│            │         ...
+│            └── Static
+│                  └── Shard_1
+│                      ...
+├── node
 ```
 
 It is very important that the directory called `db` is a subdirectory (in our case of the `import-db`).
@@ -34,6 +62,11 @@ Next, the node can be started by using:
  cd ~/elrond-go/cmd/node
  ./node -use-log-view -log-level *:INFO -import-db ./import-db 
 ```
+
+:::note
+Please note that the `-import-db` flag specifies the path to the directory containing the source db directory. The value provided in the example above assumes that the import db directory is called `import-db` and is located near the `node` executable file.
+:::
+
 
 The node will start the reprocessing of the provided database. It will end with a message like:
 ```
