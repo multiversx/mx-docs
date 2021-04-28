@@ -185,6 +185,14 @@ export default function CustomFooter() {
             >
               Maiar
             </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://maiar.exchange/"
+              className="dropdown-item"
+            >
+              Maiar Exchange
+            </a>
           </nav>
         </div>
       </div>
