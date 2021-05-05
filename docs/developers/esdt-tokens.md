@@ -3,10 +3,6 @@ id: esdt-tokens
 title: ESDT tokens
 ---
 
-:::important
-ESDTs aren't enabled yet on Elrond Mainnet. See testnet or devnet
-:::
-
 ## **Introduction**
 Custom tokens at native speed and scalability, without ERC20
 

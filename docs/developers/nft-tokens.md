@@ -3,10 +3,6 @@ id: nft-tokens
 title: NFT tokens
 ---
 
-:::important
-NFTs aren't enabled yet on Elrond Mainnet. See testnet or devnet
-:::
-
 ## **Introduction**
 
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
