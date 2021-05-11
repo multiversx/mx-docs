@@ -4,6 +4,8 @@ title: ESDT tokens
 ---
 
 ## **Introduction**
+**ESDT** stands for *Elrond Standard Digital Token*.
+
 Custom tokens at native speed and scalability, without ERC20
 
 The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native eGLD token itself.**

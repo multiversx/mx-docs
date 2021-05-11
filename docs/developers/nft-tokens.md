@@ -276,6 +276,44 @@ StopNFTCreationTransaction {
 }
 ```
 
+### **Add quantity (SFT only)**
+
+A user that has the `ESDTRoleNFTAddQuantity` role set for a given Semi Fungible Token, can increase its quantity. This function will not work for NFTs, because in that case the quantity cannot be higher than 1.
+
+```
+AddQuantityTransaction {
+    Sender: <address of an address that has ESDTRoleNFTAddQuantity role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 10000000
+    Data: "ESDTNFTAddQuantity" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <quantity to add in hexadecimal encoding>
+}
+```
+
+If successful, the balance of the address for the given SFT will be increased with the number specified in the argument.
+
+### **Burn quantity**
+
+A user that has the `ESDTRoleNFTBurn` role set for a given Semi Fungible Token, can burn some (or all) of the quantity.
+
+```
+BurnQuantityTransaction {
+    Sender: <address of an address that has ESDTRoleNFTBurn role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 10000000
+    Data: "ESDTNFTBurn" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <quantity to burn in hexadecimal encoding>
+}
+```
+
+If successful, the quantity from the argument will be decreased from the balance of the address for that given token.
+
 ### **Freezing and Unfreezing a single NFT**
 
 The manager of an ESDT token may freeze the NFT held by a specific Account. As a consequence, no NFT can be transferred to or from the frozen Account. Freezing and unfreezing a single NFT of an Account are operations designed to help token managers to comply with regulations. The transaction that freezes a single NFT of an Account has the form:
