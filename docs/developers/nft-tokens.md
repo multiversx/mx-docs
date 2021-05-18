@@ -541,6 +541,67 @@ https://api.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<crea
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
+### <span class="badge badge-primary">GET</span> **Get NFTs/SFTs registered by an address**
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+Returns the identifiers of the tokens that have been registered by the provided address. 
+
+```
+https://api.elrond.com/address/<bech32Address>/registered-nfts
+```
+
+| Param           | Required                                  | Type     | Description                           |
+| -------------   | ----------------------------------------- | -------- | ------------------------------------- |
+| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
+
+<!--Response-->
+
+```json
+{
+  "data": {
+    "tokens": [
+      "ABC-36tg72"
+    ]
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-primary">GET</span> **Get tokens where an address has a given role**
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+Returns the identifiers of the tokens where the given address has the given role.
+
+```
+https://api.elrond.com/address/<bech32Address>/esdts-with-role/<role>
+```
+
+| Param           | Required                                  | Type     | Description                           |
+| -------------   | ----------------------------------------- | -------- | ------------------------------------- |
+| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
+| role            | <span class="text-danger">REQUIRED</span> | `string` | The role to query for.                |
+
+The role can be one of the roles specified in the documentation (for example: ESDTRoleNFTCreate)
+
+<!--Response-->
+
+```json
+{
+  "data": {
+    "tokens": [
+      "ABC-36tg72"
+    ]
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 ### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
 
 One can use [get all esdt tokens for an address endpoint](/developers/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
