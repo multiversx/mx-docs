@@ -545,7 +545,7 @@ https://api.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<crea
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
-Returns the identifiers of the tokens that have been registered bt the provided address. 
+Returns the identifiers of the tokens that have been registered by the provided address. 
 
 ```
 https://api.elrond.com/address/<bech32Address>/registered-nfts
