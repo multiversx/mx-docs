@@ -21,17 +21,23 @@ The Observing Squad can be installed on multiple machines or on a single, but mo
 
 In case of a single machine, our recommendation is as follows:
 
-- 8 x CPU
+- 16 x CPU
 - 32 GB RAM
 - HDD that can grow up to 5TB
 - 100 Mbit/s always-on Internet connection
-- Linux OS (Ubuntu 18.04 recommended)
+- Linux OS (Ubuntu 20.04 recommended)
+
+The recommended number of CPUs has been updated from `8` to `16` in April 2021, considering the increasing load over the network.
+
+:::tip
+These specs are only a recommendation. Depending on the load over the API or the observers, one should upgrade the machine as to keep the squad synced and with good performance.
+:::
 
 # **Setup via the Mainnet scripts**
 
 ## **Installation and Configuration**
 
-The Observing Squad can be setup using the [installation scripts](/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
+The Observing Squad can be set up using the [installation scripts](/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
 
 Clone the installer repository:
 
@@ -42,7 +48,7 @@ git clone https://github.com/ElrondNetwork/elrond-go-scripts-mainnet.git
 Edit `config/variables.cfg` accordingly. For example:
 
 ```
-CUSTOM_HOME="/home/ubuntu/ObservingSquad"
+CUSTOM_HOME="/home/ubuntu"
 CUSTOM_USER="ubuntu"
 ```
 
@@ -52,10 +58,10 @@ Additionally, you might want to set the following option, so that the logs are s
 NODE_EXTRA_FLAGS="-log-save"
 ```
 
-Run the installation script as follows:
+Please check that the `CUSTOM_HOME` directory exists. Run the installation script as follows:
 
 ```
-./script.sh observing-squad
+./script.sh observing_squad
 ```
 
 After installation, 5 new `systemd` units will be available (and enabled).
@@ -71,6 +77,45 @@ In order to check the status of the Observing Squad, please see the section **Mo
 ## **Upgrading the Observing Squad**
 
 The Observing Squad can be updated using the Mainnet installation scripts.
+
+### **April 2021 upgrade**
+
+In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
+
+```
+$ cd ~/elrond-go-scripts-mainnet
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
+
+### **March 2021 upgrade**
+
+In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
+
+```
+$ cd ~/elrond-go-scripts-mainnet
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
+
+### **January 2021 upgrade**
+
+In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
+
+```
+$ cd ~/elrond-go-scripts-mainnet
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
 
 ### **Prerequisites for the November 2020 upgrade**
 
@@ -109,7 +154,8 @@ After running the commands above, the upgraded Observing Squad will start again.
 
 ## **Monitoring and trivial checks**
 
-One can monitor the running Observers using the **termui** utility (installed during the setup process itself), as follows:
+One can monitor the running Observers using the **termui** utility (installed during the setup process itself in the `CUSTOM_HOME="/home/ubuntu"
+` folder), as follows:
 
 ```
 ~/elrond-utils/termui --address localhost:8080    # Shard 0
@@ -143,4 +189,36 @@ curl http://localhost:8079/hyperblock/by-nonce/$NONCE | jq
 
 # **Setup via Docker**
 
-One can set up an Observing Squad using Docker, as described [here](https://github.com/ElrondNetwork/observing-squad). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).
+The Observing Squad can be also set up using Docker.
+
+Clone the Observing Squad repository:
+
+```
+git clone https://github.com/ElrondNetwork/observing-squad.git
+```
+
+Install docker-compose if not already installed:
+
+```
+apt install docker-compose
+```
+
+Install and run the whole Observing Squad using the `./start_stack.sh` script from the mainnet folder:
+
+```
+cd mainnet
+./start_stack.sh
+```
+
+In order to check if the Observing Squad is running, you can list the running containers:
+```
+docker ps
+```
+
+In order to check the status inside a container, you can check the logs on the machine for the last synchronized block nonce:
+```
+docker exec -it 'CONTAINER ID' /bin/bash
+cat logs/elrond-go-.......log
+```
+
+More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/ElrondNetwork/observing-squad). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).

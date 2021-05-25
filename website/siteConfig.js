@@ -142,6 +142,9 @@ const siteConfig = {
       icon: "🔬",
     },
   ],
+  slugPreprocessor: (slugBase) => {
+    return slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, "");
+  },
 };
 
 module.exports = siteConfig;

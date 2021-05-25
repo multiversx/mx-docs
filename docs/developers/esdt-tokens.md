@@ -4,6 +4,8 @@ title: ESDT tokens
 ---
 
 ## **Introduction**
+**ESDT** stands for *Elrond Standard Digital Token*.
+
 Custom tokens at native speed and scalability, without ERC20
 
 The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native eGLD token itself.**
@@ -14,7 +16,7 @@ Technically, the balances of ESDT tokens held by an Account are stored directly 
 
 ESDT tokens can be issued, owned and held by any Account on the Elrond network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
-## **Issuance of ESDT tokens**
+## **Issuance of fungible ESDT tokens**
 
 ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker, the initial supply, the number of decimals for display purpose and optionally additional properties. This transaction has the form:
 
@@ -22,8 +24,8 @@ ESDT tokens are issued via a request to the Metachain, which is a transaction su
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
-    GasLimit: 50000000
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
@@ -32,13 +34,15 @@ IssuanceTransaction {
 }
 ```
 
-Optionally, the properties can be set when issuing a contract. Example:
+Our initial proposal is the issuance cost to be 0.05 EGLD. Feedback and suggestions from the community is more than welcome.
+
+Optionally, the properties can be set when issuing a token. Example:
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000 (5 eGLD)
-    GasLimit: 50000000
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
     Data: "issue" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
@@ -51,6 +55,7 @@ IssuanceTransaction {
           "@" + <"canBurn" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
 }
 ```
 
@@ -79,24 +84,40 @@ Numerical values, such as initial supply or number of decimals, should be the he
 - **48** _decimal_      => **30** _hex encoded_
 - **1000000** _decimal_ => **f4240** _hex encoded_
 
+### **Number of decimals usage**
+Front-end applications will use the number of decimals in order to display balances. 
+Therefore, you must adapt the supply according to the number of decimals parameter. 
+
+For example, if you would like to create a token `ALC` with a total supply of 100 and number of decimals = 2, then you should set
+the initial supply to `10000` ($100 * 10^2$). 
+Also, when transferring/burning/minting tokens, you should keep in mind there is also the denomination involved. 
+
+Therefore, if you own some above-mentioned ALC tokens and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
+
+:::tip
+This is only relevant when performing operations via manual transactions over ESDT tokens. The Web Wallet for example already has this feature in place, so you don't have to take care of the number of decimals.
+:::
+
 ### **Issuance examples**
 
-For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6. The issuance transaction would be:
+For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6.
 
+As stated above, if the user wants 4091 tokens with 6 decimals, then the initial supply has to be $4091 * 10^6$ tokens so a total of `4091000000`. 
 ```
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000
-    GasLimit: 50000000
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
     Data: "issue" +
-          "@416c696365546f6b656e73" +
-          "@414c43" +
-          "@0ffb" +
-          "@06"
+          "@416c696365546f6b656e73" +  // "AliceTokens" hex encoded
+          "@414c43" +                  // "ALC" hex encoded
+          "@f3d7b4c0" +                // 4091000000 hex encoded
+          "@06"                        // 6 hex encoded  
 }
 ```
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of 4091 AliceTokens, to do with them as she pleases. She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
  In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
@@ -111,7 +132,7 @@ TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <account address of the receiver>
     Value: 0
-    GasLimit: 250000
+    GasLimit: 500000
     Data: "ESDTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <value to transfer in hexadecimal encoding>
@@ -131,7 +152,7 @@ TransferTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
     Value: 0
-    GasLimit: 250000
+    GasLimit: 500000
     Data: "ESDTTransfer" +
           "@414c432d363235386432" +
           "@0c"
@@ -153,7 +174,7 @@ TransferWithCallTransaction {
     Sender: <account address of the sender>
     Receiver: <account address of the smart contract>
     Value: 0
-    GasLimit: 250000 + <an appropriate amount for the method call>
+    GasLimit: 500000 + <an appropriate amount for the method call>
     Data: "ESDTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <value to transfer in hexadecimal encoding> +
@@ -181,6 +202,7 @@ Every ESDT token has a set of properties which control what operations are possi
 - `canWipe` - the token manager may wipe out the tokens held by a frozen account, reducing the supply
 - `canChangeOwner` - token management can be transferred to a different account
 - `canUpgrade` - the token manager may change these properties
+- `canAddSpecialRoles` - the token manager can assign a specific role(s)
 
 ## **Management operations**
 
@@ -195,7 +217,7 @@ MintTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "mint" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <new supply in hexadecimal encoding>
@@ -215,7 +237,7 @@ BurnTransaction {
     Sender: <account address of a token holder>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "ESDTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <supply to burn in hexadecimal encoding>
@@ -235,7 +257,7 @@ PauseTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "pause" +
           "@" + <token identifier in hexadecimal encoding>
 }
@@ -248,7 +270,7 @@ UnpauseTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "unPause" +
           "@" + <token identifier in hexadecimal encoding>
 }
@@ -265,7 +287,7 @@ FreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "freeze" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to freeze in hexadecimal encoding>
@@ -279,7 +301,7 @@ UnfreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "unFreeze" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to unfreeze in hexadecimal encoding>
@@ -297,14 +319,59 @@ WipeTransaction {
     Sender: <account address of the token managers>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "wipe" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
 
-This operation requires that the option `canWipe` is set to `true`.
+### **Setting and unsetting special roles**
+
+The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
+The special roles available for basic ESDT tokens are:
+
+- **ESDTRoleLocalBurn** # an address with this role can burn tokens
+  
+- **ESDTRoleLocalMint** # an address with this role can mint new tokens
+
+For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
+
+#### **Set special role**
+
+One or more roles for an address can be set by the owner by performing a transaction like:
+```
+RolesAssigningTransaction {
+    Sender: <address of the ESDT manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "setSpecialRole" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <address to assign the role(s) in a hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          ...
+}
+```
+
+#### **Unset special role**
+
+One or more roles for an address can be unset by the owner by performing a transaction like:
+```
+RolesAssigningTransaction {
+    Sender: <address of the ESDT manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "unSetSpecialRole" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <address to unset the role(s) in a hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          "@" + <role in hexadecimal encoding> +
+          ...
+}
+```
 
 ### **Transferring token management rights**
 
@@ -315,7 +382,7 @@ TransferOwnershipTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "transferOwnership" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <account address of the new token manager in hexadecimal encoding>
@@ -335,7 +402,7 @@ UpgradingTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "controlChanges" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <property name in hexadecimal encoding> +
@@ -353,7 +420,7 @@ UpgradingTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
-    GasLimit: 50000000
+    GasLimit: 60000000
     Data: "controlChanges" +
           "@414c432d363235386432" +
           "@63616e57697065" +
@@ -437,7 +504,7 @@ https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> **Get all issued ESDT tokens**
+### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
 
 This involves a `vm query` request to the `ESDT` address.
 For example:
@@ -447,68 +514,23 @@ For example:
 <!--Request-->
 
 ```
-https://api.elrond.com/vm-values/query
-```
-
-```json
-{
-	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-	"funcName": "getAllESDTTokens",
-	"args": []
-}
-
+https://api.elrond.com/network/esdts
 ```
 
 <!--Response-->
 
-```json
+```
 {
   "data": {
-    "data": {
-      "returnData": [
-        "VEdELWE1Y2NlYg=="
-      ],
-      "returnCode": "ok",
-      "returnMessage": "",
-      "gasRemaining": 18446744073659541615,
-      "gasRefund": 0,
-      "outputAccounts": {
-        "000000000000000000010000000000000000000000000000000000000002ffff": {
-          "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-          "nonce": 0,
-          "balance": null,
-          "balanceDelta": 0,
-          "storageUpdates": {},
-          "code": null,
-          "codeMetaData": null,
-          "outputTransfers": [],
-          "callType": 0
-        }
-      },
-      "deletedAccounts": null,
-      "touchedAccounts": null,
-      "logs": []
-    }
-  },
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
   "error": "",
   "code": "successful"
 }
 ```
-
-What is important in this section is the `returnData` member that will contain the bytes of a list of token identifiers, separated by `@`.
-In the example response, `returnData` contains a single element `VEdELWE1Y2NlYg==` which represents the bytes for a single token identifier. In JSON, bytes fields are encoded as base64. `base64decode("VEdELWE1Y2NlYg==") = TGD-a5cceb`.
-
-If multiple tokens exist, the `returnData` will still contain a single element. Example:
-```
-....
- "data": {
-      "returnData": [
-        "VEdELWE1Y2NlYkBBTEMtYjIzNDE1"
-      ],
-      "returnCode": "ok",
-...
-```
-where `VEdELWE1Y2NlYkBBTEMtYjIzNDE1` is translated to `TGD-a5cceb@ALC-b23415` (2 token identifier separated by `@`)
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
@@ -542,6 +564,7 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
     "data": {
       "returnData": [
         "QWxpY2VUb2tlbnM=",
+        "RnVuZ2libGVFU0RU",
         "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=",
         "MTAwMDAwMDAwMDA=",
         "MA==",
@@ -553,7 +576,11 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
         "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",
         "Q2FuUGF1c2UtdHJ1ZQ==",
         "Q2FuRnJlZXplLXRydWU=",
-        "Q2FuV2lwZS10cnVl"
+        "Q2FuV2lwZS10cnVl",
+        "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",
+        "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",
+        "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",
+        "TnVtV2lwZWQtMA=="
       ],
       "returnCode": "ok",
       "returnMessage": "",
@@ -585,21 +612,69 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
 The `returnData` member will contain an array of the properties in a fixed order (base64 encoded). For the example response, the meaning is:
 ```
 "returnData": [
-  "QWxpY2VUb2tlbnM=",                             | token name                | AliceTokens
-  "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=", | bytes of a bech32 addres  | erd1mq6gn3yngzdgh0zdfa07zepga6a8yf7dkeue24zp3snknvjvucvs37hmrq after decoding
-  "MTAwMDAwMDAwMDA=",                             | total supply              | 10000000000
-  "MA==",                                         | burnt value               | 0
-  "TnVtRGVjaW1hbHMtNg==",                         | number of decimals        | NumDecimals-6
-  "SXNQYXVzZWQtZmFsc2U=",                         | is paused                 | IsPaused-false
-  "Q2FuVXBncmFkZS10cnVl",                         | can upgrade               | CanUpgrade-true
-  "Q2FuTWludC10cnVl",                             | can mint                  | CanMint-true
-  "Q2FuQnVybi10cnVl",                             | can burn                  | CanBurn-true
+  "QWxpY2VUb2tlbnM=",                             | token name                   | AliceTokens
+  "RnVuZ2libGVFU0RU",                             | token type                   | FungibleESDT
+  "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=", | bytes of a bech32 addres     | erd1mq6gn3yngzdgh0zdfa07zepga6a8yf7dkeue24zp3snknvjvucvs37hmrq after decoding
+  "MTAwMDAwMDAwMDA=",                             | total supply                 | 10000000000
+  "MA==",                                         | burnt value                  | 0
+  "TnVtRGVjaW1hbHMtNg==",                         | number of decimals           | NumDecimals-6
+  "SXNQYXVzZWQtZmFsc2U=",                         | is paused                    | IsPaused-false
+  "Q2FuVXBncmFkZS10cnVl",                         | can upgrade                  | CanUpgrade-true
+  "Q2FuTWludC10cnVl",                             | can mint                     | CanMint-true
+  "Q2FuQnVybi10cnVl",                             | can burn                     | CanBurn-true
   "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",                 | can change token management address  | CanChangeOwner-true
-  "Q2FuUGF1c2UtdHJ1ZQ==",                         | can pause                 | CanPause-true
-  "Q2FuRnJlZXplLXRydWU=",                         | can freeze                | CanFreeze-true
-  "Q2FuV2lwZS10cnVl"                              | can wipe                  | CanWipe-true
+  "Q2FuUGF1c2UtdHJ1ZQ==",                         | can pause                    | CanPause-true
+  "Q2FuRnJlZXplLXRydWU=",                         | can freeze                   | CanFreeze-true
+  "Q2FuV2lwZS10cnVl",                             | can wipe                     | CanWipe-true
+  "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",             | can add special roles        | CanAddSpecialRoles-true 
+  "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",     | can transfer nft create role | CanTransferNFTCreateRole-false 
+  "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",             | nft creation stopped         | NFTCreateStopped-false  
+  "TnVtV2lwZWQtMA=="                              | number of wiped quantity     | NumWiped-0                              
 ],
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
+### <span class="badge badge-success">POST</span> **Get special roles for a token**
+
+This involves a `vm query` request to the `ESDT` address. It will return all addresses that have roles assigned for the token
+with the provided identifier.
+For example:
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+```
+https://api.elrond.com/vm-values/query
+```
+
+```json
+{
+	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+	"funcName": "getSpecialRoles",
+	"args": ["474c442d306430303630"]
+}
+```
+
+The argument must be the token identifier, hexadecimal encoded. In the example, `474c442d306430303630` = `GLD-0d0060`.
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "data": {
+      "returnData": [
+        "ZXJkMTM2cmw4NzhqMDltZXYyNGd6cHk3MGsyd2ZtM3htdmo1dWN3eGZmczl2NXQ1c2sza3NodHN6ejI1ejk6RVNEVFJvbGVMb2NhbEJ1cm4=",
+        "ZXJkMWt6enYydXc5N3E1azltdDQ1OHFrM3E5dTNjd2h3cXlrdnlrNTk4cTJmNnd3eDdndnJkOXM4a3N6eGs6RVNEVFJvbGVORlRBZGRRdWFudGl0eSxFU0RUUm9sZU5GVEJ1cm4=" 
+      ],
+      "returnCode": "ok",
+      ........
+}
+```
+
+In this example, converting the 2 messages from base64 to string would result in:
+* `erd136rl878j09mev24gzpy70k2wfm3xmvj5ucwxffs9v5t5sk3kshtszz25z9:ESDTRoleLocalBurn`
+* `erd1kzzv2uw97q5k9mt458qk3q9u3cwhwqykvyk598q2f6wwx7gvrd9s8kszxk:ESDTRoleNFTAddQuantity,ESDTRoleNFTBurn`
+
+<!--END_DOCUSAURUS_CODE_TABS-->
