@@ -319,7 +319,7 @@ These two operations require that the option `canFreeze` is set to `true`.
 
 ### **Wiping**
 
-The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations.Such a transaction has the form:
+The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
 
 ```
 WipeTransaction {
@@ -338,9 +338,9 @@ WipeTransaction {
 The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
 The special roles available for basic ESDT tokens are:
 
-- **ESDTRoleLocalBurn** # an address with this role can burn tokens
+- **ESDTRoleLocalBurn**: an address with this role can burn tokens
   
-- **ESDTRoleLocalMint** # an address with this role can mint new tokens
+- **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
 For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
 
@@ -429,21 +429,13 @@ UpgradingTransaction {
     Value: 0
     GasLimit: 60000000
     Data: "controlChanges" +
-          "@414c432d363235386432" +
-          "@63616e57697065" +
-          "@66616c7365" +
-          "@63616e4275726e" +
-          "@74727565"
+          "@414c432d363235386432" + # ALC-6258d2
+          "@63616e57697065" +       # canWipe
+          "@66616c7365" +           # false
+          "@63616e4275726e" +       # canBurn
+          "@74727565"               # true
 }
 ```
-
-In the example above, the encodings mean the following (decoded to ASCII):
-
-- `414c432d363235386432` = `ALC-6258d2`
-- `63616e57697065` = `canWipe`
-- `66616c7365` = `false`
-- `63616e4275726e` = `canBurn`
-- `74727565` = `true`
 
 ## **Rest API**
 
