@@ -422,21 +422,13 @@ UpgradingTransaction {
     Value: 0
     GasLimit: 60000000
     Data: "controlChanges" +
-          "@414c432d363235386432" +
-          "@63616e57697065" +
-          "@66616c7365" +
-          "@63616e4275726e" +
-          "@74727565"
+          "@414c432d363235386432" + # ALC-6258d2
+          "@63616e57697065" +       # canWipe
+          "@66616c7365" +           # false
+          "@63616e4275726e" +       # canBurn
+          "@74727565"               # true
 }
 ```
-
-In the example above, the encodings mean the following (decoded to ASCII):
-
-- `414c432d363235386432` = `ALC-6258d2`
-- `63616e57697065` = `canWipe`
-- `66616c7365` = `false`
-- `63616e4275726e` = `canBurn`
-- `74727565` = `true`
 
 ## **Rest API**
 
