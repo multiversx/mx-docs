@@ -331,9 +331,9 @@ WipeTransaction {
 The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
 The special roles available for basic ESDT tokens are:
 
-- **ESDTRoleLocalBurn** # an address with this role can burn tokens
+- **ESDTRoleLocalBurn**: an address with this role can burn tokens
   
-- **ESDTRoleLocalMint** # an address with this role can mint new tokens
+- **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
 For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
 
