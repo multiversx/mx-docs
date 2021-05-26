@@ -39,7 +39,7 @@ Adaptive State Sharding workflow
 
 ## Node shuffling
 
-To prevent collusion, the configuration of each shard needs to change regularily. The Elrond network does this by shuffling nodes between shards at the end of each epoch. While reshuffling all of the nodes in every epoch would provide the highest security level, it would have a non-neglijible impact on the liveness of the system, due to additional latencies that appear when nodes are resynchronizing with their new shards. To avoid these latencies, a carefully controlled proportion of eligible validators belonging to a shard will be redistributed non-deterministically and uniformly to the other shards at the end of each epoch.
+To prevent collusion, the configuration of each shard needs to change regularily. The Elrond network does this by shuffling nodes between shards at the end of each epoch. While reshuffling all of the nodes in every epoch would provide the highest security level, it would have a non-negligible impact on the liveness of the system, due to additional latencies that appear when nodes are resynchronizing with their new shards. To avoid these latencies, a carefully controlled proportion of eligible validators belonging to a shard will be redistributed non-deterministically and uniformly to the other shards at the end of each epoch.
 
 Shuffled nodes will be placed in the new shards in a _waiting list_, meaning that they must spend this epoch performing resynchronization with the new shard. Only after spending an entire epoch in the waiting list of the new shard is the node allowed to become an _eligible validator_ and join the shard in full.
 

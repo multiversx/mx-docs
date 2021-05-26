@@ -187,6 +187,13 @@ TransferWithCallTransaction {
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were eGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
+## **Transfers done programatically**
+The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
+
+```
+self.send().direct_esdt_via_transf_exec(&address, &esdt_token_name, &amount, &[]);
+```
+
 ## **Token management**
 
 The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
@@ -312,7 +319,7 @@ These two operations require that the option `canFreeze` is set to `true`.
 
 ### **Wiping**
 
-The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations.Such a transaction has the form:
+The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
 
 ```
 WipeTransaction {
@@ -331,9 +338,9 @@ WipeTransaction {
 The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
 The special roles available for basic ESDT tokens are:
 
-- **ESDTRoleLocalBurn** # an address with this role can burn tokens
+- **ESDTRoleLocalBurn**: an address with this role can burn tokens
   
-- **ESDTRoleLocalMint** # an address with this role can mint new tokens
+- **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
 For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
 
@@ -422,21 +429,13 @@ UpgradingTransaction {
     Value: 0
     GasLimit: 60000000
     Data: "controlChanges" +
-          "@414c432d363235386432" +
-          "@63616e57697065" +
-          "@66616c7365" +
-          "@63616e4275726e" +
-          "@74727565"
+          "@414c432d363235386432" + # ALC-6258d2
+          "@63616e57697065" +       # canWipe
+          "@66616c7365" +           # false
+          "@63616e4275726e" +       # canBurn
+          "@74727565"               # true
 }
 ```
-
-In the example above, the encodings mean the following (decoded to ASCII):
-
-- `414c432d363235386432` = `ALC-6258d2`
-- `63616e57697065` = `canWipe`
-- `66616c7365` = `false`
-- `63616e4275726e` = `canBurn`
-- `74727565` = `true`
 
 ## **Rest API**
 
