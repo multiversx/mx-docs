@@ -12,3 +12,6 @@ You can create a new Wallet Key at [https://wallet.elrond.com](https://wallet.el
 `erd13kgks9km5ky8vj2dfty79v769ej433k5xmyhzunk7fv4pndh7z2s8depqq.json`
 
 You can rename the file to something easy to remember. You can retrieve the address from the file by editing it with a text editor. Open it and look for the `bech32` address, which always starts with `erd1...`
+
+The wallets use the bip44 standard with the mention that because Elrond uses Ed25519 only hardened paths are used. Our coin_type is 508, making the path for the first address:m/44'/508'/0'/0'/0’
+
