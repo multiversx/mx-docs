@@ -19,16 +19,17 @@ the network by participating in the consensus mechanism, while earning rewards f
 **Validate**: the act of running a validator node and contributing to the network by relaying and
 validating information.
 
-**Stake**: locking funds in a staking pool in order to secure the network and receive rewards.
-
-**Delegate**: contribute to the network security by delegating 1 EGLD or more towards a staking provider that operates 
+**Stake**: contribute to the network security by delegating 1 EGLD or more towards a staking provider that operates
 validator nodes.
+
+**Delegate**: contribute to the network security by delegating 10 EGLD or more towards the Elrond Community Delegation 
+contract.
 
 **Stake rewards**: locked funds for running validator nodes to secure the network and generate income in form of rewards. 
 Rewards can be claimed or restaked.
 
-**Delegate rewards**: locked funds from delegation contracts also generate income in form of
-rewards. These rewards can be claimed or redelegated
+**Delegate rewards**: locked funds from delegation contracts also generate income in form of rewards. 
+These rewards can be claimed or redelegated
 
 **Unstake**: the intention to unlock staked/delegated funds, that will become available after the 10 epoch unbonding period.
 
