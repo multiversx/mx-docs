@@ -20,7 +20,7 @@ SaveKeyValueTransaction {
     Sender: <account address of the wallet owner>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 250000 + additional gas limit*
+    GasLimit: 300000 + additional gas limit*
     Data: "SaveKeyValue" +
           "@" + <key in hexadecimal encoding> +
           "@" + <value in hexadecimal encoding> +
@@ -30,7 +30,32 @@ SaveKeyValueTransaction {
 }
 ```
 
-*The gas used for saving a pair is 250,000. However, this will be higher because of the length of the data field or the storage saving. 
+*The gas used is computed as following:
+```
+required_gas =  save_key_value_cost +
+                move_balance_cost + 
+                cost_per_byte * length(txData) + 
+                persist_per_byte * length(key) +   // repeated if multiple pairs
+                persist_per_byte * length(value) + // repetead if multiple pairs
+                store_per_byte * length(value) +   // repeated if multiple pairs
+```
+
+For a real case example, the cost would be:
+
+`SaveKeyValue@6b657930@76616c756530` would cost `751000` gas units.
+
+If we break down the gas usage operations, using the costs in the moment of writing, we would get:
+
+```
+required_gas =  250000    + // save key value function cost
+                50000     + // move balance cost
+                1500 * 34 + // cost_per_byte * length(txData)
+                10000 * 4 + // persist_per_byte * length(key)
+                10000 * 6 + // persist_per_byte * length(value)
+                50000 * 6 + // store_per_byte * length(value)
+                
+             =  751000
+```
 
 ## Example 
 
