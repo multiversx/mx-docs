@@ -15,7 +15,7 @@ The Observer Nodes of the Proxy thus act as a **default dedicated entry point in
 
 It is worth repeating here, though, that submitting a Transaction through the Proxy is completely optional - any Node of the Network will accept Transactions to propagate, given it has not disabled its REST API.
 
-![img](<https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M93nKd9VLSYHsguW1PH%2F-M93o5wmBtDFoPSwcwmw%2FElrond%20Proxy%20-%20Purpose%20(overview).png?alt=media&token=55699234-8846-407d-aa16-a0646f6c3748>)
+![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M93nKd9VLSYHsguW1PH%2F-M93o5wmBtDFoPSwcwmw%2FElrond%20Proxy%20-%20Purpose%20(overview).png?alt=media&token=55699234-8846-407d-aa16-a0646f6c3748)
 
 Overview of the Elrond Proxy
 
@@ -27,7 +27,7 @@ In the figure above:
 
 ## **Official Elrond Proxy**
 
-The official instance of the Elrond Proxy is located at [https://api.elrond.com](https://api.elrond.com/).
+The official instance of the Elrond Proxy is located at [https://gateway.elrond.com](https://gateway.elrond.com/).
 
 ## **Setup a Proxy Instance**
 

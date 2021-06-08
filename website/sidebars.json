@@ -126,6 +126,7 @@
 				]
 			},
 			"sdk-and-tools/proxy",
+			"sdk-and-tools/elastic-search",
 			{
 				"type":"subcategory",
 				"label":"erdpy",
