@@ -12,7 +12,7 @@ Staking pools bridge the gap between node operators, who need funds to stake for
 Node operators can set up a staking pool to manage one or more validator nodes. For this purpose, they may use the **delegation manager** built into the Elrond Protocol to create their own **delegation contract**. A delegation contract automates certain tasks required for the management of a staking pool, such as keeping track of every account that has funded the staking pool, keeping track of the nodes themselves, as well as providing information to the delegators.
 
 :::important
-A staking pool requires 1250 eGLD deposited by the node operator at the moment of its creation. However, 2500 eGLD is required to stake a single validator node and start earning rewards.
+A staking pool requires 1250 EGLD deposited by the node operator at the moment of its creation. However, 2500 EGLD is required to stake a single validator node and start earning rewards.
 :::
 
 This page describes how to request a new delegation contract from the delegation manager and how to use it. It will focus on the delegation _contract_ more than the delegation _manager_, but the two concepts are intimately linked. However, it is important to remember that it is the delegation _contract_ which handles the staking pool and the nodes associated with it.
@@ -31,28 +31,28 @@ The delegation contract for a new staking pool can be created by issuing a reque
 NewDelegationContractTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
-    Value: 1250000000000000000000 (1250 eGLD)
+    Value: 1250000000000000000000 (1250 EGLD)
     GasLimit: 60000000
     Data: "createNewDelegationContract" +
-          "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding> +
+          "@" + <total delegation cap in EGLD, fully denominated, in hexadecimal encoding> +
           "@" + <service fee as hundredths of percents, in hexadecimal encoding>
 }
 ```
 
 The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`, which is the fixed address of the delegation manager, located on the Metachain.
 
-The `Value` is set to 1250 eGLD, which will be automatically added into the funds of the newly created delegation contract, i.e. this is the initial amount of eGLD in the staking pool. This amount of eGLD always belongs to the owner of the delegation contract.
+The `Value` is set to 1250 EGLD, which will be automatically added into the funds of the newly created delegation contract, i.e. this is the initial amount of EGLD in the staking pool. This amount of EGLD always belongs to the owner of the delegation contract.
 
 :::important
-The initial 1250 eGLD count towards the total delegation cap, like all the funds in the staking pool.
+The initial 1250 EGLD count towards the total delegation cap, like all the funds in the staking pool.
 
-The initial amount of 1250 eGLD added to the pool makes the owner the first delegator of the staking pool. This means that the owner is also entitled to a proportion of the rewards, which can be claimed like any other delegator.
+The initial amount of 1250 EGLD added to the pool makes the owner the first delegator of the staking pool. This means that the owner is also entitled to a proportion of the rewards, which can be claimed like any other delegator.
 :::
 
-In the `Data field`, the first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap.
+In the `Data field`, the first argument passed to `createNewDelegationContract` is the total delegation cap (the maximum possible size of the staking pool). It is expressed as a fully denominated amount of EGLD, meaning that it is the number of $10^{-18}$ subdivisions of the EGLD, and not the actual number of EGLD tokens. The fully denominated total delegation cap must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the total delegation cap.
 
 :::tip
-For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in `"01880b57b708cf408000"`.
+For example, to obtain the fully denominated form of 7231.941 EGLD, the amount must be multiplied by $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in `"01880b57b708cf408000"`.
 :::
 
 Setting the total delegation cap to 0 ("00" in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later (see [Delegation cap](/validators/delegation-manager#delegation-cap)).
@@ -78,7 +78,7 @@ NewDelegationContractTransaction {
 }
 ```
 
-The above transaction creates a new delegation contract owned by the sender, with total delegation cap of 7231.941 eGLD and service fee of 37.45% from the rewards. Moreover, the newly created delegation contract will start with a staking pool of 1250 eGLD.
+The above transaction creates a new delegation contract owned by the sender, with total delegation cap of 7231.941 EGLD and service fee of 37.45% from the rewards. Moreover, the newly created delegation contract will start with a staking pool of 1250 EGLD.
 
 
 ## Configuring the delegation contract
@@ -208,7 +208,7 @@ For example, a `Data` field containing `"setAutomaticActivation@74727565"` enabl
 
 ### Delegation cap
 
-The total delegation cap is the maximum possible size amount of eGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
+The total delegation cap is the maximum possible size amount of EGLD which can be held by the delegation contract. After reaching the total delegation cap, the contract will reject any subsequent funds.
 
 The total delegation cap can be modified at any time using a transaction of the form:
 ```
@@ -218,16 +218,16 @@ ModifyTotalDelegationCapTransaction {
     Value: 0
     GasLimit: 2000000
     Data: "modifyTotalDelegationCap" +
-          "@" + <total delegation cap in eGLD, fully denominated, in hexadecimal encoding>
+          "@" + <total delegation cap in EGLD, fully denominated, in hexadecimal encoding>
 }
 ```
 
-In the `Data` field, the only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. Take sure not to encode the ASCII string representing the total delegation cap.
+In the `Data` field, the only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of EGLD, meaning that it is the number of $10^{-18}$ subdivisions of the EGLD, and not the actual number of EGLD tokens. Take sure not to encode the ASCII string representing the total delegation cap.
 
 :::tip
-For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by the denomination factor $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
+For example, to obtain the fully denominated form of 7231.941 EGLD, the amount must be multiplied by the denomination factor $10^{18}$, resulting in 7231941000000000000000. Do not encode the ASCII string `"7231941000000000000000"`, but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
 
-Finally, a `Data` field containing `"modifyTotalDelegationCap@01880b57b708cf408000"` will change the total delegation cap to 7231.941 eGLD.
+Finally, a `Data` field containing `"modifyTotalDelegationCap@01880b57b708cf408000"` will change the total delegation cap to 7231.941 EGLD.
 :::
 
 Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlimited total delegation amount. It can always be modified later.
@@ -268,7 +268,7 @@ As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pa
 
 ### Staking nodes
 
-When the staking pool held by the delegation contract contains a sufficient amount of eGLD, the inactive (non-staked) nodes can be staked (activated). This promotes the nodes to the status of **validator**, which means they participate in consensus and earn rewards.
+When the staking pool held by the delegation contract contains a sufficient amount of EGLD, the inactive (non-staked) nodes can be staked (activated). This promotes the nodes to the status of **validator**, which means they participate in consensus and earn rewards.
 
 This subsection describes the _manual_ staking (activation) of nodes. To automatically stake (activate) nodes when funds become available, [automatic activation](/validators/delegation-manager#automatic-activation) can be enabled.
 
@@ -398,12 +398,12 @@ However, it can happen that rating of a validator might drop under the acceptabl
 A jailed validator does not lose its stake nor its status. It remains active, but it cannot earn rewards while in jail.
 :::
 
-Recovering a validator from jail and restoring it is called **unjailing**, for which a fine of 2.5 eGLD must be paid. Multiple validators can be recovered from jail at the same time by paying 2.5 eGLD for each validator. The format of the unjailing transaction is as follows:
+Recovering a validator from jail and restoring it is called **unjailing**, for which a fine of 2.5 EGLD must be paid. Multiple validators can be recovered from jail at the same time by paying 2.5 EGLD for each validator. The format of the unjailing transaction is as follows:
 ```
 UnjailNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
-    Value: 2.5 eGLD × <number of nodes to be unjailed>
+    Value: 2.5 EGLD × <number of nodes to be unjailed>
     GasLimit: 1000000 + N·6000000
     Data: "unJailNodes" +
           "@" + <public BLS key of the first node in hexadecimal encoding> +
@@ -425,7 +425,7 @@ Accounts that delegate their own funds to the staking pool are called **delegato
 
 ### Delegating funds
 
-Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes. By default, the owner of the delegation contract is the first delegator, having already contributed 1250 eGLD to the staking pool at its creation.
+Accounts become delegators by funding the staking pool, i.e. they delegate their funds. The delegators are rewarded for their contribution with a proportion of the rewards earned by the validator nodes. By default, the owner of the delegation contract is the first delegator, having already contributed 1250 EGLD to the staking pool at its creation.
 
 :::important
 Extra funds received by the delegation contract from delegators will be immediately used to top-up the stake of the existing active validators, consequently increasing their rewards.
@@ -440,7 +440,7 @@ Funds can be delegated by any fund holder by submitting a transaction of the fol
 DelegateTransaction {
     Sender: <account address of funds holder>
     Receiver: <address of the delegation contract>
-    Value: minimum 1 eGLD
+    Value: minimum 1 EGLD
     GasLimit: 12000000
     Data: "delegate"
 }
@@ -483,12 +483,12 @@ RedelegateRewardsTransaction {
 }
 ```
 
-If the transaction is successful, the delegator does not receive any eGLD at the moment, but the rewards they were entitled to will be added to their delegated amount.
+If the transaction is successful, the delegator does not receive any EGLD at the moment, but the rewards they were entitled to will be added to their delegated amount.
 
 
 ### Undelegating funds
 
-Delegators may express the intent to withdraw a specific amount of eGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal, because the funds may already be used to stake for active validators and this means that unstaking of nodes may be necessary.
+Delegators may express the intent to withdraw a specific amount of EGLD from the staking pool. However, this process cannot happen at once and may take a few epochs before the amount is actually available for withdrawal, because the funds may already be used to stake for active validators and this means that unstaking of nodes may be necessary.
 
 :::important
 If the amount to undelegate requested by the delegator will cause the staking pool to drop below the sufficient amount required to keep all the current validators active, some validators will inevitably end up unstaked. The owner of the delegation contract may intervene and add extra funds to prevent such situations.
@@ -515,11 +515,11 @@ UndelegateTransaction {
     Value: 0
     Gas: 12000000
     Data: "unDelegate"
-          "@" + <amount to undelegate in eGLD, minimum 1 EGLD, fully denominated, in hexadecimal encoding>
+          "@" + <amount to undelegate in EGLD, minimum 1 EGLD, fully denominated, in hexadecimal encoding>
 }
 ```
 
-In the `Data` field, the only argument passed to `unDelegate` is the desired amount of eGLD to undelegate and later withdraw. It is expressed as a fully denominated amount of eGLD, meaning that it is the number of $10^{-18}$ subdivisions of the eGLD, and not the actual number of eGLD tokens. The fully denominated amount must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the amount.
+In the `Data` field, the only argument passed to `unDelegate` is the desired amount of EGLD to undelegate and later withdraw. It is expressed as a fully denominated amount of EGLD, meaning that it is the number of $10^{-18}$ subdivisions of the EGLD, and not the actual number of EGLD tokens. The fully denominated amount must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the amount.
 
 
 ### Withdrawing
@@ -544,7 +544,7 @@ WithdrawTransaction {
 }
 ```
 
-If the transaction is successful, the delegator receives all the eGLD they have previously requested to undelegate. The amount is removed from the staking pool.
+If the transaction is successful, the delegator receives all the EGLD they have previously requested to undelegate. The amount is removed from the staking pool.
 
 
 ## Delegation contract view functions
