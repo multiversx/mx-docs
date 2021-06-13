@@ -117,7 +117,7 @@ The following commands assume that the PEM file for your Wallet was saved with t
 The command to submit an unjailing transaction with `erdpy` is this:
 
 ```
-erdpy --verbose validator unjail --pem=walletKey.pem --value="<unjail-value>" --nodes-public-keys="<BLS1>,<BLS2>,...,<BLS99>" --proxy=https://api.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator unjail --pem=walletKey.pem --value="<unjail-value>" --nodes-public-keys="<BLS1>,<BLS2>,...,<BLS99>" --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
 ```
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
@@ -130,7 +130,7 @@ Notice also that there is no calculation for "Gas Limit". If you provide the `--
 Here's an example for an unjailing command for one validator:
 
 ```
-erdpy --verbose validator unjail --pem=walletKey.pem --value="2500000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://api.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator unjail --pem=walletKey.pem --value="2500000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
 ```
 
 :::note important
@@ -140,7 +140,7 @@ You must take **denomination** into account when specifying the `value` paramete
 For two validators, the command becomes this one:
 
 ```
-erdpy --verbose validator unjail --pem=walletKey.pem --value="5000000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27,f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d" --proxy=https://api.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator unjail --pem=walletKey.pem --value="5000000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27,f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d" --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
 ```
 
 Notice that the two BLS public keys are separated by a comma, with no extra space between them.

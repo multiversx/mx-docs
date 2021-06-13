@@ -7,7 +7,7 @@ Query blocks information.
 
 ## <span class="badge badge-primary">GET</span> **Get Hyperblock by Nonce**
 
-`https://api.elrond.com//hyperblock/by-nonce/:nonce`
+`https://gateway.elrond.com//hyperblock/by-nonce/:nonce`
 
 This endpoint allows one to query a Hyperblock by its nonce.
 
@@ -86,7 +86,7 @@ A **hyperblock** is composed using a **metablock** as a starting point - therefo
 
 ## <span class="badge badge-primary">GET</span> **Get Hyperblock by Hash**
 
-`https://api.elrond.com/hyperblock/by-hash/:hash`
+`https://gateway.elrond.com/hyperblock/by-hash/:hash`
 
 This endpoint allows one to query a Hyperblock by its hash.
 

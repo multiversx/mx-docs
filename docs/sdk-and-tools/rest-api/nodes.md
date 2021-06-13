@@ -7,7 +7,7 @@ Query Nodes (Peers) information.
 
 ## <span class="badge badge-primary">GET</span> **Get Heartbeat Status**
 
-`https://api.elrond.com/node/heartbeatstatus`
+`https://gateway.elrond.com/node/heartbeatstatus`
 
 This endpoint allows one to query the status of the Nodes.
 

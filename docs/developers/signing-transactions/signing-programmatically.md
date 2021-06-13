@@ -66,6 +66,6 @@ Above, `payload` can be submitted to Elrond API in order to broadcast the transa
 ```
 from erdpy.proxy import ElrondProxy
 
-proxy = ElrondProxy("http://api.elrond.com")
+proxy = ElrondProxy("http://gateway.elrond.com")
 tx.send(proxy)
 ```

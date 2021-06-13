@@ -441,7 +441,7 @@ There are a number of API endpoints that one can use to interact with ESDT data.
 Returns an array of ESDT Tokens that the specified address has interacted with (issued, sent or received).
 
 ```
-https://api.elrond.com/address/*bech32Address*/esdt
+https://gateway.elrond.com/address/*bech32Address*/esdt
 ```
 
 | Param         | Required                                  | Type     | Description                           |
@@ -471,7 +471,7 @@ https://api.elrond.com/address/*bech32Address*/esdt
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
-https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
+https://gateway.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 
 | Param           | Required                                  | Type     | Description                           |
@@ -506,7 +506,7 @@ For example:
 <!--Request-->
 
 ```
-https://api.elrond.com/network/esdts
+https://gateway.elrond.com/network/esdts
 ```
 
 <!--Response-->
@@ -536,7 +536,7 @@ For example:
 <!--Request-->
 
 ```
-https://api.elrond.com/vm-values/query
+https://gateway.elrond.com/vm-values/query
 ```
 
 ```json
@@ -637,7 +637,7 @@ For example:
 
 <!--Request-->
 ```
-https://api.elrond.com/vm-values/query
+https://gateway.elrond.com/vm-values/query
 ```
 
 ```json

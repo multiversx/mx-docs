@@ -75,7 +75,7 @@ declare -a TRANSACTIONS=(
 
 # DO NOT MODIFY ANYTHING FROM HERE ON
 
-PROXY="https://api.elrond.com"
+PROXY="https://gateway.elrond.com"
 DENOMINATION="000000000000000000"
 
 # We recall the nonce of the wallet

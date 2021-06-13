@@ -9,7 +9,7 @@ In order to view the current configuration, one can issue the command `erdpy con
 
 ```
 {
-    "proxy": "https://api.elrond.com",
+    "proxy": "https://gateway.elrond.com",
     "txVersion": "1",
     "dependencies.llvm.tag": "v...",
     "dependencies.arwentools.tag": "v...",
@@ -22,7 +22,7 @@ One can alter the current configuration using the command `erdpy config set`. Fo
 
 ```
 $ erdpy config set chainID 1...
-$ erdpy config set proxy https://api.elrond.com
+$ erdpy config set proxy https://gateway.elrond.com
 ```
 
 :::tip

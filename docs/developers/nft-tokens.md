@@ -506,7 +506,7 @@ There are a number of API endpoints that one can use to interact with ESDT NFT d
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
-https://api.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
+https://gateway.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 ```
 
 | Param           | Required                                  | Type     | Description                           |
@@ -548,7 +548,7 @@ https://api.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<crea
 Returns the identifiers of the tokens that have been registered by the provided address. 
 
 ```
-https://api.elrond.com/address/<bech32Address>/registered-nfts
+https://gateway.elrond.com/address/<bech32Address>/registered-nfts
 ```
 
 | Param           | Required                                  | Type     | Description                           |
@@ -577,7 +577,7 @@ https://api.elrond.com/address/<bech32Address>/registered-nfts
 Returns the identifiers of the tokens where the given address has the given role.
 
 ```
-https://api.elrond.com/address/<bech32Address>/esdts-with-role/<role>
+https://gateway.elrond.com/address/<bech32Address>/esdts-with-role/<role>
 ```
 
 | Param           | Required                                  | Type     | Description                           |
