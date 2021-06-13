@@ -7,7 +7,7 @@ Query blocks information.
 
 ## <span class="badge badge-primary">GET</span> **Get Hyperblock by Nonce**
 
-`https://gateway.elrond.com//hyperblock/by-nonce/:nonce`
+`https://gateway.elrond.com/hyperblock/by-nonce/:nonce`
 
 This endpoint allows one to query a Hyperblock by its nonce.
 
