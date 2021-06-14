@@ -320,7 +320,7 @@ The fields are:
 
 ## **Step type: `transfer`**
 
-Lesser used step type. Simulates a simple transfer of eGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
+Lesser used step type. Simulates a simple transfer of EGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
 
 ```
 {
