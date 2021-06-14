@@ -271,7 +271,7 @@ This step simulates a transaction to an existing smart contract. Fields:
     - `topics` - these are event arguments, provided by the contract. Off-chain they are indexed, so that users can search by these topics. All topics are currently 32 bytes in length, but this restriction might be lifted in the future.
     - `data` - same as the topics, but this is not indexed, cannot perform searches on data. Can be of any length (or sometimes empty).
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
-  - `refund` - some operations, like freeing up storage actually give ERD back to the caller. To ignore this check, set to `“*”`
+  - `refund` - some operations, like freeing up storage actually gives eGLD back to the caller. To ignore this check, set to `“*”`
   
 ## **Step type: `scQuery`**
 
@@ -319,7 +319,7 @@ This step simulates a query to an existing smart contract. Fields:
   - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 (“user error”).
   - `message` (optional) - in case of error, the contract can also provide an error message. This is where this message can be checked, to make sure that the correct error occurred. It will be empty in case of success.
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
-  - `refund` - some operations, like freeing up storage actually give ERD back to the caller. To ignore this check, set to `“*”`
+  - `refund` - some operations, like freeing up storage actually gives eGLD back to the caller. To ignore this check, set to `“*”`
 
 ## **Step type: `scDeploy`**
 
@@ -451,7 +451,7 @@ The format is as follows
 - Load file, starting with `file:`. This will replace the field with the entire contents of the file, given as relative path with respect to the JSON file we are executing. E.g. `“file:contracts/erc20-c.wasm”`
 - Keccak hash, starting with `keccak256:`. E.g. `“keccak256:1|0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000”` gets interpreted as `“0x648147902a606bf61e05b8b9d828540be393187d2c12a271b45315628f8b05b9”`. Note that the argument can contain concatenation, but this is not a full parser yet, only very primitive syntax trees are possible for now.
 - Addresses, starting with `address:`. This will format a string to a valid address representation. A valid example would be `address:owner`.
-- SmartContract-Addresses, starting with `sc:`. Same as address, but will enforce the SmartContract address formatting.  A valid example would be `sc:smartcontract`.
+- SmartContract-Addresses, starting with `sc:`. Same as address, but will enforce the SmartContract address formatting. A valid example would be `sc:smartcontract`.
 
 # **Embedding in Go**
 
