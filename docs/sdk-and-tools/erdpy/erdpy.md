@@ -5,7 +5,8 @@ title: erdpy
 
 CLI and Python SDK
 
-**erdpy** is part of the [elrond-sdk](https://github.com/ElrondNetwork/elrond-sdk) and consists of Command Line Tools and Python SDK for interacting with the Blockchain (in general) and with Smart Contracts (in particular).
+**erdpy** can be found here: [elrond-sdk-erdpy](https://github.com/ElrondNetwork/elrond-sdk-erdpy).
+It consists of Command Line Tools and Python SDK for interacting with the Blockchain (in general) and with Smart Contracts (in particular).
 
 **erdpy** targets a broad audience of **users** and **developers**, as depicted below:
 

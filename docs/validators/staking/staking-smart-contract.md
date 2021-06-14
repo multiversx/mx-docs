@@ -9,7 +9,7 @@ Nodes are _promoted_ to the role of **validator** when their operator sends a _s
 
 - The number of nodes that the operator is staking for
 - The concatenated list of BLS keys belonging to the individual nodes
-- The stake amount for each individual node, namely the number of nodes × 2 500 EGLD
+- The stake amount for each individual node, namely the number of nodes × 2500 EGLD
 - A gas limit of 6 000 000 gas units × the number of nodes
 - Optionally, a separate address may be specified, to which the rewards should transferred, instead of the address from which the transaction itself originates. The reward address must be first decoded to bytes from the Bech32 representation, then re-encoded to base16 (hexadecimal).
 

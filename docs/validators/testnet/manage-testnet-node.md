@@ -3,11 +3,11 @@ id: manage-testnet-node
 title: Manage your testnet node
 ---
 
-Your node will start as an Observer. In order to make it into a Validator, you will need 2,500 xeGold tokens. An admin in our Telegram community will gladly help - https://t.me/ElrondValidators
+Your node will start as an Observer. In order to make it into a Validator, you will need 2500 xEGLD tokens. An admin in our Telegram community will gladly help - https://t.me/ElrondValidators
 
 First you need to create an Elrond wallet on the testnet at [https://testnet-wallet.elrond.com](https://testnet-wallet.elrond.com/)
 
-After you create the wallet, share its public address (erd1...) with an admin on the Telegram community and you will receive test xeGold.
+After you create the wallet, share its public address (erd1...) with an admin on the Telegram community and you will receive test xEGLD.
 
 Once you have sufficient funds, you can use the wallet to send a stake transaction for your node, in order for it to become a Validator on the public testnet.
 
@@ -20,5 +20,5 @@ You can check the status of your Stake transaction and other information about t
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MKj4PGWn3kQ197_YcJQ%2F-MKjCya_zwNCJWCZ4ryI%2Fimage.png?alt=media&token=7a1a0e1c-dc77-41ef-afcd-296dd23da18b)
 
 :::important
-To distinguish between the mainnet and testnet, we have carefully created different addresses for the testnet tools, which are also presented in a predominantly black theme. Stay safe and know the difference, to avoid mistakes involving your mainnet validators and real eGold tokens.
+To distinguish between the mainnet and testnet, we have carefully created different addresses for the testnet tools, which are also presented in a predominantly black theme. Stay safe and know the difference, to avoid mistakes involving your mainnet validators and real EGLD tokens.
 :::

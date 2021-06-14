@@ -17,7 +17,7 @@ Any user who submits a transaction to the network must pay a fee, in EGLD tokens
 
 Note that not all nodes earn rewards from these fees. Only **validator nodes** qualify, because they are the nodes which are allowed to take part in [consensus](/technology/secure-proof-of-stake), to produce and validate blocks and to earn rewards.
 
-Because of the influence they have in the network, validator nodes are required to have a **stake**, which is a significant amount of EGLD locked as collateral for the good behavior of the validator. Currently, the stake amount is set to 2 500 EGLD. Nodes without a stake are called **observer nodes** - they don't participate in consensus and do not earn rewards, but they support the network in different ways.
+Because of the influence they have in the network, validator nodes are required to have a **stake**, which is a significant amount of EGLD locked as collateral for the good behavior of the validator. Currently, the stake amount is set to 2500 EGLD. Nodes without a stake are called **observer nodes** - they don't participate in consensus and do not earn rewards, but they support the network in different ways.
 
 If the validator consistently misbehaves or performs malicious actions, it will be fined accordingly and lose EGLD, an action known as _stake slashing,_ and by also having its validator status removed. This form of punishment is reserved for serious offences.
 

@@ -5,6 +5,7 @@
 		],
 		"Technology":[
 			"technology/architecture-overview",
+			"technology/glossary",
 			"technology/entities",
 			"technology/chronology",
 			"technology/secure-proof-of-stake",
@@ -101,6 +102,8 @@
 					"developers/developer-reference/elrond-serialization-format"
 				]
 			},
+			"developers/constants",
+			"developers/account-storage",
 			"developers/esdt-tokens",
 			"developers/nft-tokens",
 			"developers/setup-local-testnet",
@@ -139,6 +142,7 @@
 			"sdk-and-tools/erdjs",
 			"sdk-and-tools/erdgo",
 			"sdk-and-tools/erdjava",
+			"sdk-and-tools/erdkotlin",
 			"sdk-and-tools/erdwalletjs-cli"
 		],
 		"Integrators":[
