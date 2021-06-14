@@ -271,7 +271,7 @@ This step simulates a transaction to an existing smart contract. Fields:
     - `topics` - these are event arguments, provided by the contract. Off-chain they are indexed, so that users can search by these topics. All topics are currently 32 bytes in length, but this restriction might be lifted in the future.
     - `data` - same as the topics, but this is not indexed, cannot perform searches on data. Can be of any length (or sometimes empty).
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
-  - `refund` - some operations, like freeing up storage actually gives eGLD back to the caller. To ignore this check, set to `“*”`
+  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `“*”`
   
 ## **Step type: `scQuery`**
 
@@ -319,7 +319,7 @@ This step simulates a query to an existing smart contract. Fields:
   - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 (“user error”).
   - `message` (optional) - in case of error, the contract can also provide an error message. This is where this message can be checked, to make sure that the correct error occurred. It will be empty in case of success.
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
-  - `refund` - some operations, like freeing up storage actually gives eGLD back to the caller. To ignore this check, set to `“*”`
+  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `“*”`
 
 ## **Step type: `scDeploy`**
 
