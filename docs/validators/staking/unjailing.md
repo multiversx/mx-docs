@@ -15,7 +15,7 @@ You'll see some BLS public keys in the examples on this page. Make sure you don'
 
 In order to submit an unjailing transaction, you require the following:
 
-- A wallet with at least 2.5 eGLD (the cost of unjailing a _single validator_). If you want to unjail multiple validators at once, you need to multiply that minimum amount with the number of validators. For example, unjailing 3 validators at once will require 7.5 eGLD. Make sure you have enough in your wallet.
+- A wallet with at least 2.5 EGLD (the cost of unjailing a _single validator_). If you want to unjail multiple validators at once, you need to multiply that minimum amount with the number of validators. For example, unjailing 3 validators at once will require 7.5 EGLD. Make sure you have enough in your wallet.
 - The **BLS public keys** of the validators you want to unjail. You absolutely **do not require the secret key** of the validators. The BLS public keys of the validators are found in the `validatorKey.pem` files. Please read [Validator Keys](/validators/key-management/validator-keys) to find out how to extract the public key only. Remember that the BLS public key consists of exactly 192 hexadecimal characters (that is, `0` to `9` and `a` to `f` only).
 
 # **Unjailing through the Wallet**
@@ -24,7 +24,7 @@ Open your wallet on [https://wallet.elrond.com](https://wallet.elrond.com/) and 
 
 In the "To" field, paste the address of the Staking SmartContract, which also handles unjailing: `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l`
 
-For the "Amount" field, you first need to calculate the amount of eGLD required for unjailing. This is done by multiplying 2.5 eGLD by the _number of nodes_ you want to unjail. For example, if you want to unjail a single node, you need to enter `2.5`. For two nodes, it's `5` and for three nodes it is `7.5`.
+For the "Amount" field, you first need to calculate the amount of EGLD required for unjailing. This is done by multiplying 2.5 EGLD by the _number of nodes_ you want to unjail. For example, if you want to unjail a single node, you need to enter `2.5`. For two nodes, it's `5` and for three nodes it is `7.5`.
 
 Next, expand the "Fee limit" section of the form. You'll see the "Gas limit" field appear. The value that needs to be entered here also depends on the _number of nodes_ you want to unjail. To calculate the "Gas limit" value, mulitply `6000000` (six million gas units) by the number of nodes. For example, if you want to unjail a single node, enter `6000000`. For two nodes, enter `12000000`, for three nodes enter `18000000` and so on. Observe how the "Fee limit" field automatically calculates the cost of this transaction.
 
@@ -122,7 +122,7 @@ erdpy --verbose validator unjail --pem=walletKey.pem --value="<unjail-value>" --
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
 
-- Replace `<unjail-value>` with the amount of eGLD required for unjailing your validators. You need to calculate this value with respect to the number of nodes you are unjailing. See the [beginning of the Unjailing through the Wallet](/validators/staking/unjailing#unjailing-through-the-wallet) section for info on how to do it.
+- Replace `<unjail-value>` with the amount of EGLD required for unjailing your validators. You need to calculate this value with respect to the number of nodes you are unjailing. See the [beginning of the Unjailing through the Wallet](/validators/staking/unjailing#unjailing-through-the-wallet) section for info on how to do it.
 - Replace all the `<BLS…>` with the actual **BLS public keys** of your nodes, which you can find inside their individual `validatorKey.pem` files. Make sure you **do not write the BLS secret keys**! Read the page [Validator Keys](/validators/key-management/validator-keys) to see how to interpret the `validatorKey.pem` files.
 
 Notice also that there is no calculation for "Gas Limit". If you provide the `--estimate-gas` argument to `erdpy`, the gas limit will be estimated automatically.

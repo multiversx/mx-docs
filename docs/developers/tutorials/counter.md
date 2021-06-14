@@ -50,23 +50,24 @@ Note the last parameter of the command - this instructs erdpy to dump the output
 ```
 counter.json
 {
-    "tx": {
-        "nonce": 1,
-        "value": "0",
-        "receiver": "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu",
-        "sender": "erd1...",
-        "gasPrice": 1000000000,
-        "gasLimit": 5000000,
-        "data": "MDA2MTcz...",
-        "chainID": "1596807148",
-        "version": 123,
-        "signature": "ff07..."
-    },
-    "hash": "",
-    "data": "0061736...",
-    "address": "erd1qqqqqqqqqqqqqpgqp93y6..."
+    "emitted_tx": {
+        "tx": {
+            "nonce": 0,
+            "value": "0",
+            "receiver": "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu",
+            "sender": "erd1...",
+            "gasPrice": 1000000000,
+            "gasLimit": 5000000,
+            "data": "MDA2MTczNmQwMTAwMDA...MDA=",
+            "chainID": "T",
+            "version": 1,
+            "signature": "a0ba..."
+        },
+        "hash": "...",
+        "data": "...",
+        "address": "erd1qqqqqqqqqqqqqpgqp93y6..."
+    }
 }
-
 ```
 
 Feel free to inspect these values in the [Explorer](https://explorer.elrond.com/).
@@ -76,7 +77,7 @@ Feel free to inspect these values in the [Explorer](https://explorer.elrond.com/
 Let's extract the contract address from `counter.json` before proceeding to an actual contract execution.
 
 ```
-export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counter.json')); print(data['address'])")
+export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counter.json')); print(data['emitted_tx']['address'])")
 ```
 
 Now that we have the contract address saved in an shell variable, we can call the `increment` function of the contract as follows:
@@ -108,7 +109,7 @@ The previous steps can be summed up in a simple script as follows:
 
 # Deployment
 erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.elrond.com" --outfile="counter.json" --recall-nonce --send
-export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('address.json')); print(data['contract'])")
+export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('address.json')); print(data['emitted_tx']['contract'])")
 
 # Interaction
 erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.elrond.com" --recall-nonce --send

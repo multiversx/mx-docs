@@ -14,7 +14,7 @@ An _unsigned transaction_ has the following fields:
 | Field      | Type   | Required           | Description                                                                    |
 | ---------- | ------ | ------------------ | ------------------------------------------------------------------------------ |
 | `nonce`    | number | Yes                | The account sequence number                                                    |
-| `value`    | string | Yes (can be `"0"`) | The value to transfer, represented in atomic units:`eGLD` times `denomination` |
+| `value`    | string | Yes (can be `"0"`) | The value to transfer, represented in atomic units:`EGLD` times `denomination` |
 | `receiver` | string | Yes                | The address of the receiver (bech32 format)                                    |
 | `sender`   | string | Yes                | The address of the sender (bech32 format)                                      |
 | `gasPrice` | number | Yes                | The gas price to be used in the scope of the transaction                       |
@@ -43,7 +43,7 @@ For example, given the transaction:
 
 ```
 nonce = 7
-value = "10000000000000000000"  # 10 eGLD
+value = "10000000000000000000"  # 10 EGLD
 receiver = "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r"
 sender = "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz"
 gasPrice = 1000000000
@@ -92,7 +92,7 @@ Once the `signature` field is set as well, the transaction is ready to be broadc
 ```
 # With data field
 nonce = 7
-value = "10000000000000000000"  # 10 eGLD
+value = "10000000000000000000"  # 10 EGLD
 receiver = "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r"
 sender = "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz"
 gasPrice = 1000000000
@@ -106,7 +106,7 @@ signature = "1702bb7696f992525fb77597956dd74059b5b01e88c813066ad1f6053c6afca97d6
 ```
 # Without data field
 nonce = 8
-value = "10000000000000000000"  # 10 eGLD
+value = "10000000000000000000"  # 10 EGLD
 receiver = "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r"
 sender = "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz"
 gasPrice = 1000000000

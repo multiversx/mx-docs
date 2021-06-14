@@ -418,7 +418,7 @@ Let's see a complete flow of creating and transferring a Semi Fungible Token.
 {
     Sender: <your address>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000  # 5 eGLD
+    Value: 5000000000000000000  # 5 EGLD
     GasLimit: 60000000
     Data: "issueSemiFungible" +
           "@416c696365546f6b656e73" + # AliceTokens
