@@ -157,7 +157,7 @@ This endpoint is only is only defined by the Proxy. The Observer does not expose
 
 ## <span class="badge badge-primary">GET</span> **Get Block by Nonce**
 
-`http://localhost:8080/block/:shard/by-nonce/:nonce`
+`https://gateway.elrond.com/block/:shard/by-nonce/:nonce`
 
 This endpoint allows one to query a Shard Block by its nonce (or height).
 
@@ -229,7 +229,7 @@ For Observers, the `shard` parameter should not be set.
 
 ## <span class="badge badge-primary">GET</span> **Get Block by Hash**
 
-`http://localhost:8080/block/:shard/by-hash/:hash`
+`https://gateway.elrond.com/block/:shard/by-hash/:hash`
 
 This endpoint allows one to query a Shard Block by its hash.
 
