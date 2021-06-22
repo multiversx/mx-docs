@@ -22,8 +22,16 @@ One can alter the current configuration using the command `erdpy config set`. Fo
 
 ```
 $ erdpy config set chainID 1...
-$ erdpy config set proxy https://api.elrond.com
+$ erdpy config set proxy https://gateway.elrond.com
 ```
+
+:::note
+For `mainnet` use `proxy: https://gateway.elrond.com` and `chainID: 1`.
+
+For `devnet` use `proxy: https://devnet-gateway.elrond.com` and `chainID: D`.
+
+For `testnet` use `proxy: https://testnet-api.elrond.com` and `chainID: T`.
+:::
 
 :::tip
 erdpy's configuration is stored in the file `~/elrondsdk/erdpy.json`.
