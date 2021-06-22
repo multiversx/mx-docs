@@ -37,7 +37,8 @@
 				"ids":[
 					"validators/testnet/config-scripts",
 					"validators/testnet/install-update",
-					"validators/testnet/manage-testnet-node"
+					"validators/testnet/manage-testnet-node",
+					"validators/testnet/use-docker-testnet"
 				]
 			},
 			{
@@ -46,7 +47,8 @@
 				"ids":[
 					"validators/devnet/config-scripts-devnet",
 					"validators/devnet/install-update-devnet",
-					"validators/devnet/manage-devnet-node"
+					"validators/devnet/manage-devnet-node",
+					"validators/devnet/use-docker-devnet"
 				]
 			},
 			{
