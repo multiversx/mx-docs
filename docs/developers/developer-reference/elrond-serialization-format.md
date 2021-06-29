@@ -31,22 +31,488 @@ We are used to writing the number zero as "0" or "0x00", but if we think about i
 
 With this being said, the format always encodes zeroes of any type as empty byte arrays.
 
-# **The format itself**
+# The format itself
 
-| Type description                | Rust type                      | Top-level encoding                                                                                                                                                                                                                                                                 | Nested encoding                                                                                                                      |
-| ------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Unsigned int 8/16/32/64         | u8/u16/u32/u64                 | Minimal number of bytes that can fit the number. E.g. 0u8 -> 0x5u32 -> 0x05255u32 -> 0xFF257u32 -> 0x0101                                                                                                                                                                             | Exact width representation(8/16/32/64) e.g.0u8 -> 0x005u32 -> 0x00000005257u32 -> 0x00000101                                         |
-| Unsigned platform-dependent int | usize                          | Always same as u32. _This type is 32 bits long on 32 bit architectures and 64 bits on 64. We always serialize as u32 regardless._                                                                                                                                                   | Always same as u32                                                                                                                   |
-| Unsigned big int                | BigUint                        | Minimal number of bytes that can fit the number, same rules as for the small ints                                                                                                                                                                                                  | Just like a Vec<u8>: length of the top-level encoding (as 4-byte unsigned int), followed by the top-level encoding                   |
-| Signed int 8/16/32/64           | i8/i16/i32/i64                 | Minimal number of bytes that can fit the 2's complement unambiguously. The leading byte (leftmost) must always match the sign (1=negative, 0=positive). E.g. 0i8 -> 0x5i32 -> 0x05-1i32 -> 0xFF255i32 -> 0x00FF (leading 0 required for sign, disambiguates from -1)257i32 -> 0x0101 | Exact width 2's complement (8/16/32/64). E.g. 0i8 -> 0x005i32 -> 0x00000005-1i32 -> 0xFFFFFFFF255i32 -> 0x000000FF257i32 -> 0x00000101 |
-| Unsigned platform-dependent int | isize                          | Always same as i32.                                                                                                                                                                                                                                                                | Always same as i32.                                                                                                                  |
-| Signed big int                  | BigInt                         | Minimal number of bytes that can fit the 2's complement unambiguously, same rules as for the small ints.                                                                                                                                                                           | Just like a Vec<u8>: length of the top-level encoding (as 4-byte unsigned int), followed by the top-level encoding.                  |
-| Boolean                         | bool                           | True -> 0x01False -> 0x *(equivalent to number that can only take values 0 or 1)*                                                                                                                                                                                                   | True -> 0x01False -> 0x00*(equivalent to number that can only take values 0 or 1)*                                                   |
-| Vectors                         | Vec<T>                         | Concatenated nested encodings of items.                                                                                                                                                                                                                                            | Length of the vector (as 4-byte unsigned int) followed by concatenated nested encodings of items.                                    |
-| Boxed values                    | Box<T>                         | Top-level encoding of item.                                                                                                                                                                                                                                                        | Nested encoding of item.                                                                                                             |
-| Option                          | Option<T>                      | if Some -> 0x01 followed by nested encoding of valueif None -> 0x (nothing)                                                                                                                                                                                                        | if Some -> 0x01 followed by nested encoding of valueif None -> 0x00                                                                  |
-| Tuples                          | (T1, T2, ...)                  | Concatenated nested encodings of items.                                                                                                                                                                                                                                            | Concatenated nested encodings of items. No need for length, since it is fixed.                                                        |
-| Arrays                          | [T; N]                         | Concatenated nested encodings of items.                                                                                                                                                                                                                                            | Concatenated nested encodings of items. No need for length, since it is fixed.                                                        |
-| ASCII strings                   | Vec<u8>                        | See vectors.                                                                                                                                                                                                                                                                       | See vectors.                                                                                                                         |
-| UTF-8 strings                   | String                         | Not yet supported, but will be serialized as bytes. Arguably, smart contracts don't really need UTF-8 support, that is the frontend's job.                                                                                                                                          |                                                                                                                                      |
-| Custom structures / enums       | struct S { ... }enum E { ... } | According to the implementations of traits TopEncode/TopDecode                                                                                                                                                                                                                     | According to the implementations of traits NestedEncode/NestedDecode                                                                 |
+
+## Fixed-width numbers
+
+Small numbers can be stored in variables of up to 64 bits.
+
+**Rust types**: `u8`, `u16`, `u32`, `usize`, `u64`, `i8`, `i16`, `i32`, `isize`, `i64`.
+
+**Top-encoding**: The same as for all numerical types, the minimum number of bytes that
+can fit their 2's complement, big endian representation.
+
+**Nested encoding**: Fixed width big endian encoding of the type, using 2's complement.
+
+:::important
+A note about the types `usize` and `isize`: these Rust-specific types have the width of the underlying architecture,
+i.e 32 on 32-bit systems and 64 on 64-bit systems. However, smart contracts always run on a wasm32 architrcture, so
+these types will always be identical to `u32` and `i32` respectively.
+Even when simulating smart contract execution on 64-bit systems, they must still be serialized on 32 bits.
+:::
+
+**Examples**
+
+| Type   | Number               | Top-level encoding   | Nested encoding      |
+| ----   | -------------------- | -------------------- | -------------------- |
+|`u8`    | `0`                  | `0x`                 | `0x00`               |
+|`u8`    | `1`                  | `0x`                 | `0x01`               |
+|`u8`    | `255`                | `0xFF`               | `0xFF`               |
+|`u16`   | `0`                  | `0x`                 | `0x0000`             |
+|`u32`   | `0`                  | `0x`                 | `0x00000000`         |
+|`u64`   | `0`                  | `0x`                 | `0x0000000000000000` |
+|`u64`   | `0x1122334455667788` | `0x1122334455667788` | `0x1122334455667788` |
+|`usize` | `0`                  | `0x`                 | `0x00000000`         |
+|`usize` | `0xFFFFFFFF`         | `0xFFFFFFFF`         | `0xFFFFFFFF`         |
+|`i8`    | `0`                  | `0x`                 | `0x00`               |
+|`i8`    | `1`                  | `0x`                 | `0x00`               |
+|`i8`    | `-1`                 | `0xFF`               | `0xFF`               |
+|`i8`    | `127`                | `0x7F`               | `0x7F`               |
+|`i8`    | `-128`               | `0x80`               | `0x80`               |
+|`i16`   | `-1`                 | `0xFF`               | `0xFFFF`             |
+|`i32`   | `-1`                 | `0xFF`               | `0xFFFFFFFF`         |
+|`i64`   | `-1`                 | `0xFF`               | `0xFFFFFFFFFFFFFFFF` |
+|`i64`   | `0x1122334455667788` | `0x1122334455667788` | `0x1122334455667788` |
+|`isize` | `0`                  | `0x`                 | `0x00000000`         |
+|`isize` | `-1`                 | `0xFF`               | `0xFFFFFFFF`         |
+
+
+
+
+## Arbitrary width (big) numbers
+
+For most smart contracts applications, number larger than the maximum uint64 value are needed.
+EGLD balances for instance are represented as fixed-point decimal numbers with 18 decimals.
+This means that to represent even just 1 EGLD we use the number 10^18^, which already exceeds the capacity of a regular 64-bit integer.
+
+**Rust types**: `Self::BigUint`, `Self::BigInt`,
+
+:::important
+These types are managed by Arwen, in many cases the contract never sees the data, only a handle.
+This is to reduce the burden on the smart contract.
+:::
+
+**Top-encoding**: The same as for all numerical types, the minimum number of bytes that
+can fit their 2's complement, big endian representation.
+
+**Nested encoding**: Since these types are variable length, we need to encode their length, so that the decodes knows when to stop decoding.
+The length of the encoded number always comes first, on 4 bytes (`usize`/`u32`).
+Next we encode:
+  - For `Self::BigUint` the big endian bytes
+  - For `Self::BigInt` the shortest 2's complement number that can unambigously represent the number. Positive numbers must always have the most significant bit `0`, while the negative ones `1`. See examples below. 
+
+
+**Examples**
+
+| Type           | Number               | Top-level encoding   | Nested encoding        | Explanation |
+| -------------- | -------------------- | -------------------- | ---------------------- | --- |
+|`Self::BigUint` | `0`                  | `0x`                 | `0x00000000`           | The length of `0` is considered `0`. |
+|`Self::BigUint` | `1`                  | `0x01`               | `0x0000000101`         | `1` can be represented on 1 byte, so the length is 1. |
+|`Self::BigUint` | `256`                | `0x0100`             | `0x000000020100`       | `256` is the smallest number that takes 2 bytes. |
+|`Self::BigInt`  | `0`                  | `0x`                 | `0x00000000`           | Signed `0` is also represented as zero-length bytes. |
+|`Self::BigInt`  | `1`                  | `0x01`               | `0x0000000101`         | Signed `1` is also represented as 1 byte. |
+|`Self::BigInt`  | `-1`                 | `0x01FF`             | `0x00000001FF`         | The shortest 2's complement representation of `-1` if `FF`. The most significant bit is 1. |
+|`Self::BigUint` | `127`                | `0x7F`               | `0x000000017F`         | |
+|`Self::BigInt`  | `127`                | `0x7F`               | `0x000000017F`         | |
+|`Self::BigUint` | `128`                | `0x80`               | `0x000000020100`       | |
+|`Self::BigInt`  | `128`                | `0x0080`             | `0x000000020080`       | The most significant bit of this number is 1, so to avoid ambiguity an extra `0` byte needs to be prepended. |
+|`Self::BigInt`  | `255`                | `0x00FF`             | `0x0000000200FF`       | Same as above. |
+|`Self::BigInt`  | `256`                | `0x0100`             | `0x000000020100`       | `256` requires 2 bytes to represent, of which the MSB is 0, no more need to prepend a `0` byte. |
+
+## Boolean values
+
+Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0`.
+
+**Rust type**: `bool`
+
+**Values**
+
+| Type  | Value               | Top-level encoding   | Nested encoding  |
+| ------| ------------------- | -------------------- | ---------------- |
+|`bool` | `true`              | `0x01`               | `0x01`           |
+|`bool` | `false`             | `0x`                 | `0x00`           |
+
+
+
+
+
+## Lists of items
+
+This is an umbrella term for all types of lists or arrays of various item types. They all serialize the same way.
+
+**Rust types**: `&[T]`, `Vec<T>`, `Box<[T]>`, `LinkedList<T>`, `VecMapper<T>`, etc.
+
+**Top-encoding**: All nested encodings of the items, concatenated.
+
+**Nested encoding**: First, the length of the list, encoded on 4 bytes (`usize`/`u32`).
+Then, all nested encodings of the items, concatenated.
+
+
+**Examples**
+
+| Type                 | Value                 | Top-level encoding   | Nested encoding      | Explanation |
+| --------------       | --------------------  | -------------------- | -------------------- | --- |
+|`Vec<u8>`             | `vec![1, 2]`          | `0x0102`             | `0x00000002 0102`     | Length = `2` |
+|`Vec<u16>`            | `vec![1, 2]`          | `0x00010002`         | `0x00000002 00010002` | Length = `2` |
+|`Vec<u16>`            | `vec![]`              | `0x`                 | `0x00000000`         | Length = `0` |
+|`Vec<u32>`            | `vec![1]`             | `0x00000001`         | `0x00000001 00000000` | Length = `1` |
+|`Vec< Vec<u32>>`      | `vec![ vec![7]]`      | `0x00000001 00000000` | `0x00000001 0000000100000007` | There is 1 element, which is a vector. In both cases the inner Vec needs to be nested-encoded in the larger Vec. |
+|`Vec<&[u8]>`         | `vec![ &[7u8][..]]`   | `0x00000001 00000000` | `0x00000001 0000000107` | Same as above, but the inner list is a simple list of bytes. |
+|`Vec< Self::BigUint>` | `vec![ 7u32.into()]`  | `0x00000001 00000000` | `0x00000001 0000000107` | `BigUint`s need to encode their length when nested. The `7` is encoded the same way as a list of bytes of length 1, so the same as above. |
+
+
+
+## Arrays and tuples
+
+The only difference between these types and the lists in the previous section is that their length is known at compile time.
+Therefore, there is never any need to encode their length.
+
+**Rust types**: `[T; N]`, `Box<[T; N]>`, `(T1, T2, ... , TN)`.
+
+**Top-encoding**: All nested encodings of the items, concatenated.
+
+**Nested encoding**: All nested encodings of the items, concatenated.
+
+**Examples**
+
+| Type                | Value               | Top-level encoding   | Nested encoding      |
+| --------------      | ----------------    | -------------------- | -------------------- |
+|`[u8; 2]`            | `[1, 2]`            | `0x0102`             | `0x0102`             |
+|`[u16; 2]`           | `[1, 2]`            | `0x00010002`         | `0x00010002`         |
+|`(u8, u16, u32)`     | `[1u8, 2u16, 3u32]` | `0x01000200000003`   | `0x01000200000003`   |
+
+
+
+
+## Byte slices and ASCII strings
+
+A special case of the list types, they behave according to the same rules as lists of items.
+
+:::important
+Strings are treated from the point of view of serialization as series of bytes. Using Unicode strings, while often a good practice in programming, tends to add unnecessary overhead to smart contracts. The difference is that Unicode strings get validated on input and concatenation.
+
+We consider best practice to use Unicode on the frontend, but keep all messages and error messages in ASCII format on smart contract level.
+:::
+
+**Rust types**: `BoxedBytes`, `&[u8]`, `Vec<u8>`, `String`, `&str`.
+
+**Top-encoding**: The byte slice, as-is.
+
+**Nested encoding**: The length of the byte slice on 4 bytes, followed by the byte slice as-is.
+
+**Examples**
+
+| Type                | Value                       | Top-level encoding   | Nested encoding      | Explanation |
+| --------------      | --------------------        | -------------------- | -------------------- | --- |
+|`&'static [u8]`      | `b"abc"`                    | `0x616263`           | `0x00000003616263`   | ASCII strings are regular byte slices of buffers. |
+|`BoxedBytes`         | `BoxedBytes::from( b"abc")` | `0x616263`           | `0x00000003616263`   | BoxedBytes are just optimized owned byte slices that cannot grow. |
+|`Vec<u8>`            | `b"abc".to_vec()`           | `0x616263`           | `0x00000003616263`   | BoxedBytes are just optimized owned byte slices that cannot grow. |
+|`&'static str`       | `"abc"`                     | `0x616263`           | `0x00000003616263`   | Unicode string (slice). |
+|`String`             | `"abc".to_string()`         | `0x616263`           | `0x00000003616263`   | Unicode string (owned). |
+
+
+
+
+## Options
+
+An `Option` represents an optional value: every Option is either `Some` and contains a value, or `None`, and does not.
+
+**Rust types**: `Option<T>`.
+
+**Top-encoding**: If `Some`, a `0x01` byte gets encoded, and after it the encoded value. If `None`, nothing gets encoded.
+
+**Nested encoding**: If `Some`, a `0x01` byte gets encoded, and after it the encoded value. If `None`, a `0x00` byte get encoded.
+
+**Examples**
+
+| Type                    | Value                                    | Top-level encoding   | Nested encoding      | Explanation |
+| --------------          | --------------------                     | -------------------- | ------------         | --- |
+|`Option<u16>`            | `Some(5)`                                | `0x010005`           | `0x010005`           | |
+|`Option<u16>`            | `Some(0)`                                | `0x010000`           | `0x010000`           | |
+|`Option<u16>`            | `None`                                   | `0x`                 | `0x00`               | Note that `Some` has different encoding than `None` for any type |
+|`Option< Self::BigUint>` | `Some( Self::BigUint::from( 0x1234u32))` | `0x01 00000002 1234` | `0x01 00000002 1234` | The `Some` value is nested-encoded. For a `BigUint` this adds the length, which here is `2`. |
+
+
+
+
+## Custom structures
+
+Any structure defined in a contract of library can become serializable if it is annotated with either or all of: `TopEncode`, `TopDecode`, `NestedEncode`, `NestedDecode`.
+
+**Example implementation:**
+
+```rust
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+pub struct Struct {
+	pub int: u16,
+	pub seq: Vec<u8>,
+	pub another_byte: u8,
+	pub uint_32: u32,
+	pub uint_64: u64,
+}
+```
+
+**Top-encoding**: All fields nested-encoded one after the other.
+
+**Nested encoding**: The same, all fields nested-encoded one after the other.
+
+**Example value**
+
+```rust
+Struct {
+		int: 0x42,
+		seq: vec![0x1, 0x2, 0x3, 0x4, 0x5],
+		another_byte: 0x6,
+		uint_32: 0x12345,
+		uint_64: 0x123456789,
+}
+```
+
+It will be encoded (both top-encoding and nested encoding) as: `0x004200000005010203040506000123450000000123456789`.
+
+Explanation:
+```
+[
+/* int */ 0, 0x42, 
+/* seq length */ 0, 0, 0, 5, 
+/* seq contents */ 1, 2, 3, 4, 5,
+/* another_byte */ 6,
+/* uint_32 */ 0x00, 0x01, 0x23, 0x45,
+/* uint_64 */ 0x00, 0x00, 0x00, 0x01, 0x23, 0x45, 0x67, 0x89
+]
+```
+
+
+## Custom enums
+
+Any enum defined in a contract of library can become serializable if it is annotated with either or all of: `TopEncode`, `TopDecode`, `NestedEncode`, `NestedDecode`.
+
+**A simple enum example:**
+
+*Example taken from the elrond-codec tests.*
+
+```rust
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+enum DayOfWeek {
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+}
+```
+
+**A more complex enum example:**
+
+```rust
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+enum EnumWithEverything {
+	Default,
+	Today(DayOfWeek),
+	Write(Vec<u8>, u16),
+	Struct {
+		int: u16,
+		seq: Vec<u8>,
+		another_byte: u8,
+		uint_32: u32,
+		uint_64: u64,
+	},
+}
+```
+
+**Nested encoding**:
+First, the discriminant is encoded. The discriminant is the index of the variant, starting with `0`.
+Then the fields in that variant (if any) get nested-encoded one after the other.
+
+**Top-encoding**: Same as nested-encoding, but with an additional rule:
+if the discriminant is `0` (first variant) and there are no fields, nothing is encoded.
+
+**Example values**
+
+*The examples below are taken from the elrond-codec tests.*
+
+<table>
+  <tr>
+    <th>Value</th>
+    <th>Top-encoding bytes</th>
+    <th>Nested encoding bytes</th>
+  </tr>
+  <tr>
+    <td>
+      <pre>
+        <code> 
+DayOfWeek::Monday
+        </code>
+      </pre>
+    </td>
+    <td>
+      <pre>
+        <code> 
+/* nothing */
+        </code>
+      </pre>
+    </td>
+    <td>
+      <pre>
+        <code> 
+/* discriminant */ 0,
+        </code>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+
+  <tr>
+    <td>
+      <pre>
+        <code> 
+DayOfWeek::Tuesday
+        </code>
+      </pre>
+    </td>
+    <td colspan="2">
+      <pre>
+        <code> 
+/* discriminant */ 1,
+        </code>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+  <tr>
+    <td>
+      <pre>
+        <code> 
+EnumWithEverything::Default
+        </code>
+      </pre>
+    </td>
+    <td>
+      <pre>
+        <code> 
+/* nothing */
+        </code>
+      </pre>
+    </td>
+    <td>
+      <pre>
+        <code> 
+/* discriminant */ 0,
+        </code>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <pre>
+        <code> 
+EnumWithEverything::Today(
+  DayOfWeek::Monday
+)
+        </code>
+      </pre>
+    </td>
+    <td colspan="2">
+      <pre>
+        <code> 
+/* discriminant */ 1,
+/* DayOfWeek discriminant */ 0
+        </code>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <pre>
+        <code> 
+EnumWithEverything::Today(
+  DayOfWeek::Friday
+)
+        </code>
+      </pre>
+    </td>
+    <td colspan="2">
+      <pre>
+        <code> 
+/* discriminant */ 1,
+/* DayOfWeek discriminant */ 4
+        </code>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <pre>
+        <code> 
+EnumWithEverything::Write(
+    Vec::new(),
+    0,
+)
+        </code>
+      </pre>
+    </td>
+    <td colspan="2">
+      <pre>
+        <code> 
+/* discriminant */ 2,
+/* vec length */ 0, 0, 0, 0,
+/* u16 */ 0, 0,
+        </code>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <pre>
+        <code> 
+EnumWithEverything::Write(
+    [1, 2, 3].to_vec(),
+    4
+)
+        </code>
+      </pre>
+    </td>
+    <td colspan="2">
+      <pre>
+        <code> 
+/* discriminant */ 2, 
+/* vec length */ 0, 0, 0, 3,
+/* vec contents */ 1, 2, 3,
+/* an extra 16 */ 0, 4,
+        </code>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <pre>
+        <code> 
+EnumWithEverything::Struct {
+    int: 0x42,
+    seq: vec![0x1, 0x2, 0x3, 0x4, 0x5],
+    another_byte: 0x6,
+    uint_32: 0x12345,
+    uint_64: 0x123456789,
+};
+        </code>
+      </pre>
+    </td>
+    <td colspan="2">
+      <pre>
+        <code> 
+/* discriminant */ 3,
+/* int */ 0, 0x42,
+/* seq length */ 0, 0, 0, 5,
+/* seq contents */ 1, 2, 3, 4, 5,
+/* another_byte */ 6,
+/* uint_32 */ 0x00, 0x01, 0x23, 0x45,
+/* uint_64 */ 0x00, 0x00, 0x00, 0x01,
+              0x23, 0x45, 0x67, 0x89,
+        </code>
+      </pre>
+    </td>
+  </tr>
+</table>
