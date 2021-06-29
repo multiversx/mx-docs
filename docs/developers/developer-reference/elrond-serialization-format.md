@@ -3,19 +3,24 @@ id: elrond-serialization-format
 title: The Elrond Serialization Format
 ---
 
+
 *How Elrond smart contracts serialize arguments, results, and storage*
 
 In Elrond, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 
 In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [repo](https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-codec), [doc](https://docs.rs/elrond-codec/0.5.3/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
 
-# Rationale
+
+
+## Rationale
 
 We want the format to be somewhat readable and to interact with the rest of the blockchain ecosystem as easily as possible. This is why we have chosen **big endian representation for all numeric types.**
 
 More importantly, the format needs to be as compact as possible, since each additional byte costs additional fees.
 
-# The concept of top-level vs. nested objects
+
+
+## The concept of top-level vs. nested objects
 
 There is a perk that is central to the formatter: we know the size of the byte arrays entering the contract. All arguments have a known size in bytes, and we normally learn the length of storage values before loading the value itself into the contract. This gives us some additional data straight away that allows us to encode less.
 
@@ -25,16 +30,21 @@ But now imagine that an argument that deserializes as a vector of int32. The num
 
 But what about the vector itself? Its representation must always be a multiple of 4 bytes in length, so from the representation we can always deduce the length of the vector by dividing the number of bytes by 4. If the encoded byte length is not divisible by 4, this is a deserialization error. Because the vector is top-level we don't have to worry about encoding its length, but if the vector itself gets embedded into an even larger structure, this can be a problem. If, for instance, the argument is a vector of vectors of int32, each nested vector also needs to have its length encoded before its data.
 
-# A note about the value zero
+
+
+## A note about the value zero
 
 We are used to writing the number zero as "0" or "0x00", but if we think about it we don't need 1 byte for representing it, 0 bytes or an "empty byte array" represent the number 0 just as well. In fact, just like in `0x0005`, the leading 0 byte is superfluous, so is the byte `0x00` just like an unnecessary leading 0.
 
 With this being said, the format always encodes zeroes of any type as empty byte arrays.
 
-# The format itself
 
 
-## Fixed-width numbers
+
+## How each type gets serialized
+
+
+### Fixed-width numbers
 
 Small numbers can be stored in variables of up to 64 bits.
 
@@ -79,8 +89,11 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 
 
 
+-------------------------------------------------------------------------------------------------------------------------
 
-## Arbitrary width (big) numbers
+
+
+### Arbitrary width (big) numbers
 
 For most smart contracts applications, number larger than the maximum uint64 value are needed.
 EGLD balances for instance are represented as fixed-point decimal numbers with 18 decimals.
@@ -120,7 +133,13 @@ Next we encode:
 |`Self::BigInt`  | `255`                | `0x00FF`             | `0x0000000200FF`       | Same as above. |
 |`Self::BigInt`  | `256`                | `0x0100`             | `0x000000020100`       | `256` requires 2 bytes to represent, of which the MSB is 0, no more need to prepend a `0` byte. |
 
-## Boolean values
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+### Boolean values
 
 Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0`.
 
@@ -135,9 +154,11 @@ Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0
 
 
 
+-------------------------------------------------------------------------------------------------------------------------
 
 
-## Lists of items
+
+### Lists of items
 
 This is an umbrella term for all types of lists or arrays of various item types. They all serialize the same way.
 
@@ -163,7 +184,11 @@ Then, all nested encodings of the items, concatenated.
 
 
 
-## Arrays and tuples
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+### Arrays and tuples
 
 The only difference between these types and the lists in the previous section is that their length is known at compile time.
 Therefore, there is never any need to encode their length.
@@ -184,8 +209,11 @@ Therefore, there is never any need to encode their length.
 
 
 
+-------------------------------------------------------------------------------------------------------------------------
 
-## Byte slices and ASCII strings
+
+
+### Byte slices and ASCII strings
 
 A special case of the list types, they behave according to the same rules as lists of items.
 
@@ -213,8 +241,11 @@ We consider best practice to use Unicode on the frontend, but keep all messages 
 
 
 
+-------------------------------------------------------------------------------------------------------------------------
 
-## Options
+
+
+### Options
 
 An `Option` represents an optional value: every Option is either `Some` and contains a value, or `None`, and does not.
 
@@ -235,15 +266,18 @@ An `Option` represents an optional value: every Option is either `Some` and cont
 
 
 
+-------------------------------------------------------------------------------------------------------------------------
 
-## Custom structures
+
+
+### Custom structures
 
 Any structure defined in a contract of library can become serializable if it is annotated with either or all of: `TopEncode`, `TopDecode`, `NestedEncode`, `NestedDecode`.
 
 **Example implementation:**
 
 ```rust
-#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+##[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
 pub struct Struct {
 	pub int: u16,
 	pub seq: Vec<u8>,
@@ -284,7 +318,11 @@ Explanation:
 ```
 
 
-## Custom enums
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+### Custom enums
 
 Any enum defined in a contract of library can become serializable if it is annotated with either or all of: `TopEncode`, `TopDecode`, `NestedEncode`, `NestedDecode`.
 
@@ -293,7 +331,7 @@ Any enum defined in a contract of library can become serializable if it is annot
 *Example taken from the elrond-codec tests.*
 
 ```rust
-#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+##[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
 enum DayOfWeek {
   Monday,
   Tuesday,
@@ -308,7 +346,7 @@ enum DayOfWeek {
 **A more complex enum example:**
 
 ```rust
-#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+##[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
 enum EnumWithEverything {
 	Default,
 	Today(DayOfWeek),
