@@ -3,19 +3,19 @@ id: elrond-serialization-format
 title: The Elrond Serialization Format
 ---
 
-How Elrond smart contracts serialize arguments, results, and storage
+*How Elrond smart contracts serialize arguments, results, and storage*
 
 In Elrond, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 
-In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [repo](https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-codec), [doc](https://docs.rs/elrond-codec/0.1.3/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
+In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [repo](https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-codec), [doc](https://docs.rs/elrond-codec/0.5.3/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
 
-# **Rationale**
+# Rationale
 
 We want the format to be somewhat readable and to interact with the rest of the blockchain ecosystem as easily as possible. This is why we have chosen **big endian representation for all numeric types.**
 
 More importantly, the format needs to be as compact as possible, since each additional byte costs additional fees.
 
-# **The concept of top-level vs. nested objects**
+# The concept of top-level vs. nested objects
 
 There is a perk that is central to the formatter: we know the size of the byte arrays entering the contract. All arguments have a known size in bytes, and we normally learn the length of storage values before loading the value itself into the contract. This gives us some additional data straight away that allows us to encode less.
 
@@ -25,7 +25,7 @@ But now imagine that an argument that deserializes as a vector of int32. The num
 
 But what about the vector itself? Its representation must always be a multiple of 4 bytes in length, so from the representation we can always deduce the length of the vector by dividing the number of bytes by 4. If the encoded byte length is not divisible by 4, this is a deserialization error. Because the vector is top-level we don't have to worry about encoding its length, but if the vector itself gets embedded into an even larger structure, this can be a problem. If, for instance, the argument is a vector of vectors of int32, each nested vector also needs to have its length encoded before its data.
 
-# **A note about the value zero**
+# A note about the value zero
 
 We are used to writing the number zero as "0" or "0x00", but if we think about it we don't need 1 byte for representing it, 0 bytes or an "empty byte array" represent the number 0 just as well. In fact, just like in `0x0005`, the leading 0 byte is superfluous, so is the byte `0x00` just like an unnecessary leading 0.
 
