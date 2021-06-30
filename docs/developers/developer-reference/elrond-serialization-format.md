@@ -68,24 +68,59 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 | ----   | -------------------- | -------------------- | -------------------- |
 |`u8`    | `0`                  | `0x`                 | `0x00`               |
 |`u8`    | `1`                  | `0x01`               | `0x01`               |
+|`u8`    | `0x11`               | `0x11`               | `0x11`               |
 |`u8`    | `255`                | `0xFF`               | `0xFF`               |
 |`u16`   | `0`                  | `0x`                 | `0x0000`             |
+|`u16`   | `0x11`               | `0x11`               | `0x0011`             |
+|`u16`   | `0x1122`             | `0x1122`             | `0x1122`             |
 |`u32`   | `0`                  | `0x`                 | `0x00000000`         |
+|`u32`   | `0x11`               | `0x11`               | `0x00000011`         |
+|`u32`   | `0x1122`             | `0x1122`             | `0x00001122`         |
+|`u32`   | `0x112233`           | `0x112233`           | `0x00112233`         |
+|`u32`   | `0x11223344`         | `0x11223344`         | `0x11223344`         |
 |`u64`   | `0`                  | `0x`                 | `0x0000000000000000` |
+|`u64`   | `0x11`               | `0x11`               | `0x0000000000000011` |
+|`u64`   | `0x1122`             | `0x1122`             | `0x0000000000001122` |
+|`u64`   | `0x112233`           | `0x112233`           | `0x0000000000112233` |
+|`u64`   | `0x11223344`         | `0x11223344`         | `0x0000000011223344` |
+|`u64`   | `0x1122334455`       | `0x1122334455`       | `0x0000001122334455` |
+|`u64`   | `0x112233445566`     | `0x112233445566`     | `0x0000112233445566` |
+|`u64`   | `0x11223344556677`   | `0x11223344556677`   | `0x0011223344556677` |
 |`u64`   | `0x1122334455667788` | `0x1122334455667788` | `0x1122334455667788` |
 |`usize` | `0`                  | `0x`                 | `0x00000000`         |
-|`usize` | `0xFFFFFFFF`         | `0xFFFFFFFF`         | `0xFFFFFFFF`         |
+|`usize` | `0x11`               | `0x11`               | `0x00000011`         |
+|`usize` | `0x1122`             | `0x1122`             | `0x00001122`         |
+|`usize` | `0x112233`           | `0x112233`           | `0x00112233`         |
+|`usize` | `0x11223344`         | `0x11223344`         | `0x11223344`         |
 |`i8`    | `0`                  | `0x`                 | `0x00`               |
 |`i8`    | `1`                  | `0x`                 | `0x00`               |
 |`i8`    | `-1`                 | `0xFF`               | `0xFF`               |
 |`i8`    | `127`                | `0x7F`               | `0x7F`               |
 |`i8`    | `-128`               | `0x80`               | `0x80`               |
+|`i16`   | `-0x11`              | `0xEF`               | `0xEF`               |
 |`i16`   | `-1`                 | `0xFF`               | `0xFFFF`             |
+|`i16`   | `-0x11`              | `0xEF`               | `0xFFEF`             |
+|`i16`   | `-0x1122`            | `0xEEDE`             | `0xEEDE`             |
 |`i32`   | `-1`                 | `0xFF`               | `0xFFFFFFFF`         |
+|`i32`   | `-0x11`              | `0xEF`               | `0xFFFFFFEF`         |
+|`i32`   | `-0x1122`            | `0xEEDE`             | `0xFFFFEEDE`         |
+|`i32`   | `-0x112233`          | `0xEEDDCD`           | `0xFFEEDDCD`         |
+|`i32`   | `-0x11223344`        | `0xEEDDCCBC`         | `0xEEDDCCBC`         |
 |`i64`   | `-1`                 | `0xFF`               | `0xFFFFFFFFFFFFFFFF` |
-|`i64`   | `0x1122334455667788` | `0x1122334455667788` | `0x1122334455667788` |
+|`i64`   | `-0x11`              | `0xEF`               | `0xFFFFFFFFFFFFFFEF` |
+|`i64`   | `-0x1122`            | `0xEEDE`             | `0xFFFFFFFFFFFFEEDE` |
+|`i64`   | `-0x112233`          | `0xEEDDCD`           | `0xFFFFFFFFFFEEDDCD` |
+|`i64`   | `-0x11223344`        | `0xEEDDCCBC`         | `0xFFFFFFFFEEDDCCBC` |
+|`i64`   | `-0x1122334455`      | `0xEEDDCCBBAB`       | `0xFFFFFFEEDDCCBBAB` |
+|`i64`   | `-0x112233445566`    | `0xEEDDCCBBAA9A`     | `0xFFFFEEDDCCBBAA9A` |
+|`i64`   | `-0x11223344556677`  | `0xEEDDCCBBAA9989`   | `0xFFEEDDCCBBAA9989` |
+|`i64`   | `-0x1122334455667788`| `0xEEDDCCBBAA998878` | `0xEEDDCCBBAA998878` |
 |`isize` | `0`                  | `0x`                 | `0x00000000`         |
 |`isize` | `-1`                 | `0xFF`               | `0xFFFFFFFF`         |
+|`isize` | `-0x11`              | `0xEF`               | `0xFFFFFFEF`         |
+|`isize` | `-0x1122`            | `0xEEDE`             | `0xFFFFEEDE`         |
+|`isize` | `-0x112233`          | `0xEEDDCD`           | `0xFFEEDDCD`         |
+|`isize` | `-0x11223344`        | `0xEEDDCCBC`         | `0xEEDDCCBC`         |
 
 
 
@@ -97,7 +132,7 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 
 For most smart contracts applications, number larger than the maximum uint64 value are needed.
 EGLD balances for instance are represented as fixed-point decimal numbers with 18 decimals.
-This means that to represent even just 1 EGLD we use the number 10^18, which already exceeds the capacity of a regular 64-bit integer.
+This means that to represent even just 1 EGLD we use the number 10<sup>18</sup>, which already exceeds the capacity of a regular 64-bit integer.
 
 **Rust types**: `Self::BigUint`, `Self::BigInt`,
 
@@ -128,7 +163,7 @@ Next we encode:
 |`Self::BigInt`  | `-1`                 | `0x01FF`             | `0x00000001FF`         | The shortest 2's complement representation of `-1` if `FF`. The most significant bit is 1. |
 |`Self::BigUint` | `127`                | `0x7F`               | `0x000000017F`         | |
 |`Self::BigInt`  | `127`                | `0x7F`               | `0x000000017F`         | |
-|`Self::BigUint` | `128`                | `0x80`               | `0x000000020080`       | |
+|`Self::BigUint` | `128`                | `0x80`               | `0x0000000180`         | |
 |`Self::BigInt`  | `128`                | `0x0080`             | `0x000000020080`       | The most significant bit of this number is 1, so to avoid ambiguity an extra `0` byte needs to be prepended. |
 |`Self::BigInt`  | `255`                | `0x00FF`             | `0x0000000200FF`       | Same as above. |
 |`Self::BigInt`  | `256`                | `0x0100`             | `0x000000020100`       | `256` requires 2 bytes to represent, of which the MSB is 0, no more need to prepend a `0` byte. |
@@ -172,15 +207,15 @@ Then, all nested encodings of the items, concatenated.
 
 **Examples**
 
-| Type                 | Value                 | Top-level encoding   | Nested encoding      | Explanation |
-| --------------       | --------------------  | -------------------- | -------------------- | --- |
-|`Vec<u8>`             | `vec![1, 2]`          | `0x0102`             | `0x00000002 0102`     | Length = `2` |
-|`Vec<u16>`            | `vec![1, 2]`          | `0x00010002`         | `0x00000002 00010002` | Length = `2` |
-|`Vec<u16>`            | `vec![]`              | `0x`                 | `0x00000000`         | Length = `0` |
-|`Vec<u32>`            | `vec![1]`             | `0x00000001`         | `0x00000001 00000001` | Length = `1` |
-|`Vec< Vec<u32>>`      | `vec![ vec![7]]`      | `0x00000001 00000007` | `0x00000001 0000000100000007` | There is 1 element, which is a vector. In both cases the inner Vec needs to be nested-encoded in the larger Vec. |
-|`Vec<&[u8]>`         | `vec![ &[7u8][..]]`   | `0x00000001 00000000` | `0x00000001 0000000107` | Same as above, but the inner list is a simple list of bytes. |
-|`Vec< Self::BigUint>` | `vec![ 7u32.into()]`  | `0x00000001 07` | `0x00000001 0000000107` | `BigUint`s need to encode their length when nested. The `7` is encoded the same way as a list of bytes of length 1, so the same as above. |
+| Type                 | Value                 | Top-level encoding    | Nested encoding       | Explanation |
+| --------------       | --------------------  | --------------------  | --------------------  | --- |
+|`Vec<u8>`             | `vec![1, 2]`          | `0x0102`              | `0x00000002 0102`     | Length = `2` |
+|`Vec<u16>`            | `vec![1, 2]`          | `0x00010002`          | `0x00000002 00010002` | Length = `2` |
+|`Vec<u16>`            | `vec![]`              | `0x`                  | `0x00000000`          | Length = `0` |
+|`Vec<u32>`            | `vec![7]`             | `0x00000007`          | `0x00000001 00000007` | Length = `1` |
+|`Vec< Vec<u32>>`      | `vec![ vec![7]]`      | `0x00000001 00000007` | `0x00000001 00000001 00000007` | There is 1 element, which is a vector. In both cases the inner Vec needs to be nested-encoded in the larger Vec. |
+|`Vec<&[u8]>`          | `vec![ &[7u8][..]]`   | `0x00000001 07`       | `0x00000001 00000001 07` | Same as above, but the inner list is a simple list of bytes. |
+|`Vec< Self::BigUint>` | `vec![ 7u32.into()]`  | `0x00000001 07`       | `0x00000001 00000001 07` | `BigUint`s need to encode their length when nested. The `7` is encoded the same way as a list of bytes of length 1, so the same as above. |
 
 
 
@@ -235,7 +270,7 @@ We consider best practice to use Unicode on the frontend, but keep all messages 
 | --------------      | --------------------        | -------------------- | -------------------- | --- |
 |`&'static [u8]`      | `b"abc"`                    | `0x616263`           | `0x00000003616263`   | ASCII strings are regular byte slices of buffers. |
 |`BoxedBytes`         | `BoxedBytes::from( b"abc")` | `0x616263`           | `0x00000003616263`   | BoxedBytes are just optimized owned byte slices that cannot grow. |
-|`Vec<u8>`            | `b"abc".to_vec()`           | `0x616263`           | `0x00000003616263`   | BoxedBytes are just optimized owned byte slices that cannot grow. |
+|`Vec<u8>`            | `b"abc".to_vec()`           | `0x616263`           | `0x00000003616263`   | Use `Vec` for a buffer that can grow. |
 |`&'static str`       | `"abc"`                     | `0x616263`           | `0x00000003616263`   | Unicode string (slice). |
 |`String`             | `"abc".to_string()`         | `0x616263`           | `0x00000003616263`   | Unicode string (owned). |
 
