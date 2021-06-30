@@ -26,7 +26,10 @@ Note that the annotation takes no additional arguments.
 
 ### `#[elrond_wasm_derive::module]`
 
-The `module` annotation must always be placed on a trait and will automatically make that trait a smart contract module. More about smart contract modules in [the module reference](/developers/developer-reference/elrond-wasm-modules)
+The `module` annotation must always be placed on a trait and will automatically make that trait a smart contract module.
+<!--- TODO: create page ...
+More about smart contract modules in [the module reference](/developers/developer-reference/elrond-wasm-modules)
+-->
 
 Note that the annotation takes no additional arguments.
 
@@ -198,6 +201,53 @@ To avoid this vulnerability, **never have a key that is the prefix of another ke
 :::
 
 
+#### `#[storage_mapper("key")]`
+
+Storage mappers are objects that can manage multiple storage keys at once. They are in charge with both reading and writing values. Some of them read and write values to multiple storage keys at once.
+
+There are many storage mappers in the framework and more can be custom-defined.
+
+Example:
+
+```rust
+	#[storage_mapper("user_status")]
+	fn user_status(&self) -> SingleValueMapper<Self::Storage, UserStatus>;
+
+    #[storage_mapper("list_mapper")]
+	fn list_mapper(&self, sub_key: usize) -> LinkedListMapper<Self::Storage, u32>;
+```
+
+The `SingleValueMapper` is the simplest of them all, since it only manages one storage key. Even though it only works with one storage entry, its syntax is more compact than `storage_get`/`storage_set` so it is used quite a lot.
+
+In the `LinkedListMapper` we are dealing with a list of items, each with its own key.
+
+Also note that additional sub-keys are also allowed for storage mappers, the same as for `storage_get` and `storage_set`.
+
+
+#### `#[storage_is_empty("key")]`
+
+This is very similar to `storage_get`, but instead of retrieving the value, it returns a boolean indicating whether the serialized value is empty or not. It does not attempt to deserialize the value, so it can be faster and more resilient than `storage_get`, depending on type.
+
+```rust
+	#[storage_is_empty("opt_addr")]
+	fn is_empty_opt_addr(&self) -> bool;
+```
+
+Nowadays it is more common to use storage mappers. The `SingleValueMapper` has an `is_empty()` method that does the same.
+
+
+#### `#[storage_clear("key")]`
+
+This is very similar to `storage_set`, but instead of serializing and writing the storage value, it simply clears the raw bytes.
+It does not do any serializing, so it can be faster than `storage_set`, depending on type.
+
+```rust
+	#[storage_clear("field_to_clear")]
+	fn clear_storage_value(&self);
+```
+
+Nowadays it is more common to use storage mappers. The `SingleValueMapper` has an `clear()` method that does the same.
+
 
 ### Events
 
@@ -232,4 +282,28 @@ Event arguments (fields) can be of any serializable type. There is no return val
 There is a legacy annotation, `#[legacy_event]` still used by some older contracts. It is deprecated and should no longer be used.
 
 
+### `#[proxy]`
+
+This is a simple getter, which provides a convenient instance of a contract proxy. It is used when wanting to call another contract.
+
+```rust
+#[elrond_wasm_derive::module]
+pub trait ForwarderAsyncCallModule {
+	#[proxy]
+	fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::SendApi>;
+
+    // ...
+}
+```
+
+There is no need for arguments, the annotation will figure out the contract to call by the provided return type.
+
+:::important
+Proxy types need to be specified with an explicit module. In the example `vault::` is compulsory.
+:::
+
+
+### `#[output_names]`
+
+This one is used for ABI result names. In Rust it is impossible to write Rust Docs for method returns, so we are using this annotation to optionally name the outputs of an endpoint.
 
