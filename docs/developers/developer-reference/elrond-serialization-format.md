@@ -67,7 +67,7 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 | Type   | Number               | Top-level encoding   | Nested encoding      |
 | ----   | -------------------- | -------------------- | -------------------- |
 |`u8`    | `0`                  | `0x`                 | `0x00`               |
-|`u8`    | `1`                  | `0x`                 | `0x01`               |
+|`u8`    | `1`                  | `0x01`               | `0x01`               |
 |`u8`    | `255`                | `0xFF`               | `0xFF`               |
 |`u16`   | `0`                  | `0x`                 | `0x0000`             |
 |`u32`   | `0`                  | `0x`                 | `0x00000000`         |
@@ -97,7 +97,7 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 
 For most smart contracts applications, number larger than the maximum uint64 value are needed.
 EGLD balances for instance are represented as fixed-point decimal numbers with 18 decimals.
-This means that to represent even just 1 EGLD we use the number 10^18^, which already exceeds the capacity of a regular 64-bit integer.
+This means that to represent even just 1 EGLD we use the number 10^18, which already exceeds the capacity of a regular 64-bit integer.
 
 **Rust types**: `Self::BigUint`, `Self::BigInt`,
 
@@ -128,7 +128,7 @@ Next we encode:
 |`Self::BigInt`  | `-1`                 | `0x01FF`             | `0x00000001FF`         | The shortest 2's complement representation of `-1` if `FF`. The most significant bit is 1. |
 |`Self::BigUint` | `127`                | `0x7F`               | `0x000000017F`         | |
 |`Self::BigInt`  | `127`                | `0x7F`               | `0x000000017F`         | |
-|`Self::BigUint` | `128`                | `0x80`               | `0x000000020100`       | |
+|`Self::BigUint` | `128`                | `0x80`               | `0x000000020080`       | |
 |`Self::BigInt`  | `128`                | `0x0080`             | `0x000000020080`       | The most significant bit of this number is 1, so to avoid ambiguity an extra `0` byte needs to be prepended. |
 |`Self::BigInt`  | `255`                | `0x00FF`             | `0x0000000200FF`       | Same as above. |
 |`Self::BigInt`  | `256`                | `0x0100`             | `0x000000020100`       | `256` requires 2 bytes to represent, of which the MSB is 0, no more need to prepend a `0` byte. |
@@ -177,10 +177,10 @@ Then, all nested encodings of the items, concatenated.
 |`Vec<u8>`             | `vec![1, 2]`          | `0x0102`             | `0x00000002 0102`     | Length = `2` |
 |`Vec<u16>`            | `vec![1, 2]`          | `0x00010002`         | `0x00000002 00010002` | Length = `2` |
 |`Vec<u16>`            | `vec![]`              | `0x`                 | `0x00000000`         | Length = `0` |
-|`Vec<u32>`            | `vec![1]`             | `0x00000001`         | `0x00000001 00000000` | Length = `1` |
-|`Vec< Vec<u32>>`      | `vec![ vec![7]]`      | `0x00000001 00000000` | `0x00000001 0000000100000007` | There is 1 element, which is a vector. In both cases the inner Vec needs to be nested-encoded in the larger Vec. |
+|`Vec<u32>`            | `vec![1]`             | `0x00000001`         | `0x00000001 00000001` | Length = `1` |
+|`Vec< Vec<u32>>`      | `vec![ vec![7]]`      | `0x00000001 00000007` | `0x00000001 0000000100000007` | There is 1 element, which is a vector. In both cases the inner Vec needs to be nested-encoded in the larger Vec. |
 |`Vec<&[u8]>`         | `vec![ &[7u8][..]]`   | `0x00000001 00000000` | `0x00000001 0000000107` | Same as above, but the inner list is a simple list of bytes. |
-|`Vec< Self::BigUint>` | `vec![ 7u32.into()]`  | `0x00000001 00000000` | `0x00000001 0000000107` | `BigUint`s need to encode their length when nested. The `7` is encoded the same way as a list of bytes of length 1, so the same as above. |
+|`Vec< Self::BigUint>` | `vec![ 7u32.into()]`  | `0x00000001 07` | `0x00000001 0000000107` | `BigUint`s need to encode their length when nested. The `7` is encoded the same way as a list of bytes of length 1, so the same as above. |
 
 
 

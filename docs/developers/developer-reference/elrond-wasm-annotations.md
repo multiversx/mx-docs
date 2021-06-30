@@ -122,7 +122,7 @@ A more detailed explanation on how they work in [the contract calls reference](/
 ### Storage
 
 
-It is possible for a developer to access storage manually in a contract, but this is error prone in involves a lot of boilerplace code. For this reason, `elrond-wasm` offers storage annotations that manage and serialize the keys and values behind the scenes.
+It is possible for a developer to access storage manually in a contract, but this is error prone and involves a lot of boilerplace code. For this reason, `elrond-wasm` offers storage annotations that manage and serialize the keys and values behind the scenes.
 
 Each contract has a storage where arbitrary data can be stored on-chain. This storage is organized as a map of arbitrary length keys and values. The blockchain has no concept of storage key or value types, they are all stored as raw bytes. It is the job of the contract to interpret these values.
 
@@ -154,7 +154,7 @@ For instance calling `self.get_value(1, 2)` will retrieve from the storage key `
 
 This is the easiest way to get the equivalent of a HashMap in a smart contract.
 
-Lastly, storage getters must always return a deserializable type. The framework will automatucally deserialize the object from whatever bytes it finds in the storage value.
+Lastly, storage getters must always return a deserializable type. The framework will automatically deserialize the object from whatever bytes it finds in the storage value.
 
 
 #### `#[storage_set("key")]`
@@ -167,7 +167,7 @@ pub trait Adder {
 	#[storage_set("sum")]
 	fn set_sum(&self, sum: &Self::BigInt);
 
-	#[storage_get("example_map")]
+	#[storage_set("example_map")]
     fn set_value(&self, key_1: u32, key_2: u32, value: &SerializableType);
 ```
 
@@ -185,7 +185,7 @@ There is no mechanism in place to ensure that there is no overlap between storag
     #[storage_set("sum")]
 	fn set_another_sum(&self, another_sum: &Self::BigInt);
 
-	#[storage_get("s")]
+	#[storage_set("s")]
     fn set_value(&self, key: u16, value: &SerializableType);
 ```
 
