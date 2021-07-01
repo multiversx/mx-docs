@@ -82,7 +82,7 @@ Number of decimals:
 Numerical values, such as initial supply or number of decimals, should be the hexadecimal encoding of the decimal numbers representing them. Additionally, they should have an even number of characters. Examples:
 - **10** _decimal_      => **0a** _hex encoded_
 - **48** _decimal_      => **30** _hex encoded_
-- **1000000** _decimal_ => **f4240** _hex encoded_
+- **1000000** _decimal_ => **0f4240** _hex encoded_
 
 ### **Number of decimals usage**
 Front-end applications will use the number of decimals in order to display balances. 
