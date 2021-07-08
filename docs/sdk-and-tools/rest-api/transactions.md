@@ -7,7 +7,7 @@ Send Transactions to the Blockchain and query information about them.
 
 ## <span class="badge badge-success">POST</span> Send Transaction
 
-`https://api.elrond.com/transaction/send`
+`https://gateway.elrond.com/transaction/send`
 
 This endpoint allows one to send a signed Transaction to the Blockchain.
 
@@ -61,7 +61,7 @@ For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **o
 Here's an example of a request:
 
 ```
-POST https://api.elrond.com/transaction/send HTTP/1.1
+POST https://gateway.elrond.com/transaction/send HTTP/1.1
 Content-Type: application/json
 
 {
@@ -80,7 +80,7 @@ Content-Type: application/json
 
 ## <span class="badge badge-success">POST</span> Send Multiple Transactions
 
-`https://api.elrond.com/transaction/send-multiple`
+`https://gateway.elrond.com/transaction/send-multiple`
 
 This endpoint allows one to send a bulk of Transactions to the Blockchain.
 
@@ -128,7 +128,7 @@ For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **o
 Here's an example of a request:
 
 ```
-POST https://api.elrond.com/transaction/send-multiple HTTP/1.1
+POST https://gateway.elrond.com/transaction/send-multiple HTTP/1.1
 Content-Type: application/json
 
 [
@@ -163,7 +163,7 @@ Content-Type: application/json
 
 **Nodes and observers**
 
-`https://api.elrond.com/transaction/simulate`
+`https://gateway.elrond.com/transaction/simulate`
 
 This endpoint allows one to send a signed Transaction to the Blockchain in order to simulate its execution.
 This can be useful in order to check if the transaction will be successfully executed before actually sending it.
@@ -265,7 +265,7 @@ Example response for cross-shard transactions:
 
 ## <span class="badge badge-success">POST</span> Estimate Cost of Transaction
 
-`https://api.elrond.com/transaction/cost`
+`https://gateway.elrond.com/transaction/cost`
 
 This endpoint allows one to estimate the cost of a transaction.
 
@@ -305,7 +305,7 @@ This endpoint returns the cost on the transaction in **gas units**. The returned
 Here's an example of a request:
 
 ```
-POST https://api.elrond.com/transaction/cost HTTP/1.1
+POST https://gateway.elrond.com/transaction/cost HTTP/1.1
 Content-Type: application/json
 
 {
@@ -320,7 +320,7 @@ Content-Type: application/json
 
 ## <span class="badge badge-primary">GET</span> **Get Transaction**
 
-`https://api.elrond.com/transaction/:txHash`
+`https://gateway.elrond.com/transaction/:txHash`
 
 This endpoint allows one to query the details of a Transaction.
 
@@ -378,7 +378,7 @@ The optional query parameter **`sender`** is only applicable to requests against
 
 ## <span class="badge badge-primary">GET</span> **Get Transaction Status**
 
-`https://api.elrond.com/transaction/:txHash/status`
+`https://gateway.elrond.com/transaction/:txHash/status`
 
 This endpoint allows one to query the Status of a Transaction.
 

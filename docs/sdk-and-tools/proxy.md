@@ -27,7 +27,7 @@ In the figure above:
 
 ## **Official Elrond Proxy**
 
-The official instance of the Elrond Proxy is located at [https://api.elrond.com](https://api.elrond.com/).
+The official instance of the Elrond Proxy is located at [https://gateway.elrond.com](https://gateway.elrond.com/).
 
 ## **Setup a Proxy Instance**
 
