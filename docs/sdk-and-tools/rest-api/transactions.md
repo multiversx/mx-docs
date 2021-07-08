@@ -336,9 +336,10 @@ Path Parameters
 
 Query Parameters
 
-| Param  | Required                                  | Type     | Description                                                 |
-| ------ | ----------------------------------------- | -------- | ----------------------------------------------------------- |
-| sender | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
+| Param       | Required                                  | Type     | Description                                                 |
+| ----------- | ----------------------------------------- | -------- | ----------------------------------------------------------- |
+| sender      | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
+| withResults | <span class="text-normal">OPTIONAL</span> | `bool`   | Boolean parameter to specify if smart contract results and other details should be returned. |
 
 <!--Response-->
 
@@ -367,6 +368,58 @@ Transaction details retrieved successfully.
         "blockHash": "50a1...",
         "status": "executed"
     }
+}
+```
+
+<!--Example with results-->
+
+Request URL:
+
+`https://gateway.elrond.com/transaction/:txHash?withResults=true`
+
+Response: 
+
+The response can contain additional fields such as `smartContractResults`, or `receipt`
+```
+"transaction": {
+      "type": "normal",
+      "nonce": 3,
+      "round": 186580,
+      "epoch": 12,
+      "value": "1000000000000000000",
+      "receiver": "erd1...",
+      "sender": "erd1...",
+      "gasPrice": 1000000000,
+      "gasLimit": 70000,
+      "data": "Zm9yIHRlc3Rz",
+      "signature": "1047...",
+      "sourceShard": 2,
+      "destinationShard": 1,
+      "blockNonce": 186535,
+      "miniblockHash": "e927...",
+      "blockHash": "50a1...",
+      "status": "executed",
+      "receipt": {
+        "value": 100,
+        "sender": "erd1...",
+        "data": "...",
+        "txHash": "b37..."
+      },
+      "smartContractResults": [
+        {
+          "hash": "...",
+          "nonce": 5,
+          "value": 1000,
+          "receiver": "erd1...",
+          "sender": "erd1...",
+          "data": "@6f6b",
+          "prevTxHash": "3638...",
+          "originalTxHash": "3638...",
+          "gasLimit": 0,
+          "gasPrice": 1000000000,
+          "callType": 0
+        }
+      ]
 }
 ```
 
