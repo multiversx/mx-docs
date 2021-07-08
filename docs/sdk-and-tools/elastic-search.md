@@ -1,21 +1,21 @@
 ---
 id: elastic-search
-title: Elastic Search
+title: Elasticsearch
 ---
 
 ## Overview
 
-An Elrond node can enable the indexing within an Elastic Search instance. Indexed data will serve as historical data source
+An Elrond node can enable the indexing within an Elasticsearch instance. Indexed data will serve as historical data source
 that can be used as it is for searching purposes or to serve a front-end application.
 
 :::tip
-Due to the possible high data volume, it's not recommended to use validators as nodes to index in Elastic Search from.
+Due to the possible high data volume, it's not recommended to use validators as nodes to index in Elasticsearch from.
 Our implementation uses a concept of a queue and makes sure that everything is being processed. Consensus and synchronization mechanisms can have delays because of the indexing.
 :::
 
 ## Setup
 
-In order to set up an observer that indexes in Elastic Search, one has to update the `external.toml` file from the node's 
+In order to set up an observer that indexes in Elasticsearch, one has to update the `external.toml` file from the node's 
 configuration directory. A minimum configuration would have `Enabled` set to `true` and the rest of the fields updated 
 accordingly (`URL`, `Username`, `Password`). 
 
@@ -26,7 +26,7 @@ Also, one can specify to only index data for a given set of indexes. The list of
 
 ### Proxy support
 
-There are some endpoints in elrond-proxy that rely on an Elastic Search instance. They can be found [here](/sdk-and-tools/proxy#dependency-on-elastic-search).
+There are some endpoints in elrond-proxy that rely on an Elasticsearch instance. They can be found [here](/sdk-and-tools/proxy#dependency-on-elastic-search).
 
 ## Multi-shards
 
