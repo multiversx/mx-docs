@@ -173,7 +173,7 @@ For example:
 
 Path Parameters
 
-`https://api.elrond.com/transaction/*param*`
+`https://gateway.elrond.com/transaction/*param*`
 
 | Param         | Required                                  | Type     | Description                           |
 | ------------- | ----------------------------------------- | -------- | ------------------------------------- |
