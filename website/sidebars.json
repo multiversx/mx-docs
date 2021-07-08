@@ -15,6 +15,7 @@
 		],
 		"Wallet":[
 			"wallet/web-wallet",
+			"wallet/webhooks",
 			"wallet/ledger"
 		],
 		"Validators":[
@@ -36,7 +37,8 @@
 				"ids":[
 					"validators/testnet/config-scripts",
 					"validators/testnet/install-update",
-					"validators/testnet/manage-testnet-node"
+					"validators/testnet/manage-testnet-node",
+					"validators/testnet/use-docker-testnet"
 				]
 			},
 			{
@@ -45,7 +47,8 @@
 				"ids":[
 					"validators/devnet/config-scripts-devnet",
 					"validators/devnet/install-update-devnet",
-					"validators/devnet/manage-devnet-node"
+					"validators/devnet/manage-devnet-node",
+					"validators/devnet/use-docker-devnet"
 				]
 			},
 			{
@@ -98,8 +101,10 @@
 				"type":"subcategory",
 				"label":"Developer reference",
 				"ids":[
+					"developers/developer-reference/elrond-serialization-format",
 					"developers/developer-reference/mandos-tests-reference",
-					"developers/developer-reference/elrond-serialization-format"
+					"developers/developer-reference/elrond-wasm-annotations",
+					"developers/developer-reference/elrond-wasm-contract-calls"
 				]
 			},
 			"developers/constants",

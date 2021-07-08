@@ -3,9 +3,9 @@ id: wallet-keys
 title: Wallet Keys
 ---
 
-As a Validator you use the Wallet Keys to access the address from which you send the staking transaction. Your eGold holdings leave this address and are deposited into a staking smart contract. Rewards are sent to this address. You can change it later on by using a `changeRewards` transaction.
+As a Validator you use the Wallet Keys to access the address from which you send the staking transaction. Your EGLD holdings leave this address and are deposited into a staking smart contract. Rewards are sent to this address. You can change it later on by using a `changeRewards` transaction.
 
-This wallet is the only one that can be used to send an un-stake transaction, meaning to recover your 2 500 EGLD from the staking smart contract.‌
+This wallet is the only one that can be used to send an un-stake transaction, meaning to recover your 2500 EGLD from the staking smart contract.‌
 
 You can create a new Wallet Key at [https://wallet.elrond.com](https://wallet.elrond.com/). The resulting file(s) will have the default name `<wallet address>.json`, for example:
 
