@@ -6,15 +6,15 @@ title: Constants
 Elrond uses some constants, which are specific to each chain (mainnet, testnet or devnet). The updated values can be found at these sources:
 
 **Mainnet**:
-- https://api.elrond.com/network/config
+- https://gateway.elrond.com/network/config
 - https://github.com/ElrondNetwork/elrond-config-mainnet
 
 **Testnet**:
-- https://testnet-api.elrond.com/network/config
+- https://testnet-gateway.elrond.com/network/config
 - https://github.com/ElrondNetwork/elrond-config-testnet
 
 **Devnet**:
-- https://devnet-api.elrond.com/network/config
+- https://devnet-gateway.elrond.com/network/config
 - https://github.com/ElrondNetwork/elrond-config-devnet
 
 At the time of writing, the most used constants values for mainnet were:

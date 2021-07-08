@@ -7,7 +7,7 @@ Query information about the Network.
 
 ## <span class="badge badge-primary">GET</span> **Get Network Configuration**
 
-`https://api.elrond.com/network/config`
+`https://gateway.elrond.com/network/config`
 
 This endpoint allows one to query basic details about the configuration of the Network.
 
@@ -46,7 +46,7 @@ Configuration details retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get Shard Status**
 
-`https://api.elrond.com/network/status/:shardId`
+`https://gateway.elrond.com/network/status/:shardId`
 
 This endpoint allows one to query the status of a given Shard.
 

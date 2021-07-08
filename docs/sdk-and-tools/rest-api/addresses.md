@@ -7,7 +7,7 @@ Get information about an Elrond Address.
 
 ## <span class="badge badge-primary">GET</span> **Get Address**
 
-`https://api.elrond.com/address/:bech32Address`
+`https://gateway.elrond.com/address/:bech32Address`
 
 This endpoint allows one to retrieve basic information about an Address (Account).
 
@@ -41,7 +41,7 @@ Address information successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Nonce**
 
-https://api.elrond.com**/address/:bech32Address/nonce**
+https://gateway.elrond.com**/address/:bech32Address/nonce**
 
 This endpoint allows one to retrieve the nonce of an Address.
 
@@ -71,7 +71,7 @@ Nonce successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Balance**
 
-https://api.elrond.com**/address/:bech32Address/balance**
+https://gateway.elrond.com**/address/:bech32Address/balance**
 
 This endpoint allows one to retrieve the balance of an Address.
 
@@ -101,7 +101,7 @@ Balance successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Transactions**
 
-https://api.elrond.com**/address/:bech32Address/transactions**
+https://gateway.elrond.com**/address/:bech32Address/transactions**
 
 This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
 
@@ -181,7 +181,7 @@ This endpoint requires the presence of an Elastic Search instance (populated thr
 
 ## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**
 
-https://api.elrond.com**/address/:bech32Address/key/:key**
+https://gateway.elrond.com**/address/:bech32Address/key/:key**
 
 This endpoint allows one to retrieve a value stored within the Blockchain for a given Address.
 
@@ -214,7 +214,7 @@ Value (hex-encoded) successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get all storage for Address**
 
-https://api.elrond.com**/address/:bech32Address/keys**
+https://gateway.elrond.com**/address/:bech32Address/keys**
 
 This endpoint allows one to retrieve all the key-value pairs stored under a given account.
 
