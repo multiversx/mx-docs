@@ -10,7 +10,7 @@ title: Welcome to Elrond
 - **How:** Scales via Adaptive State Sharding, consensus via Secure Proof of Stake
 - **Highlights:**
   - Performance: 15,000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100,000 (263,000 TPS in testnet)
-  - Maiar money app with progressive security, social recovery, embedded DeF
+  - Maiar money app with progressive security, social recovery, embedded DeFi
   - Tokens (FT, SFT, NFT) embedded into the protocol
   - Developers: royalties - 30% SC gas returned to authors, full IDE, Rust framework with debugger
   - Validators: ~20% APR for running nodes, low system requirements
