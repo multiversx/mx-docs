@@ -6,7 +6,11 @@ title: Node Databases
 ## **Node databases**
 
 Nodes use Serial LevelDB databases to persist processed blocks, transactions, and so on.
+
 The data can be removed or not, depending on the pruning flags that can be enabled or not in `config.toml`.
+The flags used to specify if a node should delete databases or not are `ValidatorCleanOldEpochsData` and `ObserverCleanOldEpochsData`. 
+Older versions of the configuration only have one flag `CleanOldEpochsData`. If set to false, then old databases won't be removed.
+
 By default, validators only keep the last 4 epochs and delete older ones for freeing disk space.
 
 The default databases directory is `<node-working-directory>/db` and it's content should match the following structure:
@@ -33,7 +37,7 @@ The default databases directory is `<node-working-directory>/db` and it's conten
 ```
 
 
-When starting a node, if databases exist, it will try to start with the state fetched from the storage. If it does not match
+Nodes will fetch the state from an existing database if one is detected during the startup process. If it does not match
 the current network height, it will sync the rest of the data from the network, until fully synced.
 
 ## **Starting a node with existent databases**
