@@ -75,6 +75,7 @@
 			"validators/redundancy",
 			"validators/import-db",
 			"validators/node-cli",
+			"validators/node-databases",
 			"validators/useful-links",
 			"validators/faq"
 		],
