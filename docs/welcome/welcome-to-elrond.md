@@ -11,9 +11,11 @@ title: Welcome to Elrond
 - **Highlights:**
   - Performance: 15,000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100,000 (263,000 TPS in testnet)
   - Maiar money app with progressive security, social recovery, embedded DeFi
+  - Tokens (FT, SFT, NFT) embedded into the protocol
   - Developers: royalties - 30% SC gas returned to authors, full IDE, Rust framework with debugger
-  - Validators: 36% APR for running nodes, low system requirements
-  - Network setup: over 2,000 nodes, with 4 shards (adaptivity allows throughput to increase with demand)
+  - Validators: ~20% APR for running nodes, low system requirements
+  - Network setup: 3,200 nodes, with 4 shards (adaptivity allows throughput to increase with demand)
+
 
 # **What is Elrond?**
 
@@ -34,30 +36,22 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 **Important achievements:**
 
 - First live blockchain architecture with state sharding
-- Mainnet launched in July 2020
-- 15,000 TPS, 6s latency, $0.001/tx
-- 263,000 TPS in public testnet
-- IDE with debugger and Rust framework for SCs
+- 15,000 TPS(scales > 100kTPS), 6s latency, $0.001/tx
+- Maiar App: buy, store, earn, pay EGLD, BTC, ETH, BNB
+- Smart Contracts, Staking & Delegation, Tokens
 - Validated through multiple audits from Trial of Bits & others
 
-**Q4 2020**
+**Q3 2021**
 
-- Elrond Bootstrapping Phase 3:
-  - Smart Contracts
-  - ESDT token
-- Staking: direct & delegation
-- Elrond Governance: Voting system
-- Development Toolkit
+- Maiar Exchange: DEX AMM
 
-**Q1 2021**
+**Q4 2021**
 
-- Maiar launch
-- Maiar: staking, DeFi
-- Decentralized Exchange
-- DeFi 2.0 module
-- Name Service
+- Maiar App new features
+- DeFi 2.0: Lending, Synthetics
 
-**Q2 2021**
 
-- Digital identity
-- Interoperability
+**Q2 2022**
+
+- Onchain Governance
+- Staking Phase 4
