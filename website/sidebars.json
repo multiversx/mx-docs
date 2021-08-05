@@ -71,6 +71,8 @@
 				]
 			},
 			"validators/delegation-manager",
+			"validators/convert-existing-validator-into-staking-pool",
+			"validators/merge-validator-delegation-sc",
 			"validators/rating",
 			"validators/redundancy",
 			"validators/import-db",
