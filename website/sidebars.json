@@ -1,172 +1,166 @@
 {
-	"docs":{
-		"Welcome to Elrond":[
-			"welcome/welcome-to-elrond"
-		],
-		"Technology":[
-			"technology/architecture-overview",
-			"technology/glossary",
-			"technology/entities",
-			"technology/chronology",
-			"technology/secure-proof-of-stake",
-			"technology/adaptive-state-sharding",
-			"technology/the-arwen-wasm-vm",
-			"technology/cross-shard-transactions"
-		],
-		"Wallet":[
-			"wallet/web-wallet",
-			"wallet/webhooks",
-			"wallet/ledger"
-		],
-		"Validators":[
-			"validators/overview",
-			"validators/system-requirements",
-			{
-				"type":"subcategory",
-				"label":"Install a Mainnet Node",
-				"ids":[
-					"validators/mainnet/config-scripts",
-					"validators/mainnet/install-update",
-					"validators/mainnet/optional-configs",
-					"validators/mainnet/use-docker"
-				]
-			},
-			{
-				"type":"subcategory",
-				"label":"Install a Testnet Node",
-				"ids":[
-					"validators/testnet/config-scripts",
-					"validators/testnet/install-update",
-					"validators/testnet/manage-testnet-node",
-					"validators/testnet/use-docker-testnet"
-				]
-			},
-			{
-				"type":"subcategory",
-				"label":"Install a Devnet Node",
-				"ids":[
-					"validators/devnet/config-scripts-devnet",
-					"validators/devnet/install-update-devnet",
-					"validators/devnet/manage-devnet-node",
-					"validators/devnet/use-docker-devnet"
-				]
-			},
-			{
-				"type":"subcategory",
-				"label":"Manage your keys",
-				"ids":[
-					"validators/key-management/validator-keys",
-					"validators/key-management/wallet-keys",
-					"validators/key-management/protect-keys"
-				]
-			},
-			{
-				"type":"subcategory",
-				"label":"Staking, Unstaking, Unjailing",
-				"ids":[
-					"validators/staking/staking-unstaking-unjailing",
-					"validators/staking/staking",
-					"validators/staking/unjailing",
-					"validators/staking/staking-smart-contract"
-				]
-			},
-			"validators/delegation-manager",
-			"validators/convert-existing-validator-into-staking-pool",
-			"validators/merge-validator-delegation-sc",
-			"validators/rating",
-			"validators/redundancy",
-			"validators/import-db",
-			"validators/node-cli",
-			"validators/node-databases",
-			"validators/useful-links",
-			"validators/faq"
-		],
-		"Developers":[
-			{
-				"type":"subcategory",
-				"label":"Tutorials",
-				"ids":[
-					"developers/tutorials/counter",
-					"developers/tutorials/crowdfunding-p1",
-					"developers/tutorials/crowdfunding-p2"
-				]
-			},
-			{
-				"type":"subcategory",
-				"label":"Signing Transactions",
-				"ids":[
-					"developers/signing-transactions/signing-transactions",
-					"developers/signing-transactions/tools-for-signing",
-					"developers/signing-transactions/signing-programmatically"
-				]
-			},
-			{
-				"type":"subcategory",
-				"label":"Developer reference",
-				"ids":[
-					"developers/developer-reference/elrond-serialization-format",
-					"developers/developer-reference/mandos-tests-reference",
-					"developers/developer-reference/elrond-wasm-annotations",
-					"developers/developer-reference/elrond-wasm-contract-calls"
-				]
-			},
-			"developers/constants",
-			"developers/account-storage",
-			"developers/esdt-tokens",
-			"developers/nft-tokens",
-			"developers/setup-local-testnet",
-			"developers/setup-local-testnet-advanced",
-			"developers/creating-wallets"
-		],
-		"SDK and Tools":[
-			{
-				"type":"subcategory",
-				"label":"REST API",
-				"ids":[
-					"sdk-and-tools/rest-api/rest-api",
-					"sdk-and-tools/rest-api/addresses",
-					"sdk-and-tools/rest-api/transactions",
-					"sdk-and-tools/rest-api/network",
-					"sdk-and-tools/rest-api/nodes",
-					"sdk-and-tools/rest-api/blocks",
-					"sdk-and-tools/rest-api/virtual-machine",
-					"sdk-and-tools/rest-api/versions-and-changelog"
-				]
-			},
-			"sdk-and-tools/proxy",
-			"sdk-and-tools/elastic-search",
-			{
-				"type":"subcategory",
-				"label":"erdpy",
-				"ids":[
-					"sdk-and-tools/erdpy/erdpy",
-					"sdk-and-tools/erdpy/installing-erdpy",
-					"sdk-and-tools/erdpy/configuring-erdpy",
-					"sdk-and-tools/erdpy/erdpy-cli",
-					"sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
-					"sdk-and-tools/erdpy/sending-bulk-transactions",
-					"sdk-and-tools/erdpy/writing-and-running-erdpy-scripts"
-				]
-			},
-			"sdk-and-tools/erdjs",
-			"sdk-and-tools/erdgo",
-			"sdk-and-tools/erdjava",
-			"sdk-and-tools/erdkotlin",
-			"sdk-and-tools/erdwalletjs-cli"
-		],
-		"Integrators":[
-			"integrators/observing-squad",
-			"integrators/accounts-management",
-			"integrators/creating-transactions",
-			"integrators/querying-the-blockchain"
-		],
-		"Detailed comparison":[
-			"detailed-comparison/overview",
-			"detailed-comparison/elrond-vs-ethereum-serenity",
-			"detailed-comparison/elrond-vs-zilliqa",
-			"detailed-comparison/elrond-vs-dfinity",
-			"detailed-comparison/elrond-vs-algorand",
-			"detailed-comparison/elrond-vs-harmony"
-		]
-	}
+  "docs": {
+    "Welcome to Elrond": ["welcome/welcome-to-elrond"],
+    "Technology": [
+      "technology/architecture-overview",
+      "technology/glossary",
+      "technology/entities",
+      "technology/chronology",
+      "technology/secure-proof-of-stake",
+      "technology/adaptive-state-sharding",
+      "technology/the-arwen-wasm-vm",
+      "technology/cross-shard-transactions"
+    ],
+    "Wallet": ["wallet/web-wallet", "wallet/webhooks", "wallet/ledger"],
+    "Validators": [
+      "validators/overview",
+      "validators/system-requirements",
+      {
+        "type": "subcategory",
+        "label": "Install a Mainnet Node",
+        "ids": [
+          "validators/mainnet/config-scripts",
+          "validators/mainnet/install-update",
+          "validators/mainnet/optional-configs",
+          "validators/mainnet/use-docker"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Install a Testnet Node",
+        "ids": [
+          "validators/testnet/config-scripts",
+          "validators/testnet/install-update",
+          "validators/testnet/manage-testnet-node",
+          "validators/testnet/use-docker-testnet"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Install a Devnet Node",
+        "ids": [
+          "validators/devnet/config-scripts-devnet",
+          "validators/devnet/install-update-devnet",
+          "validators/devnet/manage-devnet-node",
+          "validators/devnet/use-docker-devnet"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Manage your keys",
+        "ids": [
+          "validators/key-management/validator-keys",
+          "validators/key-management/wallet-keys",
+          "validators/key-management/protect-keys"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Staking, Unstaking, Unjailing",
+        "ids": [
+          "validators/staking/staking-unstaking-unjailing",
+          "validators/staking/staking",
+          "validators/staking/unjailing",
+          "validators/staking/staking-smart-contract"
+        ]
+      },
+      "validators/delegation-manager",
+      "validators/staking/convert-existing-validator-into-staking-pool",
+      "validators/staking/merge-validator-delegation-sc",
+      "validators/rating",
+      "validators/redundancy",
+      "validators/import-db",
+      "validators/node-cli",
+      "validators/node-databases",
+      "validators/useful-links",
+      "validators/faq"
+    ],
+    "Developers": [
+      {
+        "type": "subcategory",
+        "label": "Tutorials",
+        "ids": [
+          "developers/tutorials/counter",
+          "developers/tutorials/crowdfunding-p1",
+          "developers/tutorials/crowdfunding-p2"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Signing Transactions",
+        "ids": [
+          "developers/signing-transactions/signing-transactions",
+          "developers/signing-transactions/tools-for-signing",
+          "developers/signing-transactions/signing-programmatically"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Developer reference",
+        "ids": [
+          "developers/developer-reference/elrond-serialization-format",
+          "developers/developer-reference/mandos-tests-reference",
+          "developers/developer-reference/elrond-wasm-annotations",
+          "developers/developer-reference/elrond-wasm-contract-calls"
+        ]
+      },
+      "developers/constants",
+      "developers/account-storage",
+      "developers/esdt-tokens",
+      "developers/nft-tokens",
+      "developers/setup-local-testnet",
+      "developers/setup-local-testnet-advanced",
+      "developers/creating-wallets"
+    ],
+    "SDK and Tools": [
+      {
+        "type": "subcategory",
+        "label": "REST API",
+        "ids": [
+          "sdk-and-tools/rest-api/rest-api",
+          "sdk-and-tools/rest-api/addresses",
+          "sdk-and-tools/rest-api/transactions",
+          "sdk-and-tools/rest-api/network",
+          "sdk-and-tools/rest-api/nodes",
+          "sdk-and-tools/rest-api/blocks",
+          "sdk-and-tools/rest-api/virtual-machine",
+          "sdk-and-tools/rest-api/versions-and-changelog"
+        ]
+      },
+      "sdk-and-tools/proxy",
+      "sdk-and-tools/elastic-search",
+      {
+        "type": "subcategory",
+        "label": "erdpy",
+        "ids": [
+          "sdk-and-tools/erdpy/erdpy",
+          "sdk-and-tools/erdpy/installing-erdpy",
+          "sdk-and-tools/erdpy/configuring-erdpy",
+          "sdk-and-tools/erdpy/erdpy-cli",
+          "sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
+          "sdk-and-tools/erdpy/sending-bulk-transactions",
+          "sdk-and-tools/erdpy/writing-and-running-erdpy-scripts"
+        ]
+      },
+      "sdk-and-tools/erdjs",
+      "sdk-and-tools/erdgo",
+      "sdk-and-tools/erdjava",
+      "sdk-and-tools/erdkotlin",
+      "sdk-and-tools/erdwalletjs-cli"
+    ],
+    "Integrators": [
+      "integrators/observing-squad",
+      "integrators/accounts-management",
+      "integrators/creating-transactions",
+      "integrators/querying-the-blockchain"
+    ],
+    "Detailed comparison": [
+      "detailed-comparison/overview",
+      "detailed-comparison/elrond-vs-ethereum-serenity",
+      "detailed-comparison/elrond-vs-zilliqa",
+      "detailed-comparison/elrond-vs-dfinity",
+      "detailed-comparison/elrond-vs-algorand",
+      "detailed-comparison/elrond-vs-harmony"
+    ]
+  }
 }
