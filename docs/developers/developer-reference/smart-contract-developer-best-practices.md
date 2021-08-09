@@ -90,6 +90,10 @@ The Rust framework provides various storage mappers you can use:
 
 Although they're all very easy to use, the cost of using them vastly differs. `SingleValueMapper` is obviously the cheapest one, as you use a single key. The other mappers use additional storage to ease of iteration, insertion and deletion.  
 
+### SingleValueMapper vs old storage_set/storage_get pairs
+
+There is no difference between `SingleValueMapper` and the old-school setters/getters. In fact, `SingleValueMapper` is basically a combination between `storage_set`, `storage_get`, `storage_is_empty` and `storage_clear`. Use of `SingleValueMapper` is encouraged, as it's a lot more compact, and has no performance penalty (if, for example, you never use `is_empty()`, that code will be removed by the compiler).  
+
 ### SingleValueMapper vs VecMapper
 
 Storing a `Vec<T>` can be done in two ways:  
