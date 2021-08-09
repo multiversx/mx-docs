@@ -3,7 +3,7 @@ id: smart-contract-developer-best-practices
 title: Smart Contract Developer Best Practices
 ---
 
-# Code Arrangement
+## Code Arrangement
 
 We'll start with something simple: code arrangement. It's best to separate your code into 4 main parts:
 - endpoints
@@ -15,7 +15,7 @@ This ensures that your it's much easier to find what you're looking for, and it'
 
 The recommended order is the one from the list above, but order is not important as long as you clearly separate your code. Even better if you split those into modules.  
 
-# BigUint Operations
+## BigUint Operations
 
 `BigUint` is simply a handle to the actual representation, similar to how system file handles work, so it's simply a struct with an `i32` as member, representing the handle. All the operations have to be done through API functions, passing the handles for result, first operand, second operand. Using Rust's operator overloading feature, we're able to overwrite arithmetic operators and provide an easy way of adding `BigUint`s, just like primitive number types.  
 
@@ -79,7 +79,7 @@ This creates a single `BigUint` instead of 3.
 
 Of course, these are trivial examples, but we hope this clears up some confusion about how `BigUint`s work and how you can get the most of them.  
 
-# Storage Mappers
+## Storage Mappers
 
 The Rust framework provides various storage mappers you can use:
 - `SingleValueMapper` - Stores a single value. Also provides methods for checking for empty or clearing the entry.  
@@ -90,7 +90,7 @@ The Rust framework provides various storage mappers you can use:
 
 Although they're all very easy to use, the cost of using them vastly differs. `SingleValueMapper` is obviously the cheapest one, as you use a single key. The other mappers use additional storage to ease of iteration, insertion and deletion.  
 
-## SingleValueMapper vs VecMapper
+### SingleValueMapper vs VecMapper
 
 Storing a `Vec<T>` can be done in two ways:  
 
@@ -112,7 +112,7 @@ Use `VecMapper` when:
 - you only require reading a part of the array  
 - `T`'s top-encoding is vastly more efficient than `T`'s nested-encoding (for example: `u64`)  
 
-## VecMapper vs SetMapper
+### VecMapper vs SetMapper
 
 The primary use for `SetMapper` is storing a whitelist of addresses, token ids, etc. A token ID whitelist can be stored in these two ways:  
 
@@ -142,7 +142,7 @@ A `SetMapper` uses 3 * N + 1 storage entries, where N is the number of elements.
 
 Even so, for this particular case, `SetMapper` is way better than `VecMapper`.  
 
-## VecMapper vs LinkedListMapper
+### VecMapper vs LinkedListMapper
 
 `LinkedListMapper` can be seen as a specialization for the `VecMapper`. It allows insertion/removal only at either end of the list, known as pushing/popping. It's also storage-efficient, as it only requires 2 * N + 1 storage entries. The storage for such a mapper looks like this:  
 
@@ -156,7 +156,7 @@ Even so, for this particular case, `SetMapper` is way better than `VecMapper`.
 
 This is one of the lesser used mappers, as its purpose is very specific, but it's very useful if you ever need to store a queue.  
 
-## SingleValueMapper vs MapMapper
+### SingleValueMapper vs MapMapper
 
 Believe it or not, most of the time, `MapMapper` is not even needed, and can simply be replaced by a `SingleValueMapper`. For example, let's say you want to store an ID for every Address. It might be tempting to use `MapMapper`, which would look like this:
 
@@ -195,7 +195,7 @@ fn list_per_user_pair(&self, first_addr: &Address, second_addr: &Address) -> Vec
 
 Using the correct mapper for your situation can greatly decrease gas costs and complexity, so always remember to carefully evaluate your use-case.  
 
-# VarArgs and MultiResults
+## VarArgs and MultiResults
 
 The Rust language does not natively support var args. The best you could probably do in native rust is use `Option<T>`. Even so, through some pre-processing of arguments, the Rust framework does provide support for said var args, and even multi results.  
 
@@ -215,7 +215,7 @@ fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: VarArgs<T2>
 
 This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalArg<T>` and `Vec<T>` instead of `VarArgs<T>`? The reason is the type of encoding used for each of them.
 
-## Option\<T\> vs OptionalArg\<T\>
+### Option\<T\> vs OptionalArg\<T\>
 
 Let's use the following endpoints as examples:
 ```
@@ -243,7 +243,7 @@ For the same token ID and skipped nonce, the encodings look like this:
 
 As you can see, the argument can be skipped altogether instead of passing a `00` (`None`).  
 
-## Vec\<T\> vs VarArgs\<T\>
+### Vec\<T\> vs VarArgs\<T\>
 
 For the sake of the example, let's assume you want to receive pairs of (token ID, nonce, amount). This can be implemented in two ways:
 ```
