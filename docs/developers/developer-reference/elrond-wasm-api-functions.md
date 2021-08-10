@@ -23,7 +23,7 @@ This API is accessible through `self.blockchain()`. Available functions:
 Returns the smart contract's own address.
 
 ### `get_owner_address() -> Address`  
-Returns the smart contract's own address.
+Returns the owner's address.
 
 ### `check_caller_is_owner()`  
 Signals an error if the caller is not the owner.  
