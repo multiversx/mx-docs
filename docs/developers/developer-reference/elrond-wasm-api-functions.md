@@ -95,7 +95,7 @@ This only works for addresses that are in the same shard as the smart contract.
 
 For fungible ESDT, nonce should be 0. For EGLD balance, use the `get_balance` instead.  
 
-### `get_esdt_token_data(address: &Address, token_id: &TokenIdentifier, nonce: u64) -> Self::BigUint`  
+### `get_esdt_token_data(address: &Address, token_id: &TokenIdentifier, nonce: u64) -> EsdtTokenData<Self::BigUint>`  
 Gets the ESDT token properties for the specific token type, owned by the specified address.  
 
 `EsdtTokenData` has the following format:  
