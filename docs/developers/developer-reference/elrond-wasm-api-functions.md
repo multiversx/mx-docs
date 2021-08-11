@@ -26,7 +26,7 @@ Returns the smart contract's own address.
 Returns the owner's address.
 
 ### `check_caller_is_owner()`  
-Signals an error if the caller is not the owner.  
+Terminates the execution and signals an error if the caller is not the owner.  
 
 Use `#[only_owner]` endpoint annotation instead of directly calling this function.
 
@@ -150,3 +150,60 @@ Gets the ESDTLocalRoles set for the smart contract.
 
 This is done by simply reading protected storage, but this is a convenient function to use.  
 
+## Call Value API
+
+This API is accessible through `self.call_value()`. You should never have to call these functions (the only exception is the `get_all_esdt_transfers` function). Use the `#[payment]` annotations instead.  
+
+Available functions:  
+
+### `check_not_payable()`  
+Terminates the execution and returns an error if any call value has bee provided.  
+
+This function is used by auto-generated code. Functions that are not marked as `#[payable]` will automatically call this function.  
+
+### `egld_value() -> Self::BigUint`  
+Returns the amount of EGLD transfered in the current transaction. Will return 0 for ESDT transfers.  
+
+### `esdt_value() -> Self::BigUint`  
+Returns the amount of ESDT transfered in the current transaction. Will return 0 for EGLD transfers.  
+
+### `token() -> TokenIdentifier`  
+Returns the identifier of the token transfered in the current transaction. Will return `TokenIdentifier::egld()` for EGLD transfers.  
+
+Use `#[payment_token]` argument annotation instead of directly calling this function.  
+
+### `esdt_token_nonce() -> u64`
+Returns the nonce of the SFT/NFT transfered in the current transaction. Will return 0 for EGLD or fungible ESDT transfers.  
+
+Use `#[payment_nonce]` argument annotation instead of directly calling this function.  
+
+### `esdt_token_type() -> EsdtTokenType`
+Returns the type of token transfered in the current transaction. Will only return `EsdtTokenType::Fungible` or `EsdtTokenType::NonFungible`.  
+
+### `require_egld() -> Self::BigUint`  
+Will return `egld_value` for EGLD transfers, or terminate execution and signal an error for ESDT transfers.  
+
+This function is mostly used by auto-generated code and should never be called directly. Use `#[payable("EGLD")]` annotation instead.  
+
+### `require_esdt() -> Self::BigUint`  
+Will return `esdt_value` for ESDT transfers, or terminate execution and signal an error for EGLD transfers.  
+
+This function is mostly used by auto-generated code and should never be called directly. Use `#[payable("*")]` annotation instead.  
+
+### `payment_token_pair() -> (Self::BigUint, TokenIdentifier)`  
+Returns the amount and the ID of the token transfered in the current transaction.  
+
+Mostly used by auto-generated code. Use `#[payment_token]` and `#[payment_amount]` argument annotations instead.  
+
+### `get_all_esdt_transfers() -> Vec<EsdtTokenPayment<Self::BigUint>>`  
+Returns all the ESDT payments received in the current transaction. Used when you want to support ESDT Multi-transfers in your endpoint.  
+
+Returns an array of structs, that contain the token type, token ID, token nonce and the amount being transfered:  
+```
+pub struct EsdtTokenPayment<BigUint: BigUintApi> {
+    pub token_type: EsdtTokenType,
+    pub token_name: TokenIdentifier,
+    pub token_nonce: u64,
+    pub amount: BigUint,
+}
+```
