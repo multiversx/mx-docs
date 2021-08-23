@@ -214,16 +214,16 @@ This API is accessible through `self.crypto()`. It provides hashing functions an
 
 Hashing functions:  
 
-### `sha256(data: &[u8]) -> H256`
-### `keccak256(data: &[u8]) -> H256`
-### `ripemd160(data: &[u8]) -> Box<[u8; 20]>`
+### `sha256(data: &[u8]) -> H256`  
+### `keccak256(data: &[u8]) -> H256`  
+### `ripemd160(data: &[u8]) -> Box<[u8; 20]>`  
 
 Signature verification functions:  
 
-### `verify_bls(key: &[u8], message: &[u8], signature: &[u8]) -> bool`
-### `verify_ed25519(key: &[u8], message: &[u8], signature: &[u8]) -> bool`
-### `verify_secp256k1(key: &[u8], message: &[u8], signature: &[u8]) -> bool`
-### `verify_custom_secp256k1(key: &[u8], message: &[u8], signature: &[u8], hash_type: MessageHashType) -> bool`
+### `verify_bls(key: &[u8], message: &[u8], signature: &[u8]) -> bool`  
+### `verify_ed25519(key: &[u8], message: &[u8], signature: &[u8]) -> bool`  
+### `verify_secp256k1(key: &[u8], message: &[u8], signature: &[u8]) -> bool`  
+### `verify_custom_secp256k1(key: &[u8], message: &[u8], signature: &[u8], hash_type: MessageHashType) -> bool`  
 
 `MessageHashType` is an enum, representing the hashing algorithm that was used to create the `message` argument. Use `ECDSAPlainMsg` if the message is in "plain text".  
 
@@ -239,6 +239,94 @@ pub enum MessageHashType {
 
 Other:  
 
-### `encode_secp256k1_der_signature(r: &[u8], s: &[u8]) -> BoxedBytes`
-
+### `encode_secp256k1_der_signature(r: &[u8], s: &[u8]) -> BoxedBytes`  
 Creates a signature from the corresponding elliptic curve parameters provided.  
+
+## Send API
+
+This API is accessible through `self.send()`. It provides functionalities like sending tokens, performing smart contract calls, calling built-in functions and much more.  
+
+We will not describe every single function in the API, as that would create confusion. We will only describe those that are recommended to be used (as they're mostly wrappers around more complicated low-level functions).  
+
+For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](elrond-wasm-contract-calls.md) section.  
+
+Without further ado, let's take a look at the available functions:  
+
+### `direct(to: &Address, token: &TokenIdentifier, nonce: u64, amount: &Self::BigUint, data: &[u8])`  
+Performs a simple EGLD/ESDT/NFT transfer to the target address, with some optional additional data. If you want to send EGLD, simply pass `TokenIdentifier::egld()`. For both EGLD and fungible ESDT, `nonce` should be 0.  
+
+This will fail if the destination is a non-payable smart contract, but the current executing transaction will not fail, and as such, any changes done to the storage will persist. The tokens will not be lost though, as they will be automatically returned.  
+
+Even though an invalid destination will not revert, an illegal transfer will return an error and revert. An illegal transfer is any transfer that would leave the SC with a negative balance for the specific token.  
+
+If you're unsure about the destination's account type, you can use the `is_smart_contract` function from `Blockchain API`.  
+
+### `deploy_contract(gas: u64, amount: &Self::BigUint, code: &BoxedBytes, code_metadata: CodeMetadata, arg_buffer: &ArgBuffer) -> Option<Address>`  
+Deploys another contract and returns `Some(deployed_contract_address)` if the deploy was successful, `None` otherwise. It is recommened to deploy through a proxy instead of calling this function manually, as that also handles argument serialization for you.  
+
+For the `gas` parameter, you can use the `get_gas_left` function from `Blockchain API`. Usually, you would pas gas_left / 2, gas_left / 4 etc., as you also need to keep some gas for post-deploy operations (like saving the address in storage). Passing the whole remaining gas is not recommened, as a failed deploy will consume all the gas that's been given to it.  
+
+`amount` is the amount of EGLD to transfer to the deployed contract. This will fail if the target's `#[init]` function is not marked as `#[payable("EGLD")]`. ESDTs and NFTs can NOT be transfered at deploy time.  
+
+`code` is the smart contract's code. This is not a requirement, but to ensure full compatibility, it's best if both the parent and the child use the same elrond-wasm version. You will rarely run into issues even with different versions, but it could happen.  
+
+`code_metadata` contains bit-flags that specify if the contract can be upgraded, is payable and/or can have its storage read by other smart contracts. If, for example, you'd want your contract to have all 3 properties "on", you'd pass `CodeMetadata::UPGRADEABLE | CodeMetadata::PAYABLE |  CodeMetadata::READABLE`. In most cases, you'd simply pass `CodeMetadata::DEFAULT` here, which is upgradeable, NOT payable, and readable.  
+
+`arg_buffer` contains the serialized arguments that will be passed to the contract's `#[init]` function.  
+
+### `deploy_from_source_contract(gas: u64, amount: &Self::BigUint, source_contract_address: &Address, code_metadata: CodeMetadata, arg_buffer: &ArgBuffer) -> Option<Address>`  
+This function is very similar to the previous one, but instead of having the child's smart contract code passed directly, it will use the code of an already existing smart contract, given by the `source_contract_address` parameter.  
+
+### `upgrade_contract(sc_address: &Address, gas: u64, amount: &Self::BigUint, code: &BoxedBytes, code_metadata: CodeMetadata, arg_buffer: &ArgBuffer)`  
+This function upgrades an existing smart contract with the provided code, also calling the new implementation's `#[init]` function with the provided arguments. The function arguments are pretty similar to the `deploy_contract` API function, with the exception of needing to provide the smart contract's address instead of receiving it.  
+
+This function will fail if the current smart contract is not the owner of the `sc_address` smart contract. Owner is automatically set on deploy.  
+
+### `change_owner_address(child_sc_address: &Address, new_owner: &Address)`  
+Changes the ownership of target child contract to another address. This will fail if the current contract is not the owner of the `child_sc_address` contract.  
+
+This also has the implication that the current contract will not be able to call `#[only_owner]` functions of the child contract, upgrade, or change owner again.  
+
+### `esdt_local_mint(token: &TokenIdentifier, nonce: u64, amount: &Self::BigUint)`  
+Allows synchronous minting of ESDT/SFT (depending on nonce). Execution is resumed afterwards. Note that the SC must have the `ESDTLocalMint` or `ESDTNftAddQuantity` roles set, or this will fail with "action is not allowed".  
+
+For SFTs, you must use `esdt_nft_create` before adding additional quantity.  
+
+This function cannot be used for NFTs.  
+
+### `esdt_local_burn(token: &TokenIdentifier, nonce: u64, amount: &Self::BigUint)`  
+The inverse operation of `esdt_local_mint`, which permanently removes the tokens.  Note that the SC must have the `ESDTLocalBurn` or `ESDTNftBurn` roles set, or this will fail with "action is not allowed".  
+
+Unlike the mint function, this can be used for NFTs.  
+
+### `esdt_nft_create<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &Self::BigUint, name: &BoxedBytes, royalties: &Self::BigUint, hash: &BoxedBytes, attributes: &T, uris: &[BoxedBytes]) -> u64`  
+Creates a new SFT/NFT, and returns its nonce.  
+
+Must have `ESDTNftCreate` role set, or this will fail with "action is not allowed".  
+
+`token` is identifier of the SFT/NFT brand.  
+
+`amount` is the amount of tokens to be minted. For NFTs, this should be "1".  
+
+`name` is the display name of the token, which will be used in explorers, marketplaces, etc.  
+
+`royalties` is a number between 0 and 10,000, which represents the percentage of any selling amount the creator receives. This representation is used to be able to have more precision. For example, a percentage like `55.66%` is stored as `5566`. These royalties are not enforced, and will mostly be used in "official" NFT marketplaces.  
+
+`hash` is a user-defined hash for the token. Recommended value is sha256(attributes), but it can be anything.  
+
+`attributes` can be any serializable user-defined struct, more specifically, any type that implements the `TopEncode` trait. There is no real standard for attributes format at the point of writing this document, but that might change in the future.  
+
+`uris` is a list of links to the NFTs visual/audio representation, most of the time, these will be links to images, videos or songs. Currently, only one URI is supported, but that is planned to change at some point.  
+
+### `sell_nft(nft_id: &TokenIdentifier, nft_nonce: u64, nft_amount: &Self::BigUint, buyer: &Address, payment_token: &TokenIdentifier, payment_nonce: u64, payment_amount: &Self::BigUint) -> Self::BigUint`  
+Sends the SFTs/NFTs to target address, while also automatically calculating and sending NFT royalties to the creator. Returns the amount left after deducting royalties.  
+
+`(nft_id, nft_nonce, nft_amount)` are the SFTs/NFTs that are going to be sent to the `buyer` address.  
+
+`(payment_token, payment_nonce, payment_amount)` are the tokens that are used to pay the creator royalties.  
+
+This function's purpose is mostly to be used in marketplace-like smart contracts, where the contract sells NFTs to users.  
+
+## Conclusion
+
+While there are still other various APIs in elrond-wasm, they are mostly hidden from the user. These are the ones you're going to be using in your day-to-day smart contract development.  
