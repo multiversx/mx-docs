@@ -207,3 +207,38 @@ pub struct EsdtTokenPayment<BigUint: BigUintApi> {
     pub amount: BigUint,
 }
 ```
+
+## Crypto API
+
+This API is accessible through `self.crypto()`. It provides hashing functions and signature verification. Since those functions are widely known and have their own pages of documentation, we will not go into too much detail in this section.  
+
+Hashing functions:  
+
+### `sha256(data: &[u8]) -> H256`
+### `keccak256(data: &[u8]) -> H256`
+### `ripemd160(data: &[u8]) -> Box<[u8; 20]>`
+
+Signature verification functions:  
+
+### `verify_bls(key: &[u8], message: &[u8], signature: &[u8]) -> bool`
+### `verify_ed25519(key: &[u8], message: &[u8], signature: &[u8]) -> bool`
+### `verify_secp256k1(key: &[u8], message: &[u8], signature: &[u8]) -> bool`
+### `verify_custom_secp256k1(key: &[u8], message: &[u8], signature: &[u8], hash_type: MessageHashType) -> bool`
+
+`MessageHashType` is an enum, representing the hashing algorithm that was used to create the `message` argument. Use `ECDSAPlainMsg` if the message is in "plain text".  
+
+```
+pub enum MessageHashType {
+    ECDSAPlainMsg,
+    ECDSASha256,
+    ECDSADoubleSha256,
+    ECDSAKeccak256,
+    ECDSARipemd160,
+}
+```
+
+Other:  
+
+### `encode_secp256k1_der_signature(r: &[u8], s: &[u8]) -> BoxedBytes`
+
+Creates a signature from the corresponding elliptic curve parameters provided.  
