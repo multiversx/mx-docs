@@ -16,3 +16,7 @@ Accounts creation can be achieved through different approaches:
 - using the [lightweight CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli) wrapper over our [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
 - using our [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http), which wraps the [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
 - programmatically, using the [TrustWalletCore extension](https://github.com/trustwallet/wallet-core/tree/master/src/Elrond) for Elrond
+- programmatically, using the [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)
+- programmatically, using the [erdpy - Python SDK](/sdk-and-tools/erdpy/erdpy)
+- programmatically, using the [erdgo - Golang SDK](/sdk-and-tools/erdgo)
+- programmatically, using the [erdjava - Java SDK](/sdk-and-tools/erdjava)
