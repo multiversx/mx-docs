@@ -503,9 +503,43 @@ https://gateway.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
+### <span class="badge badge-primary">GET</span> **Get all roles for tokens of an address**
+
+This involves a basic request that contains the address to fetch all tokens and roles for.
+For example:
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/address/*bech32Address*/esdts/roles
+```
+
+<!--Response-->
+
+```
+{
+  "roles": {
+    "TCK-0cv5hj": [
+      "ESDTRoleNFTAddQuantity",
+      "ESDTRoleNFTBurn"
+    ],
+    "TCK2-ft80kn": [
+      "ESDTRoleLocalBurn"
+    ]
+  }
+  "error": "",
+  "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 ### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
 
-This involves a `vm query` request to the `ESDT` address.
+1. All ESDT tokens
+
 For example:
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -530,7 +564,87 @@ https://gateway.elrond.com/network/esdts
   "code": "successful"
 }
 ```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
+---
+
+2. Fungible tokens
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/network/esdt/fungible-tokens
+```
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+---
+
+3. Semi-fungible tokens
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/network/esdt/semi-fungible-tokens
+```
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+---
+
+4. Non-fungible tokens
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/network/esdt/non-fungible-tokens
+```
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
+  "error": "",
+  "code": "successful"
+}
+```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-success">POST</span> **Get ESDT token properties**

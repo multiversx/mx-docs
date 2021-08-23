@@ -22,6 +22,20 @@ As described in section [Signing Transactions](/developers/signing-transactions/
 }
 ```
 
+## **SDK and tools support for creating and signing transactions**
+
+There are SDKs or tools with support for interacting with the Elrond blockchain, so one can use one of the following SDKs to perform
+transactions creation and signing:
+
+- [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)
+- [erdpy - Python SDK](/sdk-and-tools/erdpy/erdpy)
+- [erdgo - Golang SDK](/sdk-and-tools/erdgo)
+- [erdjava - Java SDK](/sdk-and-tools/erdjava)
+- [elrond-core-js](https://github.com/ElrondNetwork/elrond-core-js) library
+- [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli) wrapper over our [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
+- [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http), which wraps the [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
+
+
 ## **General network parameters**
 
 General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/sdk-and-tools/rest-api/network#get-network-configuration).
