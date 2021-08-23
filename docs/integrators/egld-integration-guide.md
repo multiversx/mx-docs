@@ -63,6 +63,11 @@ For example, when the system is up, it should start processing from a nonce in t
 ...
 ```
 
+:::warning
+Keep in mind that a hyperblock shouldn't be processed twice as this might cause issues. 
+Make sure the block processing and the saving of the last processed nonce should be atomic.
+:::
+
 #### 2.3. Querying the transactions
 
 The system fetches the response and iterates over each successful transaction and determine if any address from the integrator is involved.
@@ -70,6 +75,8 @@ The system fetches the response and iterates over each successful transaction an
 ### 3. Transaction handling
 
 After identifying a relevant transaction in step 2.3 (the sender or the receiver is an integrator's address) actions could be taken on integrator's side.
+
+It is recommended that the integrator performs some balances checks before triggering internal transfers.
 
 For example, if the receiver is an integrator's address, the integrator can update its balance on internal storage systems.
 
@@ -81,8 +88,7 @@ that no transaction is skipped.
 
 ## Finality of the transactions / number of confirmations
 
-The hyperblock includes only finalized transactions so theoretically no number of confirmations is needed. However, an integrator
-can choose to wait a number of rounds until considering a transaction finalized.
+The hyperblock includes only finalized transactions so only one confirmation is needed. The integrator however has the flexibility to wait for any number of additional confirmations.
 
 ## Balances check
 
@@ -96,6 +102,6 @@ Elrond SDKs or tools can be used for signing transactions and performing account
 A complete list and more detailed information can be found on the [accounts management](/integrators/accounts-management) and 
 [signing transaction](/integrators/creating-transactions) sections.
 
-There is also an example that matches the above-presented workflow and be found on the Go SDK for Elrond, [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
+There is also an example that matches the above-presented workflow and can be found on the Go SDK for Elrond, [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
 
 However, other SDKs can be used as well for handling accounts management or transaction signing.
