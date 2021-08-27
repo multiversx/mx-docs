@@ -11,7 +11,7 @@ Smart contract modules are a handy way of dividing a contract into smaller compo
 
 Modules can be defined both in the same crate as the main contract, or even in their own standalone crate. The latter is used when you want to use the same module in multiple contracts.  
 
-A module is trait declared with the `#[elrond_was_derive::module]` macro. Inside the trait, you can write any code you would usually write in a smart contract, even endpoints, events, storage mappers, etc.  
+A module is trait declared with the `#[elrond_wasm::module]` macro. Inside the trait, you can write any code you would usually write in a smart contract, even endpoints, events, storage mappers, etc.  
 
 For example, let's say you want to have your storage mappers in a separate module. The implementation would look like this:  
 
