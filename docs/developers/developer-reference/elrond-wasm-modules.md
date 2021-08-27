@@ -16,7 +16,7 @@ A module is trait declared with the `#[elrond_wasm::module]` macro. Inside the t
 For example, let's say you want to have your storage mappers in a separate module. The implementation would look like this:  
 
 ```
-#[elrond_wasm_derive::module]
+#[elrond_wasm::module]
 pub trait StorageModule {
 #[view(getQuorum)]
     #[storage_mapper("firstStorage")]
