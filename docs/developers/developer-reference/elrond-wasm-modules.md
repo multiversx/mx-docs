@@ -41,7 +41,7 @@ pub trait SetupModule:
 ```
 
 ```
-#[elrond_wasm_derive::contract]
+#[elrond_wasm::contract]
 pub trait MainContract: 
     setup::SetupModule
     + storage::StorageModule
