@@ -18,7 +18,7 @@ For example, let's say you want to have your storage mappers in a separate modul
 ```
 #[elrond_wasm::module]
 pub trait StorageModule {
-#[view(getQuorum)]
+    #[view(getQuorum)]
     #[storage_mapper("firstStorage")]
     fn first_storage(&self) -> SingleValueMapper<Self::Storage, usize>;
 
