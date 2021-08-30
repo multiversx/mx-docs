@@ -40,7 +40,7 @@ The errors are now gone, but behind the scenes, this is more complex than simply
 
 This can be solved by borrowing `a`. `+` and the other operations are defined for references of `BigUint`, so this can be rewritten as:
 ```
-c = &a + &a;
+c = &a + &b;
 d = c + a;
 ```
 

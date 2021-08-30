@@ -102,7 +102,8 @@
           "developers/developer-reference/mandos-tests-reference",
           "developers/developer-reference/elrond-wasm-annotations",
           "developers/developer-reference/elrond-wasm-contract-calls",
-          "developers/developer-reference/smart-contract-developer-best-practices"
+          "developers/developer-reference/smart-contract-developer-best-practices",
+          "developers/developer-reference/elrond-wasm-api-functions"
         ]
       },
       "developers/constants",
