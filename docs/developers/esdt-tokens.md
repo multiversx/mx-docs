@@ -190,7 +190,7 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 ## **Multiple tokens transfer**
 
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
-fungile, semi-fungible or non-fungible tokens via a single transaction.
+fungible, semi-fungible or non-fungible tokens via a single transaction.
 
 
 A multi-token transfer transaction has the following form:
