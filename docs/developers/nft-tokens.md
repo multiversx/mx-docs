@@ -408,6 +408,12 @@ TransferTransaction {
 }
 ```
 
+## **Multiple tokens transfer**
+
+Multiple semi-fungible and/or non-fungible tokens can be transferred in a single transaction to a single receiver.
+
+More details can be found [here](/developers/esdt-tokens#multiple-tokens-transfer) .
+
 ## **Example flow**
 
 Let's see a complete flow of creating and transferring a Semi Fungible Token.
