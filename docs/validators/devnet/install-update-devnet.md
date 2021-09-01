@@ -60,7 +60,7 @@ zip node-0.zip validatorKey.pem
 mv node-0.zip $HOME/VALIDATOR_KEYS/
 ```
 
-Repeat the above for all your “n” nodes. When complete, please refer to our Key management section for instructions about how to properly backup and protect your keys.
+Repeat the above for all your “n” nodes. When complete, please refer to our Key management section for instructions about how to properly back up and protect your keys.
 
 **Start the node process**
 
@@ -79,7 +79,7 @@ $HOME/elrond-utils/termui -address localhost:8080
 ```
 
 :::tip
-Your first node is called `node-0` and it its REST API will run on port `8080` by default. The next node is `node-1 `on port `8081`, and so on.
+Your first node is called `node-0` and its REST API will run on port `8080` by default. The next node is `node-1 `on port `8081`, and so on.
 :::
 
 ## **Update your node(s)**
@@ -104,4 +104,4 @@ Your private keys are needed to run your node. Losing them means losing control 
 
 Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your “`**n**`” nodes]
 
-Create a safe backup for them on storage outside of the server running your node(s).
+Create a safe backup for them on storage outside the server running your node(s).

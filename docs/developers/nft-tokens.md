@@ -6,7 +6,7 @@ title: NFT tokens
 ## **Introduction**
 
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
-This way, one can issue a semi fungible token or a non fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
+This way, one can issue a semi fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
@@ -15,10 +15,10 @@ Once owning a quantity of a NFT/SFT, users will have their data store directly u
 - create the NFT/SFT
 - transfer quantity(es)
 
-## **Issuance of Non Fungible Tokens**
+## **Issuance of Non-Fungible Tokens**
 
-One has to perform an issuance transaction in order to register a non fungible token. 
-Non Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction in order to register a non-fungible token. 
+Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
 ```
 IssuanceTransaction {
@@ -203,7 +203,7 @@ Below you can find a table representing an example of the fields for a non-fungi
 
 As stated above, `hash` and `attributes` fields are arbitrary and the creator or the marketplace can use them in the way they want.
 
-In this example, the hash represents the hash of the `.mp3` file. Also the attributes follow a `attribute_name:attribute_value;attribute_name:attribute_value` format.
+In this example, the hash represents the hash of the `.mp3` file. Also, the attributes follow a `attribute_name:attribute_value;attribute_name:attribute_value` format.
 
 ## **Creation of an NFT**
 A single address can own the role of creating an NFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
@@ -409,6 +409,10 @@ TransferTransaction {
 ```
 
 ## **Multiple tokens transfer**
+
+:::warning
+This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
+:::
 
 Multiple semi-fungible and/or non-fungible tokens can be transferred in a single transaction to a single receiver.
 

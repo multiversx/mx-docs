@@ -242,7 +242,7 @@ $$
 |x| = \begin{Bmatrix} x  & {if } x \geq 0 \\ -x & {if } x < 0 \end{Bmatrix}
 $$
 
-### Youtube Embed
+### YouTube Embed
 
 ## First Version
 

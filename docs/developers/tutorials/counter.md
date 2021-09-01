@@ -37,7 +37,7 @@ Above, `mycounter` refers to the previously created folder, the one that holds t
 
 In order to deploy the contract on the Testnet you need to have an account with sufficient balance (required for the deployment fee) and the associated private key in **PEM format**.
 
-The deploy command is as follows:
+The deployment command is as follows:
 
 ```
 erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.elrond.com" --outfile="counter.json" --recall-nonce --send
@@ -80,7 +80,7 @@ Let's extract the contract address from `counter.json` before proceeding to an a
 export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counter.json')); print(data['emitted_tx']['address'])")
 ```
 
-Now that we have the contract address saved in an shell variable, we can call the `increment` function of the contract as follows:
+Now that we have the contract address saved in a shell variable, we can call the `increment` function of the contract as follows:
 
 ```
 erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.elrond.com" --recall-nonce --send

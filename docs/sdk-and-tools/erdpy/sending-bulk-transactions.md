@@ -46,7 +46,7 @@ See the page [Deriving the Wallet PEM](/sdk-and-tools/erdpy/deriving-the-wallet-
 
 The following Bash script defines a set of 9 example transactions. Each transaction is on one line, and contains the receiver wallet address (such as`erd1qx22...`), then a space, then the EGLD amount to be transferred (for example `8`). The script will take care of applying the correct EGLD denomination.
 
-You must change the value of `MYWALLET` first. The wallet you see in the script below doesn't actually exist and transactions sent from it will fail. Therefore you need to write your wallet address between the quotation marks `"` on the line where `MYWALLET` is defined.
+You must change the value of `MYWALLET` first. The wallet you see in the script below doesn't actually exist and transactions sent from it will fail. Therefore, you need to write your wallet address between the quotation marks `"` on the line where `MYWALLET` is defined.
 
 Next, you must change the `PEM_FILE` variable to the path to the PEM file you prepared at Step 1 (see above).
 
