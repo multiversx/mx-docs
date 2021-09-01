@@ -47,5 +47,5 @@ The random BLS key on hot-standby nodes has the following purposes:
 - the hot-standby node(s) will not cause BLS signature re-verification when idle.
 - it slightly prevents DDoS attacks as an attacker can not find all IPs behind a targeted BLS public key: 
   when an attacker takes down the Main Validator, the hot-standby nodes will advertise the public key when they 
-  by using it to sign blocks, but not sooner.
+ will need to sign blocks, but not sooner.
   

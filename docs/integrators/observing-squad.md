@@ -5,7 +5,7 @@ title: Observing Squad
 
 The N+1 setup for connecting to the Elrond Network
 
-In order to integrate with the Elrond Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to setup an **on-premises Observing Squad**.
+In order to integrate with the Elrond Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
 
 An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
 
@@ -23,7 +23,7 @@ In case of a single machine, our recommendation is as follows:
 
 - 16 x CPU
 - 32 GB RAM
-- HDD that can grow up to 5TB
+- Disk space that can grow up to 5 TB
 - 100 Mbit/s always-on Internet connection
 - Linux OS (Ubuntu 20.04 recommended)
 

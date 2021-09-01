@@ -13,7 +13,7 @@ The Rust framework provides a wrapper over the Arwen API functions and over acco
 
 The source code for the APIs can be found here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-wasm/src/api  
 
-Keep in mind that through the source code, you might see various aliases for `Self::BigUint`, like `Self::AmountType` and `Self::BalanceType`. These are all equivalent and you can safely use `Self::BigUint` everywhere in your smart contract. In the chapters to come, we will use `Self::BigUint` everywhere to prevent any confusion.  
+Keep in mind that through the source code, you might see various aliases for `Self::BigUint`, like `Self::AmountType` and `Self::BalanceType`. These are all equivalent, and you can safely use `Self::BigUint` everywhere in your smart contract. In the chapters to come, we will use `Self::BigUint` everywhere to prevent any confusion.  
 
 ## Blockchain API
 
@@ -127,7 +127,7 @@ You will never receive `EsdtTokenType::Invalid` or `EsdtTokenType::SemiFungible`
 
 `amount` is the current owned balance of the account.  
 
-`frozen` is a boolean if the account if frozen or not.  
+`frozen` is a boolean indicating if the account is frozen or not.  
 
 `hash` is the hash of the NFT. Generally, this will be the hash of the `attributes`, but this is not enforced in any way. Also, the hash length is not fixed either.  
 
@@ -143,7 +143,7 @@ You will never receive `EsdtTokenType::Invalid` or `EsdtTokenType::SemiFungible`
 
 This only works for addresses that are in the same shard as the smart contract.  
 
-Most of the time, this function is used with `self.blockchain().get_sc_address()` as address to get the properties of a token that is owned by the smart contract, or was transfered to the smart contract in the current executing call.  
+Most of the time, this function is used with `self.blockchain().get_sc_address()` as address to get the properties of a token that is owned by the smart contract, or was transferred to the smart contract in the current executing call.  
 
 ### `get_esdt_local_roles(token_id: &TokenIdentifier) -> Vec<EsdtLocalRole>`  
 Gets the ESDTLocalRoles set for the smart contract.  
@@ -157,28 +157,28 @@ This API is accessible through `self.call_value()`. You should never have to cal
 Available functions:  
 
 ### `check_not_payable()`  
-Terminates the execution and returns an error if any call value has bee provided.  
+Terminates the execution and returns an error if any call value has been provided.  
 
 This function is used by auto-generated code. Functions that are not marked as `#[payable]` will automatically call this function.  
 
 ### `egld_value() -> Self::BigUint`  
-Returns the amount of EGLD transfered in the current transaction. Will return 0 for ESDT transfers.  
+Returns the amount of EGLD transferred in the current transaction. Will return 0 for ESDT transfers.  
 
 ### `esdt_value() -> Self::BigUint`  
-Returns the amount of ESDT transfered in the current transaction. Will return 0 for EGLD transfers.  
+Returns the amount of ESDT transferred in the current transaction. Will return 0 for EGLD transfers.  
 
 ### `token() -> TokenIdentifier`  
-Returns the identifier of the token transfered in the current transaction. Will return `TokenIdentifier::egld()` for EGLD transfers.  
+Returns the identifier of the token transferred in the current transaction. Will return `TokenIdentifier::egld()` for EGLD transfers.  
 
 Use `#[payment_token]` argument annotation instead of directly calling this function.  
 
 ### `esdt_token_nonce() -> u64`
-Returns the nonce of the SFT/NFT transfered in the current transaction. Will return 0 for EGLD or fungible ESDT transfers.  
+Returns the nonce of the SFT/NFT transferred in the current transaction. Will return 0 for EGLD or fungible ESDT transfers.  
 
 Use `#[payment_nonce]` argument annotation instead of directly calling this function.  
 
 ### `esdt_token_type() -> EsdtTokenType`
-Returns the type of token transfered in the current transaction. Will only return `EsdtTokenType::Fungible` or `EsdtTokenType::NonFungible`.  
+Returns the type of token transferred in the current transaction. Will only return `EsdtTokenType::Fungible` or `EsdtTokenType::NonFungible`.  
 
 ### `require_egld() -> Self::BigUint`  
 Will return `egld_value` for EGLD transfers, or terminate execution and signal an error for ESDT transfers.  
@@ -191,14 +191,14 @@ Will return `esdt_value` for ESDT transfers, or terminate execution and signal a
 This function is mostly used by auto-generated code and should never be called directly. Use `#[payable("*")]` annotation instead.  
 
 ### `payment_token_pair() -> (Self::BigUint, TokenIdentifier)`  
-Returns the amount and the ID of the token transfered in the current transaction.  
+Returns the amount and the ID of the token transferred in the current transaction.  
 
 Mostly used by auto-generated code. Use `#[payment_token]` and `#[payment_amount]` argument annotations instead.  
 
 ### `get_all_esdt_transfers() -> Vec<EsdtTokenPayment<Self::BigUint>>`  
 Returns all the ESDT payments received in the current transaction. Used when you want to support ESDT Multi-transfers in your endpoint.  
 
-Returns an array of structs, that contain the token type, token ID, token nonce and the amount being transfered:  
+Returns an array of structs, that contain the token type, token ID, token nonce and the amount being transferred:  
 ```
 pub struct EsdtTokenPayment<BigUint: BigUintApi> {
     pub token_type: EsdtTokenType,
@@ -262,11 +262,11 @@ Even though an invalid destination will not revert, an illegal transfer will ret
 If you're unsure about the destination's account type, you can use the `is_smart_contract` function from `Blockchain API`.  
 
 ### `deploy_contract(gas: u64, amount: &Self::BigUint, code: &BoxedBytes, code_metadata: CodeMetadata, arg_buffer: &ArgBuffer) -> Option<Address>`  
-Deploys another contract and returns `Some(deployed_contract_address)` if the deploy was successful, `None` otherwise. It is recommened to deploy through a proxy instead of calling this function manually, as that also handles argument serialization for you.  
+Deploys another contract and returns `Some(deployed_contract_address)` if the deployment was successful, `None` otherwise. It is recommended to deploy through a proxy instead of calling this function manually, as that also handles argument serialization for you.  
 
-For the `gas` parameter, you can use the `get_gas_left` function from `Blockchain API`. Usually, you would pas gas_left / 2, gas_left / 4 etc., as you also need to keep some gas for post-deploy operations (like saving the address in storage). Passing the whole remaining gas is not recommened, as a failed deploy will consume all the gas that's been given to it.  
+For the `gas` parameter, you can use the `get_gas_left` function from `Blockchain API`. Usually, you would pass gas_left / 2, gas_left / 4 etc., as you also need to keep some gas for post-deploy operations (like saving the address in storage). Passing the whole remaining gas is not recommended, as a failed deployment will consume all the gas that's been given to it.  
 
-`amount` is the amount of EGLD to transfer to the deployed contract. This will fail if the target's `#[init]` function is not marked as `#[payable("EGLD")]`. ESDTs and NFTs can NOT be transfered at deploy time.  
+`amount` is the amount of EGLD to transfer to the deployed contract. This will fail if the target's `#[init]` function is not marked as `#[payable("EGLD")]`. ESDTs and NFTs can NOT be transferred at deploy time.  
 
 `code` is the smart contract's code. This is not a requirement, but to ensure full compatibility, it's best if both the parent and the child use the same elrond-wasm version. You will rarely run into issues even with different versions, but it could happen.  
 

@@ -21,7 +21,7 @@ Because of the influence they have in the network, validator nodes are required 
 
 If the validator consistently misbehaves or performs malicious actions, it will be fined accordingly and lose EGLD, an action known as _stake slashing,_ and by also having its validator status removed. This form of punishment is reserved for serious offences.
 
-Validator nodes each have an individual **rating score**, which expresses their overall reliability and responsiveness. Rating will increases for well-behaved nodes: every time a validator takes part in a successful consensus, its rating is increased.
+Validator nodes each have an individual **rating score**, which expresses their overall reliability and responsiveness. Rating will increase for well-behaved nodes: every time a validator takes part in a successful consensus, its rating is increased.
 
 The opposite is also true: a validator which is either offline during consensus or fails to contribute to the block being produced will be considered unreliable. And a consistently unreliable validator will see its rating drop.
 

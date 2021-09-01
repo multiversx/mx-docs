@@ -20,7 +20,7 @@ Let's suppose we have the following data structure:
   ~/elrond-go/cmd/node
 ```
 
-the `node` binary and the `arwen` binary are found in the above mentioned path.
+the `node` binary and the `arwen` binary are found in the above-mentioned path.
 Now, we have a previously constructed database (from an observer that synced with the chain from the 
 genesis and never switched the shards). This database will be placed in a directory, let's presume
 we will place it near the node's binary, yielding a data structure as follows:

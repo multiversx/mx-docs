@@ -116,7 +116,7 @@ Setting the keybase.io identity of the staking pool in the metadata is the **fir
 
 ### Display information
 
-To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in Maiar and the web wallet, some additional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and Maiar. If these information cannot be found a generic logo and the delegation contract's address is displayed.
+To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in Maiar and the web wallet, some additional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and Maiar. If this information cannot be found a generic logo and the delegation contract's address is displayed.
 
 In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/elrond/` folder.
 
@@ -446,7 +446,7 @@ DelegateTransaction {
 }
 ```
 
-If the transaction is successful, the funds holder has become a delegator and the funds either become a top-up amount for the stake of active validators, or may trigger the staking of inactive nodes, as described above.
+If the transaction is successful, the funds' holder has become a delegator and the funds either become a top-up amount for the stake of active validators, or may trigger the staking of inactive nodes, as described above.
 
 
 ### Claiming rewards

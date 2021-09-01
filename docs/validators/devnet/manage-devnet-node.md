@@ -7,7 +7,7 @@ Your node will start as an Observer. In order to make it into a Validator, you w
 
 First you need to create an Elrond wallet on the devnet at [https://devnet-wallet.elrond.com](https://devnet-wallet.elrond.com/)
 
-After you create the wallet, share its public address (erd1...) with an admin on the Telegram community and you will receive test xEGLD.
+After you create the wallet, share its public address (erd1...) with an admin on the Telegram community, and you will receive test xEGLD.
 
 Once you have sufficient funds, you can use the wallet to send a stake transaction for your node, in order for it to become a Validator on the public devnet.
 

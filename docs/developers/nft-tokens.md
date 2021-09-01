@@ -6,7 +6,7 @@ title: NFT tokens
 ## **Introduction**
 
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
-This way, one can issue a semi fungible token or a non fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
+This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
@@ -15,10 +15,10 @@ Once owning a quantity of a NFT/SFT, users will have their data store directly u
 - create the NFT/SFT
 - transfer quantity(es)
 
-## **Issuance of Non Fungible Tokens**
+## **Issuance of Non-Fungible Tokens**
 
-One has to perform an issuance transaction in order to register a non fungible token. 
-Non Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction in order to register a non-fungible token. 
+Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
 ```
 IssuanceTransaction {
@@ -52,10 +52,10 @@ IssuanceTransaction {
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
 
-## **Issuance of Semi Fungible Tokens**
+## **Issuance of Semi-Fungible Tokens**
 
-One has to perform an issuance transaction in order to register a semi fungible token.
-Semi Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi fungible token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction in order to register a semi-fungible token.
+Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
 ```
 IssuanceTransaction {
@@ -203,7 +203,7 @@ Below you can find a table representing an example of the fields for a non-fungi
 
 As stated above, `hash` and `attributes` fields are arbitrary and the creator or the marketplace can use them in the way they want.
 
-In this example, the hash represents the hash of the `.mp3` file. Also the attributes follow a `attribute_name:attribute_value;attribute_name:attribute_value` format.
+In this example, the hash represents the hash of the `.mp3` file. Also, the attributes follow a `attribute_name:attribute_value;attribute_name:attribute_value` format.
 
 ## **Creation of an NFT**
 A single address can own the role of creating an NFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
@@ -278,7 +278,7 @@ StopNFTCreationTransaction {
 
 ### **Add quantity (SFT only)**
 
-A user that has the `ESDTRoleNFTAddQuantity` role set for a given Semi Fungible Token, can increase its quantity. This function will not work for NFTs, because in that case the quantity cannot be higher than 1.
+A user that has the `ESDTRoleNFTAddQuantity` role set for a given Semi-Fungible Token, can increase its quantity. This function will not work for NFTs, because in that case the quantity cannot be higher than 1.
 
 ```
 AddQuantityTransaction {
@@ -297,7 +297,7 @@ If successful, the balance of the address for the given SFT will be increased wi
 
 ### **Burn quantity**
 
-A user that has the `ESDTRoleNFTBurn` role set for a given Semi Fungible Token, can burn some (or all) of the quantity.
+A user that has the `ESDTRoleNFTBurn` role set for a given semi-fungible Token, can burn some (or all) of the quantity.
 
 ```
 BurnQuantityTransaction {
@@ -410,15 +410,19 @@ TransferTransaction {
 
 ## **Multiple tokens transfer**
 
+:::warning
+This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
+:::
+
 Multiple semi-fungible and/or non-fungible tokens can be transferred in a single transaction to a single receiver.
 
 More details can be found [here](/developers/esdt-tokens#multiple-tokens-transfer) .
 
 ## **Example flow**
 
-Let's see a complete flow of creating and transferring a Semi Fungible Token.
+Let's see a complete flow of creating and transferring a Semi-Fungible Token.
 
-**Step 1: Issue/Register a Semi Fungible Token**
+**Step 1: Issue/Register a Semi-Fungible Token**
 
 ```
 {

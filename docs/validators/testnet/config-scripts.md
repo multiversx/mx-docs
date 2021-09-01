@@ -27,7 +27,7 @@ whoami
 Next, we need to edit the `variables.cfg` file and add your username in the following variables:
 
 - `CUSTOM_HOME`, which refers to the folder on the computer in which you will install your nodes
-- `CUSTOM_USER`, which is the username on the computer under which you will run the install, upgrade and other processes
+- `CUSTOM_USER`, which is the username on the computer under which you will run the installation, upgrade and other processes
 
 Open `variables.cfg` in the `nano` editor:
 

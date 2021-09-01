@@ -92,7 +92,7 @@ For example, if you would like to create a token `ALC` with a total supply of 10
 the initial supply to `10000` ($100 * 10^2$). 
 Also, when transferring/burning/minting tokens, you should keep in mind there is also the denomination involved. 
 
-Therefore, if you own some above-mentioned ALC tokens and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
+Therefore, if you own some above-mentioned ALC tokens, and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
 
 :::tip
 This is only relevant when performing operations via manual transactions over ESDT tokens. The Web Wallet for example already has this feature in place, so you don't have to take care of the number of decimals.
@@ -189,6 +189,10 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 
 ## **Multiple tokens transfer**
 
+:::warning
+This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
+:::
+
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
 fungible, semi-fungible or non-fungible tokens via a single transaction.
 
@@ -241,7 +245,7 @@ MultiTokensTransferTransaction {
 
 Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
 
-## **Transfers done programatically**
+## **Transfers done programmatically**
 The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
 
 ```

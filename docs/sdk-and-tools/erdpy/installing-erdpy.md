@@ -80,7 +80,7 @@ python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor
 
 :::
 
-You may need to restart your user session for this changes to take effect.
+You may need to restart your user session for these changes to take effect.
 
 ### **Install and smoke test**
 
@@ -92,7 +92,7 @@ pip3 install --user --upgrade --no-cache-dir erdpy
 
 ### **Troubleshooting**
 
-If you encounter encoding-related issues at installation time, such as: `UnicodeDecodeError: 'ascii' codec can't decode byte`, then please set `PYTHONIOENCODING` before running the install command:
+If you encounter encoding-related issues at installation time, such as: `UnicodeDecodeError: 'ascii' codec can't decode byte`, then please set `PYTHONIOENCODING` before running the installation command:
 
 ```
 PYTHONIOENCODING=utf8 pip3 install --user --upgrade --no-cache-dir erdpy
