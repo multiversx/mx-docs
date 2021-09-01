@@ -74,7 +74,7 @@ Input the destination address & amount, and the click <Send>
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN552w1yoO7DtY0596z%2Fimage.png?alt=media&token=c6b33892-db49-4970-a0c3-421108bf3d38)
 
-A small item will pop-up on your screen indicating the progress and completion of the transaction.
+A small item will pop up on your screen indicating the progress and completion of the transaction.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN55u2EthvWzpyHTLmk%2Fimage.png?alt=media&token=1cf59f3b-d4a9-4a58-b8e0-005a7d923431)
 
@@ -84,7 +84,7 @@ You can always review your transaction history in the "Transactions" menu on the
 
 ## **Receiving EGLD in your wallet**
 
-After logging into your wallet, as described above, you will be able to see your wallet address and share it with others so they can send you EGLD.
+After logging into your wallet, as described above, you will be able to see your wallet address and share it with others, so they can send you EGLD.
 
 Your address is immediately visible on the top part of the wallet, as "Address erd1... ". You can copy the address by pressing the copy button (two overlapping squares).
 

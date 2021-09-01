@@ -92,7 +92,7 @@ For example, if you would like to create a token `ALC` with a total supply of 10
 the initial supply to `10000` ($100 * 10^2$). 
 Also, when transferring/burning/minting tokens, you should keep in mind there is also the denomination involved. 
 
-Therefore, if you own some above-mentioned ALC tokens and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
+Therefore, if you own some above-mentioned ALC tokens, and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
 
 :::tip
 This is only relevant when performing operations via manual transactions over ESDT tokens. The Web Wallet for example already has this feature in place, so you don't have to take care of the number of decimals.
@@ -187,7 +187,65 @@ TransferWithCallTransaction {
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
-## **Transfers done programatically**
+## **Multiple tokens transfer**
+
+:::warning
+This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
+:::
+
+There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
+fungible, semi-fungible or non-fungible tokens via a single transaction.
+
+
+A multi-token transfer transaction has the following form:
+```
+MultiTokensTransferTransaction {
+    Sender: <account address of the sender>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 1_100_000 * num tokens
+    Data: "MultiESDTNFTTransfer" +
+          "@" + <receiver bytes in hexadecimal encoding> +
+          "@" + <number of tokens to transfer in hexadecimal encoding> +
+          "@" + <token 0 identifier in hexadecimal encoding> +
+          "@" + <token 0 nonce in hexadecimal encoding> +
+          "@" + <token 0 quantity to transfer in hexadecimal encoding> +
+          "@" + <token 1 identifier in hexadecimal encoding> +
+          "@" + <token 1 nonce in hexadecimal encoding> +
+          "@" + <token 1 quantity to transfer in hexadecimal encoding> +
+          ...
+}
+```
+
+:::tip
+Each token requires the token identifier, the nonce and the quantity to transfer. 
+
+For fungible tokens (regular ESDT) the nonce has to be 0 (`00` hex-encoded)
+:::
+
+Example:
+
+```
+MultiTokensTransferTransaction {
+    Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
+    Receiver: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
+    Value: 0
+    GasLimit: 2_200_000
+    Data: "MultiESDTNFTTransfer" +
+          "@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8" + // erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
+          "@02" +  // 2 tokens to transfer
+          "@414c432d363235386432" +   // ALC-6258d2 
+          "@00" +  // 0 -> the nonce is 0 for regular ESDT tokens
+          "@0c" +  // 12 -> value to transfer
+          "@5346542d317134723869" +  // SFT-1q4r8i
+          "@01" +  // 1 -> the nonce of the SFT
+          "@03"   // 3 -> the quantity to transfer
+}
+```
+
+Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
+
+## **Transfers done programmatically**
 The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
 
 ```

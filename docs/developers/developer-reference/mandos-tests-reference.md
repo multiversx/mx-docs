@@ -361,8 +361,8 @@ The fields are:
 
 - `txId` (optional) - same as for `scCall`
 - `comment` (optional) - same as for `scCall`
-- `tx` - similar with `scCall`, but a few differences. First off, there is no to field, since the contract does not exist yet. Also function cannot be specified, on deploy the `init` function is always called. We have:
-  - `contractCode` - the code for the new contract. Typically in the `"file:<relative path to contract binary>"` format.
+- `tx` - similar with `scCall`, but a few differences. First off, there is no `to` field, since the contract does not exist yet. Also function cannot be specified, on deploy the `init` function is always called. We have:
+  - `contractCode` - the code for the new contract. Typically, in the `"file:<relative path to contract binary>"` format.
   - `from`, `value`, `arguments`, `gasLimit`, `gasPrice` - same as for `ScCall`
 - `expect` (optional) - same as for `scCall`
 
@@ -443,7 +443,7 @@ The format is as follows
   - `“1” `is represented as `“0x01”`, signed interpretation: `1`, everything OK.
   - `“255”` is represented as `“0xff”`, signed interpretation: `“-1”,` this might not be what we expected.
   - `“+255”` is represented as `“0x00ff”`, signed interpretation: `“255”.` The prepended zero byte makes sure the contract interprets it as positive. The `+` makes sure those leading zeroes are added if necessary.
-  - `“+1”` is still represented as `“0x01”`, here the leading 0 is not necessary. Still, it is good practice to add the `+` if we know the argument is expected to be signed.
+  - `“+1”` is still represented as `“0x01”`, here the leading 0 is not necessary. Still, it is good practice adding the `+` if we know the argument is expected to be signed.
   - `“-1”` is represented as `“0xff”`. Negative numbers are also represented in the minimum number of bytes possible.
 - Boolean values: `"true"` = `"1"` = `"0x01"`; `"false"` = `"0"` = `""`.
 - String representation, starting with `''` or ``. Mandos steps can be embedded in Go code now; in Go ` is reserved for multi-line strings, so `''` is preferred now. In this representation, each character gets converted to a single byte, based on its ASCII code. It is especially useful for making the dummy account addresses readable. Storage keys are also commonly readable as ASCII. E.g. ` “``some string argument” `, ` "``node_address__________________s1" `, `"storage_key_1"`

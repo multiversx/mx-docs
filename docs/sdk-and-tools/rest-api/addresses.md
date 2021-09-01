@@ -176,7 +176,7 @@ This endpoint is not available on Observer Nodes. It is only available on Elrond
 
 **Currently, this endpoint is only available on the Official Elrond Proxy instance.**
 
-This endpoint requires the presence of an Elastic Search instance (populated through Observers) as well.
+This endpoint requires the presence of an Elasticsearch instance (populated through Observers) as well.
 :::
 
 ## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**

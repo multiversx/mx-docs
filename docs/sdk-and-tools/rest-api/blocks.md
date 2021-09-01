@@ -75,7 +75,7 @@ Block details retrieved successfully.
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 :::important
-This endpoint is only is only defined by the Proxy. The Observer does not expose this endpoint.
+This endpoint is only defined by the Proxy. The Observer does not expose this endpoint.
 :::
 
 :::tip

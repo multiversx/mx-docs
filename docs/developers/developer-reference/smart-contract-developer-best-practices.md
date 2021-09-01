@@ -84,7 +84,7 @@ Of course, these are trivial examples, but we hope this clears up some confusion
 The Rust framework provides various storage mappers you can use:
 - `SingleValueMapper` - Stores a single value. Also provides methods for checking for empty or clearing the entry.  
 - `VecMapper` - Stores an array, with every single value under a different storage key.  
-- `SetMapper` - Stores a set of values, with no duplicates being allowed. It also provides methods for checking if a value alreadt exists in the set.  
+- `SetMapper` - Stores a set of values, with no duplicates being allowed. It also provides methods for checking if a value already exists in the set.  
 - `LinkedListMapper` - Stores a linked list, which allows fast insertion/removal of elements, as well as possibility to iterate over the whole list.  
 - `MapMapper` - Stores (key, value) pairs, while also allowing iteration over keys.  
 
@@ -128,7 +128,7 @@ fn my_vec_whitelist(&self) -> VecMapper<Self::Storage, TokenIdentifier>
 fn my_set_mapper(&self) -> SetMapper<Self::Storage, TokenIdentifier>;
 ```
 
-This might look very similar, but the implications of using `VecMapper` for this are very damaging to the potential gas costs. Checking for an item's existance in `VecMapper` is done in O(n), with each iteration requiring a new storage read! Worst case scenario is the Token ID is not in the whitelist and the whole Vec is read.  
+This might look very similar, but the implications of using `VecMapper` for this are very damaging to the potential gas costs. Checking for an item's existence in `VecMapper` is done in O(n), with each iteration requiring a new storage read! Worst case scenario is the Token ID is not in the whitelist and the whole Vec is read.  
 
 `SetMapper` is vastly more efficient than this, as it provides checking for a value in O(1). However, this does not come without a cost. This is how the storage looks for a `SetMapper` with two elements (this snippet is taken from a mandos test): 
 

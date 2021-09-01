@@ -66,7 +66,7 @@ The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tool
 Broadcasted transactions that reach the _mempool_ having the same sender address and the same nonce are _competing transactions_, and only one of them will be processed (the one providing a higher gas price or, if they have the same gas price, the one that arrived the second - but keep in mind that arrival time is less manageable).
 
 :::tip
-Avoid competing transactions by maintaining an strictly increasing nonce sequence when broadcasting transactions of the same sender address.
+Avoid competing transactions by maintaining a strictly increasing nonce sequence when broadcasting transactions of the same sender address.
 :::
 
 Although an explicit _transaction cancellation trigger_ is not yet available in the Network, cancellation of a transaction T1 with nonce 42 could be _possible_ if one broadcasts a second transaction T2 with same nonce 42, with higher gas price (and without a value to transfer) **immediately** (e.g. 1 second) after broadcasting T1.

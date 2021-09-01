@@ -147,7 +147,7 @@ Let's take a look at the code. The first three lines declare some characteristic
 
 The 3rd line contains the command `imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the Elrond framework for Rust smart contracts, which is designed to simplify the code enormously.
 
-The framework itself it a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
+The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
 
 ```
 #[elrond_wasm_derive::contract(CrowdfundingImpl)]
@@ -159,7 +159,7 @@ The generated code will contain a structure called `CrowdfundingImpl`, as the li
 
 ### **Make it a trait**
 
-Your smart contract effectively starts at line 9. We could have gotten here quicker, but you wanted to know what the code means and it took a little while to explain. We're finally here, though. Let's look at the code again:
+Your smart contract effectively starts at line 9. We could have gotten here quicker, but you wanted to know what the code means, and it took a little while to explain. We're finally here, though. Let's look at the code again:
 
 ```Rust
 src/lib.rs (revisited)
@@ -288,7 +288,7 @@ pub trait Crowdfunding {
 
 The code above adds the methods `set_owner` and `get_owner`, which are marked as "storage setter" and "storage getter" respectively, for the key `owner`.
 
-Moreover, the `init` method now calls an API method: `self.get_caller()`. As mentioned earlier, the `init` method is called only once, during the deplyoment of the smart contract. This API method always returns the address of whomever calls the current smart contract method.
+Moreover, the `init` method now calls an API method: `self.get_caller()`. As mentioned earlier, the `init` method is called only once, during the deployment of the smart contract. This API method always returns the address of whomever calls the current smart contract method.
 
 But because the deployment is defined by the Elrond protocol as a transaction containing a call to a special system smart contract, it means that when called during `init`, the `self.get_caller()` method returns the address of whom is deploying the smart contract, i.e. the owner, so you.
 
@@ -300,7 +300,7 @@ Whenever you want to make sure your code is in order, run the build command:
 erdpy contract build
 ```
 
-There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All of the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
+There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
 
 ```
     #[view]
@@ -340,7 +340,7 @@ Your folder should look like this (output from the command `tree -L 2`):
     └── target
 ```
 
-Let's define the first test scenario. Open the file `mandos/test-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it and it's not really that complicated.
+Let's define the first test scenario. Open the file `mandos/test-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
 
 ```
 {
