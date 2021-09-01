@@ -23,7 +23,7 @@ In case of a single machine, our recommendation is as follows:
 
 - 16 x CPU
 - 32 GB RAM
-- HDD that can grow up to 5 TB
+- Disk space that can grow up to 5 TB
 - 100 Mbit/s always-on Internet connection
 - Linux OS (Ubuntu 20.04 recommended)
 
