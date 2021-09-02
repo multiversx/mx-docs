@@ -7,7 +7,7 @@ title: Staking
 
 In order to submit a staking transaction, you must have the following:
 
-- 2500 eGLD for each node and 0.006 eGold per node as transaction fee
+- 2500 EGLD for each node and 0.006 EGLD per node as transaction fee
 - A unique `validatorKey.pem` file of each node
 
 You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`.
@@ -74,13 +74,13 @@ The following commands assume that the PEM file for your Wallet was saved with t
 The command to submit a staking transaction with `erdpy` is this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://api.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
 ```
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
 
 - Replace `<stake-value>` with the amount you are staking. You need to calculate this value with respect to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
-- Replace `<validators-json-file>` with the a JSON file that lists the nodes you are staking for. This JSON file should look like this:
+- Replace `<validators-json-file>` with the JSON file that lists the nodes you are staking for. This JSON file should look like this:
 
 ```
 {
@@ -105,7 +105,7 @@ Notice also that there is no calculation for "Gas Limit". If you provide the `--
 Here's an example for a staking command for one node:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://api.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
 ```
 
 :::note important
@@ -115,7 +115,7 @@ You must take **denomination** into account when specifying the `value` paramete
 For two nodes, it becomes this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://api.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
 ```
 
 # **The --reward-address parameter**
@@ -127,7 +127,7 @@ Alternatively, you can tell `erdpy` to specify another wallet to which your rewa
 For example, a staking command for a single node, with a reward address specified, looks like this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --reward-address="erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg" --value="2500000000000000000000" --number-of-nodes=1  --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://api.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --reward-address="erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg" --value="2500000000000000000000" --number-of-nodes=1  --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
 ```
 
 The above command will submit a staking command and will also inform the Staking SmartContract that the rewards should be transferred to the wallet `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg` .

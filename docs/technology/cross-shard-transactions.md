@@ -3,9 +3,9 @@ id: cross-shard-transactions
 title: Cross Shard Transactions
 ---
 
-For an in depth example of how the cross-shard transactions are being executed and how the communication between shards and the metachain occurs, we are simplifying the entire process to just two shards and the metachain. Assuming that a user generates a transaction from his wallet, which has an address in shard 0 and wants to send eGLD to another user that has a wallet with an address in shard 1, the steps depicted in the figure below are required for processing the cross-shard transaction.
+For an in depth example of how the cross-shard transactions are being executed and how the communication between shards and the metachain occurs, we are simplifying the entire process to just two shards and the metachain. Assuming that a user generates a transaction from his wallet, which has an address in shard 0 and wants to send EGLD to another user that has a wallet with an address in shard 1, the steps depicted in the figure below are required for processing the cross-shard transaction.
 
-The block’s structure is represented by a block Header that contains information about the block (block nonce, round, proposer, validators timestamp etc), and a list of miniblocks for each shard that contain the actual transactions inside. Every miniblock contains all transactions that have either the sender in the current shard and the receiver in another shard or the sender in a different shard and the destination in the current shard. In our case, for a block in shard 0, there will normally be 3 miniblocks:
+The block’s structure is represented by a block Header that contains information about the block (block nonce, round, proposer, validators timestamp etc.), and a list of miniblocks for each shard that contain the actual transactions inside. Every miniblock contains all transactions that have either the sender in the current shard and the receiver in another shard or the sender in a different shard and the destination in the current shard. In our case, for a block in shard 0, there will normally be 3 miniblocks:
 
 - miniblock 0: containing the intrashard transactions for shard 0
 - miniblock 1: containing cross-shard transactions with the sender in shard 0 and destination in shard 1
@@ -15,7 +15,7 @@ There is no limitation on the number of miniblocks with the same sender and rece
 
 ## **Processing**
 
-Currently the atomic unit of processing in cross-shard execution is a miniblock: either all the transactions of the miniblock are processed at once or none and the miniblock’s execution will be retried in the next round.
+Currently, the atomic unit of processing in cross-shard execution is a miniblock: either all the transactions of the miniblock are processed at once or none and the miniblock’s execution will be retried in the next round.
 
 Our cross-shard transaction strategy uses an asynchronous model. Validation and processing is done first in sender’s shard and then in receivers' shard. Transactions are first dispatched in the sender’s shard, as it can fully validate any transaction initiated from the account in this shard – mainly the current balance. Afterwards, in the receivers' shard, the nodes only need proof of execution offered by metachain, do signature verification and check for replay attack and finally update the balance for the receiver, adding the amount from the transaction.
 

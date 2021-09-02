@@ -25,7 +25,7 @@ The command for generating the PEM file from mnemonic words is:
 erdpy --verbose wallet derive <output-file> --mnemonic
 ```
 
-In the above command, you must replace `<output-file>` with the name of the PEM file to be created. Upon running the command you will be asked to provided the mnemonic words.
+In the above command, you must replace `<output-file>` with the name of the PEM file to be created. Upon running the command you will be asked to provide the mnemonic words.
 
 Here is an example:
 

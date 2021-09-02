@@ -8,7 +8,7 @@ It is easy to prepare a set of transaction and then send them all at once using 
 Requirements:
 
 - You must have `erdpy` installed on your computer. See [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy) for details.
-- You need a wallet that contains sufficient eGLD. We will use the mnemonics you have for this wallet to generate a PEM file that `erdpy` needs.
+- You need a wallet that contains sufficient EGLD. We will use the mnemonics you have for this wallet to generate a PEM file that `erdpy` needs.
 
 There will be 3 steps to fulfill:
 
@@ -44,9 +44,9 @@ See the page [Deriving the Wallet PEM](/sdk-and-tools/erdpy/deriving-the-wallet-
 
 ## **Step 2: Prepare the transaction set**
 
-The following Bash script defines a set of 9 example transactions. Each transaction is on one line, and contains the receiver wallet address (such as`erd1qx22...`), then a space, then the eGLD amount to be transferred (for example `8`). The script will take care of applying the correct eGLD denomination.
+The following Bash script defines a set of 9 example transactions. Each transaction is on one line, and contains the receiver wallet address (such as`erd1qx22...`), then a space, then the EGLD amount to be transferred (for example `8`). The script will take care of applying the correct EGLD denomination.
 
-You must change the value of `MYWALLET` first. The wallet you see in the script below doesn't actually exist and transactions sent from it will fail. Therefore you need to write your wallet address between the quotation marks `"` on the line where `MYWALLET` is defined.
+You must change the value of `MYWALLET` first. The wallet you see in the script below doesn't actually exist and transactions sent from it will fail. Therefore, you need to write your wallet address between the quotation marks `"` on the line where `MYWALLET` is defined.
 
 Next, you must change the `PEM_FILE` variable to the path to the PEM file you prepared at Step 1 (see above).
 
@@ -75,7 +75,7 @@ declare -a TRANSACTIONS=(
 
 # DO NOT MODIFY ANYTHING FROM HERE ON
 
-PROXY="https://api.elrond.com"
+PROXY="https://gateway.elrond.com"
 DENOMINATION="000000000000000000"
 
 # We recall the nonce of the wallet

@@ -41,7 +41,9 @@ _italicized text_
 
 ### Link
 
-[title](https://www.elrond.com)
+[absolute URL](https://www.elrond.com)
+
+[relative URL](/developers/esdt-tokens#token-management)
 
 ### Image
 
@@ -171,7 +173,7 @@ For example:
 
 Path Parameters
 
-`https://api.elrond.com/transaction/*param*`
+`https://gateway.elrond.com/transaction/*param*`
 
 | Param         | Required                                  | Type     | Description                           |
 | ------------- | ----------------------------------------- | -------- | ------------------------------------- |
@@ -240,7 +242,7 @@ $$
 |x| = \begin{Bmatrix} x  & {if } x \geq 0 \\ -x & {if } x < 0 \end{Bmatrix}
 $$
 
-### Youtube Embed
+### YouTube Embed
 
 ## First Version
 

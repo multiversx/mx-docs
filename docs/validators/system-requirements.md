@@ -5,14 +5,14 @@ title: System Requirements
 
 # **Elrond Nodes explained**
 
-Nodes are computers running the Elrond software, so they contribute to the Elrond network by relaying information and validating it. Each node needs to stake 2.500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
+Nodes are computers running the Elrond software, so they contribute to the Elrond network by relaying information and validating it. Each node needs to stake 2500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
 
 # **Minimum System Requirements for running 1 Elrond Node**
 
 - 4 x dedicated/physical CPUs, either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 8 GB RAM
 - 200 GB SSD
-- 100 Mbit/s always-on internet connection, at least 4TB/month data plan
+- 100 Mbit/s always-on internet connection, at least 4 TB/month data plan
 - Linux OS (Ubuntu 20.04 recommended) / MacOS
 
 :::tip

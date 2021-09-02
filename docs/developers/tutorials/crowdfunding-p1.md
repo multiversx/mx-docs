@@ -17,25 +17,25 @@ The current tutorial revolves around **elrond-wasm-rs** version **0.7.1**, and w
 
 # **Introduction**
 
-Let's say you need to raise eGLD for a cause that you believe in. They will obviously be well spent, but you need to get the eGLD first. For this reason, you decided to run a crowdfunding campaign on the Elrond Network, which naturally means that you'll use a smart contract for the campaign. This tutorial will teach you how to do just that: write a crowdfunding smart contract, how to deploy it and how to use it.
+Let's say you need to raise EGLD for a cause that you believe in. They will obviously be well spent, but you need to get the EGLD first. For this reason, you decided to run a crowdfunding campaign on the Elrond Network, which naturally means that you'll use a smart contract for the campaign. This tutorial will teach you how to do just that: write a crowdfunding smart contract, how to deploy it and how to use it.
 
-The idea is simple: the smart contract will accept transfers until a deadline is reached, and it will keep track of all the people who sent eGLD.
+The idea is simple: the smart contract will accept transfers until a deadline is reached, and it will keep track of all the people who sent EGLD.
 
-If the deadline is reached and the smart contract has gathered an amount of eGLD above the desired funds, then the smart contract will consider the crowdfunding a success, and it will consequently send all the eGLD to a predetermined account (you!).
+If the deadline is reached and the smart contract has gathered an amount of EGLD above the desired funds, then the smart contract will consider the crowdfunding a success, and it will consequently send all the EGLD to a predetermined account (you!).
 
-But if the total amount of eGLD is lower than the desired target, all the donated eGLD must be sent back to the people who donated.
+But if the total amount of EGLD is lower than the desired target, all the donated EGLD must be sent back to the people who donated.
 
 # **Design**
 
 Here's how the smart contract is designed:
 
-- It will have an `init` method, which is automatically executed upon deployment. This method must receive from you the information on (1) the target amount of eGLD and (2) the crowdfunding deadline, expressed as a block nonce.
-- It will have a `fund` method, which people will call to send money to the smart contract. This method will receive the eGLD and will have to save all the information needed to return the eGLD in case the campaign does not reach the target.
+- It will have an `init` method, which is automatically executed upon deployment. This method must receive from you the information on (1) the target amount of EGLD and (2) the crowdfunding deadline, expressed as a block nonce.
+- It will have a `fund` method, which people will call to send money to the smart contract. This method will receive the EGLD and will have to save all the information needed to return the EGLD in case the campaign does not reach the target.
 - It will have a `claim` method. If anyone calls this method _before_ the deadline, it will do nothing and return an error. But if called _after_ the deadline, it will do one of the following:
-  - When you call it, and the target amount has been reached, it will send all the eGLD to you. If the amount has not been reached, it will do nothing and return an error.
-  - When one of the donors calls it, and the target amount has been reached, it will do nothing and return an error. But if the amount has not been reached (the campaign failed), then the smart contract will send the correct amount of eGLD back to the donor.
+  - When you call it, and the target amount has been reached, it will send all the EGLD to you. If the amount has not been reached, it will do nothing and return an error.
+  - When one of the donors calls it, and the target amount has been reached, it will do nothing and return an error. But if the amount has not been reached (the campaign failed), then the smart contract will send the correct amount of EGLD back to the donor.
   - When anyone else calls it, the method will do nothing and will return an error.
-- It will have a `status` method, which will return information about the campaign, such as whether the campaign is ongoing or it has ended, and how much eGLD has been donated so far. You will probably call this method often, out of impatience.
+- It will have a `status` method, which will return information about the campaign, such as whether the campaign is ongoing or it has ended, and how much EGLD has been donated so far. You will probably call this method often, out of impatience.
 
 Four methods, then: `init`, `fund`, `claim` and `status`.
 
@@ -147,7 +147,7 @@ Let's take a look at the code. The first three lines declare some characteristic
 
 The 3rd line contains the command `imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the Elrond framework for Rust smart contracts, which is designed to simplify the code enormously.
 
-The framework itself it a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
+The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
 
 ```
 #[elrond_wasm_derive::contract(CrowdfundingImpl)]
@@ -159,7 +159,7 @@ The generated code will contain a structure called `CrowdfundingImpl`, as the li
 
 ### **Make it a trait**
 
-Your smart contract effectively starts at line 9. We could have gotten here quicker, but you wanted to know what the code means and it took a little while to explain. We're finally here, though. Let's look at the code again:
+Your smart contract effectively starts at line 9. We could have gotten here quicker, but you wanted to know what the code means, and it took a little while to explain. We're finally here, though. Let's look at the code again:
 
 ```Rust
 src/lib.rs (revisited)
@@ -258,7 +258,7 @@ Normally, smart contract developers are used to dealing with raw bytes when stor
 
 You will now instruct the `init` method to store your address as the owner of this smart contract, upon deployment.
 
-The owner of a smart contract is the account which deployed it (you). By design, your Crowdfunding smart contract will send all the donated eGLD to its owner (you), assuming the target amount was reached. Nobody else has this privilege, because there is only one single owner of any given smart contract.
+The owner of a smart contract is the account which deployed it (you). By design, your Crowdfunding smart contract will send all the donated EGLD to its owner (you), assuming the target amount was reached. Nobody else has this privilege, because there is only one single owner of any given smart contract.
 
 Here's how the `init` method looks like, with the code that saves the address of the owner (guess who):
 
@@ -288,7 +288,7 @@ pub trait Crowdfunding {
 
 The code above adds the methods `set_owner` and `get_owner`, which are marked as "storage setter" and "storage getter" respectively, for the key `owner`.
 
-Moreover, the `init` method now calls an API method: `self.get_caller()`. As mentioned earlier, the `init` method is called only once, during the deplyoment of the smart contract. This API method always returns the address of whomever calls the current smart contract method.
+Moreover, the `init` method now calls an API method: `self.get_caller()`. As mentioned earlier, the `init` method is called only once, during the deployment of the smart contract. This API method always returns the address of whomever calls the current smart contract method.
 
 But because the deployment is defined by the Elrond protocol as a transaction containing a call to a special system smart contract, it means that when called during `init`, the `self.get_caller()` method returns the address of whom is deploying the smart contract, i.e. the owner, so you.
 
@@ -300,7 +300,7 @@ Whenever you want to make sure your code is in order, run the build command:
 erdpy contract build
 ```
 
-There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All of the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
+There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
 
 ```
     #[view]
@@ -340,7 +340,7 @@ Your folder should look like this (output from the command `tree -L 2`):
     └── target
 ```
 
-Let's define the first test scenario. Open the file `mandos/test-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it and it's not really that complicated.
+Let's define the first test scenario. Open the file `mandos/test-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
 
 ```
 {
@@ -444,7 +444,7 @@ There is only one account defined - the one that will perform the deployment dur
 
 ```
 
-This defines the account with the address `my_address`, which the testing framework will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000` (that's a lot of eGLD).
+This defines the account with the address `my_address`, which the testing framework will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000` (that's a lot of EGLD).
 
 Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing framework to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`.
 
@@ -490,7 +490,7 @@ This deployment transaction contains the WASM bytecode of the Crowdfunding smart
 
 Remember to run `erdpy contract build` before running the test, especially if you made recent changes to the smart contract source code! The WASM bytecode will be read directly from the file you specify here, without rebuilding it automatically.
 
-"You" also sent exactly `value: 0` eGLD out of the `1,000,000` to the deployed smart contract. It wouldn't need them anyway, because your Crowdfunding smart contract won't be transferring any eGLD to anyone, unless they donate it first.
+"You" also sent exactly `value: 0` EGLD out of the `1,000,000` to the deployed smart contract. It wouldn't need them anyway, because your Crowdfunding smart contract won't be transferring any EGLD to anyone, unless they donate it first.
 
 The fields `gasLimit` and `gasPrice` shouldn't concern you too much. It's important that `gasLimit` needs to be high, and `gasPrice` may be 0. Just so you know, the real Elrond Network would calculate the transaction fee from these values. On the real Elrond Network, you cannot set a `gasPrice` of 0, for obvious reasons.
 
@@ -508,7 +508,7 @@ Once the testing framework executes the deployment transaction described above, 
 
 The only important field here is `"status": "0"`, which is the actual return code coming from the Arwen VM after it executed the deployment transaction. `0` means success, of course.
 
-The remaining two fields `gas` and `refund` allow you to specify how much gas you expect the deployment transaction to consume, and how much eGLD you'd receive back as a result of overestimating the `gasLimit`. These are both set to `"*"` here, meaning that we don't care right now about their actual values.
+The remaining two fields `gas` and `refund` allow you to specify how much gas you expect the deployment transaction to consume, and how much EGLD you'd receive back as a result of overestimating the `gasLimit`. These are both set to `"*"` here, meaning that we don't care right now about their actual values.
 
 ## **Scenario step "checkState"**
 
@@ -535,7 +535,7 @@ Notice that there are two accounts now, not just one. There's evidently the acco
 
 The account `my_address` now has the nonce `1`, because a transaction has been executed, sent from it. Its balance remains unchanged - the deployment transaction did not cost anything, because the `gasPrice` field was set to `0` in the second scenario step. This is only allowed in tests, of course.
 
-The account `the_crowdfunding_contract` is the Crowdfunding smart contract. We assert that it contains the bytecode specified by the file `output/crowdfunding.wasm` (path relative to the JSON file). We also assert that its `nonce` is `0`, which means that the contract itself has never deployed a "child" contract of its own (which is technically possible). The `balance` of the smart contract account is `0`, because it didn't receive any eGLD as part of the deployment transaction, nor did we specify any scenario steps that transfer eGLD to it (we'll do that soon).
+The account `the_crowdfunding_contract` is the Crowdfunding smart contract. We assert that it contains the bytecode specified by the file `output/crowdfunding.wasm` (path relative to the JSON file). We also assert that its `nonce` is `0`, which means that the contract itself has never deployed a "child" contract of its own (which is technically possible). The `balance` of the smart contract account is `0`, because it didn't receive any EGLD as part of the deployment transaction, nor did we specify any scenario steps that transfer EGLD to it (we'll do that soon).
 
 And finally, we assert that the smart contract storage contains `my_address` under the `owner` key, which is what the `init` function was supposed to make sure. The smart contract has, therefore, remembered you.
 

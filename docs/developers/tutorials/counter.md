@@ -37,10 +37,10 @@ Above, `mycounter` refers to the previously created folder, the one that holds t
 
 In order to deploy the contract on the Testnet you need to have an account with sufficient balance (required for the deployment fee) and the associated private key in **PEM format**.
 
-The deploy command is as follows:
+The deployment command is as follows:
 
 ```
-erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-api.elrond.com" --outfile="counter.json" --recall-nonce --send
+erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.elrond.com" --outfile="counter.json" --recall-nonce --send
 ```
 
 Above, `mycounter` refers to the same folder that contains the source code and the build artifacts. The `deploy` command knows to search for the WASM bytecode within this folder.
@@ -50,23 +50,24 @@ Note the last parameter of the command - this instructs erdpy to dump the output
 ```
 counter.json
 {
-    "tx": {
-        "nonce": 1,
-        "value": "0",
-        "receiver": "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu",
-        "sender": "erd1...",
-        "gasPrice": 1000000000,
-        "gasLimit": 5000000,
-        "data": "MDA2MTcz...",
-        "chainID": "1596807148",
-        "version": 123,
-        "signature": "ff07..."
-    },
-    "hash": "",
-    "data": "0061736...",
-    "address": "erd1qqqqqqqqqqqqqpgqp93y6..."
+    "emitted_tx": {
+        "tx": {
+            "nonce": 0,
+            "value": "0",
+            "receiver": "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu",
+            "sender": "erd1...",
+            "gasPrice": 1000000000,
+            "gasLimit": 5000000,
+            "data": "MDA2MTczNmQwMTAwMDA...MDA=",
+            "chainID": "T",
+            "version": 1,
+            "signature": "a0ba..."
+        },
+        "hash": "...",
+        "data": "...",
+        "address": "erd1qqqqqqqqqqqqqpgqp93y6..."
+    }
 }
-
 ```
 
 Feel free to inspect these values in the [Explorer](https://explorer.elrond.com/).
@@ -76,13 +77,13 @@ Feel free to inspect these values in the [Explorer](https://explorer.elrond.com/
 Let's extract the contract address from `counter.json` before proceeding to an actual contract execution.
 
 ```
-export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counter.json')); print(data['address'])")
+export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counter.json')); print(data['emitted_tx']['address'])")
 ```
 
-Now that we have the contract address saved in an shell variable, we can call the `increment` function of the contract as follows:
+Now that we have the contract address saved in a shell variable, we can call the `increment` function of the contract as follows:
 
 ```
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-api.elrond.com" --recall-nonce --send
+erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.elrond.com" --recall-nonce --send
 ```
 
 Execute the command above a few times, with some pause in between. Then feel free to experiment with calling the `decrement` function.
@@ -90,7 +91,7 @@ Execute the command above a few times, with some pause in between. Then feel fre
 Then, in order to query the value of the counter - that is, to execute the `get` pure function of the contract - run the following:
 
 ```
-erdpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-api.elrond.com"
+erdpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-gateway.elrond.com"
 ```
 
 The output should look like this:
@@ -107,17 +108,17 @@ The previous steps can be summed up in a simple script as follows:
 #!/bin/bash
 
 # Deployment
-erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-api.elrond.com" --outfile="counter.json" --recall-nonce --send
-export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('address.json')); print(data['contract'])")
+erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.elrond.com" --outfile="counter.json" --recall-nonce --send
+export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('address.json')); print(data['emitted_tx']['contract'])")
 
 # Interaction
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-api.elrond.com" --recall-nonce --send
+erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.elrond.com" --recall-nonce --send
 sleep 10
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-api.elrond.com" --recall-nonce --send
+erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.elrond.com" --recall-nonce --send
 sleep 10
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="decrement" --proxy="https://testnet-api.elrond.com" --recall-nonce --send
+erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="decrement" --proxy="https://testnet-gateway.elrond.com" --recall-nonce --send
 sleep 10
 
 # Querying
-erdpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-api.elrond.com"
+erdpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-gateway.elrond.com"
 ```

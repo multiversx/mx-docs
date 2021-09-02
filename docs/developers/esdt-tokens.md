@@ -3,18 +3,16 @@ id: esdt-tokens
 title: ESDT tokens
 ---
 
-:::important
-ESDTs aren't enabled yet on Elrond Mainnet. See testnet or devnet
-:::
-
 ## **Introduction**
+**ESDT** stands for *Elrond Standard Digital Token*.
+
 Custom tokens at native speed and scalability, without ERC20
 
-The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native eGLD token itself.**
+The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native EGLD token itself.**
 
-Users also do not need to worry about sharding when transacting custom tokens, because the protocol employs the same handling mechanisms for ESDT transactions across shards as the mechanisms used for the eGLD token. Sharding is therefore automatically handled and invisible to the user.
+Users also do not need to worry about sharding when transacting custom tokens, because the protocol employs the same handling mechanisms for ESDT transactions across shards as the mechanisms used for the EGLD token. Sharding is therefore automatically handled and invisible to the user.
 
-Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of _any number of custom tokens_, in addition to the native eGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
+Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of _any number of custom tokens_, in addition to the native EGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
 
 ESDT tokens can be issued, owned and held by any Account on the Elrond network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
@@ -84,7 +82,7 @@ Number of decimals:
 Numerical values, such as initial supply or number of decimals, should be the hexadecimal encoding of the decimal numbers representing them. Additionally, they should have an even number of characters. Examples:
 - **10** _decimal_      => **0a** _hex encoded_
 - **48** _decimal_      => **30** _hex encoded_
-- **1000000** _decimal_ => **f4240** _hex encoded_
+- **1000000** _decimal_ => **0f4240** _hex encoded_
 
 ### **Number of decimals usage**
 Front-end applications will use the number of decimals in order to display balances. 
@@ -94,7 +92,7 @@ For example, if you would like to create a token `ALC` with a total supply of 10
 the initial supply to `10000` ($100 * 10^2$). 
 Also, when transferring/burning/minting tokens, you should keep in mind there is also the denomination involved. 
 
-Therefore, if you own some above-mentioned ALC tokens and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
+Therefore, if you own some above-mentioned ALC tokens, and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
 
 :::tip
 This is only relevant when performing operations via manual transactions over ESDT tokens. The Web Wallet for example already has this feature in place, so you don't have to take care of the number of decimals.
@@ -167,9 +165,9 @@ Using the transaction in the example above, Alice will transfer 12 AliceTokens t
 
 Smart contracts may hold ESDT tokens and perform any kind of transaction with them, just like any Account. However, there are a few extra ESDT features dedicated to smart contracts:
 
-**Payable versus non-payable contract**: upon deployment, a smart contract may be marked as _payable_, which means that it can receive either eGLD or ESDT tokens without calling any of its methods (i.e. a simple transfer). But by default, all contracts are _non-payable_, which means that simple transfers of eGLD or ESDT tokens will be rejected, unless they are method calls.
+**Payable versus non-payable contract**: upon deployment, a smart contract may be marked as _payable_, which means that it can receive either EGLD or ESDT tokens without calling any of its methods (i.e. a simple transfer). But by default, all contracts are _non-payable_, which means that simple transfers of EGLD or ESDT tokens will be rejected, unless they are method calls.
 
-**ESDT transfer with method invocation**: it is possible to send ESDT tokens to a contract _as part of a method call_, just like sending eGLD as part of a method call. A transaction that sends ESDT tokens to a contract while also calling one of its methods has the following form:
+**ESDT transfer with method invocation**: it is possible to send ESDT tokens to a contract _as part of a method call_, just like sending EGLD as part of a method call. A transaction that sends ESDT tokens to a contract while also calling one of its methods has the following form:
 
 ```
 TransferWithCallTransaction {
@@ -187,7 +185,72 @@ TransferWithCallTransaction {
 }
 ```
 
-Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were eGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
+Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
+
+## **Multiple tokens transfer**
+
+:::warning
+This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
+:::
+
+There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
+fungible, semi-fungible or non-fungible tokens via a single transaction.
+
+
+A multi-token transfer transaction has the following form:
+```
+MultiTokensTransferTransaction {
+    Sender: <account address of the sender>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 1_100_000 * num tokens
+    Data: "MultiESDTNFTTransfer" +
+          "@" + <receiver bytes in hexadecimal encoding> +
+          "@" + <number of tokens to transfer in hexadecimal encoding> +
+          "@" + <token 0 identifier in hexadecimal encoding> +
+          "@" + <token 0 nonce in hexadecimal encoding> +
+          "@" + <token 0 quantity to transfer in hexadecimal encoding> +
+          "@" + <token 1 identifier in hexadecimal encoding> +
+          "@" + <token 1 nonce in hexadecimal encoding> +
+          "@" + <token 1 quantity to transfer in hexadecimal encoding> +
+          ...
+}
+```
+
+:::tip
+Each token requires the token identifier, the nonce and the quantity to transfer. 
+
+For fungible tokens (regular ESDT) the nonce has to be 0 (`00` hex-encoded)
+:::
+
+Example:
+
+```
+MultiTokensTransferTransaction {
+    Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
+    Receiver: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
+    Value: 0
+    GasLimit: 2_200_000
+    Data: "MultiESDTNFTTransfer" +
+          "@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8" + // erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
+          "@02" +  // 2 tokens to transfer
+          "@414c432d363235386432" +   // ALC-6258d2 
+          "@00" +  // 0 -> the nonce is 0 for regular ESDT tokens
+          "@0c" +  // 12 -> value to transfer
+          "@5346542d317134723869" +  // SFT-1q4r8i
+          "@01" +  // 1 -> the nonce of the SFT
+          "@03"   // 3 -> the quantity to transfer
+}
+```
+
+Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
+
+## **Transfers done programmatically**
+The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
+
+```
+self.send().direct_esdt_via_transf_exec(&address, &esdt_token_name, &amount, &[]);
+```
 
 ## **Token management**
 
@@ -314,7 +377,7 @@ These two operations require that the option `canFreeze` is set to `true`.
 
 ### **Wiping**
 
-The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations.Such a transaction has the form:
+The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
 
 ```
 WipeTransaction {
@@ -333,9 +396,9 @@ WipeTransaction {
 The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
 The special roles available for basic ESDT tokens are:
 
-- **ESDTRoleLocalBurn** # an address with this role can burn tokens
+- **ESDTRoleLocalBurn**: an address with this role can burn tokens
   
-- **ESDTRoleLocalMint** # an address with this role can mint new tokens
+- **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
 For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
 
@@ -424,21 +487,13 @@ UpgradingTransaction {
     Value: 0
     GasLimit: 60000000
     Data: "controlChanges" +
-          "@414c432d363235386432" +
-          "@63616e57697065" +
-          "@66616c7365" +
-          "@63616e4275726e" +
-          "@74727565"
+          "@414c432d363235386432" + # ALC-6258d2
+          "@63616e57697065" +       # canWipe
+          "@66616c7365" +           # false
+          "@63616e4275726e" +       # canBurn
+          "@74727565"               # true
 }
 ```
-
-In the example above, the encodings mean the following (decoded to ASCII):
-
-- `414c432d363235386432` = `ALC-6258d2`
-- `63616e57697065` = `canWipe`
-- `66616c7365` = `false`
-- `63616e4275726e` = `canBurn`
-- `74727565` = `true`
 
 ## **Rest API**
 
@@ -451,7 +506,7 @@ There are a number of API endpoints that one can use to interact with ESDT data.
 Returns an array of ESDT Tokens that the specified address has interacted with (issued, sent or received).
 
 ```
-https://api.elrond.com/address/*bech32Address*/esdt
+https://gateway.elrond.com/address/*bech32Address*/esdt
 ```
 
 | Param         | Required                                  | Type     | Description                           |
@@ -481,7 +536,7 @@ https://api.elrond.com/address/*bech32Address*/esdt
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
-https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
+https://gateway.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 
 | Param           | Required                                  | Type     | Description                           |
@@ -506,9 +561,9 @@ https://api.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
+### <span class="badge badge-primary">GET</span> **Get all roles for tokens of an address**
 
-This involves a `vm query` request to the `ESDT` address.
+This involves a basic request that contains the address to fetch all tokens and roles for.
 For example:
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -516,7 +571,41 @@ For example:
 <!--Request-->
 
 ```
-https://api.elrond.com/network/esdts
+https://gateway.elrond.com/address/*bech32Address*/esdts/roles
+```
+
+<!--Response-->
+
+```
+{
+  "roles": {
+    "TCK-0cv5hj": [
+      "ESDTRoleNFTAddQuantity",
+      "ESDTRoleNFTBurn"
+    ],
+    "TCK2-ft80kn": [
+      "ESDTRoleLocalBurn"
+    ]
+  }
+  "error": "",
+  "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
+
+1. All ESDT tokens
+
+For example:
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/network/esdts
 ```
 
 <!--Response-->
@@ -533,7 +622,87 @@ https://api.elrond.com/network/esdts
   "code": "successful"
 }
 ```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
+---
+
+2. Fungible tokens
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/network/esdt/fungible-tokens
+```
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+---
+
+3. Semi-fungible tokens
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/network/esdt/semi-fungible-tokens
+```
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
+  "error": "",
+  "code": "successful"
+}
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+---
+
+4. Non-fungible tokens
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+```
+https://gateway.elrond.com/network/esdt/non-fungible-tokens
+```
+
+<!--Response-->
+
+```
+{
+  "data": {
+    "tokens": [
+      "token1",
+      "token2",
+      ...
+    ],
+  "error": "",
+  "code": "successful"
+}
+```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-success">POST</span> **Get ESDT token properties**
@@ -546,7 +715,7 @@ For example:
 <!--Request-->
 
 ```
-https://api.elrond.com/vm-values/query
+https://gateway.elrond.com/vm-values/query
 ```
 
 ```json
@@ -647,7 +816,7 @@ For example:
 
 <!--Request-->
 ```
-https://api.elrond.com/vm-values/query
+https://gateway.elrond.com/vm-values/query
 ```
 
 ```json

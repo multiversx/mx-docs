@@ -271,7 +271,55 @@ This step simulates a transaction to an existing smart contract. Fields:
     - `topics` - these are event arguments, provided by the contract. Off-chain they are indexed, so that users can search by these topics. All topics are currently 32 bytes in length, but this restriction might be lifted in the future.
     - `data` - same as the topics, but this is not indexed, cannot perform searches on data. Can be of any length (or sometimes empty).
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
-  - `refund` - some operations, like freeing up storage actually give ERD back to the caller. To ignore this check, set to `“*”`
+  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `“*”`
+  
+## **Step type: `scQuery`**
+
+```
+{
+    "steps": [
+        {
+            "step": "scQuery",
+            "txId": "tx-name-or-id",
+            "comment": "just an example",
+            "tx": {
+                "to": "0x1000000000000000000000000000000000000000000000000000000000000000",
+                "function": "someFunctionName",
+                "arguments": [
+                    "0x1234123400000000000000000000000000000000000000000000000000000004",
+                    "0x00",
+                    "",
+                    "``a message (as bytes)"
+                ],
+            },
+            "expect": {
+                "out": [
+                    "5",
+                    "*"
+                ],
+                "status": "",
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}
+```
+
+This step simulates a query to an existing smart contract. Fields:
+
+- `txId` (optional) - it shows up in the error messages, to help the developer find a transaction that produced a wrong result or that failed. It is also used to generate mock tx hashes.
+- `comment` (optional) - developers can provide comments or a description of the transaction. Does not influence execution.
+- `tx` - specifies the details of the transaction.
+  - `to` - account must exist in the blockchain mock and must be a smart contract
+  - `function` - function name to call in the contract
+  - `arguments` - a list of the arguments to provide to the SC function
+- `expect` (optional) - each transaction produces a receipt whose hash ends up on the blockchain. The contents of the receipt can be checked here.
+  - `out` - functions can return any number of results. This is an ordered list of these results.
+  - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 (“user error”).
+  - `message` (optional) - in case of error, the contract can also provide an error message. This is where this message can be checked, to make sure that the correct error occurred. It will be empty in case of success.
+  - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
+  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `“*”`
 
 ## **Step type: `scDeploy`**
 
@@ -313,14 +361,14 @@ The fields are:
 
 - `txId` (optional) - same as for `scCall`
 - `comment` (optional) - same as for `scCall`
-- `tx` - similar with `scCall`, but a few differences. First off, there is no to field, since the contract does not exist yet. Also function cannot be specified, on deploy the `init` function is always called. We have:
-  - `contractCode` - the code for the new contract. Typically in the `"file:<relative path to contract binary>"` format.
+- `tx` - similar with `scCall`, but a few differences. First off, there is no `to` field, since the contract does not exist yet. Also function cannot be specified, on deploy the `init` function is always called. We have:
+  - `contractCode` - the code for the new contract. Typically, in the `"file:<relative path to contract binary>"` format.
   - `from`, `value`, `arguments`, `gasLimit`, `gasPrice` - same as for `ScCall`
 - `expect` (optional) - same as for `scCall`
 
 ## **Step type: `transfer`**
 
-Lesser used step type. Simulates a simple transfer of eGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
+Lesser used step type. Simulates a simple transfer of EGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
 
 ```
 {
@@ -389,17 +437,21 @@ The format is as follows
 - Empty strings (`""`) mean empty byte arrays. The number zero can also be represented as an empty byte array.
 - Hexadecimal representation, starting with `0x`. With this representation, what you see is what you get. E.g. `“0x1234567890”`. After the `0x` prefix an even number of digits is expected, since 2 digits = 1 byte.
 - Base 10 unsigned number representation. Unprefixed numbers are interpreted as base 10, unsigned. E.g. `“0”`, `“1”`, `“1000000”.` Unsigned numbers will be represented in the minimum amount of bytes in which they can fit. `“255”` = `“0xff”`, `“256”` = `“0x0100”`, `"0"` = `""`. Digit separators are allowed, e.g. `"1,000,000"`.
+- Biguint representation. Biguints are formatted with special rules to signal the amount of bytes needed to build the number. Mandos can do that for you by specifying a number with a `biguint:` prefix for example `biguint:5`.
+- Typed numbers. Use `u64:` `i64:` `u32:` `i32:` `u16:` `i16:` `u8:` `i8:` to represent a number with a fixed length.
 - Signed number representation. Some contract arguments are expected to be signed. These arguments will be transmitted as two’s complement representation. Prefixing any number (base 10 or hex) with a minus sign will convert them to two’s complement. Two’s complement is interpreted as positive or negative based on the first bit. Sometimes positive numbers can start with a “1” bit and get accidentally interpreted as negative. To prevent this, we can prefix them with a plus. A few examples should make this clearer:
   - `“1” `is represented as `“0x01”`, signed interpretation: `1`, everything OK.
   - `“255”` is represented as `“0xff”`, signed interpretation: `“-1”,` this might not be what we expected.
   - `“+255”` is represented as `“0x00ff”`, signed interpretation: `“255”.` The prepended zero byte makes sure the contract interprets it as positive. The `+` makes sure those leading zeroes are added if necessary.
-  - `“+1”` is still represented as `“0x01”`, here the leading 0 is not necessary. Still, it is good practice to add the `+` if we know the argument is expected to be signed.
+  - `“+1”` is still represented as `“0x01”`, here the leading 0 is not necessary. Still, it is good practice adding the `+` if we know the argument is expected to be signed.
   - `“-1”` is represented as `“0xff”`. Negative numbers are also represented in the minimum number of bytes possible.
 - Boolean values: `"true"` = `"1"` = `"0x01"`; `"false"` = `"0"` = `""`.
 - String representation, starting with `''` or ``. Mandos steps can be embedded in Go code now; in Go ` is reserved for multi-line strings, so `''` is preferred now. In this representation, each character gets converted to a single byte, based on its ASCII code. It is especially useful for making the dummy account addresses readable. Storage keys are also commonly readable as ASCII. E.g. ` “``some string argument” `, ` "``node_address__________________s1" `, `"storage_key_1"`
 - Concatenate multiple values (possibly of different formats) using the pipe (`|`) separator. E.g. ` “0x1234|``abcd|-1” ` gets interpreted as `“0x123461626364ff”`
 - Load file, starting with `file:`. This will replace the field with the entire contents of the file, given as relative path with respect to the JSON file we are executing. E.g. `“file:contracts/erc20-c.wasm”`
 - Keccak hash, starting with `keccak256:`. E.g. `“keccak256:1|0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000”` gets interpreted as `“0x648147902a606bf61e05b8b9d828540be393187d2c12a271b45315628f8b05b9”`. Note that the argument can contain concatenation, but this is not a full parser yet, only very primitive syntax trees are possible for now.
+- Addresses, starting with `address:`. This will format a string to a valid address representation. A valid example would be `address:owner`.
+- SmartContract-Addresses, starting with `sc:`. Same as address, but will enforce the SmartContract address formatting. A valid example would be `sc:smartcontract`.
 
 # **Embedding in Go**
 

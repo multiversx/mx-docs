@@ -3,7 +3,7 @@ id: web-wallet
 title: Web Wallet
 ---
 
-Use the wallet to send, receive and store eGold in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
+Use the wallet to send, receive and store EGLD in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
 
 ## **Create a new wallet**
 
@@ -49,16 +49,16 @@ And you’re in! Your EGLD address is on top, you can use the “copy” button 
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwbFt_D472wfHJBEMY%2Fimage.png?alt=media&token=ebd64bce-707b-4c26-bbe0-b87c3400edd4)
 
-## **Overview of your eGold balance**
+## **Overview of your EGLD balance**
 
-After logging into your wallet, your eGold balances are immediately visible and displayed in easy to follow boxes.
+After logging into your wallet, your EGLD balances are immediately visible and displayed in easy to follow boxes.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJYD3eLB-qPT94-W4_%2F-MIJYlxGgxH4x073-b4V%2Fimage.png?alt=media&token=d38c3ca0-e3c4-4c1e-acb2-b5daa363eefc)
 
-- **Available:** freely transferable eGold balance
+- **Available:** freely transferable EGLD balance
 - **Claimable rewards:** delegation rewards that can be claimed
-- **Delegated:** Amount of eGold delegated towards a Staking Services provider
-- **Total:** the total amount of eGold associated with this address, sum of the above
+- **Delegated:** Amount of EGLD delegated towards a Staking Services provider
+- **Total:** the total amount of EGLD associated with this address, sum of the above
 
 ## **Send a transaction**
 
@@ -74,7 +74,7 @@ Input the destination address & amount, and the click <Send>
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN552w1yoO7DtY0596z%2Fimage.png?alt=media&token=c6b33892-db49-4970-a0c3-421108bf3d38)
 
-A small item will pop-up on your screen indicating the progress and completion of the transaction.
+A small item will pop up on your screen indicating the progress and completion of the transaction.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN55u2EthvWzpyHTLmk%2Fimage.png?alt=media&token=1cf59f3b-d4a9-4a58-b8e0-005a7d923431)
 
@@ -82,9 +82,9 @@ You can always review your transaction history in the "Transactions" menu on the
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN56UkAcWIpyzH3P1wn%2Fimage.png?alt=media&token=4095fb27-0e42-4d6e-8501-312e8ee59070)
 
-## **Receiving eGold in your wallet**
+## **Receiving EGLD in your wallet**
 
-After logging into your wallet, as described above, you will be able to see your wallet address and share it with others so they can send you eGold.
+After logging into your wallet, as described above, you will be able to see your wallet address and share it with others, so they can send you EGLD.
 
 Your address is immediately visible on the top part of the wallet, as "Address erd1... ". You can copy the address by pressing the copy button (two overlapping squares).
 

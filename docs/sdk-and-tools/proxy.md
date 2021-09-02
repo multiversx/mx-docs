@@ -15,7 +15,7 @@ The Observer Nodes of the Proxy thus act as a **default dedicated entry point in
 
 It is worth repeating here, though, that submitting a Transaction through the Proxy is completely optional - any Node of the Network will accept Transactions to propagate, given it has not disabled its REST API.
 
-![img](<https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M93nKd9VLSYHsguW1PH%2F-M93o5wmBtDFoPSwcwmw%2FElrond%20Proxy%20-%20Purpose%20(overview).png?alt=media&token=55699234-8846-407d-aa16-a0646f6c3748>)
+![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M93nKd9VLSYHsguW1PH%2F-M93o5wmBtDFoPSwcwmw%2FElrond%20Proxy%20-%20Purpose%20(overview).png?alt=media&token=55699234-8846-407d-aa16-a0646f6c3748)
 
 Overview of the Elrond Proxy
 
@@ -23,13 +23,13 @@ In the figure above:
 
 1. The **Elrond Network** - consisting of Nodes grouped within Shards. Some of these Nodes are **Observers**.
 2. One or more instances of the **Elrond Proxy** - including the official one - connect to Observer Nodes in order to forward incoming user Transactions to the Network and to query state within the Blockchain.
-3. The **client applications** connect to the Network through the Elrond Proxy. Is is also possible for a blockchain-powered application to talk directly to an Observer or even to a Validator.
+3. The **client applications** connect to the Network through the Elrond Proxy. It is also possible for a blockchain-powered application to talk directly to an Observer or even to a Validator.
 
 ## **Official Elrond Proxy**
 
-The official instance of the Elrond Proxy is located at [https://api.elrond.com](https://api.elrond.com/).
+The official instance of the Elrond Proxy is located at [https://gateway.elrond.com](https://gateway.elrond.com/).
 
-## **Setup a Proxy Instance**
+## **Set up a Proxy Instance**
 
 :::warning
 Documentation for setting up a Proxy is preliminary and subject to change
@@ -49,12 +49,12 @@ The Proxy holds its configuration within the `config` folder:
 
 - `config.toml` - this is the main configuration file. It has to be adjusted so that the Proxy points to a list of chosen Observer Nodes.
 - `economics.toml` - this file should not be normally altered. It must be kept in sync with the economics configuration of the Network.
-- `external.toml` - this file holds configuration necessary to Proxy components that interact with external systems. An example of such an external system is **Elastic Search** - currently, Elrond Proxy requires an Elastic Search instance to implement some of its functionality.
+- `external.toml` - this file holds configuration necessary to Proxy components that interact with external systems. An example of such an external system is **Elasticsearch** - currently, Elrond Proxy requires an Elasticsearch instance to implement some of its functionality.
 
-## **Dependency on Elastic Search**
+## **Dependency on Elasticsearch**
 
 :::warning
-Only the default (official) Proxy instance connects to the official Elastic Search instance. Documentation from this section is preliminary and subject to change.
+Only the default (official) Proxy instance connects to the official Elasticsearch instance. Documentation from this section is preliminary and subject to change.
 :::
 
-Currently, two routes provided by the REST API - namely [Get Address Transactions](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-transactions) and [Get Block](/sdk-and-tools/rest-api/blocks) - resolve the requested resources by querying an Elastic Search instance. This is **subject to change**. Therefore, if one desires to host a separate Elrond Proxy instance instead of using the official (default) instance, we recommend disabling the Elastic Search Connector by adjusting the configuration file `external.toml` - the previously mentioned routes will not work, but the rest of Proxy's functionality is unaffected.
+Currently, two routes provided by the REST API - namely [Get Address Transactions](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-transactions) and [Get Block](/sdk-and-tools/rest-api/blocks) - resolve the requested resources by querying an Elasticsearch instance. This is **subject to change**. Therefore, if one desires to host a separate Elrond Proxy instance instead of using the official (default) instance, we recommend disabling the Elasticsearch Connector by adjusting the configuration file `external.toml` - the previously mentioned routes will not work, but the rest of Proxy's functionality is unaffected.
