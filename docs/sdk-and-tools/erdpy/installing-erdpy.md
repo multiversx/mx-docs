@@ -11,8 +11,7 @@ How to install erdpy
 
 Before installing **erdpy**, please make sure you have a working **Python 3** environment:
 
-- **3.6** or later on Linux
-- **3.8** or later on MacOS
+- **3.8** or later on Linux and MacOS
 
 Smart contracts written in C require the ncurses library routines for compiling. Install them using the following:
 
