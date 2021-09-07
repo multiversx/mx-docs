@@ -16,5 +16,4 @@ Community resources:
 
 - Zabbix monitoring guide: https://thepalmtree.network/zabbix-elrond-guide
 - Elrond Zabbix plugin: https://github.com/arcsoft-ro/zabbix-elrond-plugin
-- Secure your Validator node: https://www.viastake.com/2020/05/01/how-to-secure-your-server-like-a-boss/
 - Configure Validator API & NetData https access: https://gist.github.com/hiddentao/e6283952b9fffe3f6b42dfeec87c684e
