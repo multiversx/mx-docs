@@ -130,11 +130,6 @@ cd contract/ping-pong
 We now have the source code for the smart contract, but we need to compile it into a *binary* that Elrond Virtual Machine (**Arwen**) can run. Arwen can run Web Assembly code, so we need to compile our Rust source code into Web Assembly (WASM).
 
 Run the following command in order to build the rust smart contract into a *wasm file*.
-
-```
-erdpy contract build
-```
-
 INFO:projects.core:WASM file generated: output/ping-pong.wasm
 
 After running this command line, we see that a wasm file was generated. This file contains the runtime code for our smart contract.
