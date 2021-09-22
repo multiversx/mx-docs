@@ -34,8 +34,8 @@ Maybe you noticed the default amount for a deposit is **1 xEGLD** and not 1 EGLD
 
 For the web app we'll have two pages:
 
-- The **Sign in* page - here we can authenticate with ledger, web wallet or with Maiar Wallet
-- The **Dashboard* page - here we can either ping or pong, if we already deposited, then we will see a countdown timer until the time interval clears out.
+- The *Sign in* page - here we can authenticate with ledger, web wallet or with Maiar Wallet
+- The *Dashboard* page - here we can either ping or pong, if we already deposited, then we will see a countdown timer until the time interval clears out.
 
 ### **Blockchain Layer (The Backend)**
 
