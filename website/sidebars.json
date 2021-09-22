@@ -80,6 +80,7 @@
         "type": "subcategory",
         "label": "Tutorials",
         "ids": [
+          "developers/tutorials/your-first-dapp",
           "developers/tutorials/counter",
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2"

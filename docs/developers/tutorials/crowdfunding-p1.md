@@ -1,6 +1,6 @@
 ---
 id: crowdfunding-p1
-title: Start Building - Crowdfunding Tutorial
+title: The Crowdfunding Smart Contract (part 1)
 ---
 
 Write, build and deploy a simple smart contract written in Rust

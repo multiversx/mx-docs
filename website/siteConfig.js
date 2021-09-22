@@ -105,7 +105,7 @@ const siteConfig = {
     {
       title: "Start Building",
       content: "Build your decentralized application in minutes.",
-      docName: "developers/tutorials/crowdfunding-p1",
+      docName: "developers/tutorials/your-first-dapp",
       icon: "🛠️",
     },
     {
