@@ -1,6 +1,6 @@
 ---
 id: your-first-dapp
-title: Your First dApp on Elrond Blockchain in 15 minutes
+title: Build a dApp in 15 minutes
 ---
 
 Let's build your first decentralized App on the Elrond Blockchain
@@ -42,7 +42,7 @@ For the web app we'll have two pages:
 We will create a smart contract that can handle the deposit (`ping`), claim (`pong`) and status actions (`did_user_ping`, `get_time_to_pong`).
 Let's say that, for now, this smart contract plays the role of an API in a dApp. Also this is where our business logic resides.
 
-Elrond provides a _devnet_ so we can test our smart contracts, apps or just get familiar with Elrond tools.
+The Elrond _devnet_ is a public test network maintained by our community where any developer can test their smart contracts and dApps in a real world environment.
 
 
 ## **Set up the environment**
@@ -272,11 +272,11 @@ The transaction will trigger a success message and the funds will be returned to
 
 ## **Where to go next?**
 
-Follow the video guide here:
+This guide has been made available in video format as well:
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IdkgvlK3rb8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-If you have any questions related to this guide, please feel free to ask them using stackoverflow here:
-[https://stackoverflow.com/questions/tagged/elrond](https://stackoverflow.com/questions/tagged/elrond).
+The purpose of this guide is to provide a starting point for you to discover the Elrond technology capabilities and devkit. Keep reading the next docs to dive in deeper.
+We welcome your questions and inquiries on Stack Overflow: [https://stackoverflow.com/questions/tagged/elrond](https://stackoverflow.com/questions/tagged/elrond).
 
 Break down this guide and learn more about how to extend the smart contract, the wallet and the Elrond tools. [https://docs.elrond.com](/)
