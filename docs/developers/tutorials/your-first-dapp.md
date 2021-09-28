@@ -6,10 +6,13 @@ title: Build a dApp in 15 minutes
 Let's build your first decentralized App on the Elrond Blockchain
 
 :::important
-This guide is based on Ubuntu 20.04 with [these prerequisites](/sdk-and-tools/erdpy/installing-erdpy#prerequisites) installed.
 Please [create a sample **owner wallet**](/wallet/web-wallet) and have your security phrase on hand (24 words).
 We'll work on the Devnet, you should manage your web wallet [here](https://devnet-wallet.elrond.com).
 :::
+
+This guide has been made available in video format as well:
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IdkgvlK3rb8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 ### **dApp Description**
 
@@ -52,7 +55,7 @@ Setup the environment
 
 First let's create a new folder for our project, I'll name it `ping-pong`.
 
-```
+```sh
 mkdir -p ping-pong/wallet
 cd ping-pong/wallet
 ```
@@ -65,10 +68,10 @@ In the end, we'll have three subfolders: wallet, contract and dapp. For convenie
 ### **Software Prerequisites**
 Software prerequisites
 
-In our example we'll use [Ubuntu 20.04](https://ubuntu.com/). We'll need to install `python 3.8`, `python-pip` and `libncurses5`. For the frontend application, we'll use an app template based on [React JS](https://reactjs.org/), so we will need `nodejs` and `npm`.
+In our example we'll use [Ubuntu 20.04](https://ubuntu.com/). MacOs works as well (skip to the last paragraph in this section). We'll need to install `python 3.8`, `python-pip` and `libncurses5`. For the frontend application, we'll use an app template based on [React JS](https://reactjs.org/), so we will need `nodejs` and `npm`.
 
 First we make sure the operating system prerequisites are installed:
-```
+```sh
 sudo apt-get update 
 sudo apt install libncurses5 python3-pip nodejs npm
 ```
@@ -77,15 +80,27 @@ We'll also need `erdpy`, the Elrond command line tool, which is helpful for sign
 Erdpy can be installed using the Elrond documentation page [https://docs.elrond.com/sdk-and-tools/erdpy/installing-erdpy](https://docs.elrond.com/sdk-and-tools/erdpy/installing-erdpy)
 
 We'll download the `erdpy` installer and we run it
-```
+```sh
 wget -O erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-erdpy/master/erdpy-up.py
 python3 erdpy-up.py
 ```
 
-
 Restart the user session to activate `erdpy`
-```
+```sh
 source ~/.profile
+```
+
+In order to install `erdpy` on **MacOs**, you need to make sure you have installed `python 3.8` and `pip` on your system.
+Then, install the latest `erdpy` version,using `pip`.
+
+```sh
+pip3 install --user --upgrade --no-cache-dir erdpy
+```
+
+If you encounter any error relating to `pynacl` package, make sure you have `libsodium` installed.
+
+```sh
+brew install libsodium
 ```
 
 ### **Create an owner wallet**
@@ -98,7 +113,7 @@ Let's head over to the Elrond wallet, click **"Create new wallet"**, write down 
 
 We can also generate a private key PEM file, like this we won't need to enter our wallet password each time we want to confirm a transaction.
 
-```
+```sh
 cd ~/ping-pong/wallet 
 erdpy --verbose wallet derive ./wallet-owner.pem --mnemonic
 ```
@@ -120,7 +135,7 @@ Clone the Ping-Pong Sample Smart Contract
 
 Let's start with our smart contract. We'll first clone the sample contract repository from here [https://github.com/ElrondNetwork/ping-pong-smart-contract](https://github.com/ElrondNetwork/ping-pong-smart-contract)
 
-```
+```sh
 cd ~/ping-pong
 git clone https://github.com/ElrondNetwork/ping-pong-smart-contract contract
 cd contract/ping-pong
@@ -142,7 +157,7 @@ Next step is to deploy the contract to the blockchain.
 
 Optionally we can customize the default params in `erdpy.json`: 
 
-```
+```javascript
 {
     "configurations": {
         "default": {
@@ -169,7 +184,7 @@ Make sure your *owner wallet PEM file* is in the right folder, the smart contrac
 For now let's continue with the default values.
 We will run:
 
-```
+```sh
 erdpy contract deploy
 ```
 
@@ -203,7 +218,7 @@ All right, let's move on to the application layer.
 ### **Clone the Sample App**
 We will clone a very simple dApp template that implements the calls to our newly deployed smart contract.
 
-```
+```sh
 git clone https://github.com/ElrondNetwork/dapp-template
 cd dapp-template
 ```
@@ -214,7 +229,7 @@ Customize the Smart Contract Address
 
 Let's copy our `config.devnet.tsx` into a new file `config.tsx` and let's fill in the Smart Contract address constant with our smart contract address.
 
-```
+```sh
 cp src/config.devnet.tsx src/config.tsx
 nano src/config.tsx
 ```
@@ -233,13 +248,13 @@ Save and close `config.tsx` and we're ready for the first build.
 
 We'll first install the dependencies:
 
-```
+```sh
 npm install
 ```
 
 and then we'll start a development server to test our new dApp
 
-```
+```sh
 npm run start
 ```
 
@@ -271,10 +286,6 @@ The transaction will trigger a success message and the funds will be returned to
 
 
 ## **Where to go next?**
-
-This guide has been made available in video format as well:
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IdkgvlK3rb8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 
 The purpose of this guide is to provide a starting point for you to discover the Elrond technology capabilities and devkit. Keep reading the next docs to dive in deeper.
 We welcome your questions and inquiries on Stack Overflow: [https://stackoverflow.com/questions/tagged/elrond](https://stackoverflow.com/questions/tagged/elrond).
