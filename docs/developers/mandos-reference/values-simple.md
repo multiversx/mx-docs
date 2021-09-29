@@ -71,7 +71,7 @@ Unsigned numbers will be represented in the minimum amount of bytes in which the
 :::
 
 :::tip
-Digit separators are allowed anywhere, e.g. `"1,000,000"`.
+Digit separators are allowed anywhere, for readability, e.g. `"1,000,000"`.
 :::
 
 

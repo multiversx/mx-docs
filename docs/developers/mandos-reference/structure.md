@@ -52,28 +52,63 @@ Also beware that there is currently no protection against cyclic imports.
             "step": "setState",
             "comment": "not much to comment here, but we can",
             "accounts": {
-                "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000": {
+                "address:user_account": {
                     "comment": "we can comment on individual account initializations",
                     "nonce": "0",
-                    "balance": "0xe8d4a51000",
+                    "balance": "123,000,000,000",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "400,000,000,000",
+                        "str:MYSFT-123456": {
+                            "instances": [
+                                {
+                                    "nonce": "24",
+                                    "balance": "1"
+                                },
+                                {
+                                    "nonce": "25",
+                                    "balance": "1",
+                                    "creator": "address:other_creator_address",
+                                    "royalties": "5000",
+                                    "hash": "keccak256:str:other_nft_hash",
+                                    "uri": [
+                                        "str:www.something.com/funny.jpeg"
+                                    ],
+                                    "attributes": "str:other_attributes"
+                                }
+                            ],
+                            "lastNonce": "7",
+                            "roles": [
+                                "ESDTRoleLocalMint",
+                                "ESDTRoleLocalBurn",
+                                "ESDTRoleNFTCreate",
+                                "ESDTRoleNFTAddQuantity",
+                                "ESDTRoleNFTBurn"
+                            ],
+                            "frozen": "false"
+                        }
+                    },
+                    "username": "str:myusername.elrond",
                     "storage": {},
                     "code": ""
                 },
-                "``smart_contract_address________s1": {
+                "sc:smart_contract_address": {
                     "nonce": "0x00",
                     "balance": "23,000",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "100,000,000,000",
+                    },
                     "storage": {
-                        "0x19efaebcc296cffac396adb4a60d54c05eff43926a6072498a618e943908efe1": "-5",
-                        "``32_byte_key_____________________": "``string___interpreted___as__bytes"
+                        "str:storage-key-1": "-5",
+                        "str:storage-key-2|u32:4": ["u32:1", "u32:2", "u32:3"]
                     },
                     "code": "file:smart-contract.wasm"
                 }
             },
             "newAddresses": [
                 {
-                    "creatorAddress": "``creator_addr____________________",
+                    "creatorAddress": "address:creator",
                     "creatorNonce": "1234",
-                    "newAddress": "``creator_addr____________________"
+                    "newAddress": "sc:future_sc"
                 }
             ]
         },
@@ -102,22 +137,40 @@ At least one such step is required before any execution, because all transaction
 
 Not all of its sections are required each time. These sections are:
 
-- `comment` (optional) - doesn't affect execution
-- `accounts` - any number of accounts can be specified, both user accounts and smart contracts. Each account will have:
-  - `comment` (optional)
-  - `nonce`
-  - `balance`
-  - `storage` - initializes storage with given key-value map. Both keys and values can be of any length.
-  - `code` - typically provided in the format `"code": "file:<relative path to contract binary>"`More on value type later. Having a `code` makes the account a smart contract.
+- `comment` doesn't affect execution
+- `accounts` any number of accounts can be specified, both user accounts and smart contracts. The account contains several fields, all of them optional:
+    - `comment` doesn't affect execution
+    - `nonce` account nonce at the beginning of the execution
+    - `balance` EGLD balance
+    - `esdt` a list of ESDT tokens owned by this account
+        - Owned ESDTs are represented as a map from token identifier to token data
+        - Mandos does not validate token identifiers (the keys).
+        - There are 2 formats for expressing the ESDT value:
+            - Compact: for fungible tokens a single string containing the ESDT balance is enough.
+            - Full: as a map containing several fields:
+                - `instances` is a list containing the main token data. Each instance has a unique token nonce (although Mandos does not enforce this uniqueness). Fungible tokens can only have 1 instance with the nonce 0. Semi-fungible tokens have non-zero nonces. Each instance has the following fields:
+                    - `nonce`
+                    - `balance`
+                    - `creator` address of the account that created the NFT
+                    - `royalties` a proportion out of 10000 that represents what percentage of an NFT sell price should be transferred to the creator. This is not enforced by the protocol or Mandos in any way.
+                    - `hash` NFT hash
+                    - `uri` a list of URIs associated to the NFT/SFT
+                    - `attributes` raw bytes where any data can be stored
+                - `lastNonce` the last created instance nonce for this token identifier. The next NFT/SFT will have nonce `lastNonce + 1`
+                - `roles` determine how the current account can interact with the ESDT token
+                - `frozen` ESDT tokens can be frozen by their creator if they are configured to be freezable
+    - `username` the "herotag", which is stored directly in the account trie
+    - `storage` initializes storage with given key-value map. Both keys and values can be of any length.
+    - `code` typically provided in the format `"code": "file:path/to/binary"` More on this [here](/developers/mandos-reference/values-simple#file-contents). Having a `code` makes the account a smart contract.
 - `newAddresses` - mock contract address generation during deploy. We basically tell the blockchain mock what address name to generate when deploying new contracts. Not having this would give a generated address that is hard to predict when developing tests. It consists of a list of triples:
-  - `creatorAddress`
-  - `creatorNonce`
-  - `newAddress` - whenever an account with the given address and nonce deploys a contract, this will receive this address. This should make the test more readable, by having the new addresses explicitly stated, rather than being a magic new number popping up at some point in the scenario.
+    - `creatorAddress`
+    - `creatorNonce`
+    - `newAddress` - whenever an account with the given address and nonce deploys a contract, this will receive this address. This should make the test more readable, by having the new addresses explicitly stated, rather than being a magic new number popping up at some point in the scenario.
 - `previousBlockInfo` and `currentBlockInfo` - set or change data that the blockchain mock is providing to smart contracts via hooks. Mandos does not model blocks, so this is how we simulate the passing of time in scenarios. Fields:
-  - `blockTimestamp`
-  - `blockNonce`
-  - `blockRound`
-  - `blockEpoch`
+    - `blockTimestamp`
+    - `blockNonce`
+    - `blockRound`
+    - `blockEpoch`
 
 ## **Step type: `checkState`**
 
@@ -132,30 +185,58 @@ Is allowed anywhere, not just as the end of tests, so progressive changes can be
             "step": "checkState",
             "comment": "check that previous tx did the right thing",
             "accounts": {
-                "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000": {
-                    "comment": "we can comment on individual account checks",
-                    "nonce": "1",
-                    "balance": "0xe8d4951000",
+                "address:user_account": {
+                    "comment": "we can comment on individual account initializations",
+                    "nonce": "0",
+                    "balance": "*",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "*",
+                        "str:MYSFT-123456": {
+                            "instances": [
+                                {
+                                    "nonce": "24",
+                                    "balance": "*"
+                                },
+                                {
+                                    "nonce": "25",
+                                    "balance": "1",
+                                    "creator": "address:other_creator_address",
+                                    "royalties": "5000",
+                                    "hash": "keccak256:str:other_nft_hash",
+                                    "uri": [
+                                        "str:www.something.com/funny.jpeg"
+                                    ],
+                                    "attributes": "str:other_attributes"
+                                }
+                            ],
+                            "lastNonce": "7",
+                            "roles": [
+                                "ESDTRoleLocalMint",
+                                "ESDTRoleLocalBurn",
+                                "ESDTRoleNFTCreate",
+                                "ESDTRoleNFTAddQuantity",
+                                "ESDTRoleNFTBurn"
+                            ],
+                            "frozen": "false"
+                        }
+                    },
+                    "username": "str:myusername.elrond",
                     "storage": {},
                     "code": ""
                 },
-                "``smart_contract_address________s1": {
+                "sc:smart_contract_address": {
                     "nonce": "0x00",
                     "balance": "23,000",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "100,000,000,000",
+                    },
                     "storage": {
-                        "0x19efaebcc296cffac396adb4a60d54c05eff43926a6072498a618e943908efe1": "-5",
-                        "``32_byte_key_____________________": "``string___interpreted___as__bytes"
+                        "str:storage-key-1": "-5",
+                        "str:storage-key-2|u32:4": "*",
+                        "+": ""
                     },
                     "code": "file:smart-contract.wasm"
-                },
-                "``smart_contract_address_2______s1": {
-                    "nonce": "*",
-                    "balance": "*",
-                    "storage": "*",
-                    "code": "*",
-                    "asyncCallData": "func@arg1@arg2"
-                },
-                "+": ""
+                }
             }
         }
     ]
@@ -166,10 +247,25 @@ Fields:
 - `comment` (optional) - doesn't affect execution
 - accounts - a map from account address to expected account state. It also accepts the optional entry `"+": ""`, which indicates that there can be other accounts in the blockchain mock that are not mentioned here. Without this field, unexpected account will cause an error. Each account state has the following fields:
   - `nonce` - either expected nonce value, or `"*"` to skip check
-  - `balance` - either expected balance value, or `"*" `to skip check
-  - `storage` all key-value pairs must match, or `"*"` to skip check
+  - `balance` - either expected EGLD balance, or `"*" `to skip check
+  - `esdt` - either a list of token values, or `"*"` to skip check entirely.
+    - Note: by default no other tokens than the ones specified are allowed. To allow more tokens than the ones specified, add a `"+": ""` entry.
+  - `username` - either expected user name value, or `"*"` to skip check
+  - `storage` all key-value pairs must match, or `"*"` to skip check entirely.
+    - Note: by default no other entries than the ones specified are allowed. To allow more storage entries than the ones specified, add a `"+": ""` entry.
   - `code` - expected smart contract code, or `"*"` to skip check
   - `asyncCallData` - this field is set by asynchronous calls and when contracts send funds to an account
+
+## **Step type: `dumpState`**
+
+Simply prints the entire state of the blockchain mock to the console.
+
+```
+{
+    "step": "dumpState",
+    "comment": "print everything to console"
+}
+```
 
 ## **Step type: `scCall`**
 
