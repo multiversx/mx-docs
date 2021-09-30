@@ -132,7 +132,7 @@ Once again, note that all contained values are in [nested encoding format](/deve
 - the token identifier has its length automatically prepended by the `nested:` prefix,
 - big ints are given with the `biguint:` syntax, which prepends their byte length,
 - small ints are given in full length,
-- lists have their length explicitly encoded at the start.
+- lists have their length explicitly encoded at the start, always on 4 bytes (as `u32`).
 
 :::
 

@@ -35,6 +35,6 @@ Developers are expected to only write the Mandos tests once, but they can run th
 
 ## **Test file extension**
 
-Mandos scenario files should end in `.scen.json`, where "scen" comes from "scenario". The framework uses thie double extension to identify tests to attempt running. Any other extension will be ignored.
+Mandos scenario files should end in `.scen.json`, where "scen" comes from "scenario". The framework uses the double extension to identify tests to attempt running. Any other extension will be ignored.
 
 On a side note, there is also an older format that is now deprecated, where test file names end in `.test.json`, but you shouldn't worry about it.

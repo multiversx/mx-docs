@@ -109,7 +109,7 @@ Mandos helps developers to also easily represent nested numbers. These are as fo
 :::note Examples
 - `"biguint:0"` equals `0x00000000`
 - `"biguint:1"` equals `0x0000000101`
-- `"biguint:256"` equals `0x000000210100`
+- `"biguint:256"` equals `0x00000020100`
 - `u64:1` equals `0x0000000000000001`
 - `i64:-1` equals `0xFFFFFFFFFFFFFFFF`
 - `u32:1` equals `0x00000001`
@@ -128,7 +128,7 @@ The `nested:` prefix prepends the length of the argument. It is similar to `bigu
 
 ## **Booleans**
 
-Mandos offers these 2 constants, for convenienec:
+Mandos offers these 2 constants, for convenience:
 - `"true"` = `"1"` = `"0x01"`
 - `"false"` = `"0"` = `""`. 
 
@@ -162,7 +162,7 @@ Addresses need to be 32 bytes long, so
 
 `sc:` constructs a dummy smart contract address. 
 
-On Elrond, smart contract addresses have a different format than user addresse - they start with 8 bytes of zero.
+On Elrond, smart contract addresses have a different format than user address - they start with 8 bytes of zero.
 
 :::important
 Mandos requires that all accounts with addresses in SC format must have non-empty code.
