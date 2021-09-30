@@ -24,7 +24,7 @@ More importantly, the format needs to be as compact as possible, since each addi
 
 There is a perk that is central to the formatter: we know the size of the byte arrays entering the contract. All arguments have a known size in bytes, and we normally learn the length of storage values before loading the value itself into the contract. This gives us some additional data straight away that allows us to encode less.
 
-Imagine that we have an argument of type int32. During a smart contract call we want to transmit the value "5" to it. A standard deserializer might expect us to send the full 4 bytes `0x00000005`, but there is clearly no need for the leading zeroes. It's a single argument and we know where to stop, there is no risk of reading too much. So sending `0x05` is enough. We saved 3 bytes. Here we say that the integer is represented in its **top-level form**, it exists on its own and can be represented more compactly.
+Imagine that we have an argument of type int32. During a smart contract call we want to transmit the value "5" to it. A standard deserializer might expect us to send the full 4 bytes `0x00000005`, but there is clearly no need for the leading zeroes. It's a single argument, and we know where to stop, there is no risk of reading too much. So sending `0x05` is enough. We saved 3 bytes. Here we say that the integer is represented in its **top-level form**, it exists on its own and can be represented more compactly.
 
 But now imagine that an argument that deserializes as a vector of int32. The numbers are serialized one after the other. We no longer have the possibility of having variable length integers because we won't know where one number begins and one ends. Should we interpret `0x0101` as`[1, 1]` or `[257]`? So the solution is to always represent each integer in its full 4-byte form. `[1, 1]` is thus represented as `0x0000000100000001` and`[257]`as `0x00000101`, there is no more ambiguity. The integers here are said to be in their **nested form**. This means that because they are part of a larger structure, the length of their representation must be apparent from the encoding.
 
@@ -34,7 +34,7 @@ But what about the vector itself? Its representation must always be a multiple o
 
 ## A note about the value zero
 
-We are used to writing the number zero as "0" or "0x00", but if we think about it we don't need 1 byte for representing it, 0 bytes or an "empty byte array" represent the number 0 just as well. In fact, just like in `0x0005`, the leading 0 byte is superfluous, so is the byte `0x00` just like an unnecessary leading 0.
+We are used to writing the number zero as "0" or "0x00", but if we think about it, we don't need 1 byte for representing it, 0 bytes or an "empty byte array" represent the number 0 just as well. In fact, just like in `0x0005`, the leading 0 byte is superfluous, so is the byte `0x00` just like an unnecessary leading 0.
 
 With this being said, the format always encodes zeroes of any type as empty byte arrays.
 
@@ -57,7 +57,7 @@ can fit their 2's complement, big endian representation.
 
 :::important
 A note about the types `usize` and `isize`: these Rust-specific types have the width of the underlying architecture,
-i.e 32 on 32-bit systems and 64 on 64-bit systems. However, smart contracts always run on a wasm32 architrcture, so
+i.e. 32 on 32-bit systems and 64 on 64-bit systems. However, smart contracts always run on a wasm32 architecture, so
 these types will always be identical to `u32` and `i32` respectively.
 Even when simulating smart contract execution on 64-bit systems, they must still be serialized on 32 bits.
 :::
@@ -148,7 +148,7 @@ can fit their 2's complement, big endian representation.
 The length of the encoded number always comes first, on 4 bytes (`usize`/`u32`).
 Next we encode:
   - For `Self::BigUint` the big endian bytes
-  - For `Self::BigInt` the shortest 2's complement number that can unambigously represent the number. Positive numbers must always have the most significant bit `0`, while the negative ones `1`. See examples below. 
+  - For `Self::BigInt` the shortest 2's complement number that can unambiguously represent the number. Positive numbers must always have the most significant bit `0`, while the negative ones `1`. See examples below. 
 
 
 **Examples**

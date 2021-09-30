@@ -74,7 +74,7 @@ Awesome, your transaction is now sent using your Ledger device.
 
 ## **Receiving EGLD in your wallet**‌
 
-After logging into your wallet, as described above, you will be able to see your wallet address and share it with others so they can send you EGLD.‌
+After logging into your wallet, as described above, you will be able to see your wallet address and share it with others, so they can send you EGLD.‌
 
 Your address is immediately visible on the top part of the wallet, as "Address erd1... ". You can copy the address by pressing the copy button (two overlapping squares). ‌
 

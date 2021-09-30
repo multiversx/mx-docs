@@ -88,7 +88,7 @@ const siteConfig = {
   docsSideNavCollapsible: true,
 
   algolia: {
-    apiKey: "9be00cecf9fc7dfcddd6828f1dcad056",
+    apiKey: process.env.REACT_APP_ALGOLIA_SEARCH_KEY,
     indexName: "elrond",
   },
 
@@ -105,7 +105,7 @@ const siteConfig = {
     {
       title: "Start Building",
       content: "Build your decentralized application in minutes.",
-      docName: "developers/tutorials/crowdfunding-p1",
+      docName: "developers/tutorials/your-first-dapp",
       icon: "🛠️",
     },
     {

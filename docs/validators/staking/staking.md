@@ -80,7 +80,7 @@ erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --va
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
 
 - Replace `<stake-value>` with the amount you are staking. You need to calculate this value with respect to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
-- Replace `<validators-json-file>` with the a JSON file that lists the nodes you are staking for. This JSON file should look like this:
+- Replace `<validators-json-file>` with the JSON file that lists the nodes you are staking for. This JSON file should look like this:
 
 ```
 {

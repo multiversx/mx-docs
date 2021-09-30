@@ -11,8 +11,7 @@ How to install erdpy
 
 Before installing **erdpy**, please make sure you have a working **Python 3** environment:
 
-- **3.6** or later on Linux
-- **3.8** or later on MacOS
+- **3.8** or later on Linux and MacOS
 
 Smart contracts written in C require the ncurses library routines for compiling. Install them using the following:
 
@@ -26,7 +25,7 @@ In order to install **erdpy** using the `erdpy-up` installation script, run the 
 
 ```
 wget -O erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-erdpy/master/erdpy-up.py
-python3 erdpy-up.py
+python3.8 erdpy-up.py
 ```
 
 This will create a light Python virtual environment (based on `venv`) in `~/elrondsdk/erdpy-venv `and also include `~/elrondsdk`in your **`$PATH`** variable (by editing the appropriate `.profile` file).
@@ -80,7 +79,7 @@ python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor
 
 :::
 
-You may need to restart your user session for this changes to take effect.
+You may need to restart your user session for these changes to take effect.
 
 ### **Install and smoke test**
 
@@ -92,7 +91,7 @@ pip3 install --user --upgrade --no-cache-dir erdpy
 
 ### **Troubleshooting**
 
-If you encounter encoding-related issues at installation time, such as: `UnicodeDecodeError: 'ascii' codec can't decode byte`, then please set `PYTHONIOENCODING` before running the install command:
+If you encounter encoding-related issues at installation time, such as: `UnicodeDecodeError: 'ascii' codec can't decode byte`, then please set `PYTHONIOENCODING` before running the installation command:
 
 ```
 PYTHONIOENCODING=utf8 pip3 install --user --upgrade --no-cache-dir erdpy

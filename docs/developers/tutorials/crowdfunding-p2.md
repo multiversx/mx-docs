@@ -39,7 +39,7 @@ The deadline being a block nonce can be expressed as a regular 64-bits unsigned 
 
 Try to avoid the signed version as much as possible (unless negative values are really possible and needed). There are some caveats with BigInt argument serialization that can lead to subtle bugs.
 
-Also note that BigUint logic does not reside in the contract, but is built into Arwen's API, so as to not bloat the contract code.
+Also note that BigUint logic does not reside in the contract, but is built into Arwen's API, to not bloat the contract code.
 
 Let's test that initialization works.
 
@@ -147,7 +147,7 @@ It is not enough to receive the funds, the contract also needs to keep track of 
 A few things to unpack:
 
 1. This getter and setter both have an extra argument, for both an address. This is how we define a map in the storage. The donor argument will become part of the storage key. Any number of such key arguments can be added, but in this case we only need one. The resulting storage key will be a concatenation of the specified base key `"deposit"` and the serialized argument.
-2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of ERD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with #[payable]. Notice the `#[payment] payment: &BigUint` argument. This is not a real argument, but just syntactic sugar to pass the payed sum to the function.
+2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of ERD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with #[payable]. Notice the `#[payment] payment: &BigUint` argument. This is not a real argument, but just syntactic sugar to pass the paid sum to the function.
 3. fund needs to also be explicitly declared as an endpoint. All `#[payable]`methods need to be marked `#[endpoint]`, but not the other way around.
 
 To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `test-fund.scen.json` .
@@ -221,9 +221,9 @@ Explanation:
 
 1. `"externalSteps"`allows us to import steps from another json file. This is very handy, because we can write test scenarios that branch out from each other without having to duplicate code. Here we will be reusing the deployment steps in all tests. These imported steps get executed again each time they are imported.
 2. We need a donor, so we add another account using a new `"setState"` step.
-3. The actual simulated transaction. Note that we use `"scCall"` instead of `"scDeploy"`. There is a `"to"` field, and no `"contractCode"`. The rest functions the same. The `"value"` field indicates the amount payed to the function.
-4. When checking the state, we have a new user, we see that the donor's balance is decreased by the amount payed, and the contract balance increased by the same amount.
-5. There is another entry in the contract storage. The pipe symbol`|`in the key means concatenation. The addresses is serialized as itself, and we can represent it in the same readable format.
+3. The actual simulated transaction. Note that we use `"scCall"` instead of `"scDeploy"`. There is a `"to"` field, and no `"contractCode"`. The rest functions the same. The `"value"` field indicates the amount paid to the function.
+4. When checking the state, we have a new user, we see that the donor's balance is decreased by the amount paid, and the contract balance increased by the same amount.
+5. There is another entry in the contract storage. The pipe symbol`|`in the key means concatenation. The addresses are serialized as itself, and we can represent it in the same readable format.
 
 Test it by running the commands again:
 
@@ -260,7 +260,7 @@ It doesn't make sense to fund after the deadline has passed, so fund transaction
     }
 ```
 
-`SCResult<T>` is a type specific to elrond-wasm that can contain either a result, or an error. It is the smart contract equivalent of Rust's `Result<T, E>`. In principle the type parameter can be almost anything (more on that later). However, we don't need to return anything here in case of success, so we uset he unit type`()` , which doesn't contain any data.
+`SCResult<T>` is a type specific to elrond-wasm that can contain either a result, or an error. It is the smart contract equivalent of Rust's `Result<T, E>`. In principle the type parameter can be almost anything (more on that later). However, we don't need to return anything here in case of success, so we use the unit type`()` , which doesn't contain any data.
 
 To return the error version of the SCResult, the easiest way is to use the macro `sc_error!` In case of success, we must explicitly return an `Ok(...)` expression.
 
@@ -309,7 +309,7 @@ We'll create another test file to verify that the validation works: `test-fund-t
 }
 ```
 
-We branch this time from `test-fund.scen.json`, where we already had a donor. Now the same donor wants to donate, again, but in the mean time the current block nonce has become 123,001, one block nonce later than the deadline. The transaction fails with status 4 (user error - all errors from within the contract will return this status). The testing framework allows us to also check that the correct message was returned.
+We branch this time from `test-fund.scen.json`, where we already had a donor. Now the same donor wants to donate, again, but in the meantime the current block nonce has become 123,001, one block nonce later than the deadline. The transaction fails with status 4 (user error - all errors from within the contract will return this status). The testing framework allows us to also check that the correct message was returned.
 
 By building and testing the contract again, you should see that all three tests pass:
 

@@ -28,6 +28,7 @@ jobs:
           npm run build
         env:
           CI: false
+          REACT_APP_ALGOLIA_SEARCH_KEY: ${{ secrets.ALGOLIA_SEARCH_KEY }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

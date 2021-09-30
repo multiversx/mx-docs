@@ -80,6 +80,7 @@
         "type": "subcategory",
         "label": "Tutorials",
         "ids": [
+          "developers/tutorials/your-first-dapp",
           "developers/tutorials/counter",
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2"
@@ -99,11 +100,23 @@
         "label": "Developer reference",
         "ids": [
           "developers/developer-reference/elrond-serialization-format",
-          "developers/developer-reference/mandos-tests-reference",
           "developers/developer-reference/elrond-wasm-annotations",
-          "developers/developer-reference/elrond-wasm-contract-calls"
+          "developers/developer-reference/elrond-wasm-contract-calls",
+          "developers/developer-reference/smart-contract-developer-best-practices",
+          "developers/developer-reference/elrond-wasm-api-functions"
         ]
       },
+	  {
+        "type": "subcategory",
+        "label": "Mandos tests reference",
+        "ids": [
+			"developers/mandos-reference/overview",
+			"developers/mandos-reference/structure",
+			"developers/mandos-reference/values-simple",
+			"developers/mandos-reference/values-complex",
+			"developers/mandos-reference/embed"
+		]
+	  },
       "developers/constants",
       "developers/account-storage",
       "developers/esdt-tokens",
@@ -149,6 +162,8 @@
       "sdk-and-tools/erdwalletjs-cli"
     ],
     "Integrators": [
+      "integrators/egld-integration-guide",
+      "integrators/esdt-tokens-integration-guide",
       "integrators/observing-squad",
       "integrators/accounts-management",
       "integrators/creating-transactions",

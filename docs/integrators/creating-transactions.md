@@ -22,6 +22,20 @@ As described in section [Signing Transactions](/developers/signing-transactions/
 }
 ```
 
+## **SDK and tools support for creating and signing transactions**
+
+There are SDKs or tools with support for interacting with the Elrond blockchain, so one can use one of the following SDKs to perform
+transactions creation and signing:
+
+- [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)
+- [erdpy - Python SDK](/sdk-and-tools/erdpy/erdpy)
+- [erdgo - Golang SDK](/sdk-and-tools/erdgo)
+- [erdjava - Java SDK](/sdk-and-tools/erdjava)
+- [elrond-core-js](https://github.com/ElrondNetwork/elrond-core-js) library
+- [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli) wrapper over our [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
+- [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http), which wraps the [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
+
+
 ## **General network parameters**
 
 General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/sdk-and-tools/rest-api/network#get-network-configuration).
@@ -52,7 +66,7 @@ The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tool
 Broadcasted transactions that reach the _mempool_ having the same sender address and the same nonce are _competing transactions_, and only one of them will be processed (the one providing a higher gas price or, if they have the same gas price, the one that arrived the second - but keep in mind that arrival time is less manageable).
 
 :::tip
-Avoid competing transactions by maintaining an strictly increasing nonce sequence when broadcasting transactions of the same sender address.
+Avoid competing transactions by maintaining a strictly increasing nonce sequence when broadcasting transactions of the same sender address.
 :::
 
 Although an explicit _transaction cancellation trigger_ is not yet available in the Network, cancellation of a transaction T1 with nonce 42 could be _possible_ if one broadcasts a second transaction T2 with same nonce 42, with higher gas price (and without a value to transfer) **immediately** (e.g. 1 second) after broadcasting T1.
