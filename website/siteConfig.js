@@ -88,7 +88,7 @@ const siteConfig = {
   docsSideNavCollapsible: true,
 
   algolia: {
-    apiKey: process.env.ALGOLIA_SEARCH_KEY,
+    apiKey: process.env.REACT_APP_ALGOLIA_SEARCH_KEY,
     indexName: "elrond",
   },
 
