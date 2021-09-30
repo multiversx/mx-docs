@@ -1,37 +1,7 @@
 ---
-id: mandos-tests-reference
-title: Mandos tests reference
+id: structure
+title: Mandos Structure
 ---
-
-Rationale, description and functionality of Mandos JSON tests
-
-# **Who is Mandos?**
-
-According to the Lord of the Rings wiki: «[**Mandos**](https://lotr.fandom.com/wiki/Mandos) ("Prison-Fortress") was an [Ainu](https://lotr.fandom.com/wiki/Ainu), one of the [Aratar](https://lotr.fandom.com/wiki/Aratar), and a [Vala](https://lotr.fandom.com/wiki/Vala) who was responsible for the judgement of the Spirits (or [Fëa](https://lotr.fandom.com/wiki/Fëa)) of all Elven dead. He also had responsibility for pronouncing the dooms and judgments of [Eru Ilúvatar](https://lotr.fandom.com/wiki/Eru_Ilúvatar) under [Manwë](https://lotr.fandom.com/wiki/Manwë). His real name was **Námo** ("Ordainer" or "Judge") but was later known to the [Elves](https://lotr.fandom.com/wiki/Elves) as Mandos after his sacred [Halls of Mandos](https://lotr.fandom.com/wiki/Halls_of_Mandos), over which he presided, and where Elves would go when slain.» It is only fitting that Mandos is also the name of a framework for _judging_ smart contracts, especially since they are in many ways _immortal_ too.
-
-# **Rationale**
-
-During smart contract development, it is important for the developer to have the capacity to write unit and integration tests easily.
-
-Short unit tests can use the language and tools the contract is written with, but to test the contract in a realistic scenario we need at least a blockchain mock and some way to specify execution scenarios.
-
-Mandos is suitable for both short tests that check how a transaction changes the storage, and for long and complex scenarios.
-
-The fact that it is expressed in a descriptive language like JSON makes it agnostic to the language in which the smart contract is developed.
-
-# **Running the tests**
-
-At the moment of writing this document, Mandos tests can be launched directly from the Elrond VSCode extension, from contextual menus.
-
-There are plans to enable running Mandos tests in the elrond-wasm Rust debugger directly.
-
-# **Test file extension**
-
-Mandos scenario files should end in `.scen.json`, where "scen" comes from "scenario". The framework uses thie double extension to identify tests to attempt running. Any other extension will be ignored.
-
-On a side note, there is also an older format that is now deprecated, where test file names end in `.test.json`, but you shouldn't worry about it.
-
-# **Test file structure**
 
 ## **Top level**
 
@@ -82,28 +52,63 @@ Also beware that there is currently no protection against cyclic imports.
             "step": "setState",
             "comment": "not much to comment here, but we can",
             "accounts": {
-                "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000": {
+                "address:user_account": {
                     "comment": "we can comment on individual account initializations",
                     "nonce": "0",
-                    "balance": "0xe8d4a51000",
+                    "balance": "123,000,000,000",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "400,000,000,000",
+                        "str:MYSFT-123456": {
+                            "instances": [
+                                {
+                                    "nonce": "24",
+                                    "balance": "1"
+                                },
+                                {
+                                    "nonce": "25",
+                                    "balance": "1",
+                                    "creator": "address:other_creator_address",
+                                    "royalties": "5000",
+                                    "hash": "keccak256:str:other_nft_hash",
+                                    "uri": [
+                                        "str:www.something.com/funny.jpeg"
+                                    ],
+                                    "attributes": "str:other_attributes"
+                                }
+                            ],
+                            "lastNonce": "7",
+                            "roles": [
+                                "ESDTRoleLocalMint",
+                                "ESDTRoleLocalBurn",
+                                "ESDTRoleNFTCreate",
+                                "ESDTRoleNFTAddQuantity",
+                                "ESDTRoleNFTBurn"
+                            ],
+                            "frozen": "false"
+                        }
+                    },
+                    "username": "str:myusername.elrond",
                     "storage": {},
                     "code": ""
                 },
-                "``smart_contract_address________s1": {
+                "sc:smart_contract_address": {
                     "nonce": "0x00",
                     "balance": "23,000",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "100,000,000,000",
+                    },
                     "storage": {
-                        "0x19efaebcc296cffac396adb4a60d54c05eff43926a6072498a618e943908efe1": "-5",
-                        "``32_byte_key_____________________": "``string___interpreted___as__bytes"
+                        "str:storage-key-1": "-5",
+                        "str:storage-key-2|u32:4": ["u32:1", "u32:2", "u32:3"]
                     },
                     "code": "file:smart-contract.wasm"
                 }
             },
             "newAddresses": [
                 {
-                    "creatorAddress": "``creator_addr____________________",
+                    "creatorAddress": "address:creator",
                     "creatorNonce": "1234",
-                    "newAddress": "``creator_addr____________________"
+                    "newAddress": "sc:future_sc"
                 }
             ]
         },
@@ -132,22 +137,40 @@ At least one such step is required before any execution, because all transaction
 
 Not all of its sections are required each time. These sections are:
 
-- `comment` (optional) - doesn't affect execution
-- `accounts` - any number of accounts can be specified, both user accounts and smart contracts. Each account will have:
-  - `comment` (optional)
-  - `nonce`
-  - `balance`
-  - `storage` - initializes storage with given key-value map. Both keys and values can be of any length.
-  - `code` - typically provided in the format `"code": "file:<relative path to contract binary>"`More on value type later. Having a `code` makes the account a smart contract.
+- `comment` doesn't affect execution
+- `accounts` any number of accounts can be specified, both user accounts and smart contracts. The account contains several fields, all of them optional:
+    - `comment` doesn't affect execution
+    - `nonce` account nonce at the beginning of the execution
+    - `balance` EGLD balance
+    - `esdt` a list of ESDT tokens owned by this account
+        - Owned ESDTs are represented as a map from token identifier to token data
+        - Mandos does not validate token identifiers (the keys).
+        - There are 2 formats for expressing the ESDT value:
+            - Compact: for fungible tokens a single string containing the ESDT balance is enough.
+            - Full: as a map containing several fields:
+                - `instances` is a list containing the main token data. Each instance has a unique token nonce (although Mandos does not enforce this uniqueness). Fungible tokens can only have 1 instance with the nonce 0. Semi-fungible tokens have non-zero nonces. Each instance has the following fields:
+                    - `nonce`
+                    - `balance`
+                    - `creator` address of the account that created the NFT
+                    - `royalties` a proportion out of 10000 that represents what percentage of an NFT sell price should be transferred to the creator. This is not enforced by the protocol or Mandos in any way.
+                    - `hash` NFT hash
+                    - `uri` a list of URIs associated to the NFT/SFT
+                    - `attributes` raw bytes where any data can be stored
+                - `lastNonce` the last created instance nonce for this token identifier. The next NFT/SFT will have nonce `lastNonce + 1`
+                - `roles` determine how the current account can interact with the ESDT token
+                - `frozen` ESDT tokens can be frozen by their creator if they are configured to be freezable
+    - `username` the "herotag", which is stored directly in the account trie
+    - `storage` initializes storage with given key-value map. Both keys and values can be of any length.
+    - `code` typically provided in the format `"code": "file:path/to/binary"` More on this [here](/developers/mandos-reference/values-simple#file-contents). Having a `code` makes the account a smart contract.
 - `newAddresses` - mock contract address generation during deploy. We basically tell the blockchain mock what address name to generate when deploying new contracts. Not having this would give a generated address that is hard to predict when developing tests. It consists of a list of triples:
-  - `creatorAddress`
-  - `creatorNonce`
-  - `newAddress` - whenever an account with the given address and nonce deploys a contract, this will receive this address. This should make the test more readable, by having the new addresses explicitly stated, rather than being a magic new number popping up at some point in the scenario.
+    - `creatorAddress`
+    - `creatorNonce`
+    - `newAddress` - whenever an account with the given address and nonce deploys a contract, this will receive this address. This should make the test more readable, by having the new addresses explicitly stated, rather than being a magic new number popping up at some point in the scenario.
 - `previousBlockInfo` and `currentBlockInfo` - set or change data that the blockchain mock is providing to smart contracts via hooks. Mandos does not model blocks, so this is how we simulate the passing of time in scenarios. Fields:
-  - `blockTimestamp`
-  - `blockNonce`
-  - `blockRound`
-  - `blockEpoch`
+    - `blockTimestamp`
+    - `blockNonce`
+    - `blockRound`
+    - `blockEpoch`
 
 ## **Step type: `checkState`**
 
@@ -162,30 +185,58 @@ Is allowed anywhere, not just as the end of tests, so progressive changes can be
             "step": "checkState",
             "comment": "check that previous tx did the right thing",
             "accounts": {
-                "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000": {
-                    "comment": "we can comment on individual account checks",
-                    "nonce": "1",
-                    "balance": "0xe8d4951000",
+                "address:user_account": {
+                    "comment": "we can comment on individual account initializations",
+                    "nonce": "0",
+                    "balance": "*",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "*",
+                        "str:MYSFT-123456": {
+                            "instances": [
+                                {
+                                    "nonce": "24",
+                                    "balance": "*"
+                                },
+                                {
+                                    "nonce": "25",
+                                    "balance": "1",
+                                    "creator": "address:other_creator_address",
+                                    "royalties": "5000",
+                                    "hash": "keccak256:str:other_nft_hash",
+                                    "uri": [
+                                        "str:www.something.com/funny.jpeg"
+                                    ],
+                                    "attributes": "str:other_attributes"
+                                }
+                            ],
+                            "lastNonce": "7",
+                            "roles": [
+                                "ESDTRoleLocalMint",
+                                "ESDTRoleLocalBurn",
+                                "ESDTRoleNFTCreate",
+                                "ESDTRoleNFTAddQuantity",
+                                "ESDTRoleNFTBurn"
+                            ],
+                            "frozen": "false"
+                        }
+                    },
+                    "username": "str:myusername.elrond",
                     "storage": {},
                     "code": ""
                 },
-                "``smart_contract_address________s1": {
+                "sc:smart_contract_address": {
                     "nonce": "0x00",
                     "balance": "23,000",
+                    "esdt": {
+                        "str:MYFUNGIBLE-0001": "100,000,000,000",
+                    },
                     "storage": {
-                        "0x19efaebcc296cffac396adb4a60d54c05eff43926a6072498a618e943908efe1": "-5",
-                        "``32_byte_key_____________________": "``string___interpreted___as__bytes"
+                        "str:storage-key-1": "-5",
+                        "str:storage-key-2|u32:4": "*",
+                        "+": ""
                     },
                     "code": "file:smart-contract.wasm"
-                },
-                "``smart_contract_address_2______s1": {
-                    "nonce": "*",
-                    "balance": "*",
-                    "storage": "*",
-                    "code": "*",
-                    "asyncCallData": "func@arg1@arg2"
-                },
-                "+": ""
+                }
             }
         }
     ]
@@ -195,11 +246,26 @@ Fields:
 
 - `comment` (optional) - doesn't affect execution
 - accounts - a map from account address to expected account state. It also accepts the optional entry `"+": ""`, which indicates that there can be other accounts in the blockchain mock that are not mentioned here. Without this field, unexpected account will cause an error. Each account state has the following fields:
-  - `nonce` - either expected nonce value, or `“*”` to skip check
-  - `balance` - either expected balance value, or `“*” `to skip check
-  - `storage` all key-value pairs must match, or `“*”` to skip check
-  - `code` - expected smart contract code, or `“*”` to skip check
+  - `nonce` - either expected nonce value, or `"*"` to skip check
+  - `balance` - either expected EGLD balance, or `"*" `to skip check
+  - `esdt` - either a list of token values, or `"*"` to skip check entirely.
+    - Note: by default no other tokens than the ones specified are allowed. To allow more tokens than the ones specified, add a `"+": ""` entry.
+  - `username` - either expected user name value, or `"*"` to skip check
+  - `storage` all key-value pairs must match, or `"*"` to skip check entirely.
+    - Note: by default no other entries than the ones specified are allowed. To allow more storage entries than the ones specified, add a `"+": ""` entry.
+  - `code` - expected smart contract code, or `"*"` to skip check
   - `asyncCallData` - this field is set by asynchronous calls and when contracts send funds to an account
+
+## **Step type: `dumpState`**
+
+Simply prints the entire state of the blockchain mock to the console.
+
+```
+{
+    "step": "dumpState",
+    "comment": "print everything to console"
+}
+```
 
 ## **Step type: `scCall`**
 
@@ -263,15 +329,15 @@ This step simulates a transaction to an existing smart contract. Fields:
   - `gasPrice` - how much each unit of gas costs in ERD. gasLimit x gasPrice will be subtracted from caller balance before the call. Normally, the unused gas (x gasPrice) is returned to the caller after executing the call. This does not happen in the Mandos tests as it would make resulting balances a lot harder to manage. Hint: Mandos allows `gasPrice` to be zero, to avoid having to keep track of gas payments.
 - `expect` (optional) - each transaction produces a receipt whose hash ends up on the blockchain. The contents of the receipt can be checked here.
   - `out` - functions can return any number of results. This is an ordered list of these results.
-  - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 (“user error”).
+  - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 ("user error").
   - `message` (optional) - in case of error, the contract can also provide an error message. This is where this message can be checked, to make sure that the correct error occurred. It will be empty in case of success.
-  - `logs` - contracts can save logs off-chain, that can be later studied to determine what happened with the contract. In the contract they are referred to as “events”. To skip checking logs, one can write `“logs”: “*”`.
+  - `logs` - contracts can save logs off-chain, that can be later studied to determine what happened with the contract. In the contract they are referred to as "events". To skip checking logs, one can write `"logs": "*"`.
     - `address` - smart contract address that produced the log. It can actually be different from the tx recipient if that contract in turn calls another contract.
     - `identifier` - a contract can have multiple event types, each of them has an identifier. In the API the identifier is the first topic saved. In the Rust framework the event identifier is specified explicitly in the contract.
     - `topics` - these are event arguments, provided by the contract. Off-chain they are indexed, so that users can search by these topics. All topics are currently 32 bytes in length, but this restriction might be lifted in the future.
     - `data` - same as the topics, but this is not indexed, cannot perform searches on data. Can be of any length (or sometimes empty).
-  - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
-  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `“*”`
+  - `gas` - here the consumed gas can be checked. To ignore this check, set to `"*"`
+  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
   
 ## **Step type: `scQuery`**
 
@@ -316,10 +382,10 @@ This step simulates a query to an existing smart contract. Fields:
   - `arguments` - a list of the arguments to provide to the SC function
 - `expect` (optional) - each transaction produces a receipt whose hash ends up on the blockchain. The contents of the receipt can be checked here.
   - `out` - functions can return any number of results. This is an ordered list of these results.
-  - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 (“user error”).
+  - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 ("user error").
   - `message` (optional) - in case of error, the contract can also provide an error message. This is where this message can be checked, to make sure that the correct error occurred. It will be empty in case of success.
-  - `gas` - here the consumed gas can be checked. To ignore this check, set to `“*”`
-  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `“*”`
+  - `gas` - here the consumed gas can be checked. To ignore this check, set to `"*"`
+  - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
 
 ## **Step type: `scDeploy`**
 
@@ -423,70 +489,3 @@ The fields are:
 - `tx`
   - `to`
   - `value`
-
-# **Formatting values**
-
-We went through the structure of a Mandos test, but you might have noticed that the actual values are expressed in many different, some unusual ways.
-
-Almost all values in the JSON file end up being sent to the VM as raw bytes. This is why we have developed a consistent format to express all raw values everywhere. The same format is used for expressing addresses, balances, transaction and block nonces, keys, contract code, storage keys and values, log identifiers, topics and data, gas limits, gas costs, etc.
-
-Exceptions: `txId`, `comment` and `asyncCallData` are simple strings. `asyncCallData` might be changed to the default value format in the future and/or reworked.
-
-The format is as follows
-
-- Empty strings (`""`) mean empty byte arrays. The number zero can also be represented as an empty byte array.
-- Hexadecimal representation, starting with `0x`. With this representation, what you see is what you get. E.g. `“0x1234567890”`. After the `0x` prefix an even number of digits is expected, since 2 digits = 1 byte.
-- Base 10 unsigned number representation. Unprefixed numbers are interpreted as base 10, unsigned. E.g. `“0”`, `“1”`, `“1000000”.` Unsigned numbers will be represented in the minimum amount of bytes in which they can fit. `“255”` = `“0xff”`, `“256”` = `“0x0100”`, `"0"` = `""`. Digit separators are allowed, e.g. `"1,000,000"`.
-- Biguint representation. Biguints are formatted with special rules to signal the amount of bytes needed to build the number. Mandos can do that for you by specifying a number with a `biguint:` prefix for example `biguint:5`.
-- Typed numbers. Use `u64:` `i64:` `u32:` `i32:` `u16:` `i16:` `u8:` `i8:` to represent a number with a fixed length.
-- Signed number representation. Some contract arguments are expected to be signed. These arguments will be transmitted as two’s complement representation. Prefixing any number (base 10 or hex) with a minus sign will convert them to two’s complement. Two’s complement is interpreted as positive or negative based on the first bit. Sometimes positive numbers can start with a “1” bit and get accidentally interpreted as negative. To prevent this, we can prefix them with a plus. A few examples should make this clearer:
-  - `“1” `is represented as `“0x01”`, signed interpretation: `1`, everything OK.
-  - `“255”` is represented as `“0xff”`, signed interpretation: `“-1”,` this might not be what we expected.
-  - `“+255”` is represented as `“0x00ff”`, signed interpretation: `“255”.` The prepended zero byte makes sure the contract interprets it as positive. The `+` makes sure those leading zeroes are added if necessary.
-  - `“+1”` is still represented as `“0x01”`, here the leading 0 is not necessary. Still, it is good practice adding the `+` if we know the argument is expected to be signed.
-  - `“-1”` is represented as `“0xff”`. Negative numbers are also represented in the minimum number of bytes possible.
-- Boolean values: `"true"` = `"1"` = `"0x01"`; `"false"` = `"0"` = `""`.
-- String representation, starting with `''` or ``. Mandos steps can be embedded in Go code now; in Go ` is reserved for multi-line strings, so `''` is preferred now. In this representation, each character gets converted to a single byte, based on its ASCII code. It is especially useful for making the dummy account addresses readable. Storage keys are also commonly readable as ASCII. E.g. ` “``some string argument” `, ` "``node_address__________________s1" `, `"storage_key_1"`
-- Concatenate multiple values (possibly of different formats) using the pipe (`|`) separator. E.g. ` “0x1234|``abcd|-1” ` gets interpreted as `“0x123461626364ff”`
-- Load file, starting with `file:`. This will replace the field with the entire contents of the file, given as relative path with respect to the JSON file we are executing. E.g. `“file:contracts/erc20-c.wasm”`
-- Keccak hash, starting with `keccak256:`. E.g. `“keccak256:1|0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000”` gets interpreted as `“0x648147902a606bf61e05b8b9d828540be393187d2c12a271b45315628f8b05b9”`. Note that the argument can contain concatenation, but this is not a full parser yet, only very primitive syntax trees are possible for now.
-- Addresses, starting with `address:`. This will format a string to a valid address representation. A valid example would be `address:owner`.
-- SmartContract-Addresses, starting with `sc:`. Same as address, but will enforce the SmartContract address formatting. A valid example would be `sc:smartcontract`.
-
-# **Embedding in Go**
-
-Mandos steps can be embedded in Go, in order to program for more flexible behavior. One can even save dynamically generated Mandos scenarios. For a comprehensive example on how to do that, check out the [delegation contract fuzzer in Arwen](https://github.com/ElrondNetwork/arwen-wasm-vm/tree/master/fuzz/delegation) or the [DNS contract deployment scenario test generator](https://github.com/ElrondNetwork/arwen-wasm-vm/tree/master/cmd/testgen/dns). Just a snippet from the fuzzer:
-
-```
-_, err = pfe.executeTxStep(fmt.Sprintf(`
-	{
-		"step": "scDeploy",
-		"txId": "-deploy-",
-		"tx": {
-			"from": "''%s",
-			"value": "0",
-			"contractCode": "file:delegation.wasm",
-			"arguments": [
-				"''%s",
-				"%d",
-				"%d",
-				"%d"
-			],
-			"gasLimit": "100,000",
-			"gasPrice": "0"
-		},
-		"expect": {
-			"out": [],
-			"status": "",
-			"logs": [],
-			"gas": "*",
-			"refund": "*"
-		}
-	}`,
-		string(pfe.ownerAddress),
-		string(pfe.auctionMockAddress),
-		args.serviceFee,
-		args.numBlocksBeforeForceUnstake,
-		args.numBlocksBeforeUnbond,
-	))
-```
