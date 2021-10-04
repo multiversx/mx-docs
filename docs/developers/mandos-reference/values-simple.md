@@ -3,11 +3,11 @@ id: values-simple
 title: Mandos Simple Values
 ---
 
-We went through the structure of a Mandos test, but you might have noticed that the actual values are expressed in many different, some unusual ways.
+We went through the structure of a Mandos test, and you might have noticed that in a lot of places values are expressed in diverse ways.
 
-Almost all values in the JSON file end up being sent to the VM as raw bytes. This is very flexible, but it can be difficult to work with as a human. This is why we have developed a consistent format to express all raw values everywhere.
+The VM imposes very few restrictions on its inputs and outputs, most fields are processed as raw bytes. The most straightforward way to write a test that one could think of would be to have the actual raw bytes always expressed in a simple format (e.g. like hexadecimal encoding). Indeed, our first contract tests were like this, but we soon discovered that it took painfully long prepare them and even longer to refactor. So, we gradually came up with increasingly complex formats to represent values in an intuitive human-readable way.
 
-The same format is used for expressing:
+We chose to create a single universal format to be used everywhere in a Mandos file. The same format is used for expressing:
 - addresses,
 - balances,
 - transaction and block nonces,
@@ -22,6 +22,16 @@ The advantage of this unique value format is that it is enough to understand it 
 The Mandos value format is closely related to the [Elrond serialization format](/developers/developer-reference/elrond-serialization-format). This is not by accident, Mandos is designed to make it easy to interact Elrond contracts and their data.
 
 Exceptions: `txId`, `comment` and `asyncCallData` are simple strings. `asyncCallData` might be changed to the default value format in the future and/or reworked.
+
+:::important
+
+It must be emphasized that no matter how values are expressed in Mandos, the communication with the VM is always done via raw bytes. Of course it is best when the Mandos value expression and the types in the smart contract match, but this is not enforced.
+
+:::
+
+A note on error messages: whenever we write a test that fails, Mandos tries its best to transform the actual value it found from raw bytes to a more human-readable form. It doesn't really know what format to use, to it tries its best to find something plausible. However, all it has are some heuristics, so it doesn't always get it right. It also displays the raw bytes so that the developer can investigate the proper value.
+
+
 
 ## **A note about the value parser and the use of prefixes**
 
