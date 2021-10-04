@@ -474,7 +474,7 @@ Lesser used step type. Simulates a simple transfer of EGLD between two accounts,
                 "value": "0",
                 "esdt": [
                     {
-                        "tokenIdentifier": "str:MYFUNGIBLE-0001",
+                        "tokenIdentifier": "str:MYFUNGIBLE-000001",
                         "value": "250,000,000,000"
                     },
                     {
