@@ -282,7 +282,7 @@ Simply prints the entire state of the blockchain mock to the console.
                 "value": "0",
                 "esdt": [
                     {
-                        "tokenIdentifier": "str:MYFUNGIBLE-0001",
+                        "tokenIdentifier": "str:MYFUNGIBLE-000001",
                         "value": "250,000,000,000"
                     },
                     {
