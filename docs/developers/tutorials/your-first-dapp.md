@@ -228,8 +228,8 @@ All right, let's move on to the application layer.
 We will clone a very simple dApp template that implements the calls to our newly deployed smart contract.
 
 ```sh
-git clone https://github.com/ElrondNetwork/dapp-template
-cd dapp-template
+git clone https://github.com/ElrondNetwork/dapp-template dapp
+cd dapp
 ```
 
 ### **Configure the app**
