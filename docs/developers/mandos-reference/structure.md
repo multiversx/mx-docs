@@ -92,7 +92,7 @@ Also beware that there is currently no protection against cyclic imports.
                     "code": ""
                 },
                 "sc:smart_contract_address": {
-                    "nonce": "0x00",
+                    "nonce": "0",
                     "balance": "23,000",
                     "esdt": {
                         "str:MYFUNGIBLE-0001": "100,000,000,000",
@@ -225,7 +225,7 @@ Is allowed anywhere, not just as the end of tests, so progressive changes can be
                     "code": ""
                 },
                 "sc:smart_contract_address": {
-                    "nonce": "0x00",
+                    "nonce": "0",
                     "balance": "23,000",
                     "esdt": {
                         "str:MYFUNGIBLE-0001": "100,000,000,000",
@@ -277,18 +277,29 @@ Simply prints the entire state of the blockchain mock to the console.
             "txId": "tx-name-or-id",
             "comment": "just an example",
             "tx": {
-                "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000",
-                "to": "0x1000000000000000000000000000000000000000000000000000000000000000",
-                "value": "0x00",
-                "function": "someFunctionName",
+                "from": "address:sender",
+                "to": "sc:contract",
+                "value": "0",
+                "esdt": [
+                    {
+                        "tokenIdentifier": "str:MYFUNGIBLE-000001",
+                        "value": "250,000,000,000"
+                    },
+                    {
+                        "tokenIdentifier": "str:MYSFT-123456",
+                        "nonce": "24",
+                        "value": "1"
+                    }
+                ]
+                "function": "contractEndpoint",
                 "arguments": [
-                    "0x1234123400000000000000000000000000000000000000000000000000000004",
-                    "0x00",
+                    "str:argument-1",
+                    "1234",
                     "",
-                    "``a message (as bytes)"
+                    "str:a message (as bytes)"
                 ],
-                "gasLimit": "0x100000",
-                "gasPrice": "0x01"
+                "gasLimit": "5,000,000",
+                "gasPrice": "0"
             },
             "expect": {
                 "out": [
@@ -298,16 +309,16 @@ Simply prints the entire state of the blockchain mock to the console.
                 "status": "",
                 "logs": [
                     {
-                        "address": "``smart_contract_address________s1",
-                        "identifier": "0xf099cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+                        "address": "sc:contract",
+                        "endpoint": "str:contractEndpoint",
                         "topics": [
-                            "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000",
-                            "0x1234123400000000000000000000000000000000000000000000000000000004"
+                            "str:topic-1",
+                            "str:topic-2"
                         ],
-                        "data": "0x00"
+                        "data": "str:log-value"
                     }
                 ],
-                "gas": "0x1234",
+                "gas": "*",
                 "refund": "*"
             }
         }
@@ -322,7 +333,11 @@ This step simulates a transaction to an existing smart contract. Fields:
 - `tx` - specifies the details of the transaction.
   - `from` - account must exist in the blockchain mock
   - `to` - account must exist in the blockchain mock and must be a smart contract
-  - `value` - how much ERD to transfer as part of the call. Only payable functions will accept this kind of payment.
+  - `value` - how much EGLD to transfer as part of the call. Only payable functions will accept this kind of payment.
+  - `esdt` - a list of ESDT tokens to transfer as part of the call. Cannot transfer both EGLD and ESDT at the same time. Each transferred item has the following fields:
+    - `tokenIdentifier` - the ESDT token unique identifier
+    - `nonce` - NFT/SFT token nonce. For fungible tokens the nonce is 0 and this field can be omitted.
+    - `value` - amount to transfer
   - `function` - function name to call in the contract
   - `arguments` - a list of the arguments to provide to the SC function
   - `gasLimit` - maximum amount of gas allowed in SC execution
@@ -346,16 +361,16 @@ This step simulates a transaction to an existing smart contract. Fields:
     "steps": [
         {
             "step": "scQuery",
-            "txId": "tx-name-or-id",
-            "comment": "just an example",
+            "txId": "query-id",
+            "comment": "query comment",
             "tx": {
-                "to": "0x1000000000000000000000000000000000000000000000000000000000000000",
-                "function": "someFunctionName",
+                "to": "sc:contract",
+                "function": "contractView",
                 "arguments": [
-                    "0x1234123400000000000000000000000000000000000000000000000000000004",
-                    "0x00",
+                    "str:argument-1",
+                    "1234",
                     "",
-                    "``a message (as bytes)"
+                    "str:a message (as bytes)"
                 ],
             },
             "expect": {
@@ -363,16 +378,21 @@ This step simulates a transaction to an existing smart contract. Fields:
                     "5",
                     "*"
                 ],
-                "status": "",
-                "gas": "*",
-                "refund": "*"
+                "status": ""
             }
         }
     ]
 }
 ```
 
-This step simulates a query to an existing smart contract. Fields:
+This step simulates a VM query from outside the blockchain. It is very similar to a `scCall`, with a few differences:
+- There is no sender. Being an off-chain query, there is no actual transaction happening, so the idea of sender is immaterial. In practice, just like on the real blockchain, the sender is made equal to the contract address, so it's as if the contract is calling itself.
+- Gas is irrelevant. No gas is consumed off-chain.
+- None of the changes (if any) are persisted. Despite this, it is considered bad practice to query endpoints that are not readonly.
+- Cannot transfer tokens in a query (neither EGLD nor ESDT).
+- Querying does not increase any account nonce.
+
+Fields:
 
 - `txId` (optional) - it shows up in the error messages, to help the developer find a transaction that produced a wrong result or that failed. It is also used to generate mock tx hashes.
 - `comment` (optional) - developers can provide comments or a description of the transaction. Does not influence execution.
@@ -387,6 +407,8 @@ This step simulates a query to an existing smart contract. Fields:
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
 
+
+
 ## **Step type: `scDeploy`**
 
 It is very similar to `scCall`, but it is used specifically for simulating deployment of new smart contracts.
@@ -399,17 +421,17 @@ It is very similar to `scCall`, but it is used specifically for simulating deplo
             "txId": "2",
             "comment": "deploy example",
             "tx": {
-                "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000",
-                "value": "0x00",
-                "contractCode": "``new contract code here",
+                "from": "address:deployer",
+                "value": "123,000",
+                "contractCode": "str:new contract code here",
                 "arguments": [
-                    "0x1234123400000000000000000000000000000000000000000000000000000004",
-                    "0x00",
+                    "str:init-arg-1",
+                    "100",
                     "",
-                    "``a message (as bytes)"
+                    "str:a message (as bytes)"
                 ],
-                "gasLimit": "0x100000",
-                "gasPrice": "0x01"
+                "gasLimit": "5,000,000",
+                "gasPrice": "0"
             },
             "expect": {
                 "out": [],
@@ -429,8 +451,11 @@ The fields are:
 - `comment` (optional) - same as for `scCall`
 - `tx` - similar with `scCall`, but a few differences. First off, there is no `to` field, since the contract does not exist yet. Also function cannot be specified, on deploy the `init` function is always called. We have:
   - `contractCode` - the code for the new contract. Typically, in the `"file:<relative path to contract binary>"` format.
-  - `from`, `value`, `arguments`, `gasLimit`, `gasPrice` - same as for `ScCall`
+  - `from`, `value`, `arguments`, `gasLimit`, `gasPrice` - same as for `scCall`
 - `expect` (optional) - same as for `scCall`
+
+Please note: cannot transfer ESDT during contract deploy. If you need to feed ESDTs to a contract when deploying, send them with a `scCall` immediately after deploy.
+
 
 ## **Step type: `transfer`**
 
@@ -444,9 +469,20 @@ Lesser used step type. Simulates a simple transfer of EGLD between two accounts,
             "txId": "3",
             "comment": "simple transfer, no VM",
             "tx": {
-                "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000000000",
-                "to": "0x1000000000000000000000000000000000000000000000000000000000000000",
-                "value": "1234"
+                "from": "address:sender",
+                "to": "address:receiver",
+                "value": "0",
+                "esdt": [
+                    {
+                        "tokenIdentifier": "str:MYFUNGIBLE-000001",
+                        "value": "250,000,000,000"
+                    },
+                    {
+                        "tokenIdentifier": "str:MYSFT-123456",
+                        "nonce": "24",
+                        "value": "1"
+                    }
+                ]
             }
         }
     ]
@@ -458,13 +494,16 @@ The fields are:
 - `txId` (optional) - same as `scCall`/`scDeploy`
 - `comment` (optional) - same as `scCall`/`scDeploy`
 - `tx`
-  - `from`
-  - `to`
-  - `value`
+  - `from` - same as `scCall`/`scDeploy`
+  - `to` - same as `scCall`
+  - `value` - EGLD value
+  - `esdt` - same as `scCall`
+
+
 
 ## **Step type: `validatorReward`**
 
-Lesser used step type. Simulates a validator reward being sent by the protocol. This transaction has no sender, and beside increasing the recipient balance, it also increments the `ELRONDrewards` field in the smart contract storage. Useful when building delegation of other staking contracts.
+Lesser used step type. Simulates a validator reward being sent by the protocol. This transaction has no sender, and beside increasing the recipient balance, it also increments the `ELRONDrewards` field in the smart contract storage. Useful when building delegation or other staking contracts.
 
 ```
 {
@@ -474,7 +513,7 @@ Lesser used step type. Simulates a validator reward being sent by the protocol. 
             "txId": "4",
             "comment": "system send out validator rewards",
             "tx": {
-                "to": "``delegation_contract___________s1",
+                "to": "sc:delegation_contract",
                 "value": "555,000,000"
             }
         }
