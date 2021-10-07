@@ -189,10 +189,6 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 
 ## **Multiple tokens transfer**
 
-:::warning
-This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
-:::
-
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
 fungible, semi-fungible or non-fungible tokens via a single transaction.
 
