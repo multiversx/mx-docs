@@ -410,10 +410,6 @@ TransferTransaction {
 
 ## **Multiple tokens transfer**
 
-:::warning
-This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
-:::
-
 Multiple semi-fungible and/or non-fungible tokens can be transferred in a single transaction to a single receiver.
 
 More details can be found [here](/developers/esdt-tokens#multiple-tokens-transfer) .
