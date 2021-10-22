@@ -83,8 +83,7 @@ Let's have a quick look around the project.
 
 Open `Cargo.toml` in the text editor of your choice, and add the following content:
 
-```
-Cargo.toml
+```toml,file=Cargo.toml
 [package]
 name = "crowdfunding"
 version = "0.0.1"
