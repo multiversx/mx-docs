@@ -16,7 +16,7 @@ This guide has been made available in video format as well:
 
 ## Ping Pong Microservice
 
-This guide extends the decentralized app we have built in our previous guide **"From zero to dApp in 15 minutes"**. If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=pd-vSIiw6Us).
+This guide extends the decentralized app we have built in our previous guide [**From zero to dApp in 15 minutes**](/developers/tutorials/your-first-dapp). If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=pd-vSIiw6Us).
 
 In this guide we're going to build a microservice (an API), which is an intermediary layer between the blockchain layer and the app layer. Our app will consume this microservice instead of making requests directly on the blockchain.
 
