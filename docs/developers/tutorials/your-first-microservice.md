@@ -242,7 +242,7 @@ The function `this.getPongDeadlineRaw` will invoke the only read action on the b
 
 ## The Transaction Processor
 
-After the user clicks the `Pong` button and performs the pong transaction, we have to invalidate the cache and we will use the transaction processor to identify all the `pong` transactions on the blockchain, that also have the receiver our smart contract address.
+After the user clicks the `Pong` button and performs the `pong` transaction, we have to invalidate the cache and we will use the transaction processor to identify all the `pong` transactions on the blockchain that have the receiver set to our smart contract address.
 
 Let's look at the transaction processor source file here:
 ```sh
