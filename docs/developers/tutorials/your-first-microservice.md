@@ -24,7 +24,7 @@ In this guide we're going to build a microservice (an API), which is an intermed
 
 ### Caching
 
-In our guide, the purpose of this microservice is to cache the values that come from the blockchain (`get_time_to_pong`), so every subsequent request will get fast results from our microservice.
+In our guide, the purpose of this microservice is to cache the values that come from the blockchain (e.g. `get_time_to_pong`), so every subsequent request will get fast results from our microservice.
 
 
 ### Transaction processor
