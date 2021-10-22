@@ -198,7 +198,7 @@ We can now save index.tsx and let's run the decentralized app one more time.
 npm run start
 ```
 
-We can now test that on the dashboard we still have the countdown and the Pong button is shown like it should. We can refresh the app multiple times, first the app will take the value (time to pong in seconds) from the blockchain, then it'll store it in cache, then all the subsequent refreshes will take the value from cache.
+We can now verify that on the dashboard we still have the countdown and the Pong button is shown like it should be. We can refresh the app multiple times and at first the app will take the value (time to `pong` in seconds) from the blockchain. This value is then cached and all subsequent queries will read the value from the cache.
 
 You can also find the complete file on our public repository for the dApp in the branch `microservice`:
 ```
