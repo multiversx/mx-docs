@@ -208,7 +208,7 @@ https://github.com/ElrondNetwork/dapp-template/blob/microservice/src/pages/Dashb
 
 ### Let's deep dive into the microservice code and explain the 2 basic features we implemented.
 
-We want to minimize the number of requests done directly on the blockchain because they can be slow sometimes, so we'll first make a blockchain read for the time to pong value, we'll cache that value and all the subsequent reads will be done from the cache. That value won't change over time. It will only reset AFTER we pong.
+We want to minimize the number of requests done directly on the blockchain because of the overhead they incur, so we'll first read the time to `pong` from the blockchain, we'll cache that value and all the subsequent reads will be done from the cache. That value won't change over time. It will only reset AFTER we `pong`.
 
 
 ## The Cache
