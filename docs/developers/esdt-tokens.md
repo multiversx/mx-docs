@@ -189,10 +189,6 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 
 ## **Multiple tokens transfer**
 
-:::warning
-This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
-:::
-
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
 fungible, semi-fungible or non-fungible tokens via a single transaction.
 
@@ -275,6 +271,11 @@ The manager of an ESDT token has a number of operations at their disposal, which
 
 ### **Minting**
 
+:::tip
+On Mainnet, starting with epoch 432, global mint is disabled so one has to use local mint instead. 
+Therefore, `localMint` function has to be used instead of `mint`.
+:::
+
 The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
 
 ```
@@ -283,7 +284,7 @@ MintTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 60000000
-    Data: "mint" +
+    Data: "localMint" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <new supply in hexadecimal encoding>
 }
@@ -295,6 +296,11 @@ This operation requires that the option `canMint` is set to `true` for the token
 
 ### **Burning**
 
+:::tip
+On Mainnet, starting with epoch 432, global burn is disabled so one has to use local burn instead.
+Therefore, `localBurn` function has to be used instead of `ESDTBurn`.
+:::
+
 Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
 
 ```
@@ -303,7 +309,7 @@ BurnTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 60000000
-    Data: "ESDTBurn" +
+    Data: "localBurn" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <supply to burn in hexadecimal encoding>
 }
@@ -459,6 +465,11 @@ After this transaction is processed by the Metachain, any subsequent management 
 This operation requires that the option `canChangeOwner` is set to `true`.
 
 ### **Upgrading (changing properties)**
+
+:::tip
+On Mainnet, starting with epoch 432, global mint and global burn are disabled so one has to use local mint/burn instead.
+Therefore, properties canMint and canBurn aren't effective anymore after that epoch. For setting those properties, one has to set the `ESDTRoleLocalMint` and/or `ESDTRoleLocalBurn` instead.
+:::
 
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once. Such an operation is performed by a transaction of the form:
 

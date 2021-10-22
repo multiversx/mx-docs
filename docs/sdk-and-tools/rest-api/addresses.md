@@ -30,9 +30,16 @@ Address information successfully retrieved.
 ```
 {
     "account": {
-        "address": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
-        "nonce": 5,
-        "balance": "100000000000000000000"
+        "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6",
+        "nonce": 0,
+        "balance": "100000000000000000000",
+        "username": "",
+        "code": "000000000000000000010000000000000000000000000000000000000004ffff",
+        "codeHash": "YspAmEhzTEaqNOZlw+E+bPQx4JnfLJk4Fa/gtKas5fI=",
+        "rootHash": "JF2QNq8wpVGijn9vvoSV+vGqTbuKVK1LIj7IlA21JXE=",
+        "codeMetadata": "BAA=",
+        "developerReward": "5670000000000000",
+        "ownerAddress": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz"
     }
 }
 ```
