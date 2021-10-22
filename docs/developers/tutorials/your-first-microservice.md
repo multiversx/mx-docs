@@ -29,7 +29,7 @@ In our guide, the purpose of this microservice is to cache the values that come 
 
 ### Transaction processor
 
-We will also invalidate the cache when a pong transaction will be done, we'll listen to all the `pong` transactions on the blockchain that have our smart contract address as the receiver and as soon as one transaction is confirmed, we will invalidate the cache related to the sender wallet address.
+We will also invalidate the cache when a pong transaction will be done. This means that the microservice will listen to all the `pong` transactions on the blockchain that have our smart contract address as the receiver and as soon as one transaction is confirmed, we will invalidate the cache record corresponding to the sender wallet address.
 
 
 ### The Microservice
