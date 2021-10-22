@@ -186,7 +186,7 @@ React.useEffect(() => {
   }, []);
 ```
 
-Of course, don't forget to manage the required imports (axios and the microservice address that we defined previously in the configuration file config.devnet.tsx).
+Of course, don't forget to manage the required imports (`axios` and the microservice address that we defined previously in the configuration file `config.devnet.tsx`).
 
 ```javascript
 import axios from "axios";
