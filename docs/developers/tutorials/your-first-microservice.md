@@ -6,8 +6,8 @@ title: Build a Microservice for your dApp
 Let's build a microservice for your decentralized App
 
 :::important
-This guide extends [**Build a dApp in 15 minutes** guide](/developers/tutorials/your-first-dapp), please follow it before following this one.
-We'll work on the Devnet, you should create and manage your web wallet [here](https://devnet-wallet.elrond.com).
+This guide extends the [**Build a dApp in 15 minutes** guide](/developers/tutorials/your-first-dapp), please follow it before following this one.
+We'll work on the Devnet, so you should create and manage a web wallet [here](https://devnet-wallet.elrond.com).
 :::
 
 This guide has been made available in video format as well:
@@ -16,7 +16,7 @@ This guide has been made available in video format as well:
 
 ## Ping Pong Microservice
 
-This guide extends the decentralized app we have built in our previous guide **"Build a dApp in 15 minutes"**. If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=IdkgvlK3rb8).
+This guide extends the decentralized app we have built in our previous guide [**Build a dApp in 15 minutes**](/developers/tutorials/your-first-dapp). If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=IdkgvlK3rb8).
 
 In this guide we're going to build a microservice (an API), which is an intermediary layer between the blockchain layer and the app layer. Our app will consume this microservice instead of making requests directly on the blockchain.
 
@@ -24,12 +24,12 @@ In this guide we're going to build a microservice (an API), which is an intermed
 
 ### Caching
 
-In our guide, the purpose of this microservice is to cache the values that come from the blockchain (`get_time_to_pong`), so every subsequent request will get fast results from our microservice.
+In our guide, the purpose of this microservice is to cache the values that come from the blockchain (e.g. `get_time_to_pong`), so every subsequent request will get fast results from our microservice.
 
 
 ### Transaction processor
 
-We will also invalidate the cache when a pong transaction will be done, we'll listen to all the `pong` transactions on the blockchain that have our smart contract address as the receiver and as soon as one transaction is confirmed, we will invalidate the cache related to the sender wallet address.
+We will also invalidate the cache when a pong transaction will be done. This means that the microservice will listen to all the `pong` transactions on the blockchain that have our smart contract address as the receiver and as soon as one transaction is confirmed, we will invalidate the cache record corresponding to the sender wallet address.
 
 
 ### The Microservice
@@ -186,7 +186,7 @@ React.useEffect(() => {
   }, []);
 ```
 
-Of course, don't forget to manage the required imports (axios and the microservice address that we defined previously in the configuration file config.devnet.tsx).
+Of course, don't forget to manage the required imports (`axios` and the microservice address that we defined previously in the configuration file `config.devnet.tsx`).
 
 ```javascript
 import axios from "axios";
@@ -198,9 +198,9 @@ We can now save index.tsx and let's run the decentralized app one more time.
 npm run start
 ```
 
-We can now test that on the dashboard we still have the countdown and the Pong button is shown like it should. We can refresh the app multiple times, first the app will take the value (time to pong in seconds) from the blockchain, then it'll store it in cache, then all the subsequent refreshes will take the value from cache.
+We can now verify that on the dashboard we still have the countdown and the Pong button is shown like it should be. We can refresh the app multiple times and at first the app will take the value (time to `pong` in seconds) from the blockchain. This value is then cached and all subsequent queries will read the value from the cache.
 
-You can also find the complete file on our public repository for the dApp in the branch `microservice`:
+You can also find the complete code on our public repository for the dApp in the branch `microservice`:
 ```
 https://github.com/ElrondNetwork/dapp-template/blob/microservice/src/pages/Dashboard/Actions/index.tsx
 ```
@@ -208,7 +208,7 @@ https://github.com/ElrondNetwork/dapp-template/blob/microservice/src/pages/Dashb
 
 ### Let's deep dive into the microservice code and explain the 2 basic features we implemented.
 
-We want to minimize the number of requests done directly on the blockchain because they can be slow sometimes, so we'll first make a blockchain read for the time to pong value, we'll cache that value and all the subsequent reads will be done from the cache. That value won't change over time. It will only reset AFTER we pong.
+We want to minimize the number of requests done directly on the blockchain because of the overhead they incur, so we'll first read the time to `pong` from the blockchain, we'll cache that value and all the subsequent reads will be done from the cache. That value won't change over time. It will only reset AFTER we `pong`.
 
 
 ## The Cache
@@ -242,7 +242,7 @@ The function `this.getPongDeadlineRaw` will invoke the only read action on the b
 
 ## The Transaction Processor
 
-After the user clicks the `Pong` button and performs the pong transaction, we have to invalidate the cache and we will use the transaction processor to identify all the `pong` transactions on the blockchain, that also have the receiver our smart contract address.
+After the user clicks the `Pong` button and performs the `pong` transaction, we have to invalidate the cache and we will use the transaction processor to identify all the `pong` transactions on the blockchain that have the receiver set to our smart contract address.
 
 Let's look at the transaction processor source file here:
 ```sh
