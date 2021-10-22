@@ -6,7 +6,7 @@ title: Build a Microservice for your dApp
 Let's build a microservice for your decentralized App
 
 :::important
-This guide extends [**From zero to dApp** guide](/developers/tutorials/your-first-dapp), please follow it before following this one.
+This guide extends [**Build a dApp in 15 minutes** guide](/developers/tutorials/your-first-dapp), please follow it before following this one.
 We'll work on the Devnet, you should create and manage your web wallet [here](https://devnet-wallet.elrond.com).
 :::
 
@@ -16,7 +16,7 @@ This guide has been made available in video format as well:
 
 ## Ping Pong Microservice
 
-This guide extends the decentralized app we have built in our previous guide **"From zero to dApp in 15 minutes"**. If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=pd-vSIiw6Us).
+This guide extends the decentralized app we have built in our previous guide **"Build a dApp in 15 minutes"**. If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=IdkgvlK3rb8).
 
 In this guide we're going to build a microservice (an API), which is an intermediary layer between the blockchain layer and the app layer. Our app will consume this microservice instead of making requests directly on the blockchain.
 
@@ -36,7 +36,7 @@ We will also invalidate the cache when a pong transaction will be done, we'll li
 
 We're going to use a microservice template based on nestjs, the caching will be done using redis, so the prerequisites for this guide are: nodejs, npm and redis.
 
-We will extend "From zero to dApp in 15 minutes" guide, so let's build on the existing folder structure and create the microservice into a subfolder of the parent project folder:
+We will extend "Build a dApp in 15 minutes" guide, so let's build on the existing folder structure and create the microservice into a subfolder of the parent project folder:
 
 
 
@@ -95,7 +95,7 @@ We'll find a configuration file specific for every network we want to deploy the
 
 First we're going to configure the redis server url. If we run a redis-server on the same machine (or on our development machine) then we can leave the default value.
 
-Now we'll move on to the smart contract address. We can find it in our `dapp` repository (if we followed the previous guide ["From zero to dApp in 15 minutes"](https://www.youtube.com/watch?v=pd-vSIiw6Us)). If you don't have a smart contract deployed on devnet, then we suggest to follow the previous guide first and then get back to this step.
+Now we'll move on to the smart contract address. We can find it in our `dapp` repository (if we followed the previous guide ["Build a dApp in 15 minutes"](https://www.youtube.com/watch?v=IdkgvlK3rb8)). If you don't have a smart contract deployed on devnet, then we suggest to follow the previous guide first and then get back to this step.
 
 Set the `contracts.pingPong` key with the value for the smart contract address and we're done with configuring the microservice.
 
