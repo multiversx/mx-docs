@@ -228,8 +228,8 @@ All right, let's move on to the application layer.
 We will clone a very simple dApp template that implements the calls to our newly deployed smart contract.
 
 ```sh
-git clone https://github.com/ElrondNetwork/dapp-template
-cd dapp-template
+git clone https://github.com/ElrondNetwork/dapp-template dapp
+cd dapp
 ```
 
 ### **Configure the app**
@@ -269,7 +269,7 @@ npm run start
 
 **Run it on local machine (or host it on your server)**
 If you start the development server on the local machine, then open [http://localhost:3000](http://localhost:3000) in your browser.
-If you start it on your own server, then you can access [http://<ip>:3000](http://<ip>:3000). The built version only contains static files, so any hosting provider will do.
+If you start it on your own server, then you can access [http://<ip>:3000](http://ip:3000). The built version only contains static files, so any hosting provider will do.
 
 After you start the development server, when you see the Sign in screen, this means the application is up and running.
 
