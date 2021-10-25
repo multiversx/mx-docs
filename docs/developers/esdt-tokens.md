@@ -289,7 +289,7 @@ MintTransaction {
 }
 ```
 
-Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the sender receives that amount of tokens into their balance.
+Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the manager receives that amount of tokens into their balance.
 
 This operation requires that the option `canMint` is set to `true` for the token.
 
