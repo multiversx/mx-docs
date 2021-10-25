@@ -331,7 +331,7 @@ Following this transaction, the token holder loses from the balance the amount o
 
 This operation requires that the option `canBurn` is set to `true` for the token.
 
-Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local mint:  
+Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:  
 
 ```
 LocalBurnTransaction {
