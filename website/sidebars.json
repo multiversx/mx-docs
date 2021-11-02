@@ -106,11 +106,11 @@
         "type": "subcategory",
         "label": "Developer reference",
         "ids": [
-          "developers/developer-reference/code-metadata",
           "developers/developer-reference/elrond-serialization-format",
           "developers/developer-reference/elrond-wasm-annotations",
           "developers/developer-reference/elrond-wasm-contract-calls",
           "developers/developer-reference/smart-contract-developer-best-practices",
+          "developers/developer-reference/code-metadata",
           "developers/developer-reference/elrond-wasm-api-functions"
         ]
       },
