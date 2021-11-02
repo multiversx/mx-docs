@@ -32,7 +32,7 @@ The 2 bytes of the representation are used to store the Code Metadata by the fol
 - Readable:    (bytes[0] & MetadataReadable) != 0,
 - Payable:     (bytes[1] & MetadataPayable) != 0,
 ```
-By this meaning if for example we wish to deploy a contract that is payable and upgradeable we would call the deploy function having as metadata `0x0201`
+By this meaning if for example we wish to deploy a contract that is payable and upgradeable we would call the deploy function having as metadata `0x0102`
 
 ## Conclusion
 
