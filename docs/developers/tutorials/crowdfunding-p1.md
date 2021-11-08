@@ -12,7 +12,7 @@ The Elrond Network supports smart contracts written in any programming language,
 :::
 
 :::important
-The current tutorial revolves around **elrond-wasm-rs** version **0.7.1**, and will get updated as new versions of elrond-wasm are released.
+The current tutorial revolves around **elrond-wasm-rs** version **0.21.0**, and will get updated as new versions of elrond-wasm are released.
 :::
 
 # **Introduction**
@@ -91,23 +91,23 @@ authors = [ "you",]
 edition = "2018"
 
 [lib]
-path = "src/lib.rs"
+path = "src/crowdfunding-main.rs"
 
 [features]
 wasm-output-mode = [ "elrond-wasm-node",]
 
 [dependencies.elrond-wasm]
-version = "0.7.1"
+version = "0.21.0"
 
 [dependencies.elrond-wasm-derive]
-version = "0.7.1"
+version = "0.21.0"
 
 [dependencies.elrond-wasm-node]
-version = "0.7.1"
+version = "0.21.0"
 optional = true
 
 [dev-dependencies.elrond-wasm-debug]
-version = "0.7.1"
+version = "0.21.0"
 
 ```
 
@@ -115,23 +115,20 @@ Let's see what this means:
 
 - The package is unsurprisingly named `crowdfunding`, and has the version `0.0.1`. You can set any version you like, just make sure it has 3 numbers separated by dots. It's a requirement.
 - This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the Elrond Network, you'll need 3 special and very helpful packages, developed by Elrond.
-- The file `src/lib.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring.
-- The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part)
-- The resulting binary will be produced by compiling `src/lib.rs`.
+- The file `src/crowdfunding-main.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
+- The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
 # **Step 2: the code**
 
 With the structure in place, you can now write the code and build it. Open `src/lib.rs` , remove the existing `Adder` code and insert the following:
 
-```Rust
-src/lib.rs
+```rust,file=hello-world.rs
 #![no_std]
 
-imports!();
+elrond_wasm::imports!();
 
-#[elrond_wasm_derive::contract(CrowdfundingImpl)]
+#[elrond_wasm::contract]
 pub trait Crowdfunding {
-
     #[init]
     fn init(&self) {
     }
@@ -144,36 +141,19 @@ Let's take a look at the code. The first three lines declare some characteristic
 
 ### **Bring in the framework**
 
-The 3rd line contains the command `imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the Elrond framework for Rust smart contracts, which is designed to simplify the code enormously.
+The 3rd line contains the command `elrond_wasm::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the Elrond framework for Rust smart contracts, which is designed to simplify the code enormously.
 
 The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
 
 ```
-#[elrond_wasm_derive::contract(CrowdfundingImpl)]
+#[elrond_wasm::contract]
 ```
 
 This line simply tells the framework to treat the next `trait` declaration (we'll get to it in a moment) as a smart contract. Because of this line, the framework will _automatically generate_ much of the code required. You won't see the generated code now (but you can).
 
-The generated code will contain a structure called `CrowdfundingImpl`, as the line specifies.
-
 ### **Make it a trait**
 
 Your smart contract effectively starts at line 9. We could have gotten here quicker, but you wanted to know what the code means, and it took a little while to explain. We're finally here, though. Let's look at the code again:
-
-```Rust
-src/lib.rs (revisited)
-#![no_std]
-
-imports!();
-
-#[elrond_wasm_derive::contract(CrowdfundingImpl)]
-pub trait Crowdfunding {
-
-    #[init]
-    fn init(&self) {
-    }
-}
-```
 
 It helps to know what a trait is in Rust, before continuing (the [Rust book explains it well](https://doc.rust-lang.org/book/ch10-02-traits.html)).
 
@@ -187,7 +167,7 @@ The `init` method of the Crowdfunding smart contract is currently empty. We'll a
 
 # **Step 3: the build**
 
-After creating the file `src/lib.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
+After creating the file `src/crowdfunding-main.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
 
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 
@@ -210,16 +190,13 @@ The structure of your folder should be like this (output printed by the command 
 ```
 .
 ├── Cargo.toml
-├── debug
-│   ├── Cargo.toml
-│   └── src
 ├── mandos
 │   └── crowdfunding.scen.json
 ├── output
 │   ├── crowdfunding.hex
 │   └── crowdfunding.wasm
 ├── src
-│   └── lib.rs
+│   └── crowdfunding-main.rs
 └── wasm
     ├── Cargo.lock
     ├── Cargo.toml
@@ -233,33 +210,30 @@ It's time to add some functionality to the `init` function now, because the next
 
 In this step you will use the `init` method to persist some values in the storage of the Crowdfunding smart contract. Afterwards, we will write a test to make sure that these values were properly stored.
 
-### **Storage setters, storage getters**
+### **Storage mappers**
 
 Every smart contract is allowed to store key-value pairs into a persistent structure, created for the smart contract at the moment of its deployment on the Elrond Network.
 
 The storage of a smart contract is, for all intents and purposes, a generic hash map or dictionary. When you want to store some arbitrary value, you store it under a specific key. To get the value back, you need to know the key you stored it under.
 
-To help you with keeping the code clean, the framework enables you to write setter and getter methods for individual key-value pairs. Here is a setter method and a getter method, dedicated to storing / retrieving the value stored under the key `owner`:
+To help you with keeping the code clean, the framework enables you to write setter and getter methods for individual key-value pairs. There are several ways to interact with storage from a contract, but the simplest one is by using storage mappers. Here is a simple mapper, dedicated to storing / retrieving the value stored under the key `target`:
 
 ```
-#[storage_set("owner")]
-fn set_owner(&self, address: &Address);
-
-#[storage_get("owner")]
-fn get_owner(&self) -> Address;
+#[storage_mapper("target")]
+fn target(&self) -> SingleValueMapper<BigUint>;
 ```
 
-The methods above treat the stored value as having a specific **type**, namely the type `Address`. Under the hood, `Address` resolves to `[u8; 32]`, which effectively means "an array of exactly 32 bytes".
+The methods above treat the stored value as having a specific **type**, namely the type `BigUint`. Under the hood, `BigUint` is a big unsigned number, handled by the VM. There is no need to import any library, big number arithmetic is provided for all contracts out of the box.
 
 Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The Elrond framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically. Just wait until we get to automatic serialization of complex structures.
 
-### **Remember me, I made you**
+### **Setting some targets**
 
-You will now instruct the `init` method to store your address as the owner of this smart contract, upon deployment.
+You will now instruct the `init` method to store the amount of tokens that should be gathered, upon deployment.
 
 The owner of a smart contract is the account which deployed it (you). By design, your Crowdfunding smart contract will send all the donated EGLD to its owner (you), assuming the target amount was reached. Nobody else has this privilege, because there is only one single owner of any given smart contract.
 
-Here's how the `init` method looks like, with the code that saves the address of the owner (guess who):
+Here's how the `init` method looks like, with the code that saves the target (guess who):
 
 ```Rust
 #![no_std]
@@ -270,28 +244,21 @@ imports!();
 #[elrond_wasm_derive::contract(CrowdfundingImpl)]
 pub trait Crowdfunding {
 
-    #[storage_set("owner")]
-    fn set_owner(&self, address: &Address);
-
-    #[view]
-    #[storage_get("owner")]
-    fn get_owner(&self) -> Address;
+    #[storage_mapper("target")]
+    fn target(&self) -> SingleValueMapper<BigUint>;
 
     #[init]
-    fn init(&self) {
-        let my_address: Address = self.get_caller();
-        self.set_owner(&my_address);
+    fn init(&self, target: BigUint) {
+        self.target().set(&target);
     }
 }
 ```
 
-The code above adds the methods `set_owner` and `get_owner`, which are marked as "storage setter" and "storage getter" respectively, for the key `owner`.
+We have added an argument to the constructor method, the argument is called `target` and will need to be supplied when we deploy the contract. The argument then proptly gets saved to storage.
 
-Moreover, the `init` method now calls an API method: `self.get_caller()`. As mentioned earlier, the `init` method is called only once, during the deployment of the smart contract. This API method always returns the address of whomever calls the current smart contract method.
+Now note the `self.target()` invocation. This gives us an object that acts like a proxy to a part of the storage. Calling the `.set()` method on it causes the value to be saved to the contract storage.
 
-But because the deployment is defined by the Elrond protocol as a transaction containing a call to a special system smart contract, it means that when called during `init`, the `self.get_caller()` method returns the address of whom is deploying the smart contract, i.e. the owner, so you.
-
-We assign the address returned by `self.get_caller()` to the `my_address` local variable, and then we pass this variable to our storage setter `self.set_owner()`, which will save it to the storage under the key `owner`.
+Well, not quite. All of the stored values only anctually end up in the storage if the transaction completes successfully. Smart contracts cannot access the protocol directly, it is the VM that intermediates everything.
 
 Whenever you want to make sure your code is in order, run the build command:
 
@@ -303,19 +270,17 @@ There's one more thing: by default, none of the `fn` statements declare smart co
 
 ```
     #[view]
-    #[storage_get("owner")]
-    fn get_owner(&self) -> Address;
+    #[storage_mapper("target")]
+    fn target(&self) -> SingleValueMapper<BigUint>;
 ```
-
-Note that since `set_owner()` has no endpoint annotation, nobody can call the `set_owner()` method from the outside. Only the smart contract itself may call it, so only the smart contract decides who its "owner" is, upon deployment.
 
 ### **But will you remember?**
 
 You must always make sure that the code you write functions as intended. That's what automatic testing is for.
 
-Let's write a test against the `init` method, and make sure that it definitely stores the address of the owner under the `owner` key, at deployment.
+Let's write a test against the `init` method, and make sure that it definitely stores the address of the owner under the `target` key, at deployment.
 
-To test `init`, you will write a JSON file which describes what to do with the smart contract and what is the expected output. In the folder of the Crowdfunding smart contract, there is a folder called `mandos`. Inside it, there is a file called `crowdfunding.scen.json`. Rename that file to`test-init.scen.json` ( `scen` is short for "scenario").
+To test `init`, you will write a JSON file which describes what to do with the smart contract and what is the expected output. In the folder of the Crowdfunding smart contract, there is a folder called `mandos`. Inside it, there is a file called `crowdfunding.scen.json`. Rename that file to`crowdfunding-init.scen.json` ( `scen` is short for "scenario").
 
 Your folder should look like this (output from the command `tree -L 2`):
 
@@ -326,7 +291,7 @@ Your folder should look like this (output from the command `tree -L 2`):
 │   ├── Cargo.toml
 │   └── src
 ├── mandos
-│   └── test-init.scen.json
+│   └── crowdfunding-init.scen.json
 ├── output
 │   ├── crowdfunding.hex
 │   └── crowdfunding.wasm
@@ -339,7 +304,7 @@ Your folder should look like this (output from the command `tree -L 2`):
     └── target
 ```
 
-Let's define the first test scenario. Open the file `mandos/test-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
+Let's define the first test scenario. Open the file `mandos/crowdfunding-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
 
 ```
 {
@@ -357,7 +322,7 @@ Let's define the first test scenario. Open the file `mandos/test-init.scen.json`
         {
           "creatorAddress": "address:my_address",
           "creatorNonce": "0",
-          "newAddress": "address:the_crowdfunding_contract"
+          "newAddress": "sc:the_crowdfunding_contract"
         }
       ]
     },
@@ -383,7 +348,7 @@ Let's define the first test scenario. Open the file `mandos/test-init.scen.json`
           "nonce": "1",
           "balance": "1,000,000"
         },
-        "address:the_crowdfunding_contract": {
+        "sc:the_crowdfunding_contract": {
           "nonce": "0",
           "balance": "0",
           "storage": {
@@ -406,7 +371,7 @@ erdpy contract test
 If everything went well, you should see an all-capitals, loud `SUCCESS` being printed, like this:
 
 ```
-Scenario: test-init.scen.json ...   ok
+Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 1. Failed: 0. Skipped: 0.
 SUCCESS
 ```
@@ -456,7 +421,7 @@ Immediately after the `accounts`, the first scenario step contains the following
   {
     "creatorAddress": "address:my_address",
     "creatorNonce": "0",
-    "newAddress": "address:the_crowdfunding_contract"
+    "newAddress": "sc:the_crowdfunding_contract"
   }
 ]
 ```
@@ -519,7 +484,7 @@ The final scenario step mirrors the first scenario step. There's an `accounts` f
     "nonce": "1",
     "balance": "1,000,000"
   },
-  "address:the_crowdfunding_contract": {
+  "sc:the_crowdfunding_contract": {
     "code": "file:../output/crowdfunding.wasm",
     "nonce": "0",
     "balance": "0",

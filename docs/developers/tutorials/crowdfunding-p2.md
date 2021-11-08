@@ -59,7 +59,7 @@ Let's test that initialization works.
           {
             "creatorAddress": "address:my_address",
             "creatorNonce": "0",
-            "newAddress": "address:the_crowdfunding_contract"
+            "newAddress": "sc:the_crowdfunding_contract"
           }
         ]
       },
@@ -89,7 +89,7 @@ Let's test that initialization works.
             "nonce": "1",
             "balance": "1,000,000"
           },
-          "address:the_crowdfunding_contract": {
+          "sc:the_crowdfunding_contract": {
             "nonce": "0",
             "balance": "0",
             "storage": {
@@ -117,7 +117,7 @@ erdpy contract test
 You should once again see this:
 
 ```
-Scenario: test-init.scen.json ...   ok
+Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 1. Failed: 0. Skipped: 0.
 SUCCESS
 ```
@@ -152,7 +152,7 @@ A few things to unpack:
 
 To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `test-fund.scen.json` .
 
-To avoid duplicating the deployment code, we import it from `test-init.scen.json` .
+To avoid duplicating the deployment code, we import it from `crowdfunding-init.scen.json` .
 
 ```json,file=crowdfunding-fund.scen.json
 {
@@ -160,7 +160,7 @@ To avoid duplicating the deployment code, we import it from `test-init.scen.json
   "steps": [
     {
       "step": "externalSteps",
-      "path": "test-init.scen.json"
+      "path": "crowdfunding-init.scen.json"
     },
     {
       "step": "setState",
@@ -176,7 +176,7 @@ To avoid duplicating the deployment code, we import it from `test-init.scen.json
       "txId": "fund-1",
       "tx": {
           "from": "address:donor1",
-          "to": "address:the_crowdfunding_contract",
+          "to": "sc:the_crowdfunding_contract",
           "value": "250,000,000,000",
           "function": "fund",
           "arguments": [],
@@ -200,7 +200,7 @@ To avoid duplicating the deployment code, we import it from `test-init.scen.json
           "nonce": "1",
           "balance": "150,000,000,000"
         },
-        "address:the_crowdfunding_contract": {
+        "sc:the_crowdfunding_contract": {
           "nonce": "0",
           "balance": "250,000,000,000",
           "storage": {
@@ -236,7 +236,7 @@ You should then see that both tests pass:
 
 ```
 Scenario: test-fund.scen.json ...   ok
-Scenario: test-init.scen.json ...   ok
+Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 2. Failed: 0. Skipped: 0.
 SUCCESS
 ```
@@ -291,7 +291,7 @@ We'll create another test file to verify that the validation works: `test-fund-t
       "txId": "fund-too-late",
       "tx": {
           "from": "address:donor1",
-          "to": "address:the_crowdfunding_contract",
+          "to": "sc:the_crowdfunding_contract",
           "value": "10,000,000,000",
           "function": "fund",
           "arguments": [],
@@ -316,7 +316,7 @@ By building and testing the contract again, you should see that all three tests 
 ```
 Scenario: test-fund-too-late.scen.json ...   ok
 Scenario: test-fund.scen.json ...   ok
-Scenario: test-init.scen.json ...   ok
+Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 3. Failed: 0. Skipped: 0.
 SUCCESS
 ```
@@ -412,7 +412,7 @@ To test this method, we append one more step to the last test we worked on, `tes
       "txId": "fund-too-late",
       "tx": {
           "from": "address:donor1",
-          "to": "address:the_crowdfunding_contract",
+          "to": "sc:the_crowdfunding_contract",
           "value": "10,000,000,000",
           "function": "fund",
           "arguments": [],
@@ -437,7 +437,7 @@ To test this method, we append one more step to the last test we worked on, `tes
           "nonce": "*",
           "balance": "150,000,000,000"
         },
-        "address:the_crowdfunding_contract": {
+        "sc:the_crowdfunding_contract": {
           "nonce": "0",
           "balance": "250,000,000,000",
           "storage": {
@@ -455,7 +455,7 @@ To test this method, we append one more step to the last test we worked on, `tes
       "txId": "check-status",
       "tx": {
           "from": "address:donor1",
-          "to": "address:the_crowdfunding_contract",
+          "to": "sc:the_crowdfunding_contract",
           "value": "0",
           "function": "status",
           "arguments": [],
