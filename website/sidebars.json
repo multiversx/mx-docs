@@ -1,6 +1,8 @@
 {
   "docs": {
-    "Welcome to Elrond": ["welcome/welcome-to-elrond"],
+    "Welcome to Elrond": [
+      "welcome/welcome-to-elrond"
+    ],
     "Technology": [
       "technology/architecture-overview",
       "technology/glossary",
@@ -11,7 +13,11 @@
       "technology/the-arwen-wasm-vm",
       "technology/cross-shard-transactions"
     ],
-    "Wallet": ["wallet/web-wallet", "wallet/webhooks", "wallet/ledger"],
+    "Wallet": [
+      "wallet/web-wallet",
+      "wallet/webhooks",
+      "wallet/ledger"
+    ],
     "Validators": [
       "validators/overview",
       "validators/system-requirements",
@@ -104,20 +110,21 @@
           "developers/developer-reference/elrond-wasm-annotations",
           "developers/developer-reference/elrond-wasm-contract-calls",
           "developers/developer-reference/smart-contract-developer-best-practices",
+          "developers/developer-reference/code-metadata",
           "developers/developer-reference/elrond-wasm-api-functions"
         ]
       },
-	  {
+      {
         "type": "subcategory",
         "label": "Mandos tests reference",
         "ids": [
-			"developers/mandos-reference/overview",
-			"developers/mandos-reference/structure",
-			"developers/mandos-reference/values-simple",
-			"developers/mandos-reference/values-complex",
-			"developers/mandos-reference/embed"
-		]
-	  },
+          "developers/mandos-reference/overview",
+          "developers/mandos-reference/structure",
+          "developers/mandos-reference/values-simple",
+          "developers/mandos-reference/values-complex",
+          "developers/mandos-reference/embed"
+        ]
+      },
       "developers/constants",
       "developers/account-storage",
       "developers/esdt-tokens",
