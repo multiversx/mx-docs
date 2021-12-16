@@ -22,7 +22,7 @@ You need to have the latest elrond-wasm version (at the time of writing this, th
 
 Add `elrond-wasm-debug` and required packages as dev-dependencies in your Cargo.toml:
 
-```
+```toml
 [dev-dependencies.elrond-wasm-debug]
 version = "0.25.0"
 
@@ -38,7 +38,7 @@ For this tutorial, we're going to use the crowdfunding SC, so it might be handy 
 
 In your newly created test file, add the following code (adapt the `crowdfunding_esdt` namespace, the struct/variable names, and the contract wasm path according to your contract):  
 
-```
+```rust
 use crowdfunding_esdt::*;
 use elrond_wasm::{
     sc_error,
@@ -75,14 +75,14 @@ The first test you need to write is simulating the deploy of your smart contract
 
 Since we're going to be using the same token ID everywhere, let's add it as a constant (and while we're at it, have the deadline as constant as well): 
 
-```
+```rust
 const CF_TOKEN_ID: &[u8] = b"CROWD-123456";
 const CF_DEADLINE: u64 = 7 * 24 * 60 * 60; // 1 week in seconds
 ```
 
 Let's create our initial setup:
 
-```
+```rust
 fn setup_crowdfunding<CrowdfundingObjBuilder>(
     cf_builder: CrowdfundingObjBuilder,
 ) -> CrowdfundingSetup<CrowdfundingObjBuilder>
@@ -138,7 +138,7 @@ Then, we set the ESDT balances for the two users, and deploy the smart contract,
 
 Since this is a SC deploy, we call the `init` function. Since the contract works with managed objects, we can't use the built-in Rust BigUint. We have to use the one from elrond_wasm. To create managed types, we use the `managed_` functions. Alternatively, you can create those objects by:
 
-```
+```rust
 let target = BigUint::<DebugApi>::from(2_000u32);
 ```
 
@@ -150,7 +150,7 @@ After running the `init` function, we add a `setState` step in the generated man
 
 To test the scenario and generate the mandos file, you have to create a test function:
 
-```
+```rust
 #[test]
 fn init_test() {
     let cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
@@ -166,7 +166,7 @@ And you're done for this step. You successfuly tested your contract's init funct
 
 Let's test the `fund` function. For this, we're going to use the previous setup, and the `execute_esdt_transfer` method:
 
-```
+```rust
 #[test]
 fn fund_test() {
     let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
@@ -199,7 +199,7 @@ Note: Even though we've already passed the payment in the `execute_esdt_transfer
 
 If you also want to generate a mandos for this transaction, this is where the bit of manual work comes in:  
 
-```
+```rust
     let mut sc_call = ScCallMandos::new(user_addr, cf_setup.cf_wrapper.address_ref(), "fund");
     sc_call.add_esdt_transfer(CF_TOKEN_ID, 0, &rust_biguint!(1_000));
 
@@ -217,7 +217,7 @@ You have to add this at the end of your `fund_test`. The more complex the call, 
 
 Testing queries is similar to testing transactions, just with less arguments (since there is no caller, and no payment, and any modifications are automatically reverted): 
 
-```
+```rust
 #[test]
 fn status_test() {
     let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
@@ -244,7 +244,7 @@ fn status_test() {
 
 In the previous transaction test, we've tested the happy flow. Now let's see how we can check errors:
 
-```
+```rust
 #[test]
 fn test_sc_error() {
     let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
@@ -289,7 +289,7 @@ Notice how we've changed the payment intentionally to an invalid token to check 
 
 For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the mandos generation out of this one:  
 
-```
+```rust
 #[test]
 fn test_successful_cf() {
     let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
@@ -373,7 +373,7 @@ You've already seen most of the code in this test before already. The only new t
 
 This is simimlar to the previous one, but instead we have the users claim instead of the owner after deadline.  
 
-```
+```rust
 #[test]
 fn test_failed_cf() {
     let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
