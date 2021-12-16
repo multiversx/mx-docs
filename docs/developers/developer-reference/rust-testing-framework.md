@@ -73,10 +73,11 @@ And that's all you need to get started.
 
 The first test you need to write is simulating the deploy of your smart contract. For that, you need a user address, a contract address, and then you simply call the `init` function.  
 
-Since we're going to be using the same token ID everywhere, let's add it as a constant:
+Since we're going to be using the same token ID everywhere, let's add it as a constant (and while we're at it, have the deadline as constant as well): 
 
 ```
 const CF_TOKEN_ID: &[u8] = b"CROWD-123456";
+const CF_DEADLINE: u64 = 7 * 24 * 60 * 60; // 1 week in seconds
 ```
 
 Let's create our initial setup:
@@ -106,10 +107,9 @@ where
 
     blockchain_wrapper.execute_tx(&owner_address, &cf_wrapper, &rust_zero, |sc| {
         let target = managed_biguint!(2_000);
-        let deadline = 7 * 24 * 60 * 60; // 1 week in seconds
         let token_id = managed_token_id!(CF_TOKEN_ID);
 
-        let result = sc.init(target, deadline, token_id);
+        let result = sc.init(target, CF_DEADLINE, token_id);
         assert_eq!(result, SCResult::Ok(()));
 
         StateChange::Commit
@@ -194,6 +194,8 @@ fn fund_test() {
 ```
 
 As you can see, we can directly call the storage mappers (like `deposit`) from inside the contract and compare with a local value. No need to encode anything.  
+
+Note: Even though we've already passed the payment in the `execute_esdt_transfer` method, we also have to pass it in the `fund` method of the smart contract. This is because, by calling the sc method directly, the `#[payment]` macros do not intervene yet, so the function argument is not auto-filled.  
 
 If you also want to generate a mandos for this transaction, this is where the bit of manual work comes in:  
 
@@ -283,3 +285,172 @@ fn test_sc_error() {
 
 Notice how we've changed the payment intentionally to an invalid token to check the error case. Also, we've changed the expected deposit to "0" instead of the previous "1_000". And lastly, the most important thing: the `StateChange::Revert` return result, so we don't commit any partial changes.  
 
+## Testing a successful funding campaign
+
+For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the mandos generation out of this one:  
+
+```
+#[test]
+fn test_successful_cf() {
+    let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
+    let b_wrapper = &mut cf_setup.blockchain_wrapper;
+    let owner = &cf_setup.owner_address;
+    let first_user = &cf_setup.first_user_address;
+    let second_user = &cf_setup.second_user_address;
+
+    // first user fund
+    b_wrapper.execute_esdt_transfer(
+        first_user,
+        &cf_setup.cf_wrapper,
+        CF_TOKEN_ID,
+        0,
+        &rust_biguint!(1_000),
+        |sc| {
+            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(1_000));
+            assert_eq!(result, SCResult::Ok(()));
+
+            let user_deposit = sc.deposit(&managed_address!(first_user)).get();
+            let expected_deposit = managed_biguint!(1_000);
+            assert_eq!(user_deposit, expected_deposit);
+
+            StateChange::Commit
+        },
+    );
+
+    // second user fund
+    b_wrapper.execute_esdt_transfer(
+        second_user,
+        &cf_setup.cf_wrapper,
+        CF_TOKEN_ID,
+        0,
+        &rust_biguint!(1_000),
+        |sc| {
+            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(1_000));
+            assert_eq!(result, SCResult::Ok(()));
+
+            let user_deposit = sc.deposit(&managed_address!(second_user)).get();
+            let expected_deposit = managed_biguint!(1_000);
+            assert_eq!(user_deposit, expected_deposit);
+
+            StateChange::Commit
+        },
+    );
+
+    // set block timestamp after deadline
+    b_wrapper.set_block_timestamp(CF_DEADLINE + 1);
+
+    // check status
+    b_wrapper.execute_query(&cf_setup.cf_wrapper, |sc| {
+        let status = sc.status();
+        assert_eq!(status, Status::Successful);
+    });
+
+    // user try claim
+    b_wrapper.execute_tx(first_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+        let result = sc.claim();
+        assert_eq!(result, sc_error!("only owner can claim successful funding"));
+
+        StateChange::Revert
+    });
+
+    // owner claim
+    b_wrapper.execute_tx(owner, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+        let result = sc.claim();
+        assert_eq!(result, SCResult::Ok(()));
+
+        StateChange::Commit
+    });
+
+    b_wrapper.check_esdt_balance(owner, CF_TOKEN_ID, &rust_biguint!(2_000));
+    b_wrapper.check_esdt_balance(first_user, CF_TOKEN_ID, &rust_biguint!(0));
+    b_wrapper.check_esdt_balance(second_user, CF_TOKEN_ID, &rust_biguint!(0));
+}
+```
+
+You've already seen most of the code in this test before already. The only new things are the `set_block_timestamp` and the `check_esdt_balance` methods of the wrapper. There are similar methods for setting block nonce, block random seed, etc., and the checking EGLD and SFT/NFT balances.  
+
+## Testing a failed funding campaign
+
+This is simimlar to the previous one, but instead we have the users claim instead of the owner after deadline.  
+
+```
+#[test]
+fn test_failed_cf() {
+    let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
+    let b_wrapper = &mut cf_setup.blockchain_wrapper;
+    let owner = &cf_setup.owner_address;
+    let first_user = &cf_setup.first_user_address;
+    let second_user = &cf_setup.second_user_address;
+
+    // first user fund
+    b_wrapper.execute_esdt_transfer(
+        first_user,
+        &cf_setup.cf_wrapper,
+        CF_TOKEN_ID,
+        0,
+        &rust_biguint!(300),
+        |sc| {
+            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(300));
+            assert_eq!(result, SCResult::Ok(()));
+
+            let user_deposit = sc.deposit(&managed_address!(first_user)).get();
+            let expected_deposit = managed_biguint!(300);
+            assert_eq!(user_deposit, expected_deposit);
+
+            StateChange::Commit
+        },
+    );
+
+    // second user fund
+    b_wrapper.execute_esdt_transfer(
+        second_user,
+        &cf_setup.cf_wrapper,
+        CF_TOKEN_ID,
+        0,
+        &rust_biguint!(600),
+        |sc| {
+            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(600));
+            assert_eq!(result, SCResult::Ok(()));
+
+            let user_deposit = sc.deposit(&managed_address!(second_user)).get();
+            let expected_deposit = managed_biguint!(600);
+            assert_eq!(user_deposit, expected_deposit);
+
+            StateChange::Commit
+        },
+    );
+
+    // set block timestamp after deadline
+    b_wrapper.set_block_timestamp(CF_DEADLINE + 1);
+
+    // check status
+    b_wrapper.execute_query(&cf_setup.cf_wrapper, |sc| {
+        let status = sc.status();
+        assert_eq!(status, Status::Failed);
+    });
+
+    // first user claim
+    b_wrapper.execute_tx(first_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+        let result = sc.claim();
+        assert_eq!(result, SCResult::Ok(()));
+
+        StateChange::Commit
+    });
+
+    // second user claim
+    b_wrapper.execute_tx(second_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+        let result = sc.claim();
+        assert_eq!(result, SCResult::Ok(()));
+
+        StateChange::Commit
+    });
+
+    b_wrapper.check_esdt_balance(owner, CF_TOKEN_ID, &rust_biguint!(0));
+    b_wrapper.check_esdt_balance(first_user, CF_TOKEN_ID, &rust_biguint!(1_000));
+    b_wrapper.check_esdt_balance(second_user, CF_TOKEN_ID, &rust_biguint!(1_000));
+}
+```
+
+## Conclusion
+
+This tests cover pretty much every flow in the crowdfunding smart contract. Keep in mind that code can be deduplicated even more by having functions similar to the `setup_crowdfunding` function, but for the sake of the example, we've kept this as simple as possible. We hope this will make writing tests and debugging a lot easier moving forward!  
