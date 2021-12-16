@@ -12,7 +12,7 @@ The Elrond Network supports smart contracts written in any programming language,
 :::
 
 :::important
-The current tutorial revolves around **elrond-wasm-rs** version **0.21.0**, and will get updated as new versions of elrond-wasm are released.
+The current tutorial revolves around **elrond-wasm-rs** version **0.25.0**, and will get updated as new versions of elrond-wasm are released.
 :::
 
 # **Introduction**
@@ -225,7 +225,7 @@ fn target(&self) -> SingleValueMapper<BigUint>;
 
 The methods above treat the stored value as having a specific **type**, namely the type `BigUint`. Under the hood, `BigUint` is a big unsigned number, handled by the VM. There is no need to import any library, big number arithmetic is provided for all contracts out of the box.
 
-Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The Elrond framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically. Just wait until we get to automatic serialization of complex structures.
+Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The Elrond framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically.  
 
 ### **Setting some targets**
 
@@ -241,7 +241,7 @@ Here's how the `init` method looks like, with the code that saves the target (gu
 imports!();
 
 
-#[elrond_wasm_derive::contract(CrowdfundingImpl)]
+#[elrond_wasm::contract]
 pub trait Crowdfunding {
 
     #[storage_mapper("target")]
@@ -258,7 +258,7 @@ We have added an argument to the constructor method, the argument is called `tar
 
 Now note the `self.target()` invocation. This gives us an object that acts like a proxy to a part of the storage. Calling the `.set()` method on it causes the value to be saved to the contract storage.
 
-Well, not quite. All of the stored values only anctually end up in the storage if the transaction completes successfully. Smart contracts cannot access the protocol directly, it is the VM that intermediates everything.
+Well, not quite. All of the stored values only actually end up in the storage if the transaction completes successfully. Smart contracts cannot access the protocol directly, it is the VM that intermediates everything.
 
 Whenever you want to make sure your code is in order, run the build command:
 
@@ -306,60 +306,66 @@ Your folder should look like this (output from the command `tree -L 2`):
 
 Let's define the first test scenario. Open the file `mandos/crowdfunding-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
 
-```
+```json
 {
-  "name": "crowdfunding deployment test",
-  "steps": [
-    {
-      "step": "setState",
-      "accounts": {
-        "address:my_address": {
-          "nonce": "0",
-          "balance": "1,000,000"
-        }
-      },
-      "newAddresses": [
+    "name": "crowdfunding deployment test",
+    "steps": [
         {
-          "creatorAddress": "address:my_address",
-          "creatorNonce": "0",
-          "newAddress": "sc:the_crowdfunding_contract"
-        }
-      ]
-    },
-    {
-      "step": "scDeploy",
-      "tx": {
-        "from": "address:my_address",
-        "contractCode": "file:../output/crowdfunding.wasm",
-        "value": "0",
-        "gasLimit": "1,000,000",
-        "gasPrice": "0"
-      },
-      "expect": {
-        "status": "0",
-        "gas": "*",
-        "refund": "*"
-      }
-    },
-    {
-      "step": "checkState",
-      "accounts": {
-        "address:my_address": {
-          "nonce": "1",
-          "balance": "1,000,000"
+            "step": "setState",
+            "accounts": {
+                "address:my_address": {
+                    "nonce": "0",
+                    "balance": "1,000,000"
+                }
+            },
+            "newAddresses": [
+                {
+                    "creatorAddress": "address:my_address",
+                    "creatorNonce": "0",
+                    "newAddress": "sc:crowdfunding"
+                }
+            ]
         },
-        "sc:the_crowdfunding_contract": {
-          "nonce": "0",
-          "balance": "0",
-          "storage": {
-            "''owner": "address:my_address"
-          },
-          "code": "file:../output/crowdfunding.wasm"
+        {
+            "step": "scDeploy",
+            "txId": "deploy",
+            "tx": {
+                "from": "address:my_address",
+                "contractCode": "file:../output/crowdfunding.wasm",
+                "arguments": [
+                    "500,000,000,000"
+                ],
+                "gasLimit": "5,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "out": [],
+                "status": "0",
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "address:my_address": {
+                    "nonce": "1",
+                    "balance": "1,000,000",
+                    "storage": {}
+                },
+                "sc:crowdfunding": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "str:target": "500,000,000,000"
+                    },
+                    "code": "file:../output/crowdfunding.wasm"
+                }
+            }
         }
-      }
-    }
-  ]
+    ]
 }
+
 ```
 
 Save the file. Do you want to try it out first? Go ahead and issue this command on your terminal:
@@ -398,7 +404,7 @@ The first scenario step begins by declaring the accounts that exist in the ficti
 
 There is only one account defined - the one that will perform the deployment during the test. The smart contract will believe that it is owned by this account. In the JSON file, you wrote:
 
-```
+```json
 "accounts": {
   "address:my_address": {
     "nonce": "0",
@@ -408,9 +414,9 @@ There is only one account defined - the one that will perform the deployment dur
 
 ```
 
-This defines the account with the address `my_address`, which the testing framework will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000` (that's a lot of EGLD).
+This defines the account with the address `my_address`, which the testing environment will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000`. Note: EGLD has 18 decimals, so 1 EGLD would be equal to `1,000,000,000,000,000,000` (10^18), but you rarely need to work with such big values in tests.  
 
-Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing framework to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`.
+Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing environment to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`, and all smart contracts with `sc:`.  
 
 ### **Imaginary address generator**
 
@@ -421,14 +427,14 @@ Immediately after the `accounts`, the first scenario step contains the following
   {
     "creatorAddress": "address:my_address",
     "creatorNonce": "0",
-    "newAddress": "sc:the_crowdfunding_contract"
+    "newAddress": "sc:crowdfunding"
   }
 ]
 ```
 
-In short, this block instructs the testing framework to pretend that the address to be generated for the first (nonce `0`) deployment attempted by `my_address` must be the address`the_crowdfunding_contract`.
+In short, this block instructs the testing environment to pretend that the address to be generated for the first (nonce `0`) deployment attempted by `my_address` must be the address`crowdfunding`.
 
-Makes sense, doesn't it? If you didn't write this, the testing framework would have deployed the Crowdfunding smart contract at some auto-generated address, which we wouldn't be informed of, so we couldn't interact with the smart contract in the subsequent scenario steps.
+Makes sense, doesn't it? If you didn't write this, the testing environment would have deployed the Crowdfunding smart contract at some auto-generated address, which we wouldn't be informed of, so we couldn't interact with the smart contract in the subsequent scenario steps.
 
 But with the configured `newAddresses` generator, we know that every run of the test will deploy the smart contract at the address `the_crowdfunding_contract`.
 
@@ -436,12 +442,13 @@ While it's not important to know right now, the `newAddresses` generator can be 
 
 ## **Scenario step "scDeploy"**
 
-The next scenario step defined by the JSON file instructs the testing framework to perform the deployment itself. Observe:
+The next scenario step defined by the JSON file instructs the testing environment to perform the deployment itself. Observe:
 
 ```
 "tx": {
   "from": "address:my_address",
   "contractCode": "file:../output/crowdfunding.wasm",
+  "arguments": [ "500,000,000,000" ],
   "value": "0",
   "gasLimit": "1,000,000",
   "gasPrice": "0"
@@ -460,10 +467,11 @@ The fields `gasLimit` and `gasPrice` shouldn't concern you too much. It's import
 
 ### **The result of the deployment**
 
-Once the testing framework executes the deployment transaction described above, you have the opportunity to assert its successful completion:
+Once the testing environment executes the deployment transaction described above, you have the opportunity to assert its successful completion:
 
 ```
 "expect": {
+  "out": [],
   "status": "0",
   "gas": "*",
   "refund": "*"
@@ -471,6 +479,8 @@ Once the testing framework executes the deployment transaction described above, 
 ```
 
 The only important field here is `"status": "0"`, which is the actual return code coming from the Arwen VM after it executed the deployment transaction. `0` means success, of course.
+
+The `out` array would contain values returned by your smart contract call (in this case, the `init` function doesn't return anything, but it could if the developer wanted).
 
 The remaining two fields `gas` and `refund` allow you to specify how much gas you expect the deployment transaction to consume, and how much EGLD you'd receive back as a result of overestimating the `gasLimit`. These are both set to `"*"` here, meaning that we don't care right now about their actual values.
 
@@ -484,12 +494,12 @@ The final scenario step mirrors the first scenario step. There's an `accounts` f
     "nonce": "1",
     "balance": "1,000,000"
   },
-  "sc:the_crowdfunding_contract": {
+  "sc:crowdfunding": {
     "code": "file:../output/crowdfunding.wasm",
     "nonce": "0",
     "balance": "0",
     "storage": {
-      "''owner": "address:my_address"
+      "str:target": "500,000,000,000"
     }
   }
 }
@@ -499,9 +509,9 @@ Notice that there are two accounts now, not just one. There's evidently the acco
 
 The account `my_address` now has the nonce `1`, because a transaction has been executed, sent from it. Its balance remains unchanged - the deployment transaction did not cost anything, because the `gasPrice` field was set to `0` in the second scenario step. This is only allowed in tests, of course.
 
-The account `the_crowdfunding_contract` is the Crowdfunding smart contract. We assert that it contains the bytecode specified by the file `output/crowdfunding.wasm` (path relative to the JSON file). We also assert that its `nonce` is `0`, which means that the contract itself has never deployed a "child" contract of its own (which is technically possible). The `balance` of the smart contract account is `0`, because it didn't receive any EGLD as part of the deployment transaction, nor did we specify any scenario steps that transfer EGLD to it (we'll do that soon).
+The account `crowdfunding` is the Crowdfunding smart contract. We assert that it contains the bytecode specified by the file `output/crowdfunding.wasm` (path relative to the JSON file). We also assert that its `nonce` is `0`, which means that the contract itself has never deployed a "child" contract of its own (which is technically possible). The `balance` of the smart contract account is `0`, because it didn't receive any EGLD as part of the deployment transaction, nor did we specify any scenario steps that transfer EGLD to it (we'll do that soon).
 
-And finally, we assert that the smart contract storage contains `my_address` under the `owner` key, which is what the `init` function was supposed to make sure. The smart contract has, therefore, remembered you.
+And finally, we assert that the smart contract storage contains `500,000,000,000` under the `target` key, which is what the `init` function was supposed to make sure. The smart contract has, therefore, remembered the target you set for it.
 
 # **Next up**
 
