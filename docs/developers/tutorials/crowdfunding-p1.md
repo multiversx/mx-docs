@@ -268,10 +268,10 @@ erdpy contract build
 
 There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
 
-```
-    #[view]
-    #[storage_mapper("target")]
-    fn target(&self) -> SingleValueMapper<BigUint>;
+```rust
+  #[view]
+  #[storage_mapper("target")]
+  fn target(&self) -> SingleValueMapper<BigUint>;
 ```
 
 ### **But will you remember?**
@@ -422,7 +422,7 @@ Note that there are is the text `address:`at the beginning of `my_address`, whic
 
 Immediately after the `accounts`, the first scenario step contains the following block:
 
-```
+```json
 "newAddresses": [
   {
     "creatorAddress": "address:my_address",
@@ -444,7 +444,7 @@ While it's not important to know right now, the `newAddresses` generator can be 
 
 The next scenario step defined by the JSON file instructs the testing environment to perform the deployment itself. Observe:
 
-```
+```json
 "tx": {
   "from": "address:my_address",
   "contractCode": "file:../output/crowdfunding.wasm",
@@ -469,7 +469,7 @@ The fields `gasLimit` and `gasPrice` shouldn't concern you too much. It's import
 
 Once the testing environment executes the deployment transaction described above, you have the opportunity to assert its successful completion:
 
-```
+```json
 "expect": {
   "out": [],
   "status": "0",
@@ -488,7 +488,7 @@ The remaining two fields `gas` and `refund` allow you to specify how much gas yo
 
 The final scenario step mirrors the first scenario step. There's an `accounts` field again, but with more content:
 
-```
+```json
 "accounts": {
   "address:my_address": {
     "nonce": "1",
