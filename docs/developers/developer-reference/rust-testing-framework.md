@@ -128,7 +128,7 @@ where
 
 The main object you're going to be interacting with is the `BlockchainStateWrapper`. It holds the entire (mocked) blockchain state at any given moment, and allows you to interact with the accounts.  
 
-As you can see in the above test, we use the said wrapper to create an owner account, two user accounts, and the Crowdfunding smart contract account.  
+As you can see in the above test, we use the said wrapper to create an owner account, two other user accounts, and the Crowdfunding smart contract account.  
 
 Then, we set the ESDT balances for the two users, and deploy the smart contract, by using the `execute_tx` function of the `BlockchainStateWrapper` object. The arguments are:
 - caller address
