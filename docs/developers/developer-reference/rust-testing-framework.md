@@ -12,7 +12,7 @@ The Rust testing framework was develped as an alternative to manually writing ma
 - far less verbose
 - semi-automatic generation of the mandos tests
 
-The only disadvantage is that you need to learn something new! Jokes aside, keep in mind this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work with the current VM version deployed on mainnet.  
+The only disadvantage is that you need to learn something new! Jokes aside, keep in mind that this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work identically with the current VM version deployed on the mainnet.  
 
 This is where the mandos generation part comes into play. The Rust testing framework allows you to generate mandos steps with minimal effort, and then run said tests with one click through our Elrond VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required from the developer, but we'll get to that in its specific section.  
 
