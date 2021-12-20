@@ -5,7 +5,7 @@ title: Rust Testing Framework
 
 ## Introduction
 
-The Rust testing framework was develped as an alternative to manually writing mandos tests. This comes with many advantages:
+The Rust testing framework was develped as an alternative to manually writing Mandos tests. This comes with many advantages:
 - being able to calculate values using variables
 - type checking
 - automatic serialization
@@ -32,9 +32,9 @@ num-traits = "0.2"
 hex = "0.4"
 ```
 
-You need a `tests` and a `mandos` folder in your contract. Create a `.rs` file in your `tests` folder.
+For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/examples/crowdfunding-esdt
 
-For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/examples/crowdfunding-esdt
+You need a `tests` and a `mandos` folder in your contract. Create a `.rs` file in your `tests` folder.
 
 In your newly created test file, add the following code (adapt the `crowdfunding_esdt` namespace, the struct/variable names, and the contract wasm path according to your contract):  
 
@@ -65,7 +65,7 @@ where
 }
 ```
 
-The `CrowdfundingSetup` struct isn't really needed, but it helps de-duplicating some code. You may add other fields in your struct if needed, but for now this is enough for our use-case. The only "manadatory" fields are `blockchain_wrapper` and `cf_wrapper`.  
+The `CrowdfundingSetup` struct isn't really needed, but it helps de-duplicating some code. You may add other fields in your struct if needed, but for now this is enough for our use-case. The only fields you'll need for any contract are `blockchain_wrapper` and `cf_wrapper`. The rest of the fields can be adapted according to your test scenario.  
 
 And that's all you need to get started.
 
@@ -144,9 +144,9 @@ let target = BigUint::<DebugApi>::from(2_000u32);
 
 Similarly for other managed types.  
 
-The return type for the `execute_tx` function is an enum of two possible values: Commit and Revert. This is needed for cases when you want to check SCError cases (since the lambda can contain anything, the testing framework has no idea if your mocked transaction was successful or not).  
-
-After running the `init` function, we add a `setState` step in the generated mandos, to simulate our deploy.  
+Some observations for the `execute_tx` function:
+- The return type for the lambda function is an enum of two possible values: Commit and Revert. This is needed for cases when you want to check SCError cases (since the lambda can contain anything, the testing framework has no idea if your mocked transaction was successful or not).  
+- After running the `init` function, we add a `setState` step in the generated mandos, to simulate our deploy: `blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());`
 
 To test the scenario and generate the mandos file, you have to create a test function:
 
