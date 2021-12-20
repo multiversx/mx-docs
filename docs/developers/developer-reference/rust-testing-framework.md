@@ -193,7 +193,7 @@ fn fund_test() {
 }
 ```
 
-As you can see, we can directly call the storage mappers (like `deposit`) from inside the contract and compare with a local value. No need to encode anything.  
+As you can see, we can directly call the storage mappers (like `deposit`) from within the contract and compare with a local value. No need to encode anything.  
 
 Note: Even though we've already passed the payment in the `execute_esdt_transfer` method, we also have to pass it in the `fund` method of the smart contract. This is because by calling the sc method directly, the `#[payment]` macros do not intervene as they would during a normal transaction, so the function argument is not auto-filled.  
 
