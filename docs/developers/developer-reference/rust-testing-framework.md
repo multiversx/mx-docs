@@ -10,11 +10,11 @@ The Rust testing framework was develped as an alternative to manually writing Ma
 - type checking
 - automatic serialization
 - far less verbose
-- semi-automatic generation of the mandos tests
+- semi-automatic generation of the Mandos tests
 
 The only disadvantage is that you need to learn something new! Jokes aside, keep in mind that this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work identically with the current VM version deployed on the mainnet.  
 
-This is where the mandos generation part comes into play. The Rust testing framework allows you to generate mandos scenarios with minimal effort, and then run said scenarios with one click through our Elrond VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section. 
+This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our Elrond VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section. 
 
 ## Prerequisites
 
@@ -146,9 +146,9 @@ Similarly for other managed types.
 
 Some observations for the `execute_tx` function:
 - The return type for the lambda function is an enum of two possible values: Commit and Revert. This is needed for cases when you want to check SCError cases (since the lambda can contain anything, the testing framework has no idea if your mocked transaction was successful or not).  
-- After running the `init` function, we add a `setState` step in the generated mandos, to simulate our deploy: `blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());`
+- After running the `init` function, we add a `setState` step in the generated Mandos, to simulate our deploy: `blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());`
 
-To test the scenario and generate the mandos file, you have to create a test function:
+To test the scenario and generate the Mandos file, you have to create a test function:
 
 ```rust
 #[test]
@@ -160,7 +160,7 @@ fn init_test() {
 }
 ```
 
-And you're done for this step. You successfuly tested your contract's init function, and generated a mandos scenario for it.  
+And you're done for this step. You successfuly tested your contract's init function, and generated a Mandos scenario for it.  
 
 ## Testing transactions
 
@@ -197,7 +197,7 @@ As you can see, we can directly call the storage mappers (like `deposit`) from w
 
 Note: Even though we've already passed the payment in the `execute_esdt_transfer` method, we also have to pass it in the `fund` method of the smart contract. This is because by calling the sc method directly, the `#[payment]` macros do not intervene as they would during a normal transaction, so the function argument is not auto-filled.  
 
-If you also want to generate a mandos scenario file for this transaction, this is where the bit of manual work comes in:  
+If you also want to generate a Mandos scenario file for this transaction, this is where the bit of manual work comes in:  
 
 ```rust
     let mut sc_call = ScCallMandos::new(user_addr, cf_setup.cf_wrapper.address_ref(), "fund");
@@ -287,7 +287,7 @@ Notice how we've changed the payment intentionally to an invalid token to check 
 
 ## Testing a successful funding campaign
 
-For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the mandos generation out of this one:  
+For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the Mandos generation out of this one:  
 
 ```rust
 #[test]
