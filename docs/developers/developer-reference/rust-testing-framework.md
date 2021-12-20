@@ -164,7 +164,7 @@ And you're done for this step. You successfuly tested your contract's init funct
 
 ## Testing transactions
 
-Let's test the `fund` function. For this, we're going to use the previous setup, and the `execute_esdt_transfer` method:
+Let's test the `fund` function. For this, we're going to use the previous setup, but now we use the `execute_esdt_transfer` method instead of `execute_tx`, because we're sending ESDT to the contract while calling `fund`:
 
 ```rust
 #[test]
