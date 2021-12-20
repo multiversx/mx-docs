@@ -242,7 +242,7 @@ fn status_test() {
 
 ## Testing smart contract errors
 
-In the previous transaction test, we've tested the happy flow. Now let's see how we can check errors:
+In the previous transaction test, we've tested the happy flow. Now let's see how we can check for errors:
 
 ```rust
 #[test]
