@@ -136,7 +136,7 @@ Then, we set the ESDT balances for the two users, and deploy the smart contract,
 - EGLD payment amount
 - a lambda function, which contains the actual execution
 
-Since this is a SC deploy, we call the `init` function. Since the contract works with managed objects, we can't use the built-in Rust BigUint. We have to use the one from elrond_wasm. To create managed types, we use the `managed_` functions. Alternatively, you can create those objects by:
+Since this is a SC deploy, we call the `init` function. Since the contract works with managed objects, we can't use the built-in Rust BigUint, so we use the one provided by `elrond_wasm` instead. To create managed types, we use the `managed_` functions. Alternatively, you can create those objects by:
 
 ```rust
 let target = BigUint::<DebugApi>::from(2_000u32);
