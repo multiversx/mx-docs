@@ -9,7 +9,7 @@ The Rust testing framework was develped as an alternative to manually writing ma
 - being able to calculate values using variables
 - type checking
 - automatic serialization
-- way less verbose
+- far less verbose
 - semi-automatic generation of the mandos tests
 
 The only disadvantage is that you need to learn something new! Jokes aside, keep in mind this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work with the current VM version deployed on mainnet.  
