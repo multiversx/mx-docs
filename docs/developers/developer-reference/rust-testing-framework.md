@@ -197,7 +197,7 @@ As you can see, we can directly call the storage mappers (like `deposit`) from i
 
 Note: Even though we've already passed the payment in the `execute_esdt_transfer` method, we also have to pass it in the `fund` method of the smart contract. This is because, by calling the sc method directly, the `#[payment]` macros do not intervene yet, so the function argument is not auto-filled.  
 
-If you also want to generate a mandos for this transaction, this is where the bit of manual work comes in:  
+If you also want to generate a mandos scenario file for this transaction, this is where the bit of manual work comes in:  
 
 ```rust
     let mut sc_call = ScCallMandos::new(user_addr, cf_setup.cf_wrapper.address_ref(), "fund");
