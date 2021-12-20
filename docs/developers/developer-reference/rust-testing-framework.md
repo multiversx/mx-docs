@@ -283,7 +283,7 @@ fn test_sc_error() {
 }
 ```
 
-Notice how we've changed the payment intentionally to an invalid token to check the error case. Also, we've changed the expected deposit to "0" instead of the previous "1_000". And lastly, the most important thing: the `StateChange::Revert` return result, so we don't commit any partial changes.  
+Notice how we've changed the payment intentionally to an invalid token to check the error case. Also, we've changed the expected deposit to "0" instead of the previous "1_000". And lastly, the most important thing: the `StateChange::Revert` return result, so we don't commit any partial changes to the blockchain wrapper.
 
 ## Testing a successful funding campaign
 
