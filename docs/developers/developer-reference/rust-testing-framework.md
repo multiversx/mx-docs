@@ -73,7 +73,7 @@ And that's all you need to get started.
 
 The first test you need to write is the one simulating the deploy of your smart contract. For that, you need a user address and a contract address. Then you simply call the `init` function of the smart contract.  
 
-Since we're going to be using the same token ID everywhere, let's add it as a constant (and while we're at it, have the deadline as constant as well): 
+Since we're going to be using the same token ID everywhere, let's add it as a constant (and while we're at it, have the deadline as a constant as well): 
 
 ```rust
 const CF_TOKEN_ID: &[u8] = b"CROWD-123456";
