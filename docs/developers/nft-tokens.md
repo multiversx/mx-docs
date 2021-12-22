@@ -410,7 +410,7 @@ TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 1000000 + extra for smart contract call
+    GasLimit: 300000 + extra for smart contract call
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <the nonce after the NFT creation in hexadecimal encoding> +
