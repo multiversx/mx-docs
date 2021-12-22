@@ -229,7 +229,7 @@ NFTCreationTransaction {
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 250000 + Additional gas (see below)
+    GasLimit: 2000000 + Additional gas (see below)
     Data: "ESDTNFTCreate" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <initial quantity in hexadecimal encoding> +
@@ -480,7 +480,7 @@ Fill all the attributes as you think.
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 250000 + Additional gas (see below)
+    GasLimit: 2000000 + Additional gas (see below)
     Data: "ESDTNFTCreate" +
           "@414c432d317132773365" +   # previously fetched token identifier
           "@" + <initial quantity in hexadecimal encoding> +
