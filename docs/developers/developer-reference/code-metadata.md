@@ -27,9 +27,9 @@ Internally, the metadata is stored as a 2-byte wide bit-flag. For easier visuali
 ```rust
 bitflags! {
     struct CodeMetadata: u16 {
-        const UPGRADEABLE = 0b0000_0001_0000_0000; // LSB of first byte
-        const READABLE = 0b0000_0100_0000_0000; // 3rd LSB of first byte
-        const PAYABLE = 0b0000_0000_0000_0010; // 2nd LSB of second byte
+		const UPGRADEABLE = 0b0000_0001_0000_0000; // LSB of first byte
+		const READABLE = 0b0000_0100_0000_0000; // 3rd LSB of first byte
+		const PAYABLE = 0b0000_0000_0000_0010; // 2nd LSB of second byte
 		const PAYABLE_BY_SC = 0b0000_0000_0000_0100; // 3rd LSB of second byte
     }
 }
