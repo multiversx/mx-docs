@@ -5,34 +5,45 @@ title: Code Metadata
 
 ## Introduction
 
-Code metadata are flags retresented a 2-byte bitfield concerning smart contract creation and upgrading. 
+Code metadata are flags representing the smart contract's allowed actions after deploy, specifically:
+- `upgradeable` - if the contract can be upgraded in the future
+- `readable` - if the contract's storage can be read by other contracts
+- `payable` - if the contract can receive funds without having any endpoint called (just like user accounts). Note: A contract does NOT have to be payable to receive funds in payable endpoints.
+- `payable by smart contracts` - just like the `payable` flag, but can only receive funds from other smart contracts. User transfers will be rejected.
 
 ## Usability
 
-Upon creating or upgrading a contract the metadata provided allows certain behaviours of it.
+By default, all contracts are `upgradeable`, `readable` and non-`payable`. This can be overwritten with the following `erdpy contract deploy` flags:
+- `metadata-not-upgradeable` - set `upgradeable` to `false`
+- `metadata-payable` - set `payable` to `true`
 
-```
-const (
-	// MetadataUpgradeable is the bit for upgradable flag
-	MetadataUpgradeable = 1
-	// MetadataPayable is the bit for payable flag
-	MetadataPayable = 2
-	// MetadataReadable is the bit for readable flag
-	MetadataReadable = 4
-)
+Note: There are currently no erdpy flags for `readable` and `payable by smart contracts`, but they will be added in the future.  
 
-```
+If the contract is `upgradeable`, the flags can also be overwritten at the time of upgrading.
 
 ## Converting Metadata to bytes
 
-The 2 bytes of the representation are used to store the Code Metadata by the following rules: 
+Internally, the metadata is stored as a 2-byte wide bit-flag. For easier visualization, let's define the flags like this:
+```rust
+bitflags! {
+    struct CodeMetadata: u16 {
+        const UPGRADEABLE = 0b0000_0001_0000_0000; // LSB of first byte
+        const READABLE = 0b0000_0100_0000_0000; // 3rd LSB of first byte
+        const PAYABLE = 0b0000_0000_0000_0010; // 2nd LSB of second byte
+		const PAYABLE_BY_SC = 0b0000_0000_0000_0100; // 3rd LSB of second byte
+    }
+}
+```
 
+Alternatively, if you prefer hex over binary:
+```rust
+const UPGRADEABLE: u16 = 0x01_00;
+const READABLE: u16 = 0x04_00;
+const PAYABLE: u16 = 0x00_02;
+const PAYABLE_BY_SC = 0x00_04;
 ```
-- Upgradeable: (bytes[0] & MetadataUpgradeable) != 0,
-- Readable:    (bytes[0] & MetadataReadable) != 0,
-- Payable:     (bytes[1] & MetadataPayable) != 0,
-```
-By this meaning if for example we wish to deploy a contract that is payable and upgradeable we would call the deploy function having as metadata `0x0102`
+
+For example, if we wish to deploy a contract that is payable and upgradeable our metadata would be `0x0102`.
 
 ## Conclusion
 
