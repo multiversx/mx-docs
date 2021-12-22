@@ -229,7 +229,7 @@ NFTCreationTransaction {
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 6000000 + Additional gas (see below)
+    GasLimit: 250000 + Additional gas (see below)
     Data: "ESDTNFTCreate" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <initial quantity in hexadecimal encoding> +
@@ -480,7 +480,7 @@ Fill all the attributes as you think.
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 250000
+    GasLimit: 250000 + Additional gas (see below)
     Data: "ESDTNFTCreate" +
           "@414c432d317132773365" +   # previously fetched token identifier
           "@" + <initial quantity in hexadecimal encoding> +
@@ -492,6 +492,11 @@ Fill all the attributes as you think.
           "@" + <URI in hexadecimal encoding> +
 }
 ```
+
+Additional gas refers to:
+
+-   Transaction payload cost: Data field length \* 1500 (GasPerDataByte = 1500)
+-   Storage cost: Size of NFT data \* 50000 (StorePerByte = 50000)
 
 :::tip
 Note that the nonce is very important when creating an NFT. You must save the nonce after NFT creation because you will need it for further actions.
