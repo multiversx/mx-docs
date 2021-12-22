@@ -319,7 +319,7 @@ BurnQuantityTransaction {
     Sender: <address of an address that has ESDTRoleNFTBurn role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 50000
+    GasLimit: 60000
     Data: "ESDTNFTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <NFT nonce in hexadecimal encoding>
