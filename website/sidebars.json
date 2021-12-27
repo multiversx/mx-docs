@@ -113,7 +113,8 @@
           "developers/developer-reference/smart-contract-developer-best-practices",
           "developers/developer-reference/code-metadata",
           "developers/developer-reference/elrond-wasm-api-functions",
-          "developers/developer-reference/rust-testing-framework"
+          "developers/developer-reference/rust-testing-framework",
+          "developers/developer-reference/random-numbers-in-smart-contracts"
         ]
       },
       {
