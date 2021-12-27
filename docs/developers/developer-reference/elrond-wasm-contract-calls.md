@@ -21,7 +21,7 @@ If you have access to the callee contract's code, importing the auto-generated p
 path = "relative-path-to-contract-crate"
 ```
 
-If you want to use endpoints contained in an external module (i.e. in a different crate than the main contract) that the callee contract imports, you'll also have to add said module to the dependencies, the same way you added the main contract.
+If you want to use endpoints contained in an external module (i.e. in a different crate than the main contract) that the callee contract imports, you'll also have to add the module to the dependencies, the same way you added the main contract.
 
 Additionally, in your caller code, you have to add the following import:
 ```rust
@@ -56,7 +56,7 @@ let biguint_result = self.contract_proxy(callee_sc_address)
 
 This performs a synchronous call to the `callee_sc_address` contract, with the `my_biguint_arg` used as input for `arg: BigUint`. Notice how you also don't have to specify the `myEndpoint` name either. It's handled automatically.
 
-After performing this call, you can execute some more code in the caller contract, using `biguint_result` as you with.
+After performing this call, you can execute some more code in the caller contract, using `biguint_result` as you wish.
 
 NOTE: Keep in mind that this only works for same-shard contracts. If the contracts are in different shards, you have to use async-calls or transfer-and-execute.
 
@@ -70,7 +70,7 @@ There are two main types of contract-to-contract calls available at the moment:
 
 Asynchronous calls can be launched either through transfer_execute (in the case you don't care about the result) or through async_call when you want to save the result from the callee contract or perform some additional computation. Keep in mind logic in callbacks should be kept at a minimum, as they usually receive very little gas to perform their duty.
 
-To launch a transfer and execute call using the above described proxy, you can simply replace `execute_on_dest_context` method with the `transfer_execute` method. Keep in mind you can't get the returned `BigUint` in this case.
+To launch a transfer and execute call using the above described proxy, you can simply replace `execute_on_dest_context` method with the `transfer_execute` method. Keep in mind that you can't get the returned `BigUint` in this case.
 
 If instead you want to launch an async call, you have to use the `async_call` method. Unlike the other "launch" methods, this does not execute or register the call, but instead it creates an `AsyncCall` object that you need to return.
 
