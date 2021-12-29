@@ -137,7 +137,7 @@ This means that to represent even just 1 EGLD we use the number 10<sup>18</sup>,
 **Rust types**: `Self::BigUint`, `Self::BigInt`,
 
 :::important
-These types are managed by Arwen, in many cases the contract never sees the data, only a handle.
+These types are managed by Elrond VM, in many cases the contract never sees the data, only a handle.
 This is to reduce the burden on the smart contract.
 :::
 
