@@ -10,7 +10,7 @@
       "technology/chronology",
       "technology/secure-proof-of-stake",
       "technology/adaptive-state-sharding",
-      "technology/the-arwen-wasm-vm",
+      "technology/the-elrond-wasm-vm",
       "technology/cross-shard-transactions"
     ],
     "Wallet": [
