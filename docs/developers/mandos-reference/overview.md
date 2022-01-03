@@ -27,7 +27,7 @@ At the moment of writing this document, Mandos tests can be launched directly fr
 
 There are currently 2 implementations of the Mandos specifications.
 
-1. Mandos-go is part of Arwen, it is integrated with the VM fully and runs actual smart contract code. This is the most up-to-date version of the two.
+1. Mandos-go is part of Elrond VM, it is integrated with the VM fully and runs actual smart contract code. This is the most up-to-date version of the two.
 
 2. Mandos-rs is an implementation that is integrated into the `elrond-wasm` Rust smart contract framework. It mocks everything, including the VM and the WebAssembly engine. It is useful for debugging smart contracts and for generating high-level coverage for contracts. Mandos-rs is not yet fully featured, parts of the ESDT specification are not yet implemented, as well as some of the contract-to-contract calls.
 
