@@ -178,17 +178,63 @@ Below you can find the fields involved when creating an NFT.
 - Base format is a numeric value between 0 an 10000 (0 meaning 0% and 10000 meaning 100%)
 
 **Hash**
-- Arbitrary field that should contain the hash of the NFT metadata.
+- Arbitrary field that should contain the hash of the NFT metadata
+- Optional filed, should be left `null` when building the transaction to create the NFT
 
 **Attributes**
-- Arbitrary field that should contain a set of attributes in the format desired by the creator
+- Represents additional information about the NFT or SFT, like picture traits or tags for your NFT/collection
+- The field should follow a `metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3` format
+- Below you can find a sample for the extra metadata format that should be stored on IPFS:
+```
+{
+  "description": "This is a sample description",
+  "attributes": [
+    {
+      "trait_type": "SampleTrait1",
+      "value": "SampleValue1",
+      "key":"value"
+    },
+    {
+      "trait_type": "SampleTrait2",
+      "value": "SampleValue2",
+      "key":"value"
+    },
+    {
+      "trait_type": "SampleTrait3",
+      "value": "SampleValue3",
+      "key":"value"
+    }
+  ]
+}
+```
 
 **URI(s)**
-- Minimum one field that should contain the `Uniform Resource Identifier`. Can be a URL to a media file or something similar.
+- <u>Mandatory</u> field that represents the URL to a [supported](#supported-media-types) media file ending with the file extension as described in the [example](#example) below
+- Field should contain the `Uniform Resource Identifier`
+
+<u>Note</u>: As a best practice, we recommend storing the files for media & extra metadata(from attributes field) within same folder on your storage provider, ideally IPFS.
 
 :::important
 Please note that each argument must be encoded in hexadecimal format with an even number of characters.
 :::
+
+### **Supported Media Types**
+Below you can find a table with the supported media types for NFTs available on Elrond network. 
+|**Media Extension**|**Media Type**|
+|-------------------|--------------|
+|.png|image/png|
+|.jpeg|image/jpeg|
+|.jpg|image/jpg|
+|.gif|image/gif|
+|.acc|audio/acc|
+|.flac|audio/flac|
+|.m4a|audio/m4a|
+|.mp3|audio/mp3|
+|.wav|audio/wav|
+|.mov|video/mov|
+|.quicktime|video/quicktime|
+|.mp4|video/mp4|
+|.webm|video/webm|
 
 ### **Example**
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
@@ -197,13 +243,11 @@ Below you can find a table representing an example of the fields for a non-fungi
 |**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 | 
 |**Quantity**| 1 | 01|
 |**Royalties**| 7500 *=75%* | 1d4c |
-|**Hash** | 5589...03a6 | 5589...03a6 |
-|**Attributes**| Artist:Famous artist;Duration:03.17|  4172746973743a46616d6f7573206172746973743b4475726174696f6e3a30332e3137 |
+|**Hash** | 00 | 00 |
+|**Attributes**| metadata:*ipfsCID/song.json*;tags:myTag1,myTag2,myTag3 |  6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a6d79546167312c6d79546167322c6d7954616733 |
 |**URI**| *URL_to_decentralized_storage/song.mp3* | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
 
-As stated above, `hash` and `attributes` fields are arbitrary and the creator or the marketplace can use them in the way they want.
-
-In this example, the hash represents the hash of the `.mp3` file. Also, the attributes follow a `attribute_name:attribute_value;attribute_name:attribute_value` format.
+In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
 
 ## **Creation of an NFT**
 A single address can own the role of creating an NFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
