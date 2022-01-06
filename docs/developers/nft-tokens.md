@@ -204,7 +204,8 @@ Below you can find the fields involved when creating an NFT.
       "value": "SampleValue3",
       "key":"value"
     }
-  ]
+  ],
+  "collection": "ipfsCID/fileName.json"
 }
 ```
 
