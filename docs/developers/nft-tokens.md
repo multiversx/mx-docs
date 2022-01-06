@@ -191,15 +191,18 @@ Below you can find the fields involved when creating an NFT.
   "attributes": [
     {
       "trait_type": "SampleTrait1",
-      "value": "SampleValue1"
+      "value": "SampleValue1",
+      "key":"value"
     },
     {
       "trait_type": "SampleTrait2",
-      "value": "SampleValue2"
+      "value": "SampleValue2",
+      "key":"value"
     },
     {
       "trait_type": "SampleTrait3",
-      "value": "SampleValue3"
+      "value": "SampleValue3",
+      "key":"value"
     }
   ]
 }
