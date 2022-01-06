@@ -6,18 +6,19 @@ title: NFT tokens
 ## **Introduction**
 
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
-This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
+This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI.
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
-- register/issue the token
-- set roles to the address that will create the NFT/SFTs
-- create the NFT/SFT
-- transfer quantity(es)
+
+-   register/issue the token
+-   set roles to the address that will create the NFT/SFTs
+-   create the NFT/SFT
+-   transfer quantity(es)
 
 ## **Issuance of Non-Fungible Tokens**
 
-One has to perform an issuance transaction in order to register a non-fungible token. 
+One has to perform an issuance transaction in order to register a non-fungible token.
 Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
 ```
@@ -33,6 +34,7 @@ IssuanceTransaction {
 ```
 
 Optionally, the properties can be set when issuing a token. Example:
+
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
@@ -70,6 +72,7 @@ IssuanceTransaction {
 ```
 
 Optionally, the properties can be set when issuing a token. Example:
+
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
@@ -93,14 +96,13 @@ The contract will add a random string to the ticker thus creating the **token id
 
 Token Name:
 
-- length between 3 and 20 characters
-- alphanumeric characters only
-
+-   length between 3 and 20 characters
+-   alphanumeric characters only
 
 Token Ticker:
 
-- length between 3 and 10 characters
-- alphanumeric UPPERCASE only
+-   length between 3 and 10 characters
+-   alphanumeric UPPERCASE only
 
 ## **Issuance examples**
 
@@ -117,33 +119,36 @@ IssuanceTransaction {
           "@414c43" +
 }
 ```
+
 Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [Rest API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
 
-## **Roles** ##
+## **Roles**
 
 In order to be able to perform actions over a token, one needs to have roles assigned.
 The existing roles are:
 
 For NFT:
-* ESDTRoleNFTCreate : this role allows one to create a new NFT
-* ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
+
+-   ESDTRoleNFTCreate : this role allows one to create a new NFT
+-   ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
 
 For SFT:
-* ESDTRoleNFTCreate : this role allows one to create a new SFT
-* ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
-* ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
+
+-   ESDTRoleNFTCreate : this role allows one to create a new SFT
+-   ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
+-   ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
 
 To see how roles can be assigned, please refer to [this](/developers/nft-tokens#assigning-roles) section.
 
-
-## **Assigning roles** ##
+## **Assigning roles**
 
 Roles can be assigned by sending a transaction to the Metachain from the ESDT manager.
 
 Within a transaction of this kind, any number of roles can be assigned (minimum 1).
+
 ```
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
@@ -168,23 +173,29 @@ Unset transactions are very similar. You can find an example [here](/developers/
 Below you can find the fields involved when creating an NFT.
 
 **NFT Name**
-- The name of the NFT or SFT
+
+-   The name of the NFT or SFT
 
 **Quantity**
-- The quantity of the token. If NFT, it must be `1`
+
+-   The quantity of the token. If NFT, it must be `1`
 
 **Royalties**
-- Allows the creator to receive royalties for any transaction involving their NFT
-- Base format is a numeric value between 0 an 10000 (0 meaning 0% and 10000 meaning 100%)
+
+-   Allows the creator to receive royalties for any transaction involving their NFT
+-   Base format is a numeric value between 0 an 10000 (0 meaning 0% and 10000 meaning 100%)
 
 **Hash**
-- Arbitrary field that should contain the hash of the NFT metadata
-- Optional filed, should be left `null` when building the transaction to create the NFT
+
+-   Arbitrary field that should contain the hash of the NFT metadata
+-   Optional filed, should be left `null` when building the transaction to create the NFT
 
 **Attributes**
-- Represents additional information about the NFT or SFT, like picture traits or tags for your NFT/collection
-- The field should follow a `metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3` format
-- Below you can find a sample for the extra metadata format that should be stored on IPFS:
+
+-   Represents additional information about the NFT or SFT, like picture traits or tags for your NFT/collection
+-   The field should follow a `metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3` format
+-   Below you can find a sample for the extra metadata format that should be stored on IPFS:
+
 ```
 {
   "description": "This is a sample description",
@@ -204,13 +215,15 @@ Below you can find the fields involved when creating an NFT.
       "value": "SampleValue3",
       "key":"value"
     }
-  ]
+  ],
+  collection:ipfsCID/fileName.json
 }
 ```
 
 **URI(s)**
-- <u>Mandatory</u> field that represents the URL to a [supported](#supported-media-types) media file ending with the file extension as described in the [example](#example) below
-- Field should contain the `Uniform Resource Identifier`
+
+-   <u>Mandatory</u> field that represents the URL to a [supported](#supported-media-types) media file ending with the file extension as described in the [example](#example) below
+-   Field should contain the `Uniform Resource Identifier`
 
 <u>Note</u>: As a best practice, we recommend storing the files for media & extra metadata(from attributes field) within same folder on your storage provider, ideally IPFS.
 
@@ -219,7 +232,8 @@ Please note that each argument must be encoded in hexadecimal format with an eve
 :::
 
 ### **Supported Media Types**
-Below you can find a table with the supported media types for NFTs available on Elrond network. 
+
+Below you can find a table with the supported media types for NFTs available on Elrond network.
 |**Media Extension**|**Media Type**|
 |-------------------|--------------|
 |.png|image/png|
@@ -237,19 +251,21 @@ Below you can find a table with the supported media types for NFTs available on 
 |.webm|video/webm|
 
 ### **Example**
+
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
 | Property | Plain value | Encoded value |
 |----------|-------------|---------------|
-|**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 | 
+|**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 |
 |**Quantity**| 1 | 01|
-|**Royalties**| 7500 *=75%* | 1d4c |
+|**Royalties**| 7500 _=75%_ | 1d4c |
 |**Hash** | 00 | 00 |
-|**Attributes**| metadata:*ipfsCID/song.json*;tags:myTag1,myTag2,myTag3 |  6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a6d79546167312c6d79546167322c6d7954616733 |
-|**URI**| *URL_to_decentralized_storage/song.mp3* | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
+|**Attributes**| metadata:_ipfsCID/song.json_;tags:myTag1,myTag2,myTag3 | 6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a6d79546167312c6d79546167322c6d7954616733 |
+|**URI**| _URL_to_decentralized_storage/song.mp3_ | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
 
 In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
 
 ## **Creation of an NFT**
+
 A single address can own the role of creating an NFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
 
 An NFT can be created on top of an existing ESDT by sending a transaction to self that contains the function call that triggers the creation.
@@ -275,8 +291,9 @@ NFTCreationTransaction {
 ```
 
 Additional gas refers to:
-- Transaction payload cost: Data field length * 1500 (GasPerDataByte = 1500)
-- Storage cost: Size of NFT data * 50000 (StorePerByte = 50000)
+
+-   Transaction payload cost: Data field length \* 1500 (GasPerDataByte = 1500)
+-   Storage cost: Size of NFT data \* 50000 (StorePerByte = 50000)
 
 :::tip
 Note that because NFTs are stored in accounts trie, every transaction involving the NFT will require a gas limit depending on NFT data size.
@@ -284,13 +301,14 @@ Note that because NFTs are stored in accounts trie, every transaction involving 
 
 ## **Other management operations**
 
-### **Transfer NFT Creation Role** 
+### **Transfer NFT Creation Role**
 
 :::tip
 This role can be transferred only if the `canTransferNFTCreateRole` property of the token is set to `true`.
 :::
 
 The role of creating an NFT can be transferred by a Transaction like this:
+
 ```
 TransferCreationRoleTransaction {
     Sender: <address of the current creation role owner>
@@ -299,8 +317,8 @@ TransferCreationRoleTransaction {
     GasLimit: 60000000 + length of Data field in bytes * 1500
     Data: "transferNFTCreateRole" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the address to transfer the role from in hexadecimal encoding> + 
-          "@" + <the address to transfer the role to in hexadecimal encoding> 
+          "@" + <the address to transfer the role from in hexadecimal encoding> +
+          "@" + <the address to transfer the role to in hexadecimal encoding>
 }
 ```
 
@@ -408,9 +426,9 @@ WipeTransaction {
 ```
 
 ### **Upgrading (changing properties)**
-The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable. 
-Check the [ESDT - Upgrading (changing properties)](/developers/esdt-tokens#upgrading-changing-properties) section for more details.
 
+The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable.
+Check the [ESDT - Upgrading (changing properties)](/developers/esdt-tokens#upgrading-changing-properties) section for more details.
 
 ## **Transfers**
 
@@ -424,7 +442,7 @@ TransferTransaction {
     GasLimit: 1000000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the NFT nonce in hexadecimal encoding> + 
+          "@" + <the NFT nonce in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding>
 }
@@ -442,12 +460,12 @@ TransferTransaction {
     GasLimit: 1000000 + extra for smart contract call
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the nonce after the NFT creation in hexadecimal encoding> + 
+          "@" + <the nonce after the NFT creation in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
-          "@" + <destination address in hexadecimal encoding> + 
+          "@" + <destination address in hexadecimal encoding> +
           "@" + <name of method to call in hexadecimal encoding> +
           "@" + <first argument of the method in hexadecimal encoding> +
-          "@" + <second argument of the method in hexadecimal encoding> + 
+          "@" + <second argument of the method in hexadecimal encoding> +
           <...>
 }
 ```
@@ -484,6 +502,7 @@ It will look similar to `@ok@414c432d317132773365`. The `414c432d317132773365` r
 **Step 3: Set roles**
 
 Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You can set these roles to your very own address.
+
 ```
 {
     Sender: <your address>
@@ -539,7 +558,7 @@ It can be fetched by viewing all the tokens for the address via API.
     GasLimit: 500000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@414c432d317132773365" +   # previously fetched token identifier
-          "@" + <the nonce saved above in hexadecimal encoding> + 
+          "@" + <the nonce saved above in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding>
 }
@@ -550,90 +569,94 @@ It can be fetched by viewing all the tokens for the address via API.
 There are a number of API endpoints that one can use to interact with ESDT NFT data. These are:
 
 ### <span class="badge badge-primary">GET</span> **Get NFT data for an address**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
 https://gateway.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 ```
 
-| Param           | Required                                  | Type     | Description                           |
-| -------------   | ----------------------------------------- | -------- | ------------------------------------- |
-| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
-| tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier.                 |
-| nonce           | <span class="text-danger">REQUIRED</span> | `numeric`| The nonce after the NFT creation.     |
+| Param           | Required                                  | Type      | Description                            |
+| --------------- | ----------------------------------------- | --------- | -------------------------------------- |
+| bech32Address   | <span class="text-danger">REQUIRED</span> | `string`  | The Address to query in bech32 format. |
+| tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string`  | The token identifier.                  |
+| nonce           | <span class="text-danger">REQUIRED</span> | `numeric` | The nonce after the NFT creation.      |
 
 <!--Response-->
 
 ```json
 {
-  "data": {
-    "tokenData": {
-      "attributes": "YXR0cmlidXRl",
-      "balance": "2",
-      "creator": "erd1ukn0tukrdhuv0zzxn0zlr53g7h0fr68dz9dd56mkksev59nwuvnswnlyuy",
-      "hash": "aGFzaA==",
-      "name": "H",
-      "nonce": 1,
-      "properties": "",
-      "royalties": "9000",
-      "tokenIdentifier": "4W97C-32b5ce",
-      "uris": [
-        "bmZ0IHVyaQ=="
-      ]
-    }
-  },
-  "error": "",
-  "code": "successful"
+    "data": {
+        "tokenData": {
+            "attributes": "YXR0cmlidXRl",
+            "balance": "2",
+            "creator": "erd1ukn0tukrdhuv0zzxn0zlr53g7h0fr68dz9dd56mkksev59nwuvnswnlyuy",
+            "hash": "aGFzaA==",
+            "name": "H",
+            "nonce": 1,
+            "properties": "",
+            "royalties": "9000",
+            "tokenIdentifier": "4W97C-32b5ce",
+            "uris": ["bmZ0IHVyaQ=="]
+        }
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get NFTs/SFTs registered by an address**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
-Returns the identifiers of the tokens that have been registered by the provided address. 
+
+Returns the identifiers of the tokens that have been registered by the provided address.
 
 ```
 https://gateway.elrond.com/address/<bech32Address>/registered-nfts
 ```
 
-| Param           | Required                                  | Type     | Description                           |
-| -------------   | ----------------------------------------- | -------- | ------------------------------------- |
-| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
+| Param         | Required                                  | Type     | Description                            |
+| ------------- | ----------------------------------------- | -------- | -------------------------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 
 <!--Response-->
 
 ```json
 {
-  "data": {
-    "tokens": [
-      "ABC-36tg72"
-    ]
-  },
-  "error": "",
-  "code": "successful"
+    "data": {
+        "tokens": ["ABC-36tg72"]
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get tokens where an address has a given role**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 Returns the identifiers of the tokens where the given address has the given role.
 
 ```
 https://gateway.elrond.com/address/<bech32Address>/esdts-with-role/<role>
 ```
 
-| Param           | Required                                  | Type     | Description                           |
-| -------------   | ----------------------------------------- | -------- | ------------------------------------- |
-| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
-| role            | <span class="text-danger">REQUIRED</span> | `string` | The role to query for.                |
+| Param         | Required                                  | Type     | Description                            |
+| ------------- | ----------------------------------------- | -------- | -------------------------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
+| role          | <span class="text-danger">REQUIRED</span> | `string` | The role to query for.                 |
 
 The role can be one of the roles specified in the documentation (for example: ESDTRoleNFTCreate)
 
@@ -641,15 +664,14 @@ The role can be one of the roles specified in the documentation (for example: ES
 
 ```json
 {
-  "data": {
-    "tokens": [
-      "ABC-36tg72"
-    ]
-  },
-  "error": "",
-  "code": "successful"
+    "data": {
+        "tokens": ["ABC-36tg72"]
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
