@@ -129,6 +129,7 @@
         ]
       },
       "developers/constants",
+      "developers/built-in-functions",
       "developers/account-storage",
       "developers/esdt-tokens",
       "developers/nft-tokens",
