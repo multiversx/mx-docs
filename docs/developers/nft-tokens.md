@@ -148,6 +148,22 @@ The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
 
 
+### **Converting an SFT into Meta-ESDT**
+
+An already existing *semi-fungible token* can be converted into a Meta-ESDT token if the owner sends the following transaction:
+
+```
+ConvertSftToMetaESDTTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "changeSFTToMetaESDT" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <number of decimals in hexadecimal encoding>
+}
+```
+
 ## **Parameters format**
 
 Token Name:
