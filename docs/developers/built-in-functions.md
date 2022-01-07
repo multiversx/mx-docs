@@ -5,7 +5,10 @@ title: Built-In Functions
 
 ## **Introduction**
 
-Elrond protocol has a set of built-in functions. A built-in function is a special function that is treated by a system smart contract. 
+Elrond protocol has a set of built-in functions. A built-in function is a special protocol-side function that doesn't 
+require a specific smart contract address as receiver of the transaction. When such a function is called via a transaction,
+built-in handlers are triggered and will execute it. 
+
 Calls to these functions are considered `built-in function calls` and are treated different than other smart contract calls.
 
 This documentation is subject to change, but at the time of writing, the current built-in functions were:
