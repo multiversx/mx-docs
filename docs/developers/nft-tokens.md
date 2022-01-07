@@ -5,6 +5,7 @@ title: NFT tokens
 
 ## **Introduction**
 
+### NFT and SFT
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
 This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
@@ -14,6 +15,12 @@ Once owning a quantity of a NFT/SFT, users will have their data store directly u
 - set roles to the address that will create the NFT/SFTs
 - create the NFT/SFT
 - transfer quantity(es)
+
+### Meta ESDT
+
+In addition to NFTs and SFTs, Elrond introduced Meta ESDTs.
+Meta ESDTs are a special case of semi-fungible-tokens. They can be seen as regular ESDT fungible tokens that also have properties.
+In a particular example, LKMEX is a Meta ESDT and its properties help implement the release schedule.
 
 ## **Issuance of Non-Fungible Tokens**
 
@@ -45,7 +52,11 @@ IssuanceTransaction {
           "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
-          "@" + <"canTransferNFTCreateRole" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
+          "@" + <"canTransferNFTCreateRole" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          ...
 }
 ```
 
@@ -82,12 +93,60 @@ IssuanceTransaction {
           "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
-          "@" + <"canTransferNFTCreateRole" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
+          "@" + <"canTransferNFTCreateRole" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          ...
 }
 ```
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
+
+## **Issuance of Meta-ESDT Tokens**
+
+One has to perform an issuance transaction in order to register a Meta-ESDT token.
+Meta-ESDT Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
+
+```
+IssuanceTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
+    Data: "registerMetaESDT" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
+          "@" + <number of decimals in hexadecimal encoding>
+}
+```
+
+Optionally, the properties can be set when issuing a token. Example:
+```
+IssuanceTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
+    Data: "registerMetaESDT" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
+          "@" + <number of decimals in hexadecimal encoding>
+          "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canTransferNFTCreateRole" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
+          ...
+}
+```
+
+The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
+The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
+
 
 ## **Parameters format**
 
