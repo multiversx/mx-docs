@@ -364,17 +364,11 @@ To see see more about the fields that are needed, please refer to [this](/develo
 Note that because NFTs are stored in accounts trie, every transaction involving the NFT will require a gas limit depending on NFT data size.
 :::
 
-For nft creation we have two scenarios:
+Most of the times you will be able to create the NFTs by issuing one single transaction.
+This assumes the metadata file as well as the NFT media is already uploaded to IPFS.
 
-Scenario 1: Create the nft off chain
-- The user triggers the nft creation, chooses what metadata  should have
-- Add the metadata.json to IPFS and get the hash (see more [here](/developers/nft-tokens#nftsft-fields) about the metadata file)
-- Use the hash to reference the metadata in attributes fields
-- Send the transaction
-
-Scenario 2: Create the nft on chain
-- The nft is created on chain
-- The metadata.json is generated and then added to the NFT via [ESDTNFTUpdateAttributesTransaction](/developers/nft-tokens#upgrade-nft-properties)
+There are times however when uploading the metadata file before issuing the NFT is not possible (eg. when issued from a smart contract)
+In this cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction [here](/developers/nft-tokens#change-nft-attributes) you can find more information about how to update the attributes
 
 ## **Other management operations**
 
