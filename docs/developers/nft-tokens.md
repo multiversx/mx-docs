@@ -7,7 +7,7 @@ title: NFT tokens
 
 ### NFT and SFT
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
-This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI.
+This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, as well as an assignable URI.
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
@@ -324,7 +324,7 @@ Below you can find a table representing an example of the fields for a non-fungi
 |**Quantity**| 1 | 01|
 |**Royalties**| 7500 *=75%* | 1d4c |
 |**Hash** | 00 | 00 |
-|**Attributes**| metadata:*ipfsCID/song.json*;tags:myTag1,myTag2,myTag3 |  6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a6d79546167312c6d79546167322c6d7954616733 |
+|**Attributes**| metadata:*ipfsCID/song.json*;tags:song,beautiful,music |  6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963 |
 |**URI**| *URL_to_decentralized_storage/song.mp3* | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
 
 In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
@@ -634,7 +634,7 @@ Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You
 
 **Step 4: Create NFT**
 
-Fill all the attributes as you think.
+To see more information regarding the fields used in this example you can go [here](/developers/esdt-tokens#example).
 
 ```
 {
@@ -643,13 +643,13 @@ Fill all the attributes as you think.
     Value: 0
     GasLimit: 60000000
     Data: "ESDTNFTCreate" +
-          "@414c432d317132773365" +   # previously fetched token identifier
-          "@" + <initial quantity in hexadecimal encoding> +
-          "@" + <NFT name in hexadecimal econding> +
-          "@" + <Royalties in hexadecimal encoding> +
-          "@" + <Hash in hexadecimal encoding> +
-          "@" + <Attributes in hexadecimal encoding> +
-          "@" + <URI in hexadecimal encoding> +
+          "@414c432d317132773365" +  # previously fetched token identifier
+          "@01" + # quantity: 1
+          "@42656175746966756c20736f6e67" + # NFT name: 'Beautiful song' in hexadecimal encoding
+          "@1d4c" + # Royalties: 7500 =75%c in hexadecimal encoding
+          "@00" + # Hash: 00 in hexadecimal encoding
+          "@6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963" + # Attributes: metadata:ipfsCID/song.json;tags:song,beautiful,music	 in hexadecimal encoding> +
+          "@55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033" + # URI: URL_to_decentralized_storage/song.mp3 in hexadecimal encoding> +
           "@" + <URI in hexadecimal encoding> +
 }
 ```
