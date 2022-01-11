@@ -7,7 +7,7 @@ title: NFT tokens
 
 ### NFT and SFT
 The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
-This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI. 
+This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, such as a changeable URI.
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
@@ -24,7 +24,7 @@ In a particular example, LKMEX is a Meta ESDT and its properties help implement 
 
 ## **Issuance of Non-Fungible Tokens**
 
-One has to perform an issuance transaction in order to register a non-fungible token. 
+One has to perform an issuance transaction in order to register a non-fungible token.
 Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
 ```
@@ -205,11 +205,15 @@ The existing roles are:
 For NFT:
 * ESDTRoleNFTCreate : this role allows one to create a new NFT
 * ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
+* ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
+* ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
 
 For SFT:
 * ESDTRoleNFTCreate : this role allows one to create a new SFT
 * ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
 * ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
+* ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
+* ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
 
 To see how roles can be assigned, please refer to [this](/developers/nft-tokens#assigning-roles) section.
 
@@ -295,7 +299,7 @@ Please note that each argument must be encoded in hexadecimal format with an eve
 :::
 
 ### **Supported Media Types**
-Below you can find a table with the supported media types for NFTs available on Elrond network. 
+Below you can find a table with the supported media types for NFTs available on Elrond network.
 |**Media Extension**|**Media Type**|
 |-------------------|--------------|
 |.png|image/png|
@@ -316,7 +320,7 @@ Below you can find a table with the supported media types for NFTs available on 
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
 | Property | Plain value | Encoded value |
 |----------|-------------|---------------|
-|**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 | 
+|**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 |
 |**Quantity**| 1 | 01|
 |**Royalties**| 7500 *=75%* | 1d4c |
 |**Hash** | 00 | 00 |
@@ -354,13 +358,27 @@ Additional gas refers to:
 - Transaction payload cost: Data field length * 1500 (GasPerDataByte = 1500)
 - Storage cost: Size of NFT data * 50000 (StorePerByte = 50000)
 
+To see see more about the fields that are needed, please refer to [this](/developers/nft-tokens#nftsft-fields) section.
+
 :::tip
 Note that because NFTs are stored in accounts trie, every transaction involving the NFT will require a gas limit depending on NFT data size.
 :::
 
+For nft creation we have two scenarios:
+
+Scenario 1: Create the nft off chain
+- The user triggers the nft creation, chooses what metadata  should have
+- Add the metadata.json to IPFS and get the hash (see more [here](/developers/nft-tokens#nftsft-fields) about the metadata file)
+- Use the hash to reference the metadata in attributes fields
+- Send the transaction
+
+Scenario 2: Create the nft on chain
+- The nft is created on chain
+- The metadata.json is generated and then added to the NFT via [ESDTNFTUpdateAttributesTransaction](/developers/nft-tokens#upgrade-nft-properties)
+
 ## **Other management operations**
 
-### **Transfer NFT Creation Role** 
+### **Transfer NFT Creation Role**
 
 :::tip
 This role can be transferred only if the `canTransferNFTCreateRole` property of the token is set to `true`.
@@ -375,8 +393,8 @@ TransferCreationRoleTransaction {
     GasLimit: 60000000 + length of Data field in bytes * 1500
     Data: "transferNFTCreateRole" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the address to transfer the role from in hexadecimal encoding> + 
-          "@" + <the address to transfer the role to in hexadecimal encoding> 
+          "@" + <the address to transfer the role from in hexadecimal encoding> +
+          "@" + <the address to transfer the role to in hexadecimal encoding>
 }
 ```
 
@@ -395,6 +413,51 @@ StopNFTCreationTransaction {
           "@" + <token identifier in hexadecimal encoding> +
 }
 ```
+
+### **Change NFT Attributes**
+
+A user that has the `ESDTRoleNFTUpdateAttributes` role set for a given ESDT, can change the attributes of a given NFT/SFT.
+
+:::tip
+`ESDTNFTUpdateAttributes` will remove the old attributes and add the new ones. Therefore, if you want to keep the old attributes you will have to pass them along with the new ones.
+:::
+This is done by performing a transaction like this:
+
+```
+ESDTNFTUpdateAttributesTransaction {
+    Sender: <address of an address that has ESDTRoleNFTUpdateAttributes role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 10000000
+    Data: "ESDTNFTUpdateAttributes" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <Attributes in hexadecimal encoding>
+}
+```
+To see how you can assign this role in case it is not set, please refer to [this](/developers/nft-tokens#assigning-roles) section.
+
+
+### **Add URIs to NFT**
+
+A user that has the `ESDTRoleNFTAddURI` role set for a given ESDT, can add uris to a given NFT/SFT.
+This is done by performing a transaction like this:
+
+```
+ESDTNFTAddURITransaction {
+    Sender: <address of an address that has ESDTRoleNFTAddURI role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 10000000
+    Data: "ESDTNFTAddURI" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <URI in hexadecimal encoding> +
+          "@" + <URI in hexadecimal encoding> +
+          ...
+}
+```
+To see how you can assign this role in case it is not set, please refer to [this](/developers/nft-tokens#assigning-roles) section.
 
 ### **Add quantity (SFT only)**
 
@@ -484,7 +547,7 @@ WipeTransaction {
 ```
 
 ### **Upgrading (changing properties)**
-The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable. 
+The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable.
 Check the [ESDT - Upgrading (changing properties)](/developers/esdt-tokens#upgrading-changing-properties) section for more details.
 
 
@@ -500,7 +563,7 @@ TransferTransaction {
     GasLimit: 1000000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the NFT nonce in hexadecimal encoding> + 
+          "@" + <the NFT nonce in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding>
 }
@@ -518,12 +581,12 @@ TransferTransaction {
     GasLimit: 1000000 + extra for smart contract call
     Data: "ESDTNFTTransfer" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the nonce after the NFT creation in hexadecimal encoding> + 
+          "@" + <the nonce after the NFT creation in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
-          "@" + <destination address in hexadecimal encoding> + 
+          "@" + <destination address in hexadecimal encoding> +
           "@" + <name of method to call in hexadecimal encoding> +
           "@" + <first argument of the method in hexadecimal encoding> +
-          "@" + <second argument of the method in hexadecimal encoding> + 
+          "@" + <second argument of the method in hexadecimal encoding> +
           <...>
 }
 ```
@@ -615,7 +678,7 @@ It can be fetched by viewing all the tokens for the address via API.
     GasLimit: 500000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@414c432d317132773365" +   # previously fetched token identifier
-          "@" + <the nonce saved above in hexadecimal encoding> + 
+          "@" + <the nonce saved above in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding>
 }
@@ -671,7 +734,7 @@ https://gateway.elrond.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
-Returns the identifiers of the tokens that have been registered by the provided address. 
+Returns the identifiers of the tokens that have been registered by the provided address.
 
 ```
 https://gateway.elrond.com/address/<bech32Address>/registered-nfts
