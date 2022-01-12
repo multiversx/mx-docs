@@ -1,4 +1,8 @@
-## Maiar Web Wallet Extension
+---
+id: wallet-extension
+title: Maiar Web Wallet Extension
+---
+
 
 Popularly referred to as the "future of money," Maiar DeFi Wallet now has a robust web extension. Maiar DeFi Wallet is a powerful Elrond web wallet extension that effectively automates interactions with Elrond Distributed apps and interacts with Maiar Dex. The Maiar DeFi Wallet enables users to store Elrond tokens such as EGLD and ESDT on the Elrond network.
 
@@ -33,9 +37,9 @@ Let’s walk through the steps how to install and set up the Maiar DeFi Wallet e
 ***Completed successfully!***
 
 
-### Key features
+## Key features
 
-**Send to a wallet**
+### Send to a wallet
 
 With this extension installed, you can send to a wallet from your web browser without having to enter your password, which is a key feature of the Maiar DeFi wallet extension.
 
@@ -45,13 +49,13 @@ Click on "*Send*." Add the wallet address, amount, and data.
 
 ![send](https://user-images.githubusercontent.com/52820835/149160123-225a3514-de4d-4460-9626-0cc2484e67eb.PNG)
 
-**Deposit**
+### Deposit to wallet
 
 To deposit into a wallet, click on "*deposit*" and share your QR code or wallet.
 
 ![deposit](https://user-images.githubusercontent.com/52820835/149159864-0afe7e5f-12f6-4156-911a-8de035d97125.PNG)
 
-**Transcation history**
+### Transcation history
 
 The Maiar DeFi wallet has a record of every transaction history that comes in and out of your wallet.
 
