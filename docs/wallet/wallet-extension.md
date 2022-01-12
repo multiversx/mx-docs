@@ -6,24 +6,25 @@ The Maiar Defi Wallet can be installed on Chrome, Brave, and other chromium-base
 
 Let’s walk through the steps how to install and set up the Maiar DeFi Wallet extension:
 
-1. On the [Chrome Web Store Extension](https://chrome.google.com/webstore/category/extensions), search for ***Maiar DeFi Wallet.***
-2. Next, add *Maiar DeFi Wallet* to the extension.
+* On the [Chrome Web Store Extension](https://chrome.google.com/webstore/category/extensions), search for ***Maiar DeFi Wallet.***
+* Next, add *Maiar DeFi Wallet* to the extension.
 
 ![maiar](https://user-images.githubusercontent.com/52820835/149158383-b46146ec-3dde-44d4-9ee2-1e8b3ac9bcdf.PNG)
 
-1. Once it has been successfully installed, click on the extension to get started.
-2. You will be served two options: you can either *Create new wallet* or *Import existing wallet.*
+* Once it has been successfully installed, click on the extension to get started.
+* You will be served two options: you can either *Create new wallet* or *Import existing wallet.*
 ![welcomepage](https://user-images.githubusercontent.com/52820835/149158668-5e6cdac6-d5da-4d36-96c6-0c8912d8c897.PNG)
-4. We will be creating a new wallet. Click on "*Create new wallet."* However, if you have an existing wallet, click on *Import existing wallet*. 
-5. A list of secret phrases will be displayed. Copy this phrase and agree to the instruction below. 
+* We will be creating a new wallet. Click on "*Create new wallet."* However, if you have an existing wallet, click on *Import existing wallet*. 
+* A list of secret phrases will be displayed. Copy this phrase and agree to the instruction below.
+> **Note**: These secret phrases should be kept confidential and not revealed to anyone.
 
 ![secretphrase](https://user-images.githubusercontent.com/52820835/149158911-733ecf91-8928-4d63-9c9f-7a0e87f48ffa.PNG)
 
-5. For security purposes, you will be prompted to input some of the secret phrases.
+* For security purposes, you will be prompted to input some of the secret phrases.
 
 ![authentication](https://user-images.githubusercontent.com/52820835/149158988-a0c9ca0a-0058-46b7-920d-daf7a3618366.PNG)
 
-6. Next, create a new password and confirm your password.
+* Next, create a new password and confirm your password.
 
 ![password](https://user-images.githubusercontent.com/52820835/149159515-580832a6-8e6a-4396-8477-8dbb38de1ce4.PNG)
 
