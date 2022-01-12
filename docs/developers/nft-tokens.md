@@ -340,7 +340,7 @@ NFTCreationTransaction {
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 6000000 + Additional gas (see below)
+    GasLimit: 3000000 + Additional gas (see below)
     Data: "ESDTNFTCreate" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <initial quantity in hexadecimal encoding> +
@@ -358,17 +358,17 @@ Additional gas refers to:
 - Transaction payload cost: Data field length * 1500 (GasPerDataByte = 1500)
 - Storage cost: Size of NFT data * 50000 (StorePerByte = 50000)
 
-To see see more about the fields that are needed, please refer to [this](/developers/nft-tokens#nftsft-fields) section.
+To see more about the required fields, please refer to [this](/developers/nft-tokens#nftsft-fields) section.
 
 :::tip
 Note that because NFTs are stored in accounts trie, every transaction involving the NFT will require a gas limit depending on NFT data size.
 :::
 
 Most of the times you will be able to create the NFTs by issuing one single transaction.
-This assumes the metadata file as well as the NFT media is already uploaded to IPFS.
+This assumes that the metadata file as well as the NFT media is already uploaded to IPFS.
 
-There are times however when uploading the metadata file before issuing the NFT is not possible (eg. when issued from a smart contract)
-In this cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction [here](/developers/nft-tokens#change-nft-attributes) you can find more information about how to update the attributes
+There are times, however, when uploading the metadata file before issuing the NFT is not possible (eg. when issued from a smart contract)
+In these cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction. You can find more information [here](/developers/nft-tokens#change-nft-attributes) about how to update the attributes
 
 ## **Other management operations**
 
@@ -410,7 +410,7 @@ StopNFTCreationTransaction {
 
 ### **Change NFT Attributes**
 
-A user that has the `ESDTRoleNFTUpdateAttributes` role set for a given ESDT, can change the attributes of a given NFT/SFT.
+An user that has the `ESDTRoleNFTUpdateAttributes` role set for a given ESDT, can change the attributes of a given NFT/SFT.
 
 :::tip
 `ESDTNFTUpdateAttributes` will remove the old attributes and add the new ones. Therefore, if you want to keep the old attributes you will have to pass them along with the new ones.
@@ -434,7 +434,7 @@ To see how you can assign this role in case it is not set, please refer to [this
 
 ### **Add URIs to NFT**
 
-A user that has the `ESDTRoleNFTAddURI` role set for a given ESDT, can add uris to a given NFT/SFT.
+An user that has the `ESDTRoleNFTAddURI` role set for a given ESDT, can add uris to a given NFT/SFT.
 This is done by performing a transaction like this:
 
 ```
@@ -540,9 +540,14 @@ WipeTransaction {
 }
 ```
 
+### **Transferring token management rights**
+
+The manager of an ESDT token can transfer the ownership if the ESDT was created as upgradable. Check the [ESDT - Upgrading (changing properties)](/developers/esdt-tokens#upgrading-changing-properties) section for more details.
+
+
 ### **Upgrading (changing properties)**
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable.
-Check the [ESDT - Upgrading (changing properties)](/developers/esdt-tokens#upgrading-changing-properties) section for more details.
+Check the [ESDT - Transferring token management rights](/developers/esdt-tokens#transferring-token-management-rightss) section for more details.
 
 
 ## **Transfers**
@@ -634,14 +639,14 @@ Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You
 
 **Step 4: Create NFT**
 
-To see more information regarding the fields used in this example you can go [here](/developers/esdt-tokens#example).
+Now, the NFT creation transaction for the example case defined [here](/developers/esdt-tokens#example) looks like this:
 
 ```
 {
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 60000000
+    GasLimit: 3000000
     Data: "ESDTNFTCreate" +
           "@414c432d317132773365" +  # previously fetched token identifier
           "@01" + # quantity: 1
@@ -650,7 +655,7 @@ To see more information regarding the fields used in this example you can go [he
           "@00" + # Hash: 00 in hexadecimal encoding
           "@6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963" + # Attributes: metadata:ipfsCID/song.json;tags:song,beautiful,music	 in hexadecimal encoding> +
           "@55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033" + # URI: URL_to_decentralized_storage/song.mp3 in hexadecimal encoding> +
-          "@" + <URI in hexadecimal encoding> +
+          "@" + <additional optional URI in hexadecimal encoding> +
 }
 ```
 
@@ -669,7 +674,7 @@ It can be fetched by viewing all the tokens for the address via API.
     Sender: <your address>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 500000 + length of Data field in bytes * 1500
+    GasLimit: 1000000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@414c432d317132773365" +   # previously fetched token identifier
           "@" + <the nonce saved above in hexadecimal encoding> +
