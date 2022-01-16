@@ -142,7 +142,7 @@ TransferTransaction {
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 
 - the receiver can be any account (which may or may not be a smart contract)
-- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `250000`
+- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `500000`
 - the Data field contains what appears to be a smart contract method invocation with arguments, but this invocation never reaches the VM: the string `ESDTTransfer` is reserved by the protocol and is handled as a built-in function, not as a smart contract call
 
 Following the example from earlier, assuming that the token identifier is `414c432d363235386432`, a transfer from Alice to another user, Bob, would look like this:
@@ -272,8 +272,7 @@ The manager of an ESDT token has a number of operations at their disposal, which
 ### **Minting**
 
 :::tip
-On Mainnet, starting with epoch 432, global mint is disabled so one has to use local mint instead. 
-Therefore, `localMint` function has to be used instead of `mint`.
+On Mainnet, starting with epoch 432, global mint is disabled so one has to use local mint instead.  
 :::
 
 The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
@@ -284,7 +283,7 @@ MintTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 60000000
-    Data: "localMint" +
+    Data: "mint" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <new supply in hexadecimal encoding>
 }
@@ -294,11 +293,24 @@ Following this transaction, the total supply of tokens is increased by the new s
 
 This operation requires that the option `canMint` is set to `true` for the token.
 
+Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:  
+
+```
+LocalMintTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 300000
+    Data: "ESDTLocalMint" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <new supply in hexadecimal encoding>
+}
+```
+
 ### **Burning**
 
 :::tip
 On Mainnet, starting with epoch 432, global burn is disabled so one has to use local burn instead.
-Therefore, `localBurn` function has to be used instead of `ESDTBurn`.
 :::
 
 Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
@@ -309,7 +321,7 @@ BurnTransaction {
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 60000000
-    Data: "localBurn" +
+    Data: "ESDTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <supply to burn in hexadecimal encoding>
 }
@@ -318,6 +330,20 @@ BurnTransaction {
 Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
 This operation requires that the option `canBurn` is set to `true` for the token.
+
+Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:  
+
+```
+LocalBurnTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 300000
+    Data: "ESDTLocalBurn" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <new supply in hexadecimal encoding>
+}
+```
 
 ### **Pausing and Unpausing**
 

@@ -386,7 +386,7 @@ You need to understand the contents of this JSON file - again, the importance of
 
 ### **So what just happened?**
 
-You ran a testing command which interpreted a JSON scenario. Line number 2 contains the name of this scenario, namely `crowdfunding deployment test`. This test was executed in an isolated environment, which contains the Arwen WASM VM and a simulated blockchain. It's as close to the real Elrond Network as you can get — save from running your own local testnet, of course, but you don't need to think about that right now.
+You ran a testing command which interpreted a JSON scenario. Line number 2 contains the name of this scenario, namely `crowdfunding deployment test`. This test was executed in an isolated environment, which contains the Elrond WASM VM and a simulated blockchain. It's as close to the real Elrond Network as you can get — save from running your own local testnet, of course, but you don't need to think about that right now.
 
 A scenario has steps, which will be executed in the sequence they appear in the JSON file. Observe on line 3 that the field `steps` is a JSON list, containing three scenario steps.
 
@@ -478,7 +478,7 @@ Once the testing environment executes the deployment transaction described above
 }
 ```
 
-The only important field here is `"status": "0"`, which is the actual return code coming from the Arwen VM after it executed the deployment transaction. `0` means success, of course.
+The only important field here is `"status": "0"`, which is the actual return code coming from the Elrond VM after it executed the deployment transaction. `0` means success, of course.
 
 The `out` array would contain values returned by your smart contract call (in this case, the `init` function doesn't return anything, but it could if the developer wanted).
 

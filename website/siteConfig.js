@@ -137,7 +137,7 @@ const siteConfig = {
     {
       title: "Learn How Elrond Works",
       content:
-        "Explore Adaptive state sharding, Secure Proof of Stake, and the Arwen VM.",
+        "Explore Adaptive state sharding, Secure Proof of Stake, and the Elrond WASM VM.",
       docName: "technology/architecture-overview",
       icon: "🔬",
     },

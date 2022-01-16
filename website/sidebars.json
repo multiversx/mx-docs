@@ -1,6 +1,8 @@
 {
   "docs": {
-    "Welcome to Elrond": ["welcome/welcome-to-elrond"],
+    "Welcome to Elrond": [
+      "welcome/welcome-to-elrond"
+    ],
     "Technology": [
       "technology/architecture-overview",
       "technology/glossary",
@@ -8,10 +10,14 @@
       "technology/chronology",
       "technology/secure-proof-of-stake",
       "technology/adaptive-state-sharding",
-      "technology/the-arwen-wasm-vm",
+      "technology/the-elrond-wasm-vm",
       "technology/cross-shard-transactions"
     ],
-    "Wallet": ["wallet/web-wallet", "wallet/webhooks", "wallet/ledger"],
+    "Wallet": [
+      "wallet/web-wallet",
+      "wallet/webhooks",
+      "wallet/ledger"
+    ],
     "Validators": [
       "validators/overview",
       "validators/system-requirements",
@@ -102,23 +108,28 @@
         "ids": [
           "developers/developer-reference/elrond-serialization-format",
           "developers/developer-reference/elrond-wasm-annotations",
+          "developers/developer-reference/elrond-wasm-modules",
           "developers/developer-reference/elrond-wasm-contract-calls",
           "developers/developer-reference/smart-contract-developer-best-practices",
-          "developers/developer-reference/elrond-wasm-api-functions"
+          "developers/developer-reference/code-metadata",
+          "developers/developer-reference/elrond-wasm-api-functions",
+          "developers/developer-reference/rust-testing-framework",
+          "developers/developer-reference/random-numbers-in-smart-contracts"
         ]
       },
-	  {
+      {
         "type": "subcategory",
         "label": "Mandos tests reference",
         "ids": [
-			"developers/mandos-reference/overview",
-			"developers/mandos-reference/structure",
-			"developers/mandos-reference/values-simple",
-			"developers/mandos-reference/values-complex",
-			"developers/mandos-reference/embed"
-		]
-	  },
+          "developers/mandos-reference/overview",
+          "developers/mandos-reference/structure",
+          "developers/mandos-reference/values-simple",
+          "developers/mandos-reference/values-complex",
+          "developers/mandos-reference/embed"
+        ]
+      },
       "developers/constants",
+      "developers/built-in-functions",
       "developers/account-storage",
       "developers/esdt-tokens",
       "developers/nft-tokens",

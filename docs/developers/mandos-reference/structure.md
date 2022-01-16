@@ -279,8 +279,8 @@ Simply prints the entire state of the blockchain mock to the console.
             "tx": {
                 "from": "address:sender",
                 "to": "sc:contract",
-                "value": "0",
-                "esdt": [
+                "egldValue": "0",
+                "esdtValue": [
                     {
                         "tokenIdentifier": "str:MYFUNGIBLE-000001",
                         "value": "250,000,000,000"
@@ -333,8 +333,8 @@ This step simulates a transaction to an existing smart contract. Fields:
 - `tx` - specifies the details of the transaction.
   - `from` - account must exist in the blockchain mock
   - `to` - account must exist in the blockchain mock and must be a smart contract
-  - `value` - how much EGLD to transfer as part of the call. Only payable functions will accept this kind of payment.
-  - `esdt` - a list of ESDT tokens to transfer as part of the call. Cannot transfer both EGLD and ESDT at the same time. Each transferred item has the following fields:
+  - `egldValue` - how much EGLD to transfer as part of the call. Only payable functions will accept this kind of payment.
+  - `esdtValue` - a list of ESDT tokens to transfer as part of the call. Cannot transfer both EGLD and ESDT at the same time. Each transferred item has the following fields:
     - `tokenIdentifier` - the ESDT token unique identifier
     - `nonce` - NFT/SFT token nonce. For fungible tokens the nonce is 0 and this field can be omitted.
     - `value` - amount to transfer
@@ -471,8 +471,8 @@ Lesser used step type. Simulates a simple transfer of EGLD between two accounts,
             "tx": {
                 "from": "address:sender",
                 "to": "address:receiver",
-                "value": "0",
-                "esdt": [
+                "egldValue": "0",
+                "esdtValue": [
                     {
                         "tokenIdentifier": "str:MYFUNGIBLE-000001",
                         "value": "250,000,000,000"
@@ -496,8 +496,8 @@ The fields are:
 - `tx`
   - `from` - same as `scCall`/`scDeploy`
   - `to` - same as `scCall`
-  - `value` - EGLD value
-  - `esdt` - same as `scCall`
+  - `egldValue` - EGLD value
+  - `esdtValue` - same as `scCall`
 
 
 

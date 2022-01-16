@@ -12,7 +12,7 @@ In order to view the current configuration, one can issue the command `erdpy con
     "proxy": "https://gateway.elrond.com",
     "txVersion": "1",
     "dependencies.llvm.tag": "v...",
-    "dependencies.arwentools.tag": "v...",
+    "dependencies.vmtools.tag": "v...",
     "chainID": "...",
     "dependencies.rust.tag": ""
 }

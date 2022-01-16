@@ -35,7 +35,7 @@ The deadline being a block nonce can be expressed as a regular 64-bits unsigned 
 
 Try to avoid the signed version as much as possible (unless negative values are really possible and needed). There are some caveats with BigInt argument serialization that can lead to subtle bugs.
 
-Also note that BigUint logic does not reside in the contract, but is built into Arwen's API, to not bloat the contract code.
+Also note that BigUint logic does not reside in the contract, but is built into the Elrond VM API, to not bloat the contract code.
 
 Let's test that initialization works.
 
