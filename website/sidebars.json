@@ -15,6 +15,7 @@
     ],
     "Wallet": [
       "wallet/web-wallet",
+      "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger"
     ],
