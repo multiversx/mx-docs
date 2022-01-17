@@ -29,7 +29,6 @@ fn main() {
     let code_blocks = extract_crowdfunding_tutorial_code_blocks();
     for code_block in &code_blocks {
         if let Some(filename) = code_block.filename() {
-            println!("{}", filename.as_str());
             match filename.as_str() {
                 "Cargo.toml" => write_code_block("../crowdfunding-esdt/Cargo.toml", code_block),
                 "final.rs" => write_code_block("../crowdfunding-esdt/src/crowdfunding_main.rs", code_block),

@@ -1,0 +1,20 @@
+name: Builds and tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  rust_test:
+    name: Rust tutorial code test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          default: true
+          toolchain: nightly
+      - name: Run rust tests
+        run: ./rust-tutorial-ci.sh
