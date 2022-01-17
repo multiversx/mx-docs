@@ -15,7 +15,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 ### Add Maiar DeFi Wallet to your browser
 
 * On the [Chrome Web Store Extension](https://chrome.google.com/webstore/category/extensions), search for **Maiar DeFi Wallet.** and add it to your browser,
-  ![maiar](/wallet/wallet-extension/wallet_extension_step1.png)
+  ![maiar-defi-chrome](/wallet/wallet-extension/wallet_extension_step1.png)
 
 * Confirm the action in the pop-up.
   ![maiar-defi-install](/wallet/wallet-extension/wallet_extension_step2.png)
@@ -26,22 +26,24 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 ### Set up Maiar DeFi wallet
 * Once it has been successfully installed, click on the extension to get started.
 * You will be served two options: you can either *Create new wallet* or *Import existing wallet.*
-![welcomepage](/wallet/wallet-extension/wallet_extension_step4.png)
+
+![maiar-defi-example-welcomepage](/wallet/wallet-extension/wallet_extension_step4.png)
+
 * We will be creating a new wallet. Click on "*Create new wallet"*. However, if you have an existing wallet, click on *Import existing wallet*. 
 * A list of secret phrases will be displayed. Copy this phrase and agree to the instruction below.
 > **Note**: These secret phrases should be kept confidential and not revealed to anyone.
 
-![secretphrase](/wallet/wallet-extension/wallet_extension_step5.png)
+![maiar-defi-example-secretphrase](/wallet/wallet-extension/wallet_extension_step5.png)
 
 * For security purposes, you will be prompted to input some of the secret words.
 
-![authentication](/wallet/wallet-extension/wallet_extension_step6.png)
+![maiar-defi-example-authentication](/wallet/wallet-extension/wallet_extension_step6.png)
 
 * Next, create a new password and confirm your password.
 
-![password](/wallet/wallet-extension/wallet_extension_step7.png)
+![maiar-defi-example-password](/wallet/wallet-extension/wallet_extension_step7.png)
 
-![successful](/wallet/wallet-extension/wallet_extension_step8.png)
+![maiar-defi-example-successful](/wallet/wallet-extension/wallet_extension_step8.png)
 
 **Completed successfully!**
 
@@ -52,23 +54,23 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 With this extension installed, you can send to a wallet from your web browser without having to enter your password, which is a key feature of the Maiar DeFi wallet extension.
 
-![transaction](/wallet/wallet-extension/wallet_extension_step9.png)
+![maiar-defi-example-transaction](/wallet/wallet-extension/wallet_extension_step9.png)
 
 Click on "*Send*." Add the wallet address, amount, and data.
 
-![send](/wallet/wallet-extension/wallet_extension_step10.png)
+![maiar-defi-example-send](/wallet/wallet-extension/wallet_extension_step10.png)
 
 ### Deposit to wallet
 
 To deposit into a wallet, click on "*deposit*" and share your QR code or wallet.
 
-![deposit](/wallet/wallet-extension/wallet_extension_step11.png)
+![maiar-defi-example-deposit](/wallet/wallet-extension/wallet_extension_step11.png)
 
 ### Transactions history
 
 The Maiar DeFi wallet has a record of every transaction that comes in and out of your wallet.
 
-![transaction](/wallet/wallet-extension/wallet_extension_step12.png)
+![maiar-defi-example-transaction](/wallet/wallet-extension/wallet_extension_step12.png)
 
 ### Networks
 
