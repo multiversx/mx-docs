@@ -26,6 +26,7 @@ fn write_code_block<P: AsRef<Path>>(path: P, code_block: &CodeBlock) {
 
 fn main() {
     fs::create_dir_all("../crowdfunding-esdt/mandos").unwrap();
+    fs::create_dir_all("../crowdfunding-esdt/src").unwrap();
 
     let code_blocks = extract_crowdfunding_tutorial_code_blocks();
     for code_block in &code_blocks {
