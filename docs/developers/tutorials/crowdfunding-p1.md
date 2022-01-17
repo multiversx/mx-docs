@@ -91,23 +91,23 @@ authors = [ "you",]
 edition = "2018"
 
 [lib]
-path = "src/crowdfunding-main.rs"
+path = "src/crowdfunding_main.rs"
 
 [features]
 wasm-output-mode = [ "elrond-wasm-node",]
 
 [dependencies.elrond-wasm]
-version = "0.21.0"
+version = "0.25.0"
 
 [dependencies.elrond-wasm-derive]
-version = "0.21.0"
+version = "0.25.0"
 
 [dependencies.elrond-wasm-node]
-version = "0.21.0"
+version = "0.25.0"
 optional = true
 
 [dev-dependencies.elrond-wasm-debug]
-version = "0.21.0"
+version = "0.25.0"
 
 ```
 
@@ -115,7 +115,7 @@ Let's see what this means:
 
 - The package is unsurprisingly named `crowdfunding`, and has the version `0.0.1`. You can set any version you like, just make sure it has 3 numbers separated by dots. It's a requirement.
 - This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the Elrond Network, you'll need 3 special and very helpful packages, developed by Elrond.
-- The file `src/crowdfunding-main.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
+- The file `src/crowdfunding_main.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
 - The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
 # **Step 2: the code**
@@ -167,7 +167,7 @@ The `init` method of the Crowdfunding smart contract is currently empty. We'll a
 
 # **Step 3: the build**
 
-After creating the file `src/crowdfunding-main.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
+After creating the file `src/crowdfunding_main.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
 
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 
@@ -196,7 +196,7 @@ The structure of your folder should be like this (output printed by the command 
 │   ├── crowdfunding.hex
 │   └── crowdfunding.wasm
 ├── src
-│   └── crowdfunding-main.rs
+│   └── crowdfunding_main.rs
 └── wasm
     ├── Cargo.lock
     ├── Cargo.toml

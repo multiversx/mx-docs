@@ -32,7 +32,7 @@ fn main() {
             println!("{}", filename.as_str());
             match filename.as_str() {
                 "Cargo.toml" => write_code_block("../crowdfunding-esdt/Cargo.toml", code_block),
-                "final.rs" => write_code_block("../crowdfunding-esdt/src/lib.rs", code_block),
+                "final.rs" => write_code_block("../crowdfunding-esdt/src/crowdfunding_main.rs", code_block),
                 "crowdfunding-init.scen.json" => write_code_block(
                     "../crowdfunding-esdt/mandos/crowdfunding-init.scen.json",
                     code_block,

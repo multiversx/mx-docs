@@ -145,7 +145,7 @@ A few things to unpack:
 2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with #[payable]. Notice the `#[payment_amount] payment: BigUint` argument. This is not a real argument, but just syntactic sugar to pass the paid sum to the function.
 3. fund needs to also be explicitly declared as an endpoint. All `#[payable]`methods need to be marked `#[endpoint]`, but not the other way around.
 
-To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `test-fund.scen.json` .
+To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `crowdfunding-fund.scen.json` .
 
 To avoid duplicating the deployment code, we import it from `crowdfunding-init.scen.json` .
 
@@ -232,7 +232,7 @@ erdpy contract test
 You should then see that both tests pass:
 
 ```
-Scenario: test-fund.scen.json ...   ok
+Scenario: crowdfunding-fund.scen.json ...   ok
 Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 2. Failed: 0. Skipped: 0.
 SUCCESS
@@ -275,7 +275,7 @@ We'll create another test file to verify that the validation works: `test-fund-t
     "steps": [
         {
             "step": "externalSteps",
-            "path": "test-fund.scen.json"
+            "path": "crowdfunding-fund.scen.json"
         },
         {
             "step": "setState",
@@ -289,12 +289,7 @@ We'll create another test file to verify that the validation works: `test-fund-t
             "tx": {
                 "from": "address:donor1",
                 "to": "sc:crowdfunding",
-                "esdtValue": [
-                    {
-                        "tokenIdentifier": "str:CROWD-123456",
-                        "value": "10,000,000,000"
-                    }
-                ],
+                "egldValue": "10,000,000,000",
                 "function": "fund",
                 "arguments": [],
                 "gasLimit": "100,000,000",
@@ -312,13 +307,13 @@ We'll create another test file to verify that the validation works: `test-fund-t
 }
 ```
 
-We branch this time from `test-fund.scen.json`, where we already had a donor. Now the same donor wants to donate, again, but in the meantime the current block nonce has become 123,001, one block later than the deadline. The transaction fails with status 4 (user error - all errors from within the contract will return this status). The testing environment allows us to also check that the correct message was returned.
+We branch this time from `crowdfunding-fund.scen.json`, where we already had a donor. Now the same donor wants to donate, again, but in the meantime the current block nonce has become 123,001, one block later than the deadline. The transaction fails with status 4 (user error - all errors from within the contract will return this status). The testing environment allows us to also check that the correct message was returned.
 
 By building and testing the contract again, you should see that all three tests pass:
 
 ```
-Scenario: test-fund-too-late.scen.json ...   ok
-Scenario: test-fund.scen.json ...   ok
+Scenario: crowdfunding-fund-too-late.scen.json ...   ok
+Scenario: crowdfunding-fund.scen.json ...   ok
 Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 3. Failed: 0. Skipped: 0.
 SUCCESS
@@ -471,6 +466,7 @@ The only new function here is `self.send().direct()`, which simply forwards fund
 # **The final contract code**
 
 If you followed all the steps presented until now, you should have ended up with a contract that looks something like:
+
 
 ```rust,file=final.rs
 #![no_std]
