@@ -185,23 +185,26 @@ The following can be safely deleted, as they are not important for this contract
 - the `tests` folder
 - the `interaction` folder
 
-The structure of your folder should be like this (output printed by the command `tree -L 2`):
+The structure of your folder should be like this (output printed by the command `tree -L 3`):
 
-```
+```text
 .
 ├── Cargo.toml
 ├── mandos
 │   └── crowdfunding.scen.json
+├── meta
+│   ├── Cargo.toml
+│   └── src
+│       └── main.rs
 ├── output
 │   ├── crowdfunding.hex
 │   └── crowdfunding.wasm
 ├── src
 │   └── crowdfunding_main.rs
 └── wasm
-    ├── Cargo.lock
     ├── Cargo.toml
-    ├── src
-    └── target
+    └── src
+        └── lib.rs
 ```
 
 It's time to add some functionality to the `init` function now, because the next step will take you through a very important process: testing your smart contract.
@@ -282,9 +285,9 @@ Let's write a test against the `init` method, and make sure that it definitely s
 
 To test `init`, you will write a JSON file which describes what to do with the smart contract and what is the expected output. In the folder of the Crowdfunding smart contract, there is a folder called `mandos`. Inside it, there is a file called `crowdfunding.scen.json`. Rename that file to`crowdfunding-init.scen.json` ( `scen` is short for "scenario").
 
-Your folder should look like this (output from the command `tree -L 2`):
+Your folder should look like this (output from the command `tree -L 3`):
 
-```
+```text
 .
 ├── Cargo.toml
 ├── debug
@@ -292,6 +295,10 @@ Your folder should look like this (output from the command `tree -L 2`):
 │   └── src
 ├── mandos
 │   └── crowdfunding-init.scen.json
+├── meta
+│   ├── Cargo.toml
+│   └── src
+│       └── main.rs
 ├── output
 │   ├── crowdfunding.hex
 │   └── crowdfunding.wasm
