@@ -19,7 +19,8 @@ fn extract_crowdfunding_tutorial_code_blocks() -> Vec<CodeBlock> {
 }
 
 fn write_code_block<P: AsRef<Path>>(path: P, code_block: &CodeBlock) {
-    let mut file = File::create(path).unwrap();
+    let mut file = File::create(path.as_ref())
+        .unwrap_or_else(|e| panic!("could not create file: {} {:?}", e, path.as_ref()));
     file.write_all(code_block.content().as_bytes()).unwrap();
 }
 
@@ -31,7 +32,9 @@ fn main() {
         if let Some(filename) = code_block.filename() {
             match filename.as_str() {
                 "Cargo.toml" => write_code_block("../crowdfunding-esdt/Cargo.toml", code_block),
-                "final.rs" => write_code_block("../crowdfunding-esdt/src/crowdfunding_main.rs", code_block),
+                "final.rs" => {
+                    write_code_block("../crowdfunding-esdt/src/crowdfunding_main.rs", code_block)
+                }
                 "crowdfunding-init.scen.json" => write_code_block(
                     "../crowdfunding-esdt/mandos/crowdfunding-init.scen.json",
                     code_block,
