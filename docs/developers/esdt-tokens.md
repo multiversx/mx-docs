@@ -532,6 +532,22 @@ UpgradingTransaction {
 }
 ```
 
+## **Branding**
+
+Anyone can create an ESDT token on Elrond Network. There are also no limits in tokens names or tickers. For example,
+one issues an `AliceToken` with the ticker `ALC`. Anyone else is free to create a new token with the same token name and
+the same token ticker. The only difference will be the random sequence of the token identifier. So the "original" token 
+could have received the random sequence `1q2w3e` resulting in the `ALC-1q2w3e` identifier, while the second token could 
+have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`. 
+
+In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a 
+branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens.
+An example of a branded token is MEX, the Maiar Exchange's token. Elrond products such as Explorer, Wallet and so on 
+will display tokens in accordance to their branding, if any. 
+
+A token owner can submit a branding request by opening a Pull Request on [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets).
+Please follow the instructions and the template from the README inside that repository.
+
 ## **Rest API**
 
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
