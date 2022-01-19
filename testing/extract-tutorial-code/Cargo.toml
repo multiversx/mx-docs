@@ -1,0 +1,13 @@
+[package]
+name = "extract-tutorial-code"
+version = "0.0.0"
+authors = ["Andrei Marinica <andrei.marinica@elrond.com>"]
+edition = "2018"
+
+[[bin]]
+name = "extract-tutorial-code"
+path = "src/extract_code.rs"
+
+[dependencies]
+waltz = "0.4.1"
+pulldown-cmark = { version = "0.1", default-features = false }

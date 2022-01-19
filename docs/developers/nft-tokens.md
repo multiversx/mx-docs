@@ -269,19 +269,19 @@ Below you can find the fields involved when creating an NFT.
   "description": "This is a sample description",
   "attributes": [
     {
-      "trait_type": "SampleTrait1",
-      "value": "SampleValue1",
-      "key":"value"
+      "trait_type": "Background",
+      "value": "Yellow",
+      "{key}":"{value}",
+      "{...}":"{...}",
+      "{key}":"{value}"
     },
     {
-      "trait_type": "SampleTrait2",
-      "value": "SampleValue2",
-      "key":"value"
+      "trait_type": "Headwear",
+      "value": "BlackBeanie"
     },
     {
       "trait_type": "SampleTrait3",
-      "value": "SampleValue3",
-      "key":"value"
+      "value": "SampleValue3"
     }
   ],
   "collection": "ipfsCID/fileName.json"
