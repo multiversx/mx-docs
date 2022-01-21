@@ -104,9 +104,12 @@ You can now connect Maiar Exchange to the Maiar DeFi wallet in real-time. With t
 ![Connect with password](https://user-images.githubusercontent.com/52820835/150524256-b53e9885-2fc7-48bb-9d27-a81a55dc7ceb.PNG)
 
 
+*Give us less than a minute.*
+
+* In a split second, the Maiar Exchange home page automatically reloads. You’ll notice your account has been added on the right section of the page.
+
 *How easy!* One last step!
 
-* The Maiar Exchange home page automatically reloads and you’ll notice your account added on the right section of the page.
 
 ![connected](https://user-images.githubusercontent.com/52820835/150524553-5c418e4b-0a57-409d-9b0f-6385c65acff6.PNG)
 
