@@ -4,7 +4,7 @@ title: Maiar Web Wallet Extension
 ---
 
 
-Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. This extension is a powerful Elrond Wallet extension that effectively automates and reduces the steps and time required for users to interact with Elrond Decentralized apps.
+Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. It is a powerful browser extension for the Elrond Wallet that effectively automates and reduces the steps and time required for users to interact with Elrond Decentralized apps.
 
 The Maiar DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the Elrond mainnet, and store Elrond tokens such as EGLD, ESDT, or NFTs on the Elrond Network with easy accessibility.
 
