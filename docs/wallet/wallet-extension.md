@@ -87,7 +87,7 @@ Choose either of these networks.
 
 ## Connecting the Maiar DeFi Wallet to Maiar Exchange App 
 
-You can now connect Maiar Exchange to the Maiar DeFi wallet in real-time. With this connection, you will be able to log in to the Maiar exchange using the Maiar DeFi wallet extension in a few steps.
+You can now connect Maiar Exchange to the Maiar DeFi wallet in real-time. With this connection, you will be able to log in to the Maiar Exchange using the Maiar DeFi wallet extension in a few steps.
 
 **Follow these steps to proceed**:
 
