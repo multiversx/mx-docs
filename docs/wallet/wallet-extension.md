@@ -25,7 +25,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 ### Set up Maiar DeFi wallet
 * Once it has been successfully installed, click on the extension to get started.
-* You will be served two options: you can either *Create new wallet* or *Import existing wallet.*
+* You will be presented with two options: you can either *Create new wallet* or *Import existing wallet.*
 
 ![maiar-defi-example-welcomepage](/wallet/wallet-extension/wallet_extension_step4.png)
 
