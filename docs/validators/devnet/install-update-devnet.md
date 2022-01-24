@@ -66,7 +66,7 @@ Repeat the above for all your “n” nodes. When complete, please refer to our 
 
 **Start the node process**
 
-Run the script and select option `6 - start`.
+Run the script and select option `7 - start`.
 
 ```
 ~/elrond-go-scripts-devnet/script.sh
