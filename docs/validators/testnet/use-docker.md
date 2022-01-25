@@ -24,3 +24,8 @@ In the snippet above, make sure you adjust the path to a valid key file and also
 :::note Attention required
 **Testnet** validators **should carefully** specify the precise tag when using the Docker setup, always test the new releases themselves, and only deploy them once they understand and agree with the changes.
 :::
+
+:::tip For CentOS users
+If the docker image runs on CentOS, the machine needs the `allow_execheap` flag to be enabled.
+In order to do this, one has to run the command `sudo setsebool allow_execheap=true`
+:::

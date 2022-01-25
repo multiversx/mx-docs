@@ -4,6 +4,7 @@ title: Maiar Web Wallet Extension
 ---
 
 
+
 Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. It is a powerful browser extension for the Elrond Wallet that effectively automates and reduces the steps and time required for users to interact with Elrond Decentralized apps.
 
 The Maiar DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the Elrond mainnet, and store Elrond tokens such as EGLD, ESDT, or NFTs on the Elrond Network with easy accessibility.
@@ -25,12 +26,15 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 ### Set up Maiar DeFi wallet
 * Once it has been successfully installed, click on the extension to get started.
+
 * You will be presented with two options: you can either *Create new wallet* or *Import existing wallet.*
+
 
 ![maiar-defi-example-welcomepage](/wallet/wallet-extension/wallet_extension_step4.png)
 
 * We will be creating a new wallet. Click on "*Create new wallet"*. However, if you have an existing wallet, click on *Import existing wallet*. 
 * A list of secret phrases will be displayed. Copy this phrase and agree to the instruction below.
+
 > **Note**: These secret phrases should be kept confidential and not revealed to anyone.
 
 ![maiar-defi-example-secretphrase](/wallet/wallet-extension/wallet_extension_step5.png)

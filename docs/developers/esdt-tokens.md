@@ -142,7 +142,7 @@ TransferTransaction {
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 
 - the receiver can be any account (which may or may not be a smart contract)
-- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `250000`
+- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `500000`
 - the Data field contains what appears to be a smart contract method invocation with arguments, but this invocation never reaches the VM: the string `ESDTTransfer` is reserved by the protocol and is handled as a built-in function, not as a smart contract call
 
 Following the example from earlier, assuming that the token identifier is `414c432d363235386432`, a transfer from Alice to another user, Bob, would look like this:
@@ -188,10 +188,6 @@ TransferWithCallTransaction {
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
 ## **Multiple tokens transfer**
-
-:::warning
-This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
-:::
 
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
 fungible, semi-fungible or non-fungible tokens via a single transaction.
@@ -275,6 +271,10 @@ The manager of an ESDT token has a number of operations at their disposal, which
 
 ### **Minting**
 
+:::tip
+On Mainnet, starting with epoch 432, global mint is disabled so one has to use local mint instead.  
+:::
+
 The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
 
 ```
@@ -293,7 +293,25 @@ Following this transaction, the total supply of tokens is increased by the new s
 
 This operation requires that the option `canMint` is set to `true` for the token.
 
+Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:  
+
+```
+LocalMintTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 300000
+    Data: "ESDTLocalMint" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <new supply in hexadecimal encoding>
+}
+```
+
 ### **Burning**
+
+:::tip
+On Mainnet, starting with epoch 432, global burn is disabled so one has to use local burn instead.
+:::
 
 Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
 
@@ -312,6 +330,20 @@ BurnTransaction {
 Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
 This operation requires that the option `canBurn` is set to `true` for the token.
+
+Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:  
+
+```
+LocalBurnTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 300000
+    Data: "ESDTLocalBurn" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <new supply in hexadecimal encoding>
+}
+```
 
 ### **Pausing and Unpausing**
 
@@ -460,6 +492,11 @@ This operation requires that the option `canChangeOwner` is set to `true`.
 
 ### **Upgrading (changing properties)**
 
+:::tip
+On Mainnet, starting with epoch 432, global mint and global burn are disabled so one has to use local mint/burn instead.
+Therefore, properties canMint and canBurn aren't effective anymore after that epoch. For setting those properties, one has to set the `ESDTRoleLocalMint` and/or `ESDTRoleLocalBurn` instead.
+:::
+
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once. Such an operation is performed by a transaction of the form:
 
 ```
@@ -494,6 +531,45 @@ UpgradingTransaction {
           "@74727565"               # true
 }
 ```
+
+## **Branding**
+
+Anyone can create an ESDT token on Elrond Network. There are also no limits in tokens names or tickers. For example,
+one issues an `AliceToken` with the ticker `ALC`. Anyone else is free to create a new token with the same token name and
+the same token ticker. The only difference will be the random sequence of the token identifier. So the "original" token 
+could have received the random sequence `1q2w3e` resulting in the `ALC-1q2w3e` identifier, while the second token could 
+have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`. 
+
+In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a 
+branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens.
+An example of a branded token is MEX, the Maiar Exchange's token. Elrond products such as Explorer, Wallet and so on 
+will display tokens in accordance to their branding, if any. 
+
+A token owner can submit a branding request by opening a Pull Request on [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets).
+
+### **Submitting a branding request**
+
+Project owners can create a PR to the [https://github.com/ElrondNetwork/assets](repository) with the logo in .png and .svg format, as well as a .json file containing all the relevant information.
+
+Here’s a prefilled template for the .json file to get you started:
+
+``` json
+{
+  "website": "https://www.elrondtoken.com",
+  "description": "The ERD token is the utility token of Elrond Token",
+  "social": {
+    "email": "erd-token@elrond.com",
+    "blog": "https://www.elrondtoken.com/ERD-token-blog",
+    "twitter": "https://twitter.com/ERD-token-twitter",
+    "whitepaper": "https://www.elrondtoken.com/ERD-token-whitepaper.pdf",
+    "coinmarketcap": "https://coinmarketcap.com/currencies/ERD-token",
+    "coingecko": "https://www.coingecko.com/en/coins/ERD-token"
+  },
+  "status": "active"
+}
+```
+
+The ledgerSignature will be generated by Elrond. It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
 
 ## **Rest API**
 
