@@ -153,5 +153,7 @@ Follow these steps to proceed:
 
 - In a split second, the Maiar Exchange home page automatically reloads. You’ll notice your account has been added to the right section of the page.
 
+![connectmaiar4](https://user-images.githubusercontent.com/52820835/151418100-cbcef037-d0ec-4eeb-b279-d9df3b444896.PNG)
+
 Successful 🎉
 
