@@ -15,5 +15,11 @@ desktop.ini
 
 /sam/build.yaml
 /build
+/.vscode
 
 tags
+
+# Rust workspace build target
+/target
+/testing/extract-tutorial-code/target
+Cargo.lock

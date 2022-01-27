@@ -3,11 +3,9 @@ id: wallet-extension
 title: Maiar Web Wallet Extension
 ---
 
+Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. It is a powerful browser extension for the Elrond Wallet that effectively automates and reduces the steps and time required for users to interact with Elrond Decentralized apps.
 
-Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. This extension is a powerful Elrond Wallet extension that effectively automates and reduces the steps and time required for users to interact with Elrond Decentralized apps.
-
-The Maiar DeFi wallet is currently available as a browser extension for Chrome, Brave, and other chromium-based browsers. This extension is free, secure and provides the most convenient way for you to create or import multiple different wallets and connect to different networks on your browser. 
-
+The Maiar DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the Elrond mainnet, and store Elrond tokens such as EGLD, ESDT, or NFTs on the Elrond Network with easy accessibility.
 
 Let's walk through the steps how to install and set up the Maiar DeFi Wallet extension:
 
@@ -23,13 +21,12 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 * You should receive a notification that the extension has been added successfully. 
   ![maiar-defi-install-pop-up](/wallet/wallet-extension/wallet_extension_step3.png)
-  
- ### Set up Maiar DeFi wallet
- 
-* Once the extension has been successfully installed, click on it to get started.
+
+
+### Set up Maiar DeFi wallet
+* Once it has been successfully installed, click on the extension to get started.
 
 * You will be presented with two options: you can either *Create new wallet* or *Import existing wallet.*
-
 
 ![maiar-defi-example-welcomepage](/wallet/wallet-extension/wallet_extension_step4.png)
 
@@ -105,7 +102,6 @@ Welcome to Maiar DeFi Wallet Extension! One of the key features of this extensio
 
 **Step 4:** Click on the _“Continue”_ button to complete the transaction.
 
-
 ### Lock/unlock
 
 After 60minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header. 
@@ -156,4 +152,3 @@ Follow these steps to proceed:
 ![connectmaiar4](https://user-images.githubusercontent.com/52820835/151418100-cbcef037-d0ec-4eeb-b279-d9df3b444896.PNG)
 
 Successful 🎉
-

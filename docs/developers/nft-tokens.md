@@ -269,19 +269,19 @@ Below you can find the fields involved when creating an NFT.
   "description": "This is a sample description",
   "attributes": [
     {
-      "trait_type": "SampleTrait1",
-      "value": "SampleValue1",
-      "key":"value"
+      "trait_type": "Background",
+      "value": "Yellow",
+      "{key}":"{value}",
+      "{...}":"{...}",
+      "{key}":"{value}"
     },
     {
-      "trait_type": "SampleTrait2",
-      "value": "SampleValue2",
-      "key":"value"
+      "trait_type": "Headwear",
+      "value": "BlackBeanie"
     },
     {
       "trait_type": "SampleTrait3",
-      "value": "SampleValue3",
-      "key":"value"
+      "value": "SampleValue3"
     }
   ],
   "collection": "ipfsCID/fileName.json"
@@ -606,7 +606,7 @@ Let's see a complete flow of creating and transferring a Semi-Fungible Token.
 {
     Sender: <your address>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 5000000000000000000  # 5 EGLD
+    Value: 50000000000000000 # 0.05 EGLD
     GasLimit: 60000000
     Data: "issueSemiFungible" +
           "@416c696365546f6b656e73" + # AliceTokens
