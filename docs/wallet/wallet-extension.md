@@ -37,7 +37,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 **Step 2:** Open up the extension and click on _‘’Create new wallet”_.
 
-**Step 3:** Next, a set of 24-secret phrases will be displayed. Safely backup these secret phrases. We strongly recommend you copy the phrases or write them down and store in a safe place like a password manager.  These phrases would be used to access your wallet and may not be retrieved.
+**Step 3:** Next, a secret phrase consisting of a set of 24 secret words will be displayed. Safely backup these secret words. We strongly recommend you write them down or copy and store them in a safe place like a password manager.  These secret words are the key to your wallet account and cannot be recovered if lost.
 
 ![maiar-defi-example-secretphrase](/wallet/wallet-extension/wallet_extension_step5.png)
 
