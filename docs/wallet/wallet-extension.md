@@ -47,7 +47,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 ![maiar-defi-example-authentication](/wallet/wallet-extension/wallet_extension_step6.png)
 
-**Step 6:** Create a password that will be used to access your wallet. Ensure you keep this password safe as it will be needed to access your wallet regularly and this password cannot be retrieved. 
+**Step 6:** Create a password that will be used to access the wallets stored in the Maiar DeFi wallet extension. Ensure you keep this password safe as it will be needed to access your wallets regularly. Please note that this password cannot be recovered if lost. 
 
 ![maiar-defi-example-password](/wallet/wallet-extension/wallet_extension_step7.png)
 
