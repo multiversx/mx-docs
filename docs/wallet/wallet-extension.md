@@ -124,7 +124,7 @@ On the wallet extension dashboard, the wallet records all transactions sent and 
 
 ### Networks
 
-In the settings section on your extension dashboard, you can connect to the different networks provided by Elrond, such as the mainnet, testnet, and devnet. These networks will be discussed further in this documentation.
+In the settings section on your extension dashboard, you can connect to the different networks provided by Elrond, such as the mainnet, testnet, and devnet.
 
 Choose either of these networks.
 
