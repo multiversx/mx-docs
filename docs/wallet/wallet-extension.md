@@ -43,7 +43,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 **Step 4:** Before proceeding to the next step, confirm that you have safely stored your secret phrase.
 
-**Step 5:** For further verification, you will be prompted to input some of the secret phrases. 
+**Step 5:** For further verification, you will be prompted to input some of the secret words. 
 
 ![maiar-defi-example-authentication](/wallet/wallet-extension/wallet_extension_step6.png)
 
