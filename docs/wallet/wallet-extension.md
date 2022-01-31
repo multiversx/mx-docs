@@ -60,7 +60,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 Do you already have a wallet?
 
-Then there is no need to create a new one. The Maiar Wallet Extension provides an option to import your existing wallet. However, to import an existing wallet, you must be able to access the **recovery (secret) phrase** of your wallet. 
+Then there is no need to create a new one. The Maiar Wallet Extension provides an option to import your existing wallet. However, to import an existing wallet you must have access to its **secret (recovery) phrase**.
 
 The Maiar wallet has a set of 24-secret phrases, which serve as your wallet’s key. Using your secret phrase to import an existing wallet does not affect your wallet, as all transaction history across all networks will be reflected in the wallet extension.
 
