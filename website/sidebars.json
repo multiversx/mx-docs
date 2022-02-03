@@ -105,11 +105,12 @@
       },
       {
         "type": "subcategory",
-        "label": "Estimating Gas",
+        "label": "Gas and Fees",
         "ids": [
-          "developers/estimating-gas/overview",
-          "developers/estimating-gas/egld-transfers",
-          "developers/estimating-gas/smart-contract-calls"
+          "developers/gas-and-fees/overview",
+          "developers/gas-and-fees/egld-transfers",
+          "developers/gas-and-fees/system-smart-contracts",
+          "developers/gas-and-fees/user-defined-smart-contracts"
         ]
       },
       {

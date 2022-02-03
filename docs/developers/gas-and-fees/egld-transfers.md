@@ -5,7 +5,7 @@ title: EGLD transfers
 
 ## Formula
 
-For EGLD transfers, the **actual gas cost** of processing is easy to determine precisely. The **gas limit** should be set to the **actual gas cost**, according to the following formula:
+For EGLD transfers, the **actual gas cost** of processing is easy to determine precisely, since it only contains the **value movement and data handling** component. The **gas limit** should be set to the **actual gas cost**, according to the previously depicted formula:
 
 ```
 tx.gasLimit = 
