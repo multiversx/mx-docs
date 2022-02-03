@@ -207,7 +207,7 @@ For NFT:
 * ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
 * ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 * ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
-* ESDTTransferRole : this role enables transfer only to a specific address
+* ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
 
 For SFT:
 * ESDTRoleNFTCreate : this role allows one to create a new SFT
@@ -215,7 +215,7 @@ For SFT:
 * ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
 * ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 * ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
-* ESDTTransferRole : this role enables transfer only to a specific address
+* ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
 
 
 To see how roles can be assigned, please refer to [this](/developers/nft-tokens#assigning-roles) section.
