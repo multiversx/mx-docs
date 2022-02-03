@@ -35,7 +35,7 @@ Because this transaction is a call to the Staking smart contract, it passes info
 
 - `stake` is the name of the smart contract function to be called;
 - `0002` is the number of nodes (unsigned integer, hex-encoded);
-- 45e7131ba....294812f004 is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
+- `45e7131ba....294812f004` is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
 - `67656e65736973` is the result of signing the address of the sender of the transaction, using the BLS private key of the validator being added to the transaction;
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - `67656e65736973` is the aforementioned the result of signing the address of the sender of the transaction, repeated;
