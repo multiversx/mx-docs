@@ -549,7 +549,7 @@ A token owner can submit a branding request by opening a Pull Request on [https:
 
 ### **Submitting a branding request**
 
-Project owners can create a PR to the [https://github.com/ElrondNetwork/assets](repository) with the logo in .png and .svg format, as well as a .json file containing all the relevant information.
+Project owners can create a PR against [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets) repository with the logo in `.png` and `.svg` format, as well as a `.json` file containing all the relevant information.
 
 Here’s a prefilled template for the .json file to get you started:
 
