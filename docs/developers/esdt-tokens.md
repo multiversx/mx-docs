@@ -4,8 +4,7 @@ title: ESDT tokens
 ---
 
 ## **Introduction**
-
-**ESDT** stands for _Elrond Standard Digital Token_.
+**ESDT** stands for *Elrond Standard Digital Token*.
 
 Custom tokens at native speed and scalability, without ERC20
 
@@ -38,7 +37,6 @@ IssuanceTransaction {
 Our initial proposal is the issuance cost to be 0.05 EGLD. Feedback and suggestions from the community is more than welcome.
 
 Optionally, the properties can be set when issuing a token. Example:
-
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
@@ -68,27 +66,25 @@ The contract will add a random string to the ticker thus creating the **token id
 
 Token Name:
 
--   length between 3 and 20 characters
--   alphanumeric characters only
+- length between 3 and 20 characters
+- alphanumeric characters only
+
 
 Token Ticker:
 
--   length between 3 and 10 characters
--   alphanumeric UPPERCASE only
+- length between 3 and 10 characters
+- alphanumeric UPPERCASE only
 
 Number of decimals:
-
--   should be a numerical value between _0_ and _18_
--   hexadecimal encoded
+- should be a numerical value between _0_ and _18_
+- hexadecimal encoded
 
 Numerical values, such as initial supply or number of decimals, should be the hexadecimal encoding of the decimal numbers representing them. Additionally, they should have an even number of characters. Examples:
-
--   **10** _decimal_ => **0a** _hex encoded_
--   **48** _decimal_ => **30** _hex encoded_
--   **1000000** _decimal_ => **0f4240** _hex encoded_
+- **10** _decimal_      => **0a** _hex encoded_
+- **48** _decimal_      => **30** _hex encoded_
+- **1000000** _decimal_ => **0f4240** _hex encoded_
 
 ### **Number of decimals usage**
-
 Front-end applications will use the number of decimals in order to display balances.
 Therefore, you must adapt the supply according to the number of decimals parameter.
 
@@ -107,7 +103,6 @@ This is only relevant when performing operations via manual transactions over ES
 For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6.
 
 As stated above, if the user wants 4091 tokens with 6 decimals, then the initial supply has to be $4091 * 10^6$ tokens so a total of `4091000000`.
-
 ```
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
@@ -118,14 +113,14 @@ IssuanceTransaction {
           "@416c696365546f6b656e73" +  // "AliceTokens" hex encoded
           "@414c43" +                  // "ALC" hex encoded
           "@f3d7b4c0" +                // 4091000000 hex encoded
-          "@06"                        // 6 hex encoded
+          "@06"                        // 6 hex encoded  
 }
 ```
 
 Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
-In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
+ In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also below).
 
 ## **Transfers**
@@ -146,9 +141,9 @@ TransferTransaction {
 
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 
--   the receiver can be any account (which may or may not be a smart contract)
--   the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `500000`
--   the Data field contains what appears to be a smart contract method invocation with arguments, but this invocation never reaches the VM: the string `ESDTTransfer` is reserved by the protocol and is handled as a built-in function, not as a smart contract call
+- the receiver can be any account (which may or may not be a smart contract)
+- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `500000`
+- the Data field contains what appears to be a smart contract method invocation with arguments, but this invocation never reaches the VM: the string `ESDTTransfer` is reserved by the protocol and is handled as a built-in function, not as a smart contract call
 
 Following the example from earlier, assuming that the token identifier is `414c432d363235386432`, a transfer from Alice to another user, Bob, would look like this:
 
@@ -197,8 +192,8 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple
 fungible, semi-fungible or non-fungible tokens via a single transaction.
 
-A multi-token transfer transaction has the following form:
 
+A multi-token transfer transaction has the following form:
 ```
 MultiTokensTransferTransaction {
     Sender: <account address of the sender>
@@ -247,8 +242,7 @@ MultiTokensTransferTransaction {
 Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
 
 ## **Transfers done programmatically**
-
-The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt_token_name_ to _address_, one would do the following:
+The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
 
 ```
 self.send().direct_esdt_via_transf_exec(&address, &esdt_token_name, &amount, &[]);
@@ -262,14 +256,14 @@ The Account which submitted the issuance request for a custom token automaticall
 
 Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
--   `canMint` - more units of this token can be minted by the token manager after initial issuance, increasing the supply
--   `canBurn` - users may "burn" some of their tokens, reducing the supply
--   `canPause` - the token manager may prevent all transactions of the token, apart from minting and burning
--   `canFreeze` - the token manager may freeze the token balance in a specific account, preventing transfers to and from that account
--   `canWipe` - the token manager may wipe out the tokens held by a frozen account, reducing the supply
--   `canChangeOwner` - token management can be transferred to a different account
--   `canUpgrade` - the token manager may change these properties
--   `canAddSpecialRoles` - the token manager can assign a specific role(s)
+- `canMint` - more units of this token can be minted by the token manager after initial issuance, increasing the supply
+- `canBurn` - users may "burn" some of their tokens, reducing the supply
+- `canPause` - the token manager may prevent all transactions of the token, apart from minting and burning
+- `canFreeze` - the token manager may freeze the token balance in a specific account, preventing transfers to and from that account
+- `canWipe` - the token manager may wipe out the tokens held by a frozen account, reducing the supply
+- `canChangeOwner` - token management can be transferred to a different account
+- `canUpgrade` - the token manager may change these properties
+- `canAddSpecialRoles` - the token manager can assign a specific role(s)
 
 ## **Management operations**
 
@@ -299,7 +293,7 @@ Following this transaction, the total supply of tokens is increased by the new s
 
 This operation requires that the option `canMint` is set to `true` for the token.
 
-Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:
+Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:  
 
 ```
 LocalMintTransaction {
@@ -337,7 +331,7 @@ Following this transaction, the token holder loses from the balance the amount o
 
 This operation requires that the option `canBurn` is set to `true` for the token.
 
-Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:
+Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:  
 
 ```
 LocalBurnTransaction {
@@ -434,16 +428,15 @@ WipeTransaction {
 The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
 The special roles available for basic ESDT tokens are:
 
--   **ESDTRoleLocalBurn**: an address with this role can burn tokens
+- **ESDTRoleLocalBurn**: an address with this role can burn tokens
 
--   **ESDTRoleLocalMint**: an address with this role can mint new tokens
+- **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
 For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
 
 #### **Set special role**
 
 One or more roles for an address can be set by the owner by performing a transaction like:
-
 ```
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
@@ -462,7 +455,6 @@ RolesAssigningTransaction {
 #### **Unset special role**
 
 One or more roles for an address can be unset by the owner by performing a transaction like:
-
 ```
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
@@ -553,7 +545,7 @@ branding mechanism that allows tokens owners to provide a logo, a description, a
 An example of a branded token is MEX, the Maiar Exchange's token. Elrond products such as Explorer, Wallet and so on
 will display tokens in accordance to their branding, if any.
 
-A token owner can submit a branding request by opening a Pull Request on https://github.com/ElrondNetwork/assets.
+A token owner can submit a branding request by opening a Pull Request on [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets).
 
 ### **Submitting a branding request**
 
@@ -561,19 +553,19 @@ Project owners can create a PR against [https://github.com/ElrondNetwork/assets]
 
 Here’s a prefilled template for the .json file to get you started:
 
-```json
+``` json
 {
-    "website": "https://www.elrondtoken.com",
-    "description": "The ERD token is the utility token of Elrond Token",
-    "social": {
-        "email": "erd-token@elrond.com",
-        "blog": "https://www.elrondtoken.com/ERD-token-blog",
-        "twitter": "https://twitter.com/ERD-token-twitter",
-        "whitepaper": "https://www.elrondtoken.com/ERD-token-whitepaper.pdf",
-        "coinmarketcap": "https://coinmarketcap.com/currencies/ERD-token",
-        "coingecko": "https://www.coingecko.com/en/coins/ERD-token"
-    },
-    "status": "active"
+  "website": "https://www.elrondtoken.com",
+  "description": "The ERD token is the utility token of Elrond Token",
+  "social": {
+    "email": "erd-token@elrond.com",
+    "blog": "https://www.elrondtoken.com/ERD-token-blog",
+    "twitter": "https://twitter.com/ERD-token-twitter",
+    "whitepaper": "https://www.elrondtoken.com/ERD-token-whitepaper.pdf",
+    "coinmarketcap": "https://coinmarketcap.com/currencies/ERD-token",
+    "coingecko": "https://www.coingecko.com/en/coins/ERD-token"
+  },
+  "status": "active"
 }
 ```
 
@@ -584,68 +576,65 @@ The ledgerSignature will be generated by Elrond. It will give your token “whit
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
 
 ### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
-
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
-
 Returns an array of ESDT Tokens that the specified address has interacted with (issued, sent or received).
 
 ```
 https://gateway.elrond.com/address/*bech32Address*/esdt
 ```
 
-| Param         | Required                                  | Type     | Description                            |
-| ------------- | ----------------------------------------- | -------- | -------------------------------------- |
-| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
+| Param         | Required                                  | Type     | Description                           |
+| ------------- | ----------------------------------------- | -------- | ------------------------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
 
 <!--Response-->
 
 ```json
 {
-    "data": {
-        "tokens": ["ABC-0d0060", "DEF-d00600"]
-    },
-    "error": "",
-    "code": "successful"
+  "data": {
+    "tokens": [
+      "ABC-0d0060",
+      "DEF-d00600"
+    ]
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
-
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get balance for an address and an ESDT token**
-
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
-
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
 https://gateway.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 
-| Param           | Required                                  | Type     | Description                            |
-| --------------- | ----------------------------------------- | -------- | -------------------------------------- |
-| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
-| tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier.                  |
+| Param           | Required                                  | Type     | Description                           |
+| -------------   | ----------------------------------------- | -------- | ------------------------------------- |
+| bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format.|
+| tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier.                 |
 
 <!--Response-->
 
 ```json
 {
-    "data": {
-        "tokenData": {
-            "balance": "99502603",
-            "properties": "",
-            "tokenIdentifier": "GLD-0d0060"
-        }
-    },
-    "error": "",
-    "code": "successful"
+  "data": {
+    "tokenData": {
+      "balance": "99502603",
+      "properties": "",
+      "tokenIdentifier": "GLD-0d0060"
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
-
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get all roles for tokens of an address**
@@ -709,13 +698,12 @@ https://gateway.elrond.com/network/esdts
   "code": "successful"
 }
 ```
-
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ---
 
 2. Fungible tokens
- <!--DOCUSAURUS_CODE_TABS-->
+<!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
 
@@ -737,13 +725,12 @@ https://gateway.elrond.com/network/esdt/fungible-tokens
   "code": "successful"
 }
 ```
-
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ---
 
 3. Semi-fungible tokens
- <!--DOCUSAURUS_CODE_TABS-->
+<!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
 
@@ -765,13 +752,12 @@ https://gateway.elrond.com/network/esdt/semi-fungible-tokens
   "code": "successful"
 }
 ```
-
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ---
 
 4. Non-fungible tokens
- <!--DOCUSAURUS_CODE_TABS-->
+<!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
 
@@ -793,7 +779,6 @@ https://gateway.elrond.com/network/esdt/non-fungible-tokens
   "code": "successful"
 }
 ```
-
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-success">POST</span> **Get ESDT token properties**
@@ -811,69 +796,67 @@ https://gateway.elrond.com/vm-values/query
 
 ```json
 {
-    "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-    "funcName": "getTokenProperties",
-    "args": ["474c442d306430303630"]
+	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+	"funcName": "getTokenProperties",
+	"args": ["474c442d306430303630"]
 }
 ```
-
 The argument must be the token identifier, hexadecimal encoded. In the example, `474c442d306430303630` = `GLD-0d0060`.
 
 <!--Response-->
 
 ```json
 {
+  "data": {
     "data": {
-        "data": {
-            "returnData": [
-                "QWxpY2VUb2tlbnM=",
-                "RnVuZ2libGVFU0RU",
-                "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=",
-                "MTAwMDAwMDAwMDA=",
-                "MA==",
-                "TnVtRGVjaW1hbHMtNg==",
-                "SXNQYXVzZWQtZmFsc2U=",
-                "Q2FuVXBncmFkZS10cnVl",
-                "Q2FuTWludC10cnVl",
-                "Q2FuQnVybi10cnVl",
-                "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",
-                "Q2FuUGF1c2UtdHJ1ZQ==",
-                "Q2FuRnJlZXplLXRydWU=",
-                "Q2FuV2lwZS10cnVl",
-                "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",
-                "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",
-                "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",
-                "TnVtV2lwZWQtMA=="
-            ],
-            "returnCode": "ok",
-            "returnMessage": "",
-            "gasRemaining": 18446744073659551615,
-            "gasRefund": 0,
-            "outputAccounts": {
-                "000000000000000000010000000000000000000000000000000000000002ffff": {
-                    "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-                    "nonce": 0,
-                    "balance": null,
-                    "balanceDelta": 0,
-                    "storageUpdates": {},
-                    "code": null,
-                    "codeMetaData": null,
-                    "outputTransfers": [],
-                    "callType": 0
-                }
-            },
-            "deletedAccounts": null,
-            "touchedAccounts": null,
-            "logs": []
+      "returnData": [
+        "QWxpY2VUb2tlbnM=",
+        "RnVuZ2libGVFU0RU",
+        "2DSJxJNAmou8TU9f4WQo7rpyJ822eZVUQYwnabJM5hk=",
+        "MTAwMDAwMDAwMDA=",
+        "MA==",
+        "TnVtRGVjaW1hbHMtNg==",
+        "SXNQYXVzZWQtZmFsc2U=",
+        "Q2FuVXBncmFkZS10cnVl",
+        "Q2FuTWludC10cnVl",
+        "Q2FuQnVybi10cnVl",
+        "Q2FuQ2hhbmdlT3duZXItZmFsc2U=",
+        "Q2FuUGF1c2UtdHJ1ZQ==",
+        "Q2FuRnJlZXplLXRydWU=",
+        "Q2FuV2lwZS10cnVl",
+        "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",
+        "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",
+        "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",
+        "TnVtV2lwZWQtMA=="
+      ],
+      "returnCode": "ok",
+      "returnMessage": "",
+      "gasRemaining": 18446744073659551615,
+      "gasRefund": 0,
+      "outputAccounts": {
+        "000000000000000000010000000000000000000000000000000000000002ffff": {
+          "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+          "nonce": 0,
+          "balance": null,
+          "balanceDelta": 0,
+          "storageUpdates": {},
+          "code": null,
+          "codeMetaData": null,
+          "outputTransfers": [],
+          "callType": 0
         }
-    },
-    "error": "",
-    "code": "successful"
+      },
+      "deletedAccounts": null,
+      "touchedAccounts": null,
+      "logs": []
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
 The `returnData` member will contain an array of the properties in a fixed order (base64 encoded). For the example response, the meaning is:
-
 ```
 "returnData": [
   "QWxpY2VUb2tlbnM=",                             | token name                   | AliceTokens
@@ -892,8 +875,8 @@ The `returnData` member will contain an array of the properties in a fixed order
   "Q2FuV2lwZS10cnVl",                             | can wipe                     | CanWipe-true
   "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",             | can add special roles        | CanAddSpecialRoles-true
   "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",     | can transfer nft create role | CanTransferNFTCreateRole-false
-  "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",             | nft creation stopped         | NFTCreateStopped-false
-  "TnVtV2lwZWQtMA=="                              | number of wiped quantity     | NumWiped-0
+  "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",             | nft creation stopped         | NFTCreateStopped-false  
+  "TnVtV2lwZWQtMA=="                              | number of wiped quantity     | NumWiped-0                              
 ],
 ```
 
@@ -908,16 +891,15 @@ For example:
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
-
 ```
 https://gateway.elrond.com/vm-values/query
 ```
 
 ```json
 {
-    "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-    "funcName": "getSpecialRoles",
-    "args": ["474c442d306430303630"]
+	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+	"funcName": "getSpecialRoles",
+	"args": ["474c442d306430303630"]
 }
 ```
 
@@ -939,8 +921,7 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
 ```
 
 In this example, converting the 2 messages from base64 to string would result in:
-
--   `erd136rl878j09mev24gzpy70k2wfm3xmvj5ucwxffs9v5t5sk3kshtszz25z9:ESDTRoleLocalBurn`
--   `erd1kzzv2uw97q5k9mt458qk3q9u3cwhwqykvyk598q2f6wwx7gvrd9s8kszxk:ESDTRoleNFTAddQuantity,ESDTRoleNFTBurn`
+* `erd136rl878j09mev24gzpy70k2wfm3xmvj5ucwxffs9v5t5sk3kshtszz25z9:ESDTRoleLocalBurn`
+* `erd1kzzv2uw97q5k9mt458qk3q9u3cwhwqykvyk598q2f6wwx7gvrd9s8kszxk:ESDTRoleNFTAddQuantity,ESDTRoleNFTBurn`
 
 <!--END_DOCUSAURUS_CODE_TABS-->
