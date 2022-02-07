@@ -65,7 +65,7 @@ pub trait Example {
     #[init]
     fn this_is_the_constructor(
         constructor_arg_1: u32,
-        constructor_arg_2: Self::BigUint) {
+        constructor_arg_2: BigUint) {
         // ...
     }
 }
@@ -93,10 +93,10 @@ pub trait Example {
     }
 
     #[endpoint(camelCaseEndpointName)]
-	fn snake_case_method_name(&self, value: &Self::BigInt) {
+	fn snake_case_method_name(&self, value: &BigInt) {
     }
 
-    fn private_method(&self, value: &Self::BigInt) {
+    fn private_method(&self, value: &BigInt) {
     }
 
     #[view(getData)]
@@ -141,7 +141,7 @@ This is the simplest way to retrieve data from the storage. Let's start with an 
 pub trait Adder {
 	#[view(getSum)]
 	#[storage_get("sum")]
-	fn get_sum(&self) -> Self::BigInt;
+	fn get_sum(&self) -> BigInt;
 
 	#[storage_get("example_map")]
     fn get_value(&self, key_1: u32, key_2: u32) -> SerializableType;
@@ -168,7 +168,7 @@ This is the simplest way to write data to storage. Example:
 #[elrond_wasm_derive::contract]
 pub trait Adder {
 	#[storage_set("sum")]
-	fn set_sum(&self, sum: &Self::BigInt);
+	fn set_sum(&self, sum: &BigInt);
 
 	#[storage_set("example_map")]
     fn set_value(&self, key_1: u32, key_2: u32, value: &SerializableType);
@@ -183,10 +183,10 @@ There is no mechanism in place to ensure that there is no overlap between storag
 
 ```rust
 	#[storage_set("sum")]
-	fn set_sum(&self, sum: &Self::BigInt);
+	fn set_sum(&self, sum: &BigInt);
 
     #[storage_set("sum")]
-	fn set_another_sum(&self, another_sum: &Self::BigInt);
+	fn set_another_sum(&self, another_sum: &BigInt);
 
 	#[storage_set("s")]
     fn set_value(&self, key: u16, value: &SerializableType);
@@ -211,10 +211,10 @@ Example:
 
 ```rust
 	#[storage_mapper("user_status")]
-	fn user_status(&self) -> SingleValueMapper<Self::Storage, UserStatus>;
+	fn user_status(&self) -> SingleValueMapper<UserStatus>;
 
     #[storage_mapper("list_mapper")]
-	fn list_mapper(&self, sub_key: usize) -> LinkedListMapper<Self::Storage, u32>;
+	fn list_mapper(&self, sub_key: usize) -> LinkedListMapper<u32>;
 ```
 
 The `SingleValueMapper` is the simplest of them all, since it only manages one storage key. Even though it only works with one storage entry, its syntax is more compact than `storage_get`/`storage_set` so it is used quite a lot.
@@ -290,7 +290,7 @@ This is a simple getter, which provides a convenient instance of a contract prox
 #[elrond_wasm_derive::module]
 pub trait ForwarderAsyncCallModule {
 	#[proxy]
-	fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::SendApi>;
+	fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::Api>;
 
     // ...
 }
