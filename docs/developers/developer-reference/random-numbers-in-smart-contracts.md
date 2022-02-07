@@ -22,7 +22,7 @@ The `ManagedBuffer` type has two methods you can use for this:
 
 For convenience, a wrapper over these methods was created, namely the `RandomnessSource` struct, which contains methods for generating a random number for all base rust unsigned numerical types, and a method for generating random bytes.
 
-For example, let's say you wanted to generated `n` random `u16`:
+For example, let's say you wanted to generate `n` random `u16`:
 ```rust
 let mut rand_source = RandomnessSource::<Self::Api>::new();
 for _ in 0..n {

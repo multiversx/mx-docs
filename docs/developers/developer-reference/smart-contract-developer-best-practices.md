@@ -68,7 +68,7 @@ bigIntAdd(temp3, temp2, d);
 And as such, creating 3 new `BigUints`, one for the result of `a + b`, one for the result of `(a + b) + c` and one for the final result that ends up in `e`. This can be optimized by rewriting the code in the following way:
 
 ```
-e = Self::BigUint::zero();
+e = BigUint::zero();
 e += &a;
 e += &b;
 e += &c;
@@ -100,10 +100,10 @@ Storing a `Vec<T>` can be done in two ways:
 
 ```
 #[storage_mapper("my_vec_single)]
-fn my_vec_single(&self) -> SingleValueMapper<Self::Storage, Vec<T>>
+fn my_vec_single(&self) -> SingleValueMapper<Vec<T>>
 
 #[storage_mapper("my_vec_mapper)]
-fn my_vec_mapper(&self) -> VecMapper<Self::Storage, T>;
+fn my_vec_mapper(&self) -> VecMapper<T>;
 ```
 
 Both of those approaches have their merits. The `SingleValueMapper` concatenates all elements and stores them under a single key, while the `VecMapper` stores each element under a different key. This also means that `SingleValueMapper` uses nested-encoding for each element, while `VecMapper` uses top-encoding.  
@@ -122,10 +122,10 @@ The primary use for `SetMapper` is storing a whitelist of addresses, token ids, 
 
 ```
 #[storage_mapper("my_vec_whitelist)]
-fn my_vec_whitelist(&self) -> VecMapper<Self::Storage, TokenIdentifier>
+fn my_vec_whitelist(&self) -> VecMapper<TokenIdentifier>
 
 #[storage_mapper("my_set_mapper)]
-fn my_set_mapper(&self) -> SetMapper<Self::Storage, TokenIdentifier>;
+fn my_set_mapper(&self) -> SetMapper<TokenIdentifier>;
 ```
 
 This might look very similar, but the implications of using `VecMapper` for this are very damaging to the potential gas costs. Checking for an item's existence in `VecMapper` is done in O(n), with each iteration requiring a new storage read! Worst case scenario is the Token ID is not in the whitelist and the whole Vec is read.  
@@ -166,13 +166,13 @@ Believe it or not, most of the time, `MapMapper` is not even needed, and can sim
 
 ```
 #[storage_mapper("address_id_mapper")]
-fn address_id_mapper(&self) -> MapMapper<Self::Storage, Address, u64>;
+fn address_id_mapper(&self) -> MapMapper<Address, u64>;
 ```
 
 This can be replaced with the following `SingleValueMapper`:
 ```
 #[storage_mapper("address_id_mapper")]
-fn address_id_mapper(&self, address: &Address) -> SingleValueMapper<Self::Storage, u64>;
+fn address_id_mapper(&self, address: &Address) -> SingleValueMapper<u64>;
 ```
 
 Both of them provide (almost) the same functionality. The difference is that the `SingleValueMapper` does not provide a way to iterate over all the keys, i.e. Addresses in this case, but it's also 4-5 times more efficient. 
@@ -194,7 +194,7 @@ Unless you need to iterate over all the entries, `MapMapper` should be avoided, 
 Keep in mind that all the mappers can have as many additional arguments for the main key. For example, you can have a `VecMapper` for every user pair, like this:
 ```
 #[storage_mapper("list_per_user_pair")]
-fn list_per_user_pair(&self, first_addr: &Address, second_addr: &Address) -> VecMapper<Self::Storage, T>;
+fn list_per_user_pair(&self, first_addr: &Address, second_addr: &Address) -> VecMapper<T>;
 ```
 
 Using the correct mapper for your situation can greatly decrease gas costs and complexity, so always remember to carefully evaluate your use-case.  
@@ -252,12 +252,12 @@ As you can see, the argument can be skipped altogether instead of passing a `00`
 For the sake of the example, let's assume you want to receive pairs of (token ID, nonce, amount). This can be implemented in two ways:
 ```
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, args: Vec<(TokenIdentifier, u64, Self::BigUint)>) {}
+fn my_var_args_endpoint(&self, args: Vec<(TokenIdentifier, u64, BigUint)>) {}
 ```
 
 ```
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, #[var_args] args: VarArgs<MultiArg3<TokenIdentifier, u64, Self::BigUint>>) {}
+fn my_var_args_endpoint(&self, #[var_args] args: VarArgs<MultiArg3<TokenIdentifier, u64, BigUint>>) {}
 ```
 
 The first approach looks a lot simpler, just a `Vec` of tuples. But, the implications are quite devastating, both for performance and usability. To use the first endpoint, with the pairs (TOKEN-123456, 5, 100) and (TOKEN-123456, 10, 500), the call data would have to look like this:
