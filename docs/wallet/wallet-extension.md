@@ -117,11 +117,3 @@ You can now connect Maiar Exchange to the Maiar DeFi wallet in real-time. With t
 ![connected](https://user-images.githubusercontent.com/52820835/150524553-5c418e4b-0a57-409d-9b0f-6385c65acff6.PNG)
 
 Success 🎉
-
-
-
-
-
-
-
-
