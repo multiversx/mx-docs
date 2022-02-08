@@ -32,6 +32,10 @@ In the output, look for `txGasUnits`. For example:
 }
 ```
 
+:::note
+The simulated cost `txGasUnits` contains both components of the cost.
+:::
+
 After that, check the cost simulation by running the simulation once again, but this time with the precise`gas-limit`:
 
 ```
@@ -60,29 +64,180 @@ In the end, let's actually deploy the contract:
 $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=1849711 \
  --pem=./testnet/wallets/users/alice.pem \
- --send
+ --send --wait-result
 ```
 
 :::important
 The **execution** component of the cost is associated with instantiating the Smart Contract and calling its `init()` function.
 
-If the flow of `init()` is dependent on input arguments or references blockchain data, then the cost will vary as well, depending on these variables. Make sure you simulate sufficient deployment scenarios and increase (decrease) the `gas-limit`.
+If the flow of `init()` is dependent on input arguments or it references blockchain data, then the cost will vary as well, depending on these variables. Make sure you simulate sufficient deployment scenarios and increase (decrease) the `gas-limit`.
 :::
 
 ## Contract calls
 
 In order to get the required `gasLimit` (the **actual gas cost**) for a contract call, one should first deploy the contract, then use the `erdpy contract call` command, with the `--simulate` flag set.
 
+:::important
+If the contract makes further calls to other contracts, please read the next section.
+:::
+
 Assuming we've already deployed the contract (see above) let's get the cost for calling one of its endpoints:
 
 ```
-TBD
+$ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
+ --pem=./testnet/wallets/users/alice.pem \
+ --function=increment\
+ --recall-nonce --gas-limit=600000000\
+ --simulate
 ```
 
-:::important
-The simulation only handles the original transaction - that is, the contract call performed by the user. If the contract makes further calls to other contracts, and these calls have to be executed _at destination_, _out-of-context_ (as opposed to _execute-at-source_, _same-context_ calls), these subsequent calls are not simulated. **Thus, make sure you adjust (increase) the gas limit accordingly (see next section).**
-:::
+In the output, look for `txGasUnits`. For example:
+
+```
+"txSimulation": {
+    ...
+    "cost": {
+        "txGasUnits": 1225515,
+        ...
+    }
+}
+```
+
+In the end, let's actually call the contract:
+
+```
+$ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
+ --pem=./testnet/wallets/users/alice.pem \
+ --function=increment\
+ --recall-nonce --gas-limit=1225515\
+ --send --wait-result
+```
 
 ## Contracts calling other contracts
 
-TBD
+:::important
+Documentation in this section is preliminary and subject to change.
+:::
+
+Before moving forward, make sure you first have a look over the following:
+ - [Asynchronous calls between contracts](/technology/the-elrond-wasm-vm/#asynchronous-calls-between-contracts)
+ - [Asynchronous calls (Rust framework)](/developers/developer-reference/elrond-wasm-contract-calls/#asynchornous-calls)
+ - [Callbacks (Rust framework)](/developers/developer-reference/elrond-wasm-annotations/#callbacks)
+
+Suppose we have two contracts: `A` and `B`, where `A::foo(addressOfB)` calls `B::bar()`.
+
+Let's deploy the contracts `A` and `B`:
+
+```
+$ erdpy --verbose contract deploy --bytecode=./a.wasm \
+ --recall-nonce --gas-limit=5000000 \
+ --pem=./testnet/wallets/users/alice.pem \
+ --send --wait-result --outfile=a.json
+
+$ erdpy --verbose contract deploy --bytecode=./b.wasm \
+ --recall-nonce --gas-limit=5000000 \
+ --pem=./testnet/wallets/users/alice.pem \
+ --send --wait-result --outfile=b.json
+```
+
+Assuming `A` is deployed at `erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts`, and `B` is deployed at `erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq`, let's **simulate** `A::foo(addressOfB)` (at first, pass a large-enough `gas-limit`):
+
+```
+export hexAddressOfB=0x$(erdpy wallet bech32 --decode erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq)
+
+$ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
+ --pem=./testnet/wallets/users/alice.pem \
+ --function=foo\
+ --recall-nonce --gas-limit=50000000\
+ --arguments ${hexAddressOfB}\
+ --simulate
+```
+
+In the output, look for the simulated cost (as above):
+
+```
+"txSimulation": {
+    ...
+    "cost": {
+        "txGasUnits": 3473900,
+        ...
+    }
+}
+```
+
+The simulated cost represents the **actual gas cost** for invoking `A::foo()`, `B::bar()` and `A::callBack()`.
+
+**However, the simulated cost above isn't the value we are going to use as `gasLimit`.** If we were to do so, we would be presented the error `not enough gas`.
+
+The Elrond VM, after hitting the call to `B::bar()` - also called an _asyncCall breakpoint_ - but before actually invoking the function, inspects the **_on-the-spot_ remaining gas** and **temporarily locks (reserves) a portion of it**, to allow for the execution of `A::callBack()` in the end.
+
+With respect to the [VM Gas Schedule](https://github.com/ElrondNetwork/elrond-config-mainnet/tree/master/gasSchedules), the aforementioned **_on-the-spot_ remaining gas**, in order for the **temporary gas lock (reservation)** to succeed has to satisfy:
+
+```
+onTheSpotRemainingGas > gasToLockForCallback
+
+gasToLockForCallback = 
+    costOf(AsyncCallStep) + 
+    costOf(AsyncCallbackGasLock) + 
+    codeSizeOf(callingContract) * costOf(AoTPreparePerByte)
+```
+
+:::note
+Multiple asynchronous calls employ multiple temporary gas locks, one for each callback function.
+:::
+
+For our example, where `A` has 453 bytes, as of February 2022, the `gasToLockForCallback` would be:
+
+```
+gasToLockForCallback = 100000 + 4000000 + 100 * 453 = 4145300
+```
+
+It follows that the value of `gasLimit` should be: 
+
+```
+simulatedCost < gasLimit < simulatedCost + gasToLockForCallback
+```
+
+For our example, that would be:
+
+```
+3473900 < gasLimit < 7619200
+```
+
+:::important
+As of February 2022, for contracts that call other contracts, the lowest `gasLimit` required by a successful execution isn't easy to determine using **erdpy**. While this value can be determined by a careful inspection of the local testnet logs, for the moment, the recommended approach is to **start with the right-hand side of the inequality above (`simulatedCost + gasToLockForCallback`) and gradually decrease the value**, while simulating the call and looking for a successful output.
+:::
+
+For our example, let's simulate using the following values for `gasLimit`: `7619200, 7000000, 6000000`:
+
+```
+$ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
+ --pem=./testnet/wallets/users/alice.pem \
+ --function=foo\
+ --recall-nonce --gas-limit=7619200\
+ --arguments ${hexAddressOfB}\
+ --simulate
+
+... inspect output (possibly testnet logs); execution is successful
+
+erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
+ --pem=./testnet/wallets/users/alice.pem \
+ --function=foo\
+ --recall-nonce --gas-limit=7000000\
+ --arguments ${hexAddressOfB}\
+ --simulate
+
+... inspect output (possibly testnet logs); execution is successful
+
+erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
+ --pem=./testnet/wallets/users/alice.pem \
+ --function=foo\
+ --recall-nonce --gas-limit=6000000\
+ --arguments ${hexAddressOfB}\
+ --simulate
+
+... inspect output (possibly testnet logs); ERROR: out of gas when executing B::bar()
+
+```
+
+Therefore, for our example, a reasonable value for `gasLimit` is 7000000.
