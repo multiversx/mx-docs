@@ -147,7 +147,7 @@ $ erdpy --verbose contract deploy --bytecode=./b.wasm \
 Assuming `A` is deployed at `erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts`, and `B` is deployed at `erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq`, let's **simulate** `A::foo(addressOfB)` (at first, pass a _large-enough_ or maximum `gas-limit`):
 
 ```
-export hexAddressOfB=0x$(erdpy wallet bech32 --decode erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq)
+$ export hexAddressOfB=0x$(erdpy wallet bech32 --decode erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq)
 
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
  --pem=./testnet/wallets/users/alice.pem \
