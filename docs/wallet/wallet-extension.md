@@ -63,7 +63,7 @@ Do you already have a wallet?
 
 Then there is no need to create a new one. The Maiar Wallet Extension provides an option to import your existing wallet. However, to import an existing wallet you must have access to its **secret (recovery) phrase**.
 
-The Maiar wallet has a set of 24-secret phrases, which serve as your wallet’s key. Using your secret phrase to import an existing wallet does not affect your wallet, as all transaction history across all networks will be reflected in the wallet extension.
+The Maiar wallet has a set of 24-words, which serve as your wallet’s secret phrase. Using a secret phrase to import an existing wallet does not affect your wallet in any way.
 
 **To get started:** 
 
@@ -71,7 +71,7 @@ The Maiar wallet has a set of 24-secret phrases, which serve as your wallet’s 
 
   ![maiar-defi-wallet-welcome-page](https://user-images.githubusercontent.com/52820835/151935557-3be3f085-40a3-415e-b8a2-afbee54e1313.PNG)
  
-**Step 2:** Next, enter your 24-word secret phrase. You can either enter these phrases one at a time or you can simply paste in the phrase using the "_paste_" icon.
+**Step 2:** Next, enter your 24-word secret phrase. You can either enter these words one at a time or you can simply paste in the words using the "_paste_" icon.
 
    ![importwallet](https://user-images.githubusercontent.com/52820835/151940645-b25dcee5-4a37-4950-80e8-434924f9f4d3.PNG)
   
@@ -86,9 +86,11 @@ The Maiar wallet has a set of 24-secret phrases, which serve as your wallet’s 
 
 ## Key features
 
+Now you have a wallet registered in the Maiar DeFi Wallet Extension and it's ready to use. Great! Here's what you can do with this wallet:
+
 ### Send to a wallet
 
-Welcome to Maiar DeFi Wallet Extension! One of the key features of this extension is that it allows you to send funds from your wallet to another wallet. To use this feature, you will need to have some funds in your wallet before proceeding. 
+One of the key features of this extension is that it allows you to send funds from your wallet to another wallet. To use this feature, you will need to have some funds in your wallet before proceeding. 
 
 **To get started**
 
@@ -106,7 +108,7 @@ Welcome to Maiar DeFi Wallet Extension! One of the key features of this extensio
 
 ### Lock/unlock
 
-After 60 minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header. 
+After 60minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header. 
 
 
 ### Deposit to a wallet
@@ -155,4 +157,4 @@ Follow these steps to proceed:
 
 ![connectmaiar4](https://user-images.githubusercontent.com/52820835/151418100-cbcef037-d0ec-4eeb-b279-d9df3b444896.PNG)
 
-Success! 🎉
+Successful 🎉
