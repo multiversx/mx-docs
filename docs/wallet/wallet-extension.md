@@ -106,7 +106,7 @@ Welcome to Maiar DeFi Wallet Extension! One of the key features of this extensio
 
 ### Lock/unlock
 
-After 60minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header. 
+After 60 minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header. 
 
 
 ### Deposit to a wallet
