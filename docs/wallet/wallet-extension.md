@@ -147,18 +147,18 @@ Follow these steps to proceed:
 
 **Step 1:** To get started, go to the [Maiar Exchange](https://maiar.exchange/) page on the right section of the page, click on the  _“connect”_ button.
 
-![connect_maiar](/wallet/wallet-extension/wallet_extension_step17.PNG)
+![wallet_extension_step17](/wallet/wallet-extension/wallet_extension_step17.PNG)
 
 **Step 2:** Select "***Maiar DeFi Wallet***" from the options displayed.
 
-![connect_maiar2](/wallet/wallet-extension/wallet_extension_step15.PNG)
+![wallet_extension_step15](/wallet/wallet-extension/wallet_extension_step15.PNG)
 
 **Step 3:** Lastly, enter your password and click on the wallet address you want to connect to. 
 
-![connect_maiar3](/wallet/wallet-extension/wallet_extension_step16.PNG)
+![wallet_extension_step16](/wallet/wallet-extension/wallet_extension_step16.PNG)
 
 - In a split second, the Maiar Exchange home page automatically reloads. You’ll notice your account has been added to the right section of the page.
 
-![connectmaiar4](/wallet/wallet-extension/wallet_extension_step18.PNG)
+![wallet_extension_step18](/wallet/wallet-extension/wallet_extension_step18.PNG)
 
 Successful 🎉
