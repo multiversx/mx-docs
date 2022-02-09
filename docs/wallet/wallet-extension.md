@@ -77,11 +77,11 @@ The Maiar wallet has a set of 24-words, which serve as your wallet’s secret ph
  
 **Step 2:** Next, enter your 24-word secret phrase. You can either enter these words one at a time or you can simply paste in the words using the "_paste_" icon.
 
-   ![importwallet](https://user-images.githubusercontent.com/52820835/151940645-b25dcee5-4a37-4950-80e8-434924f9f4d3.PNG)
+   ![import_wallet](/wallet/wallet-extension/wallet_extension_step14.png)
   
 **Step 3:** Enter in your wallet password and confirm this password. 
 
-  ![password3](https://user-images.githubusercontent.com/52820835/151942033-04782d44-982d-44d4-b910-5890a7d256e7.PNG)
+  ![password](/wallet/wallet-extension/wallet_extension_step13.png)
   
 **Step 4:**  Completed! Your Maiar DeFi Wallet has been successfully imported and set to be used.
 
@@ -147,18 +147,18 @@ Follow these steps to proceed:
 
 **Step 1:** To get started, go to the [Maiar Exchange](https://maiar.exchange/) page on the right section of the page, click on the  _“connect”_ button.
 
-![connect-maiar](https://user-images.githubusercontent.com/52820835/151407628-6e9d30ff-b0c6-456a-a485-a50e511c31e1.PNG)
+![connect_maiar](/wallet/wallet-extension/wallet_extension_step17.PNG)
 
 **Step 2:** Select "***Maiar DeFi Wallet***" from the options displayed.
 
-![connect-maiar2](https://user-images.githubusercontent.com/52820835/151407721-89f6a637-891b-4fa8-a161-38c3a287f28d.PNG)
+![connect_maiar2](/wallet/wallet-extension/wallet_extension_step15.PNG)
 
 **Step 3:** Lastly, enter your password and click on the wallet address you want to connect to. 
 
-![connectmaiar3](https://user-images.githubusercontent.com/52820835/151407901-ca06d7ca-1223-4306-9b92-b44de4d6dc8d.PNG)
+![connect_maiar3](/wallet/wallet-extension/wallet_extension_step16.PNG)
 
 - In a split second, the Maiar Exchange home page automatically reloads. You’ll notice your account has been added to the right section of the page.
 
-![connectmaiar4](https://user-images.githubusercontent.com/52820835/151418100-cbcef037-d0ec-4eeb-b279-d9df3b444896.PNG)
+![connectmaiar4](/wallet/wallet-extension/wallet_extension_step18.PNG)
 
 Successful 🎉
