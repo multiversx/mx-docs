@@ -16,17 +16,17 @@ If you want to follow along, you can clone the [elrond-wasm-rs](https://github.c
 
 In VSCode, you can put breakpoints anywhere in your code, by simply clicking to the left of the line number. A red dot should appear to mark the breakpoint as registered by the environment:
 
-![img](debugging-images/breakpoint_setup.png)
+![img](/developers/rust-sc-debugging/breakpoint_setup.png)
 
 Once you've done that, you can debug your test function by pressing the `Debug` button above the test function name:
 
-![img](debugging-images/start_test.png)
+![img](/developers/rust-sc-debugging/start_test.png)
 
 If it doesn't appear, you might have to wait a bit for rust-analyser to load, or you might've forgotten the `#[test]` annotation.  
 
 Once you've started the test, it should stop at the breakpoint and highlight the current line for you:
 
-![img](debugging-images/first_step_debugging.png)
+![img](/developers/rust-sc-debugging//first_step_debugging.png)
 
 Then, you can use VSCode's step by step debugging (usually F10 to step over, F11 to step into, or shift + F11 to step out).
 
