@@ -85,6 +85,7 @@ The Rust framework provides various storage mappers you can use:
 - `SingleValueMapper` - Stores a single value. Also provides methods for checking for empty or clearing the entry.  
 - `VecMapper` - Stores an array, with every single value under a different storage key.  
 - `SetMapper` - Stores a set of values, with no duplicates being allowed. It also provides methods for checking if a value already exists in the set.  
+- `UnorderedSetMapper` - Same as SetMapper, but does not guarantee the order of the items. More efficient than `SetMapper`, and should be used instead unless you need to iterate over all the elements.  
 - `LinkedListMapper` - Stores a linked list, which allows fast insertion/removal of elements, as well as possibility to iterate over the whole list.  
 - `MapMapper` - Stores (key, value) pairs, while also allowing iteration over keys.  
 
@@ -96,11 +97,11 @@ There is no difference between `SingleValueMapper` and the old-school setters/ge
 
 ### SingleValueMapper vs VecMapper
 
-Storing a `Vec<T>` can be done in two ways:  
+Storing a `ManagedVec<T>` can be done in two ways:  
 
 ```
 #[storage_mapper("my_vec_single)]
-fn my_vec_single(&self) -> SingleValueMapper<Vec<T>>
+fn my_vec_single(&self) -> SingleValueMapper<ManagedVec<T>>
 
 #[storage_mapper("my_vec_mapper)]
 fn my_vec_mapper(&self) -> VecMapper<T>;
@@ -166,13 +167,13 @@ Believe it or not, most of the time, `MapMapper` is not even needed, and can sim
 
 ```
 #[storage_mapper("address_id_mapper")]
-fn address_id_mapper(&self) -> MapMapper<Address, u64>;
+fn address_id_mapper(&self) -> MapMapper<ManagedAddress, u64>;
 ```
 
 This can be replaced with the following `SingleValueMapper`:
 ```
 #[storage_mapper("address_id_mapper")]
-fn address_id_mapper(&self, address: &Address) -> SingleValueMapper<u64>;
+fn address_id_mapper(&self, address: &ManagedAddress) -> SingleValueMapper<u64>;
 ```
 
 Both of them provide (almost) the same functionality. The difference is that the `SingleValueMapper` does not provide a way to iterate over all the keys, i.e. Addresses in this case, but it's also 4-5 times more efficient. 
@@ -194,7 +195,7 @@ Unless you need to iterate over all the entries, `MapMapper` should be avoided, 
 Keep in mind that all the mappers can have as many additional arguments for the main key. For example, you can have a `VecMapper` for every user pair, like this:
 ```
 #[storage_mapper("list_per_user_pair")]
-fn list_per_user_pair(&self, first_addr: &Address, second_addr: &Address) -> VecMapper<T>;
+fn list_per_user_pair(&self, first_addr: &ManagedAddress, second_addr: &ManagedAddress) -> VecMapper<T>;
 ```
 
 Using the correct mapper for your situation can greatly decrease gas costs and complexity, so always remember to carefully evaluate your use-case.  
@@ -205,8 +206,8 @@ The Rust language does not natively support var args. The best you could probabl
 
 There are X types of var args supported:
 - `OptionalArg<T>` - arguments that can be skipped. Can have multiple per endpoint, but they all must be the last arguments of the endpoint.  
-- `VarArgs<T>` - can receive any number of arguments. Note that only one `VarArgs` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalArg` and `VarArgs` in the same endpoint.  
-- `VarArgs<MultiArgN<T1, T2, ... TN>>` - Can be used when you want to receive a variable number of pairs or arguments. For example, let's say you want to receive a variable number of (token ID, nonce) pairs. You would then use `VarArgs<MultiArg2<TokenIdentifier, u64>>`.  
+- `ManagedVarArgs<T>` - can receive any number of arguments. Note that only one `ManagedVarArgs` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalArg` and `ManagedVarArgs` in the same endpoint.  
+- `ManagedVarArgs<MultiArgN<T1, T2, ... TN>>` - Can be used when you want to receive a variable number of pairs or arguments. For example, let's say you want to receive a variable number of (token ID, nonce) pairs. You would then use `ManagedVarArgs<MultiArg2<TokenIdentifier, u64>>`.  
 
 Note: Keep in mind you have to specify the `#[var_args]` annotation in front of those arguments. For example:
 ```
@@ -214,10 +215,10 @@ Note: Keep in mind you have to specify the `#[var_args]` annotation in front of 
 fn my_opt_arg_endpoint(&self, obligatory_arg: T1, #[var_args] opt_arg: OptionalArg<T2>) {}
 
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: VarArgs<T2>) {}
+fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: ManagedVarArgs<T2>) {}
 ```
 
-This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalArg<T>` and `Vec<T>` instead of `VarArgs<T>`? The reason is the type of encoding used for each of them.
+This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalArg<T>` and `ManagedVec<T>` instead of `ManagedVarArgs<T>`? The reason is the type of encoding used for each of them.
 
 ### Option\<T\> vs OptionalArg\<T\>
 
@@ -247,28 +248,82 @@ For the same token ID and skipped nonce, the encodings look like this:
 
 As you can see, the argument can be skipped altogether instead of passing a `00` (`None`).  
 
-### Vec\<T\> vs VarArgs\<T\>
+### ManagedVec\<T\> vs ManagedVarArgs\<T\>
 
 For the sake of the example, let's assume you want to receive pairs of (token ID, nonce, amount). This can be implemented in two ways:
 ```
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, args: Vec<(TokenIdentifier, u64, BigUint)>) {}
+fn my_var_args_endpoint(&self, args: ManagedVec<(TokenIdentifier, u64, BigUint)>) {}
 ```
 
 ```
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, #[var_args] args: VarArgs<MultiArg3<TokenIdentifier, u64, BigUint>>) {}
+fn my_var_args_endpoint(&self, #[var_args] args: ManagedVarArgs<MultiArg3<TokenIdentifier, u64, BigUint>>) {}
 ```
 
-The first approach looks a lot simpler, just a `Vec` of tuples. But, the implications are quite devastating, both for performance and usability. To use the first endpoint, with the pairs (TOKEN-123456, 5, 100) and (TOKEN-123456, 10, 500), the call data would have to look like this:
+The first approach looks a lot simpler, just a `ManagedVec` of tuples. But, the implications are quite devastating, both for performance and usability. To use the first endpoint, with the pairs (TOKEN-123456, 5, 100) and (TOKEN-123456, 10, 500), the call data would have to look like this:
 `myVarArgsEndpoint@0000000c_544f4b454e2d313233343536_0000000000000005_00000001_64_0000000c_544f4b454e2d313233343536_000000000000000a_00000002_01f4`
 
 Note: Above, we've separated the parts with `_` for readability purposes only. On the real blockchain, there would be no underscores, everything would be concatenated.
 
 As you can see, that endpoint is very hard to work with. All arguments have to be passed into this big chunk, with nested encoding, which also adds additional lengths for the `TokenIdentifier` (i.e. the 0000000c in front, which is length 12) and for `BigUint` (i.e. the length in bytes).  
 
-For the `VarArgs` approach, this endpoint is a lot easier to use. For the same arguments, the call data looks like this:
+For the `ManagedVarArgs` approach, this endpoint is a lot easier to use. For the same arguments, the call data looks like this:
 `myVarArgsEndpoint@544f4b454e2d313233343536@05@64@544f4b454e2d313233343536@0a@01f4`
 
 The call data is a lot shorter, and it's much more readable, and as we use top-encoding instead of nested-encoding, there's no need for lengths either.  
 
+## The dynamic allocation problem
+
+The main difference between the base Rust types (like `Vec<T>`) and their managed counterparts, provided by the Rust framework (like `ManagedVec<T>`) lies in their memory allocation. Base Rust types use dynamic allocation on the heap, which in simple terms, means the program (in this case, the smart contract), keeps asking for more and more memory from the operating system. For smalls collections, this doesn't matter much, but for bigger collection, this can make it so the contract call fails.  
+
+The main issue is that the Rust runtime is quite eager with its dynamic memory allocation, and asks for more memory than it actually needs. For normal programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.  
+
+The alternative is to use managed types. All managed types, like `BigUint`, `TokenIdentifier`, `ManagedBuffer` etc. store all their memory inside the Elrond Virtual Machine, which is the program that executes smart contracts and provides the API functions. The managed types only store a `handle`, which is a `u32` index. So whenever you have to add two `BigUint`s for example, you only pass the three handles: the result, the first operand, and the second operand. This way, there is very little data being passed around, which in turn makes everything cheaper. And since these types only store a handle, their memory allocation is fixed size, so it can be allocated on the stack instead of having to be allocated on the heap.  
+
+### Base Rust types vs managed types
+
+Below is a table of unmanaged types and their managed counterparts:  
+
+| Unmanaged | Managed |
+| :---: | :---: |
+| &[u8] | TokenIdentifier |
+| - | BigUint |
+| BoxedBytes | ManagedBuffer |
+| String | ManagedBuffer |
+| VarArgs | ManagedVarArgs |
+| Vec | ManagedVec |
+| MultiResultVec | ManagedMultiResultVec |
+
+### Static buffers
+
+Sometimes you might want to allocate some memory inside the SC, because it might be easier to use. In that case, we recommend using static buffers. The declaration looks like this:
+
+```rust
+static mut STATIC_BUFFER: [u8; BUFFER_SIZE] = [0u8; BUFFER_SIZE];
+```
+
+Where `BUFFER_SIZE` can be constant. This will statically allocate `BUFFER_SIZE` bytes on the stack. Keep in mind in Rust, accessing mutable global variables is unsafe, so if you want to use this buffer in any way, you will have to wrap the code in an `unsafe` block. For example, if you wanted to load a `ManagedBuffer` into a static buffer, you would have to do something like this:  
+
+```rust
+let mut buffer = ManagedBuffer::new();
+// ...
+// do something with the buffer
+// ...
+unsafe {
+    let buffer_len = buffer.len();
+    require!(
+        buffer_len <= BUFFER_SIZE,
+        "Cannot fit managed buffer in static buffer"
+    );
+
+    let static_buffer_slice = &mut STATIC_BUFFER[..buffer_len];
+    require!(
+        buffer.load_slice(0, static_buffer_slice).is_ok(),
+        "Failed to load into static buffer"
+    );
+    // use static_buffer_slice in some way
+}
+```
+
+We recommend not doing this unless you REALLY have to. This code is marked as unsafe for a good reason.  
