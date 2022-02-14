@@ -2,7 +2,9 @@
 id: rust-smart-contract-debugging
 title: Rust Smart Contract Debugging
 ---
+## Introduction
 
+Debugging smart contracts is possible with the integrated debugger in Visual Studio Code. You will be able to debug your contract just like you would debug a regular program.
 ## Prerequisites
 
 For this tutorial, you will need:
