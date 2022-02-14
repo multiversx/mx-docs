@@ -67,7 +67,3 @@ In the case of an **error**, the `data` field is unset, the `error` field contai
 :::important
 When describing each HTTP endpoint on the following pages, the basic structure of the response is **simplified for brevity,** and, in general, only the actual payload of the response is depicted.
 :::
-
-## **REST Client playground**
-
-If you wish to rapidly test the API endpoints we have created some [playground files](https://github.com/ElrondNetwork/elrond-sdk/tree/master/proxy-playground) for [Visual Studio Code REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client). These files contain examples for using the API.

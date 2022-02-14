@@ -6,7 +6,7 @@ title: api.elrond.com
 ## About api.elrond.com
 
 `api.elrond.com` is a wrapper over `gateway.elrond.com` that brings a robust caching mechanism, alongside Elasticsearch 
-historical queries support, tokens media support, delegation&staking data, and many others. 
+historical queries support, tokens media support, delegation & staking data, and many others. 
 
 References for `api.elrond.com`:
 
