@@ -652,19 +652,55 @@ https://gateway.elrond.com/address/*bech32Address*/esdts/roles
 
 <!--Response-->
 
-```
+```json
 {
-  "roles": {
-    "TCK-0cv5hj": [
-      "ESDTRoleNFTAddQuantity",
-      "ESDTRoleNFTBurn"
-    ],
-    "TCK2-ft80kn": [
-      "ESDTRoleLocalBurn"
-    ]
-  }
+  "data": {
+    "roles": {
+      "TCK-0cv5hj": [
+        "ESDTRoleNFTAddQuantity",
+        "ESDTRoleNFTBurn"
+      ],
+      "TCK-ft90kn": [
+        "ESDTRoleLocalBurn"
+       ] 
+    }
+  },
   "error": "",
   "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-primary">GET</span> **Get token's supply, burnt and minted values**
+
+This involves a basic request that contains the token name. It will gather data from all shards and compute the 
+initial minted value, burnt value, minted value and total supply value.
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+| Param           | Required                                  | Type     | Description                                    |
+| -------------   | ----------------------------------------- | -------- | -------------------------------------          |
+| tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier (example: `WEGLD-bd4d79)` |
+
+```
+https://gateway.elrond.com/network/esdt/supply/*token name*
+```
+
+<!--Response-->
+
+```json
+{
+ "data": {
+  "supply": "95000000000000000000",
+  "minted": "5000000000000000000",
+  "burned": "10000000000000000000",
+  "initialMinted": "100000000000000000000"
+ },
+ "error": "",
+ "code": "successful"
 }
 ```
 

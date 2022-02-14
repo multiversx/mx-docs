@@ -144,6 +144,8 @@
         "label": "REST API",
         "ids": [
           "sdk-and-tools/rest-api/rest-api",
+          "sdk-and-tools/rest-api/api-elrond-com",
+          "sdk-and-tools/rest-api/gateway-overview",
           "sdk-and-tools/rest-api/addresses",
           "sdk-and-tools/rest-api/transactions",
           "sdk-and-tools/rest-api/network",
@@ -181,14 +183,6 @@
       "integrators/accounts-management",
       "integrators/creating-transactions",
       "integrators/querying-the-blockchain"
-    ],
-    "Detailed comparison": [
-      "detailed-comparison/overview",
-      "detailed-comparison/elrond-vs-ethereum-serenity",
-      "detailed-comparison/elrond-vs-zilliqa",
-      "detailed-comparison/elrond-vs-dfinity",
-      "detailed-comparison/elrond-vs-algorand",
-      "detailed-comparison/elrond-vs-harmony"
     ]
   }
 }
