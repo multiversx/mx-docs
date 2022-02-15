@@ -275,7 +275,7 @@ The call data is a lot shorter, and it's much more readable, and as we use top-e
 
 ## The dynamic allocation problem
 
-The main difference between the base Rust types (like `Vec<T>`) and their managed counterparts, provided by the Rust framework (like `ManagedVec<T>`) lies in their memory allocation. Base Rust types use dynamic allocation on the heap, which in simple terms, means the program (in this case, the smart contract), keeps asking for more and more memory from the operating system. For smalls collections, this doesn't matter much, but for bigger collection, this can make it so the contract call fails.  
+The main difference between the base Rust types (like `Vec<T>`) and their managed counterparts, provided by the Rust framework (like `ManagedVec<T>`) lies in their memory allocation. Base Rust types use dynamic allocation on the heap, which in simple terms, it means the program (in this case, the smart contract) keeps asking for more and more memory from the operating system. For small collections, this doesn't matter much, but for bigger collection, this can make it so the contract call fails.  
 
 The main issue is that the Rust runtime is quite eager with its dynamic memory allocation, and asks for more memory than it actually needs. For ordinary programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.  
 
