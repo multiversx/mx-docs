@@ -229,7 +229,7 @@ IssuanceTransaction {
 Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
-here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [Rest API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
+here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [REST API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
 
 ## **Roles** ##
 
@@ -720,7 +720,7 @@ It can be fetched by viewing all the tokens for the address via API.
 }
 ```
 
-## **Rest API**
+## **REST API**
 
 There are a number of API endpoints that one can use to interact with ESDT NFT data. These are:
 

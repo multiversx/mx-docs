@@ -3,7 +3,7 @@ id: gateway-overview
 title: Gateway overview
 ---
 
-## Overview of Elrond Gateway Rest API
+## Overview of Elrond Gateway REST API
 
 The Elrond's Gateway REST API can be used by any application - dApp, desktop or server application - to interact with the Blockchain.
 The Gateway is backed by the [proxy](/sdk-and-tools/proxy) and the names Gateway or Proxy are often referred as the same thing.
