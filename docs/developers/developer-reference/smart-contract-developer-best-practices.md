@@ -303,7 +303,7 @@ Sometimes you might want to allocate some memory inside the SC, because it might
 static mut STATIC_BUFFER: [u8; BUFFER_SIZE] = [0u8; BUFFER_SIZE];
 ```
 
-Where `BUFFER_SIZE` can be constant. This will statically allocate `BUFFER_SIZE` bytes in the data segment. Keep in mind in Rust, accessing mutable global variables is unsafe, so if you want to use this buffer in any way, you will have to wrap the code in an `unsafe` block. For example, if you wanted to load a `ManagedBuffer` into a static buffer, you would have to do something like this:  
+where `BUFFER_SIZE` can be constant. This will statically allocate `BUFFER_SIZE` bytes in the data segment. Keep in mind that in Rust, accessing mutable global variables is unsafe, so if you want to use this buffer in any way, you will have to wrap the code in an `unsafe` block. For example, if you wanted to load a `ManagedBuffer` into a static buffer, you would have to do something like this:  
 
 ```rust
 let mut buffer = ManagedBuffer::new();
