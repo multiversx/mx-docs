@@ -277,9 +277,9 @@ The call data is a lot shorter, and it's much more readable, and as we use top-e
 
 The main difference between the base Rust types (like `Vec<T>`) and their managed counterparts, provided by the Rust framework (like `ManagedVec<T>`) lies in their memory allocation. Base Rust types use dynamic allocation on the heap, which in simple terms, means the program (in this case, the smart contract), keeps asking for more and more memory from the operating system. For smalls collections, this doesn't matter much, but for bigger collection, this can make it so the contract call fails.  
 
-The main issue is that the Rust runtime is quite eager with its dynamic memory allocation, and asks for more memory than it actually needs. For normal programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.  
+The main issue is that the Rust runtime is quite eager with its dynamic memory allocation, and asks for more memory than it actually needs. For ordinary programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.  
 
-The alternative is to use managed types. All managed types, like `BigUint`, `TokenIdentifier`, `ManagedBuffer` etc. store all their memory inside the Elrond Virtual Machine, which is the program that executes smart contracts and provides the API functions. The managed types only store a `handle`, which is a `u32` index. So whenever you have to add two `BigUint`s for example, you only pass the three handles: the result, the first operand, and the second operand. This way, there is very little data being passed around, which in turn makes everything cheaper. And since these types only store a handle, their memory allocation is fixed size, so it can be allocated on the stack instead of having to be allocated on the heap.  
+The alternative is to use **managed types**. All managed types, like `BigUint`, `TokenIdentifier`, `ManagedBuffer` etc. store all their memory inside the Elrond Virtual Machine, which is the program that executes smart contracts and provides the API functions. The managed types only store a `handle` within the smart contract memory, which is a `u32` index, while the actual payload resides in VM's memory. So whenever you have to add two `BigUint`s for example, you only pass the three handles: the result, the first operand, and the second operand. This way, there is very little data being passed around, which in turn makes everything cheaper. And since these types only store a handle, their memory allocation is fixed size, so it can be allocated on the stack instead of having to be allocated on the heap.  
 
 ### Base Rust types vs managed types
 
@@ -303,7 +303,7 @@ Sometimes you might want to allocate some memory inside the SC, because it might
 static mut STATIC_BUFFER: [u8; BUFFER_SIZE] = [0u8; BUFFER_SIZE];
 ```
 
-Where `BUFFER_SIZE` can be constant. This will statically allocate `BUFFER_SIZE` bytes on the stack. Keep in mind in Rust, accessing mutable global variables is unsafe, so if you want to use this buffer in any way, you will have to wrap the code in an `unsafe` block. For example, if you wanted to load a `ManagedBuffer` into a static buffer, you would have to do something like this:  
+Where `BUFFER_SIZE` can be constant. This will statically allocate `BUFFER_SIZE` bytes in the data segment. Keep in mind in Rust, accessing mutable global variables is unsafe, so if you want to use this buffer in any way, you will have to wrap the code in an `unsafe` block. For example, if you wanted to load a `ManagedBuffer` into a static buffer, you would have to do something like this:  
 
 ```rust
 let mut buffer = ManagedBuffer::new();
