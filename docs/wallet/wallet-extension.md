@@ -15,15 +15,15 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 * On the [Chrome Web Store Extension](https://chrome.google.com/webstore/category/extensions), search for **Maiar DeFi Wallet.** and add it to your browser. 
 
-  ![maiar-defi-chrome](/docs.elrond.com/website/static/wallet/wallet-extension/wallet_extension_step1.png)
+  ![maiar-defi-chrome](/wallet/wallet-extension/wallet_extension_step1.png)
   
 * Confirm the action in the pop-up.
 
-  ![wallet_extension_step2](/docs.elrond.com/website/static/wallet/wallet-extension/wallet_extension_step2.png)
+  ![wallet_extension_step2](/wallet/wallet-extension/wallet_extension_step2.png)
     
 * You should receive a notification that the extension has been added successfully. 
 
-  ![wallet_extension_step3](/docs.elrond.com/website/static/wallet/wallet-extension/wallet_extension_step3.png)
+  ![wallet_extension_step3](/wallet/wallet-extension/wallet_extension_step3.png)
 
 
 
@@ -32,7 +32,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 * You will be presented with two options: you can either *Create new wallet* or *Import existing wallet.*
 
-  ![maiar-defi-wallet-welcome-page](/docs.elrond.com/website/static/wallet/wallet-extension/wallet_extension_step4.png)
+  ![maiar-defi-wallet-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
  
 
 ### Create a new wallet
@@ -73,7 +73,7 @@ The Maiar wallet has a set of 24-words, which serve as your wallet’s secret ph
 
 **Step 1:** With the [Maiar DeFi wallet extension](https://chrome.google.com/webstore/detail/maiar-defi-wallet/dngmlblcodfobpdpecaadgfbcggfjfnm) installed. Click on ‘’Import existing wallet”.
 
-  ![maiar-defi-wallet-welcome-page](/docs.elrond.com/website/static/wallet/wallet-extension/wallet_extension_step4.png)
+  ![maiar-defi-wallet-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
  
 **Step 2:** Next, enter your 24-word secret phrase. You can either enter these words one at a time or you can simply paste in the words using the "_paste_" icon.
 
@@ -147,18 +147,18 @@ Follow these steps to proceed:
 
 **Step 1:** To get started, go to the [Maiar Exchange](https://maiar.exchange/) page on the right section of the page, click on the  _“connect”_ button.
 
-![wallet_extension_step17](/wallet/wallet-extension/wallet_extension_step17.PNG)
+![wallet_extension_step17](/wallet/wallet-extension/wallet_extension_step17.png)
 
 **Step 2:** Select "***Maiar DeFi Wallet***" from the options displayed.
 
-![wallet_extension_step15](/wallet/wallet-extension/wallet_extension_step15.PNG)
+![wallet_extension_step15](/wallet/wallet-extension/wallet_extension_step15.png)
 
 **Step 3:** Lastly, enter your password and click on the wallet address you want to connect to. 
 
-![wallet_extension_step16](/wallet/wallet-extension/wallet_extension_step16.PNG)
+![wallet_extension_step16](/wallet/wallet-extension/wallet_extension_step16.png)
 
 - In a split second, the Maiar Exchange home page automatically reloads. You’ll notice your account has been added to the right section of the page.
 
-![wallet_extension_step18](/wallet/wallet-extension/wallet_extension_step18.PNG)
+![wallet_extension_step18](/wallet/wallet-extension/wallet_extension_step18.png)
 
 Successful 🎉
