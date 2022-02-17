@@ -17,7 +17,7 @@ networkConfig.erd_min_gas_limit <= tx.gasLimit <= networkConfig.erd_max_gas_per_
 
 ### Cost components
 
-The **actual gas cost** - also known as **used gas** - is the consumed amount from the provided **gas limit** - the amount of gas units actually required by the Network in order to process the transaction. The unconsumed amount is called **remaining gas**.
+The **actual gas consumption** - also known as **used gas** - is the consumed amount from the provided **gas limit** - the amount of gas units actually required by the Network in order to process the transaction. The unconsumed amount is called **remaining gas**.
 
 At processing time, the Network breaks the **used gas** down into two components: 
  - gas used by **value movement and data handling**
