@@ -19,12 +19,12 @@ networkConfig.erd_min_gas_limit <= tx.gasLimit <= networkConfig.erd_max_gas_per_
 
 The **actual gas cost** - also known as **used gas** - is the consumed amount from the provided **gas limit** - the amount of gas units actually required by the Network in order to process the transaction. The unconsumed amount is called **remaining gas**.
 
-At processing time, the Network breaks the **actual gas cost** down into two components: 
- - **value movement and data handling** cost
- - **contract execution** cost (for executing System or User-Defined Smart Contract)
+At processing time, the Network breaks the **used gas** down into two components: 
+ - gas used by **value movement and data handling**
+ - gas used by **contract execution** (for executing System or User-Defined Smart Contract)
 
 :::note
-Simple transfers of value (EGLD transfers) present only the _value movement and data handling_ component of the cost (that is, no _execution_ cost), while Smart Contract calls (which includes ESDT and NFT transfers as well - since they are, actually, calls against a System Smart Contract) present both components of the cost.
+Simple transfers of value (EGLD transfers) only require the _value movement and data handling_ component of the gas usage (that is, no _execution_ gas), while Smart Contract calls require both components of the gas consumption. This includes ESDT and NFT transfers as well, because they are in fact calls to a System Smart Contract.
 :::
 
 The  **value movement and data handling** cost component is easily computable, using on the following formula:
@@ -41,7 +41,9 @@ The **contract execution** cost component is easily computable for System Smart 
 
 The **processing fee**, measured in EGLD, is computed with respect to the **actual gas cost** - broken down into its components - and the **gas price per gas unit**, which differs between the components.
 
-While the price of a gas unit for the **value movement and data handling** component equals the **gas price** provided in the transaction, the price of a gas unit for the **contract execution** component is computed with respect to a Network parameter called `erd_gas_price_modifier`:
+The **gas price per gas unit** for the **value movement and data handling** must be specified by the transaction, and it must be equal or greater than a Network parameter called `erd_min_gas_price`.
+
+While the price of a gas unit for the **value movement and data handling** component equals the **gas price** provided in the transaction, the price of a gas unit for the **contract execution** component is computed with respect to another Network parameter called `erd_gas_price_modifier`:
 
 ```
 value_movement_and_data_handling_price_per_unit = tx.GasPrice

@@ -247,5 +247,5 @@ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p
 Therefore, in our case, a reasonable value for `gasLimit` would be 7000000.
 
 :::important
-In case of a highly gas-demanding callback (not recommended) which would consume more than `gasToLockForCallback`, one should appropriately increase the right-hand side of the `gasLimit` inquality depicted above, by inspecting the contract call output and the testnet logs.
+In case of a highly gas-demanding callback (not recommended) which would consume more than `gasToLockForCallback`, one should appropriately increase the right-hand side of the `gasLimit` inequation depicted above, by inspecting the contract call output and the testnet logs.
 :::
