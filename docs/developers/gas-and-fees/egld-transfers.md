@@ -1,6 +1,6 @@
 ---
 id: egld-transfers
-title: EGLD transfers
+title: EGLD transfers (move balance transactions)
 ---
 
 ## Formula

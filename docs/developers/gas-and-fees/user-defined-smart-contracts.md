@@ -187,7 +187,7 @@ gasToLockForCallback =
 ```
 
 :::note
-Multiple asynchronous calls employ multiple temporary gas locks, one for each callback function.
+Subsequent asynchronous calls (asynchronous calls performed by an asynchronously-called contract) will require temporary gas locks as well.
 :::
 
 For our example, where `A` has 453 bytes, the `gasToLockForCallback` would be (as of February 2022):
