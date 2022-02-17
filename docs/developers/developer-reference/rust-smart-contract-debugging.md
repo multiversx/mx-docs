@@ -28,7 +28,7 @@ If it doesn't appear, you might have to wait a bit for rust-analyser to load, or
 
 Once you've started the test, it should stop at the breakpoint and highlight the current line for you:
 
-![img](/developers/rust-sc-debugging//first_step_debugging.png)
+![img](/developers/rust-sc-debugging/first_step_debugging.png)
 
 Then, you can use VSCode's step by step debugging (usually F10 to step over, F11 to step into, or shift + F11 to step out).
 
