@@ -22,6 +22,40 @@ In addition to NFTs and SFTs, Elrond introduced Meta ESDTs.
 Meta ESDTs are a special case of semi-fungible-tokens. They can be seen as regular ESDT fungible tokens that also have properties.
 In a particular example, LKMEX is a Meta ESDT and its properties help implement the release schedule.
 
+## **Branding**
+
+Anyone can create NFTs and SFTs tokens on Elrond Network. There are also no limits in tokens names or tickers. For example,
+one issues an `AliceToken` with the ticker `ALC`. Anyone else is free to create a new token with the same token name and
+the same token ticker. The only difference will be the random sequence of the token identifier. So the "original" token
+could have received the random sequence `1q2w3e` resulting in the `ALC-1q2w3e` identifier, while the second token could
+have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`.
+
+In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a
+branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens. Elrond products such as Explorer, Wallet and so on
+will display tokens in accordance to their branding, if any.
+
+A token owner can submit a branding request by opening a Pull Request on https://github.com/ElrondNetwork/assets.
+
+### **Submitting a branding request**
+
+Token owners can create a PR to the https://github.com/ElrondNetwork/assets with the logo in .png and .svg format, as well as a .json file containing all the relevant information.
+
+Here’s a prefilled template for the .json file to get you started:
+
+``` json
+{
+  "website": "https://www.elrondtoken.com",
+  "description": "Elrond Token is a collection of 10.000 unique and randomly generated tokens.",
+  "social": {
+    "email": "erd-token@elrond.com",
+    "blog": "https://www.elrondtoken.com/ERD-token-blog",
+    "twitter": "https://twitter.com/ERD-token-twitter"
+  },
+  "status": "active"
+}
+```
+
+
 ## **Issuance of Non-Fungible Tokens**
 
 One has to perform an issuance transaction in order to register a non-fungible token.
@@ -195,7 +229,7 @@ IssuanceTransaction {
 Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
 
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
-here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [Rest API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
+here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [REST API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
 
 ## **Roles** ##
 
@@ -207,6 +241,7 @@ For NFT:
 * ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
 * ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 * ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
+* ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
 
 For SFT:
 * ESDTRoleNFTCreate : this role allows one to create a new SFT
@@ -214,6 +249,8 @@ For SFT:
 * ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
 * ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 * ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
+* ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
+
 
 To see how roles can be assigned, please refer to [this](/developers/nft-tokens#assigning-roles) section.
 
@@ -683,7 +720,7 @@ It can be fetched by viewing all the tokens for the address via API.
 }
 ```
 
-## **Rest API**
+## **REST API**
 
 There are a number of API endpoints that one can use to interact with ESDT NFT data. These are:
 

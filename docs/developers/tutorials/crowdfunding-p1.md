@@ -241,8 +241,7 @@ Here's how the `init` method looks like, with the code that saves the target (gu
 ```Rust
 #![no_std]
 
-imports!();
-
+elrond_wasm::imports!();
 
 #[elrond_wasm::contract]
 pub trait Crowdfunding {
