@@ -17,7 +17,7 @@ networkConfig.erd_min_gas_limit <= tx.gasLimit <= networkConfig.erd_max_gas_per_
 
 ### Cost components
 
-The **actual gas cost** - also known as **used gas** - is the consumed amount from the provided **gas limit** - the amount of gas units actually required by the Network in order to process the transaction. The unconsumed amount is called **remaining gas**.
+The **actual gas consumption** - also known as **used gas** - is the consumed amount from the provided **gas limit** - the amount of gas units actually required by the Network in order to process the transaction. The unconsumed amount is called **remaining gas**.
 
 At processing time, the Network breaks the **used gas** down into two components: 
  - gas used by **value movement and data handling**
@@ -35,7 +35,7 @@ tx.gasLimit =
     networkConfig.erd_gas_per_data_byte * lengthOf(tx.data)
 ```
 
-The **contract execution** cost component is easily computable for System Smart Contract calls (based on formulas specific to each contract), but harder to determine _a priori_  for User-defined Smart Contracts - where _simulations_ and _estimations_ are employed.
+The **contract execution** cost component is easily computable for System Smart Contract calls (based on formulas specific to each contract), but harder to determine _a priori_  for user-defined Smart Contracts. This is where _simulations_ and _estimations_ are employed.
 
 ## Processing fee (EGLD)
 
@@ -51,7 +51,7 @@ contract_execution_price_per_unit = tx.GasPrice * networkConfig.erd_gas_price_mo
 ```
 
 :::note
-Generally speaking, the price of a gas unit for **contract execution** is lower than the price of a gas unit for **value movement and data handling**. 
+Generally speaking, the price of a gas unit for **contract execution** is lower than the price of a gas unit for **value movement and data handling**, due to the gas price modifier for contracts (`erd_gas_price_modifier`). 
 :::
 
 The **processing fee** formula looks like this:
@@ -62,4 +62,4 @@ processing_fee =
     contract_execution_cost * contract_execution_price_per_unit
 ```
 
-Upon processing the transaction, if applicable (if the **paid fee** is higher than the **necessary fee**), the Network will return the originator a value called **gas refund**, computed with respect to the unconsumed (component of the) gas.
+After processing the transaction, the Network will send a value called **gas refund** back to the sender of the transaction, computed with respect to the unconsumed (component of the) gas, if applicable (if the **paid fee** is higher than the **necessary fee**).
