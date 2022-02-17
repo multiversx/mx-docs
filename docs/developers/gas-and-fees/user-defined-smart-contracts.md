@@ -3,9 +3,9 @@ id: user-defined-smart-contracts
 title: User-defined Smart Contracts
 ---
 
-For User-defined Smart Contract deployments and function calls, the **actual gas cost** of processing contains both of the previously mentioned cost components - though, while the **value movement and data handling** component is easily computable (using the previously depicted formula), the **contract execution** component is hard to determine precisely _a priori_. Therefore, for this component we have to rely on _simulations_ and _estimations_.
+For user-defined Smart Contract deployments and function calls, the **actual gas consumption** of processing contains both of the previously mentioned cost components - though, while the **value movement and data handling** component is easily computable (using the previously depicted formula), the **contract execution** component is hard to determine precisely _a priori_. Therefore, for this component we have to rely on _simulations_ and _estimations_.
 
-For **simulations**, we will start a local testnet using erdpy (detailed setup instructions can be found [here](/developers/setup-local-testnet)). Thus, before going further, make sure your local testnet is up and running.
+For **simulations**, we will start a local testnet using `erdpy` (detailed setup instructions can be found [here](/developers/setup-local-testnet)). Thus, before going further, make sure your local testnet is up and running.
 
 ## Contract deployments
 
@@ -173,9 +173,9 @@ The simulated cost represents the **actual gas cost** for invoking `A::foo()`, `
 
 **However, the simulated cost above isn't the value we are going to use as `gasLimit`.** If we were to do so, we would be presented the error `not enough gas`.
 
-The Elrond VM, while hitting the call to `B::bar()` - also called an _asyncCall breakpoint_ - before actually invoking the function, inspects the **_on-the-spot_ remaining gas** and **temporarily locks (reserves) a portion of it**, to allow for the execution of `A::callBack()` in the end.
+Upon reaching the call to `B::bar()` inside `A::foo()`, the Elrond VM inspects the **remaining gas _at runtime_** and **temporarily locks (reserves) a portion of it**, to allow for the execution of `A::callBack()` once the call to `B::bar()` returns.
 
-With respect to the [VM Gas Schedule](https://github.com/ElrondNetwork/elrond-config-mainnet/tree/master/gasSchedules), the aforementioned **_on-the-spot_ remaining gas** has to satisfy the following (in order for the **temporary gas lock reservation** to succeed):
+With respect to the [VM Gas Schedule](https://github.com/ElrondNetwork/elrond-config-mainnet/tree/master/gasSchedules), the aforementioned **remaining gas _at runtime_** has to satisfy the following conditions in order for the **temporary gas lock reservation** to succeed:
 
 ```
 onTheSpotRemainingGas > gasToLockForCallback
