@@ -19,19 +19,12 @@ If not specified otherwise, the mini-testnet starts with one Shard plus the Meta
 In order to install erdpy, follow the instructions at [install erdpy](/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended).
 
 :::note erdpy version
-Make sure your erdpy version is `0.8.7` or higher.
+Make sure your erdpy version is `1.0.24` or higher.
 :::
 
 ## **Prerequisites: Node and Proxy**
 
-First, let erdpy know the desired software releases for the Node and for the Proxy:
-
-```
-$ erdpy config set dependencies.elrond_proxy_go.tag master
-$ erdpy config set dependencies.elrond_go.tag master
-```
-
-Then, run the following command - this will fetch the software into `~/elrondsdk`:
+Run the following command, which will fetch the prerequisites (`elrond-go`, `elrond-proxy-go` and `golang`) into `~/elrondsdk`:
 
 ```
 $ erdpy testnet prerequisites

@@ -145,6 +145,7 @@ Choose either of these networks.
 You can now connect Maiar Exchange to the Maiar DeFi wallet in real-time. With this connection, you will be able to log in to the Maiar exchange using the Maiar DeFi wallet extension in a few steps.
 Follow these steps to proceed:
 
+
 **Step 1:** To get started, go to the [Maiar Exchange](https://maiar.exchange/) page on the right section of the page, click on the  _“connect”_ button.
 
 ![wallet_extension_step17](/wallet/wallet-extension/wallet_extension_step17.png)
@@ -162,3 +163,4 @@ Follow these steps to proceed:
 ![wallet_extension_step18](/wallet/wallet-extension/wallet_extension_step18.png)
 
 Successful 🎉
+

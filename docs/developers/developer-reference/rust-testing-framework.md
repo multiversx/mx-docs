@@ -18,13 +18,13 @@ This is where the Mandos generation part comes into play. The Rust testing frame
 
 ## Prerequisites
 
-You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.25.0). You can check the latest version here: https://crates.io/crates/elrond-wasm
+You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.27.4). You can check the latest version here: https://crates.io/crates/elrond-wasm
 
 Add `elrond-wasm-debug` and required packages as dev-dependencies in your Cargo.toml:
 
 ```toml
 [dev-dependencies.elrond-wasm-debug]
-version = "0.25.0"
+version = "0.27.4"
 
 [dev-dependencies]
 num-bigint = "0.4.2"
@@ -140,6 +140,16 @@ Since this is a SC deploy, we call the `init` function. Since the contract works
 
 ```rust
 let target = BigUint::<DebugApi>::from(2_000u32);
+```
+
+Keep in mind you can't create managed types outside of the `execute_tx` functions. If you need to do that, you should use `blockchain_wrapper.execute_in_managed_environment()`. For example, if you needed to create a struct with managed types: 
+
+```rust
+let my_struct =
+    wrapper.execute_in_managed_environment(|| StructWithManagedTypes::<DebugApi> {
+        big_uint: managed_biguint!(500),
+        buffer: managed_buffer!(b"MyBuffer"),
+    });
 ```
 
 Similarly for other managed types.  
