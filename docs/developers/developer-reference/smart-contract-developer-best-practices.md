@@ -285,7 +285,7 @@ Here are a few simple guidelines you can use to ensure your contract performs ef
 
 The basic Rust types (like `String` and `Vec<T>`) are dynamically allocated on the heap. In simple terms, it means the program (in this case, the smart contract) keeps asking for more and more memory from the runtime environment (the VM). For small collections, this doesn't matter much, but for bigger collection, this can become slow and the VM might even stop the contract and mark the execution as failed.
 
-The main issue is that basic Rust types are quite eager with dynamic memory allocation: they ask for more memory than they actually needs. For ordinary programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.
+The main issue is that basic Rust types are quite eager with dynamic memory allocation: they ask for more memory than they actually need. For ordinary programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.
 
 The alternative is to use **managed types** instead of the usual Rust types. All managed types, like `BigUint`, `TokenIdentifier`, `ManagedBuffer` etc. store all their contents inside the VM's memory, as opposed to the contract memory, so they have a great performance advantage. But you don't need to be concerned with "where" the contents are, because managed types automatically keep track of the contents with help from the VM.
 
