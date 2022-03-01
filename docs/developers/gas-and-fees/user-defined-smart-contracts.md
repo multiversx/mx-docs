@@ -117,10 +117,10 @@ $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9j
 If the flow of the called function is dependent on input arguments or it references blockchain data, then the cost will vary as well, depending on these variables. Make sure you simulate sufficient scenarios for the contract call and increase (decrease) the `gas-limit`.
 :::
 
-## Contracts calling other contracts
+## Contracts calling (asynchronously) other contracts
 
 :::important
-Documentation in this section is preliminary and subject to change.
+Documentation in this section is preliminary and subject to change. Furthermore, **only asynchronous calls are covered**.
 :::
 
 Before moving forward, make sure you first have a look over the following:
@@ -128,7 +128,7 @@ Before moving forward, make sure you first have a look over the following:
  - [Asynchronous calls (Rust framework)](/developers/developer-reference/elrond-wasm-contract-calls/#asynchornous-calls)
  - [Callbacks (Rust framework)](/developers/developer-reference/elrond-wasm-annotations/#callbacks)
 
-Suppose we have two contracts: `A` and `B`, where `A::foo(addressOfB)` calls `B::bar()`.
+Suppose we have two contracts: `A` and `B`, where `A::foo(addressOfB)` asynchronously calls `B::bar()` (e.g. using `asyncCall()`).
 
 Let's deploy the contracts `A` and `B`:
 
