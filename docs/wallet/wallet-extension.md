@@ -32,7 +32,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 * You will be presented with two options: you can either *Create new wallet* or *Import existing wallet.*
 
-  ![maiar-defi-wallet-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
+  ![maiar-defi-example-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
  
 
 ### Create a new wallet
@@ -43,7 +43,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 **Step 3:** Next, a secret phrase consisting of a set of 24 secret words will be displayed. Safely backup these secret words. We strongly recommend you write them down or copy and store them in a safe place like a password manager.  These secret words are the key to your wallet account and cannot be recovered if lost.
 
-   ![maiar-defi-secret-phrase](/wallet/wallet-extension/wallet_extension_step5.png)
+   ![maiar-defi-example-secret-phrase](/wallet/wallet-extension/wallet_extension_step5.png)
 
 
 **Step 4:** Before proceeding to the next step, confirm that you have safely stored your secret phrase.
@@ -58,7 +58,7 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
 **Step 7:** Completed! Your Maiar DeFi Wallet has been successfully created and set to be used. 
 
-   ![successful](/wallet/wallet-extension/wallet_extension_step8.png)
+   ![maiar-defi-example-successful](/wallet/wallet-extension/wallet_extension_step8.png)
     
 
 ### Import existing wallet
@@ -73,19 +73,19 @@ The Maiar wallet has a set of 24-words, which serve as your wallet’s secret ph
 
 **Step 1:** With the [Maiar DeFi wallet extension](https://chrome.google.com/webstore/detail/maiar-defi-wallet/dngmlblcodfobpdpecaadgfbcggfjfnm) installed. Click on ‘’Import existing wallet”.
 
-  ![maiar-defi-wallet-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
+  ![maiar-defi-example-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
  
 **Step 2:** Next, enter your 24-word secret phrase. You can either enter these words one at a time or you can simply paste in the words using the "_paste_" icon.
 
-   ![import_wallet](/wallet/wallet-extension/wallet_extension_step14.png)
+   ![maiar-defi-example-import-wallet](/wallet/wallet-extension/wallet_extension_step14.png)
   
 **Step 3:** Enter in your wallet password and confirm this password. 
 
-  ![password](/wallet/wallet-extension/wallet_extension_step13.png)
+  ![maiar-defi-example-password](/wallet/wallet-extension/wallet_extension_step13.png)
   
 **Step 4:**  Completed! Your Maiar DeFi Wallet has been successfully imported and set to be used.
 
-   ![successful](/wallet/wallet-extension/wallet_extension_step8.png)
+   ![maiar-defi-example-successful](/wallet/wallet-extension/wallet_extension_step8.png)
    
 
 ## Key features
@@ -100,11 +100,11 @@ One of the key features of this extension is that it allows you to send funds fr
 
  **Step 1:** Go to the Maiar Wallet extension, enter your password and click on _“**Send**”_.
  
-  ![wallet_extension_step9](/wallet/wallet-extension/wallet_extension_step9.png)
+  ![maiar-defi-example-step9](/wallet/wallet-extension/wallet_extension_step9.png)
 
 **Step 2:** Enter the address of the wallet you intend to send to and the amount. 
 
-![maiar-defi-example-send](/wallet/wallet-extension/wallet_extension_step10.png)
+  ![maiar-defi-example-send](/wallet/wallet-extension/wallet_extension_step10.png)
 
 *(Optional)* **Step 3**: Enter the data. This is a description of the transaction or any information you wish to pass through. 
 
@@ -130,7 +130,7 @@ A deposit can be made to your wallet using the wallet extension. This feature al
 
 On the wallet extension dashboard, the wallet records all transactions sent and received in your wallet. If you are a new user, it says "*No transactions found for this wallet*" until you make your first transaction.
 
-   ![wallet_extension_step9](/wallet/wallet-extension/wallet_extension_step9.png)
+   ![maiar-defi-example-step9](/wallet/wallet-extension/wallet_extension_step9.png)
 
 
 ### Networks

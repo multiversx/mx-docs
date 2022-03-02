@@ -10,18 +10,18 @@ After preparing the user permissions, the script configurations and the keys, th
 ```
  ~/elrond-go-scripts-devnet/script.sh
 
-1) install	         
-2) observing_squad      
-3) upgrade	      	  
-4) upgrade_proxy     		  
-5) upgrade_squad	
-6) remove_db	
-7) start	
-8) stop
-9) cleanup
-10) github_pull
-11) get_logs
-12) quit
+ 1) install
+ 2) observing_squad
+ 3) upgrade
+ 4) upgrade_proxy
+ 5) upgrade_squad
+ 6) remove_db
+ 7) start
+ 8) stop
+ 9) cleanup
+ 10) github_pull
+ 11) get_logs
+ 12) quit
 
 Please select an action:1
 ```
@@ -88,10 +88,10 @@ Your first node is called `node-0` and its REST API will run on port `8080` by d
 
 Upgrade your node by running the script and selecting options:
 
-- `9 - github_pull` downloads the latest version of the scripts
+- `10 - github_pull` downloads the latest version of the scripts
 - `3 - upgrade`
-- `6 - start`
-- `11 - quit`
+- `7 - start`
+- `12 - quit`
 
 ```
  cd ~/elrond-go-scripts-devnet
