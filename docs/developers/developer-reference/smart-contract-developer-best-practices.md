@@ -302,14 +302,24 @@ If you need to update older code to take advantage of managed types, please take
 
 Below is a table of unmanaged types (basic Rust types) and their managed counterparts, provided by the Elrond framework:
 
-| Unmanaged | Managed |
-| :---: | :---: |
-| `&[u8]` | `ManagedBuffer` |
-| - | `BigUint` |
-| `Vec<u8>` and `BoxedBytes` | `ManagedBuffer` |
-| `String` | `ManagedBuffer` |
-| `MultiValueVec` | `ManagedValueEncoded` / `MultiValueManagedVec` |
-| `Vec` | `ManagedVec` |
+| Unmanaged (safe to use) | Unmanaged (allocates on the heap) | Managed |
+| :---: | :---: | :---: |
+| - | - | `BigUint` |
+| `&[u8]` | - | `&ManagedBuffer` |
+| - | `BoxedBytes` | `ManagedBuffer` |
+| `ArrayVec<u8, CAP>`[^1] | `Vec<u8>` | `ManagedBuffer` |
+| - | `String` | `ManagedBuffer` |
+| - | - | `TokenIdentifier` |
+| - | `MultiValueVec` | `ManagedValueEncoded` / `MultiValueManagedVec` |
+| `ArrayVec<T, CAP>`[^1] | `Vec<T>` | `ManagedVec<T>` |
+| `[T; N]`[^2]| `Box<[T; N]>` | `ManagedByteArray<N>` |
+| - | `Address` | `ManagedAddress` |
+| - | `H256` | `ManagedByteArray<32>` |
+| - | - | `EsdtTokenData` |
+| - | - | `EsdtTokenPayment` |
+
+[^1]: `ArrayVec` allocates on the stack, and so it has a fixed capacity - it cannot grow indefinitely. You can make it as large as you please, but be warned that adding beyond this capacity results in a panic. Use `try_push` instead of `push` for more graceful error handling.
+[^2]: Be careful when passing arrays around, since they get copied when returned from functions. This can add a lot of expensive memory copies in your contract.
 
 In most cases, the managed types can be used as drop-in replacements for the basic Rust types. For a simple example, see [BigUint Operations](#biguint-operations).
 
