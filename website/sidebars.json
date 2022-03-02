@@ -105,6 +105,16 @@
       },
       {
         "type": "subcategory",
+        "label": "Gas and Fees",
+        "ids": [
+          "developers/gas-and-fees/overview",
+          "developers/gas-and-fees/egld-transfers",
+          "developers/gas-and-fees/system-smart-contracts",
+          "developers/gas-and-fees/user-defined-smart-contracts"
+        ]
+      },
+      {
+        "type": "subcategory",
         "label": "Developer reference",
         "ids": [
           "developers/developer-reference/elrond-serialization-format",

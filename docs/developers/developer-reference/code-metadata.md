@@ -11,15 +11,23 @@ Code metadata are flags representing the smart contract's allowed actions after 
 - `payable` - if the contract can receive funds without having any endpoint called (just like user accounts). Note: A contract does NOT have to be payable to receive funds in payable endpoints.
 - `payable by smart contracts` - just like the `payable` flag, but can only receive funds from other smart contracts. User transfers will be rejected.
 
+:::important
+The code metadata **must be specified** at deploy-time and, if the contract is _upgradeable_, it **must be specified** at upgrade-time, as well.
+:::
+
+:::important
+Once a contract is marked as _**not** upgradeable_, its code and code metadata become **immutable, forever**.
+:::
+
 ## Usability
 
-By default, all contracts are `upgradeable`, `readable` and non-`payable`. This can be overwritten with the following `erdpy contract deploy` flags:
-- `metadata-not-upgradeable` - set `upgradeable` to `false`
-- `metadata-payable` - set `payable` to `true`
+When deploying (or upgrading) a smart contract using **erdpy**, its default _code metadata flags_ are: `upgradeable`, `readable` and **non-**`payable`. The default values can be overwritten by decorating the command `erdpy contract deploy` (or `erdpy contract upgrade`) as follows:
+- `--metadata-not-upgradeable` - mark the contract as **non-** `upgradeable`
+- `--metadata-not-readable` - mark the contract as **non-** `readable`
+- `--metadata-payable` - mark the contract as `payable`
+- `--metadata-payable-by-sc` - mark the contract as `payable by smart contracts`
 
-Note: There are currently no erdpy flags for `readable` and `payable by smart contracts`, but they will be added in the future.  
-
-If the contract is `upgradeable`, the flags can also be overwritten at the time of upgrading.
+For more information, please follow [erdpy CLI](/sdk-and-tools/erdpy/erdpy-cli).
 
 ## Converting Metadata to bytes
 

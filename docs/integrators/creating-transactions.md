@@ -98,21 +98,7 @@ Avoid recalling the nonce in between **rapidly sequenced transactions from the s
 
 ## **Gas limit computation**
 
-### **Balance transfers**
-
-For balance transfers, the gas limit should be set according to the following formula:
-
-```
-gasLimit = erd_min_gas_limit + erd_gas_per_data_byte * lengthOf(data)
-```
-
-`erd_min_gas_limit` and `erd_gas_per_data_byte` are general network parameters - see above.
-
-### **Smart contract calls**
-
-:::important
-Documentation about properly setting a gas limit for smart contract transactions is preliminary and subject to change.
-:::
+Please follow [Estimating Gas](/developers/estimating-gas/estimating-gas).
 
 ## **Signing transactions**
 
