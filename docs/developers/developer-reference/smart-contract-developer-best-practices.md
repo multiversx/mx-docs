@@ -208,8 +208,9 @@ Please note that the same types are used both as arguments and as results. This 
 
 There are 4 types of variadic arguments supported for functions:
 - `OptionalValue<T>` - arguments that can be skipped. Can have multiple per endpoint, but they all must be the last arguments of the endpoint.
-- `ManagedValueEncoded<T>` - can receive any number of arguments. Note that only one `ManagedValueEncoded` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalValue` and `ManagedValueEncoded` in the same endpoint.
-- `MultiValueManagedVec<T1, T2, ... TN>` - Can be used when you want to receive a variable number of pairs or arguments. For example, let's say you want to receive a variable number of (token ID, nonce) pairs. You would then use `MultiValueManagedVec<TokenIdentifier, u64>`.
+- `MultiValueN<T1, T2, ... TN>` - A multi-value tuple. Can be used to return multiple results (since Rust methods can only have a single result value). They also work well in conjunction with other multi-values, for instance `ManagedValueEncoded<MultiValue2<usize, BigUint>>` will accept any number of pairs of value, but will crash if an odd number of arguments is provided.
+- `ManagedValueEncoded<T>` - can receive any number of arguments. Note that only one `ManagedValueEncoded` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalValue` and `ManagedValueEncoded` in the same endpoint. It keeps its contents encoded, so it decodes lazily when used as an argument and encodes eagerly when used as a result.
+- `MultiValueManagedVec<T>` - Similar to `ManagedValueEncoded<T>`, but it decodes eagerly when used as an argument and encodes lazily when used as a result. It is practically a `ManagedVec` with multi-value encoding, and so `T` in this case must be a type that implements `ManagedVecItem`. It cannot contain multi-values such as `MultiValueN`.
 
 Note: Keep in mind you have to specify the `#[var_args]` annotation in front of those arguments. For example:
 ```
