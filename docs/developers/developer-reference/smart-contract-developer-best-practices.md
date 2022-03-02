@@ -181,15 +181,15 @@ Both of them provide (almost) the same functionality. The difference is that the
 Unless you need to iterate over all the entries, `MapMapper` should be avoided, as this is the most expensive mapper. It uses 4 * N + 1 storage entries. The storage for a `MapMapper` looks like this:
 
 ```
-"``map_mapper.node_links|u32:1": "u32:0|u32:2",
-"``map_mapper.node_links|u32:2": "u32:1|u32:0",
-"``map_mapper.value|u32:1": "123",
-"``map_mapper.value|u32:2": "111",
-"``map_mapper.node_id|u32:123": "1",
-"``map_mapper.node_id|u32:111": "2",
-"``map_mapper.mapped|u32:123": "456",
-"``map_mapper.mapped|u32:111": "222",
-"``map_mapper.info": "u32:2|u32:1|u32:2|u32:2"
+"str:map_mapper.node_links|u32:1": "u32:0|u32:2",
+"str:map_mapper.node_links|u32:2": "u32:1|u32:0",
+"str:map_mapper.value|u32:1": "123",
+"str:map_mapper.value|u32:2": "111",
+"str:map_mapper.node_id|u32:123": "1",
+"str:map_mapper.node_id|u32:111": "2",
+"str:map_mapper.mapped|u32:123": "456",
+"str:map_mapper.mapped|u32:111": "222",
+"str:map_mapper.info": "u32:2|u32:1|u32:2|u32:2"
 ```
 
 Keep in mind that all the mappers can have as many additional arguments for the main key. For example, you can have a `VecMapper` for every user pair, like this:
