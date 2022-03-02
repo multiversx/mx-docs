@@ -108,7 +108,7 @@ pub trait Example {
 In this example, 3 methods are public endpoints. They are named `example`, `camelCaseEndpointName` and `getData`. All other names are internal and do not show up in the resulting contract.
 
 :::note
-All endpoint arguments and results must be either serializable or special endpoint argument types such as `VarArgs`. They must also all implement the `TypeAbi` trait. There is no such restriction for private methods.
+All endpoint arguments and results must be either serializable or special endpoint argument types such as `MultiValueEncoded`. They must also all implement the `TypeAbi` trait. There is no such restriction for private methods.
 :::
 
 ### Callbacks
