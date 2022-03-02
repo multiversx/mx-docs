@@ -208,9 +208,9 @@ Please note that the same types are used both as arguments and as results. This 
 
 There are 4 types of variadic arguments supported for functions:
 - `OptionalValue<T>` - arguments that can be skipped. Can have multiple per endpoint, but they all must be the last arguments of the endpoint.
-- `MultiValueN<T1, T2, ... TN>` - A multi-value tuple. Can be used to return multiple results (since Rust methods can only have a single result value). They also work well in conjunction with other multi-values, for instance `ManagedValueEncoded<MultiValue2<usize, BigUint>>` will accept any number of pairs of value, but will crash if an odd number of arguments is provided.
-- `ManagedValueEncoded<T>` - can receive any number of arguments. Note that only one `ManagedValueEncoded` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalValue` and `ManagedValueEncoded` in the same endpoint. It keeps its contents encoded, so it decodes lazily when used as an argument and encodes eagerly when used as a result.
-- `MultiValueManagedVec<T>` - Similar to `ManagedValueEncoded<T>`, but it decodes eagerly when used as an argument and encodes lazily when used as a result. It is practically a `ManagedVec` with multi-value encoding, and so `T` in this case must be a type that implements `ManagedVecItem`. It cannot contain multi-values such as `MultiValueN`.
+- `MultiValueN<T1, T2, ... TN>` - A multi-value tuple. Can be used to return multiple results (since Rust methods can only have a single result value). They also work well in conjunction with other multi-values, for instance `MultiValueEncoded<MultiValue2<usize, BigUint>>` will accept any number of pairs of value, but will crash if an odd number of arguments is provided.
+- `MultiValueEncoded<T>` - can receive any number of arguments. Note that only one `MultiValueEncoded` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalValue` and `MultiValueEncoded` in the same endpoint. It keeps its contents encoded, so it decodes lazily when used as an argument and encodes eagerly when used as a result.
+- `MultiValueManagedVec<T>` - Similar to `MultiValueEncoded<T>`, but it decodes eagerly when used as an argument and encodes lazily when used as a result. It is practically a `ManagedVec` with multi-value encoding, and so `T` in this case must be a type that implements `ManagedVecItem`. It cannot contain multi-values such as `MultiValueN`.
 
 Note: Keep in mind you have to specify the `#[var_args]` annotation in front of those arguments. For example:
 ```
@@ -218,10 +218,10 @@ Note: Keep in mind you have to specify the `#[var_args]` annotation in front of 
 fn my_opt_arg_endpoint(&self, obligatory_arg: T1, #[var_args] opt_arg: OptionalValue<T2>) {}
 
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: ManagedValueEncoded<T2>) {}
+fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: MultiValueEncoded<T2>) {}
 ```
 
-This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalValue<T>` and `ManagedVec<T>` instead of `ManagedValueEncoded<T>`? The reason is the type of encoding used for each of them.
+This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalValue<T>` and `ManagedVec<T>` instead of `MultiValueEncoded<T>`? The reason is the type of encoding used for each of them.
 
 ### Option\<T\> vs OptionalValue\<T\>
 
@@ -251,7 +251,7 @@ For the same token ID and skipped nonce, the encodings look like this:
 
 As you can see, the argument can be skipped altogether instead of passing a `00` (`None`).
 
-### ManagedVec\<T\> vs ManagedValueEncoded\<T\>
+### ManagedVec\<T\> vs MultiValueEncoded\<T\>
 
 For the sake of the example, let's assume you want to receive pairs of (token ID, nonce, amount). This can be implemented in two ways:
 ```
@@ -271,7 +271,7 @@ Note: Above, we've separated the parts with `_` for readability purposes only. O
 
 As you can see, that endpoint is very hard to work with. All arguments have to be passed into this big chunk, with nested encoding, which also adds additional lengths for the `TokenIdentifier` (i.e. the 0000000c in front, which is length 12) and for `BigUint` (i.e. the length in bytes).
 
-For the `ManagedValueEncoded` approach, this endpoint is a lot easier to use. For the same arguments, the call data looks like this:
+For the `MultiValueEncoded` approach, this endpoint is a lot easier to use. For the same arguments, the call data looks like this:
 `myVarArgsEndpoint@544f4b454e2d313233343536@05@64@544f4b454e2d313233343536@0a@01f4`
 
 The call data is a lot shorter, and it's much more readable, and as we use top-encoding instead of nested-encoding, there's no need for lengths either.
@@ -310,7 +310,7 @@ Below is a table of unmanaged types (basic Rust types) and their managed counter
 | `ArrayVec<u8, CAP>`[^1] | `Vec<u8>` | `ManagedBuffer` |
 | - | `String` | `ManagedBuffer` |
 | - | - | `TokenIdentifier` |
-| - | `MultiValueVec` | `ManagedValueEncoded` / `MultiValueManagedVec` |
+| - | `MultiValueVec` | `MultiValueEncoded` / `MultiValueManagedVec` |
 | `ArrayVec<T, CAP>`[^1] | `Vec<T>` | `ManagedVec<T>` |
 | `[T; N]`[^2]| `Box<[T; N]>` | `ManagedByteArray<N>` |
 | - | `Address` | `ManagedAddress` |
