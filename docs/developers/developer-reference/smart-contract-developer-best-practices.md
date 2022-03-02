@@ -152,11 +152,11 @@ Even so, for this particular case, `SetMapper` is way better than `VecMapper`.
 `LinkedListMapper` can be seen as a specialization for the `VecMapper`. It allows insertion/removal only at either end of the list, known as pushing/popping. It's also storage-efficient, as it only requires 2 * N + 1 storage entries. The storage for such a mapper looks like this:
 
 ```
-"``list_mapper.node_links|u32:1": "u32:0|u32:2",
-"``list_mapper.node_links|u32:2": "u32:1|u32:0",
-"``list_mapper.value|u32:1": "123",
-"``list_mapper.value|u32:2": "111",
-"``list_mapper.info": "u32:2|u32:1|u32:2|u32:2"
+"str:list_mapper.node_links|u32:1": "u32:0|u32:2",
+"str:list_mapper.node_links|u32:2": "u32:1|u32:0",
+"str:list_mapper.value|u32:1": "123",
+"str:list_mapper.value|u32:2": "111",
+"str:list_mapper.info": "u32:2|u32:1|u32:2|u32:2"
 ```
 
 This is one of the lesser used mappers, as its purpose is very specific, but it's very useful if you ever need to store a queue.
@@ -308,9 +308,8 @@ Below is a table of unmanaged types (basic Rust types) and their managed counter
 | - | `BigUint` |
 | `Vec<u8>` and `BoxedBytes` | `ManagedBuffer` |
 | `String` | `ManagedBuffer` |
-| `VarArgs` | `ManagedValueEncoded` |
+| `MultiValueVec` | `ManagedValueEncoded` / `MultiValueManagedVec` |
 | `Vec` | `ManagedVec` |
-| `MultiResultVec` | `ManagedMultiResultVec` |
 
 In most cases, the managed types can be used as drop-in replacements for the basic Rust types. For a simple example, see [BigUint Operations](#biguint-operations).
 
