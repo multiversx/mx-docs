@@ -214,15 +214,15 @@ There are 4 types of variadic arguments supported for functions:
 Note: Keep in mind you have to specify the `#[var_args]` annotation in front of those arguments. For example:
 ```
 #[endpoint(myOptArgEndpoint)]
-fn my_opt_arg_endpoint(&self, obligatory_arg: T1, #[var_args] opt_arg: OptionalArg<T2>) {}
+fn my_opt_arg_endpoint(&self, obligatory_arg: T1, #[var_args] opt_arg: OptionalValue<T2>) {}
 
 #[endpoint(myVarArgsEndpoint)]
 fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: ManagedValueEncoded<T2>) {}
 ```
 
-This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalArg<T>` and `ManagedVec<T>` instead of `ManagedValueEncoded<T>`? The reason is the type of encoding used for each of them.
+This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalValue<T>` and `ManagedVec<T>` instead of `ManagedValueEncoded<T>`? The reason is the type of encoding used for each of them.
 
-### Option\<T\> vs OptionalArg\<T\>
+### Option\<T\> vs OptionalValue\<T\>
 
 Let's use the following endpoints as examples:
 ```
@@ -232,7 +232,7 @@ fn my_opt_arg_endpoint(&self, token_id: TokenIdentifier, opt_nonce: Option<u64>)
 
 ```
 #[endpoint(myOptArgEndpoint)]
-fn my_opt_arg_endpoint(&self, token_id: TokenIdentifier, #[var_args] opt_nonce: OptionalArg<u64>) {}
+fn my_opt_arg_endpoint(&self, token_id: TokenIdentifier, #[var_args] opt_nonce: OptionalValue<u64>) {}
 ```
 
 With the following arguments: TOKEN-123456 (0x544f4b454e2d313233343536) and 5.
