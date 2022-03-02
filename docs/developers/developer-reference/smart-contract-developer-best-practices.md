@@ -315,6 +315,8 @@ In most cases, the managed types can be used as drop-in replacements for the bas
 
 We also recommend _allocating Rust arrays directly on the stack_ (as local variables) whenever a contiguous area of useful memory is needed. Moreover, avoid allocating mutable global buffers for this purpose, which require `unsafe` code to work with.
 
+Also, consider using `ArrayVec`, which provides the functionality of a `Vec`, but without allocation on the heap. Instead, it requires allocation of a block of memory directly on the stack, like a basic Rust local array, but retains the flexibility of `Vec`.
+
 :::warning
 Make sure you migrate to the managed types **incrementally** and **thoroughly test your code** before even considering deploying to the mainnet.
 :::
