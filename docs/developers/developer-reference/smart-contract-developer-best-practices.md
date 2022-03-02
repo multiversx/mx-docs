@@ -200,14 +200,16 @@ fn list_per_user_pair(&self, first_addr: &ManagedAddress, second_addr: &ManagedA
 
 Using the correct mapper for your situation can greatly decrease gas costs and complexity, so always remember to carefully evaluate your use-case.
 
-## VarArgs and MultiResults
+## Variadic inputs and outputs (multi-values)
 
-The Rust language does not natively support var args. The best you could probably do in native rust is use `Option<T>`. Even so, through some pre-processing of arguments, the Rust framework does provide support for said var args, and even multi results.
+The Rust language does not natively support variadic arguments. Smart contracts, on the other hand, have no limitations on accepting a variable number of inputs or producing a variable number of results. To accommodate this, and to make I/O processing succint, the Rust framework provides a number of so-called multi-value types, that deserialize from multiple inputs and serialize to multiple outputs.
 
-There are X types of var args supported:
-- `OptionalArg<T>` - arguments that can be skipped. Can have multiple per endpoint, but they all must be the last arguments of the endpoint.
-- `ManagedVarArgs<T>` - can receive any number of arguments. Note that only one `ManagedVarArgs` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalArg` and `ManagedVarArgs` in the same endpoint.
-- `ManagedVarArgs<MultiArgN<T1, T2, ... TN>>` - Can be used when you want to receive a variable number of pairs or arguments. For example, let's say you want to receive a variable number of (token ID, nonce) pairs. You would then use `ManagedVarArgs<MultiArg2<TokenIdentifier, u64>>`.
+Please note that the same types are used both as arguments and as results. This makes sense especially for places like the callbacks, where the results of the asynchronous call become the inputs of the callback.
+
+There are 4 types of variadic arguments supported for functions:
+- `OptionalValue<T>` - arguments that can be skipped. Can have multiple per endpoint, but they all must be the last arguments of the endpoint.
+- `ManagedValueEncoded<T>` - can receive any number of arguments. Note that only one `ManagedValueEncoded` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalValue` and `ManagedValueEncoded` in the same endpoint.
+- `MultiValueManagedVec<T1, T2, ... TN>` - Can be used when you want to receive a variable number of pairs or arguments. For example, let's say you want to receive a variable number of (token ID, nonce) pairs. You would then use `MultiValueManagedVec<TokenIdentifier, u64>`.
 
 Note: Keep in mind you have to specify the `#[var_args]` annotation in front of those arguments. For example:
 ```
@@ -215,10 +217,10 @@ Note: Keep in mind you have to specify the `#[var_args]` annotation in front of 
 fn my_opt_arg_endpoint(&self, obligatory_arg: T1, #[var_args] opt_arg: OptionalArg<T2>) {}
 
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: ManagedVarArgs<T2>) {}
+fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: ManagedValueEncoded<T2>) {}
 ```
 
-This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalArg<T>` and `ManagedVec<T>` instead of `ManagedVarArgs<T>`? The reason is the type of encoding used for each of them.
+This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalArg<T>` and `ManagedVec<T>` instead of `ManagedValueEncoded<T>`? The reason is the type of encoding used for each of them.
 
 ### Option\<T\> vs OptionalArg\<T\>
 
@@ -248,7 +250,7 @@ For the same token ID and skipped nonce, the encodings look like this:
 
 As you can see, the argument can be skipped altogether instead of passing a `00` (`None`).
 
-### ManagedVec\<T\> vs ManagedVarArgs\<T\>
+### ManagedVec\<T\> vs ManagedValueEncoded\<T\>
 
 For the sake of the example, let's assume you want to receive pairs of (token ID, nonce, amount). This can be implemented in two ways:
 ```
@@ -258,7 +260,7 @@ fn my_var_args_endpoint(&self, args: ManagedVec<(TokenIdentifier, u64, BigUint)>
 
 ```
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, #[var_args] args: ManagedVarArgs<MultiArg3<TokenIdentifier, u64, BigUint>>) {}
+fn my_var_args_endpoint(&self, #[var_args] args: MultiValueManagedVec<TokenIdentifier, u64, BigUint>) {}
 ```
 
 The first approach looks a lot simpler, just a `ManagedVec` of tuples. But, the implications are quite devastating, both for performance and usability. To use the first endpoint, with the pairs (TOKEN-123456, 5, 100) and (TOKEN-123456, 10, 500), the call data would have to look like this:
@@ -268,7 +270,7 @@ Note: Above, we've separated the parts with `_` for readability purposes only. O
 
 As you can see, that endpoint is very hard to work with. All arguments have to be passed into this big chunk, with nested encoding, which also adds additional lengths for the `TokenIdentifier` (i.e. the 0000000c in front, which is length 12) and for `BigUint` (i.e. the length in bytes).
 
-For the `ManagedVarArgs` approach, this endpoint is a lot easier to use. For the same arguments, the call data looks like this:
+For the `ManagedValueEncoded` approach, this endpoint is a lot easier to use. For the same arguments, the call data looks like this:
 `myVarArgsEndpoint@544f4b454e2d313233343536@05@64@544f4b454e2d313233343536@0a@01f4`
 
 The call data is a lot shorter, and it's much more readable, and as we use top-encoding instead of nested-encoding, there's no need for lengths either.
@@ -283,11 +285,11 @@ Here are a few simple guidelines you can use to ensure your contract performs ef
 
 ### It's all about the types
 
-The basic Rust types (like `String` and `Vec<T>`) are dynamically allocated on the heap. In simple terms, it means the program (in this case, the smart contract) keeps asking for more and more memory from the runtime environment (the VM). For small collections, this doesn't matter much, but for bigger collection, this can become slow and the VM might even stop the contract and mark the execution as failed.
+Many basic Rust types (like `String` and `Vec<T>`) are dynamically allocated on the heap. In simple terms, it means the program (in this case, the smart contract) keeps asking for more and more memory from the runtime environment (the VM). For small collections, this doesn't matter much, but for bigger collection, this can become slow and the VM might even stop the contract and mark the execution as failed.
 
 The main issue is that basic Rust types are quite eager with dynamic memory allocation: they ask for more memory than they actually need. For ordinary programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.
 
-The alternative is to use **managed types** instead of the usual Rust types. All managed types, like `BigUint`, `TokenIdentifier`, `ManagedBuffer` etc. store all their contents inside the VM's memory, as opposed to the contract memory, so they have a great performance advantage. But you don't need to be concerned with "where" the contents are, because managed types automatically keep track of the contents with help from the VM.
+The alternative is to use **managed types** instead of the usual Rust types. All managed types, like `BigUint`,  `ManagedBuffer` etc. store all their contents inside the VM's memory, as opposed to the contract memory, so they have a great performance advantage. But you don't need to be concerned with "where" the contents are, because managed types automatically keep track of the contents with help from the VM.
 
 The managed types work by only storing a `handle` within the contract memory, which is a `u32` index, while the actual payload resides in reserved VM memory. So whenever you have to add two `BigUint`s for example, the `+` operation in your code will only pass the three handles: the result, the first operand, and the second operand. This way, there is very little data being passed around, which in turn makes everything cheaper. And since these types only store a handle, their memory allocation is fixed in size, so it can be allocated on the stack instead of having to be allocated on the heap.
 
@@ -301,15 +303,17 @@ Below is a table of unmanaged types (basic Rust types) and their managed counter
 
 | Unmanaged | Managed |
 | :---: | :---: |
-| `&[u8]` | `TokenIdentifier` |
+| `&[u8]` | `ManagedBuffer` |
 | - | `BigUint` |
-| `BoxedBytes` | `ManagedBuffer` |
+| `Vec<u8>` and `BoxedBytes` | `ManagedBuffer` |
 | `String` | `ManagedBuffer` |
-| `VarArgs` | `ManagedVarArgs` |
+| `VarArgs` | `ManagedValueEncoded` |
 | `Vec` | `ManagedVec` |
 | `MultiResultVec` | `ManagedMultiResultVec` |
 
 In most cases, the managed types can be used as drop-in replacements for the basic Rust types. For a simple example, see [BigUint Operations](#biguint-operations).
+
+We also recommend _allocating Rust arrays directly on the stack_ (as local variables) whenever a contiguous area of useful memory is needed. Moreover, avoid allocating mutable global buffers for this purpose, which require `unsafe` code to work with.
 
 :::warning
 Make sure you migrate to the managed types **incrementally** and **thoroughly test your code** before even considering deploying to the mainnet.
@@ -319,35 +323,3 @@ Make sure you migrate to the managed types **incrementally** and **thoroughly te
 You can use the `erdpy contract report` command to verify whether your contract still requires dynamic allocation or not.
 :::
 
-### Static buffers
-
-Sometimes you might want to allocate some memory inside the smart contract, because it might be easier to use. In that case, we recommend using static buffers. The declaration looks like this:
-
-```rust
-static mut STATIC_BUFFER: [u8; BUFFER_SIZE] = [0u8; BUFFER_SIZE];
-```
-
-where `BUFFER_SIZE` can be constant. This will statically allocate `BUFFER_SIZE` bytes in the data segment. Keep in mind that in Rust, accessing mutable global variables is unsafe, so if you want to use this buffer in any way, you will have to wrap the code in an `unsafe` block. For example, if you wanted to load a `ManagedBuffer` into a static buffer, you would have to do something like this:
-
-```rust
-let mut buffer = ManagedBuffer::new();
-// ...
-// do something with the buffer
-// ...
-unsafe {
-    let buffer_len = buffer.len();
-    require!(
-        buffer_len <= BUFFER_SIZE,
-        "Cannot fit managed buffer in static buffer"
-    );
-
-    let static_buffer_slice = &mut STATIC_BUFFER[..buffer_len];
-    require!(
-        buffer.load_slice(0, static_buffer_slice).is_ok(),
-        "Failed to load into static buffer"
-    );
-    // use static_buffer_slice in some way
-}
-```
-
-We recommend not doing this unless you REALLY have to. This code is marked as unsafe for a good reason.
