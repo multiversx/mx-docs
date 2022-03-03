@@ -96,7 +96,7 @@ fn caller_endpoint(&self) -> MultiResult2<BigUint, AsyncCall> {
 
 	let my_value = BigUint::from(42u32);
 	let async_obj = self.contract_proxy(callee_sc_address)
-		.my_endpoint(my_biguint_arg)
+		.my_endpoint(my_value)
 		.async_call();
 
 	(my_value, async_obj).into()
