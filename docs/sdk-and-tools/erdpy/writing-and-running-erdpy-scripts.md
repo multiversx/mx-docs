@@ -5,7 +5,7 @@ title: Writing and running erdpy scripts
 
 Since **erdpy** is not only a CLI tool, but also a **Python SDK**, one can write Python modules or scripts based on erdpy in order to interact with the Blockchain.
 
-Some examples can be found at the following locations:
+Some examples can be found at the following location:
 
 - [elrond-sdk-erdpy examples](https://github.com/ElrondNetwork/elrond-sdk-erdpy/tree/master/examples)
 
