@@ -3,7 +3,6 @@ id: biguint-operations
 title: BigUint Operations
 ---
 
-
 ## BigUint Operations
 
 `BigUint` is simply a handle to the actual representation, similar to how system file handles work, so it's simply a struct with an `i32` as member, representing the handle. All the operations have to be done through API functions, passing the handles for result, first operand, second operand. Using Rust's operator overloading feature, we're able to overwrite arithmetic operators and provide an easy way of adding `BigUint`s, just like primitive number types.

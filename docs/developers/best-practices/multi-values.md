@@ -3,7 +3,6 @@ id: the-dynamic-allocation-problem
 title: Multi-values
 ---
 
-
 ## Variadic inputs and outputs (multi-values)
 
 The Rust language does not natively support variadic arguments. Smart contracts, on the other hand, have no limitations on accepting a variable number of inputs or producing a variable number of results. To accommodate this, and to make I/O processing succint, the Rust framework provides a number of so-called multi-value types, that deserialize from multiple inputs and serialize to multiple outputs.
@@ -79,5 +78,3 @@ For the `MultiValueEncoded` approach, this endpoint is a lot easier to use. For 
 `myVarArgsEndpoint@544f4b454e2d313233343536@05@64@544f4b454e2d313233343536@0a@01f4`
 
 The call data is a lot shorter, and it's much more readable, and as we use top-encoding instead of nested-encoding, there's no need for lengths either.
-
-
