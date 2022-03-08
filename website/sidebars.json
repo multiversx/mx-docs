@@ -177,7 +177,6 @@
           "sdk-and-tools/erdpy/configuring-erdpy",
           "sdk-and-tools/erdpy/erdpy-cli",
           "sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
-          "sdk-and-tools/erdpy/sending-bulk-transactions",
           "sdk-and-tools/erdpy/writing-and-running-erdpy-scripts"
         ]
       },
