@@ -3,7 +3,7 @@ id: storage-mappers
 title: Storage Mappers
 ---
 
-### STorage Mappers in Rust framework
+### Storage Mappers in Rust framework
 
 The Rust framework provides various storage mappers you can use:
 - `SingleValueMapper` - Stores a single value. Also provides methods for checking for empty or clearing the entry.
