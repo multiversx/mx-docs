@@ -7,8 +7,7 @@ Since **erdpy** is not only a CLI tool, but also a **Python SDK**, one can write
 
 Some examples can be found at the following locations:
 
-- [elrond-sdk examples](https://github.com/ElrondNetwork/elrond-sdk/tree/master/examples)
-- [sc-examples (see the `interaction` subfolders for each contract)](https://github.com/ElrondNetwork/sc-examples)
+- [elrond-sdk-erdpy examples](https://github.com/ElrondNetwork/elrond-sdk-erdpy/tree/master/examples)
 
 The examples include scenarios such as:
 
@@ -17,11 +16,11 @@ The examples include scenarios such as:
 - deploying and upgrading Smart Contracts
 - interacting with Smart Contracts
 
-In order to run a script (Python module) that relies on erdpy, it is recommended to use the Python Virtual Environment set up by [erdpy-up](/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended). Prior to the actual execution, the Virtual Environment has to be activated:
+In order to run a script (Python module) that relies on erdpy, it is recommended to use the **Python Virtual Environment** set up by [erdpy-up](/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended). Prior to the actual invocation of the script, the Virtual Environment has to be activated:
 
 ```
 source erdpy-activate
-python ./mission4.py
+python ./myscript.py
 deactivate
 ```
 
