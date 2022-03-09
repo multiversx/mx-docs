@@ -236,16 +236,16 @@ cd dapp
 
 Customize the Smart Contract Address
 
-Let's copy our `config.devnet.tsx` into a new file `config.tsx` and let's fill in the Smart Contract address constant with our smart contract address.
-
 ```sh
-cp src/config.devnet.tsx src/config.tsx
 nano src/config.tsx
 ```
 
-We'll take a look on the line 15:
+We'll take a look on the first instruction
 
-`export const contractAddress = 'erd1qqqqqqqq....';`
+```sh
+export const contractAddress = 
+  'erd1qqqqqqqqqqqqq...';
+```
 
 and we'll change it to our contract address that was shown after erdpy contract deploy:
 
