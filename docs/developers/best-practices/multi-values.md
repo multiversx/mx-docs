@@ -1,5 +1,5 @@
 ---
-id: the-dynamic-allocation-problem
+id: multi-values
 title: Multi-values
 ---
 
