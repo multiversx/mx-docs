@@ -98,7 +98,7 @@ Avoid recalling the nonce in between **rapidly sequenced transactions from the s
 
 ## **Gas limit computation**
 
-Please follow [Estimating Gas](/developers/estimating-gas/estimating-gas).
+Please follow [Gas and Fees](/developers/gas-and-fees/overview/).
 
 ## **Signing transactions**
 
