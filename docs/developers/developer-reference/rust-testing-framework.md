@@ -16,6 +16,8 @@ The only disadvantage is that you need to learn something new! Jokes aside, keep
 
 This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our Elrond VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section. 
 
+Please note that mandos generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.  
+
 ## Prerequisites
 
 You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.29.3). You can check the latest version here: https://crates.io/crates/elrond-wasm
