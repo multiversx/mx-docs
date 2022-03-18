@@ -82,7 +82,7 @@ For fungible ESDT, nonce should be 0. To get the EGLD balance, you can simply pa
 
 ### get_tx_hash
 ```
-get_tx_hash() -> ManagedByteArray<A, 32>
+get_tx_hash() -> ManagedByteArray<Self::Api, 32>
 ```
 
 Returns the current tx hash.  
@@ -124,7 +124,7 @@ These functions are mostly used for setting up deadlines, so they've been groupe
 
 ### get_block_random_seed  
 ```
-get_block_random_seed() -> ManagedByteArray<A, 48>
+get_block_random_seed() -> ManagedByteArray<Self::Api, 48>
 ```
 Returns the block random seed, which can be used for generating random numbers.  
 
@@ -152,7 +152,7 @@ get_prev_block_epoch() -> u64
 
 ### get_prev_block_random_seed
 ```
-get_prev_block_random_seed() -> ManagedByteArray<A, 48>
+get_prev_block_random_seed() -> ManagedByteArray<Self::Api, 48>
 ```
 The same as the functions above, but for the previous block instead of the current block.
 
@@ -186,7 +186,7 @@ get_esdt_token_data(address: &ManagedAddress, token_id: &TokenIdentifier, nonce:
 Gets the ESDT token properties for the specific token type, owned by the specified address.  
 
 `EsdtTokenData` has the following format:  
-```
+```rust
 pub struct EsdtTokenData<M: ManagedTypeApi> {
     pub token_type: EsdtTokenType,
     pub amount: BigUint<M>,
@@ -201,16 +201,17 @@ pub struct EsdtTokenData<M: ManagedTypeApi> {
 ```
 
 `token_type` is an enum, which can have one of the following values:  
-```
+```rust
 pub enum EsdtTokenType {
     Fungible,
     NonFungible,
     SemiFungible,
+    Meta,
     Invalid,
 }
 ```
 
-You will never receive `EsdtTokenType::Invalid` or `EsdtTokenType::SemiFungible` from this function (The smart has no way of telling the difference between non-fungible and semi-fungible tokens).  
+You will only receive basic distinctions for the token type, i.e. only `Fungible` and `NonFungible` (The smart contract has no way of telling the difference between non-fungible, semi-fungible and meta tokens).  
 
 `amount` is the current owned balance of the account.  
 
@@ -242,7 +243,7 @@ This is done by simply reading protected storage, but this is a convenient funct
 
 ## Call Value API
 
-This API is accessible through `self.call_value()`. You should never have to call these functions. Use the `#[payment]` annotations instead.  
+This API is accessible through `self.call_value()`. The alternative is to use the `#[payment]` annotations, but we no longer recommend them. They have a history of creating confusion, especially for new users.  
 
 Available functions:  
 
@@ -276,8 +277,6 @@ esdt_token_nonce() -> u64
 
 Returns the nonce of the SFT/NFT transferred in the current transaction. Will return 0 for EGLD or fungible ESDT transfers.  
 
-Use `#[payment_nonce]` argument annotation instead of directly calling this function.  
-
 ### esdt_token_type
 ```
 esdt_token_type() -> EsdtTokenType
@@ -298,10 +297,10 @@ Mostly used by auto-generated code. Use `#[payment_token]` and `#[payment_amount
 all_esdt_transfers() -> ManagedVec<EsdtTokenPayment<Self::Api>>
 ```
 
-Returns all the ESDT payments received in the current transaction. Used when you want to support ESDT Multi-transfers in your endpoint. Mostly used in auto-generated code. Use `#[payment_multi]` annotation instead: `#[payment_multi] payments: ManagedVec<EsdtTokenPayment<Self::Api>>`
+Returns all the ESDT payments received in the current transaction. Used when you want to support ESDT Multi-transfers in your endpoint.  
 
 Returns an array of structs, that contain the token type, token ID, token nonce and the amount being transferred:  
-```
+```rust
 pub struct EsdtTokenPayment<M: ManagedTypeApi> {
     pub token_type: EsdtTokenType,
     pub token_identifier: TokenIdentifier<M>,
@@ -316,22 +315,19 @@ This API is accessible through `self.crypto()`. It provides hashing functions an
 
 Hashing functions:  
 
-### sha256
+### sha256_legacy_managed
 ```
-sha256(data: &[u8]) -> H256
-```
-
-### keccak256
-```
-keccak256(data: &[u8]) -> H256
+sha256_legacy_managed<const MAX_INPUT_LEN: usize>(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
 ```
 
-### ripemd160
+### keccak256_legacy_managed
 ```
-ripemd160(data: &[u8]) -> Box<[u8; 20]>
+keccak256_legacy_managed<const MAX_INPUT_LEN: usize>(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
 ```
 
-Signature verification functions:  
+Signature verification functions: 
+
+### `verify_ed25519_managed<const MAX_MESSAGE_LEN: usize>(key: &ManagedByteArray<Self::Api, 32>, message: &ManagedBuffer, signature: &ManagedByteArray<Self::Api, 64>) -> bool`  
 
 ### verify_bls
 ```
@@ -355,7 +351,7 @@ verify_custom_secp256k1(key: &[u8], message: &[u8], signature: &[u8], hash_type:
 
 `MessageHashType` is an enum, representing the hashing algorithm that was used to create the `message` argument. Use `ECDSAPlainMsg` if the message is in "plain text".  
 
-```
+```rust
 pub enum MessageHashType {
     ECDSAPlainMsg,
     ECDSASha256,
@@ -365,12 +361,20 @@ pub enum MessageHashType {
 }
 ```
 
-Other:  
+To be able to use the hashing functions without dynamic allocations, we use a concept in Rust known as `const generics`. This allows the function to have a constant value as a generic instead of the usual trait types you'd see in generics. The value is used to allocate a static buffer in which the data is copied temporarily, to then be passed to the legacy API.  
+
+To call such a function, the call would look like this:
+```rust
+let hash = self.crypto().sha256_legacy_managed::<200>(&data);
+```
+
+Where `200` is the max expected byte length of `data`.  
 
 ### encode_secp256k1_der_signature
 ```
 encode_secp256k1_der_signature(r: &[u8], s: &[u8]) -> BoxedBytes
 ```
+
 Creates a signature from the corresponding elliptic curve parameters provided.  
 
 ## Send API
@@ -385,7 +389,7 @@ Without further ado, let's take a look at the available functions:
 
 ### direct
 ```
-direct<D>(to: &ManagedAddress<A>, token: &TokenIdentifier<A>, nonce: u64, amount: &BigUint<A>, data: D
+direct<D>(to: &ManagedAddress, token: &TokenIdentifier, nonce: u64, amount: &BigUint, data: D)
 ```
 
 Where `D` is any type that can be converted to a `ManagedBuffer`.  
@@ -398,7 +402,11 @@ Even though an invalid destination will not revert, an illegal transfer will ret
 
 If you're unsure about the destination's account type, you can use the `is_smart_contract` function from `Blockchain API`.  
 
-If you need a bit more control, use the `direct_with_gas_limit` function instead.    
+If you need a bit more control, use the `direct_with_gas_limit` function instead.  
+
+### `direct_multi<D>(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment<Self::Api>>, data: D)`
+
+The multi-transfer version for the `direct` function.  
 
 ### change_owner_address
 ```
@@ -452,6 +460,14 @@ Must have `ESDTNftCreate` role set, or this will fail with "action is not allowe
 
 `uris` is a list of links to the NFTs visual/audio representation, most of the time, these will be links to images, videos or songs. If empty, the framework will automatically add an "empty" URI.
 
+### esdt_nft_create_compact
+
+```
+esdt_nft_create_compact<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &BigUint, attributes: &T) -> u64
+```
+
+Same as `esdt_nft_create`, but fills most arguments with default values. Mostly used in contracts that use NFTs as a means of information rather than for display purposes.  
+
 ### sell_nft
 ```
 sell_nft(nft_id: &TokenIdentifier, nft_nonce: u64, nft_amount: &BigUint, buyer: &ManagedAddress, payment_token: &TokenIdentifier, payment_nonce: u64, payment_amount: &BigUint) -> BigUint
@@ -464,6 +480,16 @@ Sends the SFTs/NFTs to target address, while also automatically calculating and 
 `(payment_token, payment_nonce, payment_amount)` are the tokens that are used to pay the creator royalties.  
 
 This function's purpose is mostly to be used in marketplace-like smart contracts, where the contract sells NFTs to users.  
+
+### `nft_add_uri(token_id: &TokenIdentifier, nft_nonce: u64, new_uri: ManagedBuffer)`
+
+Adds an URI to the selected NFT. The SC must own the NFT and have the `ESDTRoleNFTAddURI` to be able to use this function.
+
+If you need to add multiple URIs at once, you can use `nft_add_multiple_uri` function, which takes a `ManagedVec<ManagedBuffer>` as argument instead.  
+
+### `nft_update_attributes<T: TopEncode>(token_id: &TokenIdentifier, nft_nonce: u64, new_attributes: &T)`
+
+Updates the attributes of the selected NFT to the provided value. The SC must own the NFT and have the `ESDTRoleNFTUpdateAttributes` to be able to update the attributes.  
 
 ## Conclusion
 
