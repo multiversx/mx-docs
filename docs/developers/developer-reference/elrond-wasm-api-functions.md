@@ -18,21 +18,21 @@ The source code for the APIs can be found here: https://github.com/ElrondNetwork
 This API is accessible through `self.blockchain()`. Available functions:  
 
 ### get_sc_address
-```
+```rust
 get_sc_address() -> ManagedAddress
 ```
 
 Returns the smart contract's own address.
 
 ### get_owner_address
-```
+```rust
 get_owner_address() -> ManagedAddress
 ```
 
 Returns the owner's address.
 
 ### check_caller_is_owner
-```
+```rust
 check_caller_is_owner()
 ```
 
@@ -41,21 +41,21 @@ Terminates the execution and signals an error if the caller is not the owner.
 Use `#[only_owner]` endpoint annotation instead of directly calling this function.
 
 ### get_shard_of_address
-```
+```rust
 get_shard_of_address(address: &ManagedAddress) -> u32
 ```
 
 Returns the shard of the address passed as argument.
 
 ### is_smart_contract
-```
+```rust
 is_smart_contract(address: &ManagedAddress) -> bool
 ```
 
 Returns `true` if the address passed as parameter is a Smart Contract address, `false` for simple accounts.
 
 ### get_caller 
-```
+```rust
 get_caller() -> ManagedAddress
 ```
 Returns the current caller.  
@@ -63,7 +63,7 @@ Returns the current caller.
 Keep in mind that for SC Queries, this function will return the SC's own address, so having a view function that uses this API function will not have the expected behaviour.
 
 ### get_balance 
-```
+```rust
 get_balance(address: &ManagedAddress) -> BigUint
 ```
 
@@ -72,7 +72,7 @@ Returns the EGLD balance of the given address.
 This only works for addresses that are in the same shard as the smart contract.  
 
 ### get_sc_balance
-```
+```rust
 get_sc_balance(token: &TokenIdentifier, nonce: u64) -> BigUint
 ```
 
@@ -81,7 +81,7 @@ Returns the EGLD/ESDT/NFT balance of the smart contract.
 For fungible ESDT, nonce should be 0. To get the EGLD balance, you can simply pass `TokenIdentifier::egld()` as parameter.  
 
 ### get_tx_hash
-```
+```rust
 get_tx_hash() -> ManagedByteArray<Self::Api, 32>
 ```
 
@@ -90,7 +90,7 @@ Returns the current tx hash.
 In case of asynchronous calls, the tx hash is the same both in the original call and in the associated callback.
 
 ### get_gas_left
-```
+```rust
 get_gas_left() - > u64
 ```
 
@@ -101,29 +101,29 @@ This is useful for expensive operations, like iterating over an array of users i
 A smart contract call that runs out of gas will revert all operations, so this function can be used to return _before_ running out of gas, saving a checkpoint, and continuing on a second call.
 
 ### get_block_timestamp  
-```
+```rust
 get_block_timestamp() -> u64
 ```
 
 ### get_block_nonce 
-```
+```rust
 get_block_nonce() -> u64
 ```
 
 ### get_block_round
-```
+```rust
 get_block_round() -> u64
 ```
 
 ### get_block_epoch
-```
+```rust
 get_block_epoch() -> u64
 ```
 
 These functions are mostly used for setting up deadlines, so they've been grouped together.
 
 ### get_block_random_seed  
-```
+```rust
 get_block_random_seed() -> ManagedByteArray<Self::Api, 48>
 ```
 Returns the block random seed, which can be used for generating random numbers.  
@@ -131,33 +131,33 @@ Returns the block random seed, which can be used for generating random numbers.
 This will be the same for all the calls in the current block, so it can be predicted by someone calling this at the start of the round and only then calling your contract.  
 
 ### get_prev_block_timestamp  
-```
+```rust
 get_prev_block_timestamp() -> u64
 ```
 
 ### get_prev_block_nonce 
-```
+```rust
 get_prev_block_nonce() -> u64
 ```
 
 ### get_prev_block_round  
-```
+```rust
 get_prev_block_round() -> u64 
 ```
 
 ### get_prev_block_epoch
-```
+```rust
 get_prev_block_epoch() -> u64
 ```
 
 ### get_prev_block_random_seed
-```
+```rust
 get_prev_block_random_seed() -> ManagedByteArray<Self::Api, 48>
 ```
 The same as the functions above, but for the previous block instead of the current block.
 
 ### get_current_esdt_nft_nonce
-```
+```rust
 get_current_esdt_nft_nonce(address: &ManagedAddress, token_id: &TokenIdentifier) -> u64
 ```
 
@@ -168,7 +168,7 @@ This only works for accounts that have the ESDTNFTCreateRole set and only for ac
 This function is usually used with `self.blockchain().get_sc_address()` for smart contracts that create SFT/NFTs themselves.  
 
 ### get_esdt_balance 
-```
+```rust
 get_esdt_balance(address: &ManagedAddress, token_id: &TokenIdentifier, nonce: u64) -> BigUint
 ```
 
@@ -179,7 +179,7 @@ This only works for addresses that are in the same shard as the smart contract.
 For fungible ESDT, nonce should be 0. For EGLD balance, use the `get_balance` instead.  
 
 ### get_esdt_token_data
-```
+```rust
 get_esdt_token_data(address: &ManagedAddress, token_id: &TokenIdentifier, nonce: u64) -> EsdtTokenData<Self::Api>
 ```
 
@@ -234,7 +234,7 @@ This only works for addresses that are in the same shard as the smart contract.
 Most of the time, this function is used with `self.blockchain().get_sc_address()` as address to get the properties of a token that is owned by the smart contract, or was transferred to the smart contract in the current executing call.  
 
 ### get_esdt_local_roles
-```
+```rust
 get_esdt_local_roles(token_id: &TokenIdentifier) -> EsdtLocalRoleFlags
 ```
 Gets the ESDTLocalRoles set for the smart contract, as a bitflag. The returned type contains methods of checking if a role exists and iterating over all the roles.  
@@ -248,21 +248,21 @@ This API is accessible through `self.call_value()`. The alternative is to use th
 Available functions:  
 
 ### egld_value
-```
+```rust
 egld_value() -> BigUint
 ```
 
 Returns the amount of EGLD transferred in the current transaction. Will return 0 for ESDT transfers.  
 
 ### esdt_value
-```
+```rust
 esdt_value() -> BigUint
 ```
 
 Returns the amount of ESDT transferred in the current transaction. Will return 0 for EGLD transfers.  
 
 ### token
-```
+```rust
 token() -> TokenIdentifier
 ```
 
@@ -271,21 +271,21 @@ Returns the identifier of the token transferred in the current transaction. Will
 Use `#[payment_token]` argument annotation instead of directly calling this function.  
 
 ### esdt_token_nonce
-```
+```rust
 esdt_token_nonce() -> u64
 ```
 
 Returns the nonce of the SFT/NFT transferred in the current transaction. Will return 0 for EGLD or fungible ESDT transfers.  
 
 ### esdt_token_type
-```
+```rust
 esdt_token_type() -> EsdtTokenType
 ```
 
 Returns the type of token transferred in the current transaction. Will only return `EsdtTokenType::Fungible` or `EsdtTokenType::NonFungible`.   
 
 ### payment_token_pair
-```
+```rust
 payment_token_pair() -> (BigUint, TokenIdentifier)
 ```
 Returns the amount and the ID of the token transferred in the current transaction.  
@@ -293,7 +293,7 @@ Returns the amount and the ID of the token transferred in the current transactio
 Mostly used by auto-generated code. Use `#[payment_token]` and `#[payment_amount]` argument annotations instead.  
 
 ### all_esdt_transfers
-```
+```rust
 all_esdt_transfers() -> ManagedVec<EsdtTokenPayment<Self::Api>>
 ```
 
@@ -316,36 +316,39 @@ This API is accessible through `self.crypto()`. It provides hashing functions an
 Hashing functions:  
 
 ### sha256_legacy_managed
-```
+```rust
 sha256_legacy_managed<const MAX_INPUT_LEN: usize>(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
 ```
 
 ### keccak256_legacy_managed
-```
+```rust
 keccak256_legacy_managed<const MAX_INPUT_LEN: usize>(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
 ```
 
 Signature verification functions: 
 
-### `verify_ed25519_managed<const MAX_MESSAGE_LEN: usize>(key: &ManagedByteArray<Self::Api, 32>, message: &ManagedBuffer, signature: &ManagedByteArray<Self::Api, 64>) -> bool`  
+### verify_ed25519_managed
+```rust
+verify_ed25519_managed<const MAX_MESSAGE_LEN: usize>(key: &ManagedByteArray<Self::Api, 32>, message: &ManagedBuffer, signature: &ManagedByteArray<Self::Api, 64>) -> bool
+```
 
 ### verify_bls
-```
+```rust
 verify_bls(key: &[u8], message: &[u8], signature: &[u8]) -> bool
 ```
 
 ### verify_ed25519
-```
+```rust
 verify_ed25519(key: &[u8], message: &[u8], signature: &[u8]) -> bool
 ```
 
 ### verify_secp256k1
-```
+```rust
 verify_secp256k1(key: &[u8], message: &[u8], signature: &[u8]) -> bool
 ```
 
 ### verify_custom_secp256k1
-```
+```rust
 verify_custom_secp256k1(key: &[u8], message: &[u8], signature: &[u8], hash_type: MessageHashType) -> bool
 ```
 
@@ -371,7 +374,7 @@ let hash = self.crypto().sha256_legacy_managed::<200>(&data);
 Where `200` is the max expected byte length of `data`.  
 
 ### encode_secp256k1_der_signature
-```
+```rust
 encode_secp256k1_der_signature(r: &[u8], s: &[u8]) -> BoxedBytes
 ```
 
@@ -388,7 +391,7 @@ For Smart Contract to Smart Contract calls, use the Proxies, as described in the
 Without further ado, let's take a look at the available functions:  
 
 ### direct
-```
+```rust
 direct<D>(to: &ManagedAddress, token: &TokenIdentifier, nonce: u64, amount: &BigUint, data: D)
 ```
 
@@ -404,12 +407,16 @@ If you're unsure about the destination's account type, you can use the `is_smart
 
 If you need a bit more control, use the `direct_with_gas_limit` function instead.  
 
-### `direct_multi<D>(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment<Self::Api>>, data: D)`
+### direct_multi
+
+```rust
+direct_multi<D>(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment<Self::Api>>, data: D)
+```
 
 The multi-transfer version for the `direct` function.  
 
 ### change_owner_address
-```
+```rust
 change_owner_address(child_sc_address: &ManagedAddress, new_owner: &ManagedAddress)
 ```
 
@@ -418,7 +425,7 @@ Changes the ownership of target child contract to another address. This will fai
 This also has the implication that the current contract will not be able to call `#[only_owner]` functions of the child contract, upgrade, or change owner again.  
 
 ### esdt_local_mint
-```
+```rust
 esdt_local_mint(token: &TokenIdentifier, nonce: u64, amount: &BigUint)
 ```
 
@@ -429,7 +436,7 @@ For SFTs, you must use `esdt_nft_create` before adding additional quantity.
 This function cannot be used for NFTs.  
 
 ### esdt_local_burn
-```
+```rust
 esdt_local_burn(token: &TokenIdentifier, nonce: u64, amount: &BigUint)
 ```
 
@@ -438,7 +445,7 @@ The inverse operation of `esdt_local_mint`, which permanently removes the tokens
 Unlike the mint function, this can be used for NFTs.  
 
 ### esdt_nft_create
-```
+```rust
 esdt_nft_create<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &BigUint, name: &ManagedBuffer, royalties: &BigUint, hash: &ManagedBuffer, attributes: &T, uris: &ManagedVec< ManagedBuffer>) -> u64
 ```
 
@@ -461,15 +468,14 @@ Must have `ESDTNftCreate` role set, or this will fail with "action is not allowe
 `uris` is a list of links to the NFTs visual/audio representation, most of the time, these will be links to images, videos or songs. If empty, the framework will automatically add an "empty" URI.
 
 ### esdt_nft_create_compact
-
-```
+```rust
 esdt_nft_create_compact<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &BigUint, attributes: &T) -> u64
 ```
 
 Same as `esdt_nft_create`, but fills most arguments with default values. Mostly used in contracts that use NFTs as a means of information rather than for display purposes.  
 
 ### sell_nft
-```
+```rust
 sell_nft(nft_id: &TokenIdentifier, nft_nonce: u64, nft_amount: &BigUint, buyer: &ManagedAddress, payment_token: &TokenIdentifier, payment_nonce: u64, payment_amount: &BigUint) -> BigUint
 ```
 
@@ -481,13 +487,19 @@ Sends the SFTs/NFTs to target address, while also automatically calculating and 
 
 This function's purpose is mostly to be used in marketplace-like smart contracts, where the contract sells NFTs to users.  
 
-### `nft_add_uri(token_id: &TokenIdentifier, nft_nonce: u64, new_uri: ManagedBuffer)`
+### nft_add_uri
+```rust
+nft_add_uri(token_id: &TokenIdentifier, nft_nonce: u64, new_uri: ManagedBuffer)
+```
 
 Adds an URI to the selected NFT. The SC must own the NFT and have the `ESDTRoleNFTAddURI` to be able to use this function.
 
 If you need to add multiple URIs at once, you can use `nft_add_multiple_uri` function, which takes a `ManagedVec<ManagedBuffer>` as argument instead.  
 
-### `nft_update_attributes<T: TopEncode>(token_id: &TokenIdentifier, nft_nonce: u64, new_attributes: &T)`
+### nft_update_attributes
+```rust
+nft_update_attributes<T: TopEncode>(token_id: &TokenIdentifier, nft_nonce: u64, new_attributes: &T)
+```
 
 Updates the attributes of the selected NFT to the provided value. The SC must own the NFT and have the `ESDTRoleNFTUpdateAttributes` to be able to update the attributes.  
 
