@@ -72,38 +72,20 @@ Asynchronous calls can be launched either through transfer_execute (in the case 
 
 To launch a transfer and execute call using the above described proxy, you can simply replace `execute_on_dest_context` method with the `transfer_execute` method. Keep in mind that you can't get the returned `BigUint` in this case.
 
-If instead you want to launch an async call, you have to use the `async_call` method. Unlike the other "launch" methods, this does not execute or register the call, but instead it creates an `AsyncCall` object that you need to return.
+If instead you want to launch an async call, you have to use the `async_call` method, and use the `call_and_exit()` method on the returned object.  
 
 Using the above example, your async call would look like this:
 ```rust
 #[endpoint]
-fn caller_endpoint(&self) -> AsyncCall {
+fn caller_endpoint(&self) {
 	// other code here
 
 	self.contract_proxy(callee_sc_address)
 		.my_endpoint(my_biguint_arg)
 		.async_call()
+		.call_and_exit();
 }
 ```
-
-The `AsyncCall` struct performs some logic when returned as an endpoint result (this can be done by implementing the `EndpointResult` trait, but you should never have to implement this trait on any of your custom types, except in some very niche scenarios).
-
-If want your `caller_endpoint` to return some data on its own, you can use `MultiResult` in combination with the aforementioned `AsyncCall`, like so:
-```rust
-#[endpoint]
-fn caller_endpoint(&self) -> MultiResult2<BigUint, AsyncCall> {
-	// other code here
-
-	let my_value = BigUint::from(42u32);
-	let async_obj = self.contract_proxy(callee_sc_address)
-		.my_endpoint(my_biguint_arg)
-		.async_call();
-
-	(my_value, async_obj).into()
-}
-```
-
-Important: The `AsyncCall` object MUST be the last one in the multi-result sequence. And no, you can't return something like `MultiResult2<AsyncCall, AsyncCall>`. Only one async call per transaction is supported at this point in time.
 
 ### Callbacks
 
@@ -133,13 +115,14 @@ fn my_endpoint_callback(
 To assign this callback to the aforementioned async call, we hook it like this:
 ```rust
 #[endpoint]
-fn caller_endpoint(&self) -> AsyncCall {
+fn caller_endpoint(&self) {
 	// other code here
 
 	self.contract_proxy(callee_sc_address)
 		.my_endpoint(my_biguint_arg)
 		.async_call()
 		.with_callback(self.callbacks().my_endpoint_callback())
+		.call_and_exit();
 }
 ```
 
@@ -165,12 +148,13 @@ fn my_payable_endpoint(
 You don't have to do any manual work for the payment args, you just have to pass them as simple arguments:
 ```rust
 #[endpoint]
-fn caller_endpoint(&self, token: TokenIdentifier, nonce: u64 amount: BigUint) -> AsyncCall {
+fn caller_endpoint(&self, token: TokenIdentifier, nonce: u64 amount: BigUint) {
 	// other code here
 
 	self.contract_proxy(callee_sc_address)
 		.my_endpoint(token, nonce, amount, my_biguint_arg)
 		.async_call()
+		.call_and_exit();
 }
 ```
 
@@ -209,13 +193,14 @@ fn my_endpoint_callback(
 Keep in mind you do NOT need to specify these arguments when hooking the callback:
 ```rust
 #[endpoint]
-fn caller_endpoint(&self) -> AsyncCall {
+fn caller_endpoint(&self) {
 	// other code here
 
 	self.contract_proxy(callee_sc_address)
 		.my_endpoint(my_biguint_arg)
 		.async_call()
 		.with_callback(self.callbacks().my_endpoint_callback())
+		.call_and_exit();
 }
 ```
 ### Miscellaneous functions
@@ -226,7 +211,7 @@ fn caller_endpoint(&self) -> AsyncCall {
 
 #### Manually adding payments
 
-If for some reason the callee endpoint does not use the payment args, but instead calls the low level APIs to get the call values, you can pass payments through the `with_egld_transfer` for EGLD, and `add_token_transfer` and `with_multi_token_transfer` for ESDTs.
+If the callee endpoint does not use the payment args, but instead calls the low level APIs to get the call values, you can pass payments through the `with_egld_transfer` for EGLD, and `add_token_transfer` and `with_multi_token_transfer` for ESDTs.
 
 ### Method #2: Manually writing the proxy
 
