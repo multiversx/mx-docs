@@ -5,6 +5,10 @@ title: Writing and testing interactions
 
 Writing and testing interactions
 
+:::important
+This tutorial makes use of `erdjs 10`, which isn't officially released yet (still in _alpha_ as of 2022-03-24). Therefore, the code examples in this section are subject to change.
+:::
+
 This tutorial will guide you through the process of writing smart contract interactions using **erdjs** and run (test) them as [**mocha**](https://mochajs.org)-based **erdjs snippets**.
 
 ## IDE Prerequisites
@@ -160,10 +164,129 @@ let controller = new DefaultSmartContractController(abi, provider);
 let interactor = new LotteryInteractor(contract, controller);
 ```
 
-### Writing a contract query interaction
+### Methods of the interactor
 
-TBD
+Generally speaking, when writing an interactor, you'd like to have a function (method) for each endpoint of the smart contract. While this is straightforward when writing query functions against `readonly` / `get` endpoints, for `executable` / `do` endpoints you need to build, **sign** (using a signing / wallet provider) and broadcast a transaction, then optionally await for its execution and parse the results (if any). The interrupted nature of the flow for calling `executable` endpoints and the eventual context switching required by some of the signing / wallet providers (e.g. navigating through web pages) makes it (the flow) a bit harder to be captured in a single function (method) of the interactor in an _universally applicable manner_. However, the example interactors follow the _one method for each endpoint_ guideline, since they use a _test user_ object to sign the transactions (that is, no external signing provider).
 
-### Writing a contract call interaction
+### Writing an interactor method for a contract query
+
+In order to implement a contract query as a method of your interactor, you first need to the prepare the `Interaction` object:
+
+```
+// Example 1 (adder contract)
+let interaction = <Interaction>this.contract.methods.getSum();
+
+// Example 2 (lottery contract)
+let interaction = <Interaction>this.contract.methods.status([
+    BytesValue.fromUTF8("my-lottery")
+]);
+
+// Example 2-auto (lottery contract)
+let interaction = <Interaction>this.contract.methodsAuto.status(["my-lottery"]);
+
+// Example 3 (lottery contract)
+let interaction = <Interaction>this.contract.methods.getLotteryWhitelist([
+    BytesValue.fromUTF8("my-lottery")
+]);
+
+// Example 3-auto (lottery contract)
+let interaction = <Interaction>this.contract.methodsAuto.getLotteryWhitelist(["my-lottery"]);
+
+// Example 4 (lottery contract)
+let interaction = <Interaction>this.contract.methods.getLotteryInfo([
+    BytesValue.fromUTF8("my-lottery")
+]);
+
+// Example 4-auto (lottery contract)
+let interaction = <Interaction>this.contract.methodsAuto.getLotteryInfo(["my-lottery"]);
+```
+
+Above, you may notice there are two possible ways for providing the arguments to the interaction: the **explicity** mode and the **implicit** mode, also called **the auto mode** - since it performs _automatic type inference_ (within erdjs' own typesystem) with respect to the endpoint definition (more precisely, with respect to the ABI types of the input arguments). You can choose any of the modes to provide the arguments for the interaction. Pick the one that best suits your programming style.
+
+Afterwards, you feed the interaction to the smart contract controller, which verifies the interaction object with respect to the ABI, performs a HTTP call (VM Query) against the Network Provider, then parses the results into an object called `TypedOutcomeBundle`:
+
+```
+// Example 1
+let { firstValue } = await this.controller.query(interaction);
+
+// Example 2
+let { firstValue, secondValue, thirdValue } = await this.controller.query(interaction);
+
+// Example 3
+let { values, returnCode } = await this.controller.query(interaction);
+
+// Example 4
+let bundle = await this.controller.query(interaction);
+```
+
+In the end, you would (optionally) cast, then interpret the values in the bundle (when necessary), before returning them to the caller of the interactor function (method):
+
+```
+// Example 1
+let firstValueAsBigUInt = <BigUIntValue>firstValue;
+return firstValueAsBigUInt.valueOf().toNumber();
+
+// Example 2
+let firstValueAsEnum = <EnumValue>firstValue;
+return firstValueAsEnum.name;
+
+// Example 3
+let firstValueAsVariadic = <VariadicValue>firstValue;
+return firstValueAsVariadic.valueOf();
+
+// Example 4 (not calling valueOf())
+let firstValueAsStruct = <Struct>firstValue;
+return firstValueAsStruct;
+```
+
+Now let's put the code together and see some full examples.
+
+Getting the status of a lottery **(enum)**:
+
+```
+// Interactor method:
+async getStatus(lotteryName: string): Promise<string> {
+    // Prepare the interaction
+    let interaction = <Interaction>this.contract.methodsAuto.status([lotteryName]);
+    
+    // Let's perform the interaction via the controller.
+    let { firstValue } = await this.controller.query(interaction);
+
+    // Now let's interpret the results.
+    let firstValueAsEnum = <EnumValue>firstValue;
+    return firstValueAsEnum.name;
+}
+
+// Caller:
+let status: string = await interactor.getStatus("my-lottery");
+console.log(status);
+```
+
+Getting the lottery info **(struct)**:
+
+```
+// Interactor method:
+async getLotteryInfo(lotteryName: string): Promise<Struct> {
+    // Prepare the interaction
+    let interaction = <Interaction>this.contract.methods.getLotteryInfo([
+        BytesValue.fromUTF8(lotteryName)
+    ]);
+
+    // Let's perform the interaction via the controller.
+    let { firstValue } = await this.controller.query(interaction);
+
+    // Now let's interpret the results.
+    let firstValueAsStruct = <Struct>firstValue;
+    return firstValueAsStruct;
+}
+
+// Caller:
+let lotteryInfo: Struct = await interactor.getLotteryInfo("my-lottery");
+console.log(lotteryInfo.valueOf());
+console.log(lotteryInfo.getFieldValue("token_identifier"));
+console.log(lotteryInfo.getFieldValue("prize_pool"));
+```
+
+### Writing an interactor method for a contract call
 
 TBD
