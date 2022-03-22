@@ -106,6 +106,17 @@ let whale = session.users.whale;
 let alice = session.users.alice;
 ```
 
+### Assertions
+
+Don't forget to use _assert_ statements, which makes the snippets more valuable. For example:
+
+```
+assert.isTrue(returnCode.isSuccess());
+...
+assert.equal(lotteryInfo.getFieldValue("token_identifier"), "myToken");
+assert.equal(lotteryStatus, "someStatus");
+```
+
 ### Dependence on interactors
 
 The most important dependency of a snippet is the **contract interactor**, which is responsible with creating and executing erdjs-based interactions and contract queries.
@@ -115,6 +126,7 @@ The most important dependency of a snippet is the **contract interactor**, which
 In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain almost production-ready code to call and query your contracts, code which is mostly copy-paste-able into your dApps.
 
 Generally speaking, an interactor component depends on two objects: a `SmartContract` and a `SmartContractController` (both defined in erdjs).
+
 ### Creation of an interactor
 
 Let's see how to construct an interactor (we use the lottery contract as an example).
@@ -147,3 +159,11 @@ Now, create the `SmartContractController` and finally, the interactor:
 let controller = new DefaultSmartContractController(abi, provider);
 let interactor = new LotteryInteractor(contract, controller);
 ```
+
+### Writing a contract query interaction
+
+TBD
+
+### Writing a contract call interaction
+
+TBD
