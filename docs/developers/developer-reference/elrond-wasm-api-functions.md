@@ -290,7 +290,16 @@ payment_token_pair() -> (BigUint, TokenIdentifier)
 ```
 Returns the amount and the ID of the token transferred in the current transaction.  
 
-Mostly used by auto-generated code. Use `#[payment_token]` and `#[payment_amount]` argument annotations instead.  
+Mostly used by auto-generated code. Use `#[payment_token]` and `#[payment_amount]` argument annotations instead.
+
+### payment_as_tuple
+```rust
+payment_as_tuple() -> (TokenIdentifier, u64, BigUint)
+```
+
+Returns the ID, the nonce and the amount of the token transferred in the current transaction.
+
+Use `#[payment_token]`, `#[payment_nonce]`and `#[payment_amount]` argument annotations instead.
 
 ### all_esdt_transfers
 ```rust
@@ -407,8 +416,14 @@ If you're unsure about the destination's account type, you can use the `is_smart
 
 If you need a bit more control, use the `direct_with_gas_limit` function instead.  
 
-### direct_multi
+### direct_egld
+```rust
+direct_egld<D>(to: &ManagedAddress, amount: &BigUint, data: D)
+```
 
+The EGLD-transfer version for the `direct` function.
+
+### direct_multi
 ```rust
 direct_multi<D>(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment<Self::Api>>, data: D)
 ```
