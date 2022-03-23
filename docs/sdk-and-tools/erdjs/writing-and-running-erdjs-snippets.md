@@ -376,7 +376,7 @@ Then, for interpreting the results, follow the same guidelines as for query resu
 
 ## Dissecting the contracts controller
 
-If, for some reason, the function `controller.excute()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
+If, for some reason, the function `controller.execute()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
 
 First, create an interaction checker and a results parser:
 
