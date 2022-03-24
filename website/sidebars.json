@@ -193,7 +193,14 @@
           "sdk-and-tools/erdpy/writing-and-running-erdpy-scripts"
         ]
       },
-      "sdk-and-tools/erdjs",
+      {
+        "type": "subcategory",
+        "label": "erdjs",
+        "ids": [
+          "sdk-and-tools/erdjs/erdjs",
+          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions"
+        ]
+      },
       "sdk-and-tools/erdgo",
       "sdk-and-tools/erdjava",
       "sdk-and-tools/erdkotlin",
