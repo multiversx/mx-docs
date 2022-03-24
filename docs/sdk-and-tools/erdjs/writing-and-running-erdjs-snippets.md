@@ -6,7 +6,7 @@ title: Writing and testing interactions
 Writing and testing interactions
 
 :::important
-This tutorial makes use of `erdjs 10`, which isn't officially released yet (still in _alpha_ as of 2022-03-24). Therefore, the code examples in this section are subject to change.
+This tutorial makes use of `erdjs 10`, which isn't officially released yet (in _beta_ as of 2022-03-24). Therefore, the code examples in this section are subject to change.
 :::
 
 This tutorial will guide you through the process of writing smart contract interactions using **erdjs** and run (test) them as [**mocha**](https://mochajs.org)-based **erdjs snippets**.
@@ -376,6 +376,8 @@ Then, for interpreting the results, follow the same guidelines as for query resu
 
 ## Dissecting the contracts controller
 
+### Contract calls
+
 If, for some reason, the function `controller.execute()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
 
 First, create an interaction checker and a results parser:
@@ -404,4 +406,34 @@ await transaction.send(provider);
 await transaction.awaitExecuted(provider);
 let transactionOnNetwork = await transaction.getAsOnNetwork(provider);
 let bundle = parser.parseOutcome(transactionOnNetwork, endpoint);
+```
+
+### Contract queries
+
+If, for some reason, the function `controller.query()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
+
+First, create an interaction checker and a results parser:
+
+```
+let checker = new InteractionChecker();
+let parser = new ResultsParser();
+```
+
+Suppose that the following objects are available in your scope:
+
+```
+let abi: SmartContractAbi;
+let provider: IProvider;
+let interaction: Interaction;
+```
+
+Then, check the interaction against the ABI (optionally), query the provider and parse the results as follows:
+
+```
+let endpoint = abi.getEndpoint(interaction.getFunction());
+checker.checkInteraction(interaction, endpoint);
+
+let query = interaction.buildQuery();
+let queryResponse = await provider.queryContract(query);
+let bundle = parser.parseQueryResponse(queryResponse, endpoint);
 ```
