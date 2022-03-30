@@ -15,8 +15,13 @@ Before installing **erdpy**, please make sure you have a working **Python 3** en
 
 Smart contracts written in C require the ncurses library routines for compiling. Install them using the following:
 
+For Linux:
 ```
 sudo apt install libncurses5
+```
+For MacOS:
+```
+brew install ncurses
 ```
 
 ## **Install using erdpy-up (recommended)**
