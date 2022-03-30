@@ -16,7 +16,7 @@ At first, pass the maximum possible amount for `gas-limit` (no guessing).
 ```
 $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=600000000 \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --simulate
 ```
 
@@ -41,7 +41,7 @@ After that, check the cost simulation by running the simulation once again, but 
 ```
 $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=1849711 \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --simulate
 ```
 
@@ -63,7 +63,7 @@ In the end, let's actually deploy the contract:
 ```
 $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=1849711 \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --send --wait-result
 ```
 
@@ -85,7 +85,7 @@ Assuming we've already deployed the contract (see above) let's get the cost for 
 
 ```
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=increment\
  --recall-nonce --gas-limit=600000000\
  --simulate
@@ -107,7 +107,7 @@ In the end, let's actually call the contract:
 
 ```
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=increment\
  --recall-nonce --gas-limit=1225515\
  --send --wait-result
@@ -135,12 +135,12 @@ Let's deploy the contracts `A` and `B`:
 ```
 $ erdpy --verbose contract deploy --bytecode=./a.wasm \
  --recall-nonce --gas-limit=5000000 \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --send --wait-result --outfile=a.json
 
 $ erdpy --verbose contract deploy --bytecode=./b.wasm \
  --recall-nonce --gas-limit=5000000 \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --send --wait-result --outfile=b.json
 ```
 
@@ -150,7 +150,7 @@ Assuming `A` is deployed at `erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9
 $ export hexAddressOfB=0x$(erdpy wallet bech32 --decode erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq)
 
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=50000000\
  --arguments ${hexAddressOfB}\
@@ -216,7 +216,7 @@ For our example, let's simulate using the following values for `gasLimit`: `7619
 
 ```
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=7619200\
  --arguments ${hexAddressOfB}\
@@ -225,7 +225,7 @@ $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t
 ... inspect output (possibly testnet logs); execution is successful
 
 erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=7000000\
  --arguments ${hexAddressOfB}\
@@ -234,7 +234,7 @@ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p
 ... inspect output (possibly testnet logs); execution is successful
 
 erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=6000000\
  --arguments ${hexAddressOfB}\
