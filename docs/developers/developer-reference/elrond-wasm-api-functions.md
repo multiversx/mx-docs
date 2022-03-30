@@ -266,9 +266,7 @@ Returns the amount of ESDT transferred in the current transaction. Will return 0
 token() -> TokenIdentifier
 ```
 
-Returns the identifier of the token transferred in the current transaction. Will return `TokenIdentifier::egld()` for EGLD transfers.  
-
-Use `#[payment_token]` argument annotation instead of directly calling this function.  
+Returns the identifier of the token transferred in the current transaction. Will return `TokenIdentifier::egld()` for EGLD transfers.   
 
 ### esdt_token_nonce
 ```rust
@@ -290,16 +288,12 @@ payment_token_pair() -> (BigUint, TokenIdentifier)
 ```
 Returns the amount and the ID of the token transferred in the current transaction.  
 
-Mostly used by auto-generated code. Use `#[payment_token]` and `#[payment_amount]` argument annotations instead.
-
 ### payment_as_tuple
 ```rust
 payment_as_tuple() -> (TokenIdentifier, u64, BigUint)
 ```
 
-Returns the ID, the nonce and the amount of the token transferred in the current transaction.
-
-Use `#[payment_token]`, `#[payment_nonce]`and `#[payment_amount]` argument annotations instead.
+Returns the ID, the nonce and the amount of the token transferred in the current transaction.  
 
 ### all_esdt_transfers
 ```rust
