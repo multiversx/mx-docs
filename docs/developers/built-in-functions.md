@@ -54,7 +54,7 @@ ChangeOwnerAddressTransaction {
     Receiver: <SC address>
     Value: 0
     GasLimit: 6_000_000
-    Data: "ChangeOwnerAddress@" +
+    Data: "ChangeOwnerAddress" +
           "@" + <new owner address in hexadecimal encoding>
 }
 ```

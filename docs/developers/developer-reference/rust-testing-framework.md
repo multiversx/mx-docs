@@ -5,7 +5,7 @@ title: Rust Testing Framework
 
 ## Introduction
 
-The Rust testing framework was develped as an alternative to manually writing Mandos tests. This comes with many advantages:
+The Rust testing framework was developed as an alternative to manually writing Mandos tests. This comes with many advantages:
 - being able to calculate values using variables
 - type checking
 - automatic serialization
