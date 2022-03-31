@@ -11,7 +11,7 @@ We maintain different version of the scripts used to manage Elrond validators. H
 
 ```
 cd ~
-git clone https://github.com/ElrondNetwork/elrond-go-scripts-devnet
+git clone https://github.com/ElrondNetwork/elrond-go-scripts
 ```
 
 ## **Configure the scripts correctly**
@@ -32,13 +32,13 @@ Next, we need to edit the `variables.cfg` file and add your username in the foll
 Open `variables.cfg` in the `nano` editor:
 
 ```
-cd ~/elrond-go-scripts-devnet/config
+cd ~/elrond-go-scripts/config
 nano variables.cfg
 ```
 
 Change the variables `CUSTOM_HOME` and `CUSTOM_USER`, as indicated in the screenshot. Do not use `root`
-
-![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MD9DoWdOc74MmwiD2RQ%2F-MD9EYPoRPkuJCUx1gc9%2FMobaRTE_3oIeHkweXC.png?alt=media&token=efc7b95b-624c-4c9d-b8bd-67690678a462)
+Update the `ENVIRONMENT` value with `devnet`  
+![scripts](/validators/scripts/variables.png)
 
 Replace <yourusername> with the returned output of the "whoami" command
 
