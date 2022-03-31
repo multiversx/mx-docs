@@ -3,7 +3,7 @@ id: install-update
 title: Installing & updating
 ---
 
-## Install your node(s)
+## **Install your node(s)**
 
 After preparing the user permissions, the script configurations and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node. For installation use`1 - install`.
 
@@ -85,7 +85,7 @@ $HOME/elrond-utils/termui -address localhost:8080
 Your first node is called `node-0` and its REST API will run on port `8080` by default. The next node is `node-1 `on port `8081`, and so on.
 :::
 
-## Update your node(s)
+## **Update your node(s)**
 
 Upgrade your node by running the script and selecting options:
 
@@ -105,7 +105,7 @@ Those are the basic steps. Please carefully read the on-screen instructions, ref
 
 Your private keys are needed to run your node. Losing them means losing control of your node.
 
-Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your “`**n**`” nodes]
+Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your `n` nodes]
 
 Create a safe backup for them on storage outside the server running your node(s).
 
