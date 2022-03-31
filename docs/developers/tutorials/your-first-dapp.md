@@ -105,23 +105,24 @@ brew install libsodium
 
 ### **Create an owner wallet**
 
-We now have all the prerequisites installed, let's create an owner's wallet **PEM file**.
+Now that we have all the prerequisites installed, let's create an owner's wallet **PEM file**.
 
-The smart contract can only be deployed on the blockchain by an owner, so we will create an owner wallet [here](https://devnet-wallet.elrond.com). The owner can also update the contract, later on, if needed.
+The smart contract can be deployed on the blockchain only by an owner (via `erdpy contract deploy`). The owner can also upgrade the smart contract later on, if needed (via `erdpy contract upgrade`).
 
-Let's head over to the Elrond wallet, click **"Create new wallet"**, write down the security phrase (24 words) that can help us retrieve the wallet, and the password for the JSON keystore (that we will save in the `~/ping-pong/wallet folder`). We should be able to see our new Elrond wallet owner address which is, in this case, *erd1.......*
-
-We can also generate a private key PEM file, like this we won't need to enter our wallet password each time we want to confirm a transaction.
+The easiest method for creating a wallet is by using `erdpy`:
 
 ```sh
 cd ~/ping-pong/wallet 
-erdpy --verbose wallet derive ./wallet-owner.pem --mnemonic
+erdpy wallet new --pem --output-path ./wallet-owner.pem
 ```
 
-We will enter our **24 secret words** when prompted and a new PEM file will be created. This command requires that you enter all 24 words each separated by a space.
+Please store all the 24 words displayed after `Mnemonic:` in a safe place. This is the seed phrase of your wallet and should never be lost.  
+To see our new Elrond wallet owner address, we can type `cat ./wallet-owner.pem` in the terminal. The address should have 62 characters, starting with `erd1...`
 
-In order to initiate transactions on the blockchain, we need some funds, every transaction costs a very small fee, on the blockchain this is called **gas**.
-On the devnet wallet we have a **faucet**  that allows you to get free test funds for our applications. We can request 10 xEGLD every 24 hours, so let's request 10 xEGLD now.
+* Note that generating the wallet address using this method is recommended only for development purposes. For any other scenario, please use [Web Wallet](https://devnet-wallet.elrond.com/) or Maiar/Maiar DeFi Wallet/Ledger.
+
+In order to initiate transactions on the blockchain, we need some funds. Every transaction on the blockchain costs a very small fee that is called **gas**.
+On the devnet wallet we have a [faucet](https://devnet-wallet.elrond.com/faucet) that allows us to get free test funds for our applications. We can request 10 xEGLD every 24 hours, so let's request 10 xEGLD now.
 We now check if the transaction was successful, and yes, we see that we now have 10 xEGLD in our devnet wallet.
 
 
