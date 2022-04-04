@@ -98,7 +98,7 @@ const siteConfig = {
         lvl3: ".docsContainer h4",
         lvl4: ".docsContainer h5",
         lvl5: ".docsContainer h6",
-        text: ".docsContainer p, .docsContainer li, .docsContainer ol, .docsContainer code, .docsContainer th, .docsContainer td, .docsContainer span",
+        text: ".docsContainer p, .docsContainer li, .docsContainer ol, .docsContainer code, .docsContainer th, .docsContainer td, .docsContainer span, .docsContainer pre, .docsContainer pre code span",
       },
     },
   },
