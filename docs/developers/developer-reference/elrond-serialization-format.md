@@ -8,7 +8,7 @@ title: The Elrond Serialization Format
 
 In Elrond, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 
-In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [repo](https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-codec), [doc](https://docs.rs/elrond-codec/0.5.3/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
+In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [repo](https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-codec), [doc](https://docs.rs/elrond-codec/0.8.5/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
 
 
 
@@ -134,10 +134,10 @@ For most smart contracts applications, number larger than the maximum uint64 val
 EGLD balances for instance are represented as fixed-point decimal numbers with 18 decimals.
 This means that to represent even just 1 EGLD we use the number 10<sup>18</sup>, which already exceeds the capacity of a regular 64-bit integer.
 
-**Rust types**: `Self::BigUint`, `Self::BigInt`,
+**Rust types**: `BigUint`, `BigInt`,
 
 :::important
-These types are managed by Arwen, in many cases the contract never sees the data, only a handle.
+These types are managed by Elrond VM, in many cases the contract never sees the data, only a handle.
 This is to reduce the burden on the smart contract.
 :::
 
@@ -147,26 +147,26 @@ can fit their 2's complement, big endian representation.
 **Nested encoding**: Since these types are variable length, we need to encode their length, so that the decodes knows when to stop decoding.
 The length of the encoded number always comes first, on 4 bytes (`usize`/`u32`).
 Next we encode:
-  - For `Self::BigUint` the big endian bytes
-  - For `Self::BigInt` the shortest 2's complement number that can unambiguously represent the number. Positive numbers must always have the most significant bit `0`, while the negative ones `1`. See examples below. 
+  - For `BigUint` the big endian bytes
+  - For `BigInt` the shortest 2's complement number that can unambiguously represent the number. Positive numbers must always have the most significant bit `0`, while the negative ones `1`. See examples below. 
 
 
 **Examples**
 
 | Type           | Number               | Top-level encoding   | Nested encoding        | Explanation |
 | -------------- | -------------------- | -------------------- | ---------------------- | --- |
-|`Self::BigUint` | `0`                  | `0x`                 | `0x00000000`           | The length of `0` is considered `0`. |
-|`Self::BigUint` | `1`                  | `0x01`               | `0x0000000101`         | `1` can be represented on 1 byte, so the length is 1. |
-|`Self::BigUint` | `256`                | `0x0100`             | `0x000000020100`       | `256` is the smallest number that takes 2 bytes. |
-|`Self::BigInt`  | `0`                  | `0x`                 | `0x00000000`           | Signed `0` is also represented as zero-length bytes. |
-|`Self::BigInt`  | `1`                  | `0x01`               | `0x0000000101`         | Signed `1` is also represented as 1 byte. |
-|`Self::BigInt`  | `-1`                 | `0x01FF`             | `0x00000001FF`         | The shortest 2's complement representation of `-1` if `FF`. The most significant bit is 1. |
-|`Self::BigUint` | `127`                | `0x7F`               | `0x000000017F`         | |
-|`Self::BigInt`  | `127`                | `0x7F`               | `0x000000017F`         | |
-|`Self::BigUint` | `128`                | `0x80`               | `0x0000000180`         | |
-|`Self::BigInt`  | `128`                | `0x0080`             | `0x000000020080`       | The most significant bit of this number is 1, so to avoid ambiguity an extra `0` byte needs to be prepended. |
-|`Self::BigInt`  | `255`                | `0x00FF`             | `0x0000000200FF`       | Same as above. |
-|`Self::BigInt`  | `256`                | `0x0100`             | `0x000000020100`       | `256` requires 2 bytes to represent, of which the MSB is 0, no more need to prepend a `0` byte. |
+|`BigUint` | `0`                  | `0x`                 | `0x00000000`           | The length of `0` is considered `0`. |
+|`BigUint` | `1`                  | `0x01`               | `0x0000000101`         | `1` can be represented on 1 byte, so the length is 1. |
+|`BigUint` | `256`                | `0x0100`             | `0x000000020100`       | `256` is the smallest number that takes 2 bytes. |
+|`BigInt`  | `0`                  | `0x`                 | `0x00000000`           | Signed `0` is also represented as zero-length bytes. |
+|`BigInt`  | `1`                  | `0x01`               | `0x0000000101`         | Signed `1` is also represented as 1 byte. |
+|`BigInt`  | `-1`                 | `0x01FF`             | `0x00000001FF`         | The shortest 2's complement representation of `-1` if `FF`. The most significant bit is 1. |
+|`BigUint` | `127`                | `0x7F`               | `0x000000017F`         | |
+|`BigInt`  | `127`                | `0x7F`               | `0x000000017F`         | |
+|`BigUint` | `128`                | `0x80`               | `0x0000000180`         | |
+|`BigInt`  | `128`                | `0x0080`             | `0x000000020080`       | The most significant bit of this number is 1, so to avoid ambiguity an extra `0` byte needs to be prepended. |
+|`BigInt`  | `255`                | `0x00FF`             | `0x0000000200FF`       | Same as above. |
+|`BigInt`  | `256`                | `0x0100`             | `0x000000020100`       | `256` requires 2 bytes to represent, of which the MSB is 0, no more need to prepend a `0` byte. |
 
 
 
@@ -215,7 +215,7 @@ Then, all nested encodings of the items, concatenated.
 |`Vec<u32>`            | `vec![7]`             | `0x00000007`          | `0x00000001 00000007` | Length = `1` |
 |`Vec< Vec<u32>>`      | `vec![ vec![7]]`      | `0x00000001 00000007` | `0x00000001 00000001 00000007` | There is 1 element, which is a vector. In both cases the inner Vec needs to be nested-encoded in the larger Vec. |
 |`Vec<&[u8]>`          | `vec![ &[7u8][..]]`   | `0x00000001 07`       | `0x00000001 00000001 07` | Same as above, but the inner list is a simple list of bytes. |
-|`Vec< Self::BigUint>` | `vec![ 7u32.into()]`  | `0x00000001 07`       | `0x00000001 00000001 07` | `BigUint`s need to encode their length when nested. The `7` is encoded the same way as a list of bytes of length 1, so the same as above. |
+|`Vec< BigUint>` | `vec![ 7u32.into()]`  | `0x00000001 07`       | `0x00000001 00000001 07` | `BigUint`s need to encode their length when nested. The `7` is encoded the same way as a list of bytes of length 1, so the same as above. |
 
 
 
@@ -297,7 +297,7 @@ An `Option` represents an optional value: every Option is either `Some` and cont
 |`Option<u16>`            | `Some(5)`                                | `0x010005`           | `0x010005`           | |
 |`Option<u16>`            | `Some(0)`                                | `0x010000`           | `0x010000`           | |
 |`Option<u16>`            | `None`                                   | `0x`                 | `0x00`               | Note that `Some` has different encoding than `None` for any type |
-|`Option< Self::BigUint>` | `Some( Self::BigUint::from( 0x1234u32))` | `0x01 00000002 1234` | `0x01 00000002 1234` | The `Some` value is nested-encoded. For a `BigUint` this adds the length, which here is `2`. |
+|`Option< BigUint>` | `Some( BigUint::from( 0x1234u32))` | `0x01 00000002 1234` | `0x01 00000002 1234` | The `Some` value is nested-encoded. For a `BigUint` this adds the length, which here is `2`. |
 
 
 

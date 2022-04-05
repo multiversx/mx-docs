@@ -11,22 +11,24 @@ After preparing the user permissions, the script configurations and the keys, th
  ~/elrond-go-scripts-devnet/script.sh
 
  1) install
- 2) observers
+ 2) observing_squad
  3) upgrade
  4) upgrade_proxy
- 5) remove_db
- 6) start
- 7) stop
- 8) cleanup
- 9) github_pull
-10) get_logs
-11) quit
+ 5) upgrade_squad
+ 6) remove_db
+ 7) start
+ 8) stop
+ 9) cleanup
+ 10) github_pull
+ 11) get_logs
+ 12) quit
+
 Please select an action:1
 ```
 
 - When asked, indicate the number of nodes you want to run, i.e. `1`
 - When asked, indicate the name for your validator, i.e. `Valar`
-- Quit the menu without starting (we need keys first) by using `11 - quit`
+- Quit the menu without starting (we need keys first) by using `12 - quit`
 
 **Prepare your keys**
 
@@ -64,7 +66,7 @@ Repeat the above for all your “n” nodes. When complete, please refer to our 
 
 **Start the node process**
 
-Run the script and select option `6 - start`.
+Run the script and select option `7 - start`.
 
 ```
 ~/elrond-go-scripts-devnet/script.sh
@@ -86,10 +88,10 @@ Your first node is called `node-0` and its REST API will run on port `8080` by d
 
 Upgrade your node by running the script and selecting options:
 
-- `9 - github_pull` downloads the latest version of the scripts
+- `10 - github_pull` downloads the latest version of the scripts
 - `3 - upgrade`
-- `6 - start`
-- `11 - quit`
+- `7 - start`
+- `12 - quit`
 
 ```
  cd ~/elrond-go-scripts-devnet

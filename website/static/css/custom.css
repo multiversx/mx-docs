@@ -470,6 +470,15 @@ footer a.footer-text svg {
   fill: #f1c40f;
 }
 
+/* --------------- Start Fixes ---------------------- */
+
+.docsContainer img[alt^="maiar-defi-example-"] {
+  max-width: 347px;
+  max-width: min(375px, 100%);
+}
+
+/* --------------- End Fixes ---------------------- */
+
 @media only screen and (max-device-width: 736px) {
   .reactNavSearchWrapper .aa-dropdown-menu {
     min-width: 296px;
@@ -558,10 +567,4 @@ footer a.footer-text svg {
   #app-links .menu-text {
     display: none;
   }
-}
-
-@media only screen and (min-width: 1400px) {
-}
-
-@media only screen and (min-width: 1500px) {
 }

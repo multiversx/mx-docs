@@ -85,12 +85,12 @@ Numerical values, such as initial supply or number of decimals, should be the he
 - **1000000** _decimal_ => **0f4240** _hex encoded_
 
 ### **Number of decimals usage**
-Front-end applications will use the number of decimals in order to display balances. 
-Therefore, you must adapt the supply according to the number of decimals parameter. 
+Front-end applications will use the number of decimals in order to display balances.
+Therefore, you must adapt the supply according to the number of decimals parameter.
 
 For example, if you would like to create a token `ALC` with a total supply of 100 and number of decimals = 2, then you should set
-the initial supply to `10000` ($100 * 10^2$). 
-Also, when transferring/burning/minting tokens, you should keep in mind there is also the denomination involved. 
+the initial supply to `10000` ($100 * 10^2$).
+Also, when transferring/burning/minting tokens, you should keep in mind there is also the denomination involved.
 
 Therefore, if you own some above-mentioned ALC tokens, and you want to transfer 7.5 ALC, then the value argument of the transaction should be `750` ($7.5 * 10^2$). The same rule applies to burning or minting.
 
@@ -102,7 +102,7 @@ This is only relevant when performing operations via manual transactions over ES
 
 For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6.
 
-As stated above, if the user wants 4091 tokens with 6 decimals, then the initial supply has to be $4091 * 10^6$ tokens so a total of `4091000000`. 
+As stated above, if the user wants 4091 tokens with 6 decimals, then the initial supply has to be $4091 * 10^6$ tokens so a total of `4091000000`.
 ```
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
@@ -142,7 +142,7 @@ TransferTransaction {
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 
 - the receiver can be any account (which may or may not be a smart contract)
-- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `250000`
+- the `GasLimit` must be set to the value required by the protocol for ESDT transfers, namely `500000`
 - the Data field contains what appears to be a smart contract method invocation with arguments, but this invocation never reaches the VM: the string `ESDTTransfer` is reserved by the protocol and is handled as a built-in function, not as a smart contract call
 
 Following the example from earlier, assuming that the token identifier is `414c432d363235386432`, a transfer from Alice to another user, Bob, would look like this:
@@ -189,11 +189,7 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 
 ## **Multiple tokens transfer**
 
-:::warning
-This is an upcoming feature, and it's not yet enabled on mainnet, testnet or devnet.
-:::
-
-There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple 
+There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple
 fungible, semi-fungible or non-fungible tokens via a single transaction.
 
 
@@ -218,7 +214,7 @@ MultiTokensTransferTransaction {
 ```
 
 :::tip
-Each token requires the token identifier, the nonce and the quantity to transfer. 
+Each token requires the token identifier, the nonce and the quantity to transfer.
 
 For fungible tokens (regular ESDT) the nonce has to be 0 (`00` hex-encoded)
 :::
@@ -234,7 +230,7 @@ MultiTokensTransferTransaction {
     Data: "MultiESDTNFTTransfer" +
           "@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8" + // erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
           "@02" +  // 2 tokens to transfer
-          "@414c432d363235386432" +   // ALC-6258d2 
+          "@414c432d363235386432" +   // ALC-6258d2
           "@00" +  // 0 -> the nonce is 0 for regular ESDT tokens
           "@0c" +  // 12 -> value to transfer
           "@5346542d317134723869" +  // SFT-1q4r8i
@@ -275,6 +271,10 @@ The manager of an ESDT token has a number of operations at their disposal, which
 
 ### **Minting**
 
+:::tip
+On Mainnet, starting with epoch 432, global mint is disabled so one has to use local mint instead.  
+:::
+
 The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
 
 ```
@@ -293,7 +293,25 @@ Following this transaction, the total supply of tokens is increased by the new s
 
 This operation requires that the option `canMint` is set to `true` for the token.
 
+Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:  
+
+```
+LocalMintTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 300000
+    Data: "ESDTLocalMint" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <new supply in hexadecimal encoding>
+}
+```
+
 ### **Burning**
+
+:::tip
+On Mainnet, starting with epoch 432, global burn is disabled so one has to use local burn instead.
+:::
 
 Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
 
@@ -312,6 +330,20 @@ BurnTransaction {
 Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
 This operation requires that the option `canBurn` is set to `true` for the token.
+
+Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:  
+
+```
+LocalBurnTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 300000
+    Data: "ESDTLocalBurn" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <new supply in hexadecimal encoding>
+}
+```
 
 ### **Pausing and Unpausing**
 
@@ -397,7 +429,7 @@ The manager of an ESDT token can set and unset special roles for a given address
 The special roles available for basic ESDT tokens are:
 
 - **ESDTRoleLocalBurn**: an address with this role can burn tokens
-  
+
 - **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
 For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
@@ -460,6 +492,11 @@ This operation requires that the option `canChangeOwner` is set to `true`.
 
 ### **Upgrading (changing properties)**
 
+:::tip
+On Mainnet, starting with epoch 432, global mint and global burn are disabled so one has to use local mint/burn instead.
+Therefore, properties canMint and canBurn aren't effective anymore after that epoch. For setting those properties, one has to set the `ESDTRoleLocalMint` and/or `ESDTRoleLocalBurn` instead.
+:::
+
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once. Such an operation is performed by a transaction of the form:
 
 ```
@@ -495,7 +532,46 @@ UpgradingTransaction {
 }
 ```
 
-## **Rest API**
+## **Branding**
+
+Anyone can create an ESDT token on Elrond Network. There are also no limits in tokens names or tickers. For example,
+one issues an `AliceToken` with the ticker `ALC`. Anyone else is free to create a new token with the same token name and
+the same token ticker. The only difference will be the random sequence of the token identifier. So the "original" token
+could have received the random sequence `1q2w3e` resulting in the `ALC-1q2w3e` identifier, while the second token could
+have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`.
+
+In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a
+branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens.
+An example of a branded token is MEX, the Maiar Exchange's token. Elrond products such as Explorer, Wallet and so on
+will display tokens in accordance to their branding, if any.
+
+A token owner can submit a branding request by opening a Pull Request on [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets).
+
+### **Submitting a branding request**
+
+Project owners can create a PR against [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets) repository with the logo in `.png` and `.svg` format, as well as a `.json` file containing all the relevant information.
+
+Here’s a prefilled template for the .json file to get you started:
+
+``` json
+{
+  "website": "https://www.elrondtoken.com",
+  "description": "The ERD token is the utility token of Elrond Token",
+  "social": {
+    "email": "erd-token@elrond.com",
+    "blog": "https://www.elrondtoken.com/ERD-token-blog",
+    "twitter": "https://twitter.com/ERD-token-twitter",
+    "whitepaper": "https://www.elrondtoken.com/ERD-token-whitepaper.pdf",
+    "coinmarketcap": "https://coinmarketcap.com/currencies/ERD-token",
+    "coingecko": "https://www.coingecko.com/en/coins/ERD-token"
+  },
+  "status": "active"
+}
+```
+
+The ledgerSignature will be generated by Elrond. It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
+
+## **REST API**
 
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
 
@@ -576,19 +652,55 @@ https://gateway.elrond.com/address/*bech32Address*/esdts/roles
 
 <!--Response-->
 
-```
+```json
 {
-  "roles": {
-    "TCK-0cv5hj": [
-      "ESDTRoleNFTAddQuantity",
-      "ESDTRoleNFTBurn"
-    ],
-    "TCK2-ft80kn": [
-      "ESDTRoleLocalBurn"
-    ]
-  }
+  "data": {
+    "roles": {
+      "TCK-0cv5hj": [
+        "ESDTRoleNFTAddQuantity",
+        "ESDTRoleNFTBurn"
+      ],
+      "TCK-ft90kn": [
+        "ESDTRoleLocalBurn"
+       ] 
+    }
+  },
   "error": "",
   "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### <span class="badge badge-primary">GET</span> **Get token's supply, burnt and minted values**
+
+This involves a basic request that contains the token name. It will gather data from all shards and compute the 
+initial minted value, burnt value, minted value and total supply value.
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+| Param           | Required                                  | Type     | Description                                    |
+| -------------   | ----------------------------------------- | -------- | -------------------------------------          |
+| tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier (example: `WEGLD-bd4d79)` |
+
+```
+https://gateway.elrond.com/network/esdt/supply/*token name*
+```
+
+<!--Response-->
+
+```json
+{
+ "data": {
+  "supply": "95000000000000000000",
+  "minted": "5000000000000000000",
+  "burned": "10000000000000000000",
+  "initialMinted": "100000000000000000000"
+ },
+ "error": "",
+ "code": "successful"
 }
 ```
 
@@ -797,8 +909,8 @@ The `returnData` member will contain an array of the properties in a fixed order
   "Q2FuUGF1c2UtdHJ1ZQ==",                         | can pause                    | CanPause-true
   "Q2FuRnJlZXplLXRydWU=",                         | can freeze                   | CanFreeze-true
   "Q2FuV2lwZS10cnVl",                             | can wipe                     | CanWipe-true
-  "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",             | can add special roles        | CanAddSpecialRoles-true 
-  "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",     | can transfer nft create role | CanTransferNFTCreateRole-false 
+  "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",             | can add special roles        | CanAddSpecialRoles-true
+  "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",     | can transfer nft create role | CanTransferNFTCreateRole-false
   "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",             | nft creation stopped         | NFTCreateStopped-false  
   "TnVtV2lwZWQtMA=="                              | number of wiped quantity     | NumWiped-0                              
 ],
@@ -837,7 +949,7 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
     "data": {
       "returnData": [
         "ZXJkMTM2cmw4NzhqMDltZXYyNGd6cHk3MGsyd2ZtM3htdmo1dWN3eGZmczl2NXQ1c2sza3NodHN6ejI1ejk6RVNEVFJvbGVMb2NhbEJ1cm4=",
-        "ZXJkMWt6enYydXc5N3E1azltdDQ1OHFrM3E5dTNjd2h3cXlrdnlrNTk4cTJmNnd3eDdndnJkOXM4a3N6eGs6RVNEVFJvbGVORlRBZGRRdWFudGl0eSxFU0RUUm9sZU5GVEJ1cm4=" 
+        "ZXJkMWt6enYydXc5N3E1azltdDQ1OHFrM3E5dTNjd2h3cXlrdnlrNTk4cTJmNnd3eDdndnJkOXM4a3N6eGs6RVNEVFJvbGVORlRBZGRRdWFudGl0eSxFU0RUUm9sZU5GVEJ1cm4="
       ],
       "returnCode": "ok",
       ........

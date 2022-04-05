@@ -90,6 +90,17 @@ const siteConfig = {
   algolia: {
     apiKey: process.env.REACT_APP_ALGOLIA_SEARCH_KEY,
     indexName: "elrond",
+    selectors: {
+      default: {
+        lvl0: ".docsContainer h1",
+        lvl1: ".docsContainer h2",
+        lvl2: ".docsContainer h3",
+        lvl3: ".docsContainer h4",
+        lvl4: ".docsContainer h5",
+        lvl5: ".docsContainer h6",
+        text: ".docsContainer p, .docsContainer li, .docsContainer ol, .docsContainer code, .docsContainer th, .docsContainer td, .docsContainer span, .docsContainer pre, .docsContainer pre code span",
+      },
+    },
   },
 
   // You may provide arbitrary config keys to be used as needed by your
@@ -137,7 +148,7 @@ const siteConfig = {
     {
       title: "Learn How Elrond Works",
       content:
-        "Explore Adaptive state sharding, Secure Proof of Stake, and the Arwen VM.",
+        "Explore Adaptive state sharding, Secure Proof of Stake, and the Elrond WASM VM.",
       docName: "technology/architecture-overview",
       icon: "🔬",
     },

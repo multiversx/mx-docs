@@ -14,7 +14,7 @@ For an introduction, check out [the Crowdfunding tutorial](/developers/tutorials
 
 ## Trait annotations
 
-### `#[elrond_wasm_derive::contract]`
+### `#[elrond_wasm::contract]`
 
 The `contract` annotation must always be placed on a trait and will automatically make that trait the main container for the smart contract endpoints and logic. There should be only one such trait defined per crate.
 
@@ -24,12 +24,9 @@ Note that the annotation takes no additional arguments.
 ----------------------------------------------
 
 
-### `#[elrond_wasm_derive::module]`
+### `#[elrond_wasm::module]`
 
 The `module` annotation must always be placed on a trait and will automatically make that trait a smart contract module.
-<!--- TODO: create page ...
-More about smart contract modules in [the module reference](/developers/developer-reference/elrond-wasm-modules)
--->
 
 Note that the annotation takes no additional arguments.
 
@@ -40,7 +37,7 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 ----------------------------------------------
 
 
-### `#[elrond_wasm_derive::proxy]`
+### `#[elrond_wasm::proxy]`
 
 The `proxy` annotation must always be placed on a trait and will automatically make that trait a smart contract call proxy. More about smart contract proxies in [the contract calls reference](/developers/developer-reference/elrond-wasm-contract-calls).
 
@@ -60,12 +57,12 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 Every smart contract needs one constructor that only gets called once when the contract is deployed. The method annotated with init is the constructor.
 
 ```rust
-#[elrond_wasm_derive::contract]
+#[elrond_wasm::contract]
 pub trait Example {
     #[init]
     fn this_is_the_constructor(
         constructor_arg_1: u32,
-        constructor_arg_2: Self::BigUint) {
+        constructor_arg_2: BigUint) {
         // ...
     }
 }
@@ -86,17 +83,17 @@ If no arguments are provided to the attribute, the name of the Rust method will 
 Example:
 
 ```rust
-#[elrond_wasm_derive::contract]
+#[elrond_wasm::contract]
 pub trait Example {
 	#[endpoint]
 	fn example(&self) {
     }
 
     #[endpoint(camelCaseEndpointName)]
-	fn snake_case_method_name(&self, value: &Self::BigInt) {
+	fn snake_case_method_name(&self, value: &BigInt) {
     }
 
-    fn private_method(&self, value: &Self::BigInt) {
+    fn private_method(&self, value: &BigInt) {
     }
 
     #[view(getData)]
@@ -108,7 +105,7 @@ pub trait Example {
 In this example, 3 methods are public endpoints. They are named `example`, `camelCaseEndpointName` and `getData`. All other names are internal and do not show up in the resulting contract.
 
 :::note
-All endpoint arguments and results must be either serializable or special endpoint argument types such as `VarArgs`. They must also all implement the `TypeAbi` trait. There is no such restriction for private methods.
+All endpoint arguments and results must be either serializable or special endpoint argument types such as `MultiValueEncoded`. They must also all implement the `TypeAbi` trait. There is no such restriction for private methods.
 :::
 
 ### Callbacks
@@ -137,11 +134,11 @@ All trait methods annotated for storage handling must have no implementation.
 This is the simplest way to retrieve data from the storage. Let's start with an example of usage:
 
 ```rust
-#[elrond_wasm_derive::contract]
+#[elrond_wasm::contract]
 pub trait Adder {
 	#[view(getSum)]
 	#[storage_get("sum")]
-	fn get_sum(&self) -> Self::BigInt;
+	fn get_sum(&self) -> BigInt;
 
 	#[storage_get("example_map")]
     fn get_value(&self, key_1: u32, key_2: u32) -> SerializableType;
@@ -165,10 +162,10 @@ Lastly, storage getters must always return a deserializable type. The framework 
 This is the simplest way to write data to storage. Example:
 
 ```rust
-#[elrond_wasm_derive::contract]
+#[elrond_wasm::contract]
 pub trait Adder {
 	#[storage_set("sum")]
-	fn set_sum(&self, sum: &Self::BigInt);
+	fn set_sum(&self, sum: &BigInt);
 
 	#[storage_set("example_map")]
     fn set_value(&self, key_1: u32, key_2: u32, value: &SerializableType);
@@ -183,10 +180,10 @@ There is no mechanism in place to ensure that there is no overlap between storag
 
 ```rust
 	#[storage_set("sum")]
-	fn set_sum(&self, sum: &Self::BigInt);
+	fn set_sum(&self, sum: &BigInt);
 
     #[storage_set("sum")]
-	fn set_another_sum(&self, another_sum: &Self::BigInt);
+	fn set_another_sum(&self, another_sum: &BigInt);
 
 	#[storage_set("s")]
     fn set_value(&self, key: u16, value: &SerializableType);
@@ -211,10 +208,10 @@ Example:
 
 ```rust
 	#[storage_mapper("user_status")]
-	fn user_status(&self) -> SingleValueMapper<Self::Storage, UserStatus>;
+	fn user_status(&self) -> SingleValueMapper<UserStatus>;
 
     #[storage_mapper("list_mapper")]
-	fn list_mapper(&self, sub_key: usize) -> LinkedListMapper<Self::Storage, u32>;
+	fn list_mapper(&self, sub_key: usize) -> LinkedListMapper<u32>;
 ```
 
 The `SingleValueMapper` is the simplest of them all, since it only manages one storage key. Even though it only works with one storage entry, its syntax is more compact than `storage_get`/`storage_set` so it is used quite a lot.
@@ -261,10 +258,10 @@ In smart contracts we define them as trait methods with no implementation, as fo
 	#[event("transfer")]
 	fn transfer_event(
 		&self,
-		#[indexed] from: &Address,
-		#[indexed] to: &Address,
+		#[indexed] from: &ManagedAddress,
+		#[indexed] to: &ManagedAddress,
 		#[indexed] token_id: u32,
-        data: BoxedBytes,
+        data: ManagedBuffer,
 	);
 ```
 
@@ -287,10 +284,10 @@ There is a legacy annotation, `#[legacy_event]` still used by some older contrac
 This is a simple getter, which provides a convenient instance of a contract proxy. It is used when wanting to call another contract.
 
 ```rust
-#[elrond_wasm_derive::module]
+#[elrond_wasm::module]
 pub trait ForwarderAsyncCallModule {
 	#[proxy]
-	fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::SendApi>;
+	fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::Api>;
 
     // ...
 }
@@ -306,4 +303,3 @@ Proxy types need to be specified with an explicit module. In the example `vault:
 ### `#[output_names]`
 
 This one is used for ABI result names. In Rust, it is impossible to write Rust Docs for method returns, so we are using this annotation to optionally name the outputs of an endpoint.
-

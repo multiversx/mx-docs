@@ -20,11 +20,11 @@ For example, let's say you want to have your storage mappers in a separate modul
 pub trait StorageModule {
     #[view(getQuorum)]
     #[storage_mapper("firstStorage")]
-    fn first_storage(&self) -> SingleValueMapper<Self::Storage, usize>;
+    fn first_storage(&self) -> SingleValueMapper<usize>;
 
     #[view]
     #[storage_mapper("secondStorage")]
-    fn second_storage(&self) -> SingleValueMapper<Self::Storage, u64>;
+    fn second_storage(&self) -> SingleValueMapper<u64>;
 }
 ```
 
@@ -56,4 +56,4 @@ Keep in mind your main contract has to implement all modules that any sub-module
 
 We hope this module system will make it a lot easier to write maintainable smart contract code, and even reusable modules.  
 
-If you want to take a look at some more examples, or even just modules you can use, take a look here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/modules  
+If you want to take a look at some more examples, or even just modules you can use, take a look here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-wasm-modules  

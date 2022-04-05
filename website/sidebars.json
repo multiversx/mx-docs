@@ -1,6 +1,8 @@
 {
   "docs": {
-    "Welcome to Elrond": ["welcome/welcome-to-elrond"],
+    "Welcome to Elrond": [
+      "welcome/welcome-to-elrond"
+    ],
     "Technology": [
       "technology/architecture-overview",
       "technology/glossary",
@@ -8,10 +10,15 @@
       "technology/chronology",
       "technology/secure-proof-of-stake",
       "technology/adaptive-state-sharding",
-      "technology/the-arwen-wasm-vm",
+      "technology/the-elrond-wasm-vm",
       "technology/cross-shard-transactions"
     ],
-    "Wallet": ["wallet/web-wallet", "wallet/webhooks", "wallet/ledger"],
+    "Wallet": [
+      "wallet/web-wallet",
+      "wallet/wallet-extension",
+      "wallet/webhooks",
+      "wallet/ledger"
+    ],
     "Validators": [
       "validators/overview",
       "validators/system-requirements",
@@ -81,9 +88,10 @@
         "label": "Tutorials",
         "ids": [
           "developers/tutorials/your-first-dapp",
-          "developers/tutorials/counter",
+          "developers/tutorials/your-first-microservice",
           "developers/tutorials/crowdfunding-p1",
-          "developers/tutorials/crowdfunding-p2"
+          "developers/tutorials/crowdfunding-p2",
+          "developers/tutorials/counter"
         ]
       },
       {
@@ -97,27 +105,55 @@
       },
       {
         "type": "subcategory",
+        "label": "Gas and Fees",
+        "ids": [
+          "developers/gas-and-fees/overview",
+          "developers/gas-and-fees/egld-transfers",
+          "developers/gas-and-fees/system-smart-contracts",
+          "developers/gas-and-fees/user-defined-smart-contracts"
+        ]
+      },
+      {
+        "type": "subcategory",
         "label": "Developer reference",
         "ids": [
           "developers/developer-reference/elrond-serialization-format",
           "developers/developer-reference/elrond-wasm-annotations",
+          "developers/developer-reference/elrond-wasm-modules",
           "developers/developer-reference/elrond-wasm-contract-calls",
           "developers/developer-reference/smart-contract-developer-best-practices",
-          "developers/developer-reference/elrond-wasm-api-functions"
+          "developers/developer-reference/code-metadata",
+          "developers/developer-reference/elrond-wasm-api-functions",
+          "developers/developer-reference/rust-testing-framework",
+          "developers/developer-reference/rust-testing-framework-functions-reference",
+          "developers/developer-reference/rust-smart-contract-debugging",
+          "developers/developer-reference/random-numbers-in-smart-contracts"
         ]
       },
-	  {
+      {
+        "type": "subcategory",
+        "label": "Developers Best Practices",
+        "ids": [
+          "developers/best-practices/best-practices-basics",
+          "developers/best-practices/biguint-operations",
+          "developers/best-practices/the-dynamic-allocation-problem",
+          "developers/best-practices/multi-values",
+          "developers/best-practices/storage-mappers"
+        ]
+      },
+      {
         "type": "subcategory",
         "label": "Mandos tests reference",
         "ids": [
-			"developers/mandos-reference/overview",
-			"developers/mandos-reference/structure",
-			"developers/mandos-reference/values-simple",
-			"developers/mandos-reference/values-complex",
-			"developers/mandos-reference/embed"
-		]
-	  },
+          "developers/mandos-reference/overview",
+          "developers/mandos-reference/structure",
+          "developers/mandos-reference/values-simple",
+          "developers/mandos-reference/values-complex",
+          "developers/mandos-reference/embed"
+        ]
+      },
       "developers/constants",
+      "developers/built-in-functions",
       "developers/account-storage",
       "developers/esdt-tokens",
       "developers/nft-tokens",
@@ -131,6 +167,8 @@
         "label": "REST API",
         "ids": [
           "sdk-and-tools/rest-api/rest-api",
+          "sdk-and-tools/rest-api/api-elrond-com",
+          "sdk-and-tools/rest-api/gateway-overview",
           "sdk-and-tools/rest-api/addresses",
           "sdk-and-tools/rest-api/transactions",
           "sdk-and-tools/rest-api/network",
@@ -155,7 +193,14 @@
           "sdk-and-tools/erdpy/writing-and-running-erdpy-scripts"
         ]
       },
-      "sdk-and-tools/erdjs",
+      {
+        "type": "subcategory",
+        "label": "erdjs",
+        "ids": [
+          "sdk-and-tools/erdjs/erdjs",
+          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions"
+        ]
+      },
       "sdk-and-tools/erdgo",
       "sdk-and-tools/erdjava",
       "sdk-and-tools/erdkotlin",
@@ -168,14 +213,6 @@
       "integrators/accounts-management",
       "integrators/creating-transactions",
       "integrators/querying-the-blockchain"
-    ],
-    "Detailed comparison": [
-      "detailed-comparison/overview",
-      "detailed-comparison/elrond-vs-ethereum-serenity",
-      "detailed-comparison/elrond-vs-zilliqa",
-      "detailed-comparison/elrond-vs-dfinity",
-      "detailed-comparison/elrond-vs-algorand",
-      "detailed-comparison/elrond-vs-harmony"
     ]
   }
 }

@@ -72,7 +72,7 @@ SaveKeyValueTransaction {
 }
 ```
 
-## Rest API
+## REST API
 
 There are two endpoints that can be used for fetching key-value pairs for an account. They are:
 

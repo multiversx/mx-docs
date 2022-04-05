@@ -19,19 +19,12 @@ If not specified otherwise, the mini-testnet starts with one Shard plus the Meta
 In order to install erdpy, follow the instructions at [install erdpy](/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended).
 
 :::note erdpy version
-Make sure your erdpy version is `0.8.7` or higher.
+Make sure your erdpy version is `1.3.2` or higher.
 :::
 
 ## **Prerequisites: Node and Proxy**
 
-First, let erdpy know the desired software releases for the Node and for the Proxy:
-
-```
-$ erdpy config set dependencies.elrond_proxy_go.tag master
-$ erdpy config set dependencies.elrond_go.tag master
-```
-
-Then, run the following command - this will fetch the software into `~/elrondsdk`:
+Run the following command, which will fetch the prerequisites (`elrond-go`, `elrond-proxy-go`, `golang` and `testwallets`) into `~/elrondsdk`:
 
 ```
 $ erdpy testnet prerequisites
@@ -98,7 +91,7 @@ Let's send a simple transaction using **erdpy:**
 Simple Transfer
 erdpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --send
 ```
 
@@ -119,7 +112,7 @@ If you need guidance on how to build the Counter sample contract, please follow 
 Deploy Contract
 erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=5000000 \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --outfile=myCounter.json \
  --send
 ```
@@ -137,7 +130,7 @@ If everything is fine (transaction status is `executed` and the `code` property 
 Call Contract
 erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq \
  --recall-nonce --gas-limit=1000000 --function=increment \
- --pem=./testnet/wallets/users/alice.pem --outfile=myCall.json \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --send
 
 ```
@@ -154,7 +147,7 @@ At times, you can simulate transactions instead of broadcasting them, by replaci
 ```
 Simulate: Call Contract
 all-nonce --gas-limit=1000000 --function=increment \
- --pem=./testnet/wallets/users/alice.pem --outfile=myCall.json \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --simulate
 ```
 
@@ -162,6 +155,6 @@ all-nonce --gas-limit=1000000 --function=increment \
 Simulate: Simple Transfer
 erdpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
- --pem=./testnet/wallets/users/alice.pem \
+ --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --simulate
 ```
