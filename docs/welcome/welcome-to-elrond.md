@@ -16,7 +16,6 @@ title: Welcome to Elrond
   - Validators: ~20% APR for running nodes, low system requirements
   - Network setup: 3,200 nodes, with 4 shards (adaptivity allows throughput to increase with demand)
 
-
 # **What is Elrond?**
 
 Elrond is a distributed transactional computation protocol which relies on a sharded state architecture and a secure Proof of Stake consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, Elrond runs on average computers.
@@ -41,13 +40,46 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 - Smart Contracts, Staking & Delegation, Tokens
 - Validated through multiple audits from Trial of Bits & others
 
+**Q2 2021**
+
+- ESDT token
+- dApp core components
+- Maiar Login
+- Staking Phase 3.5
+
+**Q3 2021**
+
+- Maiar DeFi Wallet
+
 **Q4 2021**
 
-- Maiar Exchange: DEX AMM
 - Maiar App new features
-- DeFi 2.0: Lending, Synthetics
+- Maiar Launchpad
+- Maiar Exchange: DEX AMM
+
+**Q1 2022**
+
+- Web3 Payments
+- Multisig for DAOs
+- Growth 2.0
+- NFT Marketplace
 
 **Q2 2022**
 
-- Onchain Governance
+- Elrond SuperWave
+- Elrond Gamify
 - Staking Phase 4
+
+**Q3 2022**
+
+- Maiar App 2.0
+- Onchain governance
+
+**Q4 2022**
+
+- DeFi 2.0: Lending & Synthetics
+- Merchant Yield
+
+**Q1 2023**
+
+- Strategic Multi-country hypergrowth
