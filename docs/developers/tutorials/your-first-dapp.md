@@ -73,7 +73,7 @@ In our example we'll use [Ubuntu 20.04](https://ubuntu.com/). MacOs works as wel
 First we make sure the operating system prerequisites are installed:
 ```sh
 sudo apt-get update 
-sudo apt install libncurses5 build-essential python3-pip nodejs npm
+sudo apt install libncurses5 build-essential python3-pip nodejs npm python3.8-venv
 ```
 
 We'll also need `erdpy`, the Elrond command line tool, which is helpful for signing transactions, deploying smart contracts, managing wallets, accounts and validators. We'll use it to deploy our smart contract.
