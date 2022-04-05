@@ -41,15 +41,11 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 - Smart Contracts, Staking & Delegation, Tokens
 - Validated through multiple audits from Trial of Bits & others
 
-**Q3 2021**
-
-- Maiar Exchange: DEX AMM
-
 **Q4 2021**
 
+- Maiar Exchange: DEX AMM
 - Maiar App new features
 - DeFi 2.0: Lending, Synthetics
-
 
 **Q2 2022**
 
