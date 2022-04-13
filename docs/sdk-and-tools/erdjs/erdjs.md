@@ -18,7 +18,7 @@ Signing providers for dApps:
 
 | Package | Source code | Description |
 | ------------- | ----------------------------------------- | ------------------------------------- |
-| [erdjs](https://www.npmjs.com/package/@elrondnetwork/erdjs-hw-provider) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-hw-provider) | Sign using the hardware wallet (Ledger). |
+| [erdjs-hw-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-hw-provider) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-hw-provider) | Sign using the hardware wallet (Ledger). |
 | [erdjs-web-wallet-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-web-wallet-provider) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-web-wallet-provider) | Sign using the Elrond web wallet. |
 | [erdjs-wallet-connect-providers](https://www.npmjs.com/package/@elrondnetwork/erdjs-wallet-connect-providers) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider) | Sign using Wallet Connect.|
 | [erdjs-extension-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-extension-provider) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-extension-provider) | Sign using the Maiar DeFi Wallet (browser extension). |
