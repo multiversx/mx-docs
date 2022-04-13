@@ -65,6 +65,36 @@ transaction.setNonce(alice.getNonceThenIncrement());
 
 ## Prepairing payment objects
 
+:::important
+In **erdjs 9x**, the payments were prepared using the classes `Balance` and `BalanceBuilder`. In **erdjs 10**, we use `TokenPayment`.
+:::
+
+A `TokenPayment` object for **EGLD transfers** (value movements):
+
+```
+let firstPayment = TokenPayment.egldFromAmount("1.5");
+let secondPayment = TokenPayment.egldFromBigInteger("1500000000000000000");
+console.log(firstPayment.valueOf(), secondPayment.valueOf());
+console.log(firstPayment.toPrettyString(), secondPayment.toPrettyString());
+```
+
+A `TokenPayment` object for transferring **fungible** tokens:
+
+```
+```
+
+A `TokenPayment` object for transferring **semi-fungible** tokens:
+
+```
+```
+
+A `TokenPayment` object for transferring **non-fungible** tokens:
+
+```
+```
+
+A `TokenPayment` object for transferring **meta-esdt** tokens:
+
 ```
 ```
 
@@ -111,16 +141,40 @@ If only the `txHash` is available, then:
 
 ```
 let transactionOnNetwork = await watcher.awaitCompleted({ getHash: () => txHash });
+console.log(transactionOnNetwork);
+```
+
+In order to wait for multiple transactions:
+
+```
+await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), watcher.awaitCompleted(tx3)]);
 ```
 
 ## Token transfers
+
+Transfer **fungible** tokens:
+
+```
+```
+
+Transfer **semi-fungible** tokens:
+
+```
+```
+
+Transfer **non-fungible** tokens:
+
+```
+```
+
+Transfer **meta-esdt** tokens:
 
 ```
 ```
 
 ## Contract deployments
 
-### Load the contract bytecode from a file
+### Load the bytecode from a file
 
 ```
 import { Code } from "@elrondnetwork/erdjs";
@@ -130,7 +184,7 @@ let buffer: Buffer = await promises.readFile(file);
 let code = Code.fromBuffer(buffer);
 ```
 
-### Load the contract bytecode from an URL
+### Load the bytecode from an URL
 
 ```
 import axios, { AxiosResponse } from "axios";
@@ -221,6 +275,32 @@ let abi = new SmartContractAbi(abiRegistry, ["MyContract"]);
 ...
 let contract = new SmartContract({ address: new Address("erd1..."), abi: abi });
 ```
+
+## Parsing contract results
+
+In order to parse the outcome of a smart contract using a `ResultsParser`, you need:
+ - the representation of the transaction, as fetched from the Network
+ - the ABI definition of the called endpoint
+
+```
+let parser = new ResultsParser();
+let transactionOnNetwork = await networkProvider.getTransaction(txHash);
+let { returnCode } = resultsParser.parseOutcome(transactionOnNetwork, endpointDefinition);
+```
+
+The `endpointDefinition` can be obtained from the `Interaction` object, if available in the context:
+
+```
+let endpointDefinition = interaction.getEndpoint();
+```
+
+Alternatively, the `endpointDefinition` can be obtained from the `SmartContract` object:
+
+```
+let endpointDefinition = smartContract.getEndpoint("myFunction");
+```
+
+## Contract queries
 
 ## Contract interactions
 
