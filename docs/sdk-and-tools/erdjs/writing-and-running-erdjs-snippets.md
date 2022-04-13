@@ -3,8 +3,6 @@ id: writing-and-testing-erdjs-interactions
 title: Writing and testing interactions
 ---
 
-Writing and testing interactions
-
 :::important
 This tutorial makes use of `erdjs 10`.
 :::
