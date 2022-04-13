@@ -81,21 +81,29 @@ console.log(firstPayment.toPrettyString(), secondPayment.toPrettyString());
 A `TokenPayment` object for transferring **fungible** tokens:
 
 ```
+let firstPayment = TokenPayment.fungibleFromAmount(identifier, "1.5", numDecimals);
+let secondPayment = TokenPayment.fungibleFromBigInteger(identifier, "4000", numDecimals);
 ```
 
 A `TokenPayment` object for transferring **semi-fungible** tokens:
 
 ```
+let nonce = 3;
+let quantity = 50;
+let payment = TokenPayment.semiFungible(identifier, nonce, quantity);
 ```
 
 A `TokenPayment` object for transferring **non-fungible** tokens:
 
 ```
+let nonce = 7;
+let payment = TokenPayment.nonFungible(identifier, nonce);
 ```
 
 A `TokenPayment` object for transferring **meta-esdt** tokens:
 
 ```
+let payment = TokenPayment.metaEsdtFromAmount(identifier, nonce, "0.1", numDecimals);
 ```
 
 ## Broadcasting transactions
@@ -152,25 +160,9 @@ await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), wat
 
 ## Token transfers
 
-Transfer **fungible** tokens:
-
-```
-```
-
-Transfer **semi-fungible** tokens:
-
-```
-```
-
-Transfer **non-fungible** tokens:
-
-```
-```
-
-Transfer **meta-esdt** tokens:
-
-```
-```
+:::important
+Documentation in this section is preliminary and subject to change.
+:::
 
 ## Contract deployments
 
@@ -276,11 +268,171 @@ let abi = new SmartContractAbi(abiRegistry, ["MyContract"]);
 let contract = new SmartContract({ address: new Address("erd1..."), abi: abi });
 ```
 
+## Contract queries
+
+### When the ABI is not available
+
+```
+let contractAddress = new Address("erd1qqq...");
+let contract = new SmartContract({ address: contractAddress });
+let addressOfAlice = new Address("erd1...");
+
+let query = contract.createQuery({
+    func: new ContractFunction("getClaimableRewards"),
+    args: [new AddressValue(addressOfAlice)],
+    caller: new Address("erd1...")
+});
+
+let queryResponse = await networkProvider.queryContract(query);
+let bundle = resultsParser.parseUntypedQueryResponse(queryResponse);
+console.log(bundle.returnCode);
+console.log(bundle.returnMessage);
+console.log(bundle.values);
+```
+
+### Using `Interaction`, when the ABI is not available
+
+```
+let func = new ContractFunction("getClaimableRewards");
+let args = [new AddressValue(addressOfAlice)];
+let query = new Interaction(contract, func, args)
+    .withQuerent(new Address("erd1..."))
+    .buildQuery();
+
+let queryResponse = await networkProvider.queryContract(query);
+```
+
+Then, parse the response as above.
+
+### When the ABI is available
+
+```
+let query = contract.createQuery({
+    func: new ContractFunction("getClaimableRewards"),
+    args: [new AddressValue(addressOfAlice)],
+    caller: new Address("erd1...")
+});
+
+let queryResponse = await networkProvider.queryContract(query);
+let endpointDefinition = contract.getEndpoint("getClaimableRewards");
+let { firstValue, secondValue, returnCode } = resultsParser.parseQueryResponse(queryResponse, endpointDefinition);
+```
+
+### Using `Interaction`, when the ABI is available
+
+Prepare the interaction, check it, then build the query:
+
+```
+let interaction = <Interaction>contract.methods.getLotteryInfo(["myLottery]);
+let query = interaction.check().buildQuery();
+```
+
+Then, run the query and parse the results:
+
+```
+let queryResponse = await networkProvider.queryContract(query);
+let endpointDefinition = interaction.getEndpoint();
+let { firstValue, secondValue, returnCode } = resultsParser.parseQueryResponse(queryResponse, endpointDefinition);
+```
+
+Depending on the context, reinterpret (cast) the results:
+
+```
+let firstValueAsStruct = <Struct>firstValue;
+return firstValueAsStruct;
+```
+
+## Contract interactions
+
+### When the ABI is not available
+
+```
+let contractAddress = new Address("erd1qqq...");
+let contract = new SmartContract({ address: contractAddress });
+let addressOfCarol = new Address("erd1...");
+
+let tx = contract.call({
+    func: new ContractFunction("transferToken"),
+    gasLimit: 5000000,
+    args: [new AddressValue(addressOfCarol), new U64Value(1000)],
+    chainID: "D"
+});
+
+tx.setNonce(alice.nonce);
+```
+
+Then, sign, broadcast `tx` and wait for its complection.
+
+### Using `Interaction`, when the ABI is not available
+
+```
+let contract = new SmartContract({ address: contractAddress });
+let dummyFunction = new ContractFunction("dummy");
+let args = [new U32Value(100)];
+let interaction = new Interaction(contract, dummyFunction, args);
+
+let tx = interaction
+    .withNonce(7)
+    .withValue(TokenPayment.egldFromAmount(1))
+    .withGasLimit(20000000)
+    .withChainID("D")
+    .buildTransaction();
+```
+
+Then, sign, broadcast `tx` and wait for its complection.
+
+### Using `Interaction`, when the ABI is available
+
+```
+let contract = new SmartContract({ address: contractAddress, abi: abi });
+let tx = contract.methods.dummy([new U32Value(100)])
+    .withNonce(7)
+    .withValue(TokenPayment.egldFromAmount(1))
+    .withGasLimit(20000000)
+    .withChainID("D")
+    .buildTransaction();
+```
+
+### Transfer & execute
+
+Given an interaction:
+
+```
+let interaction = contract.methods.doStuff([]);
+```
+
+One can apply token transfers to the smart contract call, as well. 
+
+For single payments, do as follows:
+
+```
+// Fungible token
+interaction.withSingleESDTTransfer(TokenPayment.fungibleFromAmount("FOO-6ce17b", "1.5", 18));
+
+// Non-fungible token
+interaction.withSingleESDTNFTTransfer(TokenPayment.nonFungible("ERDJS-38f249", 1));
+```
+
+For multiple payments:
+
+```
+interaction.withMultiESDTNFTTransfer([
+    TokenPayment.fungibleFromAmount("FOO-6ce17b", "1.5", 18)
+    TokenPayment.nonFungible("ERDJS-38f249", 1)
+]);
+```
+
 ## Parsing contract results
 
-In order to parse the outcome of a smart contract using a `ResultsParser`, you need:
- - the representation of the transaction, as fetched from the Network
- - the ABI definition of the called endpoint
+### When the ABI is not available
+
+```
+let parser = new ResultsParser();
+let transactionOnNetwork = await networkProvider.getTransaction(txHash);
+let { returnCode, returnMessage, values } = resultsParser.parseUntypedOutcome(transactionOnNetwork, endpointDefinition);
+```
+
+### When the ABI is available
 
 ```
 let parser = new ResultsParser();
@@ -300,8 +452,26 @@ Alternatively, the `endpointDefinition` can be obtained from the `SmartContract`
 let endpointDefinition = smartContract.getEndpoint("myFunction");
 ```
 
-## Contract queries
+## Decoding transaction metadata
 
-## Contract interactions
+### Using the `transaction-decoder`
 
-### Transfer & execute
+In order to decode the metadata (function, arguments, transfers) from a transaction payload, do as follows:
+
+```
+import { TransactionDecoder, TransactionMetadata } from "@elrondnetwork/transaction-decoder";
+
+let transactionOnNetwork = await networkProvider.getTransaction(txHash);
+
+let metadata = new TransactionDecoder().getTransactionMetadata({
+    sender: transactionOnNetwork.sender.bech32(),
+    receiver: transactionOnNetwork.receiver.bech32(),
+    data: transactionOnNetwork.data.toString("base64"),
+    value: transactionOnNetwork.value.toString(),
+    type: transactionOnNetwork.type
+});
+```
+
+### Using the `esdtHelpers` of `erdjs 9x`
+
+The `esdtHelpers` have been removed in `erdjs 10`, in favor of the `transaction-decoder` (see above). However, you can find them at the following location: [esdtHelpers](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts). Examples of usage can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts).
