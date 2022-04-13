@@ -198,7 +198,9 @@
         "label": "erdjs",
         "ids": [
           "sdk-and-tools/erdjs/erdjs",
-          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions"
+          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
+          "sdk-and-tools/erdjs/erdjs-cookbook",
+          "sdk-and-tools/erdjs/erdjs-extension-points"
         ]
       },
       "sdk-and-tools/erdgo",
