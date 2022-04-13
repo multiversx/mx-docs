@@ -208,7 +208,12 @@ Finally, create the interactor:
 let interactor = new LotteryInteractor(contract, networkProvider, networkConfig);
 ```
 
-In our examples, the `TransactionWatcher` and the `ResultsParser` are usually instantiated by the interactor class (e.g. in the constructor) instead of being provided as a dependency. This should not be considered a guideline though. Strive to apply the most appropriate software design to your dApp.
+In our examples, the `TransactionWatcher` and the `ResultsParser` are usually instantiated by the interactor class (e.g. in the constructor) instead of being provided as a dependency. This should not be considered a guideline though. Strive to apply the most appropriate software design to your dApp. Here is how you would create the transaction watcher and the results parser:
+
+```
+var transactionWatcher = new TransactionWatcher(networkProvider);
+var resultsParser = new ResultsParser();
+```
 
 ### Methods of the interactor
 
@@ -359,25 +364,8 @@ let interaction = <Interaction>this.contract.methods
     .withNonce(caller.account.getNonceThenIncrement());
 ```
 ```
-// Example 2 (lottery)
+// Example 2 - automatic type inference (lottery)
 let interaction = <Interaction>this.contract.methods
-    .start([
-        BytesValue.fromUTF8(lotteryName),
-        new TokenIdentifierValue(token_identifier),
-        new BigUIntValue(price),
-        OptionValue.newMissing(),
-        OptionValue.newMissing(),
-        OptionValue.newProvided(new U32Value(1)),
-        OptionValue.newMissing(),
-        OptionValue.newProvided(createListOfAddresses(whitelist)),
-        OptionalValue.newMissing()
-    ])
-    .withGasLimit(new GasLimit(20000000))
-    .withNonce(owner.account.getNonceThenIncrement());
-```
-```
-// Example 2-auto (lottery)
-let interaction = <Interaction>this.contract.methodsAuto
     .start([
         lotteryName,
         token_identifier,
@@ -393,107 +381,69 @@ let interaction = <Interaction>this.contract.methodsAuto
     .withNonce(owner.account.getNonceThenIncrement());
 ```
 ```
-// Example 3 (lottery)
-let interaction = <Interaction>this.contract.methods
-    .buy_ticket([
-        BytesValue.fromUTF8(lotteryName)
+// Example 2 - explicit types (lottery)
+let interaction = <Interaction>this.contract.methodsExplicit
+    .start([
+        BytesValue.fromUTF8(lotteryName),
+        new TokenIdentifierValue(token_identifier),
+        new BigUIntValue(price),
+        OptionValue.newMissing(),
+        OptionValue.newMissing(),
+        OptionValue.newProvided(new U32Value(1)),
+        OptionValue.newMissing(),
+        OptionValue.newProvided(createListOfAddresses(whitelist)),
+        OptionalValue.newMissing()
     ])
+    .withGasLimit(new GasLimit(20000000))
+    .withNonce(owner.account.getNonceThenIncrement());
+```
+```
+// Example 3 - automatic type inference (lottery)
+let interaction = <Interaction>this.contract.methods
+    .buy_ticket([lotteryName])
     .withGasLimit(new GasLimit(50000000))
     .withSingleESDTTransfer(amount)
     .withNonce(user.account.getNonceThenIncrement());
 ```
 
 :::note
-Generally, it is the interactors where you specify the default **gas limit** and apply the **payments** (token transfers) on the contract calls, but there are other ways to design this, according to your needs.
+Generally, it is the interactors where you specify the default **gas limit** and apply the **payments** (token transfers) on the contract calls (above, see `withGasLimit` and `withSingleESDTTransfer`), but there are other ways to design this, according to your needs.
 :::
 
 :::important
 The account nonce must be synchronized beforehand (that is, before calling the interactor method).
 :::
 
-After that, you need to build the transaction object:
+Afterwards, you should verify the interaction object with respect to the ABI (skip this step if you are using the _auto mode_), then build the transaction object:
 
 ```
-let transaction: Transaction = interaction.buildTransaction();
+let transaction = interaction.check().buildTransaction();
 ```
 
-And now you have to sign the transaction using your provider of choice.
+Then, use a signer (e.g. a dApp provider) to sign the transaction. In the snippets, we use the `ITestUser` object to perform the signing:
 
-Once you've signed the transaction, you feed both the interaction object and the signed transaction to the smart contract controller, which verifies the interaction object with respect to the ABI, broadcast the transaction (using the Network Provider), awaits for its completion and parses the results into an object called `TypedOutcomeBundle`. It returns both the bundle and the `TransactionOnNetwork` object:
+```
+await owner.signer.sign(transaction);
+```
+
+Now let's broadcast the transaction and await its completion:
+
+```
+await this.networkProvider.sendTransaction(transaction);
+let transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
+```
+
+In the end, we parse the results into an object called `TypedOutcomeBundle` (just like for query responses):
 
 ```
 // Example 1
-let { bundle: { returnCode } } = await this.controller.execute(interaction, transaction);
+let { returnCode } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 
 // Example 2
-let { transactionOnNetwork, bundle } = await this.controller.execute(interaction, transaction);
+let bundle = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 
 // Example 3
-let { bundle: { returnCode, firstValue } } = await this.controller.execute(interaction, transaction);
+let { returnCode, firstValue } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 ```
 
 Then, for interpreting the results, follow the same guidelines as for query results (section above).
-
-## Dissecting the contracts controller
-
-### Contract calls
-
-If, for some reason, the function `controller.execute()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
-
-First, create an interaction checker and a results parser:
-
-```
-let checker = new InteractionChecker();
-let parser = new ResultsParser();
-```
-
-Suppose that the following objects are available in your scope:
-
-```
-let abi: SmartContractAbi;
-let provider: IProvider;
-let interaction: Interaction;
-let signedTransaction: Transaction;
-```
-
-Then, check the interaction against the ABI (optionally), broadcast the transaction, await for its completion and parse the contract results as follows:
-
-```
-let endpoint = abi.getEndpoint(interaction.getFunction());
-checker.checkInteraction(interaction, endpoint);
-
-await transaction.send(provider);
-await transaction.awaitExecuted(provider);
-let transactionOnNetwork = await transaction.getAsOnNetwork(provider);
-let bundle = parser.parseOutcome(transactionOnNetwork, endpoint);
-```
-
-### Contract queries
-
-If, for some reason, the function `controller.query()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
-
-First, create an interaction checker and a results parser:
-
-```
-let checker = new InteractionChecker();
-let parser = new ResultsParser();
-```
-
-Suppose that the following objects are available in your scope:
-
-```
-let abi: SmartContractAbi;
-let provider: IProvider;
-let interaction: Interaction;
-```
-
-Then, check the interaction against the ABI (optionally), query the provider and parse the results as follows:
-
-```
-let endpoint = abi.getEndpoint(interaction.getFunction());
-checker.checkInteraction(interaction, endpoint);
-
-let query = interaction.buildQuery();
-let queryResponse = await provider.queryContract(query);
-let bundle = parser.parseQueryResponse(queryResponse, endpoint);
-```
