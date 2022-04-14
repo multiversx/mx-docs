@@ -48,7 +48,7 @@ console.log(networkConfig.ChainID);
 The following snippet fetches (from the Network) the **nonce** and the **balance** of an account, and updates the local representation of the account.
 
 ```
-let addressOfAlice = new Address("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th");
+let addressOfAlice = new Address("erd1...");
 let alice = new Account(addressOfAlice);
 let aliceOnNetwork = await networkProvider.getAccount(addressOfAlice);
 alice.update(aliceOnNetwork);
@@ -167,7 +167,7 @@ In order to wait for multiple transactions:
 await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), watcher.awaitCompleted(tx3)]);
 ```
 
-For a different awaitening strategy, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
+For a different awaiting strategy, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
 
 ## Token transfers
 
@@ -265,7 +265,7 @@ let code = Code.fromBuffer(buffer);
 import axios, { AxiosResponse } from "axios";
 
 let response: AxiosResponse<ArrayBuffer> = await axios.get("https://.../myContract.wasm", {
-    responseType: 'arraybuffer',
+    responseType: "arraybuffer",
     transformResponse: [],
     headers: {
         "Accept": "application/wasm"

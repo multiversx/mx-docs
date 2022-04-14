@@ -252,7 +252,7 @@ let interaction = <Interaction>this.contract.methodsExplicit.getLotteryInfo([
 ]);
 ```
 
-Above, you may notice there are two possible ways for providing the arguments to the interaction: the **explicity** mode and the **implicit** mode, also called **the auto mode** - since it performs _automatic type inference_ (within erdjs' own typesystem) with respect to the endpoint definition (more precisely, with respect to the ABI types of the input arguments). You can choose any of the modes to provide the arguments for the interaction. Pick the one that best suits your programming style.
+Above, you may notice there are two possible ways for providing the arguments to the interaction: the **explicitly** mode and the **implicit** mode, also called **the auto mode** - since it performs _automatic type inference_ (within erdjs' own typesystem) with respect to the endpoint definition (more precisely, with respect to the ABI types of the input arguments). You can choose any of the modes to provide the arguments for the interaction. Pick the one that best suits your programming style.
 
 Afterwards, you should verify the interaction object with respect to the ABI (skip this step if you are using the _auto mode_). It will throw an error if the ABI (more specifically, the input parameters of the endpoint) is not followed:
 

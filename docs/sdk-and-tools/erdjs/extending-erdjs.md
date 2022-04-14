@@ -91,9 +91,9 @@ export class MyTailoredNetworkProvider extends ApiNetworkProvider {
 }
 ```
 
-## Customizing the transaction awaitening
+## Customizing the transaction awaiting
 
-If, for some reason, the default transaction completion detection algorithm provided by **erdjs** does not satisfy your requirements, you may want to use a different strategy for transaction awaitening, such as:
+If, for some reason, the default transaction completion detection algorithm provided by **erdjs** does not satisfy your requirements, you may want to use a different strategy for transaction awaiting, such as:
 
 ```
 await transactionWatcher.awaitAllEvents(transaction, ["mySpecialEventFoo", "mySpecialEventBar"]);

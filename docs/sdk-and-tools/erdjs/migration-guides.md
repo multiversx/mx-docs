@@ -48,7 +48,7 @@ await networkProvider.sendTransaction(tx);
 await networkProvider.getTransaction(txHash)
 ```
 
-### Transaction awaitening
+### Transaction awaiting
 
 In erdjs 10, the following utility functions are not available anymore: `transaction.awaitExecuted()`, `transaction.awaitPending()`.
 
