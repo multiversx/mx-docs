@@ -16,6 +16,10 @@ Elrond SDK for TypeScript and JavaScript
 
 Signing providers for dApps:
 
+:::important
+For all purposes, **we recommend using [dapp-core](https://github.com/ElrondNetwork/dapp-core)** instead of integrating the signing providers on your own.
+:::
+
 | Package | Source code | Description |
 | ------------- | ----------------------------------------- | ------------------------------------- |
 | [erdjs-hw-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-hw-provider) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-hw-provider) | Sign using the hardware wallet (Ledger). |

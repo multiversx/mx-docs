@@ -123,7 +123,8 @@ let tx = new Transaction({
     data: new TransactionPayload("helloWorld"),
     gasLimit: 70000,
     receiver: new Address("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
-    value: TokenPayment.egldFromAmount(1)
+    value: TokenPayment.egldFromAmount(1),
+    chainID: "D"
 });
 ```
 
@@ -165,6 +166,8 @@ In order to wait for multiple transactions:
 ```
 await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), watcher.awaitCompleted(tx3)]);
 ```
+
+For a different awaitening strategy, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
 
 ## Token transfers
 
@@ -504,6 +507,10 @@ interaction.withMultiESDTNFTTransfer([
 
 ## Parsing contract results
 
+:::important
+When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/ElrondNetwork/elrond-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
+:::
+
 ### When the ABI is not available
 
 ```
@@ -531,6 +538,8 @@ Alternatively, the `endpointDefinition` can be obtained from the `SmartContract`
 ```
 let endpointDefinition = smartContract.getEndpoint("myFunction");
 ```
+
+For customizing the default parser, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
 
 ## Decoding transaction metadata
 
