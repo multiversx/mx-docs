@@ -3,10 +3,8 @@ id: writing-and-testing-erdjs-interactions
 title: Writing and testing interactions
 ---
 
-Writing and testing interactions
-
 :::important
-This tutorial makes use of `erdjs 10`, which isn't officially released yet (in _beta_ as of 2022-03-24). Therefore, the code examples in this section are subject to change.
+This tutorial makes use of `erdjs 10`.
 :::
 
 This tutorial will guide you through the process of writing smart contract interactions using **erdjs** and run (test) them as [**mocha**](https://mochajs.org)-based **erdjs snippets**.
@@ -71,9 +69,42 @@ The test session is configured by means of a `nameOfMySession.session.json` file
 
 ```
 {
-    "proxyUrl": "http://localhost:7950",
-    "whalePem": "~/elrondsdk/testwallets/latest/users/alice.pem",
-    ...
+    "networkProvider": {
+        "type": "ProxyNetworkProvider",
+        "url": "https://devnet-gateway.elrond.com"
+    },
+    "users": {
+        "individuals": [
+            {
+                "name": "alice",
+                "pem": "~/elrondsdk/testwallets/latest/users/alice.pem"
+            },
+            {
+                "name": "bob",
+                "pem": "~/elrondsdk/testwallets/latest/users/bob.pem"
+            }
+        ],
+        "groups": [
+            {
+                "name": "friends",
+                "folder": "~/elrondsdk/testwallets/latest/users"
+            }
+        ]
+    }
+}
+```
+
+Another example, using the `ApiNetworkProvider` instead of `ProxyNetworkProvider`:
+
+```
+{
+    "networkProvider": {
+        "type": "ApiNetworkProvider",
+        "url": "https://devnet-api.elrond.com"
+    },
+    "users": {
+        ...
+    }
 }
 ```
 
@@ -91,6 +122,8 @@ For example, in an early step you can save the address of a deployed contract or
 await session.saveAddress("myContractAddress", addressOfMyContract);
 ...
 await session.saveToken("lotteryToken", myLotteryToken);
+...
+await session.saveBreadcrumb("someArbitraryData", { someValue: 42 });
 ```
 
 Then, in a subsequent step, you can load the previously stored contract address and token:
@@ -99,20 +132,23 @@ Then, in a subsequent step, you can load the previously stored contract address 
 let myLotteryToken = await session.loadToken("lotteryToken");
 ...
 let addressOfMyContract = await session.loadAddress("myContractAddress");
+...
+let someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
 ```
 
 ### Test users
 
-A test session provides a set of test users to engage in smart contract interactions. They can be accessed as follows:
+A test session provides a set of test users to engage in smart contract interactions. Given the session configuration provided as an example above, one can access the test users as follows:
 
 ```
-let whale = session.users.whale;
-let alice = session.users.alice;
+let alice: ITestUser = session.users.getUser("alice");
+let bob: ITestUser = session.users.getUser("bob");
+let friends: ITestUser[] = session.users.getGroup("friends");
 ```
 
 ### Assertions
 
-Don't forget to use _assert_ statements, which makes the snippets more valuable. For example:
+Don't forget to use _assert_ statements, which makes the snippets more valuable and meaningful. For example:
 
 ```
 assert.isTrue(returnCode.isSuccess());
@@ -129,7 +165,12 @@ The most important dependency of a snippet is the **contract interactor**, which
 
 In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain almost production-ready code to call and query your contracts, code which is mostly copy-paste-able into your dApps.
 
-Generally speaking, an interactor component depends on two objects: a `SmartContract` and a `SmartContractController` (both defined in erdjs).
+Generally speaking, an interactor component depends on the following objects (defined by `erdjs` or by satellites of `erdjs`):
+ - a `SmartContract` (composed with its `SmartContractAbi`)
+ - a `NetworkProvider`, to broadcast / retrieve transactions and perform contract queries
+ - a snapshot of the `NetworkConfig`
+ - a `TransactionWatcher`, to properly detect the completion of a transaction
+ - a `ResultsParser`, to parse the outcome of contract queries or contract interactions
 
 ### Creation of an interactor
 
@@ -138,16 +179,11 @@ Let's see how to construct an interactor (we use the lottery contract as an exam
 First, you have to load the ABI:
 
 ```
-let registry = await AbiRegistry.load({ files: [PathToAbi] });
+let registry = await loadAbiRegistry(PathToAbi);
 let abi = new SmartContractAbi(registry, ["Lottery"]);
 ```
 
-When loading the ABI from an url, change your code to:
-
-```
-let registry = await AbiRegistry.load({ url: [UrlToAbi] });
-...
-```
+**TBD: REFERENCE TO COOKBOOK (page).**
 
 Then, create a `SmartContract` object as follows:
 
@@ -157,16 +193,31 @@ let contract = new SmartContract({ address: address, abi: abi });
 
 If the address of the contract is yet unknown (e.g. prior deployment), then omit the address parameter above.
 
-Now, create the `SmartContractController` and finally, the interactor:
+Afterwards, hold a reference to the `NetworkProvider` and the `NetworkConfig` snapshot provided by the test session:
 
 ```
-let controller = new DefaultSmartContractController(abi, provider);
-let interactor = new LotteryInteractor(contract, controller);
+let networkProvider = session.networkProvider;
+let networkConfig = session.getNetworkConfig();
+```
+
+Finally, create the interactor:
+
+```
+let interactor = new LotteryInteractor(contract, networkProvider, networkConfig);
+```
+
+In our examples, the `TransactionWatcher` and the `ResultsParser` are usually instantiated by the interactor class (e.g. in the constructor) instead of being provided as a dependency. This should not be considered a guideline though. Strive to apply the most appropriate software design to your dApp. Here is how you would create the transaction watcher and the results parser:
+
+```
+var transactionWatcher = new TransactionWatcher(networkProvider);
+var resultsParser = new ResultsParser();
 ```
 
 ### Methods of the interactor
 
-Generally speaking, when writing an interactor, you'd like to have a function (method) for each endpoint of the smart contract. While this is straightforward when writing query functions against `readonly` / `get` endpoints, for `executable` / `do` endpoints you need to build, **sign** (using a signing / wallet provider) and broadcast a transaction, then optionally await for its execution and parse the results (if any). The interrupted nature of the flow for calling `executable` endpoints and the eventual context switching required by some of the signing / wallet providers (e.g. navigating through web pages) makes it (the flow) a bit harder to be captured in a single function (method) of the interactor in an _universally applicable manner_. However, the example interactors follow the _one method for each endpoint_ guideline, since they use a _test user_ object to sign the transactions (that is, no external signing provider).
+Generally speaking, when writing an interactor, you'd like to have a function (method) for each endpoint of the smart contract. While this is straightforward when writing query functions against `readonly` / `get` endpoints, for `executable` / `do` endpoints you need to build, **sign** (using a signing / wallet provider) and broadcast a transaction, then optionally await for its execution and parse the results (if any).
+
+The interrupted nature of the flow for calling `executable` endpoints and the eventual context switching required by some of the signing / wallet providers (e.g. navigating through web pages) makes it (the flow) a bit harder to be captured in a single function (method) of the interactor in an _universally applicable manner_. However, the example interactors follow the _one method for each endpoint_ guideline, since they use a _test user_ object to sign the transactions (that is, no external signing provider).
 
 ### Writing an interactor method for a contract query
 
@@ -176,47 +227,59 @@ In order to implement a contract query as a method of your interactor, you first
 // Example 1 (adder contract)
 let interaction = <Interaction>this.contract.methods.getSum();
 
-// Example 2 (lottery contract)
-let interaction = <Interaction>this.contract.methods.status([
+// Example 2 - automatic type inference of parameters (lottery contract)
+let interaction = <Interaction>this.contract.methods.status(["my-lottery"]);
+
+// Example 2 - explicit types (lottery contract)
+let interaction = <Interaction>this.contract.methodsExplicit.status([
     BytesValue.fromUTF8("my-lottery")
 ]);
 
-// Example 2-auto (lottery contract)
-let interaction = <Interaction>this.contract.methodsAuto.status(["my-lottery"]);
-
-// Example 3 (lottery contract)
-let interaction = <Interaction>this.contract.methods.getLotteryWhitelist([
-    BytesValue.fromUTF8("my-lottery")
-]);
-
-// Example 3-auto (lottery contract)
+// Example 3 - automatic type inference of parameters (lottery contract)
 let interaction = <Interaction>this.contract.methodsAuto.getLotteryWhitelist(["my-lottery"]);
 
-// Example 4 (lottery contract)
-let interaction = <Interaction>this.contract.methods.getLotteryInfo([
+// Example 3 - explicit types (lottery contract)
+let interaction = <Interaction>this.contract.methodsExplicit.getLotteryWhitelist([
     BytesValue.fromUTF8("my-lottery")
 ]);
 
-// Example 4-auto (lottery contract)
-let interaction = <Interaction>this.contract.methodsAuto.getLotteryInfo(["my-lottery"]);
+// Example 4 - automatic type inference of parameters (lottery contract)
+let interaction = <Interaction>this.contract.methods.getLotteryInfo(["my-lottery"]);
+
+// Example 4 - explicit types (lottery contract)
+let interaction = <Interaction>this.contract.methodsExplicit.getLotteryInfo([
+    BytesValue.fromUTF8("my-lottery")
+]);
 ```
 
-Above, you may notice there are two possible ways for providing the arguments to the interaction: the **explicity** mode and the **implicit** mode, also called **the auto mode** - since it performs _automatic type inference_ (within erdjs' own typesystem) with respect to the endpoint definition (more precisely, with respect to the ABI types of the input arguments). You can choose any of the modes to provide the arguments for the interaction. Pick the one that best suits your programming style.
+Above, you may notice there are two possible ways for providing the arguments to the interaction: the **explicitly** mode and the **implicit** mode, also called **the auto mode** - since it performs _automatic type inference_ (within erdjs' own typesystem) with respect to the endpoint definition (more precisely, with respect to the ABI types of the input arguments). You can choose any of the modes to provide the arguments for the interaction. Pick the one that best suits your programming style.
 
-Afterwards, you feed the interaction to the smart contract controller, which verifies the interaction object with respect to the ABI, performs a HTTP call (VM Query) against the Network Provider, then parses the results into an object called `TypedOutcomeBundle`:
+Afterwards, you should verify the interaction object with respect to the ABI (skip this step if you are using the _auto mode_). It will throw an error if the ABI (more specifically, the input parameters of the endpoint) is not followed:
+
+```
+interaction.check();
+```
+
+Now Let's run the query:
+
+```
+let queryResponse = await this.networkProvider.queryContract(query);
+```
+
+Then parse the results:
 
 ```
 // Example 1
-let { firstValue } = await this.controller.query(interaction);
+let { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
 // Example 2
-let { firstValue, secondValue, thirdValue } = await this.controller.query(interaction);
+let { firstValue, secondValue, thirdValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
 // Example 3
-let { values, returnCode } = await this.controller.query(interaction);
+let { values, returnCode } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
 // Example 4
-let bundle = await this.controller.query(interaction);
+let bundle = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 ```
 
 In the end, you would (optionally) cast, then interpret the values in the bundle (when necessary), before returning them to the caller of the interactor function (method):
@@ -247,10 +310,12 @@ Getting the status of a lottery **(enum)**:
 // Interactor method:
 async getStatus(lotteryName: string): Promise<string> {
     // Prepare the interaction
-    let interaction = <Interaction>this.contract.methodsAuto.status([lotteryName]);
-    
-    // Let's perform the interaction via the controller.
-    let { firstValue } = await this.controller.query(interaction);
+    let interaction = <Interaction>this.contract.methods.status([lotteryName]);
+    let query = interaction.check().buildQuery();
+
+    // Let's run the query and parse the results:
+    let queryResponse = await this.networkProvider.queryContract(query);
+    let { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
     // Now let's interpret the results.
     let firstValueAsEnum = <EnumValue>firstValue;
@@ -268,12 +333,12 @@ Getting the lottery info **(struct)**:
 // Interactor method:
 async getLotteryInfo(lotteryName: string): Promise<Struct> {
     // Prepare the interaction
-    let interaction = <Interaction>this.contract.methods.getLotteryInfo([
-        BytesValue.fromUTF8(lotteryName)
-    ]);
+    let interaction = <Interaction>this.contract.methods.getLotteryInfo([lotteryName]);
+    let query = interaction.check().buildQuery();
 
-    // Let's perform the interaction via the controller.
-    let { firstValue } = await this.controller.query(interaction);
+    // Let's run the query and parse the results:
+    let queryResponse = await this.networkProvider.queryContract(query);
+    let { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
     // Now let's interpret the results.
     let firstValueAsStruct = <Struct>firstValue;
@@ -299,25 +364,8 @@ let interaction = <Interaction>this.contract.methods
     .withNonce(caller.account.getNonceThenIncrement());
 ```
 ```
-// Example 2 (lottery)
+// Example 2 - automatic type inference (lottery)
 let interaction = <Interaction>this.contract.methods
-    .start([
-        BytesValue.fromUTF8(lotteryName),
-        new TokenIdentifierValue(token_identifier),
-        new BigUIntValue(price),
-        OptionValue.newMissing(),
-        OptionValue.newMissing(),
-        OptionValue.newProvided(new U32Value(1)),
-        OptionValue.newMissing(),
-        OptionValue.newProvided(createListOfAddresses(whitelist)),
-        OptionalValue.newMissing()
-    ])
-    .withGasLimit(new GasLimit(20000000))
-    .withNonce(owner.account.getNonceThenIncrement());
-```
-```
-// Example 2-auto (lottery)
-let interaction = <Interaction>this.contract.methodsAuto
     .start([
         lotteryName,
         token_identifier,
@@ -333,107 +381,69 @@ let interaction = <Interaction>this.contract.methodsAuto
     .withNonce(owner.account.getNonceThenIncrement());
 ```
 ```
-// Example 3 (lottery)
-let interaction = <Interaction>this.contract.methods
-    .buy_ticket([
-        BytesValue.fromUTF8(lotteryName)
+// Example 2 - explicit types (lottery)
+let interaction = <Interaction>this.contract.methodsExplicit
+    .start([
+        BytesValue.fromUTF8(lotteryName),
+        new TokenIdentifierValue(token_identifier),
+        new BigUIntValue(price),
+        OptionValue.newMissing(),
+        OptionValue.newMissing(),
+        OptionValue.newProvided(new U32Value(1)),
+        OptionValue.newMissing(),
+        OptionValue.newProvided(createListOfAddresses(whitelist)),
+        OptionalValue.newMissing()
     ])
+    .withGasLimit(new GasLimit(20000000))
+    .withNonce(owner.account.getNonceThenIncrement());
+```
+```
+// Example 3 - automatic type inference (lottery)
+let interaction = <Interaction>this.contract.methods
+    .buy_ticket([lotteryName])
     .withGasLimit(new GasLimit(50000000))
     .withSingleESDTTransfer(amount)
     .withNonce(user.account.getNonceThenIncrement());
 ```
 
 :::note
-Generally, it is the interactors where you specify the default **gas limit** and apply the **payments** (token transfers) on the contract calls, but there are other ways to design this, according to your needs.
+Generally, it is the interactors where you specify the default **gas limit** and apply the **payments** (token transfers) on the contract calls (above, see `withGasLimit` and `withSingleESDTTransfer`), but there are other ways to design this, according to your needs.
 :::
 
 :::important
 The account nonce must be synchronized beforehand (that is, before calling the interactor method).
 :::
 
-After that, you need to build the transaction object:
+Afterwards, you should verify the interaction object with respect to the ABI (skip this step if you are using the _auto mode_), then build the transaction object:
 
 ```
-let transaction: Transaction = interaction.buildTransaction();
+let transaction = interaction.check().buildTransaction();
 ```
 
-And now you have to sign the transaction using your provider of choice.
+Then, use a signer (e.g. a dApp provider) to sign the transaction. In the snippets, we use the `ITestUser` object to perform the signing:
 
-Once you've signed the transaction, you feed both the interaction object and the signed transaction to the smart contract controller, which verifies the interaction object with respect to the ABI, broadcast the transaction (using the Network Provider), awaits for its completion and parses the results into an object called `TypedOutcomeBundle`. It returns both the bundle and the `TransactionOnNetwork` object:
+```
+await owner.signer.sign(transaction);
+```
+
+Now let's broadcast the transaction and await its completion:
+
+```
+await this.networkProvider.sendTransaction(transaction);
+let transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
+```
+
+In the end, we parse the results into an object called `TypedOutcomeBundle` (just like for query responses):
 
 ```
 // Example 1
-let { bundle: { returnCode } } = await this.controller.execute(interaction, transaction);
+let { returnCode } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 
 // Example 2
-let { transactionOnNetwork, bundle } = await this.controller.execute(interaction, transaction);
+let bundle = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 
 // Example 3
-let { bundle: { returnCode, firstValue } } = await this.controller.execute(interaction, transaction);
+let { returnCode, firstValue } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 ```
 
 Then, for interpreting the results, follow the same guidelines as for query results (section above).
-
-## Dissecting the contracts controller
-
-### Contract calls
-
-If, for some reason, the function `controller.execute()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
-
-First, create an interaction checker and a results parser:
-
-```
-let checker = new InteractionChecker();
-let parser = new ResultsParser();
-```
-
-Suppose that the following objects are available in your scope:
-
-```
-let abi: SmartContractAbi;
-let provider: IProvider;
-let interaction: Interaction;
-let signedTransaction: Transaction;
-```
-
-Then, check the interaction against the ABI (optionally), broadcast the transaction, await for its completion and parse the contract results as follows:
-
-```
-let endpoint = abi.getEndpoint(interaction.getFunction());
-checker.checkInteraction(interaction, endpoint);
-
-await transaction.send(provider);
-await transaction.awaitExecuted(provider);
-let transactionOnNetwork = await transaction.getAsOnNetwork(provider);
-let bundle = parser.parseOutcome(transactionOnNetwork, endpoint);
-```
-
-### Contract queries
-
-If, for some reason, the function `controller.query()` depicted above brings undesired constraints in your application, you can replicate (and adjust) its behaviour with ease.
-
-First, create an interaction checker and a results parser:
-
-```
-let checker = new InteractionChecker();
-let parser = new ResultsParser();
-```
-
-Suppose that the following objects are available in your scope:
-
-```
-let abi: SmartContractAbi;
-let provider: IProvider;
-let interaction: Interaction;
-```
-
-Then, check the interaction against the ABI (optionally), query the provider and parse the results as follows:
-
-```
-let endpoint = abi.getEndpoint(interaction.getFunction());
-checker.checkInteraction(interaction, endpoint);
-
-let query = interaction.buildQuery();
-let queryResponse = await provider.queryContract(query);
-let bundle = parser.parseQueryResponse(queryResponse, endpoint);
-```

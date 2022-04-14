@@ -198,7 +198,10 @@
         "label": "erdjs",
         "ids": [
           "sdk-and-tools/erdjs/erdjs",
-          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions"
+          "sdk-and-tools/erdjs/erdjs-cookbook",
+          "sdk-and-tools/erdjs/extending-erdjs",
+          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
+          "sdk-and-tools/erdjs/erdjs-migration-guides"
         ]
       },
       "sdk-and-tools/erdgo",
