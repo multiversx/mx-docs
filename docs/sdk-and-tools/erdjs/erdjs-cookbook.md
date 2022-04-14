@@ -1,13 +1,13 @@
 ---
 id: erdjs-cookbook
-title: Cookbook (common tasks)
+title: Cookbook
 ---
+
+This page will guide you through the process of handling common tasks using **erdjs**.
 
 :::important
 This cookbook makes use of `erdjs 10`.
 :::
-
-This page will guide you through the process of handling common tasks using **erdjs**.
 
 ## Fetching network parameters
 
@@ -63,7 +63,7 @@ Alternatively, you can also use:
 transaction.setNonce(alice.getNonceThenIncrement());
 ```
 
-## Prepairing payment objects
+## Preparing payment objects
 
 :::important
 In **erdjs 9x**, the payments were prepared using the classes `Balance` and `BalanceBuilder`. In **erdjs 10**, we use `TokenPayment`.
@@ -160,9 +160,81 @@ await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), wat
 
 ## Token transfers
 
-:::important
-Documentation in this section is preliminary and subject to change.
-:::
+### Single ESDT transfer
+
+```
+let payment = TokenPayment.fungibleFromAmount("COUNTER-8b028f", "100.00", 0);
+let data = new ESDTTransferPayloadBuilder()
+    .setPayment(payment)
+    .build();
+
+transactions.push(new Transaction({
+    nonce: 7,
+    receiver: new Address("erd1..."),
+    data: data,
+    gasLimit: 50000 + 1500 * data.length() + 300000,
+    chainID: "D"
+}));
+```
+
+### Single NFT transfer
+
+```
+let payment = TokenPayment.nonFungible("ERDJS-38f249", 1);
+let payload = new ESDTNFTTransferPayloadBuilder()
+    .setPayment(payment)
+    .setDestination(new Address("erd1..."))
+    .build();
+
+transactions.push(new Transaction({
+    nonce: 7,
+    // Same as sender address!
+    receiver: new Address("erd1..."),
+    data: data,
+    gasLimit: 50000 + 1500 * data.length() + 1000000,
+    chainID: "D"
+}));
+```
+
+### Single SFT transfer
+
+```
+let payment = TokenPayment.semiFungible("SEMI-9efd0f", 1, 5);
+let payload = new ESDTNFTTransferPayloadBuilder()
+    .setPayment(payment)
+    .setDestination(new Address("erd1..."))
+    .build();
+
+transactions.push(new Transaction({
+    nonce: 7,
+    // Same as sender address!
+    receiver: new Address("erd1..."),
+    data: data,
+    gasLimit: 50000 + 1500 * data.length() + 1000000,
+    chainID: "D"
+}));
+```
+
+### Multi ESDT / NFT transfer
+
+```
+let paymentOne = TokenPayment.nonFungible("ERDJS-38f249", 1);
+let paymentTwo = TokenPayment.fungibleFromAmount("BAR-c80d29", "10.00", 18);
+let payments = [paymentOne, paymentTwo];
+let payload = new MultiESDTNFTTransferPayloadBuilder()
+    .setPayments(payments)
+    .setDestination(new Address("erd1..."))
+    .build();
+
+transactions.push(new Transaction({
+    nonce: 7,
+    // Same as sender address!
+    receiver: new Address("erd1..."),
+    data: data,
+    gasLimit: 50000 + 1500 * data.length() + 1000000 * payments.length,
+    chainID: "D"
+}));
+```
 
 ## Contract deployments
 
@@ -361,7 +433,7 @@ let tx = contract.call({
 tx.setNonce(alice.nonce);
 ```
 
-Then, sign, broadcast `tx` and wait for its complection.
+Then, sign, broadcast `tx` and wait for its completion.
 
 ### Using `Interaction`, when the ABI is not available
 
@@ -379,7 +451,7 @@ let tx = interaction
     .buildTransaction();
 ```
 
-Then, sign, broadcast `tx` and wait for its complection.
+Then, sign, broadcast `tx` and wait for its completion.
 
 ### Using `Interaction`, when the ABI is available
 
@@ -472,6 +544,13 @@ let metadata = new TransactionDecoder().getTransactionMetadata({
 });
 ```
 
-### Using the `esdtHelpers` of `erdjs 9x`
+### Using the `esdtHelpers` and `scArgumentsParser` of `erdjs 9x`
 
-The `esdtHelpers` have been removed in `erdjs 10`, in favor of the `transaction-decoder` (see above). However, you can find them at the following location: [esdtHelpers](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts). Examples of usage can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts).
+The classes `esdtHelpers` and `scArgumentsParser` have been removed in `erdjs 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above). 
+
+However, you can still find the previous implementations at the following location: 
+ - [esdtHelpers](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
+ - [esdtHelpers examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
+ - [scArgumentsParser](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
+ - [scArgumentsParser examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)
+ 
