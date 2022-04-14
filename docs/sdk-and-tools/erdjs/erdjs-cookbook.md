@@ -9,25 +9,33 @@ This page will guide you through the process of handling common tasks using **er
 This cookbook makes use of `erdjs 10`.
 :::
 
-## Fetching network parameters
+## Creating network providers
 
-### Using the API Provider
+Creating an API provider:
 
 ```
 import { ApiNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
 let networkProvider = new ApiNetworkProvider("https://devnet-api.elrond.com");
-let networkConfig = await networkProvider.getNetworkConfig();
-console.log(networkConfig.MinGasPrice);
-console.log(networkConfig.ChainID);
 ```
 
-### Using the Proxy Provider
+Creating a Proxy provider:
 
 ```
 import { ProxyNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
 let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.elrond.com");
+```
+
+:::important
+Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the Elrond API (or Gateway).
+
+On this topic, please see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
+:::
+
+## Fetching network parameters
+
+```
 let networkConfig = await networkProvider.getNetworkConfig();
 console.log(networkConfig.MinGasPrice);
 console.log(networkConfig.ChainID);
