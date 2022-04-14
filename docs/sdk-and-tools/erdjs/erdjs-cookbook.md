@@ -6,7 +6,7 @@ title: Cookbook
 This page will guide you through the process of handling common tasks using **erdjs**.
 
 :::important
-This cookbook makes use of `erdjs 10`.
+This cookbook makes use of `erdjs 10`. In order to migrate from `erdjs 9.x` to `erdjs 10`, please follow [the migration guide](/sdk-and-tools/erdjs/erdjs-migration-guides).
 :::
 
 ## Creating network providers
@@ -71,6 +71,8 @@ Alternatively, you can also use:
 transaction.setNonce(alice.getNonceThenIncrement());
 ```
 
+For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
+
 ## Preparing payment objects
 
 :::important
@@ -89,8 +91,16 @@ console.log(firstPayment.toPrettyString(), secondPayment.toPrettyString());
 A `TokenPayment` object for transferring **fungible** tokens:
 
 ```
+let identifier = "FOO-123456";
+let numDecimals = 2;
 let firstPayment = TokenPayment.fungibleFromAmount(identifier, "1.5", numDecimals);
 let secondPayment = TokenPayment.fungibleFromBigInteger(identifier, "4000", numDecimals);
+
+console.log(firstPayment.toString()); // Will output: 150.
+console.log(firstPayment.toPrettyString()); // Will output: 1.50 FOO-123456.
+console.log(secondPayment.toString()); // Will output: 4000.
+console.log(secondPayment.toPrettyString()); // Will output: 40.00 FOO-123456.
+
 ```
 
 A `TokenPayment` object for transferring **semi-fungible** tokens:
@@ -101,7 +111,7 @@ let quantity = 50;
 let payment = TokenPayment.semiFungible(identifier, nonce, quantity);
 ```
 
-A `TokenPayment` object for transferring **non-fungible** tokens:
+A `TokenPayment` object for transferring **non-fungible** tokens (the quantity doesn't need to be specified for NFTs, as the token is only one of its kind):
 
 ```
 let nonce = 7;
@@ -133,6 +143,12 @@ let tx = new Transaction({
 ```
 let txHash = await networkProvider.send(tx);
 ```
+
+Note that the transaction needs to be signed before broadcasting it. Signing can be achieved using a signing provider.
+
+:::important
+Note that, for all purposes, **we recommend using [dapp-core](https://github.com/ElrondNetwork/dapp-core)** instead of integrating the signing providers on your own.
+:::
 
 ### Broadcast using `axios`
 

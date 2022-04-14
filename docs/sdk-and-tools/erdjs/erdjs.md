@@ -11,7 +11,7 @@ Elrond SDK for TypeScript and JavaScript
 | ------------- | ----------------------------------------- | ------------------------------------- |
 | [erdjs](https://www.npmjs.com/package/@elrondnetwork/erdjs) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs) | Basic components for interacting with the blockchain and with smart contracts. |
 | [erdjs-walletcore](https://www.npmjs.com/package/@elrondnetwork/erdjs-walletcore) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-walletcore) | Core wallet components (generation, signing). |
-| [erdjs-contract-wrappers](https://www.npmjs.com/package/@elrondnetwork/erdjs-contract-wrappers) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-contract-wrappers) | Smart Contract wrappers, based on erdjs. NodeJS repl-friendly. |
+| erdjs-contract-wrappers | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-contract-wrappers) | Smart Contract wrappers, based on erdjs. NodeJS repl-friendly. |
 | [erdjs-network-providers](https://www.npmjs.com/package/@elrondnetwork/erdjs-network-providers) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-network-providers) | Network Provider (API, Gateway) components (compatible with erdjs). |
 
 Signing providers for dApps:
