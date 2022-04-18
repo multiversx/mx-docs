@@ -247,7 +247,7 @@ It doesn't make sense to fund after the deadline has passed, so fund transaction
     #[endpoint]
     fn fund(&self, #[payment] payment: BigUint) -> SCResult<()> {
       let current_time = self.blockchain().get_block_nonce();
-      require!(current_time <> self.deadline().get(), "cannot fund after deadline");
+      require!(current_time < self.deadline().get(), "cannot fund after deadline");
 
       let caller = self.blockchain().get_caller();
       self.deposit(&caller).update(|deposit| *deposit += payment);
