@@ -50,7 +50,7 @@ let mut my_vec = ManagedVec::new();
 let vec_len = my_vec.len();
 let mut rand_source = RandomnessSource::<Self::Api>::new();
 for i in 0..vec_len {
-    let rand_index = rand.next_usize_in_range(i, vec_len);
+    let rand_index = rand_source.next_usize_in_range(i, vec_len);
     let first_item = my_vec.get(i).unwrap();
     let second_item = my_vec.get(rand_index).unwrap();
 

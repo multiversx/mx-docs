@@ -5,7 +5,7 @@ title: Rust Testing Framework
 
 ## Introduction
 
-The Rust testing framework was develped as an alternative to manually writing Mandos tests. This comes with many advantages:
+The Rust testing framework was developed as an alternative to manually writing Mandos tests. This comes with many advantages:
 - being able to calculate values using variables
 - type checking
 - automatic serialization
@@ -16,15 +16,17 @@ The only disadvantage is that you need to learn something new! Jokes aside, keep
 
 This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our Elrond VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section. 
 
+Please note that mandos generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.  
+
 ## Prerequisites
 
-You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.27.4). You can check the latest version here: https://crates.io/crates/elrond-wasm
+You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.29.3). You can check the latest version here: https://crates.io/crates/elrond-wasm
 
 Add `elrond-wasm-debug` and required packages as dev-dependencies in your Cargo.toml:
 
 ```toml
 [dev-dependencies.elrond-wasm-debug]
-version = "0.27.4"
+version = "0.29.3"
 
 [dev-dependencies]
 num-bigint = "0.4.2"
@@ -87,8 +89,7 @@ fn setup_crowdfunding<CrowdfundingObjBuilder>(
     cf_builder: CrowdfundingObjBuilder,
 ) -> CrowdfundingSetup<CrowdfundingObjBuilder>
 where
-    CrowdfundingObjBuilder:
-        'static + Copy + Fn() -> crowdfunding_esdt::ContractObj<DebugApi>,
+    CrowdfundingObjBuilder: 'static + Copy + Fn() -> crowdfunding_esdt::ContractObj<DebugApi>,
 {
     let rust_zero = rust_biguint!(0u64);
     let mut blockchain_wrapper = BlockchainStateWrapper::new();
@@ -105,15 +106,15 @@ where
     blockchain_wrapper.set_esdt_balance(&first_user_address, CF_TOKEN_ID, &rust_biguint!(1_000));
     blockchain_wrapper.set_esdt_balance(&second_user_address, CF_TOKEN_ID, &rust_biguint!(1_000));
 
-    blockchain_wrapper.execute_tx(&owner_address, &cf_wrapper, &rust_zero, |sc| {
-        let target = managed_biguint!(2_000);
-        let token_id = managed_token_id!(CF_TOKEN_ID);
+    blockchain_wrapper
+        .execute_tx(&owner_address, &cf_wrapper, &rust_zero, |sc| {
+            let target = managed_biguint!(2_000);
+            let token_id = managed_token_id!(CF_TOKEN_ID);
 
-        let result = sc.init(target, CF_DEADLINE, token_id);
-        assert_eq!(result, SCResult::Ok(()));
+            sc.init(target, CF_DEADLINE, token_id);
+        })
+        .assert_ok();
 
-        StateChange::Commit
-    });
     blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());
 
     CrowdfundingSetup {
@@ -142,20 +143,10 @@ Since this is a SC deploy, we call the `init` function. Since the contract works
 let target = BigUint::<DebugApi>::from(2_000u32);
 ```
 
-Keep in mind you can't create managed types outside of the `execute_tx` functions. If you need to do that, you should use `blockchain_wrapper.execute_in_managed_environment()`. For example, if you needed to create a struct with managed types: 
-
-```rust
-let my_struct =
-    wrapper.execute_in_managed_environment(|| StructWithManagedTypes::<DebugApi> {
-        big_uint: managed_biguint!(500),
-        buffer: managed_buffer!(b"MyBuffer"),
-    });
-```
-
-Similarly for other managed types.  
+Keep in mind you can't create managed types outside of the `execute_tx` functions.
 
 Some observations for the `execute_tx` function:
-- The return type for the lambda function is an enum of two possible values: Commit and Revert. This is needed for cases when you want to check SCError cases (since the lambda can contain anything, the testing framework has no idea if your mocked transaction was successful or not).  
+- The return type for the lambda function is a `TxResult`, which has methods for checking for success or error: `assert_ok()` is used to check the tx worked. If you want to check error cases, you would use `assert_user_error("message")`.  
 - After running the `init` function, we add a `setState` step in the generated Mandos, to simulate our deploy: `blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());`
 
 To test the scenario and generate the Mandos file, you have to create a test function:
@@ -183,29 +174,26 @@ fn fund_test() {
     let b_wrapper = &mut cf_setup.blockchain_wrapper;
     let user_addr = &cf_setup.first_user_address;
 
-    b_wrapper.execute_esdt_transfer(
-        user_addr,
-        &cf_setup.cf_wrapper,
-        CF_TOKEN_ID,
-        0,
-        &rust_biguint!(1_000),
-        |sc| {
-            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(1_000));
-            assert_eq!(result, SCResult::Ok(()));
+    b_wrapper
+        .execute_esdt_transfer(
+            user_addr,
+            &cf_setup.cf_wrapper,
+            CF_TOKEN_ID,
+            0,
+            &rust_biguint!(1_000),
+            |sc| {
+                sc.fund();
 
-            let user_deposit = sc.deposit(&managed_address!(user_addr)).get();
-            let expected_deposit = managed_biguint!(1_000);
-            assert_eq!(user_deposit, expected_deposit);
-
-            StateChange::Commit
-        },
-    );
+                let user_deposit = sc.deposit(&managed_address!(user_addr)).get();
+                let expected_deposit = managed_biguint!(1_000);
+                assert_eq!(user_deposit, expected_deposit);
+            },
+        )
+        .assert_ok();
 }
 ```
 
 As you can see, we can directly call the storage mappers (like `deposit`) from within the contract and compare with a local value. No need to encode anything.  
-
-Note: Even though we've already passed the payment in the `execute_esdt_transfer` method, we also have to pass it in the `fund` method of the smart contract. This is because by calling the sc method directly, the `#[payment]` macros do not intervene as they would during a normal transaction, so the function argument is not auto-filled.  
 
 If you also want to generate a Mandos scenario file for this transaction, this is where the bit of manual work comes in:  
 
@@ -233,10 +221,12 @@ fn status_test() {
     let mut cf_setup = setup_crowdfunding(crowdfunding_esdt::contract_obj);
     let b_wrapper = &mut cf_setup.blockchain_wrapper;
 
-    b_wrapper.execute_query(&cf_setup.cf_wrapper, |sc| {
-        let status = sc.status();
-        assert_eq!(status, Status::FundingPeriod);
-    });
+    b_wrapper
+        .execute_query(&cf_setup.cf_wrapper, |sc| {
+            let status = sc.status();
+            assert_eq!(status, Status::FundingPeriod);
+        })
+        .assert_ok();
 
     let sc_query = ScQueryMandos::new(cf_setup.cf_wrapper.address_ref(), "status");
     let mut expect = TxExpectMandos::new(0);
@@ -263,21 +253,24 @@ fn test_sc_error() {
 
     b_wrapper.set_egld_balance(user_addr, &rust_biguint!(1_000));
 
-    b_wrapper.execute_tx(
-        user_addr,
-        &cf_setup.cf_wrapper,
-        &rust_biguint!(1_000),
-        |sc| {
-            let result = sc.fund(managed_token_id!(b""), managed_biguint!(1_000));
-            assert_eq!(result, sc_error!("wrong token"));
+    b_wrapper
+        .execute_tx(
+            user_addr,
+            &cf_setup.cf_wrapper,
+            &rust_biguint!(1_000),
+            |sc| {
+                sc.fund();
+            },
+        )
+        .assert_user_error("wrong token");
 
+    b_wrapper
+        .execute_tx(user_addr, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
             let user_deposit = sc.deposit(&managed_address!(user_addr)).get();
             let expected_deposit = managed_biguint!(0);
             assert_eq!(user_deposit, expected_deposit);
-
-            StateChange::Revert
-        },
-    );
+        })
+        .assert_ok();
 
     let mut sc_call = ScCallMandos::new(user_addr, cf_setup.cf_wrapper.address_ref(), "fund");
     sc_call.add_egld_value(&rust_biguint!(1_000));
@@ -293,7 +286,7 @@ fn test_sc_error() {
 }
 ```
 
-Notice how we've changed the payment intentionally to an invalid token to check the error case. Also, we've changed the expected deposit to "0" instead of the previous "1_000". And lastly, the most important thing: the `StateChange::Revert` return result, so we don't commit any partial changes to the blockchain wrapper.
+Notice how we've changed the payment intentionally to an invalid token to check the error case. Also, we've changed the expected deposit to "0" instead of the previous "1_000". And lastly: the `.assert_user_error("wrong token")` call on the result.
 
 ## Testing a successful funding campaign
 
@@ -309,67 +302,65 @@ fn test_successful_cf() {
     let second_user = &cf_setup.second_user_address;
 
     // first user fund
-    b_wrapper.execute_esdt_transfer(
-        first_user,
-        &cf_setup.cf_wrapper,
-        CF_TOKEN_ID,
-        0,
-        &rust_biguint!(1_000),
-        |sc| {
-            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(1_000));
-            assert_eq!(result, SCResult::Ok(()));
+    b_wrapper
+        .execute_esdt_transfer(
+            first_user,
+            &cf_setup.cf_wrapper,
+            CF_TOKEN_ID,
+            0,
+            &rust_biguint!(1_000),
+            |sc| {
+                sc.fund();
 
-            let user_deposit = sc.deposit(&managed_address!(first_user)).get();
-            let expected_deposit = managed_biguint!(1_000);
-            assert_eq!(user_deposit, expected_deposit);
-
-            StateChange::Commit
-        },
-    );
+                let user_deposit = sc.deposit(&managed_address!(first_user)).get();
+                let expected_deposit = managed_biguint!(1_000);
+                assert_eq!(user_deposit, expected_deposit);
+            },
+        )
+        .assert_ok();
 
     // second user fund
-    b_wrapper.execute_esdt_transfer(
-        second_user,
-        &cf_setup.cf_wrapper,
-        CF_TOKEN_ID,
-        0,
-        &rust_biguint!(1_000),
-        |sc| {
-            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(1_000));
-            assert_eq!(result, SCResult::Ok(()));
+    b_wrapper
+        .execute_esdt_transfer(
+            second_user,
+            &cf_setup.cf_wrapper,
+            CF_TOKEN_ID,
+            0,
+            &rust_biguint!(1_000),
+            |sc| {
+                sc.fund();
 
-            let user_deposit = sc.deposit(&managed_address!(second_user)).get();
-            let expected_deposit = managed_biguint!(1_000);
-            assert_eq!(user_deposit, expected_deposit);
-
-            StateChange::Commit
-        },
-    );
+                let user_deposit = sc.deposit(&managed_address!(second_user)).get();
+                let expected_deposit = managed_biguint!(1_000);
+                assert_eq!(user_deposit, expected_deposit);
+            },
+        )
+        .assert_ok();
 
     // set block timestamp after deadline
     b_wrapper.set_block_timestamp(CF_DEADLINE + 1);
 
     // check status
-    b_wrapper.execute_query(&cf_setup.cf_wrapper, |sc| {
-        let status = sc.status();
-        assert_eq!(status, Status::Successful);
-    });
+    b_wrapper
+        .execute_query(&cf_setup.cf_wrapper, |sc| {
+            let status = sc.status();
+            assert_eq!(status, Status::Successful);
+        })
+        .assert_ok();
 
     // user try claim
-    b_wrapper.execute_tx(first_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
-        let result = sc.claim();
-        assert_eq!(result, sc_error!("only owner can claim successful funding"));
-
-        StateChange::Revert
-    });
+    b_wrapper
+        .execute_tx(first_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+            sc.claim();
+        })
+        .assert_user_error("only owner can claim successful funding");
 
     // owner claim
-    b_wrapper.execute_tx(owner, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
-        let result = sc.claim();
-        assert_eq!(result, SCResult::Ok(()));
-
-        StateChange::Commit
-    });
+    b_wrapper
+        .execute_tx(owner, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+            sc.claim();
+        })
+        .assert_ok();
 
     b_wrapper.check_esdt_balance(owner, CF_TOKEN_ID, &rust_biguint!(2_000));
     b_wrapper.check_esdt_balance(first_user, CF_TOKEN_ID, &rust_biguint!(0));
@@ -393,67 +384,65 @@ fn test_failed_cf() {
     let second_user = &cf_setup.second_user_address;
 
     // first user fund
-    b_wrapper.execute_esdt_transfer(
-        first_user,
-        &cf_setup.cf_wrapper,
-        CF_TOKEN_ID,
-        0,
-        &rust_biguint!(300),
-        |sc| {
-            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(300));
-            assert_eq!(result, SCResult::Ok(()));
+    b_wrapper
+        .execute_esdt_transfer(
+            first_user,
+            &cf_setup.cf_wrapper,
+            CF_TOKEN_ID,
+            0,
+            &rust_biguint!(300),
+            |sc| {
+                sc.fund();
 
-            let user_deposit = sc.deposit(&managed_address!(first_user)).get();
-            let expected_deposit = managed_biguint!(300);
-            assert_eq!(user_deposit, expected_deposit);
-
-            StateChange::Commit
-        },
-    );
+                let user_deposit = sc.deposit(&managed_address!(first_user)).get();
+                let expected_deposit = managed_biguint!(300);
+                assert_eq!(user_deposit, expected_deposit);
+            },
+        )
+        .assert_ok();
 
     // second user fund
-    b_wrapper.execute_esdt_transfer(
-        second_user,
-        &cf_setup.cf_wrapper,
-        CF_TOKEN_ID,
-        0,
-        &rust_biguint!(600),
-        |sc| {
-            let result = sc.fund(managed_token_id!(CF_TOKEN_ID), managed_biguint!(600));
-            assert_eq!(result, SCResult::Ok(()));
+    b_wrapper
+        .execute_esdt_transfer(
+            second_user,
+            &cf_setup.cf_wrapper,
+            CF_TOKEN_ID,
+            0,
+            &rust_biguint!(600),
+            |sc| {
+                sc.fund();
 
-            let user_deposit = sc.deposit(&managed_address!(second_user)).get();
-            let expected_deposit = managed_biguint!(600);
-            assert_eq!(user_deposit, expected_deposit);
-
-            StateChange::Commit
-        },
-    );
+                let user_deposit = sc.deposit(&managed_address!(second_user)).get();
+                let expected_deposit = managed_biguint!(600);
+                assert_eq!(user_deposit, expected_deposit);
+            },
+        )
+        .assert_ok();
 
     // set block timestamp after deadline
     b_wrapper.set_block_timestamp(CF_DEADLINE + 1);
 
     // check status
-    b_wrapper.execute_query(&cf_setup.cf_wrapper, |sc| {
-        let status = sc.status();
-        assert_eq!(status, Status::Failed);
-    });
+    b_wrapper
+        .execute_query(&cf_setup.cf_wrapper, |sc| {
+            let status = sc.status();
+            assert_eq!(status, Status::Failed);
+        })
+        .assert_ok();
 
     // first user claim
-    b_wrapper.execute_tx(first_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
-        let result = sc.claim();
-        assert_eq!(result, SCResult::Ok(()));
-
-        StateChange::Commit
-    });
+    b_wrapper
+        .execute_tx(first_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+            sc.claim();
+        })
+        .assert_ok();
 
     // second user claim
-    b_wrapper.execute_tx(second_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
-        let result = sc.claim();
-        assert_eq!(result, SCResult::Ok(()));
-
-        StateChange::Commit
-    });
+    b_wrapper
+        .execute_tx(second_user, &cf_setup.cf_wrapper, &rust_biguint!(0), |sc| {
+            sc.claim();
+        })
+        .assert_ok();
 
     b_wrapper.check_esdt_balance(owner, CF_TOKEN_ID, &rust_biguint!(0));
     b_wrapper.check_esdt_balance(first_user, CF_TOKEN_ID, &rust_biguint!(1_000));

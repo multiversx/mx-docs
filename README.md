@@ -4,12 +4,12 @@ The repository containing the [documentation](https://docs.elrond.com) for the E
 
 ## About
 
-The documentation is built over a custom [docusaurus](https://docusaurus.io/) solution and relies on MarkDown files.
+The documentation is built over a custom [docusaurus](https://docusaurus.io/) solution and relies on Markdown files.
 This repository also has GitHub actions that will trigger the real-time updating of the official documentation website by merging into the `master` branch.
 
 ## How to use locally
 
-In order to ensure that the new added content is correctly aligned and every Mark Down feature is working as intended, one can run the project on a local machine.
+In order to ensure that the new added content is correctly aligned and every Markdown feature is working as intended, one can run the project on a local machine.
 
 ### Requirements:
 
@@ -48,9 +48,9 @@ Anyone can contribute to the docs. Any help is appreciated. Here are some ways i
 - external contributions will be made to the `external` branch.
 - you can contribute from GitHub directly (not recommended) or by working locally and pushing the changes (recommended).
 - the documentation pages are to be found inside the `docs` directory at the corresponding category.
-- please follow `docs/utils.md` for mark down examples.
+- please follow `docs/utils.md` for Markdown examples.
 
-A web version of the mark down examples is available [here](https://docs.elrond.com/utils/).
+A web version of the Markdown examples is available [here](https://docs.elrond.com/utils/).
 
 ### Opening a `pull request`
 

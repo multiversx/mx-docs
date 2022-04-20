@@ -85,6 +85,16 @@
       },
       {
         "type": "subcategory",
+        "label": "Gas and Fees",
+        "ids": [
+          "developers/gas-and-fees/overview",
+          "developers/gas-and-fees/egld-transfers",
+          "developers/gas-and-fees/system-smart-contracts",
+          "developers/gas-and-fees/user-defined-smart-contracts"
+        ]
+      },
+      {
+        "type": "subcategory",
         "label": "Developer reference",
         "ids": [
           "developers/developer-reference/elrond-serialization-format",
@@ -95,7 +105,20 @@
           "developers/developer-reference/code-metadata",
           "developers/developer-reference/elrond-wasm-api-functions",
           "developers/developer-reference/rust-testing-framework",
+          "developers/developer-reference/rust-testing-framework-functions-reference",
+          "developers/developer-reference/rust-smart-contract-debugging",
           "developers/developer-reference/random-numbers-in-smart-contracts"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Developers Best Practices",
+        "ids": [
+          "developers/best-practices/best-practices-basics",
+          "developers/best-practices/biguint-operations",
+          "developers/best-practices/the-dynamic-allocation-problem",
+          "developers/best-practices/multi-values",
+          "developers/best-practices/storage-mappers"
         ]
       },
       {
@@ -148,7 +171,17 @@
           "sdk-and-tools/erdpy/writing-and-running-erdpy-scripts"
         ]
       },
-      "sdk-and-tools/erdjs",
+      {
+        "type": "subcategory",
+        "label": "erdjs",
+        "ids": [
+          "sdk-and-tools/erdjs/erdjs",
+          "sdk-and-tools/erdjs/erdjs-cookbook",
+          "sdk-and-tools/erdjs/extending-erdjs",
+          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
+          "sdk-and-tools/erdjs/erdjs-migration-guides"
+        ]
+      },
       "sdk-and-tools/erdgo",
       "sdk-and-tools/erdjava",
       "sdk-and-tools/erdkotlin",
