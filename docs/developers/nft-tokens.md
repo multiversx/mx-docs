@@ -828,7 +828,7 @@ The role can be one of the roles specified in the documentation (for example: ES
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 
-### <span class="badge badge-primary">GET</span> **Parse non tokens transfer logs**
+### <span class="badge badge-primary">GET</span> **Parse non/semi fungible tokens transfer logs**
 
 Each **successful** nft/sft transfer generates logs and events that can be used to parse all the details about a transfer
 (token identifier, sent amount and receiver).

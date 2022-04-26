@@ -35,5 +35,5 @@ These properties can be fetch via an API call described [here](/developers/esdt-
 ## **Useful tools**
 - ESDT documentation can be found [here](/developers/esdt-tokens).
 - ESDT API docs can be found [here](/developers/esdt-tokens#rest-api).
-- erdjs helper functions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/esdtHelpers.ts).
+- erdjs helper functions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts).
 - erdjava helper functions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjava/blob/esdt-support/src/main/java/elrond/esdt/ESDTFunctions.java).
