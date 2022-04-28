@@ -3,13 +3,9 @@ id: install-update
 title: Installing a Validator Node
 ---
 
-An Elrond node requires a host (computer) with the aforementioned specifications, with the OS - preferably Ubuntu 18.04, 20.04 & up - installed. To begin, you will need to deploy the Elrond scripts which we had earlier configured, tune its parameters and ensure proper user permissions. Then installation, you will install the node, back up its private keys, and start it.
-
-Let’s dive in!
-
 ## **Install your node(s)**
 
-After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to all networks: Mainnet, Devnet, and Testnet.
+After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Devnet and Testnet Network.
 
 - *Note: This process installs a validator node for all Elrond networks (mainnet, devnet, and testnet).*
 
