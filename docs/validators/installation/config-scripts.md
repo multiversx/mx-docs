@@ -3,7 +3,7 @@ id: config-scripts
 title: Scripts & User config
 ---
 
-Elrond provides scripts designed to streamline the process of installing an Elrond node. These validator scripts aim at increasing the validator experience. The validator script is a general script that is accessible to all networks: Mainnet, Devnet, and Testnet.
+Elrond provides scripts designed to streamline the process of installing an Elrond node. This validator script is a general script for accessing the Devnet and Testnet networks.
 
 To get started, you will begin by getting a copy of the latest version of the scripts from Github and configure it to match your local setup.
 
