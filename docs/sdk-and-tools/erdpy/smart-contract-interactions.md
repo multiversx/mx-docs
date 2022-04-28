@@ -39,7 +39,9 @@ deploySC() {
 }
 ```
 
-Now let's look at the structure of the interaction. It receives the path of the wasm file, where we previously built the contract. It also receives the path of the PEM file, the proxy url and the chain id, where the contract will be deployed. Another important parameter is the gas limit, where we state the maximum amount of gas we are willing to spend with this transaction. Each transaction cost depends on its complexity and the amount of data storage it handles.
+Now let's look at the structure of the interaction. It receives the path of the wasm file, where we previously built the contract. It also receives the path of the PEM file, the proxy url and the chain id, where the contract will be deployed. Another important parameter is the gas limit, where we state the maximum amount of gas we are willing to spend with this transaction. Each transaction cost depends on its complexity and the amount of data storage it handles. 
+The last argument we must discuss is **recall-nonce**. As we know, each account has its own nonce, that increases with each sent transaction. That being said, when calling an endpoint or a deploy function and so on, we must pass the next-in-line nonce, for the transaction to be correctly processed. And **recall-nonce** does just that. It gives us the correct nonce by querying the blockchain for the last one.
+
 After the transaction is sent, erdpy will output information like the transaction hash, data and any other important information, based on the type of transaction. In case of a contract deployment, it will also output the newly deployed contract address.
 
 Let's now suppose we need to make the contract payable, in case it needs to receive funds. We could redeploy the contract but that will mean two different contracts, and not to mention that we will lose any existing storage. For that, we can use the **upgrade** command, that replaces the existing SC bytecode with the newly built contract version.
@@ -77,7 +79,7 @@ Let's suppose we want to call the following endpoint, that receives an address a
 #2 - SecondBigUintArgument
 
 ADDRESS_ARGUMENT="erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3"
-THIRD_BIGUINT_ARGUMENT=0x661efdf12d1653cf340000 
+THIRD_BIGUINT_ARGUMENT=0x0f4240
 myNonPayableEndpoint() {
     address_argument="0x$(erdpy wallet bech32 --decode ${ADDRESS_ARGUMENT})"
     erdpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
@@ -93,12 +95,46 @@ myNonPayableEndpoint() {
 So, what happens in this interaction and how do we call it? Besides the function and arguments parts, the snippet is more or less the same as when deploying or upgrading a contract. When calling a non payable function, we need to provide the endpoint's name as the function argument. As for the arguments, they have to be in the same order as in the SC, including when calling an endpoint that has a variable number of arguments. Now, for the sake of example, we provided the arguments in multiple ways. It is up to each developer to choose the layout he prefers, but a few points need to be underlined:
 - Most of the supplied arguments need to be in the hex format (0x...).
 - When converting a value to a hex format, we need to make sure it has an even number of characters. If not, we need to provide an extra 0 in order to make it even. (e.g. The number 911 -> In hex encoding, it is equal to: 38f -> So we need to provide the argument 0x038f).
-- Arguments can be provided both as a fixed arguments (usually for unchangeable arguments like the contract's address or a fixed number) or can be provided as an input in the terminal, when interacting with the snippet.
+- Arguments can be provided both as a fixed arguments (usually for unchangeable arguments like the contract's address or a fixed number) or can be provided as an input in the terminal, when interacting with the snippet (mostly used for arguments that change often like numbers).
 
-In our example we provide the address argument as a fixed argument. We then convert it to hex format (as it is in the bech32 format by default) and only after that we pass it as a parameter. As for the BigUint parameters, we provide the first two parameters directly in the terminal and the last one as a fixed argument, hex encoded. The important thing to note here is that when we provide numeric arguments directly in the terminal, they will automatically be hex encoded, so we can write them directly, without any specific encoding.
+In our example we provide the address argument as a fixed argument. We then convert it to hex format (as it is in the bech32 format by default) and only after that we pass it as a parameter. As for the BigUint parameters, we provide the first two parameters directly in the terminal and the last one as a fixed argument, hex encoded.
+
+:::tip
+Erdpy facilitates us with some encoding conventions, including:
+- We can use **str:** for encoding strings. For example: str:MYTOKEN-123456
+- Blockchain addresses that start with **erd1** are automatically encoded, so there is no need to further hex encode them
+- The values **true** or **false** are automatically converted to **boolean** values
+- Values that are identified as **numbers** are hex encoded by default
+- Arguments like **0x...** are left unchanged, as they are interpreted as already encoded hex values
+:::
+
+So, in case of our **myNonPayableEndpoint** interaction, we can write it like so:
+
+```
+###PARAMS
+#1 - FirstBigUintArgument
+#2 - SecondBigUintArgument
+
+ADDRESS_ARGUMENT="erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3"
+THIRD_BIGUINT_ARGUMENT=1000000 
+myNonPayableEndpoint() {
+    erdpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
+        --pem=${WALLET_PEM} \
+        --gas-limit=6000000 \
+        --proxy=${PROXY} --chain=${CHAIN_ID} \
+        --function="myNonPayableEndpoint" \
+        --arguments $address_argument $1 $2 ${THIRD_BIGUINT_ARGUMENT}\
+        --send || return
+}
+```
+
 A call example for this endpoint would look like:
 ```
 myNonPayableEndpoint 10000 100000
+```
+This would translate in (using unencoded values for easier reading): 
+```
+myNonPayableEndpoint erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3 10000 100000 1000000
 ```
 
 :::warning
@@ -111,14 +147,15 @@ Now let's look at the following example, where we want to call a payable endpoin
 
 ```
 myPayableEndpoint() {
-    method_name="0x$(echo -n 'myPayableEndpoint' | xxd -p -u | tr -d '\n')"
-    my_token="0x$(echo -n $1 | xxd -p -u | tr -d '\n')"
+    method_name=str:myPayableEndpoint
+    my_token=str:$1
+    token_amount=$2
     erdpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
         --pem=${WALLET_PEM} \
         --gas-limit=6000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
         --function="ESDTTransfer" \
-        --arguments $my_token $2 $method_name\
+        --arguments $my_token $token_amount $method_name\
         --send || return
 }
 ```
