@@ -12,7 +12,7 @@ As an alternative to the recommended installation flow, one could choose to run 
 docker pull elrondnetwork/elrond-go-node:latest
 ```
 
-- Note: *You can pull from any Elrond network (mainnet, devnet, or testnet) of your choice.* *Example,* `docker pull elrondnetwork/elrond-go-node-testnet:latest`  
+- Note: *You can pull from either the devnet, or testnet network of your choice.* *Example,* `docker pull elrondnetwork/elrond-go-node-testnet:latest`  
 
 Let’s proceed!
 
