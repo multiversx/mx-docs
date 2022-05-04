@@ -247,7 +247,7 @@ myMultiESDTNFTPayableEndpoint() {
         --pem=${WALLET_PEM} \
         --gas-limit=100000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
-        --function="multiESDTNFTTransfer" \
+        --function="MultiESDTNFTTransfer" \
         --arguments $destination_address 
                     $number_of_tokens 
                     $first_token 
