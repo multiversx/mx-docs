@@ -148,7 +148,7 @@ fn my_payable_endpoint(
 You don't have to do any manual work for the payment args, you just have to pass them as simple arguments:
 ```rust
 #[endpoint]
-fn caller_endpoint(&self, token: TokenIdentifier, nonce: u64 amount: BigUint) {
+fn caller_endpoint(&self, token: TokenIdentifier, nonce: u64, amount: BigUint) {
 	// other code here
 
 	self.contract_proxy(callee_sc_address)

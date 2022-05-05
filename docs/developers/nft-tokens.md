@@ -247,8 +247,6 @@ For SFT:
 * ESDTRoleNFTCreate : this role allows one to create a new SFT
 * ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
 * ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
-* ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific SFT
-* ESDTRoleNFTAddURI : this role allows one add URIs for a specific SFT
 * ESDTTransferRole : this role enables transfer only to specified addresses. The owner of the SFT and the address with the ESDTTransferRole should be located on the same shard. The addresses with the transfer role can transfer anywhere.
 
 
