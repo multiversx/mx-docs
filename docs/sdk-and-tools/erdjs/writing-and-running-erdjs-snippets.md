@@ -3,11 +3,17 @@ id: writing-and-testing-erdjs-interactions
 title: Writing and testing interactions
 ---
 
-:::important
+:::note
 This tutorial makes use of `erdjs 10` and `erdjs-snippets 3`.
 :::
 
-This tutorial will guide you through the process of writing smart contract interactions using **erdjs** and run (test) them as [**mocha**](https://mochajs.org)-based **erdjs snippets**.
+This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **erdjs** and **erdjs snippets**.
+
+:::important
+Everything in this tutorial is meant for **testing & auditing Smart Contracts**.
+
+**Do not reference `erdjs-snippets` library as a regular dependency (i.e. `dependencies` section) of your Node / dApp project. Only reference it as a development dependency (i.e. `devDependencies` section).**
+:::
 
 ## IDE Prerequisites
 
@@ -167,12 +173,13 @@ The most important dependency of a snippet is the **contract interactor**, which
 
 In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain almost production-ready code to call and query your contracts, code which is mostly copy-paste-able into your dApps.
 
-Generally speaking, an interactor component depends on the following objects (defined by `erdjs` or by satellites of `erdjs`):
+Generally speaking, an interactor component (class) depends on the following objects (defined by `erdjs` or by satellites of `erdjs`):
  - a `SmartContract` (composed with its `SmartContractAbi`)
- - a `NetworkProvider`, to broadcast / retrieve transactions and perform contract queries
- - a snapshot of the `NetworkConfig`
+ - an `INetworkProvider`, to broadcast / retrieve transactions and perform contract queries
+ - a snapshot of the `INetworkConfig`
  - a `TransactionWatcher`, to properly detect the completion of a transaction
  - a `ResultsParser`, to parse the outcome of contract queries or contract interactions
+ - optionally, an `IAudit` object to record certain events within the test session
 
 ### Creation of an interactor
 
@@ -217,6 +224,45 @@ const transactionWatcher = new TransactionWatcher(networkProvider);
 const resultsParser = new ResultsParser();
 ```
 
+In the end, the code that creates an interactor looks as follows:
+
+```
+export async function createLotteryInteractor(session: ITestSession, contractAddress?: IAddress): Promise<LotteryInteractor> {
+    const registry = await loadAbiRegistry(PathToAbi);
+    const abi = new SmartContractAbi(registry);
+    const contract = new SmartContract({ address: contractAddress, abi: abi });
+    const networkProvider = session.networkProvider;
+    const networkConfig = session.getNetworkConfig();
+    const audit = session.audit;
+    const interactor = new LotteryInteractor(contract, networkProvider, networkConfig, audit);
+    return interactor;
+}
+```
+
+Where the class `LotteryInteractor` is defined like this:
+
+```
+export class LotteryInteractor {
+    private readonly contract: SmartContract;
+    private readonly networkProvider: INetworkProvider;
+    private readonly networkConfig: INetworkConfig;
+    private readonly transactionWatcher: TransactionWatcher;
+    private readonly resultsParser: ResultsParser;
+    private readonly audit: IAudit;
+
+    constructor(contract: SmartContract, networkProvider: INetworkProvider, networkConfig: INetworkConfig, audit: IAudit) {
+        this.contract = contract;
+        this.networkProvider = networkProvider;
+        this.networkConfig = networkConfig;
+        this.transactionWatcher = new TransactionWatcher(networkProvider);
+        this.resultsParser = new ResultsParser();
+        this.audit = audit;
+    }
+
+    // ... methods of the interactor (see next section)
+}
+```
+
 ### Methods of the interactor
 
 Generally speaking, when writing an interactor, you'd like to have a function (method) for each endpoint of the smart contract. While this is straightforward when writing query functions against `readonly` / `get` endpoints, for `executable` / `do` endpoints you need to build, **sign** (using a signing / wallet provider) and broadcast a transaction, then optionally await for its execution and parse the results (if any).
@@ -225,33 +271,37 @@ The interrupted nature of the flow for calling `executable` endpoints and the ev
 
 ### Writing an interactor method for a contract query
 
+:::important
+Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
+:::
+
 In order to implement a contract query as a method of your interactor, you first need to the prepare the `Interaction` object:
 
 ```
 // Example 1 (adder contract)
-let interaction = <Interaction>this.contract.methods.getSum();
+const interaction = <Interaction>this.contract.methods.getSum();
 
 // Example 2 - automatic type inference of parameters (lottery contract)
-let interaction = <Interaction>this.contract.methods.status(["my-lottery"]);
+const interaction = <Interaction>this.contract.methods.status(["my-lottery"]);
 
 // Example 2 - explicit types (lottery contract)
-let interaction = <Interaction>this.contract.methodsExplicit.status([
+const interaction = <Interaction>this.contract.methodsExplicit.status([
     BytesValue.fromUTF8("my-lottery")
 ]);
 
 // Example 3 - automatic type inference of parameters (lottery contract)
-let interaction = <Interaction>this.contract.methodsAuto.getLotteryWhitelist(["my-lottery"]);
+const interaction = <Interaction>this.contract.methodsAuto.getLotteryWhitelist(["my-lottery"]);
 
 // Example 3 - explicit types (lottery contract)
-let interaction = <Interaction>this.contract.methodsExplicit.getLotteryWhitelist([
+const interaction = <Interaction>this.contract.methodsExplicit.getLotteryWhitelist([
     BytesValue.fromUTF8("my-lottery")
 ]);
 
 // Example 4 - automatic type inference of parameters (lottery contract)
-let interaction = <Interaction>this.contract.methods.getLotteryInfo(["my-lottery"]);
+const interaction = <Interaction>this.contract.methods.getLotteryInfo(["my-lottery"]);
 
 // Example 4 - explicit types (lottery contract)
-let interaction = <Interaction>this.contract.methodsExplicit.getLotteryInfo([
+const interaction = <Interaction>this.contract.methodsExplicit.getLotteryInfo([
     BytesValue.fromUTF8("my-lottery")
 ]);
 ```
@@ -274,35 +324,35 @@ Then parse the results:
 
 ```
 // Example 1
-let { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
 // Example 2
-let { firstValue, secondValue, thirdValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const { firstValue, secondValue, thirdValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
 // Example 3
-let { values, returnCode } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const { values, returnCode } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
 // Example 4
-let bundle = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const bundle = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 ```
 
 In the end, you would (optionally) cast, then interpret the values in the bundle (when necessary), before returning them to the caller of the interactor function (method):
 
 ```
 // Example 1
-let firstValueAsBigUInt = <BigUIntValue>firstValue;
+const firstValueAsBigUInt = <BigUIntValue>firstValue;
 return firstValueAsBigUInt.valueOf().toNumber();
 
 // Example 2
-let firstValueAsEnum = <EnumValue>firstValue;
+const firstValueAsEnum = <EnumValue>firstValue;
 return firstValueAsEnum.name;
 
 // Example 3
-let firstValueAsVariadic = <VariadicValue>firstValue;
+const firstValueAsVariadic = <VariadicValue>firstValue;
 return firstValueAsVariadic.valueOf();
 
 // Example 4 (not calling valueOf())
-let firstValueAsStruct = <Struct>firstValue;
+const firstValueAsStruct = <Struct>firstValue;
 return firstValueAsStruct;
 ```
 
@@ -314,15 +364,15 @@ Getting the status of a lottery **(enum)**:
 // Interactor method:
 async getStatus(lotteryName: string): Promise<string> {
     // Prepare the interaction
-    let interaction = <Interaction>this.contract.methods.status([lotteryName]);
-    let query = interaction.check().buildQuery();
+    const interaction = <Interaction>this.contract.methods.status([lotteryName]);
+    const query = interaction.check().buildQuery();
 
     // Let's run the query and parse the results:
-    let queryResponse = await this.networkProvider.queryContract(query);
-    let { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
     // Now let's interpret the results.
-    let firstValueAsEnum = <EnumValue>firstValue;
+    const firstValueAsEnum = <EnumValue>firstValue;
     return firstValueAsEnum.name;
 }
 
@@ -337,20 +387,20 @@ Getting the lottery info **(struct)**:
 // Interactor method:
 async getLotteryInfo(lotteryName: string): Promise<Struct> {
     // Prepare the interaction
-    let interaction = <Interaction>this.contract.methods.getLotteryInfo([lotteryName]);
-    let query = interaction.check().buildQuery();
+    const interaction = <Interaction>this.contract.methods.getLotteryInfo([lotteryName]);
+    const query = interaction.check().buildQuery();
 
     // Let's run the query and parse the results:
-    let queryResponse = await this.networkProvider.queryContract(query);
-    let { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
 
     // Now let's interpret the results.
-    let firstValueAsStruct = <Struct>firstValue;
+    const firstValueAsStruct = <Struct>firstValue;
     return firstValueAsStruct;
 }
 
 // Caller:
-let lotteryInfo: Struct = await interactor.getLotteryInfo("my-lottery");
+const lotteryInfo: Struct = await interactor.getLotteryInfo("my-lottery");
 console.log(lotteryInfo.valueOf());
 console.log(lotteryInfo.getFieldValue("token_identifier"));
 console.log(lotteryInfo.getFieldValue("prize_pool"));
@@ -358,18 +408,22 @@ console.log(lotteryInfo.getFieldValue("prize_pool"));
 
 ### Writing an interactor method for a contract call
 
+:::important
+Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
+:::
+
 In order to implement a contract call as a method of your interactor, you first need to the prepare the `Interaction` object:
 
 ```
 // Example 1 (adder)
-let interaction = <Interaction>this.contract.methods
+const interaction = <Interaction>this.contract.methods
     .add([new BigUIntValue(value)])
     .withGasLimit(new GasLimit(10000000))
     .withNonce(caller.account.getNonceThenIncrement());
 ```
 ```
 // Example 2 - automatic type inference (lottery)
-let interaction = <Interaction>this.contract.methods
+const interaction = <Interaction>this.contract.methods
     .start([
         lotteryName,
         token_identifier,
@@ -386,7 +440,7 @@ let interaction = <Interaction>this.contract.methods
 ```
 ```
 // Example 2 - explicit types (lottery)
-let interaction = <Interaction>this.contract.methodsExplicit
+const interaction = <Interaction>this.contract.methodsExplicit
     .start([
         BytesValue.fromUTF8(lotteryName),
         new TokenIdentifierValue(token_identifier),
@@ -403,7 +457,7 @@ let interaction = <Interaction>this.contract.methodsExplicit
 ```
 ```
 // Example 3 - automatic type inference (lottery)
-let interaction = <Interaction>this.contract.methods
+const interaction = <Interaction>this.contract.methods
     .buy_ticket([lotteryName])
     .withGasLimit(new GasLimit(50000000))
     .withSingleESDTTransfer(amount)
@@ -434,20 +488,20 @@ Now let's broadcast the transaction and await its completion:
 
 ```
 await this.networkProvider.sendTransaction(transaction);
-let transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
+const transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
 ```
 
 In the end, we parse the results into an object called `TypedOutcomeBundle` (just like for query responses):
 
 ```
 // Example 1
-let { returnCode } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
+const { returnCode } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 
 // Example 2
-let bundle = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
+const bundle = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 
 // Example 3
-let { returnCode, firstValue } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
+const { returnCode, firstValue } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
 ```
 
 Then, for interpreting the results, follow the same guidelines as for query results (section above).
