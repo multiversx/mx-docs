@@ -4,7 +4,7 @@ title: Writing and testing interactions
 ---
 
 :::important
-This tutorial makes use of `erdjs 10`.
+This tutorial makes use of `erdjs 10` and `erdjs-snippets 3`.
 :::
 
 This tutorial will guide you through the process of writing smart contract interactions using **erdjs** and run (test) them as [**mocha**](https://mochajs.org)-based **erdjs snippets**.
@@ -60,7 +60,7 @@ An erdjs **snippet** is, actually, a file that defines a suite of _mocha_ tests,
 When executing one or more steps, they execute within a **test session**, selected by the following instruction of the snippet:
 
 ```
-session = await TestSession.loadOnSuite("nameOfMySession", suite);
+session = await TestSession.load("nameOfMySession", __dirname);
 ```
 
 ### Session configuration
@@ -71,7 +71,8 @@ The test session is configured by means of a `nameOfMySession.session.json` file
 {
     "networkProvider": {
         "type": "ProxyNetworkProvider",
-        "url": "https://devnet-gateway.elrond.com"
+        "url": "https://devnet-gateway.elrond.com",
+        "timeout": 5000
     },
     "users": {
         "individuals": [
@@ -100,7 +101,8 @@ Another example, using the `ApiNetworkProvider` instead of `ProxyNetworkProvider
 {
     "networkProvider": {
         "type": "ApiNetworkProvider",
-        "url": "https://devnet-api.elrond.com"
+        "url": "https://devnet-api.elrond.com",
+        "timeout": 5000
     },
     "users": {
         ...
@@ -123,17 +125,17 @@ await session.saveAddress("myContractAddress", addressOfMyContract);
 ...
 await session.saveToken("lotteryToken", myLotteryToken);
 ...
-await session.saveBreadcrumb("someArbitraryData", { someValue: 42 });
+await session.saveBreadcrumb({ name: "someArbitraryData", value: { someValue: 42 } });
 ```
 
 Then, in a subsequent step, you can load the previously stored contract address and token:
 
 ```
-let myLotteryToken = await session.loadToken("lotteryToken");
+const myLotteryToken = await session.loadToken("lotteryToken");
 ...
-let addressOfMyContract = await session.loadAddress("myContractAddress");
+const addressOfMyContract = await session.loadAddress("myContractAddress");
 ...
-let someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
+const someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
 ```
 
 ### Test users
@@ -141,9 +143,9 @@ let someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
 A test session provides a set of test users to engage in smart contract interactions. Given the session configuration provided as an example above, one can access the test users as follows:
 
 ```
-let alice: ITestUser = session.users.getUser("alice");
-let bob: ITestUser = session.users.getUser("bob");
-let friends: ITestUser[] = session.users.getGroup("friends");
+const alice: ITestUser = session.users.getUser("alice");
+const bob: ITestUser = session.users.getUser("bob");
+const friends: ITestUser[] = session.users.getGroup("friends");
 ```
 
 ### Assertions
@@ -179,16 +181,18 @@ Let's see how to construct an interactor (we use the lottery contract as an exam
 First, you have to load the ABI:
 
 ```
-let registry = await loadAbiRegistry(PathToAbi);
-let abi = new SmartContractAbi(registry, ["Lottery"]);
+const registry = await loadAbiRegistry(PathToAbi);
+const abi = new SmartContractAbi(registry);
 ```
 
-**TBD: REFERENCE TO COOKBOOK (page).**
+:::important
+Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
+:::
 
 Then, create a `SmartContract` object as follows:
 
 ```
-let contract = new SmartContract({ address: address, abi: abi });
+const contract = new SmartContract({ address: address, abi: abi });
 ```
 
 If the address of the contract is yet unknown (e.g. prior deployment), then omit the address parameter above.
@@ -196,21 +200,21 @@ If the address of the contract is yet unknown (e.g. prior deployment), then omit
 Afterwards, hold a reference to the `NetworkProvider` and the `NetworkConfig` snapshot provided by the test session:
 
 ```
-let networkProvider = session.networkProvider;
-let networkConfig = session.getNetworkConfig();
+const networkProvider = session.networkProvider;
+const networkConfig = session.getNetworkConfig();
 ```
 
 Finally, create the interactor:
 
 ```
-let interactor = new LotteryInteractor(contract, networkProvider, networkConfig);
+const interactor = new LotteryInteractor(contract, networkProvider, networkConfig);
 ```
 
 In our examples, the `TransactionWatcher` and the `ResultsParser` are usually instantiated by the interactor class (e.g. in the constructor) instead of being provided as a dependency. This should not be considered a guideline though. Strive to apply the most appropriate software design to your dApp. Here is how you would create the transaction watcher and the results parser:
 
 ```
-var transactionWatcher = new TransactionWatcher(networkProvider);
-var resultsParser = new ResultsParser();
+const transactionWatcher = new TransactionWatcher(networkProvider);
+const resultsParser = new ResultsParser();
 ```
 
 ### Methods of the interactor
