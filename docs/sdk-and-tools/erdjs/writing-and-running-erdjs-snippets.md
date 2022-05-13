@@ -121,7 +121,15 @@ Another example, using the `ApiNetworkProvider` instead of `ProxyNetworkProvider
 One of the main responsibilities of the test session object is to hold state among the steps (until it is explicitly destroyed). Under the hood, the state is saved in a lightweight **sqlite database** located near the `nameOfMySession.session.json` file.
 
 :::note
-Currently, the only way to destroy a session is to delete it's `*.sqlite` file. However, in practice, sessions can be reused indefinitely.
+One way to destroy the session is to delete it's `*.sqlite` file. Another way is to define a special step in your snippets, as follows:
+
+```
+it("destroy session", async function () {
+    await session.destroy();
+});
+```
+
+However, in practice, sessions can be reused indefinitely.
 :::
 
 For example, in an early step you can save the address of a deployed contract or the identifier of an issued token:
@@ -505,3 +513,62 @@ const { returnCode, firstValue } = this.resultsParser.parseOutcome(transactionOn
 ```
 
 Then, for interpreting the results, follow the same guidelines as for query results (section above).
+
+### Writing events in the audit log
+
+TBD
+
+### Generate reports
+
+TBD
+
+### Generate secret keys for test users
+
+TBD
+
+```
+{
+    "individuals": [
+        {
+            "shard": 0,
+            "pem": "~/test-wallets/zero.pem"
+        },
+        {
+            "shard": 1,
+            "pem": "~/test-wallets/one.pem"
+        },
+        {
+            "shard": 2,
+            "pem": "~/test-wallets/two.pem"
+        }
+    ],
+    "groups": [
+        {
+            "size": 3,
+            "shard": 0,
+            "pem": "~/test-wallets/manyZero.pem"
+        },
+        {
+            "size": 3,
+            "shard": 1,
+            "pem": "~/test-wallets/manyOne.pem"
+        },
+        {
+            "size": 3,
+            "shard": 2,
+            "pem": "~/test-wallets/manyTwo.pem"
+        }
+    ]
+}
+```
+
+```
+describe("user operations snippet", async function () {
+    it("generate keys", async function () {
+        this.timeout(OneMinuteInMilliseconds);
+
+        const config = readJson<ISecretKeysGeneratorConfig>("secretKeysGenerator.json");
+        await generateSecretKeys(config);
+    });
+});
+```
