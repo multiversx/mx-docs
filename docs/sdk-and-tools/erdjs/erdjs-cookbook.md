@@ -141,7 +141,7 @@ let tx = new Transaction({
 ### Broadcast using a network provider
 
 ```
-let txHash = await networkProvider.send(tx);
+let txHash = await networkProvider.sendTransaction(tx);
 ```
 
 Note that the transaction needs to be signed before broadcasting it. Signing can be achieved using a signing provider.
