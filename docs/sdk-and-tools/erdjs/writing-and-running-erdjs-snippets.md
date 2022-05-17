@@ -4,15 +4,13 @@ title: Writing and testing interactions
 ---
 
 :::note
-This tutorial makes use of `erdjs 10` and `erdjs-snippets 3`.
+This tutorial makes use of `erdjs 10` and `erdjs-snippets 3`. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
 :::
 
 This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **erdjs** and **erdjs snippets**.
 
 :::important
-Everything in this tutorial is meant for **testing & auditing Smart Contracts**.
-
-**Do not reference `erdjs-snippets` library as a regular dependency (i.e. `dependencies` section) of your Node / dApp project. Only reference it as a development dependency (i.e. `devDependencies` section).**
+**Do not reference** `erdjs-snippets` library as a **regular** dependency (i.e. `dependencies` section) of your project (Node / dApp). Only reference it as a **development** dependency (i.e. `devDependencies` section).
 :::
 
 ## IDE Prerequisites
@@ -135,9 +133,9 @@ However, in practice, sessions can be reused indefinitely.
 For example, in an early step you can save the address of a deployed contract or the identifier of an issued token:
 
 ```
-await session.saveAddress("myContractAddress", addressOfMyContract);
+await session.saveAddress({ name: "myContractAddress", address: addressOfMyContract });
 ...
-await session.saveToken("lotteryToken", myLotteryToken);
+await session.saveToken({ name: "lotteryToken", token: myLotteryToken });
 ...
 await session.saveBreadcrumb({ name: "someArbitraryData", value: { someValue: 42 } });
 ```
@@ -516,15 +514,68 @@ Then, for interpreting the results, follow the same guidelines as for query resu
 
 ### Writing events in the audit log
 
-TBD
+At some point within the _*.spec.ts_ files or  _interactor_ objects, it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
+
+The recorded events will be listed in the generated report(s).
+
+For example, in the _interactor_:
+
+```
+const transactionHash = await this.networkProvider.sendTransaction(transaction);
+await this.audit.onTransactionSent({ action: "add", args: [value], transactionHash: transactionHash });
+
+let transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
+await this.audit.onTransactionCompleted({ transactionHash: transactionHash, transaction: transactionOnNetwork });
+```
+
+For example, in the _*.spec.ts_ file:
+
+```
+const sumBefore = await interactor.getSum();
+const snapshotBefore = await session.audit.onSnapshot({ state: { sum: sumBefore } });
+
+const returnCode = await interactor.add(owner, 3);
+await session.audit.onContractOutcome({ returnCode });
+
+const sumAfter = await interactor.getSum();
+await session.audit.onSnapshot({ state: { sum: sumBefore }, comparableTo: snapshotBefore });
+```
+
+Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated report will include a difference between the two snapshots in question (**this feature isn't available as of `erdjs-snippets 3.0.0`**).
 
 ### Generate reports
 
-TBD
+:::important
+As of `erdjs-snippets 3.0.0`, report generation is experimental. It will improve over time.
+:::
+
+`erdjs-snippets` can generate a HTML report based on the data and events accumulated within a test session.
+
+In order to configure the reporting feature, define an additional entry in the session configuration file:
+
+```
+"reporting": {
+    "explorerUrl": "https://devnet-explorer.elrond.com",
+    "apiUrl": "https://devnet-api.elrond.com",
+    "outputFolder": "~/reports"
+}
+```
+
+Then, in order to generate a report, add an extra step in the _*.spec.ts_ file:
+
+```
+it("generate report", async function () {
+    await session.generateReport();
+});
+```
+
+Upon running the step, the `outputFolder` should contain the generated report(s).
 
 ### Generate secret keys for test users
 
-TBD
+`erdjs-snippets` allows you to generate test users (secrey keys, as well. On this matter, you first have to provide a configuration file, which specifies ...
+
+For example, `myGenerator.json`:
 
 ```
 {
@@ -562,13 +613,17 @@ TBD
 }
 ```
 
+Then, in order to actually generate the test users (secret keys), add a step in an arbitrary `*.spec.ts` file and run it:
+
 ```
 describe("user operations snippet", async function () {
     it("generate keys", async function () {
         this.timeout(OneMinuteInMilliseconds);
 
-        const config = readJson<ISecretKeysGeneratorConfig>("secretKeysGenerator.json");
+        const config = readJson<ISecretKeysGeneratorConfig>("myGenerator.json");
         await generateSecretKeys(config);
     });
 });
 ```
+
+The resulted keys can be used as seen in the section [session configuration](/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions#session-configuration).
