@@ -130,7 +130,7 @@ it("destroy session", async function () {
 However, in practice, sessions can be reused indefinitely.
 :::
 
-For example, in an early step you can save the address of a deployed contract or the identifier of an issued token:
+For example, in an early step you can save the address of a deployed contract, the identifier of an issued token or some arbitrary data:
 
 ```
 await session.saveAddress({ name: "myContractAddress", address: addressOfMyContract });
@@ -140,7 +140,7 @@ await session.saveToken({ name: "lotteryToken", token: myLotteryToken });
 await session.saveBreadcrumb({ name: "someArbitraryData", value: { someValue: 42 } });
 ```
 
-Then, in a subsequent step, you can load the previously stored contract address and token:
+Then, in a subsequent step, you can load the previously stored contract address, token and arbitrary data:
 
 ```
 const myLotteryToken = await session.loadToken("lotteryToken");
@@ -148,6 +148,17 @@ const myLotteryToken = await session.loadToken("lotteryToken");
 const addressOfMyContract = await session.loadAddress("myContractAddress");
 ...
 const someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
+```
+
+### Assertions
+
+It's recommended to make use of _assert_ statements, which makes the snippets more valuable and meaningful. For example:
+
+```
+assert.isTrue(returnCode.isSuccess());
+...
+assert.equal(lotteryInfo.getFieldValue("token_identifier"), "myToken");
+assert.equal(lotteryStatus, "someStatus");
 ```
 
 ### Test users
@@ -160,16 +171,121 @@ const bob: ITestUser = session.users.getUser("bob");
 const friends: ITestUser[] = session.users.getGroup("friends");
 ```
 
-### Assertions
+### Generate secret keys for test users
 
-Don't forget to use _assert_ statements, which makes the snippets more valuable and meaningful. For example:
+`erdjs-snippets` allows you to generate test users (secrey keys), as well. On this matter, you first have to provide a configuration file, which specifies some parameters for the generation process.
+
+For example, let's create the file `myGenerator.json`:
 
 ```
-assert.isTrue(returnCode.isSuccess());
-...
-assert.equal(lotteryInfo.getFieldValue("token_identifier"), "myToken");
-assert.equal(lotteryStatus, "someStatus");
+{
+    "individuals": [
+        {
+            "shard": 0,
+            "pem": "~/test-wallets/zero.pem"
+        },
+        {
+            "shard": 1,
+            "pem": "~/test-wallets/one.pem"
+        },
+        {
+            "shard": 2,
+            "pem": "~/test-wallets/two.pem"
+        }
+    ],
+    "groups": [
+        {
+            "size": 3,
+            "shard": 0,
+            "pem": "~/test-wallets/manyZero.pem"
+        },
+        {
+            "size": 3,
+            "shard": 1,
+            "pem": "~/test-wallets/manyOne.pem"
+        },
+        {
+            "size": 3,
+            "shard": 2,
+            "pem": "~/test-wallets/manyTwo.pem"
+        }
+    ]
+}
 ```
+
+Then, in order to actually generate the test users (secret keys), add a step in an arbitrary snippet file and run it:
+
+```
+describe("user operations snippet", async function () {
+    it("generate keys", async function () {
+        this.timeout(OneMinuteInMilliseconds);
+
+        const config = readJson<ISecretKeysGeneratorConfig>("myGenerator.json");
+        await generateSecretKeys(config);
+    });
+});
+```
+
+The resulted keys can be used as seen in the section [session configuration](/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions#session-configuration).
+
+### Writing events in the audit log
+
+At some point within the snippets or  _interactor_ objects (more on that later), it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or take account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
+
+The recorded events will be listed in the session report(s) - more on that later.
+
+For example, in the _interactor_:
+
+```
+const transactionHash = await this.networkProvider.sendTransaction(transaction);
+await this.audit.onTransactionSent({ action: "add", args: [value], transactionHash: transactionHash });
+
+const transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
+await this.audit.onTransactionCompleted({ transactionHash: transactionHash, transaction: transactionOnNetwork });
+```
+
+For example, in the snippet file:
+
+```
+const sumBefore = await interactor.getSum();
+const snapshotBefore = await session.audit.onSnapshot({ state: { sum: sumBefore } });
+
+const returnCode = await interactor.add(owner, 3);
+await session.audit.onContractOutcome({ returnCode });
+
+const sumAfter = await interactor.getSum();
+await session.audit.onSnapshot({ state: { sum: sumBefore }, comparableTo: snapshotBefore });
+```
+
+Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated session report will include a difference between the two snapshots in question (**this feature isn't available as of `erdjs-snippets 3.0.0`**).
+
+### Generate session reports
+
+:::important
+As of `erdjs-snippets 3.0.0`, report generation is experimental. It will improve over time.
+:::
+
+`erdjs-snippets` can generate a HTML report based on the data and events accumulated within a test session.
+
+In order to configure the reporting feature, define an additional entry in the session configuration file:
+
+```
+"reporting": {
+    "explorerUrl": "https://devnet-explorer.elrond.com",
+    "apiUrl": "https://devnet-api.elrond.com",
+    "outputFolder": "~/reports"
+}
+```
+
+Then, in order to generate a report, add an extra snippet step:
+
+```
+it("generate report", async function () {
+    await session.generateReport();
+});
+```
+
+Upon running the step, the `outputFolder` should contain the generated session report(s).
 
 ### Dependence on interactors
 
@@ -177,7 +293,7 @@ The most important dependency of a snippet is the **contract interactor**, which
 
 ## Anatomy of an interactor
 
-In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain almost production-ready code to call and query your contracts, code which is mostly copy-paste-able into your dApps.
+In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain _almost_ production-ready code to call and query your contracts, code which is _generally_ copy-paste-able into your dApps.
 
 Generally speaking, an interactor component (class) depends on the following objects (defined by `erdjs` or by satellites of `erdjs`):
  - a `SmartContract` (composed with its `SmartContractAbi`)
@@ -223,7 +339,7 @@ Finally, create the interactor:
 const interactor = new LotteryInteractor(contract, networkProvider, networkConfig);
 ```
 
-In our examples, the `TransactionWatcher` and the `ResultsParser` are usually instantiated by the interactor class (e.g. in the constructor) instead of being provided as a dependency. This should not be considered a guideline though. Strive to apply the most appropriate software design to your dApp. Here is how you would create the transaction watcher and the results parser:
+In our examples, the `TransactionWatcher` and the `ResultsParser` are usually instantiated by the interactor class (e.g. in the constructor) instead of being provided as a dependency. This should not be considered a guideline though. Here is how you would create the transaction watcher and the results parser:
 
 ```
 const transactionWatcher = new TransactionWatcher(networkProvider);
@@ -512,118 +628,37 @@ const { returnCode, firstValue } = this.resultsParser.parseOutcome(transactionOn
 
 Then, for interpreting the results, follow the same guidelines as for query results (section above).
 
-### Writing events in the audit log
-
-At some point within the _*.spec.ts_ files or  _interactor_ objects, it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
-
-The recorded events will be listed in the generated report(s).
-
-For example, in the _interactor_:
+Now let's put the code together and see a full example:
 
 ```
-const transactionHash = await this.networkProvider.sendTransaction(transaction);
-await this.audit.onTransactionSent({ action: "add", args: [value], transactionHash: transactionHash });
+async buyTicket(user: ITestUser, lotteryName: string, amount: TokenPayment): Promise<ReturnCode> {
+    console.log(`LotteryInteractor.buyTicket(): address = ${user.address}, amount = ${amount.toPrettyString()}`);
 
-let transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
-await this.audit.onTransactionCompleted({ transactionHash: transactionHash, transaction: transactionOnNetwork });
-```
+    // Prepare the interaction
+    let interaction = <Interaction>this.contract.methods
+        .buy_ticket([
+            lotteryName
+        ])
+        .withGasLimit(50000000)
+        .withSingleESDTTransfer(amount)
+        .withNonce(user.account.getNonceThenIncrement())
+        .withChainID(this.networkConfig.ChainID);
 
-For example, in the _*.spec.ts_ file:
+    // Let's check the interaction, then build the transaction object.
+    let transaction = interaction.check().buildTransaction();
 
-```
-const sumBefore = await interactor.getSum();
-const snapshotBefore = await session.audit.onSnapshot({ state: { sum: sumBefore } });
+    // Let's sign the transaction. For dApps, use a wallet provider instead.
+    await user.signer.sign(transaction);
 
-const returnCode = await interactor.add(owner, 3);
-await session.audit.onContractOutcome({ returnCode });
+    // Let's broadcast the transaction and await its completion:
+    const transactionHash = await this.networkProvider.sendTransaction(transaction);
+    await this.audit.onTransactionSent({ action: "buyTicket", args: [lotteryName, amount.toPrettyString()], transactionHash: transactionHash });
 
-const sumAfter = await interactor.getSum();
-await session.audit.onSnapshot({ state: { sum: sumBefore }, comparableTo: snapshotBefore });
-```
+    const transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
+    await this.audit.onTransactionCompleted({ transactionHash: transactionHash, transaction: transactionOnNetwork });
 
-Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated report will include a difference between the two snapshots in question (**this feature isn't available as of `erdjs-snippets 3.0.0`**).
-
-### Generate reports
-
-:::important
-As of `erdjs-snippets 3.0.0`, report generation is experimental. It will improve over time.
-:::
-
-`erdjs-snippets` can generate a HTML report based on the data and events accumulated within a test session.
-
-In order to configure the reporting feature, define an additional entry in the session configuration file:
-
-```
-"reporting": {
-    "explorerUrl": "https://devnet-explorer.elrond.com",
-    "apiUrl": "https://devnet-api.elrond.com",
-    "outputFolder": "~/reports"
+    // In the end, parse the results:
+    let { returnCode } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
+    return returnCode;
 }
 ```
-
-Then, in order to generate a report, add an extra step in the _*.spec.ts_ file:
-
-```
-it("generate report", async function () {
-    await session.generateReport();
-});
-```
-
-Upon running the step, the `outputFolder` should contain the generated report(s).
-
-### Generate secret keys for test users
-
-`erdjs-snippets` allows you to generate test users (secrey keys, as well. On this matter, you first have to provide a configuration file, which specifies ...
-
-For example, `myGenerator.json`:
-
-```
-{
-    "individuals": [
-        {
-            "shard": 0,
-            "pem": "~/test-wallets/zero.pem"
-        },
-        {
-            "shard": 1,
-            "pem": "~/test-wallets/one.pem"
-        },
-        {
-            "shard": 2,
-            "pem": "~/test-wallets/two.pem"
-        }
-    ],
-    "groups": [
-        {
-            "size": 3,
-            "shard": 0,
-            "pem": "~/test-wallets/manyZero.pem"
-        },
-        {
-            "size": 3,
-            "shard": 1,
-            "pem": "~/test-wallets/manyOne.pem"
-        },
-        {
-            "size": 3,
-            "shard": 2,
-            "pem": "~/test-wallets/manyTwo.pem"
-        }
-    ]
-}
-```
-
-Then, in order to actually generate the test users (secret keys), add a step in an arbitrary `*.spec.ts` file and run it:
-
-```
-describe("user operations snippet", async function () {
-    it("generate keys", async function () {
-        this.timeout(OneMinuteInMilliseconds);
-
-        const config = readJson<ISecretKeysGeneratorConfig>("myGenerator.json");
-        await generateSecretKeys(config);
-    });
-});
-```
-
-The resulted keys can be used as seen in the section [session configuration](/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions#session-configuration).
