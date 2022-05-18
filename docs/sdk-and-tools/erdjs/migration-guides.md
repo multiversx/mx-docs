@@ -3,13 +3,13 @@ id: erdjs-migration-guides
 title: Migration guides
 ---
 
-This tutorial will guide you through the process of migrating from one major version of **erdjs** to another.
+This tutorial will guide you through the process of migrating from one major version of **erdjs** (or one of its _satellites_) to another.
 
 :::important
 Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
 :::
 
-## Migrate from v9.x to v10 (April of 2022)
+## Migrate **erdjs** from v9.x to v10 (April of 2022)
 
 **erdjs 10** brought a series of breaking changes. Most importantly, the packages **walletcore**, **dapp**, **contractWrappers** and the network providers (`ApiProvider`, `ProxyProvider`) have been extracted to separate repositories - consequently, they are now distributed as separate NPM packages. **erdjs** does not depend anymore on the libraries **fs**, **crypto** and **axios**.
 
@@ -155,3 +155,7 @@ let tx = interaction
     .withChainID("D")
     .buildTransaction();
 ```
+
+## Migrate **erdjs-snippets** from v2.x to v3.x (May of 2022)
+
+In order to migrate from `erdjs-snippets v2.x` to `erdjs-snippets v3.x`, please follow the changes depicted [here](https://github.com/ElrondNetwork/elrond-wasm-rs/pull/712).
