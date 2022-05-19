@@ -5,7 +5,7 @@ title: Elrond Node upgrades
 
 ## **Introduction**
 
-Once a new node's binary is ready to be deployed on one of a network (mainnet, testnet or devnet), nodes operators must 
+Once a new node's binary is ready to be deployed on one of the networks (mainnet, testnet or devnet), nodes operators must 
 perform the upgrade to the newest version. These releases are always announced on Elrond [Validators chat](https://t.me/ElrondValidators) 
 plus via other communication channels, depending on the case. 
 
@@ -16,19 +16,21 @@ Currently, we have the following types of upgrades:
 A. - **all nodes need to upgrade**:  upgrades that involve processing changes with an activation epoch (as explained below) 
 and have to be performed by all nodes operators in order to keep the same view over the network and not cause service disruptions.
 
-B. - **optional upgrades**: upgrades that for example simply add a new Rest API endpoint or improve the trie syncing timing 
+B. - **optional upgrades**: upgrades that, for example, simply add a new Rest API endpoint or improve the trie syncing timing 
 are not critical from a processing point of view, and they are optional. If the nodes operators think the new feature will help them,
 they can proceed with the upgrade without losing the compatibility with the network.
 
 C. - **only validators need to upgrade**: upgrades that, for example, include new features that only trigger validators (ratings changes, 
-transactions selection improvements and so on). Observers (nodes that don't have a stake attached) don't need to perform the upgrade.
+transactions selection improvements and so on). Observers (nodes that don't have a stake attached) don't need to perform the upgrade
+(but can upgrade nonetheless if desired).
 
 ## **Activation epochs**
 
-In order to make the upgrades as smooth as possible and to ensure that each node has the same view over the network, 
-Elrond has a so called *activation epoch* mechanism that allows the node to have both versions of the code (before and 
-after the activation epoch) so that we can maintain the backwards compatibility. The system will behave accordingly to 
-the epoch.
+In order to make the upgrades as smooth as possible and to ensure that each node has the same view over the network at a given moment, 
+Elrond has a so called *activation epoch* mechanism that allows the node to implement both behaviors of the protocol - 
+the old (current) one, and the new one, planned for activation at a specific epoch. This mechanisms ensures that, 
+**until the protocol change becomes active**, nodes with an upgraded codebase / binary remain compatible with nodes that 
+did not perform the upgrade, and consensus is held.
 
 ### **Deterministic time / height for upgrades**
 
@@ -36,7 +38,7 @@ As compared to other protocols that perform upgrades that start at a specific bl
 don't have a specific block height where the new updates become effective, but rather the first block in the 
 activation epoch will make the nodes proceed with the updated versions of the components.
 
-Since the height of the first block in an epoch isn't deterministic (due to possible roll-backs), the Network Height
+Since the height of the first block in an epoch cannot be known in advance (due to possible roll-backs), the network height
 where a feature becomes effective cannot be calculated.
 
 However, the time when a new feature of a bugfix becomes effective can be calculated, as epochs have fixed lengths in rounds.
@@ -54,7 +56,7 @@ will allow them to receive EGLD or other tokens from other smart contracts.
 will be returned.
 - at epoch `600`, we release a new node binary that contains the `PayableBySC` metadata that will become active starting with epoch `613`.
 - all nodes operators perform the upgrade.
-- when epoch `613` begins, that metadata will be activated and smart contracts can now have that flag.
+- when epoch `613` begins, the new feature activates and the new metadata is recognized and accepted.
 - if one wants to issue a smart contract that is `PayableBySC`, it will work.
 
 - nodes that didn't perform the upgrade will produce a different output of the transaction (as compared to the majority)
@@ -67,7 +69,7 @@ it will behave this way:
 as `invalid metadata`
 - for transactions in epochs newer than `613` it will process the new metadata.
 
-|                 | Before activation epoch | After activation epoch |
+|                 | Epoch < 613             | Epoch >= 613           |
 | --------------- | ----------------------- | ---------------------- |
 | IsPayableBySC   | `invalid metadata`      |   `successful`         |
 
