@@ -39,8 +39,9 @@ activation epoch will make the nodes proceed with the updated versions of the co
 Since the height of the first block in an epoch isn't deterministic (due to possible roll-backs), the Network Height
 where a feature becomes effective cannot be calculated.
 
-However, the time when a new feature of a bugfix becomes effective is deterministic, as epochs have fixed lengths in rounds.
-Currently, Elrond Mainnet has epochs of `14,400` rounds and a round is `6 sec`. This results in a `24h` epoch.
+However, the time when a new feature of a bugfix becomes effective can be calculated, as epochs have fixed lengths in rounds.
+Currently, Elrond Mainnet has epochs of `14,400` rounds and a round is `6 sec`. This results in a `24h` epoch. However,
+there can delays of a few rounds, due to roll-backs.
 
 ### *Activation epoch example*
 
@@ -51,13 +52,13 @@ will allow them to receive EGLD or other tokens from other smart contracts.
 - the Elrond Mainnet is at epoch `590`.
 - currently, the node binary doesn't know about the `PayableBySC` metadata so if one wants to try it, an error like `invalid metadata` 
 will be returned.
-- at epoch `600`, we release a new node binary that contains the `PayableBySC` metadata that will become activate starting with epoch `613`.
+- at epoch `600`, we release a new node binary that contains the `PayableBySC` metadata that will become active starting with epoch `613`.
 - all nodes operators perform the upgrade.
 - when epoch `613` begins, that metadata will be activated and smart contracts can now have that flag.
 - if one wants to issue a smart contract that is `PayableBySC`, it will work.
 
 - nodes that didn't perform the upgrade will produce a different output of the transaction (as compared to the majority)
-and won't be able to advance in the consensus.
+and won't be able to keep up with the rest of the chain.
 
 *Backwards compatibility explained*:  
 If one wants to process all the blocks since genesis (via `full archive` or via `import-db`) with the released binary
