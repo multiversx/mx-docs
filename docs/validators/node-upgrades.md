@@ -41,7 +41,7 @@ where a feature becomes effective cannot be calculated.
 
 However, the time when a new feature of a bugfix becomes effective can be calculated, as epochs have fixed lengths in rounds.
 Currently, Elrond Mainnet has epochs of `14,400` rounds and a round is `6 sec`. This results in a `24h` epoch. However,
-there can delays of a few rounds, due to roll-backs.
+there can be delays of a few rounds, due to rollbacks of the start of epoch metablocks.
 
 ### *Activation epoch example*
 
