@@ -34,22 +34,12 @@
       },
       {
         "type": "subcategory",
-        "label": "Install a Testnet Node",
+        "label": "Install a Testnet/Devnet Node",
         "ids": [
-          "validators/testnet/config-scripts",
-          "validators/testnet/install-update",
-          "validators/testnet/manage-testnet-node",
-          "validators/testnet/use-docker-testnet"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "Install a Devnet Node",
-        "ids": [
-          "validators/devnet/config-scripts-devnet",
-          "validators/devnet/install-update-devnet",
-          "validators/devnet/manage-devnet-node",
-          "validators/devnet/use-docker-devnet"
+          "validators/elrond-go-scripts/config-scripts",
+          "validators/elrond-go-scripts/install-update",
+          "validators/elrond-go-scripts/manage-node",
+          "validators/elrond-go-scripts/use-docker"
         ]
       },
       {
@@ -75,6 +65,7 @@
       "validators/staking/convert-existing-validator-into-staking-pool",
       "validators/staking/merge-validator-delegation-sc",
       "validators/rating",
+      "validators/node-upgrades",
       "validators/redundancy",
       "validators/import-db",
       "validators/node-cli",

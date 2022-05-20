@@ -24,9 +24,9 @@ StakingTransaction {
     Data: "stake" +
           "@0002" +
           "@45e7131ba....294812f004" +
-          "@<BLS-signature-1>"
+          "@67656e65736973"
           "@ecf6fdbf5....70f1d251f7" +
-          "@<BLS-signature-2>"
+          "@67656e65736973"
           "@optional_reward_address_HEX_ENCODED"
 }
 ```
@@ -35,10 +35,10 @@ Because this transaction is a call to the Staking smart contract, it passes info
 
 - `stake` is the name of the smart contract function to be called;
 - `0002` is the number of nodes (unsigned integer, hex-encoded);
-- `45e7131ba....294812f004` is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
-- `<BLS-signature-1>` is the result of signing the address of the sender of the transaction, using the BLS private key of the first node being added to the transaction;
+- 45e7131ba....294812f004 is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
+- `67656e65736973` is a reserved placeholder, required after each BLS key;
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
-- `<BLS-signature-2>` is the result of signing the address of the sender of the transaction, using the BLS private key of the second node being added to the transaction;
+- `67656e65736973` is the aforementioned reserved placeholder, repeated;
 - `optional_reward_address_HEX_ENCODED` is the address of the account which will receive the rewards for the staked nodes (decoded from its usual Bech32 representation into binary, then re-encoded to a hexadecimal string).
 
 # **Changing the reward address**
@@ -93,7 +93,7 @@ Note that:
 
 - `45e7131ba....294812f004` is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
-- no BLS signature is needed, as opposed to the staking transaction (see above)
+- no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
 # **Unbonding**
 
@@ -123,7 +123,7 @@ Note that:
 
 - 45e7131ba....294812f004 is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
-- no BLS signature is needed, as opposed to the staking transaction (see above)
+- no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
 # **Unjailing**
 
@@ -151,7 +151,7 @@ Note that:
 
 - `45e7131ba....294812f004` is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
-- no BLS signature is needed, as opposed to the staking transaction (see above)
+- no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
 # **Claiming unused tokens from Staking**
 
