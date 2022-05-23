@@ -530,8 +530,286 @@ Provides an iterator over all keys, values, and (key, value) pairs respectively.
 
 # Specialized mappers
 
+## FungibleTokenMapper
+
+Stores a token identifier (like a `SingleValueMapper<TokenIdentifier>`) and provides methods for using this token ID directly with the most common API functions. Note that most method calls will fail if the token was not issued previously.
+
+Examples:
+```rust
+fn my_token_id(&self) -> FungibleTokenMapper<Self::Api>
+```
+
+Available methods:
+
+### issue/issue_and_set_all_roles
+```rust
+fn issue(issue_cost: BigUint, token_display_name: ManagedBuffer, token_ticker: ManagedBuffer,initial_supply: BigUint, num_decimals: usize, opt_callback: Option<CallbackClosure<SA>>) -> !
+
+fn issue_and_set_all_roles(issue_cost: BigUint, token_display_name: ManagedBuffer, token_ticker: ManagedBuffer,initial_supply: BigUint, num_decimals: usize, opt_callback: Option<CallbackClosure<SA>>) -> !
+```
+
+Issues a new fungible token. `issue_cost` is 0.05 EGLD (5000000000000000) at the time of writing this, but since this changed in the past, we've let it as an argument it case it changes again in the future.
+
+This mapper allows only one issue, so trying to issue multiple types will signal an error.
+
+`opt_callback` is an optional custom callback you can use for your issue call. We recommed using the default callback. To do so, you need to import elrond-wasm-modules in your Cargo.toml:
+```toml
+[dependencies.elrond-wasm-modules]
+version = "0.31.1"
+```
+
+Note: current released elrond-wasm version at the time of writing this was 0.31.1, upgrade if necessary.
+
+Then you should import the `DefaultCallbacksModule` in your contract:
+```rust
+#[elrond_wasm::contract]
+pub trait MyContract: elrond_wasm_modules::default_issue_callbacks::DefaultIssueCallbacksModule {
+    /* ... */
+}
+```
+
+Additionally, pass `None` for `opt_callback`.
+
+Note the "never" type `-> !` as return type for this function. This means this function will terminate the execution and launch the issue async call, so any code after this call will not be executed.
+
+Alternatively, if you want to issue and also have all roles set for the SC, you can use the `issue_and_set_all_roles` method instead.
+
+### mint
+```rust
+fn mint(amount: BigUint) -> EsdtTokenPayment<Self::Api>
+```
+
+Mints `amount` tokens for the stored token ID, using the `ESDTLocalMint` built-in function. Returns a payment struct, containing the token ID and the given amount.
+
+### mint_and_send
+```rust
+fn mint_and_send(to: &ManagedAddress, amount: BigUint) -> EsdtTokenPayment<SA>
+```
+
+Same as the method above, but also sends the minted tokens to the given address.
+
+### burn
+```rust
+fn burn(amount: &BigUint)
+```
+
+Burns `amount` tokens, using the `ESDTLocalBurn` built-in function.
+
+### get_balance
+```rust
+fn get_balance() -> BigUint
+```
+
+Gets the current balance the SC has for the token.
+
+## NonFungibleTokenMapper
+
+Similar to the `FungibleTokenMapper`, but is used for NFT, SFT and META-ESDT tokens.
+
+### issue/issue_and_set_all_roles
+```rust
+fn issue(token_type: EsdtTokenType, issue_cost: BigUint, token_display_name: ManagedBuffer, token_ticker: ManagedBuffer,initial_supply: BigUint, num_decimals: usize, opt_callback: Option<CallbackClosure>) -> !
+
+fn issue_and_set_all_roles(token_type: EsdtTokenType, issue_cost: BigUint, token_display_name: ManagedBuffer, token_ticker: ManagedBuffer,initial_supply: BigUint, num_decimals: usize, opt_callback: Option<CallbackClosure>) -> !
+```
+
+Same as the previous issue function, but also takes an `EsdtTokenType` enum as argument, to decide which type of token to issue. Accepted values are `EsdtTokenType::NonFungible`, `EsdtTokenType::SemiFungible` and `EsdtTokenType::Meta`.
+
+### nft_create/nft_create_named
+```rust
+fn nft_create<T: TopEncode>(amount: BigUint, attributes: &T) -> EsdtTokenPayment<Self::Api>
+
+fn nft_create_named<T: TopEncode>(amount: BigUint, name: &ManagedBuffer, attributes: &T) -> EsdtTokenPayment<Self::Api>
+```
+
+Creates an NFT (optionally with a display `name`) and returns the token ID, the created token's nonce, and the given amount in a payment struct.
+
+### nft_create_and_send/nft_create_and_send_named
+```rust
+fn nft_create<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+
+fn nft_create_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+```
+
+Same as the methods above, but also sends the created token to the provided address.
+
+### nft_add_quantity
+```rust
+fn nft_add_quantity(token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+```
+
+Adds quantity for the given token nonce. This can only be used if one of the `nft_create` functions was used before AND the SC holds at least 1 token for the given nonce.
+
+### nft_add_quantity_and_send
+```rust
+fn nft_add_quantity_and_send(to: &ManagedAddress, token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+```
+
+Same as the method above, but also sends the tokens to the provided address.
+
+### nft_burn
+```rust
+
+```rust
+fn nft_burn(token_nonce: u64, amount: &BigUint)
+```
+
+Burns `amount` tokens for the given nonce.
+
+### get_all_esdt_token_data
+```rust
+fn get_all_token_data(token_nonce: u64) -> EsdtTokenData<Self::Api>
+```
+
+Gets all the token data for the given nonce. The SC must own at least 1 token to use this function.
+
+`EsdtTokenData` contains the following fields:
+```rust
+pub struct EsdtTokenData<M: ManagedTypeApi> {
+    pub token_type: EsdtTokenType,
+    pub amount: BigUint<M>,
+    pub frozen: bool,
+    pub hash: ManagedBuffer<M>,
+    pub name: ManagedBuffer<M>,
+    pub attributes: ManagedBuffer<M>,
+    pub creator: ManagedAddress<M>,
+    pub royalties: BigUint<M>,
+    pub uris: ManagedVec<M, ManagedBuffer<M>>,
+}
+```
+
+### get_balance
+```rust
+fn get_balance(token_nonce: u64) -> BigUint
+```
+
+Gets the SC's balance for the given token nonce.
+
+### get_token_attributes
+```rust
+fn get_token_attributes<T: TopDecode>(token_nonce: u64) -> T
+```
+
+Gets the attributes for the given token nonce. The SC must own at least 1 copy for this function to work.
+
+## Common functions for FungibleTokenMapper and NonFungibleTokenMapper
+
+Both mappers work similarly, so some functions have the same implementation for both.
+
+### is_empty
+```rust
+fn is_empty() -> bool
+```
+
+Returns `true` if the token ID is not set yet.
+
+### get_token_id
+```rust
+fn get_token_id() -> TokenIdentifier<SA>
+```
+
+Gets the stored token ID.
+
+### set_token_id
+```rust
+fn set_token_id(token_id: &TokenIdentifier)
+```
+
+Manually sets the token ID for this mapper. This can only be used once, and can not be overwritten afterwards. This will fail if the token was issue previously, as the token ID was automatically set.
+
+### require_same_token/require_all_same_token
+```rust
+fn require_same_token(expected_token_id: &TokenIdentifier<SA>)
+fn require_all_same_token(payments: &ManagedVec<EsdtTokenPayment<Self::Api>>)
+```
+
+Will signal an error if the provided token ID argument(s) differs from the stored token. Useful in `#[payable]` methods when you only want to this token as payment.
+
+### set_local_roles
+```rust
+fn set_local_roles(roles: &[EsdtLocalRole], opt_callback: Option<CallbackClosure>) -> !
+```
+
+Sets the provided local roles for the token. By default, no callback is used for this call, but you may provide a custom callback if you want to.
+
+You don't need to call this function if you use `issue_and_set_all_roles` for issueing.
+
+Same as the issue function, this will terminate execution when called.
+
+### set_local_roles_for_address
+```rust
+fn set_local_roles_for_address(address: &ManagedAddress, roles: &[EsdtLocalRole], opt_callback: Option<CallbackClosure>) -> !
+```
+
+Similar to the previous function, but sets the roles for a specific address instead of the SC address.
 
 
+## UniqueIdMapper
+
+A special mapper that holds the values from 1 to N, with the following property: if `mapper[i] == i`, then nothing is actually stored.
+
+This makes it so the mapper initialization is O(1) instead of O(N). Very useful when you want to have a list of available IDs, as its name suggests.
+
+Both the IDs and the indexes are `usize`.
+
+Note: If you want an in-memory version of this, you can use the `SparseArray` type provided by the framework.
+
+Examples:
+```rust
+fn my_id_mapper(&self) -> UniqueIdMapper<Self::Api>
+```
+
+Available methods:
+
+### set_initial_len
+```rust
+fn set_initial_len(&mut self, len: usize)
+```
+
+Sets the initial mapper length, i.e. the `N`. The length may only be set once.
+
+### is_empty
+```rust
+fn is_empty() -> bool
+```
+
+Returns `true` if the mapper has no elements stored.
+
+### len
+```rust
+fn len() -> usize
+```
+
+Returns the number of items stored in the mapper.
+
+### get
+```rust
+fn get(index: usize) -> usize
+```
+
+Gets the value for the given index. If the entry is empty, then `index` is returned, as per the mapper's property.
+
+### set
+```rust
+fn set(&mut self, index: usize, id: usize)
+```
+
+Sets the value at the given index. The mapper's internal property of `mapper[i] == i` if empty entry is maintained.
+
+
+### swap_remove
+```rust
+fn swap_remove(index: usize) -> usize
+```
+
+Removes the ID at the given `index` and returns it. Also, the value at `index` is now set the value of the last entry in the map. Length is decreased by 1.
+
+### iter
+```rust
+fn iter(&self) -> Iter<usize>
+```
+
+Provides an iterator over all the IDs.
 
 # Comparisons between the different mappers
 
