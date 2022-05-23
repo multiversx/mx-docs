@@ -806,7 +806,7 @@ Removes the ID at the given `index` and returns it. Also, the value at `index` i
 
 ### iter
 ```rust
-fn iter(&self) -> Iter<usize>
+fn iter() -> Iter<usize>
 ```
 
 Provides an iterator over all the IDs.
