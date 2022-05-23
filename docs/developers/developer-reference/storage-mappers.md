@@ -11,7 +11,7 @@ Note: All the storage mappers support additional key arguments.
 
 ## SingleValueMapper
 
-Stored a single value. Examples:
+Stores a single value. Examples:
 
 ```rust
 fn single_value(&self) -> SingleValueMapper<Type>;
