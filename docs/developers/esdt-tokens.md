@@ -285,7 +285,7 @@ MintTransaction {
     GasLimit: 60000000
     Data: "mint" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <new supply in hexadecimal encoding>
+          "@" + <supply to mint in hexadecimal encoding>
 }
 ```
 
@@ -303,7 +303,7 @@ LocalMintTransaction {
     GasLimit: 300000
     Data: "ESDTLocalMint" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <new supply in hexadecimal encoding>
+          "@" + <supply to mint in hexadecimal encoding>
 }
 ```
 
@@ -341,7 +341,7 @@ LocalBurnTransaction {
     GasLimit: 300000
     Data: "ESDTLocalBurn" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <new supply in hexadecimal encoding>
+          "@" + <supply to burn in hexadecimal encoding>
 }
 ```
 
