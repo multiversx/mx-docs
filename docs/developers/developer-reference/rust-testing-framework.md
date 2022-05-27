@@ -20,13 +20,13 @@ Please note that mandos generation is more of an experiment rather than a fully 
 
 ## Prerequisites
 
-You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.29.3). You can check the latest version here: https://crates.io/crates/elrond-wasm
+You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.31.1). You can check the latest version here: https://crates.io/crates/elrond-wasm
 
 Add `elrond-wasm-debug` and required packages as dev-dependencies in your Cargo.toml:
 
 ```toml
 [dev-dependencies.elrond-wasm-debug]
-version = "0.29.3"
+version = "0.31.1"
 
 [dev-dependencies]
 num-bigint = "0.4.2"
