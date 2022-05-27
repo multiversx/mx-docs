@@ -45,24 +45,22 @@ _phantom:{...}
 
 This is not very helpful. Unfortunately, for managed types you don't have the actual data in the type itself, you only have a handle (i.e. an index) in a stack somewhere. 
 
-For that reason, we have a print method for biguints:
+For that reason, we have the `sc_print!` macro:
 
 ```rust
-self.print().print_biguint(&target);
+sc_print!("{}", target);
 ```
 
-Adding this line to the beginning of the `#[init]` function will print the following in the console:
-
-`BigUint { handle: 0, hex: "07d0", dec: "2000" }`
+Adding this line to the beginning of the `#[init]` function will print `2000` in the console.
 
 ## Printing formatted messages
 
-If you want to print other data types, maybe even with a message, you can use the `sc_print!` macro. Currently, only HEX and ASCII representations are supported (no decimal numbers yet. For that, use the `print_biguint` function).  
+If you want to print other data types, maybe even with a message, you can use the `sc_print!` macro all the same.
 
 For example, if you were to add this to the start of the `#[init]` function:
 ```rust
 sc_print!(
-    "I accept {}, a number of {:x}, and only until {:x}",
+    "I accept {}, a number of {}, and only until {}",
     token_identifier,
     target,
     deadline
@@ -71,6 +69,6 @@ sc_print!(
 
 This macro would print the following: 
 
-`"I accept CROWD-123456, a number of 0x07d0, and only until 0x093a80"`
+`"I accept CROWD-123456, a number of 2000, and only until 604800"`
 
-Note: For ASCII representation, use `{}`, and for hex, use `{:x}`.  
+Note: For ASCII or decimal representation, use `{}`, and for hex, use `{:x}`.  
