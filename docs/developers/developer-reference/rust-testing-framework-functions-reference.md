@@ -34,7 +34,15 @@ check_nft_balance<T>(&self, address: &Address, token_id: &[u8], nonce: u64, expe
 
 Where T has to implement TopEncode, TopDecode, PartialEq, and core::fmt::Debug. This is usually done through `#[derive(TopEncode, TopDecode, PartialEq, Debug)]`. 
 
-This function checks the NFT balance for a specific nonce for an address, and optionally checks the NFT attributes as well. If you are only interested in the balance, pass `Option::None` for `opt_expected_attributes`.  
+This function checks the NFT balance for a specific nonce for an address, and optionally checks the NFT attributes as well. If you are only interested in the balance, pass `Option::None` for `opt_expected_attributes`. The Rust compiler might complain that it can't deduce the generic `T`, in which case, you can do one of the following:
+
+```rust
+b_mock.check_nft_balance::<Empty>(..., None);
+
+b_mock.check_nft_balance(..., Option::<Empty>::None);
+```
+
+Where `...` are the rest of the arguments.
 
 ## State-getter functions
 

@@ -295,6 +295,13 @@ payment_as_tuple() -> (TokenIdentifier, u64, BigUint)
 
 Returns the ID, the nonce and the amount of the token transferred in the current transaction.  
 
+### payment
+```rust
+payment() -> EsdtTokenPayment<Self::Api>
+```
+
+Same as the function above, but returns them wrapped into an `EsdtTokenPayment` struct.
+
 ### all_esdt_transfers
 ```rust
 all_esdt_transfers() -> ManagedVec<EsdtTokenPayment<Self::Api>>
