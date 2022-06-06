@@ -15,13 +15,13 @@ There are 4 types of variadic arguments supported for functions:
 - `MultiValueEncoded<T>` - can receive any number of arguments. Note that only one `MultiValueEncoded` can be used per endpoint and must be the last argument in the endpoint. Cannot use both `OptionalValue` and `MultiValueEncoded` in the same endpoint. It keeps its contents encoded, so it decodes lazily when used as an argument and encodes eagerly when used as a result.
 - `MultiValueManagedVec<T>` - Similar to `MultiValueEncoded<T>`, but it decodes eagerly when used as an argument and encodes lazily when used as a result. It is practically a `ManagedVec` with multi-value encoding, and so `T` in this case must be a type that implements `ManagedVecItem`. It cannot contain multi-values such as `MultiValueN`.
 
-Note: Keep in mind you have to specify the `#[var_args]` annotation in front of those arguments. For example:
+Below you can find some examples:
 ```
 #[endpoint(myOptArgEndpoint)]
-fn my_opt_arg_endpoint(&self, obligatory_arg: T1, #[var_args] opt_arg: OptionalValue<T2>) {}
+fn my_opt_arg_endpoint(&self, obligatory_arg: T1, opt_arg: OptionalValue<T2>) {}
 
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, obligatory_arg: T1, #[var_args] args: MultiValueEncoded<T2>) {}
+fn my_var_args_endpoint(&self, obligatory_arg: T1, args: MultiValueEncoded<T2>) {}
 ```
 
 This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalValue<T>` and `ManagedVec<T>` instead of `MultiValueEncoded<T>`? The reason is the type of encoding used for each of them.
@@ -36,7 +36,7 @@ fn my_opt_arg_endpoint(&self, token_id: TokenIdentifier, opt_nonce: Option<u64>)
 
 ```
 #[endpoint(myOptArgEndpoint)]
-fn my_opt_arg_endpoint(&self, token_id: TokenIdentifier, #[var_args] opt_nonce: OptionalValue<u64>) {}
+fn my_opt_arg_endpoint(&self, token_id: TokenIdentifier, opt_nonce: OptionalValue<u64>) {}
 ```
 
 With the following arguments: TOKEN-123456 (0x544f4b454e2d313233343536) and 5.
@@ -64,7 +64,7 @@ fn my_var_args_endpoint(&self, args: ManagedVec<(TokenIdentifier, u64, BigUint)>
 
 ```
 #[endpoint(myVarArgsEndpoint)]
-fn my_var_args_endpoint(&self, #[var_args] args: MultiValueManagedVec<TokenIdentifier, u64, BigUint>) {}
+fn my_var_args_endpoint(&self, args: MultiValueManagedVec<TokenIdentifier, u64, BigUint>) {}
 ```
 
 The first approach looks a lot simpler, just a `ManagedVec` of tuples. But, the implications are quite devastating, both for performance and usability. To use the first endpoint, with the pairs (TOKEN-123456, 5, 100) and (TOKEN-123456, 10, 500), the call data would have to look like this:

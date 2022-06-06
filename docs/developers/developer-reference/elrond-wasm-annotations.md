@@ -90,10 +90,10 @@ pub trait Example {
     }
 
     #[endpoint(camelCaseEndpointName)]
-	fn snake_case_method_name(&self, value: &BigInt) {
+	fn snake_case_method_name(&self, value: BigUint) {
     }
 
-    fn private_method(&self, value: &BigInt) {
+    fn private_method(&self, value: &BigUint) {
     }
 
     #[view(getData)]
@@ -138,7 +138,7 @@ This is the simplest way to retrieve data from the storage. Let's start with an 
 pub trait Adder {
 	#[view(getSum)]
 	#[storage_get("sum")]
-	fn get_sum(&self) -> BigInt;
+	fn get_sum(&self) -> BigUint;
 
 	#[storage_get("example_map")]
     fn get_value(&self, key_1: u32, key_2: u32) -> SerializableType;
@@ -165,7 +165,7 @@ This is the simplest way to write data to storage. Example:
 #[elrond_wasm::contract]
 pub trait Adder {
 	#[storage_set("sum")]
-	fn set_sum(&self, sum: &BigInt);
+	fn set_sum(&self, sum: &BigUint);
 
 	#[storage_set("example_map")]
     fn set_value(&self, key_1: u32, key_2: u32, value: &SerializableType);
@@ -180,10 +180,10 @@ There is no mechanism in place to ensure that there is no overlap between storag
 
 ```rust
 	#[storage_set("sum")]
-	fn set_sum(&self, sum: &BigInt);
+	fn set_sum(&self, sum: &BigUint);
 
     #[storage_set("sum")]
-	fn set_another_sum(&self, another_sum: &BigInt);
+	fn set_another_sum(&self, another_sum: &BigUint);
 
 	#[storage_set("s")]
     fn set_value(&self, key: u16, value: &SerializableType);
