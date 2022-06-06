@@ -73,12 +73,12 @@ This only works for addresses that are in the same shard as the smart contract.
 
 ### get_sc_balance
 ```rust
-get_sc_balance(token: &TokenIdentifier, nonce: u64) -> BigUint
+get_sc_balance(token: &EgldOrEsdtTokenIdentifier, nonce: u64) -> BigUint
 ```
 
 Returns the EGLD/ESDT/NFT balance of the smart contract.  
 
-For fungible ESDT, nonce should be 0. To get the EGLD balance, you can simply pass `TokenIdentifier::egld()` as parameter.  
+For fungible ESDT, nonce should be 0. To get the EGLD balance, you can simply pass `EgldOrEsdtTokenIdentifier::egld()` as parameter.  
 
 ### get_tx_hash
 ```rust
@@ -252,72 +252,61 @@ Available functions:
 egld_value() -> BigUint
 ```
 
-Returns the amount of EGLD transferred in the current transaction. Will return 0 for ESDT transfers.  
-
-### esdt_value
-```rust
-esdt_value() -> BigUint
-```
-
-Returns the amount of ESDT transferred in the current transaction. Will return 0 for EGLD transfers.  
-
-### token
-```rust
-token() -> TokenIdentifier
-```
-
-Returns the identifier of the token transferred in the current transaction. Will return `TokenIdentifier::egld()` for EGLD transfers.   
-
-### esdt_token_nonce
-```rust
-esdt_token_nonce() -> u64
-```
-
-Returns the nonce of the SFT/NFT transferred in the current transaction. Will return 0 for EGLD or fungible ESDT transfers.  
-
-### esdt_token_type
-```rust
-esdt_token_type() -> EsdtTokenType
-```
-
-Returns the type of token transferred in the current transaction. Will only return `EsdtTokenType::Fungible` or `EsdtTokenType::NonFungible`.   
-
-### payment_token_pair
-```rust
-payment_token_pair() -> (BigUint, TokenIdentifier)
-```
-Returns the amount and the ID of the token transferred in the current transaction.  
-
-### payment_as_tuple
-```rust
-payment_as_tuple() -> (TokenIdentifier, u64, BigUint)
-```
-
-Returns the ID, the nonce and the amount of the token transferred in the current transaction.  
-
-### payment
-```rust
-payment() -> EsdtTokenPayment<Self::Api>
-```
-
-Same as the function above, but returns them wrapped into an `EsdtTokenPayment` struct.
+Returns the amount of EGLD transferred in the current transaction. Will return 0 for ESDT transfers.   
 
 ### all_esdt_transfers
 ```rust
 all_esdt_transfers() -> ManagedVec<EsdtTokenPayment<Self::Api>>
 ```
 
-Returns all the ESDT payments received in the current transaction. Used when you want to support ESDT Multi-transfers in your endpoint.  
+Returns all ESDT transfers. Useful when you're expecting a variable number of transfers.
 
-Returns an array of structs, that contain the token type, token ID, token nonce and the amount being transferred:  
+Returns the payments into a `ManagedVec` of structs, that contain the token type, token ID, token nonce and the amount being transferred:  
 ```rust
 pub struct EsdtTokenPayment<M: ManagedTypeApi> {
-    pub token_type: EsdtTokenType,
     pub token_identifier: TokenIdentifier<M>,
     pub token_nonce: u64,
     pub amount: BigUint<M>,
 }
 ```
+
+### multi_esdt
+```rust
+multi_esdt<const N: usize>() -> [EsdtTokenPayment<Self::Api>; N]
+```
+
+Returns a fixed number of ESDT transfers as an array. Will signal an error if the number of ESDT transfers differs from `N`.
+
+For example, if you always expect exactly 3 payments in your endpoint, you can use this function like so:  
+`let [payment_a, payment_b, payment_c] = self.call_value().multi_esdt();`
+
+### single_esdt
+```rust
+single_esdt() -> EsdtTokenPayment<Self::Api>
+```
+
+Returns the received ESDT token payment if exactly one was received. Will signal an error in case of multi-transfer or no transfer.
+
+### single_fungible_esdt
+```rust
+single_fungible_esdt(&self) -> (TokenIdentifier, BigUint)
+```
+
+Similar to the function above, but also enforces the payment to be a fungible ESDT.
+
+### egld_or_single_fungible_esdt
+```rust
+egld_or_single_fungible_esdt(&self) -> (EgldOrEsdtTokenIdentifier<Self::Api>, BigUint)
+```
+
+Same as the function above, but also allows EGLD to be received.
+
+### egld_or_single_esdt
+```rust
+egld_or_single_esdt() -> EgldOrEsdtTokenPayment<Self::Api>
+```
+
+Allows EGLD or any single ESDT token to be received.
 
 ## Crypto API
 
@@ -325,31 +314,31 @@ This API is accessible through `self.crypto()`. It provides hashing functions an
 
 Hashing functions:  
 
-### sha256_legacy_managed
+### sha256
 ```rust
-sha256_legacy_managed<const MAX_INPUT_LEN: usize>(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
+sha256(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
 ```
 
-### keccak256_legacy_managed
+### keccak256
 ```rust
-keccak256_legacy_managed<const MAX_INPUT_LEN: usize>(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
+keccak256(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 32>
+```
+
+### ripemd160
+```rust
+ripemd160(data: &ManagedBuffer) -> ManagedByteArray<Self::Api, 20>
 ```
 
 Signature verification functions: 
 
-### verify_ed25519_managed
+### verify_ed25519_legacy_managed
 ```rust
-verify_ed25519_managed<const MAX_MESSAGE_LEN: usize>(key: &ManagedByteArray<Self::Api, 32>, message: &ManagedBuffer, signature: &ManagedByteArray<Self::Api, 64>) -> bool
+verify_ed25519_legacy_managed<const MAX_MESSAGE_LEN: usize>(key: &ManagedByteArray<Self::Api, 32>, message: &ManagedBuffer, signature: &ManagedByteArray<Self::Api, 64>) -> bool
 ```
 
 ### verify_bls
 ```rust
 verify_bls(key: &[u8], message: &[u8], signature: &[u8]) -> bool
-```
-
-### verify_ed25519
-```rust
-verify_ed25519(key: &[u8], message: &[u8], signature: &[u8]) -> bool
 ```
 
 ### verify_secp256k1
@@ -402,14 +391,18 @@ Without further ado, let's take a look at the available functions:
 
 ### direct
 ```rust
-direct<D>(to: &ManagedAddress, token: &TokenIdentifier, nonce: u64, amount: &BigUint, data: D)
+direct<D>(to: &ManagedAddress, token: &EgldOrEsdtTokenIdentifier, nonce: u64, amount: &BigUint, data: D)
 ```
 
 Where `D` is any type that can be converted to a `ManagedBuffer`.  
 
-Performs a simple EGLD/ESDT/NFT transfer to the target address, with some optional additional data. If you want to send EGLD, simply pass `TokenIdentifier::egld()`. For both EGLD and fungible ESDT, `nonce` should be 0.  
+:::warning
+Do not use non-empty data when transferring to Smart Contracts. That will attempt to call an endpoint and fail. If you simply want to transfer to any type of account, pass `&[]` for `data`.
+:::
 
-This will fail if the destination is a non-payable smart contract, but the current executing transaction will not fail, and as such, any changes done to the storage will persist. The tokens will not be lost though, as they will be automatically returned.  
+Performs a simple EGLD/ESDT/NFT transfer to the target address, with some optional additional data. If you want to send EGLD, simply pass `EgldOrEsdtTokenIdentifier::egld()`. For both EGLD and fungible ESDT, `nonce` should be 0.  
+
+This will fail if the destination is a non-payable smart contract, but the current executing transaction will only fail if the destination SC is in the same shard, and as such, any changes done to the storage will persist. The tokens will not be lost though, as they will be automatically returned.  
 
 Even though an invalid destination will not revert, an illegal transfer will return an error and revert. An illegal transfer is any transfer that would leave the SC with a negative balance for the specific token.  
 
@@ -465,6 +458,8 @@ Unlike the mint function, this can be used for NFTs.
 esdt_nft_create<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &BigUint, name: &ManagedBuffer, royalties: &BigUint, hash: &ManagedBuffer, attributes: &T, uris: &ManagedVec< ManagedBuffer>) -> u64
 ```
 
+Note: If you want the caller to be the "creator" of the NFT, use `esdt_nft_create_as_caller`.
+
 Creates a new SFT/NFT, and returns its nonce.  
 
 Must have `ESDTNftCreate` role set, or this will fail with "action is not allowed".  
@@ -492,7 +487,7 @@ Same as `esdt_nft_create`, but fills most arguments with default values. Mostly 
 
 ### sell_nft
 ```rust
-sell_nft(nft_id: &TokenIdentifier, nft_nonce: u64, nft_amount: &BigUint, buyer: &ManagedAddress, payment_token: &TokenIdentifier, payment_nonce: u64, payment_amount: &BigUint) -> BigUint
+sell_nft(nft_id: &TokenIdentifier, nft_nonce: u64, nft_amount: &BigUint, buyer: &ManagedAddress, payment_token: &EgldOrEsdtTokenIdentifier, payment_nonce: u64, payment_amount: &BigUint) -> BigUint
 ```
 
 Sends the SFTs/NFTs to target address, while also automatically calculating and sending NFT royalties to the creator. Returns the amount left after deducting royalties.  
