@@ -134,46 +134,43 @@ Let's say you want to call a `#[payable]` endpoint, with this definition:
 ```rust
 #[payable("*")]
 #[endpoint(myEndpoint)]
-fn my_payable_endpoint(
-	&self, 
-	#[payment_token] payment_token: TokenIdentifier,
-	#[payment_nonce] payment_nonce: u64,
-	#[payment_amount] payment_amount: BigUint,
-	arg: BigUint)
--> BigUint {
+fn my_payable_endpoint(&self, arg: BigUint) -> BigUint {
+	let payment = self.call_value().egld_or_single_esdt();
 	// implementation
 }
 ```
 
-You don't have to do any manual work for the payment args, you just have to pass them as simple arguments:
+To pass the payment, you can use the `with_egld_or_single_esdt_token_transfer` method:
+
 ```rust
 #[endpoint]
-fn caller_endpoint(&self, token: TokenIdentifier, nonce: u64, amount: BigUint) {
+fn caller_endpoint(&self, token: EgldOrEsdtTokenIdentifier, nonce: u64, amount: BigUint) {
 	// other code here
 
 	self.contract_proxy(callee_sc_address)
 		.my_endpoint(token, nonce, amount, my_biguint_arg)
+		.with_egld_or_single_esdt_token_transfer(token, nonce, amount)
 		.async_call()
 		.call_and_exit();
 }
 ```
 
-The Rust framework automatically detects the `#[payment]` annotations and knows how to convert to the needed function calls.
+`with_egld_or_single_esdt_token_transfer` allows adding EGLD payment of a single ESDT token as payment.
+
+There are similar functions for other types of payments:
+- `add_esdt_token_transfer` - for single ESDT transfers
+- `with_egld_transfer` - for EGLD transfers
+- `with_multi_token_transfer` - for ESDT multi-transfers
 
 ### Payments in callbacks
 
-If you expect to receive a payment instead of paying the contract, your callback definition can also use payment annotations:
+If you expect to receive a payment instead of paying the contract, keep in mind callback functions are `#[payable]` by default, so you don't need to add the annotation:
 
 ```rust
-#[payable("*")]
 #[callback]
-fn my_endpoint_callback(
-	&self,
-	#[payment_token] payment_token: TokenIdentifier,
-	#[payment_nonce] payment_nonce: u64,
-	#[payment_amount] payment_amount: BigUint,
-	#[call_result] result: ManagedAsyncCallResult<BigUint>
-) {
+fn my_endpoint_callback(&self, #[call_result] result: ManagedAsyncCallResult<BigUint>) {
+	let payment = self.call_value().egld_or_single_esdt();
+
 	match result {
         ManagedAsyncCallResult::Ok(value) => {
             if value % 2 == 0 {
@@ -190,7 +187,7 @@ fn my_endpoint_callback(
 }
 ```
 
-Keep in mind you do NOT need to specify these arguments when hooking the callback:
+Keep in mind you do NOT need to specify the payments when hooking the callback:
 ```rust
 #[endpoint]
 fn caller_endpoint(&self) {
@@ -203,15 +200,9 @@ fn caller_endpoint(&self) {
 		.call_and_exit();
 }
 ```
-### Miscellaneous functions
+### Gas limit for execution
 
-#### Gas limit
-
-`with_gas_limit` allows you to specify a gas limit for your call. By default, all gas left is passed.
-
-#### Manually adding payments
-
-If the callee endpoint does not use the payment args, but instead calls the low level APIs to get the call values, you can pass payments through the `with_egld_transfer` for EGLD, and `add_token_transfer` and `with_multi_token_transfer` for ESDTs.
+`with_gas_limit` allows you to specify a gas limit for your call. By default, all gas left is passed, and any remaining is returned either for further execution (in case of sync calls) or for callback execution (for async calls).
 
 ### Method #2: Manually writing the proxy
 
@@ -224,12 +215,7 @@ mod callee_proxy {
     pub trait CalleeContract {
         #[payable("*")]
 		#[endpoint(myEndpoint)]
-		fn my_payable_endpoint(
-			&self, 
-			#[payment_token] payment_token: TokenIdentifier,
-			#[payment_nonce] payment_nonce: u64,
-			#[payment_amount] payment_amount: BigUint,
-			arg: BigUint) -> BigUint;
+		fn my_payable_endpoint(&self, arg: BigUint) -> BigUint;
     }
 }
 ```

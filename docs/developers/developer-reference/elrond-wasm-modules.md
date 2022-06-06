@@ -28,6 +28,11 @@ pub trait StorageModule {
 }
 ```
 
+Then, in your main file (usually named `lib.rs`), you have to define the module. If the file for the above module is named `storage.rs`, then in the main file you'd declare it like this:
+```rust
+pub mod storage;
+```
+
 ## Importing a module
 
 A module can be imported both by other modules and contracts: 
