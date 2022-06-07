@@ -27,7 +27,7 @@ Make sure your erdpy version is `1.3.2` or higher.
 Run the following command, which will fetch the prerequisites (`elrond-go`, `elrond-proxy-go`, `golang` and `testwallets`) into `~/elrondsdk`:
 
 ```
-$ erdpy testnet prerequisites
+erdpy testnet prerequisites
 ```
 
 ## **Testnet Configuration**
@@ -35,15 +35,15 @@ $ erdpy testnet prerequisites
 Let's configure the following network parameters in erdpy, so that subsequent command invocations (of erdpy) will not require you explicitly provide the `--proxy` and `--chainID` arguments:
 
 ```
-$ erdpy config set chainID local-testnet
-$ erdpy config set proxy http://localhost:7950
+erdpy config set chainID local-testnet
+erdpy config set proxy http://localhost:7950
 ```
 
 Then, in a folder of your choice add a file names `testnet.toml` with the content below.
 
 ```
-$ mkdir MySandbox && cd MySandbox
-$ touch testnet.toml
+mkdir MySandbox && cd MySandbox
+touch testnet.toml
 ```
 
 ```
@@ -59,8 +59,8 @@ erdpy allows you to customize the configuration of the local mini-testnet in muc
 Then, configure and build the local testnet as follows:
 
 ```
-$ cd MySandbox
-$ erdpy testnet config
+cd MySandbox
+erdpy testnet config
 ```
 
 Upon running this command, a new folder called `testnet` will be added in the current directory. This folder contains the Node & Proxy binaries, their configurations, plus the **development wallets**.
@@ -98,8 +98,8 @@ erdpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
 You should see the prepared transaction and the **transaction hash** in the `stdout` (or in the `--outfile` of your choice). Using the transaction hash, you can query the status of the transaction against the Proxy or against erdpy itself:
 
 ```
-$ curl http://localhost:7950/transaction/1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
-$ erdpy tx get --hash=1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
+curl http://localhost:7950/transaction/1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
+erdpy tx get --hash=1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
 ```
 
 ## **Deploying and interacting with Smart Contracts**
@@ -120,8 +120,8 @@ erdpy --verbose contract deploy --bytecode=./counter.wasm \
 Upon deployment, you can check the status of the transaction and the existence of the Smart Contract:
 
 ```
-$ curl http://localhost:7950/transaction/0db61bab8e78779ae009300988c6be0949086d93e2b7adfddd5e6375a4b6eeb7 | jq
-$ curl http://localhost:7950/address/erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq | jq
+curl http://localhost:7950/transaction/0db61bab8e78779ae009300988c6be0949086d93e2b7adfddd5e6375a4b6eeb7 | jq
+curl http://localhost:7950/address/erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq | jq
 ```
 
 If everything is fine (transaction status is `executed` and the `code` property of the address is set), you can interact with or perform queries against the deployed contract:
