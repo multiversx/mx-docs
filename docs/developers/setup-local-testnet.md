@@ -126,17 +126,18 @@ $ curl http://localhost:7950/address/erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmx
 
 If everything is fine (transaction status is `executed` and the `code` property of the address is set), you can interact with or perform queries against the deployed contract:
 
+- Call Contract
+
 ```
-Call Contract
 erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq \
  --recall-nonce --gas-limit=1000000 --function=increment \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --send
-
 ```
 
+- Query Contract
+
 ```
-Query Contract
 erdpy --verbose contract query erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq --function=get
 ```
 
@@ -144,15 +145,17 @@ erdpy --verbose contract query erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh
 
 At times, you can simulate transactions instead of broadcasting them, by replacing the flag `--send` with the flag `--simulate`. For example:
 
+- Simulate: Call Contract
+
 ```
-Simulate: Call Contract
 all-nonce --gas-limit=1000000 --function=increment \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --simulate
 ```
 
+- Simulate: Simple Transfer
+
 ```
-Simulate: Simple Transfer
 erdpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
