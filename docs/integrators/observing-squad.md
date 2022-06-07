@@ -83,12 +83,12 @@ The Observing Squad can be updated using the Mainnet installation scripts.
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
 ```
-$ cd ~/elrond-go-scripts-mainnet
-$ ./script.sh github_pull
-$ ./script.sh stop
-$ ./script.sh upgrade_squad
-$ ./script.sh upgrade_proxy
-$ ./script.sh start
+cd ~/elrond-go-scripts-mainnet
+./script.sh github_pull
+./script.sh stop
+./script.sh upgrade_squad
+./script.sh upgrade_proxy
+./script.sh start
 ```
 
 ### **March 2021 upgrade**
@@ -96,12 +96,12 @@ $ ./script.sh start
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
 ```
-$ cd ~/elrond-go-scripts-mainnet
-$ ./script.sh github_pull
-$ ./script.sh stop
-$ ./script.sh upgrade_squad
-$ ./script.sh upgrade_proxy
-$ ./script.sh start
+cd ~/elrond-go-scripts-mainnet
+./script.sh github_pull
+./script.sh stop
+./script.sh upgrade_squad
+./script.sh upgrade_proxy
+./script.sh start
 ```
 
 ### **January 2021 upgrade**
@@ -109,12 +109,12 @@ $ ./script.sh start
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
 ```
-$ cd ~/elrond-go-scripts-mainnet
-$ ./script.sh github_pull
-$ ./script.sh stop
-$ ./script.sh upgrade_squad
-$ ./script.sh upgrade_proxy
-$ ./script.sh start
+cd ~/elrond-go-scripts-mainnet
+./script.sh github_pull
+./script.sh stop
+./script.sh upgrade_squad
+./script.sh upgrade_proxy
+./script.sh start
 ```
 
 ### **Prerequisites for the November 2020 upgrade**
@@ -124,13 +124,13 @@ Observing Squads set up before November 2020 have been installed using a special
 In order to upgrade an Observing Squad set up before November 2020, **one has to first follow these steps**:
 
 ```
-$ cd ~/elrond-go-scripts-mainnet
+cd ~/elrond-go-scripts-mainnet
 MANUALLY BACKUP FILE config/variables.cfg
 
 # IN ORDER TO ALLOW THE SUBSEQUENT SWITCH TO MAIN BRANCH
-$ git checkout config/variables.cfg
+git checkout config/variables.cfg
 # SWITCH TO MAIN BRANCH
-$ git checkout master
+git checkout master
 
 MANUALLY RESTORE FILE config/variables.cfg
 ```
@@ -142,12 +142,12 @@ After following the steps above, the upgrade procedure shall continue as describ
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
 ```
-$ cd ~/elrond-go-scripts-mainnet
-$ ./script.sh github_pull
-$ ./script.sh stop
-$ ./script.sh upgrade_squad
-$ ./script.sh upgrade_proxy
-$ ./script.sh start
+cd ~/elrond-go-scripts-mainnet
+./script.sh github_pull
+./script.sh stop
+./script.sh upgrade_squad
+./script.sh upgrade_proxy
+./script.sh start
 ```
 
 After running the commands above, the upgraded Observing Squad will start again. The expected downtime is about 2-3 minutes.
