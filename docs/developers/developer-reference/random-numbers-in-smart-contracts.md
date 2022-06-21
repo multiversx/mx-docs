@@ -87,7 +87,7 @@ fn roll_die(&self) {
     let rand_nr = rand_source.next_u8();
     if rand_nr % 6 == 0 {
         let prize = payment * 2u32;
-        self.send().direct(&caller, &prize, b"you win!");
+        self.send().direct(&caller, &prize);
     }
     // ...
 }
@@ -123,7 +123,7 @@ fn select_winners(&self) {
 fn claim(&self) {
     let was_winner = self.winners_list().swap_remove(&caller);
     if was_winner {
-        self.send().direct_egld(&caller, &prize, &[]);
+        self.send().direct_egld(&caller, &prize);
     }
 }
 

@@ -128,6 +128,55 @@ fn caller_endpoint(&self) {
 
 Even though, in theory, smart contract can only have ONE callback function, the Rust framework handles this for you by saving an ID for the callback function in storage when you fire the async call, and it knows how to retrieve the ID and call the correct function once the call returns.
 
+### Callback Arguments
+
+Your callback may have additional arguments that are given to it at the time of launching the async call. These will be automatically saved before performing the initial async call, and they will be retrieved when the callback is called. Example:
+
+```rust
+#[callback]
+fn my_endpoint_callback(
+	&self,
+	original_caller: ManagedAddress,
+	#[call_result] result: ManagedAsyncCallResult<BigUint>
+) {
+	match result {
+        ManagedAsyncCallResult::Ok(value) => {
+            if value % 2 == 0 {
+				// do something
+			} else {
+				// do something else
+			}
+        },
+        ManagedAsyncCallResult::Err(err) => {
+			// log the error in storage
+			self.err_storage().set(&err.err_msg);
+        },
+    }
+}
+```
+
+To assign this callback to the aforementioned async call, we hook it like this:
+```rust
+#[endpoint]
+fn caller_endpoint(&self) {
+	// other code here
+	let caller = self.blockchain().get_caller();
+
+	self.contract_proxy(callee_sc_address)
+		.my_endpoint(my_biguint_arg)
+		.async_call()
+		.with_callback(self.callbacks().my_endpoint_callback(caller))
+		.call_and_exit();
+}
+```
+
+Notice how the callback now has an argument:
+```rust
+self.callbacks().my_endpoint_callback(caller)
+```
+
+You can then use `original_caller` in the callback like any other function argument.
+
 ### Payments in proxy arguments
 
 Let's say you want to call a `#[payable]` endpoint, with this definition:

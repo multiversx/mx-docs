@@ -124,19 +124,17 @@ SUCCESS
 It is not enough to receive the funds, the contract also needs to keep track of who donated how much.
 
 ```rust
-  #[view(getDeposit)]
-  #[storage_mapper("deposit")]
-  fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
+    #[view(getDeposit)]
+    #[storage_mapper("deposit")]
+    fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
 
-  #[endpoint]
-  #[payable("*")]
-  fn fund(
-    &self,
-    #[payment_amount] payment: BigUint,
-  ) {
-      let caller = self.blockchain().get_caller();
-      self.deposit(&caller).update(|deposit| *deposit += payment);
-  }
+    #[endpoint]
+    #[payable("EGLD")]
+    fn fund(&self) {
+        let payment = self.call_value().egld_value();
+        let caller = self.blockchain().get_caller();
+        self.deposit(&caller).update(|deposit| *deposit += payment);
+    }
 ```
 
 A few things to unpack:
@@ -243,29 +241,24 @@ SUCCESS
 It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block nonce must be rejected. The idiomatic way to do this is:
 
 ```
-    #[payable("*")]
     #[endpoint]
-    fn fund(&self, #[payment] payment: BigUint) -> SCResult<()> {
-      let current_time = self.blockchain().get_block_nonce();
-      require!(current_time < self.deadline().get(), "cannot fund after deadline");
+    #[payable("EGLD")]
+    fn fund(&self) {
+        let payment = self.call_value().egld_value();
 
-      let caller = self.blockchain().get_caller();
-      self.deposit(&caller).update(|deposit| *deposit += payment);
-      Ok(())
+        let current_time = self.blockchain().get_block_nonce();
+        require!(current_time < self.deadline().get(), "cannot fund after deadline");
+
+        let caller = self.blockchain().get_caller();
+        self.deposit(&caller).update(|deposit| *deposit += payment);
     }
 ```
 
-`SCResult<T>` is a type specific to elrond-wasm that can contain either a result, or an error. It is the smart contract equivalent of Rust's `Result<T, E>`. In principle the type parameter can be almost anything (more on that later). However, we don't need to return anything here in case of success, so we use the unit type`()` , which doesn't contain any data.
-
-To return the error version of the SCResult, the easiest way is to use the macros `require!` or `sc_error!` In case of success, we must explicitly return an `Ok(...)` expression.
-
 :::tip
-`require!(expression, error_msg)` is the same as `if !expression { return sc_error!(error_msg) }`
+`require!(expression, error_msg)` is the same as `if !expression { sc_panic!(error_msg) }`
 
-`sc_error!("message")` is just syntactic sugar for `SCResult::Err(SCError::Static(b"message"[..]))`. Only static messages for now, some error formatting is on our to-do list.
+`sc_panic!("message")` works similarly to the standard `panic!`, but works better in a smart contract context and is more efficient. The regular `panic!` is allowed too, but it might bloat your code, and you won't see the error message.
 :::
-
-Note: `panic!` works in contracts, but it is highly discouraged.
 
 We'll create another test file to verify that the validation works: `test-fund-too-late.scen.json` .
 
@@ -428,40 +421,34 @@ Contract functions can return in principle any number of results, that is why `"
 Finally, let's add the `claim` method. The `status` method we just implemented helps us keep the code tidy:
 
 ```rust
-#[endpoint]
-  fn claim(&self) -> SCResult<()> {
-      match self.status() {
-          Status::FundingPeriod => sc_error!("cannot claim before deadline"),
-          Status::Successful => {
-              let caller = self.blockchain().get_caller();
-              require!(
-                  caller == self.blockchain().get_owner_address(),
-                  "only owner can claim successful funding"
-              );
+    #[endpoint]
+    fn claim(&self) {
+        match self.status() {
+            Status::FundingPeriod => sc_panic!("cannot claim before deadline"),
+            Status::Successful => {
+                let caller = self.blockchain().get_caller();
+                require!(
+                    caller == self.blockchain().get_owner_address(),
+                    "only owner can claim successful funding"
+                );
 
-              let sc_balance = self.get_current_funds();
-              self.send()
-                  .direct(&caller, &TokenIdentifier::egld(), 0, &sc_balance, b"claim");
+                let sc_balance = self.get_current_funds();
+                self.send().direct_egld(&caller, &sc_balance);
+            },
+            Status::Failed => {
+                let caller = self.blockchain().get_caller();
+                let deposit = self.deposit(&caller).get();
 
-              Ok(())
-          },
-          Status::Failed => {
-              let caller = self.blockchain().get_caller();
-              let deposit = self.deposit(&caller).get();
-
-              if deposit > 0 {
-                  self.deposit(&caller).clear();
-                  self.send()
-                      .direct(&caller, &TokenIdentifier::egld(), 0, &deposit, b"claim");
-              }
-
-              Ok(())
-          },
-      }
-  }
+                if deposit > 0u32 {
+                    self.deposit(&caller).clear();
+                    self.send().direct_egld(&caller, &deposit);
+                }
+            },
+        }
+    }
 ```
 
-The only new function here is `self.send().direct()`, which simply forwards funds from the contract to the given address. The last argument is a message that gets saved on the blockchain too with the transaction.
+The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address. The last argument is a message that gets saved on the blockchain too with the transaction.
 
 # **The final contract code**
 
@@ -474,7 +461,7 @@ If you followed all the steps presented until now, you should have ended up with
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-#[derive(TopEncode, TopDecode, TypeAbi, PartialEq, Clone, Copy, Debug)]
+#[derive(TopEncode, TopDecode, TypeAbi, PartialEq, Eq, Clone, Copy, Debug)]
 pub enum Status {
     FundingPeriod,
     Successful,
@@ -484,21 +471,22 @@ pub enum Status {
 #[elrond_wasm::contract]
 pub trait Crowdfunding {
     #[init]
-    fn init(
-        &self,
-        target: BigUint,
-        deadline: u64,
-    ) {
-        self.target().set(&target);
-        self.deadline().set(&deadline);
+    fn init(&self, target: BigUint, deadline: u64) {
+        require!(target > 0, "Target must be more than 0");
+        self.target().set(target);
+
+        require!(
+            deadline > self.get_current_time(),
+            "Deadline can't be in the past"
+        );
+        self.deadline().set(deadline);
     }
 
     #[endpoint]
-    #[payable("*")]
-    fn fund(
-        &self,
-        #[payment_amount] payment: BigUint,
-    ) -> SCResult<()> {
+    #[payable("EGLD")]
+    fn fund(&self) {
+        let payment = self.call_value().egld_value();
+
         require!(
             self.status() == Status::FundingPeriod,
             "cannot fund after deadline"
@@ -506,8 +494,6 @@ pub trait Crowdfunding {
 
         let caller = self.blockchain().get_caller();
         self.deposit(&caller).update(|deposit| *deposit += payment);
-
-        Ok(())
     }
 
     #[view]
@@ -521,15 +507,15 @@ pub trait Crowdfunding {
         }
     }
 
-    #[view]
+    #[view(getCurrentFunds)]
     fn get_current_funds(&self) -> BigUint {
-        self.blockchain().get_sc_balance(&TokenIdentifier::egld(), 0)
+        self.blockchain().get_sc_balance(&EgldOrEsdtTokenIdentifier::egld(), 0)
     }
 
     #[endpoint]
-    fn claim(&self) -> SCResult<()> {
+    fn claim(&self) {
         match self.status() {
-            Status::FundingPeriod => sc_error!("cannot claim before deadline"),
+            Status::FundingPeriod => sc_panic!("cannot claim before deadline"),
             Status::Successful => {
                 let caller = self.blockchain().get_caller();
                 require!(
@@ -538,22 +524,16 @@ pub trait Crowdfunding {
                 );
 
                 let sc_balance = self.get_current_funds();
-                self.send()
-                    .direct(&caller, &TokenIdentifier::egld(), 0, &sc_balance, &[]);
-
-                Ok(())
+                self.send().direct_egld(&caller, &sc_balance);
             },
             Status::Failed => {
                 let caller = self.blockchain().get_caller();
                 let deposit = self.deposit(&caller).get();
 
-                if deposit > 0 {
+                if deposit > 0u32 {
                     self.deposit(&caller).clear();
-                    self.send()
-                        .direct(&caller, &TokenIdentifier::egld(), 0, &deposit, &[]);
+                    self.send().direct_egld(&caller, &deposit);
                 }
-
-                Ok(())
             },
         }
     }
@@ -586,9 +566,10 @@ As an exercise, try to add some more tests, especially ones involving the claim 
 
 This concludes the first Rust elrond-wasm tutorial.
 
-For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.25.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.25.0/elrond_wasm/index.html)
+For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.33.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.33.0/elrond_wasm/index.html)
 
-If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/examples
+If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/v0.33.0/contracts/examples
 
-[
-](/developers/tutorials/crowdfunding-p1)
+:::tip
+When entering directly on the `elrond-wasm` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.
+:::
