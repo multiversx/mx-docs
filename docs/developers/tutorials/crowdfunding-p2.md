@@ -238,7 +238,7 @@ SUCCESS
 
 # **Validation**
 
-It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block nonce must be rejected. We might need this check in other places too, so we're extracting it to a separate method. Making it a `view`, also allows it to be easily queried off-chain. The idiomatic way to do this is:
+It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block nonce must be rejected. The idiomatic way to do this is:
 
 ```
     #[endpoint]
