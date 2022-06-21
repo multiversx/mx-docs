@@ -391,14 +391,8 @@ Without further ado, let's take a look at the available functions:
 
 ### direct
 ```rust
-direct<D>(to: &ManagedAddress, token: &EgldOrEsdtTokenIdentifier, nonce: u64, amount: &BigUint, data: D)
+direct(to: &ManagedAddress, token: &EgldOrEsdtTokenIdentifier, nonce: u64, amount: &BigUint)
 ```
-
-Where `D` is any type that can be converted to a `ManagedBuffer`.  
-
-:::warning
-Do not use non-empty data when transferring to Smart Contracts. That will attempt to call an endpoint and fail. If you simply want to transfer to any type of account, pass `&[]` for `data`.
-:::
 
 Performs a simple EGLD/ESDT/NFT transfer to the target address, with some optional additional data. If you want to send EGLD, simply pass `EgldOrEsdtTokenIdentifier::egld()`. For both EGLD and fungible ESDT, `nonce` should be 0.  
 
@@ -412,17 +406,24 @@ If you need a bit more control, use the `direct_with_gas_limit` function instead
 
 ### direct_egld
 ```rust
-direct_egld<D>(to: &ManagedAddress, amount: &BigUint, data: D)
+direct_egld(to: &ManagedAddress, amount: &BigUint)
 ```
 
 The EGLD-transfer version for the `direct` function.
 
-### direct_multi
+### direct_esdt
 ```rust
-direct_multi<D>(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment<Self::Api>>, data: D)
+direct_esdt(to: &ManagedAddress, token_id: &TokenIdentifier, token_nonce: u64, amount: &BigUint)
 ```
 
-The multi-transfer version for the `direct` function.  
+The ESDT-only version for the `direct` function. Used so you don't have to wrap `TokenIdentifier` into an `EgldOrEsdtTokenIdentifier`.
+
+### direct_multi
+```rust
+direct_multi(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment<Self::Api>>)
+```
+
+The multi-transfer version for the `direct_esdt` function. Keep in mind you cannot transfer EGLD with this function, only ESDTs.  
 
 ### change_owner_address
 ```rust
@@ -457,8 +458,6 @@ Unlike the mint function, this can be used for NFTs.
 ```rust
 esdt_nft_create<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &BigUint, name: &ManagedBuffer, royalties: &BigUint, hash: &ManagedBuffer, attributes: &T, uris: &ManagedVec< ManagedBuffer>) -> u64
 ```
-
-Note: If you want the caller to be the "creator" of the NFT, use `esdt_nft_create_as_caller`.
 
 Creates a new SFT/NFT, and returns its nonce.  
 

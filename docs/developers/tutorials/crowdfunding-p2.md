@@ -441,7 +441,7 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
 
               let sc_balance = self.get_current_funds();
               self.send()
-                  .direct(&caller, &TokenIdentifier::egld(), 0, &sc_balance, b"claim");
+                  .direct(&caller, &TokenIdentifier::egld(), 0, &sc_balance);
 
               Ok(())
           },
@@ -452,7 +452,7 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
               if deposit > 0 {
                   self.deposit(&caller).clear();
                   self.send()
-                      .direct(&caller, &TokenIdentifier::egld(), 0, &deposit, b"claim");
+                      .direct(&caller, &TokenIdentifier::egld(), 0, &deposit);
               }
 
               Ok(())
@@ -539,7 +539,7 @@ pub trait Crowdfunding {
 
                 let sc_balance = self.get_current_funds();
                 self.send()
-                    .direct(&caller, &TokenIdentifier::egld(), 0, &sc_balance, &[]);
+                    .direct(&caller, &TokenIdentifier::egld(), 0, &sc_balance);
 
                 Ok(())
             },
@@ -550,7 +550,7 @@ pub trait Crowdfunding {
                 if deposit > 0 {
                     self.deposit(&caller).clear();
                     self.send()
-                        .direct(&caller, &TokenIdentifier::egld(), 0, &deposit, &[]);
+                        .direct(&caller, &TokenIdentifier::egld(), 0, &deposit);
                 }
 
                 Ok(())
