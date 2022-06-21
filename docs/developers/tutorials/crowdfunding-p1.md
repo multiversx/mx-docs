@@ -12,7 +12,7 @@ The Elrond Network supports smart contracts written in any programming language,
 :::
 
 :::important
-The current tutorial revolves around **elrond-wasm-rs** version **0.25.0**, and will get updated as new versions of elrond-wasm are released.
+The current tutorial revolves around **elrond-wasm-rs** version **0.33.0**, and will get updated as new versions of elrond-wasm are released.
 :::
 
 # **Introduction**
@@ -93,21 +93,11 @@ edition = "2018"
 [lib]
 path = "src/crowdfunding_main.rs"
 
-[features]
-wasm-output-mode = [ "elrond-wasm-node",]
-
 [dependencies.elrond-wasm]
-version = "0.25.0"
-
-[dependencies.elrond-wasm-derive]
-version = "0.25.0"
-
-[dependencies.elrond-wasm-node]
-version = "0.25.0"
-optional = true
+version = "0.33.0"
 
 [dev-dependencies.elrond-wasm-debug]
-version = "0.25.0"
+version = "0.33.0"
 
 ```
 
@@ -177,7 +167,7 @@ erdpy contract build
 
 If this is the first time you build a Rust smart contract with the `erdpy` command, it will take a little while before it's done. Subsequent builds will be much faster.
 
-When the command completes, a new folder will appear: `output`. This folder now contains two files: `crowdfunding.hex` and `crowdfunding.wasm`. We won't be doing anything with these files just yet - wait until we get to the deployment part. Along with `output`, there are a few other folders and files generated. You can safely ignore them for now, but do not delete the `wasm` folder - it's what makes the build command faster after the initial run.
+When the command completes, a new folder will appear: `output`. This folder now contains two files: `crowdfunding.abi.json` and `crowdfunding.wasm`. We won't be doing anything with these files just yet - wait until we get to the deployment part. Along with `output`, there are a few other folders and files generated. You can safely ignore them for now, but do not delete the `wasm` folder - it's what makes the build command faster after the initial run.
 
 The following can be safely deleted, as they are not important for this contract:
 
@@ -197,7 +187,7 @@ The structure of your folder should be like this (output printed by the command 
 │   └── src
 │       └── main.rs
 ├── output
-│   ├── crowdfunding.hex
+│   ├── crowdfunding.abi.json
 │   └── crowdfunding.wasm
 ├── src
 │   └── crowdfunding_main.rs
@@ -299,7 +289,7 @@ Your folder should look like this (output from the command `tree -L 3`):
 │   └── src
 │       └── main.rs
 ├── output
-│   ├── crowdfunding.hex
+│   ├── crowdfunding.abi.json
 │   └── crowdfunding.wasm
 ├── src
 │   └── lib.rs
