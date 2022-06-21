@@ -448,7 +448,7 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
     }
 ```
 
-The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address. The last argument is a message that gets saved on the blockchain too with the transaction.
+The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.  
 
 # **The final contract code**
 
