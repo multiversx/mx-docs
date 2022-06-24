@@ -93,7 +93,7 @@ fn roll_die(&self) {
 }
 ```
 
-This is very easy to abuse, as you can simply simulate your transactions, and only send them when you see you've won. Therefore, guarnateeing a 100% win chance!
+This is very easy to abuse, as you can simply simulate your transactions, and only send them when you see you've won. Therefore, guaranteeing a 100% win chance!
 
 Keep in mind you are not running this on your own private server, you are running it on a public blockchain, so you need a complete shift in design.
 

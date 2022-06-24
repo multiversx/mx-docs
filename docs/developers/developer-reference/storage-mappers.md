@@ -626,9 +626,9 @@ Creates an NFT (optionally with a display `name`) and returns the token ID, the 
 
 ### nft_create_and_send/nft_create_and_send_named
 ```rust
-fn nft_create<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment<Self::Api>
 
-fn nft_create_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment<Self::Api>
 ```
 
 Same as the methods above, but also sends the created token to the provided address.
