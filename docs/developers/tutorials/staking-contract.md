@@ -5,7 +5,9 @@ title: Staking smart contrac tutorial
 
 # Introduction
 
-This tutorial aims to teach you how to write a simple staking contract, and to illustrate and correct the common pitfalls new smart contract developers might fall into.
+This tutorial aims to teach you how to write a simple staking contract, and to illustrate and correct the common pitfalls new smart contract developers might fall into.  
+
+If you find anything not answered here, feel free to ask further questions on the Elrond Developers Telegram channel: https://t.me/ElrondDevelopers
 
 # Prerequisites
 
@@ -157,6 +159,10 @@ pub trait StakingContract {
 }
 ```
 
+### What's with the empty init function?
+
+Every smart contract needs to have a function annotated with `#[init]`. This function is called on deploy and upgrade. For now, we need no logic inside it, but we still need to have this function.  
+
 # Trying it out on devnet
 
 To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the Elrond IDE extension. More on this in a bit. Your new folder structure should look like this:  
@@ -191,7 +197,7 @@ CHAIN_ID="D"
 deploy() {
     erdpy --verbose contract deploy --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
-    --gas-limit=50000000 \
+    --gas-limit=10000000 \
     --send --outfile="deploy-testnet.interaction.json" \
     --proxy=${PROXY} --chain=${CHAIN_ID} || return
 }
@@ -207,7 +213,7 @@ To run this snippet, we're going to use the Elrond IDE extension again. Open the
 
 For now, we only have one option, as we only have a single function in our file, but any bash functionw we write in the snippets.sh file will appear there. Now, select the deploy option and let's deploy the contract.  
 
-## Account was not found? But I just created the wallet!
+### Account was not found? But I just created the wallet!
 
 You're going to see an error like the following:  
 ```bash
@@ -222,7 +228,7 @@ INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
 INFO:utils:View this contract address in the Elrond Devnet Explorer: https://devnet-explorer.elrond.com/accounts/erd1qqqqqqqqqqqqq...
 ```
 
-This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So erdpy calculates the address beforehand and displays it in the terminal.  
+This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So erdpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.  
 
 ## Getting EGLD on devnet
 
@@ -243,4 +249,167 @@ Go to https://r3d4.fr/faucet and submit a request:
 ![img](/developers/staking-contract-tutorial-img/external_faucet.png)
 
 Make sure you selected "devnet" and input your address! It might take a bit depending on how "busy" the faucet is.  
+
+## Deploying the contract, second try
+
+Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. erdpy will print it in the console for you:
+```bash
+INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
+```
+
+Alternatively, you can check the address in the logs tab in explorer, namely the `SCDeploy` event.
+
+### Too much gas error?
+
+Everything should work just fine, but you'll see this message:  
+![img](/developers/staking-contract-tutorial-img/too_much_gas.png)
+
+This is NOT an error. This simply means you provided way more gas than needed, so all the gas was consumed instead of the leftover being returned to you. This is done to protect the network against certain attacks. For instance, one could always provide the max gas limit and only use very little, decreasing the network's throughput significantly.  
+
+## The first stake
+
+Let's add a snippet for the staking function:
+```bash
+USER_PEM="~/Downloads/tutorialKey.pem"
+PROXY="https://devnet-gateway.elrond.com"
+CHAIN_ID="D"
+
+SC_ADDRESS=erd1qqqqqqqqqqqqq...
+STAKE_FUNC_NAME="stake"
+EGLD_AMOUNT=1
+
+deploy() {
+    erdpy --verbose contract deploy --project=${PROJECT} \
+    --recall-nonce --pem=${USER_PEM} \
+    --gas-limit=10000000 \
+    --send --outfile="deploy-testnet.interaction.json" \
+    --proxy=${PROXY} --chain=${CHAIN_ID} || return
+}
+
+stake() {
+    erdpy --verbose contract call ${SC_ADDRESS} \
+    --proxy=${PROXY} --chain=${CHAIN_ID} \
+    --send --recall-nonce --pem=${USER_PEM} \
+    --gas-limit=10000000 \
+    --value=${EGLD_AMOUNT} \
+    --function=${STAKE_FUNC_NAME}
+}
+```
+
+To pay EGLD, the `--value` argument is used, and, as you can guess, the `--function` argument is used to select which endpoint we want to call.  
+
+We've now successfully staked 1 EGLD... or have we? If we look at the transaction, that's not quite the case:  
+![img](/developers/staking-contract-tutorial-img/first_stake.png)
+
+### I sent 1 EGLD to the SC, but instead 0.000000000000000001 EGLD got sent?
+
+This is because EGLD has 18 decimals. So to send 1 EGLD, you actually have to send a value equal to 1000000000000000000 (i.e. 1 * 10^18). The blockchain only works with unsigned numbers. Floating point numbers are not allowed. The only reason the explorer displays the balances with a floating point is because it's much more user friendly to tell someone they have 1 EGLD instead of 1000000000000000000 EGLD, but internally, only the integer value is used.
+
+### But how do I send 0.5 EGLD to the SC?
+
+Since we know EGLD has 18 decimals, we have to simply multiply 0.5 by 10^18, which yields 500000000000000000.  
+
+## Actually staking 1 EGLD
+
+To do this, we simply have to update our `EGLD_AMOUNT` variable in the snippet. This should be:
+`EGLD_AMOUNT=1000000000000000000`.
+
+Now let's try staking again:  
+![img](/developers/staking-contract-tutorial-img/second_stake.png)
+
+## Querying the view functions
+
+To perform smart contract queries, we also use erdpy. Let's add the following to our snippet file:
+```bash
+USER_ADDRESS=erd1...
+
+getStakeForAddress() {
+    erdpy --verbose contract query ${SC_ADDRESS} \
+    --proxy=${PROXY} \
+    --function="getStakingPosition" \
+    --arguments ${USER_ADDRESS}
+}
+```
+
+:::note
+You don't need a PEM file or an account at all to perform queries. Notice how you also don't need a chain ID for this call.
+
+Replace `USER_ADDRESS` value with your address. Now let's see our staking amount, according to the SC's internal state:  
+```bash
+getStakeForAddress
+[
+    {
+        "base64": "DeC2s6dkAAE=",
+        "hex": "0de0b6b3a7640001",
+        "number": 1000000000000000001
+    }
+]
+```
+
+We get the expected amount, 1 EGLD, plus the initial 10^-18 EGLD we sent.
+
+Now let's also query the stakers list:
+```bash
+getAllStakers() {
+    erdpy --verbose contract query ${SC_ADDRESS} \
+    --proxy=${PROXY} \
+    --function="getStakedAddresses"
+}
+```
+
+Running this function should yield a result like this:
+```bash
+getAllStakers
+[
+    {
+        "base64": "nKGLvsPooKhq/R30cdiu1SRbQysprPITCnvi04n0cR0=",
+        "hex": "9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d",
+        "number": 70846231242182541417246304875524977991498122361356467219989042906898688667933
+    }
+]
+```
+
+...but what's this value? If we try to convert `9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d` to ASCII, we get gibberish. So what happened to our pretty erd1 address?
+
+### Converting erd1 addresses to hex
+
+The smart contracts never work with the erd1 address format, but rather with the hex format. This is NOT an ASCII to hex conversion. This is a bech32 to ASCII.
+
+But then, why did the previous query work?  
+```bash
+getStakeForAddress() {
+    erdpy --verbose contract query ${SC_ADDRESS} \
+    --proxy=${PROXY} \
+    --function="getStakingPosition" \
+    --arguments ${USER_ADDRESS}
+}
+```
+
+This is because erdpy automatically detected and converted the erd1 address to hex. To perform those conversions yourself, you can also use erdpy: 
+
+bech32 to hex  
+```bash
+erdpy wallet bech32 --decode erd1...
+```
+
+In the previous example, we used the address: erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
+
+Now let's try and decode this with erdpy:  
+```bash
+erdpy wallet bech32 --decode erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
+9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
+```
+
+Which is precisely the value we received from the smart contract. Now let's try it the other way around.
+
+hex to bech32  
+```bash
+erdpy wallet bech32 --encode hex_address
+```
+
+Running the command with the previous example, we should get the same initial address:
+```bash
+erdpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
+erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
+```bash
 
