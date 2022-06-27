@@ -411,5 +411,5 @@ Running the command with the previous example, we should get the same initial ad
 ```bash
 erdpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
 erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
-```bash
+```
 
