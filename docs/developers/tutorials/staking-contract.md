@@ -124,7 +124,7 @@ Firstly, the last _clone_ is not needed. If you clone variables all the time, th
 
 Secondly, the `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
 
-And lastly, there's a logic error. What happens if a user stakes twice? That's right, their position will be overwritten with the newest value.
+And lastly, there's a logic error. What happens if a user stakes twice? That's right, their position will be overwritten with the newest value. So instead, we need to add the newest stake amount over their current amount, using the `update` method.
 
 After fixing the above problems, we end up with the following code:
 ```rust
