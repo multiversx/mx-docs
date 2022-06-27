@@ -1,6 +1,6 @@
 ---
 id: staking-contract
-title: Staking smart contrac tutorial
+title: Staking smart contract tutorial
 ---
 
 # Introduction
