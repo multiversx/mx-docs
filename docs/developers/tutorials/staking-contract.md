@@ -243,7 +243,7 @@ Go to https://devnet-wallet.elrond.com and login to your devnet account with you
 
 Request the tokens. After a couple seconds, refresh the page, and you should have 30 xEGLD in your wallet.  
 
-### Getting EGLd through external faucet
+### Getting EGLD through external faucet
 
 Go to https://r3d4.fr/faucet and submit a request:  
 ![img](/developers/staking-contract-tutorial-img/external_faucet.png)
