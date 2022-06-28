@@ -17,6 +17,8 @@ First and foremost, you need to have erdpy installed: https://docs.elrond.com/sd
 
 If you already have erdpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
+We're going to use erdpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.elrond.com/sdk-and-tools/erdpy/smart-contract-interactions/
+
 ## Rust
 
 Once you have erdpy installed, you also have to install Rust through it, and the VM tools for testing:
