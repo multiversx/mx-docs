@@ -198,7 +198,7 @@ deploy() {
     erdpy --verbose contract deploy --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
-    --send --outfile="deploy-testnet.interaction.json" \
+    --send --outfile="deploy-devnet.interaction.json" \
     --proxy=${PROXY} --chain=${CHAIN_ID} || return
 }
 ```
@@ -275,14 +275,13 @@ PROXY="https://devnet-gateway.elrond.com"
 CHAIN_ID="D"
 
 SC_ADDRESS=erd1qqqqqqqqqqqqq...
-STAKE_FUNC_NAME="stake"
-EGLD_AMOUNT=1
+STAKE_AMOUNT=1
 
 deploy() {
     erdpy --verbose contract deploy --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
-    --send --outfile="deploy-testnet.interaction.json" \
+    --send --outfile="deploy-devnet.interaction.json" \
     --proxy=${PROXY} --chain=${CHAIN_ID} || return
 }
 
@@ -291,8 +290,8 @@ stake() {
     --proxy=${PROXY} --chain=${CHAIN_ID} \
     --send --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
-    --value=${EGLD_AMOUNT} \
-    --function=${STAKE_FUNC_NAME}
+    --value=${STAKE_AMOUNT} \
+    --function="stake"
 }
 ```
 
@@ -311,8 +310,8 @@ Since we know EGLD has 18 decimals, we have to simply multiply 0.5 by 10^18, whi
 
 ## Actually staking 1 EGLD
 
-To do this, we simply have to update our `EGLD_AMOUNT` variable in the snippet. This should be:
-`EGLD_AMOUNT=1000000000000000000`.
+To do this, we simply have to update our `STAKE_AMOUNT` variable in the snippet. This should be:
+`STAKE_AMOUNT=1000000000000000000`.
 
 Now let's try staking again:  
 ![img](/developers/staking-contract-tutorial-img/second_stake.png)
@@ -333,6 +332,9 @@ getStakeForAddress() {
 
 :::note
 You don't need a PEM file or an account at all to perform queries. Notice how you also don't need a chain ID for this call.
+
+:::note
+Because there is no PEM file required, there is no "caller" for VM queries. Attemting to use `self.blockchain().get_caller()` in a query function will return the SC's own address.
 
 Replace `USER_ADDRESS` value with your address. Now let's see our staking amount, according to the SC's internal state:  
 ```bash
@@ -373,7 +375,7 @@ getAllStakers
 
 ### Converting erd1 addresses to hex
 
-The smart contracts never work with the erd1 address format, but rather with the hex format. This is NOT an ASCII to hex conversion. This is a bech32 to ASCII.
+The smart contracts never work with the erd1 address format, but rather with the hex format. This is NOT an ASCII to hex conversion. This is a bech32 to ASCII conversion.
 
 But then, why did the previous query work?  
 ```bash
@@ -412,4 +414,175 @@ Running the command with the previous example, we should get the same initial ad
 erdpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
 erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 ```
+
+# Adding unstake functionality
+
+For now, users can only stake, but they cannot actually get their EGLD back... at all. Let's add the unstake endpoint in our SC:
+
+```rust
+#[endpoint]
+fn unstake(&self) {
+    let caller = self.blockchain().get_caller();
+    let stake_mapper = self.staking_position(&caller);
+
+    let caller_stake = stake_mapper.get();
+    if caller_stake == 0 {
+        return;
+    }
+
+    self.staked_addresses().swap_remove(&caller);
+    stake_mapper.clear();
+
+    self.send().direct_egld(&caller, &caller_stake);
+}
+```
+
+You might notice the variable `stake_mapper`. Just to remind you, the mapper's definition looks like this:
+```rust
+#[storage_mapper("stakingPosition")]
+fn staking_position(&self, addr: &ManagedAddress) -> SingleValueMapper<BigUint>;
+```
+
+In pure Rust terms, this is a method of our contract trait, with one argument, that returns a `SingleValueMapper<BigUint>`. All mappers are nothing more than struct types that provide an interface to the storage API.
+
+So then, why save the mapper in a variable? 
+
+### Better usage of storage mapper types
+
+Each time you access `self.staking_position(&addr)`, the storage key has to be constructed again, by concatenating the static string `stakingPosition` with the given `addr` argument. The mapper saves its key internally, so if we reuse the same mapper, the key is only constructed once.
+
+This saves us the following operations:
+```rust
+let mut key = ManagedBuffer::new_from_bytes(b"stakingPosition");
+key.append(addr.as_managed_buffer());
+```
+
+Instead, we just reuse the key we built previously. This can be a great performance enhancement, especially for mappers with multiple arguments. For mappers with no arguments, the improvement is minimal, but might still be worth thinking about.  
+
+## Partial unstake
+
+Some users might only want to unstake a part of their tokens, so we could simply add an `unstake_amount` argument:
+```rust
+#[endpoint]
+fn unstake(&self, unstake_amount: BigUint) {
+    let caller = self.blockchain().get_caller();
+    let remaining_stake = self.staking_position(&caller).update(|staked_amount| {
+        require!(
+            unstake_amount > 0 && unstake_amount <= *staked_amount,
+            "Invalid unstake amount"
+        );
+        *staked_amount -= &unstake_amount;
+
+        staked_amount.clone()
+    });
+    if remaining_stake == 0 {
+        self.staked_addresses().swap_remove(&caller);
+    }
+
+    self.send().direct_egld(&caller, &unstake_amount);
+}
+```
+
+As you might notice, the code changed quite a bit. We also need to account for invalid user input, so we add a `require!` statement. Additionally, since we no longer need to simply "clear" the storage, we use the `update` method, which allows us to change the currently stored value through a mutable reference.
+
+`update` is the same as doing `get`, followed by computation, and then `set`, but it's just a lot more compact. Additionally, it also allows us to return anything we want from the given closure, so we use that to detect if this was a full unstake.
+
+```rust
+pub fn update<R, F: FnOnce(&mut T) -> R>(&self, f: F) -> R {
+    let mut value = self.get();
+    let result = f(&mut value);
+    self.set(value);
+    result
+}
+```
+
+### Optional arguments
+
+For a bit of performance enhancement, we could have the `unstake_amount` as an optional argument, with the default being full unstake.
+
+```rust
+#[endpoint]
+fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
+    let caller = self.blockchain().get_caller();
+    let stake_mapper = self.staking_position(&caller);
+    let unstake_amount = match opt_unstake_amount {
+        OptionalValue::Some(amt) => amt,
+        OptionalValue::None => stake_mapper.get(),
+    };
+
+    let remaining_stake = self.staking_position(&caller).update(|staked_amount| {
+        require!(
+            unstake_amount > 0 && unstake_amount <= *staked_amount,
+            "Invalid unstake amount"
+        );
+        *staked_amount -= &unstake_amount;
+
+        staked_amount.clone()
+    });
+    if remaining_stake == 0 {
+        self.staked_addresses().swap_remove(&caller);
+    }
+
+    self.send().direct_egld(&caller, &unstake_amount);
+}
+```
+
+This makes it so if someone wants to perform a full unstake, they can simply not give the argument at all.
+
+## Unstaking our devnet tokens
+
+Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the Elrond IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
+
+```bash
+UNSTAKE_AMOUNT=500000000000000000
+
+unstake() {
+    erdpy --verbose contract call ${SC_ADDRESS} \
+    --proxy=${PROXY} --chain=${CHAIN_ID} \
+    --send --recall-nonce --pem=${USER_PEM} \
+    --gas-limit=10000000 \
+    --function="unstake" \
+    --arguments ${UNSTAKE_AMOUNT}
+}
+```
+
+Now run this function, and you'll get this result:  
+![img](/developers/staking-contract-tutorial-img/first_unstake.png)
+
+...but why? We just added the function! Well, we might've added it to our code, but the contract on the devnet still has our old code. So, how do we upload our new code?
+
+## Upgrading smart contracts
+
+Since we've added some new functionality, we also want to update the currently deployed implementation. Add the upgrade snippet to your snippets.sh and run it:
+
+```bash
+upgrade() {
+    erdpy --verbose contract upgrade ${SC_ADDRESS} \
+    --project=${PROJECT} \
+    --recall-nonce --pem=${USER_PEM} \
+    --gas-limit=20000000 \
+    --send --outfile="upgrade-devnet.interaction.json" \
+    --proxy=${PROXY} --chain=${CHAIN_ID} || return
+}
+```
+
+:::note
+Keep in mind the `#[init]` function of the newly uploaded code is also called on upgrade. For now, it does not matter, as our init function does nothing, but it's worth keeping in mind.
+
+## Try unstaking again
+
+Try running the `unstake` snippet again. This time, it should work just fine. Afterwards, let's query our staked amount through `getStakeForAddress`, to see if it updated our amount properly:
+
+```bash
+getStakeForAddress
+[
+    {
+        "base64": "BvBbWdOyAAE=",
+        "hex": "06f05b59d3b20001",
+        "number": 500000000000000001
+    }
+]
+```
+
+We had 1 EGLD, and we've unstaked 0.5 EGLD. Now we have 0.5 EGLD staked. (with the extra 1 fraction of EGLD we've staked initially).  
 
