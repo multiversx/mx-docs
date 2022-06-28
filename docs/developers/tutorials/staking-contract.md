@@ -588,3 +588,48 @@ getStakeForAddress
 
 We had 1 EGLD, and we've unstaked 0.5 EGLD. Now we have 0.5 EGLD staked. (with the extra 1 fraction of EGLD we've staked initially).  
 
+## Unstake with no arguments
+
+Let's also test the optional argument functionality. Remove the `--arguments` line from the snippet, and run it again.
+
+```bash
+unstake() {
+    erdpy --verbose contract call ${SC_ADDRESS} \
+    --proxy=${PROXY} --chain=${CHAIN_ID} \
+    --send --recall-nonce --pem=${USER_PEM} \
+    --gas-limit=10000000 \
+    --function="unstake"
+}
+```
+
+Let's also query `getStakeForAddress` and `getAllStakers` afterwards to see if the state was cleaned up properly:
+
+```bash
+getStakeForAddress
+[
+    ""
+]
+```
+
+```bash
+getAllStakers
+[]
+```
+
+As you can see, we get an empty result (which means the value 0), and an empty array respectively.
+
+# Writing Rust tests
+
+As you might've noticed, it can be quite a chore to keep upgrading the contract after every little change, especially if all we want to do is test a new feature. So let's recap what we've done until now:
+- deploy our contract
+- stake
+- partial unstake
+- full unstake
+
+----- TODO -----
+
+# Staking Rewards
+
+Right now, there is no incentive to stake EGLD into this smart contract. Let's say we want to give every staker 10% APY. For example, if someone staked 100 EGLD, they will receive a total of 10EGLD per year.
+
+----- TODO -----
