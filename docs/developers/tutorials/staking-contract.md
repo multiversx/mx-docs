@@ -56,10 +56,12 @@ Run the following command in the folder in which you want your smart contract to
 erdpy contract new staking-contract --template empty
 ```
 
-Open the generated folder, and you should have the following structure:  
+Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
+
+You should then have the following structure:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure.png)
 
-For now, comment all the code in the `empty_rust_test.rs` file (ctrl + "A", then ctrl + "/"). Otherwise, it will keep popping up errors as we modify the contract's code.
+For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "A", then ctrl + "/"). Otherwise, it will keep popping up errors as we modify the contract's code.
 
 # Setting up the workspace
 
@@ -68,7 +70,7 @@ Now, to have all the extensions work properly, we have to setup our workspace. T
 Now let's open the Elrond VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
 ![img](/developers/staking-contract-tutorial-img/elrond_ide_extension.png)
 
-Alternatively, you can run `erdpy --verbose contract build` yourself from the VSCode terminal.
+Alternatively, you can run `erdpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
 
 After the building has completed, our folder should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_2.png)
@@ -79,17 +81,35 @@ A new folder, called `output` was created, which contains the compiled contract 
 
 Currently, we just have an empty contract. Not very useful, is it? So let's add some simple code for it. Since this is a staking contract, we'd expect to have a `stake` function, right?
 
-Let's add said function:
+First, remove all the code in the `./src/empty.rs` file and replace it with this:
 ```rust
-#[payable("EGLD")]
-#[endpoint]
-fn stake(&self) {}
+#![no_std]
+
+elrond_wasm::imports!();
+
+#[elrond_wasm::contract]
+pub trait StakingContract {
+    #[init]
+    fn init(&self) {}
+
+    #[payable("EGLD")]
+    #[endpoint]
+    fn stake(&self) {}
+}
+
 ```
 
-Since we want this function to be callable by users, we have to annotate it with `#[endpoint]`. Also,since we want to be able to receive a payment, we mark it also as `#[payable("EGLD)]`. For now, we'll use EGLD as our staking token. Note that the contract does NOT need to be payable for it to receive payments on endpoint calls. The payable flag at contract level is only for receiving payments without endpoint invocation.
+Since we want this function to be callable by users, we have to annotate it with `#[endpoint]`. Also,since we want to be able to receive a payment, we mark it also as `#[payable("EGLD)]`. For now, we'll use EGLD as our staking token. 
+
+:::note
+The contract does NOT need to be payable for it to receive payments on endpoint calls. The payable flag at contract level is only for receiving payments without endpoint invocation.
 
 Now, it's time to add an implementation for the function. We need to see how much a user paid, and save their staking information in storage. We end up with this code:
 ```rust
+#![no_std]
+
+elrond_wasm::imports!();
+
 #[elrond_wasm::contract]
 pub trait StakingContract {
     #[init]
@@ -134,6 +154,10 @@ And lastly, there's a logic error. What happens if a user stakes twice? That's r
 
 After fixing the above problems, we end up with the following code:
 ```rust
+#![no_std]
+
+elrond_wasm::imports!();
+
 #[elrond_wasm::contract]
 pub trait StakingContract {
     #[init]
