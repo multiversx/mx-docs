@@ -662,7 +662,7 @@ use elrond_wasm_debug::{
 use staking_contract::*;
 
 const WASM_PATH: &'static str = "output/staking-contract.wasm";
-const USER_BALANCE: u64 = 100;
+const USER_BALANCE: u64 = 1_000_000_000_000_000_000;
 
 struct ContractSetup<ContractObjBuilder>
 where
@@ -816,7 +816,7 @@ fn stake_unstake_test() {
 We've added a `user_address` field in the setup struct, which is initiated with `USER_BALANCE` EGLD in their account.
 
 :::note
-For the test we're going to use small numbers for balances, since there is no reason to work with big numbers.
+For the test we're going to use small numbers for balances, since there is no reason to work with big numbers. For this test, we're using 1 EGLD for user balance.
 
 Then, we've staked the user's entire balance, unstaked half, then unstaked fully. After each transaction, we've checked the SC's internal staking storage, and also the balance of the user and the SC respectively.
 
@@ -836,11 +836,95 @@ Where `empty_rust_test` is the name of the file containing the tests.
 
 # Staking Rewards
 
-Right now, there is no incentive to stake EGLD into this smart contract. Let's say we want to give every staker 10% APY. For example, if someone staked 100 EGLD, they will receive a total of 10EGLD per year.
+Right now, there is no incentive to stake EGLD into this smart contract. Let's say we want to give every staker 10% APY (Annual Percentage Yield). For example, if someone staked 100 EGLD, they will receive a total of 10EGLD per year.
 
 For this, we're also going to need to save the time at which each user staked. Also, we can't simply make each user wait 1 year to get their rewards. We need a more fine-tuned solution, so we're going to calculate rewards per block instead of per year.
 
 :::note
 You can also use rounds, timestamp, epochs etc. for time keeping in smart contracts, but number of blocks is the recommended approach.
 
------ TODO -----
+## User-defined struct types
+
+A single `BigUint` for each user is not enough anymore. As stated before, we need to also store the stake block, and we need to update this block number on every action.
+
+So we're going to use a struct:
+```rust
+pub struct StakingPosition<M: ManagedTypeApi> {
+    pub stake_amount: BigUint<M>,
+    pub last_action_block: u64,
+}
+```
+
+:::note
+Every managed type from the Rust framework needs a `ManagedTypeApi` implementation, which allows it to access the VM functions for perfoming operations. For example, adding two `BigUint` numbers, concatenating two `ManagedBuffer`s, etc. Inside smart contract code, the `ManagedTypeApi` associated type is automatically added, but outside of it, we have to manually specify it.
+
+Additionally, since we need to store this in storage, we need to tell the Rust framework how to encode and decode this type. This can be done automatically by deriving (i.e. auto-implementing) these traits, via the `#[derive]` annotation:
+
+```rust
+elrond_wasm::derive_imports!();
+
+#[derive(TypeAbi, TopEncode, TopDecode)]
+pub struct StakingPosition<M: ManagedTypeApi> {
+    pub stake_amount: BigUint<M>,
+    pub last_action_block: u64,
+}
+```
+
+We've also added `TypeAbi`, since this is required for ABI generation. ABIs are used by dApps and such to decode custom SC types, but this is out of scope of this tutorial.
+
+If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more here: https://docs.elrond.com/developers/developer-reference/elrond-serialization-format/
+
+## Rewards formula
+
+A block is produced about every 6 seconds, so total blocks in a year would be seconds in year, divided by 6. More specifically:
+```rust
+pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
+```
+
+More specifically: 60 seconds per minute * 60 minutes per hour * 24 hours per day * 365 days, divided by the 6 second block duration.
+
+:::note
+This is calculated and replaced with the exact value at compile time, so there is no performance penalty of having a constant with mathematical operations in its value definition.
+
+Having defined this constant, rewards formula should look like this:
+```rust
+let reward_amt = apy / 100 * user_stake * blocks_since_last_claim / BLOCKS_IN_YEAR;
+```
+
+Using 10% as APY, and assuming exactly one year has passed since last claim, the reward amount would be `10/100 * user_stake`, which is exactly 10% APY.
+
+But there is something wrong with the current formula. We will always get `reward_amt` = 0.
+
+### BigUint division
+
+BigUint division works the same as unsigned integer division. If you divide `x` by `y`, where `x < y`, you will always get 0 as result. So in our previous example, 10/100 is NOT 0.1, but 0.
+
+To fix this, we need to take care of our operation order:
+```rust
+let reward_amt = user_stake * apy / 100 * blocks_since_last_claim / BLOCKS_IN_YEAR;
+```
+
+### How to express percentages like 50.45%?
+
+In this case, we need to extend our precision by using fixed point precision. Instead of having `100` as the max percentage, we will extend it to `10_000`, and give `50.45%` as `5_045`. Updating our above formula results in this:
+
+```rust
+pub const MAX_PERCENTAGE: u64 = 10_000;
+
+let reward_amt = user_stake * apy / MAX_PERCENTAGE * blocks_since_last_claim / BLOCKS_IN_YEAR;
+```
+
+
+For example, let's assume the user stake is 100, and 1 year has passed. Using `5_045` as APY value, the formula would become:
+```rust
+reward_amt = 100 * 5_045 / 10_000 = 504_500 / 10_000 = 50
+```
+
+:::note
+Since we're still using BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the MAX_PERCENTAGE and the respective APY, but this is also inheritly "fixed" on the blockchain, because we work with very big numbers for `user_stake`
+
+## Rewards implementation
+
+Now let's see how this would look in our Rust smart contract code:
+
+--- TODO ---
