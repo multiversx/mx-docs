@@ -595,6 +595,9 @@ upgrade() {
 :::note
 Keep in mind the `#[init]` function of the newly uploaded code is also called on upgrade. For now, it does not matter, as our init function does nothing, but it's worth keeping in mind.
 
+:::note
+All the storage is kept on upgrade, so make sure any storage changes you make to storage mapping are backwards compatible!
+
 ## Try unstaking again
 
 Try running the `unstake` snippet again. This time, it should work just fine. Afterwards, let's query our staked amount through `getStakeForAddress`, to see if it updated our amount properly:
