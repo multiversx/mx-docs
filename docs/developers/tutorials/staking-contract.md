@@ -61,7 +61,7 @@ Open VSCode, select File -> Open Folder, and open the newly created `staking-con
 You should then have the following structure:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure.png)
 
-For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "A", then ctrl + "/"). Otherwise, it will keep popping up errors as we modify the contract's code.
+For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "A", then ctrl + "/"). Otherwise, it will keep popping up errors as we modify the contract's code.  
 
 # Setting up the workspace
 
@@ -650,10 +650,197 @@ As you might've noticed, it can be quite a chore to keep upgrading the contract 
 - partial unstake
 - full unstake
 
------ TODO -----
+:::note
+A more detailed explanation of Rust tests can be found here: https://docs.elrond.com/developers/developer-reference/rust-testing-framework/
+
+To test the previously described scenario, we're going to need a user address, and a new test function. Replace the contents of the `./tests/empty_rust_test.rs` file with the following:
+```rust
+use elrond_wasm::{elrond_codec::multi_types::OptionalValue, types::Address};
+use elrond_wasm_debug::{
+    managed_address, managed_biguint, rust_biguint, testing_framework::*, DebugApi,
+};
+use staking_contract::*;
+
+const WASM_PATH: &'static str = "output/staking-contract.wasm";
+const USER_BALANCE: u64 = 100;
+
+struct ContractSetup<ContractObjBuilder>
+where
+    ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
+{
+    pub blockchain_wrapper: BlockchainStateWrapper,
+    pub owner_address: Address,
+    pub user_address: Address,
+    pub contract_wrapper:
+        ContractObjWrapper<staking_contract::ContractObj<DebugApi>, ContractObjBuilder>,
+}
+
+fn setup_contract<ContractObjBuilder>(
+    cf_builder: ContractObjBuilder,
+) -> ContractSetup<ContractObjBuilder>
+where
+    ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
+{
+    let rust_zero = rust_biguint!(0u64);
+    let mut blockchain_wrapper = BlockchainStateWrapper::new();
+    let owner_address = blockchain_wrapper.create_user_account(&rust_zero);
+    let user_address = blockchain_wrapper.create_user_account(&rust_biguint!(USER_BALANCE));
+    let cf_wrapper = blockchain_wrapper.create_sc_account(
+        &rust_zero,
+        Some(&owner_address),
+        cf_builder,
+        WASM_PATH,
+    );
+
+    blockchain_wrapper
+        .execute_tx(&owner_address, &cf_wrapper, &rust_zero, |sc| {
+            sc.init();
+        })
+        .assert_ok();
+
+    blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());
+
+    ContractSetup {
+        blockchain_wrapper,
+        owner_address,
+        user_address,
+        contract_wrapper: cf_wrapper,
+    }
+}
+
+#[test]
+fn stake_unstake_test() {
+    let mut setup = setup_contract(staking_contract::contract_obj);
+    let owner_addr = setup.owner_address.clone();
+    let user_addr = setup.user_address.clone();
+
+    // simulate deploy
+    setup
+        .blockchain_wrapper
+        .execute_tx(
+            &owner_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(0u64),
+            |sc| {
+                sc.init();
+            },
+        )
+        .assert_ok();
+
+    setup
+        .blockchain_wrapper
+        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
+    setup
+        .blockchain_wrapper
+        .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
+
+    // stake full
+    setup
+        .blockchain_wrapper
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(USER_BALANCE),
+            |sc| {
+                sc.stake();
+
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    managed_biguint!(USER_BALANCE)
+                );
+            },
+        )
+        .assert_ok();
+
+    setup
+        .blockchain_wrapper
+        .check_egld_balance(&user_addr, &rust_biguint!(0));
+    setup.blockchain_wrapper.check_egld_balance(
+        setup.contract_wrapper.address_ref(),
+        &rust_biguint!(USER_BALANCE),
+    );
+
+    // unstake partial
+    setup
+        .blockchain_wrapper
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(0),
+            |sc| {
+                sc.unstake(OptionalValue::Some(managed_biguint!(USER_BALANCE / 2)));
+
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    managed_biguint!(USER_BALANCE / 2)
+                );
+            },
+        )
+        .assert_ok();
+
+    setup
+        .blockchain_wrapper
+        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE / 2));
+    setup.blockchain_wrapper.check_egld_balance(
+        setup.contract_wrapper.address_ref(),
+        &rust_biguint!(USER_BALANCE / 2),
+    );
+
+    // unstake full
+    setup
+        .blockchain_wrapper
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(0),
+            |sc| {
+                sc.unstake(OptionalValue::None);
+
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    managed_biguint!(0)
+                );
+            },
+        )
+        .assert_ok();
+
+    setup
+        .blockchain_wrapper
+        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
+    setup
+        .blockchain_wrapper
+        .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
+}
+```
+
+We've added a `user_address` field in the setup struct, which is initiated with `USER_BALANCE` EGLD in their account.
+
+:::note
+For the test we're going to use small numbers for balances, since there is no reason to work with big numbers.
+
+Then, we've staked the user's entire balance, unstaked half, then unstaked fully. After each transaction, we've checked the SC's internal staking storage, and also the balance of the user and the SC respectively.
+
+## Running the test
+
+To run a test, you can use click on the `Run Test` button from under the test name.
+![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
+
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.elrond.com/developers/developer-reference/rust-smart-contract-debugging/
+
+Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
+```bash
+cargo test --test empty_rust_test
+```
+
+Where `empty_rust_test` is the name of the file containing the tests.
 
 # Staking Rewards
 
 Right now, there is no incentive to stake EGLD into this smart contract. Let's say we want to give every staker 10% APY. For example, if someone staked 100 EGLD, they will receive a total of 10EGLD per year.
+
+For this, we're also going to need to save the time at which each user staked. Also, we can't simply make each user wait 1 year to get their rewards. We need a more fine-tuned solution, so we're going to calculate rewards per block instead of per year.
+
+:::note
+You can also use rounds, timestamp, epochs etc. for time keeping in smart contracts, but number of blocks is the recommended approach.
 
 ----- TODO -----
