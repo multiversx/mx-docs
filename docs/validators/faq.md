@@ -9,6 +9,7 @@ Get started with a few popular VPS choices:
 
 - Amazon - https://aws.amazon.com/lightsail/pricing/
 - DigitalOcean - https://www.digitalocean.com/pricing/
+- UpCloud - https://upcloud.com/pricing/
 - Vultr - https://www.vultr.com/products/cloud-compute/
 - Alibaba Cloud - https://www.alibabacloud.com/product/ecs#pricing
 - Google Cloud - https://cloud.google.com/products/calculator
