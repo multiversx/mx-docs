@@ -251,3 +251,12 @@ Key-value pairs (both hex-encoded) successfully retrieved.
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
+
+## **ESDT tokens endpoints**
+
+There are a number of ESDT tokens endpoints that one can use to check all tokens of an address, balance for 
+specific fungible or non-fungible tokens or so on.
+
+Fungible tokens endpoints can be found [here](/developers/esdt-tokens/#rest-api) and non-fungible tokens 
+endpoints can be found [here](/developers/nft-tokens/#rest-api). 
+
