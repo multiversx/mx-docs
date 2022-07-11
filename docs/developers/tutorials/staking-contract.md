@@ -65,7 +65,7 @@ For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "
 
 # Setting up the workspace
 
-Now, to have all the extensions work properly, we have to setup our workspace. This is done by pressing `ctrl + shift + P` and selecting the "Elrond: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
+Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "Elrond: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
 
 Now let's open the Elrond VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
 ![img](/developers/staking-contract-tutorial-img/elrond_ide_extension.png)
@@ -103,6 +103,7 @@ Since we want this function to be callable by users, we have to annotate it with
 
 :::note
 The contract does NOT need to be payable for it to receive payments on endpoint calls. The payable flag at contract level is only for receiving payments without endpoint invocation.
+::: 
 
 Now, it's time to add an implementation for the function. We need to see how much a user paid, and save their staking information in storage. We end up with this code:
 ```rust
@@ -234,10 +235,10 @@ If you wanted to use testnet, the proxy would be "https://testnet-gateway.elrond
 
 The only thing you need to edit is the USER_PEM variable with the previously created PEM file's path.
 
-To run this snippet, we're going to use the Elrond IDE extension again. Open the extension in VSCode from the left-hand menu, right click on the contract name, and select the `Run Contract Snippet` option. This should open a menu in at the top:  
+To run this snippet, we're going to use the Elrond IDE extension again. Open the extension in VSCode from the left-hand menu, right-click on the contract name, and select the `Run Contract Snippet` option. This should open a menu in at the top:  
 ![img](/developers/staking-contract-tutorial-img/snippet.png)
 
-For now, we only have one option, as we only have a single function in our file, but any bash functionw we write in the snippets.sh file will appear there. Now, select the deploy option and let's deploy the contract.  
+For now, we only have one option, as we only have a single function in our file, but any bash function we write in the snippets.sh file will appear there. Now, select the deploy option and let's deploy the contract.  
 
 ### Account was not found? But I just created the wallet!
 
@@ -264,7 +265,7 @@ There are two ways of getting EGLD on devnet:
 
 ### Getting EGLD through devnet wallet
 
-Go to https://devnet-wallet.elrond.com and login to your devnet account with your PEM file. In the leftside menu, select the "faucet" option:  
+Go to https://devnet-wallet.elrond.com and login to your devnet account with your PEM file. In the left side menu, select the "faucet" option:  
 ![img](/developers/staking-contract-tutorial-img/wallet_faucet.png)
 
 Request the tokens. After a couple seconds, refresh the page, and you should have 30 xEGLD in your wallet.  
@@ -328,7 +329,7 @@ We've now successfully staked 1 EGLD... or have we? If we look at the transactio
 
 ### I sent 1 EGLD to the SC, but instead 0.000000000000000001 EGLD got sent?
 
-This is because EGLD has 18 decimals. So to send 1 EGLD, you actually have to send a value equal to 1000000000000000000 (i.e. 1 * 10^18). The blockchain only works with unsigned numbers. Floating point numbers are not allowed. The only reason the explorer displays the balances with a floating point is because it's much more user friendly to tell someone they have 1 EGLD instead of 1000000000000000000 EGLD, but internally, only the integer value is used.
+This is because EGLD has 18 decimals. So to send 1 EGLD, you actually have to send a value equal to 1000000000000000000 (i.e. 1 * 10^18). The blockchain only works with unsigned numbers. Floating point numbers are not allowed. The only reason the explorer displays the balances with a floating point is because it's much more user-friendly to tell someone they have 1 EGLD instead of 1000000000000000000 EGLD, but internally, only the integer value is used.
 
 ### But how do I send 0.5 EGLD to the SC?
 
@@ -360,7 +361,7 @@ getStakeForAddress() {
 You don't need a PEM file or an account at all to perform queries. Notice how you also don't need a chain ID for this call.
 
 :::note
-Because there is no PEM file required, there is no "caller" for VM queries. Attemting to use `self.blockchain().get_caller()` in a query function will return the SC's own address.
+Because there is no PEM file required, there is no "caller" for VM queries. Attempting to use `self.blockchain().get_caller()` in a query function will return the SC's own address.
 
 Replace `USER_ADDRESS` value with your address. Now let's see our staking amount, according to the SC's internal state:  
 ```bash
@@ -859,7 +860,7 @@ pub struct StakingPosition<M: ManagedTypeApi> {
 ```
 
 :::note
-Every managed type from the Rust framework needs a `ManagedTypeApi` implementation, which allows it to access the VM functions for perfoming operations. For example, adding two `BigUint` numbers, concatenating two `ManagedBuffer`s, etc. Inside smart contract code, the `ManagedTypeApi` associated type is automatically added, but outside of it, we have to manually specify it.
+Every managed type from the Rust framework needs a `ManagedTypeApi` implementation, which allows it to access the VM functions for performing operations. For example, adding two `BigUint` numbers, concatenating two `ManagedBuffer`s, etc. Inside smart contract code, the `ManagedTypeApi` associated type is automatically added, but outside of it, we have to manually specify it.
 
 Additionally, since we need to store this in storage, we need to tell the Rust framework how to encode and decode this type. This can be done automatically by deriving (i.e. auto-implementing) these traits, via the `#[derive]` annotation:
 
@@ -884,7 +885,7 @@ A block is produced about every 6 seconds, so total blocks in a year would be se
 pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
 ```
 
-More specifically: 60 seconds per minute * 60 minutes per hour * 24 hours per day * 365 days, divided by the 6 second block duration.
+More specifically: 60 seconds per minute * 60 minutes per hour * 24 hours per day * 365 days, divided by the 6-second block duration.
 
 :::note
 This is calculated and replaced with the exact value at compile time, so there is no performance penalty of having a constant with mathematical operations in its value definition.
@@ -924,7 +925,7 @@ reward_amt = 100 * 5_045 / 10_000 = 504_500 / 10_000 = 50
 ```
 
 :::note
-Since we're still using BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the MAX_PERCENTAGE and the respective APY, but this is also inheritly "fixed" on the blockchain, because we work with very big numbers for `user_stake`
+Since we're still using BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the MAX_PERCENTAGE and the respective APY, but this is also "inheritly fixed" on the blockchain, because we work with very big numbers for `user_stake`
 
 ## Rewards implementation
 
