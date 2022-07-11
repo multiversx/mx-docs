@@ -9,6 +9,7 @@ Get started with a few popular VPS choices:
 
 - Amazon - https://aws.amazon.com/lightsail/pricing/
 - DigitalOcean - https://www.digitalocean.com/pricing/
+- UpCloud - https://upcloud.com/pricing/
 - Vultr - https://www.vultr.com/products/cloud-compute/
 - Alibaba Cloud - https://www.alibabacloud.com/product/ecs#pricing
 - Google Cloud - https://cloud.google.com/products/calculator
@@ -19,7 +20,6 @@ Find more via a comparison calculator - https://www.vpsbenchmarks.com/screener
 Recommendations from experienced validators:
 
 - Jose - https://medium.com/@josefcoap/elrond-vps-guide-ebfa6655cb9f
-- Sebastian - https://medium.com/@SebastianJ/elrond-a-comparison-of-node-hosting-options-ca9268da7d72
 
 :::warning
 Consider the price of cheap services that offer same specs as other providers at half of the price, when running a validator - the protocol dynamically phases out low performance nodes, which will lead to fewer returns for operators.
