@@ -67,7 +67,7 @@ const authToken = "aaaabbbbaaaabbbb";
 // the relationship between "authToken" and the Elrond address of the user
 const callbackUrl = "https://my-dapp/on-wallet-login"
 
-await this.provider.login({ callbackUrl: callbackUrl, token: authToken });
+await provider.login({ callbackUrl: callbackUrl, token: authToken });
 ```
 
 ### Signing transactions
@@ -115,3 +115,85 @@ Documentation in this section is preliminary and subject to change.
 :::
 
 As of July 2022, the web wallet provider does not allow one to sign arbitrary messages (only transaction signing is supported).
+
+## The Extension Provider (Maiar DeFi Wallet)
+
+:::note
+Make sure you have a look over the [webhooks](/wallet/wallet-extension), in advance.
+:::
+
+[`@elrondnetwork/erdjs-extension-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
+
+In order to aquire the instance (singleton) of the provider, do as follows:
+
+```
+import { ExtensionProvider } from "@elrondnetwork/erdjs-extension-provider";
+
+const provider = ExtensionProvider.getInstance();
+```
+
+Before performing any operation, make sure to initialize the provider:
+
+```
+await provider.init();
+```
+
+### Login and logout
+
+Then, ask the user to login:
+
+```
+const address = await provider.login();
+
+console.log(address);
+console.log(provider.account);
+```
+
+In order to logout, do as follows:
+
+```
+await provider.logout();
+```
+
+The `login()` method supports the `token` parameter (similar to the web wallet provider):
+
+```
+// A custom identity token (opaque to the signing provider)
+const authToken = "aaaabbbbaaaabbbb";
+
+await provider.login({ token: authToken });
+
+console.log("Address:", provider.account.address);
+console.log("Token signature:", provider.account.signature);
+```
+
+### Signing transactions
+
+Transactions can be signed as follows:
+
+```
+import { Transaction } from "@elrondnetwork/erdjs";
+
+const firstTransaction = new Transaction({ ... });
+const secondTransaction = new Transaction({ ... });
+
+await provider.signTransactions([firstTransaction, secondTransaction]);
+
+// "firstTransaction" and "secondTransaction" can now be broadcasted.
+```
+
+### Signing messages
+
+Arbitrary messages can be signed as follows:
+
+```
+import { SignableMessage } from "@elrondnetwork/erdjs";
+
+const message = new SignableMessage({
+    message: Buffer.from("hello")
+});
+
+await provider.signMessage(message);
+
+console.log(message.toJSON());
+```
