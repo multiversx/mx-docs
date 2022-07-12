@@ -39,7 +39,7 @@ Then, ask the user to login:
 await provider.login({ callbackUrl: "http://my-dapp" });
 ```
 
-Once the user opens hers wallet, the web wallet issues a redirected back to `callbackUrl`, along with the **address** of the user. You can get the address as follows:
+Once the user opens her wallet, the web wallet issues a redirected back to `callbackUrl`, along with the **address** of the user. You can get the address as follows:
 
 ```
 import qs from "qs";
@@ -119,7 +119,7 @@ As of July 2022, the web wallet provider does not allow one to sign arbitrary me
 ## The Extension Provider (Maiar DeFi Wallet)
 
 :::note
-Make sure you have a look over the [webhooks](/wallet/wallet-extension), in advance.
+Make sure you have a look over [this page](/wallet/wallet-extension), in advance.
 :::
 
 [`@elrondnetwork/erdjs-extension-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
@@ -197,3 +197,82 @@ await provider.signMessage(message);
 
 console.log(message.toJSON());
 ```
+
+## The Wallet Connect provider
+
+[`@elrondnetwork/erdjs-wallet-connect-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
+
+:::note
+The examples in this section rely on [`@walletconnect/qrcode-modal`](https://www.npmjs.com/package/@walletconnect/qrcode-modal) to build the QR popup.
+:::
+
+In order to create an instance of the provider, do as follows:
+
+```
+import QRCodeModal from "@walletconnect/qrcode-modal";
+import { WalletConnectProvider } from "@elrondnetwork/erdjs-wallet-connect-provider";
+
+var provider;
+
+const bridgeUrl = "https://bridge.walletconnect.org";
+
+const callbacks = {
+    onClientLogin: async function () {
+        QRCodeModal.close();
+        const address = await provider.getAddress();
+        console.log("Address:", address);
+    },
+    onClientLogout: async function () {
+        console.log("onClientLogout()");
+    }
+};
+
+const provider = new WalletConnectProvider(bridgeUrl, callbacks);
+```
+
+Before performing any operation, make sure to initialize the provider:
+
+```
+await provider.init();
+```
+
+### Login and logout
+
+Then, ask the user to login using Maiar on her phone:
+
+```
+const connectorUri = await provider.login();
+QRCodeModal.open(connectorUri);
+```
+
+Once the user confirms the login, the `onClientLogin()` callback (declared above) is executed.
+
+
+In order to logout, do as follows:
+
+```
+await provider.logout();
+```
+
+Transactions can be signed as follows:
+
+```
+import { Transaction } from "@elrondnetwork/erdjs";
+
+const firstTransaction = new Transaction({ ... });
+const secondTransaction = new Transaction({ ... });
+
+await provider.signTransactions([firstTransaction, secondTransaction]);
+
+// "firstTransaction" and "secondTransaction" can now be broadcasted.
+```
+
+Alternatively, one can sign a single transaction using the method `signTransaction()`.
+
+### Signing messages
+
+:::important
+Documentation in this section is preliminary and subject to change.
+:::
+
+As of July 2022, erdjs' Wallet Connect provider does not allow one to sign arbitrary messages (only transaction signing is supported).
