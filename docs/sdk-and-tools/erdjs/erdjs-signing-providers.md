@@ -9,8 +9,8 @@ This page will guide you through the process of integrating the **erdjs signing 
 Note that for most purposes, **we recommend using [dapp-core](https://github.com/ElrondNetwork/dapp-core)** instead of integrating the signing providers on your own.
 :::
 
-:::note
-The code samples depicted on this page can also be found on the [erdjs examples repository](https://github.com/ElrondNetwork/elrond-sdk-erdjs-examples).
+:::important
+The code samples depicted on this page can also be found on the [**erdjs examples repository**](https://github.com/ElrondNetwork/elrond-sdk-erdjs-examples).
 :::
 
 ## The Web Wallet Provider
@@ -254,6 +254,8 @@ In order to logout, do as follows:
 await provider.logout();
 ```
 
+### Signing transactions
+
 Transactions can be signed as follows:
 
 ```
@@ -276,3 +278,97 @@ Documentation in this section is preliminary and subject to change.
 :::
 
 As of July 2022, erdjs' Wallet Connect provider does not allow one to sign arbitrary messages (only transaction signing is supported).
+
+## The Hardware Wallet (Ledger) Provider
+
+:::note
+Make sure you have a look over [this page](/wallet/ledger), in advance.
+:::
+
+[`@elrondnetwork/erdjs-hw-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
+
+In order to create an instance of the provider, do as follows:
+
+```
+import { HWProvider } from "@elrondnetwork/erdjs-hw-provider";
+
+const provider = new HWProvider();
+```
+
+Before performing any operation, make sure to initialize the provider (also, the Elrond application has to be open on the device):
+
+```
+await provider.init();
+```
+
+### Login
+
+Before asking the user to login using the Ledger, you may want to display all the available addresses on the device, and let the user choose one of them:
+
+```
+const addresses = await provider.getAccounts();
+console.log(addresses);
+```
+
+The login looks like this:
+
+```
+const chosenAddressIndex = 3;
+await provider.login({ addressIndex: chosenAddressIndex });
+alert(`Logged in. Address: ${await provider.getAddress()}`);
+```
+
+Alternatively, in order to select a specific address on the device after login, call `setAddressIndex()`:
+
+```
+const addressIndex = 3;
+await provider.setAddressIndex(addressIndex);
+console.log(`Address has been set: ${await provider.getAddress()}.`);
+```
+
+The Ledger provider does not support a _logout_ operation per se (not applicable in this context).
+
+The login flow supports the `token` parameter (similar to other providers), using the method `tokenLogin()`:
+
+```
+// A custom identity token (opaque to the signing provider)
+const authToken = "aaaabbbbaaaabbbb";
+
+const { address, signature } = await provider.tokenLogin({ addressIndex: 0, token: authToken });
+
+console.log("Address:", address);
+console.log("Signature:", signature.hex());
+```
+
+### Signing transactions
+
+Transactions can be signed as follows:
+
+```
+import { Transaction } from "@elrondnetwork/erdjs";
+
+const firstTransaction = new Transaction({ ... });
+const secondTransaction = new Transaction({ ... });
+
+await provider.signTransactions([firstTransaction, secondTransaction]);
+
+// "firstTransaction" and "secondTransaction" can now be broadcasted.
+```
+
+Alternatively, one can sign a single transaction using the method `signTransaction()`.
+
+### Signing messages
+
+Arbitrary messages can be signed as follows:
+
+```
+import { SignableMessage } from "@elrondnetwork/erdjs";
+
+const message = new SignableMessage({
+    message: Buffer.from("hello")
+});
+
+await provider.signMessage(message);
+
+console.log(message.toJSON());
+```
