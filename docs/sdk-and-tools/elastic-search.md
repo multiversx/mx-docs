@@ -33,3 +33,20 @@ There are some endpoints in elrond-proxy that rely on an Elasticsearch instance.
 In order to have the history of the entire network, one has to enable elastic indexing for a node in each shard (0, 1, 2 and metachain).
 Some features that ensure data validity rely on the fact that a node of each shard indexes in the database. For example, the status
 of a cross-shard transaction is decided on the destination shard.
+
+## Elasticsearch cluster system requirements
+
+The Elasticsearch cluster can be installed on multiple machines (we recommend a setup with more nodes in a cluster) or on a single one.
+
+In case of a single machine, our recommendation is as follows:
+
+- 12 x CPU
+- 32 GB RAM
+- Disk space that can grow up to 3 TB
+- 100 Mbit/s always-on Internet connection
+
+## Clone an Elasticsearch cluster
+
+In order to have all the information about the Elrond chain in an Elasticsearch cluster (from genessis to current time) one has to copy all the data with a specific tool from an Elasticsearch cluster to another.
+To get more information how to do this use the documentation from this [repository](https://github.com/ElrondNetwork/elrond-tools-go/tree/main/elasticreindexer).
+
