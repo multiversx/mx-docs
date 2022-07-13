@@ -334,7 +334,9 @@ The login flow supports the `token` parameter (similar to other providers), usin
 // A custom identity token (opaque to the signing provider)
 const authToken = "aaaabbbbaaaabbbb";
 
-const { address, signature } = await provider.tokenLogin({ addressIndex: 0, token: authToken });
+// Note the additional suffix (required as of July 2022):
+const payloadToSign = Buffer.from(`${authToken}{}`);
+const { address, signature } = await provider.tokenLogin({ addressIndex: 0, token: payloadToSign });
 
 console.log("Address:", address);
 console.log("Signature:", signature.hex());
@@ -372,3 +374,36 @@ await provider.signMessage(message);
 
 console.log(message.toJSON());
 ```
+
+## Verifying the signature of a login token
+
+As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an Elrond address. On this purpose, the signing providers allow an _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
+
+```
+export function verifyAuthTokenSignature(address, authToken, signature) {
+    console.log("verifyAuthTokenSignature()");
+    console.log("address:", address);
+    console.log("authToken:", authToken);
+    console.log("signature:", signature);
+
+    // Note that the verification API will be improved in a future version of erdjs-walletcore.
+    // As of @elrondnetwork/erdjs-walletcore@v1.0.0, this API is a bit tedious:
+    const verifier = UserVerifier.fromAddress(new Address(address));
+    
+    const message = new SignableMessage({
+        signature: { hex: () => signature },
+        message: Buffer.from(`${address}${authToken}{}`)
+    });
+
+    const ok = verifier.verify(message);
+    if (ok) {
+        return `The bearer of the token [${authToken}] is also the owner of the address [${address}].`;
+    }
+
+    return "Verification failed.";
+}
+```
+
+:::important
+The workaround applied in the code snippet above is subject for improvement.
+:::
