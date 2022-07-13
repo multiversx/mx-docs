@@ -13,6 +13,13 @@ Note that for most purposes, **we recommend using [dapp-core](https://github.com
 The code samples depicted on this page can also be found on the [**erdjs examples repository**](https://github.com/ElrondNetwork/elrond-sdk-erdjs-examples).
 :::
 
+The following signing providers are available:
+
+ - Web Wallet Provider
+ - Extension Provider (Maiar DeFi Wallet)
+ - Wallet Connect provider
+ - Hardware Wallet (Ledger) Provider
+
 ## The Web Wallet Provider
 
 :::note
@@ -33,7 +40,7 @@ The following provider URLs [are defined](https://github.com/ElrondNetwork/elron
 
 ### Login and logout
 
-Then, ask the user to login:
+Then, ask the user to log in:
 
 ```
 await provider.login({ callbackUrl: "http://my-dapp" });
@@ -49,7 +56,7 @@ const params = qs.parse(queryString);
 console.log(params.address);
 ```
 
-In order to logout, do as follows:
+In order to log out, do as follows:
 
 ```
 const callbackUrl = window.location.href.split("?")[0];
@@ -149,7 +156,7 @@ console.log(address);
 console.log(provider.account);
 ```
 
-In order to logout, do as follows:
+In order to log out, do as follows:
 
 ```
 await provider.logout();
@@ -248,7 +255,7 @@ QRCodeModal.open(connectorUri);
 Once the user confirms the login, the `onClientLogin()` callback (declared above) is executed.
 
 
-In order to logout, do as follows:
+In order to log out, do as follows:
 
 ```
 await provider.logout();
@@ -303,7 +310,7 @@ await provider.init();
 
 ### Login
 
-Before asking the user to login using the Ledger, you may want to display all the available addresses on the device, and let the user choose one of them:
+Before asking the user to log in using the Ledger, you may want to get all the available addresses on the device, display them, and let the user choose one of them:
 
 ```
 const addresses = await provider.getAccounts();
@@ -377,7 +384,7 @@ console.log(message.toJSON());
 
 ## Verifying the signature of a login token
 
-As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an Elrond address. On this purpose, the signing providers allow an _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
+As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an Elrond address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
 
 ```
 export function verifyAuthTokenSignature(address, authToken, signature) {
@@ -404,6 +411,6 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
 }
 ```
 
-:::important
+:::note
 The workaround applied in the code snippet above is subject for improvement.
 :::
