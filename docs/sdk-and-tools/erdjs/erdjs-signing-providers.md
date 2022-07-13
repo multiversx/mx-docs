@@ -43,7 +43,8 @@ The following provider URLs [are defined](https://github.com/ElrondNetwork/elron
 Then, ask the user to log in:
 
 ```
-await provider.login({ callbackUrl: "http://my-dapp" });
+const callbackUrl = encodeURIComponent("http://my-dapp");
+await provider.login({ callbackUrl });
 ```
 
 Once the user opens her wallet, the web wallet issues a redirected back to `callbackUrl`, along with the **address** of the user. You can get the address as follows:
@@ -72,9 +73,8 @@ const authToken = "aaaabbbbaaaabbbb";
 
 // A server-side handler used to acknowledge, validate and honour
 // the relationship between "authToken" and the Elrond address of the user
-const callbackUrl = "https://my-dapp/on-wallet-login"
-
-await provider.login({ callbackUrl: callbackUrl, token: authToken });
+const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
+await provider.login({ callbackUrl, token: authToken });
 ```
 
 ### Signing transactions
