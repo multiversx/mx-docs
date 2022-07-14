@@ -209,14 +209,27 @@ console.log(message.toJSON());
 
 [`@elrondnetwork/erdjs-wallet-connect-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
 
-:::note
-The examples in this section rely on [`@walletconnect/qrcode-modal`](https://www.npmjs.com/package/@walletconnect/qrcode-modal) to build the QR popup.
-:::
+First, let's see a (simple) way to build a QR dialog using [`qrcode`](https://www.npmjs.com/package/qrcode) (and bootstrap):
+
+```
+import QRCode from "qrcode";
+
+async function openModal(connectorUri) {
+    const svg = await QRCode.toString(connectorUri, { type: "svg" });
+
+    // The referenced elements must be added to your page, in advance
+    $("#MyWalletConnectQRContainer").html(svg);
+    $("#MyWalletConnectModal").modal("show");
+}
+
+function closeModal() {
+    $("#MyWalletConnectModal").modal("hide");
+}
+```
 
 In order to create an instance of the provider, do as follows:
 
 ```
-import QRCodeModal from "@walletconnect/qrcode-modal";
 import { WalletConnectProvider } from "@elrondnetwork/erdjs-wallet-connect-provider";
 
 var provider;
@@ -225,7 +238,8 @@ const bridgeUrl = "https://bridge.walletconnect.org";
 
 const callbacks = {
     onClientLogin: async function () {
-        QRCodeModal.close();
+        // closeModal() is defined above
+        closeModal();
         const address = await provider.getAddress();
         console.log("Address:", address);
     },
@@ -249,7 +263,9 @@ Then, ask the user to login using Maiar on her phone:
 
 ```
 const connectorUri = await provider.login();
-QRCodeModal.open(connectorUri);
+
+// openModal() is defined above
+openModal(connectorUri);
 ```
 
 Once the user confirms the login, the `onClientLogin()` callback (declared above) is executed.
