@@ -14,10 +14,14 @@
       "technology/cross-shard-transactions"
     ],
     "Wallet": [
+      "wallet/overview",
       "wallet/web-wallet",
       "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger"
+    ],
+    "Tokens": [
+      "tokens/overview"
     ],
     "Validators": [
       "validators/overview",
@@ -74,6 +78,7 @@
       "validators/faq"
     ],
     "Developers": [
+      "developers/overview",
       {
         "type": "subcategory",
         "label": "Tutorials",
@@ -146,8 +151,6 @@
       "developers/constants",
       "developers/built-in-functions",
       "developers/account-storage",
-      "developers/esdt-tokens",
-      "developers/nft-tokens",
       "developers/setup-local-testnet",
       "developers/setup-local-testnet-advanced",
       "developers/creating-wallets"

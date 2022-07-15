@@ -9,7 +9,7 @@ We will call a _node_ any running instance of the software application developed
 
 We will call a _node operator_ any person or entity who manages one or more nodes. These pages are for them.
 
-# **Background**
+## Background
 
 Elrond is a decentralized blockchain network. This means that its nodes collaborate to create sequential **blocks** with strict regularity - blocks which contain the results of operations that were requested by the users of the network. Such operations may be simple transfers of tokens, or may be calls to SmartContracts. Either way, _all_ operations take the form of **transactions**.
 
@@ -30,3 +30,11 @@ The opposite is also true: a validator which is either offline during consensus 
 This implies that a node with high rating produces far more rewards than a node with low rating, so it is essential that operators maintain their validators online, up-to-date and responsive.
 
 Moreover, if the rating of a validator becomes too low, it will be **jailed**. A jailed validator will not be selected for consensus - thus earning no rewards. To restore the validator, it must be **unjailed**, which requires a fine to be paid, currently set to 2.5 EGLD.
+
+## Table of contents
+
+| Name                                                   | Description                                    |
+|--------------------------------------------------------|------------------------------------------------|
+| [System requirements](/validators/system-requirements) | System requirements for running an Elrond node |
+| TODO add rest of them                                  | TODO add rest of them                          |
+

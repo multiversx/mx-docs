@@ -116,13 +116,13 @@ const siteConfig = {
     {
       title: "Start Building",
       content: "Build your decentralized application in minutes.",
-      docName: "developers/tutorials/your-first-dapp",
+      docName: "developers/overview",
       icon: "🛠️",
     },
     {
       title: "Run a Validator Node",
       content: "Validate transactions, secure the network, and earn rewards.",
-      docName: "validators/system-requirements",
+      docName: "validators/overview",
       icon: "🖥",
     },
     {
@@ -135,14 +135,14 @@ const siteConfig = {
     {
       title: "Manage a Wallet",
       content: "Create a wallet to send, receive and store Elrond tokens.",
-      docName: "wallet/web-wallet",
+      docName: "wallet/overview",
       icon: "📱",
     },
     {
       title: "Create a Token",
       content:
         "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
-      docName: "developers/esdt-tokens",
+      docName: "tokens/overview",
       icon: "🔷",
     },
     {
