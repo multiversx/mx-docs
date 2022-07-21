@@ -48,13 +48,12 @@ go build .
 The Proxy holds its configuration within the `config` folder:
 
 - `config.toml` - this is the main configuration file. It has to be adjusted so that the Proxy points to a list of chosen Observer Nodes.
-- `economics.toml` - this file should not be normally altered. It must be kept in sync with the economics configuration of the Network.
 - `external.toml` - this file holds configuration necessary to Proxy components that interact with external systems. An example of such an external system is **Elasticsearch** - currently, Elrond Proxy requires an Elasticsearch instance to implement some of its functionality.
+- `apiConfig/credentials.toml` - this file holds the configuration needed for enabling secured endpoints - only accessible by using BasicAuth.
+- `apiConfig/v1_0.toml` - this file contains all the endpoints with their settings (open, secured and rate limit).
 
 ## **Dependency on Elasticsearch**
 
-:::warning
-Only the default (official) Proxy instance connects to the official Elasticsearch instance. Documentation from this section is preliminary and subject to change.
-:::
+Currently, Proxy uses the dependency to Elasticsearch in order to satisfy the [Get Address Transactions](/sdk-and-tools/rest-api/addresses/#get-address-transactions) endpoint. 
 
-Currently, two routes provided by the REST API - namely [Get Address Transactions](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-transactions) and [Get Block](/sdk-and-tools/rest-api/blocks) - resolve the requested resources by querying an Elasticsearch instance. This is **subject to change**. Therefore, if one desires to host a separate Elrond Proxy instance instead of using the official (default) instance, we recommend disabling the Elasticsearch Connector by adjusting the configuration file `external.toml` - the previously mentioned routes will not work, but the rest of Proxy's functionality is unaffected.
+In order to connect a Proxy instance to an Elasticsearch cluster, one must update the `external.toml` file.
