@@ -27,12 +27,6 @@ The Elrond WASM VM is a stateless VM. When a smart contract is being executed, i
 
 In effect, the global state remains unaffected until the execution ends.
 
-## **Out-of-process execution**
-
-To add an extra layer of stability and security, the VM runs in its own process, separate from the node itself. The two processes exchange information via a collection of anonymous in-memory pipes. This means that memory segmentation itself, as realized by the OS, is used as a protective layer.
-
-Moreover, the execution of WASM bytecode always happens in a tightly controlled sandbox, and the memory of the VM's process is inaccessible.
-
 ## **Fast execution engine**
 
 The Elrond VM executes code using Wasmer as an execution engine, which operates as a just-in-time streaming compiler. Due to the design of Wasmer, the smart contracts are executed at near-native speed.
