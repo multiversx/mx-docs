@@ -83,6 +83,7 @@
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
           "developers/tutorials/counter",
+          "developers/tutorials/custom-wallet-connect",
           "developers/tutorials/staking-contract"
         ]
       },
@@ -194,7 +195,8 @@
           "sdk-and-tools/erdjs/erdjs-cookbook",
           "sdk-and-tools/erdjs/extending-erdjs",
           "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
-          "sdk-and-tools/erdjs/erdjs-migration-guides"
+          "sdk-and-tools/erdjs/erdjs-migration-guides",
+          "sdk-and-tools/erdjs/erdjs-signing-providers"
         ]
       },
       "sdk-and-tools/erdgo",
