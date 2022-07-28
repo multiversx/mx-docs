@@ -240,16 +240,19 @@ Customize the Smart Contract Address
 nano src/config.tsx
 ```
 
-We'll take a look on the first instruction
+We'll take a look on the first instruction:
 
-```sh
+```javascript
 export const contractAddress = 
   'erd1qqqqqqqqqqqqq...';
 ```
 
 and we'll change it to our contract address that was shown after erdpy contract deploy:
 
-`export const contractAddress = 'erd1qqqqqqqqqqqqqpgq0hmfvuygs34cgqsvg...ffh4y04cysagr6cn';`
+```javascript
+export const contractAddress = 
+'erd1qqqqqqqqqqqqqpgq0hmfvuygs34cgqsvg...ffh4y04cysagr6cn';
+```
 
 Save and close `config.tsx` and we're ready for the first build.
 
