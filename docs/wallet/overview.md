@@ -1,6 +1,6 @@
 ---
 id: overview
-title: Wallets
+title: Wallets - Overview
 ---
 
 ## Elrond Wallets
@@ -12,14 +12,10 @@ There are multiple ways you can store your funds. This page will present some of
 
 ## Table of contents
 
-| Name                                                               | Description                                |
-|--------------------------------------------------------------------|--------------------------------------------|
-| [Web Wallet](/wallet/web-wallet)                                   | Elrond Web Wallet - TODO add more          |
-| [Maiar Web Wallet Extension](/wallet/wallet-extension/)            | Maiar Web Wallet Extension - TODO add more |
-| [Ledger](/wallet/ledger)                                           | Ledger Hardware Wallet - TODO add more     |
-
-TODO add Maiar App ?
-
-
-
+| Name                                                    | Description                                                                                                         |
+|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| [Maiar App](https://maiar.com/)                         | Digital wallet and global payments app that allows you to exchange and securely store money on your mobile phone. . |
+| [Web Wallet](/wallet/web-wallet)                        | Elrond Web Wallet                                                                                                   |
+| [Maiar Web Wallet Extension](/wallet/wallet-extension/) | Maiar Web Wallet Extension                                                                                          |
+| [Ledger](/wallet/ledger)                                | Ledger Hardware Wallet                                                                                              |
 

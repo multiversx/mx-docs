@@ -29,9 +29,9 @@ const siteConfig = {
 
   headerLinks: [
     { search: true },
-    { href: "/developers/tutorials/crowdfunding-p1", label: "Develop" },
-    { href: "/validators/system-requirements", label: "Validate" },
-    { href: "/integrators/observing-squad", label: "Integrate" },
+    { href: "/developers/overview", label: "Develop" },
+    { href: "/validators/overview", label: "Validate" },
+    { href: "/integrators/overview", label: "Integrate" },
     { href: "/technology/architecture-overview", label: "Learn" },
   ],
 
@@ -129,7 +129,7 @@ const siteConfig = {
       title: "Integrate a Platform",
       content:
         "Follow our guide to integrate exchanges, wallets, and other platforms.",
-      docName: "integrators/observing-squad",
+      docName: "integrators/overview",
       icon: "🏛",
     },
     {

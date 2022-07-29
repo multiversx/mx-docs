@@ -21,7 +21,9 @@
       "wallet/ledger"
     ],
     "Tokens": [
-      "tokens/overview"
+      "tokens/overview",
+      "tokens/esdt-tokens",
+      "tokens/nft-tokens"
     ],
     "Validators": [
       "validators/overview",
@@ -157,6 +159,7 @@
       "developers/creating-wallets"
     ],
     "SDK and Tools": [
+      "sdk-and-tools/overview",
       {
         "type": "subcategory",
         "label": "REST API",
@@ -202,11 +205,13 @@
         ]
       },
       "sdk-and-tools/erdgo",
+      "sdk-and-tools/erdcpp",
       "sdk-and-tools/erdjava",
       "sdk-and-tools/erdkotlin",
       "sdk-and-tools/erdwalletjs-cli"
     ],
     "Integrators": [
+      "integrators/overview",
       "integrators/egld-integration-guide",
       "integrators/esdt-tokens-integration-guide",
       "integrators/observing-squad",
