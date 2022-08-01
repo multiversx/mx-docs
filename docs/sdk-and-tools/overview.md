@@ -21,7 +21,7 @@ Follow the following table to guide you towards the action you are interested in
 | [erdjs signing providers](/sdk-and-tools/erdjs/erdjs-signing-providers)                               | Integrate erdjs signing providers.                 |
 
 
-In addition to erdjs, one could use the following Javascript library for performing wallets operations via CLI:
+In addition to erdjs, one could use the following Javascript library for performing wallet operations via CLI:
 
 | Name                                                                                               | Description                                                  |
 |----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|

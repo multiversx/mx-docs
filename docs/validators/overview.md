@@ -25,7 +25,7 @@ title: Validators - Overview
 
 | Name                                                                                | Description                                                   |
 |-------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| [Staking, unstaking and unjailing](/validators/staking/staking-unstaking-unjailing) | Learn about how to stake, to unstake or unjail a Node.        |
+| [Staking, unstaking and unjailing](/validators/staking/staking-unstaking-unjailing) | Learn about how to stake, unstake or unjail a Node.           |
 | [How to Stake a Node](/validators/staking/staking)                                  | Learn how to stake a node via a step-by-step tutorial.        |
 | [How to unJail a Node](/validators/staking/unjailing)                               | Learn how to unJail a node.                                   |
 | [The Staking Smart Contract](/validators/staking/staking-smart-contract)            | How to interact with the Smart Contract that manages Staking. |
