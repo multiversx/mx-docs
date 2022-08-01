@@ -71,6 +71,70 @@ let rand_hash = rand_source.next_bytes(32);
 // NFT create logic here
 ```
 
+## Considerations
+
+:::warning
+NEVER have logic in your smart contract that only depends on the current state.
+:::
+
+Example of BAD implementation:
+```rust
+#[payable("EGLD")]
+#[endpoint(rollDie)]
+fn roll_die(&self) {
+    // ...
+    let payment = self.call_value().egld_value();
+    let rand_nr = rand_source.next_u8();
+    if rand_nr % 6 == 0 {
+        let prize = payment * 2u32;
+        self.send().direct(&caller, &prize);
+    }
+    // ...
+}
+```
+
+This is very easy to abuse, as you can simply simulate your transactions, and only send them when you see you've won. Therefore, guaranteeing a 100% win chance!
+
+Keep in mind you are not running this on your own private server, you are running it on a public blockchain, so you need a complete shift in design.
+
+Example of GOOD implementation:
+```rust
+#[payable("EGLD")]
+#[endpoint(signUp)]
+fn sign_up(&self) {
+    let already_signed_up = self.user_list().insert(caller.clone());
+    if already_signed_up {
+        sc_panic!("Already signed up");
+    }
+}
+
+#[only_owner]
+#[endpoint(selectWinners)]
+fn select_winners(&self) {
+    for user in self.user_list().iter() {
+        let rand_nr = rand_source.next_u8();
+        if rand_nr % 6 == 0 {
+            self.winners_list().insert(user.clone());
+        }
+    }
+}
+
+#[endpoint]
+fn claim(&self) {
+    let was_winner = self.winners_list().swap_remove(&caller);
+    if was_winner {
+        self.send().direct_egld(&caller, &prize);
+    }
+}
+
+#[storage_mapper("userList")]
+fn user_list(&self) -> UnorderedSetMapper<ManagedAddress>;
+
+#[storage_mapper("winnersList")]
+fn winners_list(&self) -> UnorderedSetMapper<ManagedAddress>;
+```
+
+
 ## Conclusion
 
 This random number generator should be enough for most purposes. Enjoy using it for your lotteries and such!

@@ -17,18 +17,21 @@ This endpoint allows one to send a signed Transaction to the Blockchain.
 
 Body Parameters
 
-| Param     | Required                                  | Type     | Description                                     |
-| --------- | ----------------------------------------- | -------- | ----------------------------------------------- |
-| version   | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).        |
-| chainID   | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                           |
-| nonce     | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                        |
-| value     | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer (can be zero).            |
-| sender    | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.             |
-| receiver  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.           |
-| gasPrice  | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).           |
-| gasLimit  | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.     |
-| data      | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.          |
-| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction. |
+| Param            | Required                                  | Type     | Description                                                               |
+|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
+| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                  |
+| value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
+| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
+| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
+| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                |
+| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.              |
+| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                     |
+| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                               |
+| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
+| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                           |
+| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
+| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
+| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                  |
 
 <!--Response-->
 
@@ -65,16 +68,16 @@ POST https://gateway.elrond.com/transaction/send HTTP/1.1
 Content-Type: application/json
 
 {
-    "version": 1,
-    "chainId": "v1.0.141",
     "nonce": 42,
     "value": "100000000000000000",
     "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
     "sender": "erd1njqj2zggfup4nl83x0nfgqjkjserm7mjyxdx5vzkm8k0gkh40ezqtfz9lg",
     "gasPrice": 1000000000,
     "gasLimit": 70000,
-    "data": "food for cats",
-    "signature": "93207c579bf57be03add632b0e1624a73576eeda8a1687e0fa286f03eb1a17ffb125ccdb008a264c402f074a360442c7a034e237679322f62268b614e926d10f"
+    "data": "Zm9vZCBmb3IgY2F0cw==", #base64 representation of "food for cats"
+    "signature": "93207c579bf57be03add632b0e1624a73576eeda8a1687e0fa286f03eb1a17ffb125ccdb008a264c402f074a360442c7a034e237679322f62268b614e926d10f",
+    "chainId": "1",
+    "version": 1
 }
 ```
 
@@ -90,18 +93,23 @@ This endpoint allows one to send a bulk of Transactions to the Blockchain.
 
 Body Parameters
 
-| Param     | Required                                  | Type     | Description                                        |
-| --------- | ----------------------------------------- | -------- | -------------------------------------------------- |
-| version   | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).           |
-| chainID   | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                              |
-| nonce     | <span class="text-danger">REQUIRED</span> | `number` | The Nonce, for each Transaction.                   |
-| value     | <span class="text-danger">REQUIRED</span> | `string` | The Value, for each Transaction.                   |
-| sender    | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Sender, for each Transaction.   |
-| receiver  | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Receiver, for each Transaction. |
-| gasPrice  | <span class="text-danger">REQUIRED</span> | `number` | The Gas Price, for each Transaction.               |
-| gasLimit  | <span class="text-danger">REQUIRED</span> | `number` | The Gas Limit, for each Transaction.               |
-| data      | <span class="text-normal">OPTIONAL</span> | `string` | The message (data), for each Transaction.          |
-| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature, for each Transaction.               |
+Array of:
+
+| Param            | Required                                  | Type     | Description                                                               |
+|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
+| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                  |
+| value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
+| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
+| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
+| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                |
+| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.              |
+| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                     |
+| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                               |
+| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
+| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                           |
+| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
+| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
+| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                  |
 
 <!--Response-->
 
@@ -139,11 +147,11 @@ Content-Type: application/json
         "sender": "erd1njqj2zggfup4nl83x0nfgqjkjserm7mjyxdx5vzkm8k0gkh40ezqtfz9lg",
         "gasPrice": 1000000000,
         "gasLimit": 70000,
-        "data": "food for cats",
-        "chainId": "v1.0.141",
-        "version": 1,
-        "signature": "93207c579bf57be03add632b0e1624a73576eeda8a1687e0fa286f03eb1a17ffb125ccdb008a264c402f074a360442c7a034e237679322f62268b614e926d10f"
-    },
+        "data": "Zm9vZCBmb3IgY2F0cw==", #base64 representation of "food for cats"
+        "signature": "93207c579bf57be03add632b0e1624a73576eeda8a1687e0fa286f03eb1a17ffb125ccdb008a264c402f074a360442c7a034e237679322f62268b614e926d10f",
+        "chainId": "1",
+        "version": 1
+}
     {
         "nonce": 43,
         "value": "100000000000000000",
@@ -151,10 +159,10 @@ Content-Type: application/json
         "sender": "erd1rhp4q3qlydyrrjt7dgpfzxk8n4f7yrat4wc6hmkmcnmj0vgc543s8h7hyl",
         "gasPrice": 1000000000,
         "gasLimit": 70000,
-        "data": "bus tickets",
-        "chainID": "v1.0.141",
-        "version": 1,
-        "signature": "01535fd1d40d98b7178ccfd1729b3f526ee4542482eb9f591d83433f9df97ce7b91db07298b1d14308e020bba80dbe4bba8617a96dd7743f91ee4b03d7f43e00"
+        "data": "YnVzIHRpY2tldHM=", #base64 representation of "bus tickets"
+        "signature": "01535fd1d40d98b7178ccfd1729b3f526ee4542482eb9f591d83433f9df97ce7b91db07298b1d14308e020bba80dbe4bba8617a96dd7743f91ee4b03d7f43e00",
+        "chainID": "1",
+        "version": 1
     }
 ]
 ```
@@ -176,18 +184,21 @@ Move balance successful transaction simulation
 
 Body Parameters
 
-| Param     | Required                                  | Type     | Description                                     |
-| --------- | ----------------------------------------- | -------- | ----------------------------------------------- |
-| version   | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).        |
-| chainID   | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                           |
-| nonce     | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                        |
-| value     | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer (can be zero).            |
-| sender    | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.             |
-| receiver  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.           |
-| gasPrice  | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).           |
-| gasLimit  | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.     |
-| data      | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.          |
-| signature | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction. |
+| Param            | Required                                  | Type     | Description                                                               |
+|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
+| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                  |
+| value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
+| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
+| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
+| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                |
+| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.              |
+| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                     |
+| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                               |
+| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
+| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                           |
+| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
+| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
+| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                  |
 
 <!--Response-->
 
@@ -275,14 +286,14 @@ This endpoint allows one to estimate the cost of a transaction.
 
 Body Parameters
 
-| Param    | Required                                  | Type     | Description                              |
-| -------- | ----------------------------------------- | -------- | ---------------------------------------- |
-| version  | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1). |
-| chainID  | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                    |
-| value    | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer.                   |
-| sender   | <span class="text-danger">REQUIRED</span> | `string` | TThe Address of the Sender.              |
-| receiver | <span class="text-danger">REQUIRED</span> | `string` | The Address of the Receiver.             |
-| data     | <span class="text-normal">OPTIONAL</span> | `string` | The message (data) of the Transaction.   |
+| Param            | Required                                  | Type     | Description                                                               |
+|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
+| value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
+| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
+| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
+| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
+| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
+| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
 
 <!--Response-->
 
@@ -310,10 +321,10 @@ Content-Type: application/json
 
 {
     "value": "100000",
-    "sender": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
     "receiver": "erd188nydpkagtpwvfklkl2tn0w6g40zdxkwfgwpjqc2a2m2n7ne9g8q2t22sr",
-    "data": "this is an example",
-    "chainID": "v1.0.141",
+    "sender": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
+    "data": "dGhpcyBpcyBhbiBleGFtcGxl", #base64 representation of "this is an example"
+    "chainID": "1",
     "version": 1
 }
 ```

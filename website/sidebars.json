@@ -14,10 +14,16 @@
       "technology/cross-shard-transactions"
     ],
     "Wallet": [
+      "wallet/overview",
       "wallet/web-wallet",
       "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger"
+    ],
+    "Tokens": [
+      "tokens/overview",
+      "tokens/esdt-tokens",
+      "tokens/nft-tokens"
     ],
     "Validators": [
       "validators/overview",
@@ -34,22 +40,12 @@
       },
       {
         "type": "subcategory",
-        "label": "Install a Testnet Node",
+        "label": "Install a Testnet/Devnet Node",
         "ids": [
-          "validators/testnet/config-scripts",
-          "validators/testnet/install-update",
-          "validators/testnet/manage-testnet-node",
-          "validators/testnet/use-docker-testnet"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "Install a Devnet Node",
-        "ids": [
-          "validators/devnet/config-scripts-devnet",
-          "validators/devnet/install-update-devnet",
-          "validators/devnet/manage-devnet-node",
-          "validators/devnet/use-docker-devnet"
+          "validators/elrond-go-scripts/config-scripts",
+          "validators/elrond-go-scripts/install-update",
+          "validators/elrond-go-scripts/manage-node",
+          "validators/elrond-go-scripts/use-docker"
         ]
       },
       {
@@ -75,6 +71,7 @@
       "validators/staking/convert-existing-validator-into-staking-pool",
       "validators/staking/merge-validator-delegation-sc",
       "validators/rating",
+      "validators/node-upgrades",
       "validators/redundancy",
       "validators/import-db",
       "validators/node-cli",
@@ -83,6 +80,7 @@
       "validators/faq"
     ],
     "Developers": [
+      "developers/overview",
       {
         "type": "subcategory",
         "label": "Tutorials",
@@ -91,7 +89,8 @@
           "developers/tutorials/your-first-microservice",
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
-          "developers/tutorials/counter"
+          "developers/tutorials/counter",
+          "developers/tutorials/custom-wallet-connect"
         ]
       },
       {
@@ -124,6 +123,7 @@
           "developers/developer-reference/smart-contract-developer-best-practices",
           "developers/developer-reference/code-metadata",
           "developers/developer-reference/elrond-wasm-api-functions",
+          "developers/developer-reference/storage-mappers",
           "developers/developer-reference/rust-testing-framework",
           "developers/developer-reference/rust-testing-framework-functions-reference",
           "developers/developer-reference/rust-smart-contract-debugging",
@@ -137,8 +137,7 @@
           "developers/best-practices/best-practices-basics",
           "developers/best-practices/biguint-operations",
           "developers/best-practices/the-dynamic-allocation-problem",
-          "developers/best-practices/multi-values",
-          "developers/best-practices/storage-mappers"
+          "developers/best-practices/multi-values"
         ]
       },
       {
@@ -155,13 +154,12 @@
       "developers/constants",
       "developers/built-in-functions",
       "developers/account-storage",
-      "developers/esdt-tokens",
-      "developers/nft-tokens",
       "developers/setup-local-testnet",
       "developers/setup-local-testnet-advanced",
       "developers/creating-wallets"
     ],
     "SDK and Tools": [
+      "sdk-and-tools/overview",
       {
         "type": "subcategory",
         "label": "REST API",
@@ -190,7 +188,8 @@
           "sdk-and-tools/erdpy/erdpy-cli",
           "sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
           "sdk-and-tools/erdpy/sending-bulk-transactions",
-          "sdk-and-tools/erdpy/writing-and-running-erdpy-scripts"
+          "sdk-and-tools/erdpy/writing-and-running-erdpy-scripts",
+          "sdk-and-tools/erdpy/smart-contract-interactions"
         ]
       },
       {
@@ -198,15 +197,21 @@
         "label": "erdjs",
         "ids": [
           "sdk-and-tools/erdjs/erdjs",
-          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions"
+          "sdk-and-tools/erdjs/erdjs-cookbook",
+          "sdk-and-tools/erdjs/extending-erdjs",
+          "sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
+          "sdk-and-tools/erdjs/erdjs-migration-guides",
+          "sdk-and-tools/erdjs/erdjs-signing-providers"
         ]
       },
       "sdk-and-tools/erdgo",
+      "sdk-and-tools/erdcpp",
       "sdk-and-tools/erdjava",
       "sdk-and-tools/erdkotlin",
       "sdk-and-tools/erdwalletjs-cli"
     ],
     "Integrators": [
+      "integrators/overview",
       "integrators/egld-integration-guide",
       "integrators/esdt-tokens-integration-guide",
       "integrators/observing-squad",

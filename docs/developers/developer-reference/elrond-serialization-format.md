@@ -312,7 +312,7 @@ Any structure defined in a contract of library can become serializable if it is 
 **Example implementation:**
 
 ```rust
-##[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
 pub struct Struct {
 	pub int: u16,
 	pub seq: Vec<u8>,
@@ -366,7 +366,7 @@ Any enum defined in a contract of library can become serializable if it is annot
 *Example taken from the elrond-codec tests.*
 
 ```rust
-##[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
 enum DayOfWeek {
   Monday,
   Tuesday,
@@ -381,7 +381,7 @@ enum DayOfWeek {
 **A more complex enum example:**
 
 ```rust
-##[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
 enum EnumWithEverything {
 	Default,
 	Today(DayOfWeek),
