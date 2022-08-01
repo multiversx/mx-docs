@@ -65,7 +65,6 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 
 **Q2 2022**
 
-- Elrond Growth 2.0
 - Metabonding
 - Elrond SuperWave
 - Ad Astra Bridge
@@ -73,6 +72,7 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 
 **Q3 2022**
 
+- Elrond Growth 2.0
 - Elrond Gamify
 - Staking Phase 4
 - NFT Marketplace
