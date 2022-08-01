@@ -186,7 +186,7 @@ Now let's suppose we want to call an endpoint that accepts an NFT or an SFT as p
 FIRST_BIGUINT_ARGUMENT=1000
 SECOND_BIGUINT_ARGUMENT=10000
 myESDTNFTPayableEndpoint() {
-    user_address="0x$(erdpy wallet pem-address $WALLET_PEM)"
+    user_address="$(erdpy wallet pem-address $WALLET_PEM)"
     method_name=str:myESDTNFTPayableEndpoint
     sft_token=str:$1
     sft_token_nonce=$2
@@ -229,7 +229,7 @@ In case we need to call an endpoint that accepts multiple tokens (let's say for 
 FIRST_BIGUINT_ARGUMENT=1000
 SECOND_BIGUINT_ARGUMENT=10000
 myMultiESDTNFTPayableEndpoint() {
-    user_address="0x$(erdpy wallet pem-address $WALLET_PEM)"
+    user_address="$(erdpy wallet pem-address $WALLET_PEM)"
     method_name=str:myMultiESDTPayableEndpoint
     destination_address=$1
     number_of_tokens=3
