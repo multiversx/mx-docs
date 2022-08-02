@@ -12,7 +12,7 @@ Currently all you need in order to make this work are the next libraries:
 
 ## WalletConnectProvider
 
-You can use most of the `WalletConnectProvider` located [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider/blob/main/src/walletConnectProvider.ts) already implemented by the Elrond team, the only thing that we had to provide to the constructor was the `clientMeta` prop.
+You can use most of the `WalletConnectProvider` located [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider/blob/main/src/walletConnectProvider.ts), the only thing that we had to provide to the constructor was the `clientMeta` prop.
 
 ```ts
 import WalletClient from "@walletconnect/client";
