@@ -34,7 +34,7 @@ IssuanceTransaction {
 }
 ```
 
-Our initial proposal is the issuance cost to be 0.05 EGLD. Feedback and suggestions from the community is more than welcome.
+The issuance cost is set to 0.05 EGLD. 
 
 Optionally, the properties can be set when issuing a token. Example:
 ```
@@ -142,6 +142,10 @@ TransferTransaction {
           "@" + <value to transfer in hexadecimal encoding>
 }
 ```
+
+:::important
+The value of the transaction should be set to 0 EGLD, otherwise the transaction will fail. The (token) amount to be transferred is encoded into the data field. 
+:::
 
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 
