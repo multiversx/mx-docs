@@ -91,3 +91,12 @@ Your address is immediately visible on the top part of the wallet, as "Address e
 You can also click "Receive" on the left-hand side to see a QR code for the address, which can be scanned to reveal the public address.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJYD3eLB-qPT94-W4_%2F-MIJYv-OyKPBpE3IX1Zb%2Fimage.png?alt=media&token=f2897077-834a-43b2-a22f-ce4687faa1fe)
+
+## **Testnet and Devnet faucet**
+
+You can request test tokens from [Testnet Wallet](https://testnet-wallet.elrond.com) or [Devnet Wallet](https://devnet-wallet.elrond.com) in the `Faucet` tab. 
+
+The faucet is only available once in a given time period. Another alternatives for getting test tokens are:
+
+- request tokens on [Telegram - Validators chat](https://t.me/ElrondValidators)
+- use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet)
