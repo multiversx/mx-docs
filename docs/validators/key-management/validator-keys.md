@@ -3,6 +3,8 @@ id: validator-keys
 title: Validator Keys
 ---
 
+## Validator key format
+
 A file containing the keys for your node.
 
 The **Validator Keys** are located in the `validatorKey.pem` file, which is generated in the node setup process. By default, each node stores its own .pem file in the `$HOME/elrond-nodes/node-0` folder. A copy also archived as a zip file in the `$HOME/VALIDATOR_KEYS` folder, for restore purposes.
@@ -36,3 +38,18 @@ More clearly:
 Always save and protect **private keys**, they are like your username + password + 2FA at your bank, all combined.
 
 _Public keys_ are like your phone number - no harm in others knowing it, it actually is needed for some scenarios. Still, only share it on a need to basis, like you would do with your own phone number.
+
+## How to generate a new key
+
+The easiest way to generate a new validator key is by using the `keygenerator` tool that resides near the node. 
+
+- [https://github.com/ElrondNetwork/elrond-go/tree/master/cmd/keygenerator](https://github.com/ElrondNetwork/elrond-go/tree/master/cmd/keygenerator)
+
+How to generate a new validator key:
+
+```shell
+$ git clone https://github.com/ElrondNetwork/elrond-go.git
+$ cd elrond-go/cmd/keygenerator
+$ go build
+$ ./keygenerator --key-type validator
+```
