@@ -3,7 +3,7 @@ id: constants
 title: Constants
 ---
 
-Elrond uses some constants, which are specific to each chain (mainnet, testnet or devnet). The updated values can be found at these sources:
+Elrond uses some constants, which are specific to each chain (Mainnet, Testnet or Devnet). The updated values can be found at these sources:
 
 **Mainnet**:
 - https://gateway.elrond.com/network/config
@@ -16,6 +16,14 @@ Elrond uses some constants, which are specific to each chain (mainnet, testnet o
 **Devnet**:
 - https://devnet-gateway.elrond.com/network/config
 - https://github.com/ElrondNetwork/elrond-config-devnet
+
+:::important
+Each transaction requires a `chainID` field that represents the network's identifier. It adds protection so that transactions cannot be replayed from a network to another. 
+The values are:
+- Mainnet: `1`
+- Testnet: `T`
+- Devnet: `D`
+:::
 
 At the time of writing, the most used constants values for mainnet were:
 
