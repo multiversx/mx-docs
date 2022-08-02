@@ -1,6 +1,8 @@
 {
   "docs": {
-    "Welcome to Elrond": ["welcome/welcome-to-elrond"],
+    "Welcome to Elrond": [
+      "welcome/welcome-to-elrond"
+    ],
     "Technology": [
       "technology/architecture-overview",
       "technology/glossary",
@@ -18,7 +20,11 @@
       "wallet/webhooks",
       "wallet/ledger"
     ],
-    "Tokens": ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
+    "Tokens": [
+      "tokens/overview",
+      "tokens/esdt-tokens",
+      "tokens/nft-tokens"
+    ],
     "Validators": [
       "validators/overview",
       "validators/system-requirements",
@@ -202,8 +208,7 @@
       "sdk-and-tools/erdcpp",
       "sdk-and-tools/erdjava",
       "sdk-and-tools/erdkotlin",
-      "sdk-and-tools/erdwalletjs-cli",
-      "sdk-and-tools/maiar-integration-react-native-guide"
+      "sdk-and-tools/erdwalletjs-cli"
     ],
     "Integrators": [
       "integrators/overview",
