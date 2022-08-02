@@ -62,6 +62,10 @@ IssuanceTransaction {
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
 
+:::note
+Because of the 6 random characters sequence, the token identifier cannot be precalculated, thus one has to check the Smart Contract Result of the issue transaction that indicates it. Alternatively, one can check its tokens via Explorer or API and search for the token that starts with the ticker that was chosen when issuing the token.
+:::
+
 ### **Parameters format**
 
 Token Name:
