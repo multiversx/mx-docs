@@ -34,7 +34,7 @@ IssuanceTransaction {
 }
 ```
 
-Our initial proposal is the issuance cost to be 0.05 EGLD. Feedback and suggestions from the community is more than welcome.
+The issuance cost is set to 0.05 EGLD. 
 
 Optionally, the properties can be set when issuing a token. Example:
 ```
@@ -60,7 +60,11 @@ IssuanceTransaction {
 ```
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
-The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
+The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters (3 bytes - 6 characters hex encoded). For example, a token identifier could look like _ALC-6258d2_.
+
+:::note
+Because of the 6 random characters sequence (3 bytes - 6 characters hex encoded), the token identifier cannot be precalculated, thus one has to check the Smart Contract Result of the issue transaction that indicates it. Alternatively, one can check its tokens via Explorer or API and search for the token that starts with the ticker that was chosen when issuing the token.
+:::
 
 ### **Parameters format**
 
@@ -138,6 +142,10 @@ TransferTransaction {
           "@" + <value to transfer in hexadecimal encoding>
 }
 ```
+
+:::important
+The value of the transaction should be set to 0 EGLD, otherwise the transaction will fail. The (token) amount to be transferred is encoded into the data field. 
+:::
 
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
 

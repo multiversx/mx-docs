@@ -44,3 +44,7 @@ To make sure the required ports are open, use the following command before conti
 ```
 sudo ufw allow 37373:38383/tcp
 ```
+
+:::note
+The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/ElrondNetwork/elrond-go/blob/master/cmd/node/config/p2p.toml#L7). 
+:::
