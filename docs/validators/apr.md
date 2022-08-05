@@ -6,14 +6,14 @@ title: Staking Providers APR
 ## Introduction
 
 By using the [Delegation Manager](/validators/delegation-manager/) system smart contract, a new staking provider can be 
-set up. According to the initial deposits (half the price of a node) + delegations from other users (or even the owner itself)
-the staking contract can spawn new nodes. Currently, a node costs 2500 EGLD, so, for example, if a staking contract
+set up. According to the initial deposits (half of the minimum node stake) + delegations from other users (or even the owner itself)
+the staking contract can spawn new nodes. Currently, the minimum node cost is 2500 EGLD, so, for example, if a staking contract
 gathered 7500 EGLD it can spawn 3 new nodes.
 
 ### Base stake and top-up
 
-As stated, a validator node requires 2500 EGLD. So multiple nodes would mean a number of tokens that is divisible by 2500. 
-The upper difference is considered top-up. Also, the staking provider owner can choose to keep the tokens as top-up, even
+As stated, a validator node requires at least 2500 EGLD. So multiple nodes would mean at least *2500 multiplied by the number of nodes* EGLD in the contract. 
+The difference is considered top-up. Also, the staking provider owner can choose to keep the tokens as top-up, even
 if the top-up is enough to spawn a new validator node.
 
 Let's take some examples:
@@ -49,7 +49,7 @@ The approximated inflation rate is as follows:
 
 | Year | Inflation rate |
 |------|----------------|
- | 1    | 10.84%         |
+| 1    | 10.84%         |
 | 2    | 9.7%           |
 | 3    | 8.56%          |
 | 4    | 7.42%          |
@@ -73,20 +73,24 @@ This also has to be taken into account when calculating the APR.
 ## Rewards calculation
 
 When wanting to calculate the APR (Annual Percentage Return) of a Staking Provider, there are multiple factors that have
-to be taken into account, such as total value locked at Network-level, the inflation based on the current year, and so on.
+to be taken into account, such as total value locked at Network-level, the inflation based on the current year, the 
+staking provider base stake and top-up stake, and so on.
 
 ### Network Top-Up rewards
 
 The formula for determining the rewards received by the validators for the top-up in a given epoch is:
 
 $$
-topUpRewards(e) = \frac{(2 * topUpRewardLimit(e)}{\pi} * atan(\frac{eligibleCumulatedTopUp(e)}{p})
+topUpRewards(e) = \frac{2 * topUpRewardLimit(e)}{\pi} * atan(\frac{eligibleCumulatedTopUp(e)}{p})
 $$
 
 Where:
 - `e` represents the given epoch
-- `topUpRewardLimit(e)` represents the maximum top-up rewards that can be distributed in the given epoch
-- `eligibleCumulatedTopUp(e)` represents the cumulated top-up for all eligible nodes in the given epoch
+- `topUpRewardLimit(e)` represents the maximum top-up rewards that can be distributed in the given epoch. This can be viewed
+as the maximum value out of the epoch rewards that can be distributed as rewards for the top-up stake, and depends 
+on the total rewards to be distributed in the epoch and a configured network parameter that defines the proportion out of the total rewards.
+- `eligibleCumulatedTopUp(e)` represents the rewards distributed in the epoch for signing and proposing blocks. 
+This does not include the protocol sustainability rewards, developer fees or the penalty for missed blocks.
 - `p` represents a chosen parameter to control the gradient of top-up rewards. It can be viewed as the cumulated top-up stake 
 where the given top-up rewards reach ½ of the top-up rewards set limit. It is currently set to 2M EGLD.
 
@@ -106,7 +110,7 @@ part of the canonical chain
 
 After determining the base and the top-up rewards for an epoch, the APR can be calculated for a Staking Provider.
 
-First, we have to determine the maximum rewards that can be reached in ideal situations (no roll-back in an epoch). 
+First, we have to determine the maximum rewards that can be reached in ideal situations (no missed block in an epoch). 
 
 ### Staking Provider base stake rewards
 
