@@ -27,6 +27,7 @@
     ],
     "Validators": [
       "validators/overview",
+      "validators/staking-providers-apr",
       "validators/system-requirements",
       {
         "type": "subcategory",
