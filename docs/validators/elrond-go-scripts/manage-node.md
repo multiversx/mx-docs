@@ -11,7 +11,8 @@ Let’s begin!
 
 First, you need to create an Elrond wallet. You can create this wallet on either the [devnet](https://devnet-wallet.elrond.com) or [testnet](https://testnet-wallet.elrond.com).
 
-Next, share your wallet's public address (erd1...) with an admin on the Telegram community, and you will receive test xEGLD.
+Next, share your wallet's public address (erd1...) with an admin on the Telegram community, and you will receive test xEGLD. If a smaller amount of tokens is needed,
+you can use the [wallet's faucet](/wallet/web-wallet#testnet-and-devnet-faucet). 
 
 Once you have sufficient funds, you can use the wallet to send a stake transaction for your node, in order for it to become a Validator.
 
