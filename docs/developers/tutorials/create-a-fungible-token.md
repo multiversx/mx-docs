@@ -26,11 +26,12 @@ Once you access your web wallet, you will be directed to the wallet dashboard.
 
 Navigate to ***ISSUE*** sections and click on ***Tokens***.
 
-![issue-token}](https://user-images.githubusercontent.com/52820835/183431208-60d2ee39-7a30-4598-ae17-01d4530b219e.png)
+![issue-token}](https://user-images.githubusercontent.com/52820835/183435253-83c89f0e-0bdc-4d4d-a15d-bacfdd8043c8.png)
+
 
 When creating a token, you are required to provide the token name, a ticker, the initial supply, and the number of decimals for display purposes. You can issue, manage, mint, burn, freeze, transfer, etc. ESDT tokens.
 
-Enter the name of the token you wish to create, the tracker, mint amount and decimals. Next, click on **_Continue_** button to proceed.
+Enter the required details. Next, click on **_Continue_** button to proceed.
 
 ## Transfer a token from your wallet
 
@@ -47,3 +48,6 @@ Enter the token name, a ticker, the mint amount, and the number of decimals. Nex
 ![issue-token2](https://user-images.githubusercontent.com/52820835/183431726-4285662a-20ac-49cb-83d1-c06e94a5fe5f.png)
 
 Select the token you wish to transfer and click ***send*** to complete the transfer.
+
+![transfer_token](https://user-images.githubusercontent.com/52820835/183435369-3aaff004-926c-4691-98d1-cabb21441cf4.png)
+
