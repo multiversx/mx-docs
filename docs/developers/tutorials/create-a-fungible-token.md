@@ -3,7 +3,7 @@ id: create-a-fungible-token
 title: Create a fungible token from your web wallet
 ---
 
-# Create a fungible token from your web wallet
+
 Elrond Standard Digital Tokens (ESDT) are standard fungible tokens hosted on the Elrond network. Each of these tokens is identical to the others. This means that each token is the same in type and value. ESDT tokens are highly scalable and fast like the native eGold token. In addition, the eGold token can be integrated by other apps and dApps thanks to ESDT.
 
 You can create and issue the ESDT token from your [Elrond web wallet](https://wallet.elrond.com/) in a few steps. Let's go over these steps.
@@ -28,10 +28,9 @@ Navigate to ***ISSUE*** sections and click on ***Tokens***.
 
 ![issue-token}](https://user-images.githubusercontent.com/52820835/183435253-83c89f0e-0bdc-4d4d-a15d-bacfdd8043c8.png)
 
-
 When creating a token, you are required to provide the token name, a ticker, the initial supply, and the number of decimals for display purposes. You can issue, manage, mint, burn, freeze, transfer, etc. ESDT tokens.
 
-Enter the required details. Next, click on **_Continue_** button to proceed.
+Enter the required details. Next, click on ***Continue*** button to proceed.
 
 ## Transfer a token from your wallet
 
@@ -43,11 +42,10 @@ On the web wallet dashboard, navigate to the **ISSUE** sections and click on 
 
 ![issue-token](https://user-images.githubusercontent.com/52820835/183431208-60d2ee39-7a30-4598-ae17-01d4530b219e.png)
 
-Enter the token name, a ticker, the mint amount, and the number of decimals. Next, tick _**Changeable Owner**_ and click on the ***Continue*** button.
+Enter the token name, a ticker, the mint amount, and the number of decimals. Next, tick ***Changeable Owner*** and click on the ***Continue*** button.
 
 ![issue-token2](https://user-images.githubusercontent.com/52820835/183431726-4285662a-20ac-49cb-83d1-c06e94a5fe5f.png)
 
 Select the token you wish to transfer and click ***send*** to complete the transfer.
 
 ![transfer_token](https://user-images.githubusercontent.com/52820835/183435369-3aaff004-926c-4691-98d1-cabb21441cf4.png)
-
