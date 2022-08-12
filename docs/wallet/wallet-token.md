@@ -20,7 +20,11 @@ You can create and issue an ESDT token from [Elrond web wallet](https://wallet.e
 
 To get started, open up the [Elrond web wallet](https://wallet.elrond.com/). You can create a new wallet if you do not have one or import your existing wallet. Here is a [guide](https://docs.elrond.com/wallet/web-wallet/) to help you navigate.
 
-On the left sidebar, from the **ISSUE** section click on **Tokens**.
+On the left sidebar, you will notice the **ISSUE** section.
+
+![sidebar](/wallet/wallet-tokens/sidebar.png)
+
+Click on **Tokens**.
 
 ![issue-token}](/wallet/wallet-tokens/issue-token.png)
 
@@ -41,12 +45,12 @@ Once the transaction is processed, your token will be issued.
 
 ### **Finding the token identifier**
 
-The token identifier of a token is unique. It is composed by the token ticker, a `-` char, followed by 6 random hex characters. Example: `MTKN-70e238`.
+The token identifier of a token is unique. It is composed by the token ticker, a `-` char, followed by 6 random hex characters. Example: `MTKN-c66c30`.
 
 Because the token identifier isn't deterministic, it can be found only after issuing it. There are 2 ways of finding it:
 
-1) On the Explorer page of the issue transaction, you will see a Smart Contract Result which has a data field similar to: `@4d544b4e2d373065323338@152d02c7e14af6800000`. 
-The first element (`4d544b4e2d373065323338`) is the hex representation of `MTKN-70e238`. 
+1) On the Explorer page of the issue transaction, you will see a Smart Contract Result which has a data field similar to: `@4d544b4e2d373065323338@152d02c7e14af6800000`.
+On the right side, choose `Smart` and you will able to see the decoded parameters. In this example, the token identifier is `MTKN-c66c30`.
 
 ![Token issue SCR](/wallet/wallet-tokens/scr-issue-token.png)
 
@@ -58,7 +62,7 @@ The first element (`4d544b4e2d373065323338`) is the hex representation of `MTKN-
 
 You can transfer an amount of a token to another account. To get started, open up the [Elrond web wallet](https://wallet.elrond.com/).
 
-Navigate to the `TOKENS` tab, and click on `Send` for the token you want to transfer. 
+Navigate to the `Tokens` tab, and click on `Send` for the token you want to transfer. 
 
 ![Web Wallet Tokens page](/wallet/wallet-tokens/web-wallet-tokens-page.png)
 
