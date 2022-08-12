@@ -8,7 +8,7 @@ title: Web Wallet Tokens
 **ESDT** stands for *Elrond Standard Digital Token*.
 
 Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases.
-You can create and issue the ESDT token from [Elrond web wallet](https://wallet.elrond.com/) in a few steps. Let's go over these steps.
+You can create and issue an ESDT token from [Elrond web wallet](https://wallet.elrond.com/) in a few steps. Let's go over these steps.
 
 ## **Prerequisites**
 
@@ -20,15 +20,15 @@ You can create and issue the ESDT token from [Elrond web wallet](https://wallet.
 
 To get started, open up the [Elrond web wallet](https://wallet.elrond.com/). You can create a new wallet if you do not have one or import your existing wallet. Here is a [guide](https://docs.elrond.com/wallet/web-wallet/) to help you navigate.
 
-Navigate to **ISSUE** section and click on **Tokens**.
+On the left sidebar, from the **ISSUE** section click on **Tokens**.
 
 ![issue-token}](/wallet/wallet-tokens/issue-token.png)
 
 :::note
-Web Wallet will handle the preparation of the transaction. Therefore, if you'd want a token with a supply of 10 and 2 decimals, you should simply put 10 as supply and 2 as number of decimals.
+The Web Wallet will handle the preparation of the transaction. Therefore, if you'd want a token with a supply of 10 and 2 decimals, you should simply put 10 as supply and 2 as number of decimals.
 :::
 
-When creating a token, you are required to provide the token name, a ticker, the initial supply, and the number of decimals for display purposes. 
+When creating a token, you are required to provide the token name, a ticker, the initial supply, and the number of decimals.
 In addition to these, tokens' properties should be set. 
 
 Useful resources:
@@ -37,7 +37,7 @@ Useful resources:
 
 Enter the required details. Next, click on ***Continue*** button to proceed. You will have to review the transaction and sign it, if everything looks good.
 
-After the transaction will be processed, your token will be issued. 
+Once the transaction is processed, your token will be issued. 
 
 ### **Finding the token identifier**
 
@@ -45,12 +45,12 @@ The token identifier of a token is unique. It is composed by the token ticker, a
 
 Because the token identifier isn't deterministic, it can be found only after issuing it. There are 2 ways of finding it:
 
-1). On the Explorer page of the issue transaction, you will see a Smart Contract Result which has a data field similar to: `@4d544b4e2d373065323338@152d02c7e14af6800000`. 
+1) On the Explorer page of the issue transaction, you will see a Smart Contract Result which has a data field similar to: `@4d544b4e2d373065323338@152d02c7e14af6800000`. 
 The first element (`4d544b4e2d373065323338`) is the hex representation of `MTKN-70e238`. 
 
 ![Token issue SCR](/wallet/wallet-tokens/scr-issue-token.png)
 
-2). From Web Wallet, go to `TOKENS` tab, and you can see the token there, including its identifier.
+2) From the Web Wallet, go to `TOKENS` tab from the left sidebar, and you can see the token there, including its identifier.
 
 ![Token view in Web Wallet](/wallet/wallet-tokens/web-wallet-token-display.png)
 
@@ -66,9 +66,9 @@ On the pop-up, introduce the recipient and the amount you want to send. Then pre
 
 ![Web Wallet Transfer Token](/wallet/wallet-tokens/web-wallet-transfer-token.png)
 
-After the transaction will be successfully executed, the recipient should receive the amount of tokens.
+Once the transaction is successfully executed, the recipient should receive the amount of tokens.
 
 ## **Managing a token from Web Wallet**
 
-At the time of writing, a dashboard for tokens owners was still under construction. Meanwhile, token operations have to be done
+At the time of writing, a dashboard for tokens owners is still under construction. Meanwhile, token operations have to be done
 manually, by following the transaction formats described [here](/tokens/esdt-tokens/#management-operations).
