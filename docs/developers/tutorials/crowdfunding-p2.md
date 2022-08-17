@@ -340,7 +340,7 @@ We can now use the type Status just like we use the other types, so we can write
 ```rust
   #[view]
   fn status(&self) -> Status {
-      if self.blockchain().get_block_nonce() <= self.deadline().get() {
+      if self.blockchain().get_block_timestamp() <= self.deadline().get() {
           Status::FundingPeriod
       } else if self.get_current_funds() >= self.target().get() {
           Status::Successful
@@ -498,7 +498,7 @@ pub trait Crowdfunding {
 
     #[view]
     fn status(&self) -> Status {
-        if self.blockchain().get_block_nonce() <= self.deadline().get() {
+        if self.get_current_time() <= self.deadline().get() {
             Status::FundingPeriod
         } else if self.get_current_funds() >= self.target().get() {
             Status::Successful
