@@ -16,6 +16,12 @@ Testnet: [https://testnet-api.elrond.com](https://testnet-api.elrond.com).
 
 Devnet: [https://devnet-api.elrond.com](https://devnet-api.elrond.com).
 
+## External Providers
+
+Mainnet: [https://elrond-api.public.blastapi.io](https://elrond-api.public.blastapi.io).
+
+Devnet: [https://elrond-api-devnet.public.blastapi.io](https://elrond-api-devnet.public.blastapi.io).
+
 ## Dependencies
 
 ### Core dependencies 
