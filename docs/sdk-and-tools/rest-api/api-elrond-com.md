@@ -76,18 +76,6 @@ Currently, there is a rate limit mechanism that limits an IP address to a maximu
 
 Rest API documentation of `api.elrond.com` can be found on the [Swagger docs](https://api.elrond.com).
 
-## Blastapi
-
-
-As a user of [Blastapi](https://blastapi.io/) powered by Bware Labs, you will be able to obtain your own free endpoint allowing you to interact with Elrond API, just by performing a few simple clicks within a user-friendly interface. There are different rate limits based on your plan, for more information check [here](https://docs.blastapi.io/blast-documentation/apis-documentation/elrond).
-
-To get started, you'll need to head to [Blastapi](https://blastapi.io/), launch the app and connect your wallet (for now, the only supported wallet is Metamask). Once your wallet is connected, you will be able to create a project and then generate your own custom endpoint. To generate an endpoint:
-
-1. Create a new project
-2. Click on **Available Endpoints**
-3. Select **Elrond network** for your endpoint. There are four options to choose from: Mainnet API, Mainnet Gateway, Testnet Gateway and Devnet API
-4. Select Mainnet API or Devnet API and press **Activate**
-5. You'll now see your chosen network under **Active Endpoints**. Click on the network and you'll see your custom endpoint on the next page 
 
 ## References:
 
