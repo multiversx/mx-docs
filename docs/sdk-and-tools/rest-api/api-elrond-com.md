@@ -10,11 +10,19 @@ historical queries support, tokens media support, delegation & staking data, and
 
 ## Public URLs
 
+**Hosted by Elrond:**
+
 Mainnet: [https://api.elrond.com](https://api.elrond.com).
 
 Testnet: [https://testnet-api.elrond.com](https://testnet-api.elrond.com).
 
 Devnet: [https://devnet-api.elrond.com](https://devnet-api.elrond.com).
+
+**External providers:**
+
+Mainnet: [https://elrond-api.public.blastapi.io](https://elrond-api.public.blastapi.io).
+
+Devnet: [https://elrond-api-devnet.public.blastapi.io](https://elrond-api-devnet.public.blastapi.io).
 
 ## Dependencies
 
@@ -24,7 +32,7 @@ For its basic functionality (without including caching or storage improvements),
 - `gateway`: also referred as Proxy, provides access to node information, such as network settings, account balance, sending transactions, etc
         docs: [Proxy](/sdk-and-tools/proxy).
 - `index`: a database that indexes data that can be queries, such as transactions, blocks, nfts, etc.
-        docs: [Elasticsearc](/sdk-and-tools/elastic-search).
+        docs: [Elasticsearch](/sdk-and-tools/elastic-search).
 - `delegation`: a microservice used to fetch providers list from the delegation API. Not currently open for public access.
 
 ### Other dependencies
@@ -67,6 +75,7 @@ Currently, there is a rate limit mechanism that limits an IP address to a maximu
 ## Rest API documentation
 
 Rest API documentation of `api.elrond.com` can be found on the [Swagger docs](https://api.elrond.com).
+
 
 ## References:
 
