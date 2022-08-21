@@ -18,9 +18,16 @@ Devnet: [https://devnet-api.elrond.com](https://devnet-api.elrond.com).
 
 ## External Providers
 
+**Blastapi**
+
 Mainnet: [https://elrond-api.public.blastapi.io](https://elrond-api.public.blastapi.io).
 
 Devnet: [https://elrond-api-devnet.public.blastapi.io](https://elrond-api-devnet.public.blastapi.io).
+
+Checkout information about [pricing](https://blastapi.io/pricing) and API [limitations per plan](https://docs.blastapi.io/blast-documentation/apis-documentation/elrond).
+
+More details on how to get your private endpoint can be found [here](https://docs.blastapi.io/blast-documentation/tutorials-and-guides/using-blast-to-get-a-blockchain-endpoint-1).
+
 
 ## Dependencies
 
@@ -30,7 +37,7 @@ For its basic functionality (without including caching or storage improvements),
 - `gateway`: also referred as Proxy, provides access to node information, such as network settings, account balance, sending transactions, etc
         docs: [Proxy](/sdk-and-tools/proxy).
 - `index`: a database that indexes data that can be queries, such as transactions, blocks, nfts, etc.
-        docs: [Elasticsearc](/sdk-and-tools/elastic-search).
+        docs: [Elasticsearch](/sdk-and-tools/elastic-search).
 - `delegation`: a microservice used to fetch providers list from the delegation API. Not currently open for public access.
 
 ### Other dependencies
