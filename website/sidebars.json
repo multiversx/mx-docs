@@ -18,7 +18,8 @@
       "wallet/web-wallet",
       "wallet/wallet-extension",
       "wallet/webhooks",
-      "wallet/ledger"
+      "wallet/ledger",
+      "wallet/create-a-fungible-token"
     ],
     "Tokens": [
       "tokens/overview",
@@ -27,6 +28,7 @@
     ],
     "Validators": [
       "validators/overview",
+      "validators/staking-providers-apr",
       "validators/system-requirements",
       {
         "type": "subcategory",

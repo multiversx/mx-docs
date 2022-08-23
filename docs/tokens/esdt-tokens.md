@@ -272,6 +272,7 @@ Every ESDT token has a set of properties which control what operations are possi
 - `canChangeOwner` - token management can be transferred to a different account
 - `canUpgrade` - the token manager may change these properties
 - `canAddSpecialRoles` - the token manager can assign a specific role(s)
+- `canCreateMultiShard` - if true, then local mint/burn can be used so the token will be distributed among shards.
 
 ## **Management operations**
 
