@@ -40,6 +40,12 @@ In addition to erdjs, one could use the following Javascript library for perform
 | [Writing and running erdpy scripts](/sdk-and-tools/erdpy/writing-and-running-erdpy-scripts) | Write and run scripts made with erdpy.                   |
 | [Smart contract interactions](/sdk-and-tools/erdpy/smart-contract-interactions)             | Interact with Smart Contract.                            |
 
+### erdnest - NestJS SDK
+
+| Name                          | Description                                            |
+|-------------------------------|--------------------------------------------------------|
+| [erdnest](/sdk-and-tools/erdnest) | NestJS SDK commonly used in the Elrond Microservice ecosystem. |
+
 ### erdgo - Golang SDK
 
 | Name                          | Description                                            |
