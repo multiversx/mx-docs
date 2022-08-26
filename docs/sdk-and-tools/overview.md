@@ -27,6 +27,12 @@ In addition to erdjs, one could use the following Javascript library for perform
 |----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
 | [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli)                                                  | Lightweight CLI wrapper used to perform wallet interactions. |
 
+### dapp-core - core functional logic of a dApp
+
+| Name                                   | Description                                                                  |
+|----------------------------------------|------------------------------------------------------------------------------|
+| [dapp-core](/sdk-and-tools/dapp-core)  | React library aimed to help developers create dApps based on Elrond Network. |
+
 ### erdpy - Python SDK
 
 | Name                                                                                        | Description                                              |
