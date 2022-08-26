@@ -460,7 +460,7 @@ ESDTNFTUpdateAttributesTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTUpdateAttributes" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <NFT nonce> +
           "@" + <Attributes in hexadecimal encoding>
 }
 ```
@@ -480,7 +480,7 @@ ESDTNFTAddURITransaction {
     GasLimit: 10000000
     Data: "ESDTNFTAddURI" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <NFT nonce> +
           "@" + <URI in hexadecimal encoding> +
           "@" + <URI in hexadecimal encoding> +
           ...
@@ -500,7 +500,7 @@ AddQuantityTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTAddQuantity" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <NFT nonce>
           "@" + <quantity to add in hexadecimal encoding>
 }
 ```
@@ -519,7 +519,7 @@ BurnQuantityTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <NFT nonce>
           "@" + <quantity to burn in hexadecimal encoding>
 }
 ```
@@ -538,7 +538,7 @@ FreezeTransaction {
     GasLimit: 60000000
     Data: "freezeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <NFT nonce>
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
@@ -553,7 +553,7 @@ UnfreezeTransaction {
     GasLimit: 60000000
     Data: "unFreezeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <NFT nonce> +
           "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
@@ -570,7 +570,7 @@ WipeTransaction {
     GasLimit: 60000000
     Data: "wipeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <NFT nonce> +
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
@@ -596,12 +596,21 @@ TransferTransaction {
     Value: 0
     GasLimit: 1000000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
-          "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the NFT nonce in hexadecimal encoding> +
+          "@" + <collection identifier in hexadecimal encoding> +
+          "@" + <the NFT nonce> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding>
 }
 ```
+
+:::tip
+Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
+
+The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`
+
+Also note that an Elrond address is in bech32 so you will need to convert the address from bech32 to hexadecimal.
+:::
+
 
 ## **Transfers to a Smart Contract**
 
@@ -614,8 +623,8 @@ TransferTransaction {
     Value: 0
     GasLimit: 1000000 + extra for smart contract call
     Data: "ESDTNFTTransfer" +
-          "@" + <token identifier in hexadecimal encoding> +
-          "@" + <the nonce after the NFT creation in hexadecimal encoding> +
+          "@" + <collection identifier in hexadecimal encoding> +
+          "@" + <the nonce after the NFT creation> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding> +
           "@" + <name of method to call in hexadecimal encoding> +
