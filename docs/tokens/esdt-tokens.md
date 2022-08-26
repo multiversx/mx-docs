@@ -121,7 +121,7 @@ IssuanceTransaction {
 }
 ```
 
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/tokens/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
  In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
@@ -258,11 +258,11 @@ self.send().direct_esdt(&address, &esdt_token_name, token_nonce: u64, &amount);
 
 ## **Token management**
 
-The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
+The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/tokens/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
 
 ## **Configuration properties of an ESDT token**
 
-Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
+Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/tokens/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
 - `canMint` - more units of this token can be minted by the token manager after initial issuance, increasing the supply
 - `canBurn` - users may "burn" some of their tokens, reducing the supply
@@ -441,7 +441,7 @@ The special roles available for basic ESDT tokens are:
 
 - **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
-For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
+For NFTs, there are different roles that can be set. You can find them [here](/tokens/nft-tokens#assigning-roles).
 
 #### **Set special role**
 

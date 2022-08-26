@@ -6,9 +6,9 @@ title: NFT tokens
 ## **Introduction**
 
 ### NFT and SFT
-The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/developers/esdt-tokens).
+The Elrond protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/tokens/esdt-tokens).
 This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, as well as an assignable URI.
-Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/developers/nft-tokens#nftsft-fields).
+Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/tokens/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
 - register/issue the token
@@ -226,10 +226,10 @@ IssuanceTransaction {
           "@414c43" +
 }
 ```
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/tokens/esdt-tokens#token-management).
 
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
-here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [REST API - Get NFT data](/developers/nft-tokens#get-nft-data-for-an-address) ).
+here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [REST API - Get NFT data](/tokens/nft-tokens#get-nft-data-for-an-address) ).
 
 ## **Roles** ##
 
@@ -250,7 +250,7 @@ For SFT:
 * ESDTTransferRole : this role enables transfer only to specified addresses. The owner of the SFT and the address with the ESDTTransferRole should be located on the same shard. The addresses with the transfer role can transfer anywhere.
 
 
-To see how roles can be assigned, please refer to [this](/developers/nft-tokens#assigning-roles) section.
+To see how roles can be assigned, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
 
 ## **Assigning roles** ##
@@ -275,7 +275,7 @@ RolesAssigningTransaction {
 
 For example, `ESDTRoleNFTCreate` = `45534454526f6c654e4654437265617465`
 
-Unset transactions are very similar. You can find an example [here](/developers/esdt-tokens#unset-special-role).
+Unset transactions are very similar. You can find an example [here](/tokens/esdt-tokens#unset-special-role).
 
 ## **NFT/SFT fields**
 
@@ -393,7 +393,7 @@ Additional gas refers to:
 - Transaction payload cost: Data field length * 1500 (GasPerDataByte = 1500)
 - Storage cost: Size of NFT data * 50000 (StorePerByte = 50000)
 
-To see more about the required fields, please refer to [this](/developers/nft-tokens#nftsft-fields) section.
+To see more about the required fields, please refer to [this](/tokens/nft-tokens#nftsft-fields) section.
 
 :::tip
 Note that because NFTs are stored in accounts trie, every transaction involving the NFT will require a gas limit depending on NFT data size.
@@ -403,7 +403,7 @@ Most of the times you will be able to create the NFTs by issuing one single tran
 This assumes that the metadata file as well as the NFT media is already uploaded to IPFS.
 
 There are times, however, when uploading the metadata file before issuing the NFT is not possible (eg. when issued from a smart contract)
-In these cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction. You can find more information [here](/developers/nft-tokens#change-nft-attributes) about how to update the attributes
+In these cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction. You can find more information [here](/tokens/nft-tokens#change-nft-attributes) about how to update the attributes
 
 ## **Other management operations**
 
@@ -464,7 +464,7 @@ ESDTNFTUpdateAttributesTransaction {
           "@" + <Attributes in hexadecimal encoding>
 }
 ```
-To see how you can assign this role in case it is not set, please refer to [this](/developers/nft-tokens#assigning-roles) section.
+To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
 
 ### **Add URIs to NFT**
@@ -486,7 +486,7 @@ ESDTNFTAddURITransaction {
           ...
 }
 ```
-To see how you can assign this role in case it is not set, please refer to [this](/developers/nft-tokens#assigning-roles) section.
+To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
 ### **Add quantity (SFT only)**
 
@@ -577,12 +577,12 @@ WipeTransaction {
 
 ### **Transferring token management rights**
 
-The manager of an ESDT token can transfer the ownership if the ESDT was created as upgradable. Check the [ESDT - Upgrading (changing properties)](/developers/esdt-tokens#upgrading-changing-properties) section for more details.
+The manager of an ESDT token can transfer the ownership if the ESDT was created as upgradable. Check the [ESDT - Upgrading (changing properties)](/tokens/esdt-tokens#upgrading-changing-properties) section for more details.
 
 
 ### **Upgrading (changing properties)**
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable.
-Check the [ESDT - Transferring token management rights](/developers/esdt-tokens#transferring-token-management-rightss) section for more details.
+Check the [ESDT - Transferring token management rights](/tokens/esdt-tokens#transferring-token-management-rightss) section for more details.
 
 
 ## **Transfers**
@@ -611,7 +611,6 @@ The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`
 Also note that an Elrond address is in bech32 so you will need to convert the address from bech32 to hexadecimal.
 :::
 
-
 ## **Transfers to a Smart Contract**
 
 To perform the transfer from your account to the smart contract, you have to use the following transaction format:
@@ -638,7 +637,7 @@ TransferTransaction {
 
 Multiple semi-fungible and/or non-fungible tokens can be transferred in a single transaction to a single receiver.
 
-More details can be found [here](/developers/esdt-tokens#multiple-tokens-transfer) .
+More details can be found [here](/tokens/esdt-tokens#multiple-tokens-transfer).
 
 ## **Example flow**
 
@@ -683,7 +682,7 @@ Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You
 
 **Step 4: Create NFT**
 
-Now, the NFT creation transaction for the example case defined [here](/developers/esdt-tokens#example) looks like this:
+Now, the NFT creation transaction for the example case defined [here](/tokens/nft-tokens#creation-of-an-nft) looks like this:
 
 ```
 {
@@ -894,16 +893,16 @@ In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 
 ### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
 
-One can use [get all esdt tokens for an address endpoint](/developers/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
+One can use [get all esdt tokens for an address endpoint](/tokens/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
 
 ### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
 
-One can use [get all issued esdt tokens endpoint](/developers/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
+One can use [get all issued esdt tokens endpoint](/tokens/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
 
 ### <span class="badge badge-success">POST</span> **Get ESDT properties**
 
-Properties can be queried via the [getTokenProperties function](/developers/esdt-tokens#get-esdt-token-properties) provided by ESDT.
+Properties can be queried via the [getTokenProperties function](/tokens/esdt-tokens#get-esdt-token-properties) provided by ESDT.
 
 ### <span class="badge badge-success">POST</span> **Get special roles**
 
-Special roles can be queried via the [getSpecialRoles function](/developers/esdt-tokens#get-special-roles-for-a-token) provided by ESDT.
+Special roles can be queried via the [getSpecialRoles function](/tokens/esdt-tokens#get-special-roles-for-a-token) provided by ESDT.
