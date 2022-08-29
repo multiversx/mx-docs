@@ -206,6 +206,7 @@
           "sdk-and-tools/erdjs/erdjs-signing-providers"
         ]
       },
+      "sdk-and-tools/erdnest",
       "sdk-and-tools/erdgo",
       "sdk-and-tools/erdcpp",
       "sdk-and-tools/erdjava",
