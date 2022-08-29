@@ -9,7 +9,7 @@ Define contract arguments, handle storage, process payments, define new types, w
 
 The previous chapter left us with a minimal contract as a starting point.
 
-The first thing we need to do is to configure the desired target amount and the deadline. The deadline will be expressed as the block nonce after which the contract can no longer be funded. We will be adding 2 more storage fields and arguments to the constructor.
+The first thing we need to do is to configure the desired target amount and the deadline. The deadline will be expressed as the block timestamp after which the contract can no longer be funded. We will be adding 2 more storage fields and arguments to the constructor.
 
 ```rust
   #[view(getTarget)]
@@ -31,7 +31,7 @@ The first thing we need to do is to configure the desired target amount and the 
   }
 ```
 
-The deadline being a block nonce can be expressed as a regular 64-bits unsigned int. The target, however, being a sum of EGLD cannot. Note that 1 EGLD = 10^18 EGLD-wei (also known as atto-EGLD), the smallest unit of currency, and all payments are expressed in wei. So you can see that even for small payments the numbers get large. Luckily, the framework offers support for big numbers out of the box. Two types are available: BigUint and BigInt.
+The deadline being a block timestamp can be expressed as a regular 64-bits unsigned int. The target, however, being a sum of EGLD cannot. Note that 1 EGLD = 10^18 EGLD-wei (also known as atto-EGLD), the smallest unit of currency, and all payments are expressed in wei. So you can see that even for small payments the numbers get large. Luckily, the framework offers support for big numbers out of the box. Two types are available: BigUint and BigInt.
 
 Try to avoid the signed version as much as possible (unless negative values are really possible and needed). There are some caveats with BigInt argument serialization that can lead to subtle bugs.
 
@@ -238,7 +238,7 @@ SUCCESS
 
 # **Validation**
 
-It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block nonce must be rejected. The idiomatic way to do this is:
+It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block timestamp must be rejected. The idiomatic way to do this is:
 
 ```
     #[endpoint]
@@ -246,7 +246,7 @@ It doesn't make sense to fund after the deadline has passed, so fund transaction
     fn fund(&self) {
         let payment = self.call_value().egld_value();
 
-        let current_time = self.blockchain().get_block_nonce();
+        let current_time = self.blockchain().get_block_timstamp();
         require!(current_time < self.deadline().get(), "cannot fund after deadline");
 
         let caller = self.blockchain().get_caller();
@@ -273,7 +273,7 @@ We'll create another test file to verify that the validation works: `test-fund-t
         {
             "step": "setState",
             "currentBlockInfo": {
-                "blockNonce": "123,001"
+                "blockTimestamp": "123,001"
             }
         },
         {
@@ -300,7 +300,7 @@ We'll create another test file to verify that the validation works: `test-fund-t
 }
 ```
 
-We branch this time from `crowdfunding-fund.scen.json`, where we already had a donor. Now the same donor wants to donate, again, but in the meantime the current block nonce has become 123,001, one block later than the deadline. The transaction fails with status 4 (user error - all errors from within the contract will return this status). The testing environment allows us to also check that the correct message was returned.
+We branch this time from `crowdfunding-fund.scen.json`, where we already had a donor. Now the same donor wants to donate, again, but in the meantime the current block timestamp has become 123,001, one block later than the deadline. The transaction fails with status 4 (user error - all errors from within the contract will return this status). The testing environment allows us to also check that the correct message was returned.
 
 By building and testing the contract again, you should see that all three tests pass:
 
@@ -368,7 +368,7 @@ To test this method, we append one more step to the last test we worked on, `tes
         {
             "step": "setState",
             "currentBlockInfo": {
-                "blockNonce": "123,001"
+                "blockTimestamp": "123,001"
             }
         },
         {
