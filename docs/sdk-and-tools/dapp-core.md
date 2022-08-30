@@ -36,7 +36,7 @@ A live demo of the dapp-template is available at [https://dapp-template.elrond.c
 
 ## Migration from dapp-core 1.x
 
-**If you're transitioning from dapp-core 1.x to dapp-core 2.0, please read the [Migration guide](https://github.com/ElrondNetwork/dapp-core/wiki/Migration-guide-2.0).
+If you're transitioning from dapp-core 1.x to dapp-core 2.0, please read the [Migration guide](https://github.com/ElrondNetwork/dapp-core/wiki/Migration-guide-2.0).
 
 ## Installation
 
