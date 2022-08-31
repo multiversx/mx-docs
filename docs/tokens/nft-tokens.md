@@ -460,7 +460,7 @@ ESDTNFTUpdateAttributesTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTUpdateAttributes" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce> +
+          "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <Attributes in hexadecimal encoding>
 }
 ```
@@ -480,7 +480,7 @@ ESDTNFTAddURITransaction {
     GasLimit: 10000000
     Data: "ESDTNFTAddURI" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce> +
+          "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <URI in hexadecimal encoding> +
           "@" + <URI in hexadecimal encoding> +
           ...
@@ -500,7 +500,7 @@ AddQuantityTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTAddQuantity" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce>
+          "@" + <NFT nonce in hexadecimal encoding>
           "@" + <quantity to add in hexadecimal encoding>
 }
 ```
@@ -519,7 +519,7 @@ BurnQuantityTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce>
+          "@" + <NFT nonce in hexadecimal encoding>
           "@" + <quantity to burn in hexadecimal encoding>
 }
 ```
@@ -538,7 +538,7 @@ FreezeTransaction {
     GasLimit: 60000000
     Data: "freezeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce>
+          "@" + <NFT nonce in hexadecimal encoding>
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
@@ -553,7 +553,7 @@ UnfreezeTransaction {
     GasLimit: 60000000
     Data: "unFreezeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce> +
+          "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
@@ -570,7 +570,7 @@ WipeTransaction {
     GasLimit: 60000000
     Data: "wipeSingleNFT" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce> +
+          "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
@@ -597,7 +597,7 @@ TransferTransaction {
     GasLimit: 1000000 + length of Data field in bytes * 1500
     Data: "ESDTNFTTransfer" +
           "@" + <collection identifier in hexadecimal encoding> +
-          "@" + <the NFT nonce> +
+          "@" + <the NFT nonce in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding>
 }
@@ -606,9 +606,9 @@ TransferTransaction {
 :::tip
 Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
 
-The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`
+The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`. Note that the `05dc` is hexadecimal encoded, it represents decimal 1500.
 
-Also note that an Elrond address is in bech32 so you will need to convert the address from bech32 to hexadecimal.
+Also note that an Elrond address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 :::
 
 ## **Transfers to a Smart Contract**
@@ -623,7 +623,7 @@ TransferTransaction {
     GasLimit: 1000000 + extra for smart contract call
     Data: "ESDTNFTTransfer" +
           "@" + <collection identifier in hexadecimal encoding> +
-          "@" + <the nonce after the NFT creation> +
+          "@" + <the nonce after the NFT creation in hexadecimal encoding> +
           "@" + <quantity to transfer in hexadecimal encoding> +
           "@" + <destination address in hexadecimal encoding> +
           "@" + <name of method to call in hexadecimal encoding> +
