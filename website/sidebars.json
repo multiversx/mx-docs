@@ -158,7 +158,8 @@
       "developers/account-storage",
       "developers/setup-local-testnet",
       "developers/setup-local-testnet-advanced",
-      "developers/creating-wallets"
+      "developers/creating-wallets",
+      "developers/reproducible-contract-builds"
     ],
     "SDK and Tools": [
       "sdk-and-tools/overview",
