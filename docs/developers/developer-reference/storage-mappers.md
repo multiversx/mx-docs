@@ -649,19 +649,17 @@ Same as the method above, but also sends the tokens to the provided address.
 
 ### nft_burn
 ```rust
-
-```rust
 fn nft_burn(token_nonce: u64, amount: &BigUint)
 ```
 
 Burns `amount` tokens for the given nonce.
 
-### get_all_esdt_token_data
+### get_all_token_data
 ```rust
 fn get_all_token_data(token_nonce: u64) -> EsdtTokenData<Self::Api>
 ```
 
-Gets all the token data for the given nonce. The SC must own at least 1 token to use this function.
+Gets all the token data for the given nonce. The SC must own the given nonce for this function to work.
 
 `EsdtTokenData` contains the following fields:
 ```rust
@@ -690,7 +688,7 @@ Gets the SC's balance for the given token nonce.
 fn get_token_attributes<T: TopDecode>(token_nonce: u64) -> T
 ```
 
-Gets the attributes for the given token nonce. The SC must own at least 1 copy for this function to work.
+Gets the attributes for the given token nonce. The SC must own the given nonce for this function to work.
 
 ## Common functions for FungibleTokenMapper and NonFungibleTokenMapper
 

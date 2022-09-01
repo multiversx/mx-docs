@@ -19,10 +19,30 @@ In order to set up an observer that indexes in Elasticsearch, one has to update 
 configuration directory. A minimum configuration would have `Enabled` set to `true` and the rest of the fields updated 
 accordingly (`URL`, `Username`, `Password`). 
 
-Alternatively, one can choose to use also Kibana for visualizing Elastic Data. Kikana's path must be `_plugin/kibana/api`.
+An example of a configuration is:
 
-Also, one can specify to only index data for a given set of indexes. The list of indexes enabled is to be found at the 
-`EnabledIndexes` section.
+```
+# ElasticSearchConnector defines settings related to ElasticSearch such as login information or URL
+[ElasticSearchConnector]
+    ## We do not recommend to activate this indexer on a validator node since
+    #the node might loose rating (even facing penalties) due to the fact that
+    #the indexer is called synchronously and might block due to external causes.
+    #Strongly suggested to activate this on a regular observer node.
+    Enabled           = true
+    IndexerCacheSize  = 0
+    BulkRequestMaxSizeInBytes = 4194304 # 4MB
+    URL               = "http://localhost:9200"
+    UseKibana         = false
+    Username          = "elastic-username"
+    Password          = "elastic-password"
+    # EnabledIndexes represents a slice of indexes that will be enabled for indexing. Full list is:
+    # ["rating", "transactions", "blocks", "validators", "miniblocks", "rounds", "accounts", "accountshistory", "receipts", "scresults", "accountsesdt", "accountsesdthistory", "epochinfo", "scdeploys", "tokens", "tags", "logs", "delegators", "operations", "collections"]
+    EnabledIndexes    = ["rating", "transactions", "blocks", "validators", "miniblocks", "rounds", "accounts", "accountshistory", "receipts", "scresults", "accountsesdt", "accountsesdthistory", "epochinfo", "scdeploys", "tokens", "tags", "logs", "delegators", "operations", "collections"]
+```
+
+`Kibana` can be used for visualizing Elastic Data. Kikana's path must be `_plugin/kibana/api` (as seen in AWS managed instances).
+
+`EnabledIndexes` array specifies the indices that will be populated. 
 
 ### Proxy support
 
