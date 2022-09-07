@@ -1395,4 +1395,8 @@ This test should work without any errors.
 
 Currently, there is no way to deposit rewards into the SC, unless the owner makes it payable, which is generally bad practice, and not recommded.
 
-// TODO
+As this is a fairly simple task compared to what we've done already, we'll leave this as an exercise to the reader. You'll have to add a `payable("EGLD")` endpoint, and additionally, a storage mapper that keeps track of the remaining rewards.
+
+Good luck!
+
+In part 2, which will come soon, we'll discuss about how to use custom ESDTs instead of just EGLD.
