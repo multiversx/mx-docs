@@ -1189,7 +1189,7 @@ fn stake_unstake_test() {
 
 Now let's run the test... it didn't work. You should see the following error:
 
-## Storage decode error: input too short
+### Storage decode error: input too short
 
 But why? Everything worked fine before. This is because instead of using a simple `BigUint` for staking positions, we now use the `StakingPosition` struct. If you follow the error trace, you will see exactly where it failed:
 ```
@@ -1206,7 +1206,7 @@ self.staking_position(&caller).update(|staking_pos| {
         });
 ```
 
-Because we're trying to add a new user, which has no staking entry yet, the decoding fails. For as simple `BigUint`, decoding from an empty storage yields the `0` value, which is exactly what we want, but for a struct type, it cannot give us any default value.
+Because we're trying to add a new user, which has no staking entry yet, the decoding fails. For a simple `BigUint`, decoding from an empty storage yields the `0` value, which is exactly what we want, but for a struct type, it cannot give us any default value.
 
 For this reason, we have to add some additional checks. The endpoint implementations will have to be changed to the following (the rest of the code remains the same):
 ```rust
