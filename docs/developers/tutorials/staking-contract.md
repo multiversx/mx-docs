@@ -1188,9 +1188,8 @@ fn stake_unstake_test() {
 ```
 
 Now let's run the test... it didn't work. You should see the following error:
-```
-storage decode error: input too short
-```
+
+## Storage decode error: input too short
 
 But why? Everything worked fine before. This is because instead of using a simple `BigUint` for staking positions, we now use the `StakingPosition` struct. If you follow the error trace, you will see exactly where it failed:
 ```
@@ -1391,7 +1390,7 @@ In the test, we perform the following steps:
 
 This test should work without any errors.
 
-## Depositing rewards
+## Depositing rewards / Conclusion
 
 Currently, there is no way to deposit rewards into the SC, unless the owner makes it payable, which is generally bad practice, and not recommded.
 
