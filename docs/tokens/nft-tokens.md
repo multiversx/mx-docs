@@ -341,6 +341,7 @@ Below you can find a table with the supported media types for NFTs available on 
 |.jpeg|image/jpeg|
 |.jpg|image/jpg|
 |.gif|image/gif|
+|.webp|image/webp|
 |.acc|audio/acc|
 |.flac|audio/flac|
 |.m4a|audio/m4a|
