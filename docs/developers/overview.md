@@ -18,14 +18,15 @@ For interacting with Elrond Blockchain via SDKs or Rest API, please refer to [SD
 
 Below is a list of tutorials that one can you to get a full experience of building on Elrond
 
-| Name                                                                                | Description                                                    |
-|-------------------------------------------------------------------------------------|----------------------------------------------------------------|
-| [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.     |
-| [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.   |
-| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                |
-| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                |
-| [The Counter Smart Contract](/developers/tutorials/counter)                         | The Counter SC tutorial.                                       |
-| [Custom Wallet Connect](/developers/tutorials/custom-wallet-connect)                | Custom Wallet Connect tutorial.                                |
+| Name                                                                                | Description                                                       |
+|-------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.        |
+| [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.      |
+| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                   |
+| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                   |
+| [The Counter Smart Contract](/developers/tutorials/counter)                         | The Counter SC tutorial.                                          |
+| [Custom Wallet Connect](/developers/tutorials/custom-wallet-connect)                | Custom Wallet Connect tutorial.                                   |
+| [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract.  | 
 
 ### Signing transactions
 

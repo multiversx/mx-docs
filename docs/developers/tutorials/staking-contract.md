@@ -3,15 +3,15 @@ id: staking-contract
 title: Staking smart contract tutorial
 ---
 
-# Introduction
+## Introduction
 
 This tutorial aims to teach you how to write a simple staking contract, and to illustrate and correct the common pitfalls new smart contract developers might fall into.  
 
 If you find anything not answered here, feel free to ask further questions on the Elrond Developers Telegram channel: https://t.me/ElrondDevelopers
 
-# Prerequisites
+## Prerequisites
 
-## erdpy
+### erdpy
 
 First and foremost, you need to have erdpy installed: https://docs.elrond.com/sdk-and-tools/erdpy/installing-erdpy/
 
@@ -19,7 +19,7 @@ If you already have erdpy installed, make sure to update it to the latest versio
 
 We're going to use erdpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.elrond.com/sdk-and-tools/erdpy/smart-contract-interactions/
 
-## Rust
+### Rust
 
 Once you have erdpy installed, you also have to install Rust through it, and the VM tools for testing:
 ```
@@ -36,7 +36,7 @@ error[E0554]: #![feature] may not be used on the stable release channel
 --> /home/user/elrondsdk/vendor-rust/registry/src/github.com-1ecc6299db9ec823/elrond-wasm-derive-0.33.0/src/lib.rs:4:12
 ```
 
-## VSCode and rust-analyser extension
+### VSCode and rust-analyser extension
 
 VSCode: https://code.visualstudio.com/
 
@@ -49,7 +49,7 @@ Elrond VSCode extension: https://marketplace.visualstudio.com/items?itemName=Elr
 
 Both can be easily installed from the "Extensions" menu in VSCode.  
 
-# Creating the contract
+## Creating the contract
 
 Run the following command in the folder in which you want your smart contract to be created:
 ```
@@ -63,7 +63,7 @@ You should then have the following structure:
 
 For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "A", then ctrl + "/"). Otherwise, it will keep popping up errors as we modify the contract's code.  
 
-# Setting up the workspace
+## Setting up the workspace
 
 Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "Elrond: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
 
@@ -77,7 +77,7 @@ After the building has completed, our folder should look like this:
 
 A new folder, called `output` was created, which contains the compiled contract code. More on this is used later. For now, let's continue.
 
-# Your first lines of Rust
+## Your first lines of Rust
 
 Currently, we just have an empty contract. Not very useful, is it? So let's add some simple code for it. Since this is a staking contract, we'd expect to have a `stake` function, right?
 
@@ -190,15 +190,16 @@ pub trait StakingContract {
 
 Every smart contract needs to have a function annotated with `#[init]`. This function is called on deploy and upgrade. For now, we need no logic inside it, but we still need to have this function.  
 
-# Trying it out on devnet
+## Trying it out on devnet
 
 To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the Elrond IDE extension. More on this in a bit. Your new folder structure should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_3.png)
 
-## Creating a devnet wallet
+### Creating a devnet wallet
 
 :::note  
 You can skip this section if you already have a devnet wallet setup.
+:::
 
 Let's create a devnet wallet. Go to https://devnet-wallet.elrond.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
@@ -211,8 +212,9 @@ erdpy --verbose wallet derive ./tutorialKey.pem --mnemonic
 
 :::note  
 You have to press "space" between the words, not "enter"!
+:::
 
-## Deploying the contract
+### Deploying the contract
 
 Now that we've created a wallet, it's time to deploy our contract. Open your `snippets.sh` file, and add the following:
 
@@ -231,7 +233,10 @@ deploy() {
 ```
 
 :::note  
-If you wanted to use testnet, the proxy would be "https://testnet-gateway.elrond.com" and the chain ID would be "T". For mainnet, it would be "https://gateway.elrond.com" and chain ID "1".  
+If you wanted to use testnet, the proxy would be "https://testnet-gateway.elrond.com" and the chain ID would be "T". For mainnet, it would be "https://gateway.elrond.com" and chain ID "1". 
+
+More details can be found [here](/developers/constants/).
+:::
 
 The only thing you need to edit is the USER_PEM variable with the previously created PEM file's path.
 
@@ -249,7 +254,7 @@ CRITICAL:cli:Proxy request error for url [https://devnet-gateway.elrond.com/tran
 
 This is because your account has no EGLD in it, so as far as the blockchain is concerned, the account does not exist, as it has no transactions from or to it.  
 
-But still, how come you're seeing the contract's address if the deploy failed?
+But still, how come you're seeing the contract's address if the deployment failed?
 ```bash
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
 INFO:utils:View this contract address in the Elrond Devnet Explorer: https://devnet-explorer.elrond.com/accounts/erd1qqqqqqqqqqqqq...
@@ -257,27 +262,27 @@ INFO:utils:View this contract address in the Elrond Devnet Explorer: https://dev
 
 This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So erdpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.  
 
-## Getting EGLD on devnet
+### Getting EGLD on devnet
 
 There are two ways of getting EGLD on devnet:
 - through the devnet wallet
 - through an external faucet
 
-### Getting EGLD through devnet wallet
+#### Getting EGLD through devnet wallet
 
-Go to https://devnet-wallet.elrond.com and login to your devnet account with your PEM file. In the left side menu, select the "faucet" option:  
+Go to https://devnet-wallet.elrond.com and login to your devnet account with your PEM file. On the left side menu, select the "faucet" option:  
 ![img](/developers/staking-contract-tutorial-img/wallet_faucet.png)
 
 Request the tokens. After a couple seconds, refresh the page, and you should have 30 xEGLD in your wallet.  
 
-### Getting EGLD through external faucet
+#### Getting EGLD through external faucet
 
 Go to https://r3d4.fr/faucet and submit a request:  
 ![img](/developers/staking-contract-tutorial-img/external_faucet.png)
 
 Make sure you selected "devnet" and input your address! It might take a bit depending on how "busy" the faucet is.  
 
-## Deploying the contract, second try
+### Deploying the contract, second try
 
 Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. erdpy will print it in the console for you:
 ```bash
@@ -286,7 +291,7 @@ INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
 
 Alternatively, you can check the address in the logs tab in explorer, namely the `SCDeploy` event.
 
-### Too much gas error?
+#### Too much gas error?
 
 Everything should work just fine, but you'll see this message:  
 ![img](/developers/staking-contract-tutorial-img/too_much_gas.png)
@@ -359,9 +364,11 @@ getStakeForAddress() {
 
 :::note
 You don't need a PEM file or an account at all to perform queries. Notice how you also don't need a chain ID for this call.
+:::
 
 :::note
 Because there is no PEM file required, there is no "caller" for VM queries. Attempting to use `self.blockchain().get_caller()` in a query function will return the SC's own address.
+:::
 
 Replace `USER_ADDRESS` value with your address. Now let's see our staking amount, according to the SC's internal state:  
 ```bash
@@ -442,7 +449,7 @@ erdpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7
 erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 ```
 
-# Adding unstake functionality
+## Adding unstake functionality
 
 For now, users can only stake, but they cannot actually get their EGLD back... at all. Let's add the unstake endpoint in our SC:
 
@@ -486,7 +493,7 @@ key.append(addr.as_managed_buffer());
 
 Instead, we just reuse the key we built previously. This can be a great performance enhancement, especially for mappers with multiple arguments. For mappers with no arguments, the improvement is minimal, but might still be worth thinking about.  
 
-## Partial unstake
+### Partial unstake
 
 Some users might only want to unstake a part of their tokens, so we could simply add an `unstake_amount` argument:
 ```rust
@@ -556,7 +563,7 @@ fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
 
 This makes it so if someone wants to perform a full unstake, they can simply not give the argument at all.
 
-## Unstaking our devnet tokens
+### Unstaking our devnet tokens
 
 Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the Elrond IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
 
@@ -595,9 +602,11 @@ upgrade() {
 
 :::note
 Keep in mind the `#[init]` function of the newly uploaded code is also called on upgrade. For now, it does not matter, as our init function does nothing, but it's worth keeping in mind.
+:::
 
 :::note
 All the storage is kept on upgrade, so make sure any storage changes you make to storage mapping are backwards compatible!
+:::
 
 ## Try unstaking again
 
@@ -646,7 +655,7 @@ getAllStakers
 
 As you can see, we get an empty result (which means the value 0), and an empty array respectively.
 
-# Writing Rust tests
+## Writing Rust tests
 
 As you might've noticed, it can be quite a chore to keep upgrading the contract after every little change, especially if all we want to do is test a new feature. So let's recap what we've done until now:
 - deploy our contract
@@ -656,6 +665,7 @@ As you might've noticed, it can be quite a chore to keep upgrading the contract 
 
 :::note
 A more detailed explanation of Rust tests can be found here: https://docs.elrond.com/developers/developer-reference/rust-testing-framework/
+:::
 
 To test the previously described scenario, we're going to need a user address, and a new test function. Replace the contents of the `./tests/empty_rust_test.rs` file with the following:
 ```rust
@@ -803,10 +813,11 @@ We've added a `user_address` field in the setup struct, which is initiated with 
 
 :::note
 For the test we're going to use small numbers for balances, since there is no reason to work with big numbers. For this test, we're using 1 EGLD for user balance.
+:::
 
 Then, we've staked the user's entire balance, unstaked half, then unstaked fully. After each transaction, we've checked the SC's internal staking storage, and also the balance of the user and the SC respectively.
 
-## Running the test
+### Running the test
 
 To run a test, you can use click on the `Run Test` button from under the test name.
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
@@ -820,7 +831,7 @@ cargo test --test empty_rust_test
 
 Where `empty_rust_test` is the name of the file containing the tests.
 
-# Staking Rewards
+## Staking Rewards
 
 Right now, there is no incentive to stake EGLD into this smart contract. Let's say we want to give every staker 10% APY (Annual Percentage Yield). For example, if someone staked 100 EGLD, they will receive a total of 10EGLD per year.
 
@@ -828,8 +839,9 @@ For this, we're also going to need to save the time at which each user staked. A
 
 :::note
 You can also use rounds, timestamp, epochs etc. for time keeping in smart contracts, but number of blocks is the recommended approach.
+:::
 
-## User-defined struct types
+### User-defined struct types
 
 A single `BigUint` for each user is not enough anymore. As stated before, we need to also store the stake block, and we need to update this block number on every action.
 
@@ -843,6 +855,7 @@ pub struct StakingPosition<M: ManagedTypeApi> {
 
 :::note
 Every managed type from the Rust framework needs a `ManagedTypeApi` implementation, which allows it to access the VM functions for performing operations. For example, adding two `BigUint` numbers, concatenating two `ManagedBuffer`s, etc. Inside smart contract code, the `ManagedTypeApi` associated type is automatically added, but outside of it, we have to manually specify it.
+:::
 
 Additionally, since we need to store this in storage, we need to tell the Rust framework how to encode and decode this type. This can be done automatically by deriving (i.e. auto-implementing) these traits, via the `#[derive]` annotation:
 
@@ -862,7 +875,7 @@ Additionally, we've added `PartialEq` and `Debug` derives, for easier use within
 
 If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more here: https://docs.elrond.com/developers/developer-reference/elrond-serialization-format/
 
-## Rewards formula
+### Rewards formula
 
 A block is produced about every 6 seconds, so total blocks in a year would be seconds in year, divided by 6. More specifically:
 ```rust
@@ -873,6 +886,7 @@ More specifically: 60 seconds per minute * 60 minutes per hour * 24 hours per da
 
 :::note
 This is calculated and replaced with the exact value at compile time, so there is no performance penalty of having a constant with mathematical operations in its value definition.
+:::
 
 Having defined this constant, rewards formula should look like this:
 ```rust
@@ -910,6 +924,7 @@ reward_amt = 100 * 5_045 / 10_000 = 504_500 / 10_000 = 50
 
 :::note
 Since we're still using BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the MAX_PERCENTAGE and the respective APY, but this is also "inheritly fixed" on the blockchain, because we work with very big numbers for `user_stake`
+:::
 
 ## Rewards implementation
 
@@ -1293,7 +1308,7 @@ running 1 test
 test stake_unstake_test ... ok
 ```
 
-## Rewards testing
+### Rewards testing
 
 Now that we've implemented rewards logic, let's add the following test to ensure everything works as expected:
 ```rust
@@ -1392,7 +1407,7 @@ This test should work without any errors.
 
 ## Depositing rewards / Conclusion
 
-Currently, there is no way to deposit rewards into the SC, unless the owner makes it payable, which is generally bad practice, and not recommded.
+Currently, there is no way to deposit rewards into the SC, unless the owner makes it payable, which is generally bad practice, and not recommended.
 
 As this is a fairly simple task compared to what we've done already, we'll leave this as an exercise to the reader. You'll have to add a `payable("EGLD")` endpoint, and additionally, a storage mapper that keeps track of the remaining rewards.
 
