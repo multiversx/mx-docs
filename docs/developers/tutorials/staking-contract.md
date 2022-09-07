@@ -537,7 +537,7 @@ fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
         OptionalValue::None => stake_mapper.get(),
     };
 
-    let remaining_stake = self.staking_position(&caller).update(|staked_amount| {
+    let remaining_stake = stake_mapper.update(|staked_amount| {
         require!(
             unstake_amount > 0 && unstake_amount <= *staked_amount,
             "Invalid unstake amount"
@@ -672,75 +672,57 @@ struct ContractSetup<ContractObjBuilder>
 where
     ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
 {
-    pub blockchain_wrapper: BlockchainStateWrapper,
+    pub b_mock: BlockchainStateWrapper,
     pub owner_address: Address,
     pub user_address: Address,
     pub contract_wrapper:
         ContractObjWrapper<staking_contract::ContractObj<DebugApi>, ContractObjBuilder>,
 }
 
-fn setup_contract<ContractObjBuilder>(
-    cf_builder: ContractObjBuilder,
-) -> ContractSetup<ContractObjBuilder>
+impl<ContractObjBuilder> ContractSetup<ContractObjBuilder>
 where
     ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
 {
-    let rust_zero = rust_biguint!(0u64);
-    let mut blockchain_wrapper = BlockchainStateWrapper::new();
-    let owner_address = blockchain_wrapper.create_user_account(&rust_zero);
-    let user_address = blockchain_wrapper.create_user_account(&rust_biguint!(USER_BALANCE));
-    let cf_wrapper = blockchain_wrapper.create_sc_account(
-        &rust_zero,
-        Some(&owner_address),
-        cf_builder,
-        WASM_PATH,
-    );
+    pub fn new(sc_builder: ContractObjBuilder) -> Self {
+        let rust_zero = rust_biguint!(0u64);
+        let mut b_mock = BlockchainStateWrapper::new();
+        let owner_address = b_mock.create_user_account(&rust_zero);
+        let user_address = b_mock.create_user_account(&rust_biguint!(USER_BALANCE));
+        let sc_wrapper =
+            b_mock.create_sc_account(&rust_zero, Some(&owner_address), sc_builder, WASM_PATH);
 
-    blockchain_wrapper
-        .execute_tx(&owner_address, &cf_wrapper, &rust_zero, |sc| {
-            sc.init();
-        })
-        .assert_ok();
+        // simulate deploy
+        b_mock
+            .execute_tx(&owner_address, &sc_wrapper, &rust_zero, |sc| {
+                sc.init();
+            })
+            .assert_ok();
 
-    blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());
-
-    ContractSetup {
-        blockchain_wrapper,
-        owner_address,
-        user_address,
-        contract_wrapper: cf_wrapper,
+        ContractSetup {
+            b_mock,
+            owner_address,
+            user_address,
+            contract_wrapper: sc_wrapper,
+        }
     }
 }
 
 #[test]
 fn stake_unstake_test() {
-    let mut setup = setup_contract(staking_contract::contract_obj);
+    let mut setup = ContractSetup::new(staking_contract::contract_obj);
     let owner_addr = setup.owner_address.clone();
     let user_addr = setup.user_address.clone();
 
-    // simulate deploy
     setup
-        .blockchain_wrapper
-        .execute_tx(
-            &owner_addr,
-            &setup.contract_wrapper,
-            &rust_biguint!(0u64),
-            |sc| {
-                sc.init();
-            },
-        )
-        .assert_ok();
-
-    setup
-        .blockchain_wrapper
+        .b_mock
         .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
     setup
-        .blockchain_wrapper
+        .b_mock
         .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
 
     // stake full
     setup
-        .blockchain_wrapper
+        .b_mock
         .execute_tx(
             &user_addr,
             &setup.contract_wrapper,
@@ -757,16 +739,16 @@ fn stake_unstake_test() {
         .assert_ok();
 
     setup
-        .blockchain_wrapper
+        .b_mock
         .check_egld_balance(&user_addr, &rust_biguint!(0));
-    setup.blockchain_wrapper.check_egld_balance(
+    setup.b_mock.check_egld_balance(
         setup.contract_wrapper.address_ref(),
         &rust_biguint!(USER_BALANCE),
     );
 
     // unstake partial
     setup
-        .blockchain_wrapper
+        .b_mock
         .execute_tx(
             &user_addr,
             &setup.contract_wrapper,
@@ -783,16 +765,16 @@ fn stake_unstake_test() {
         .assert_ok();
 
     setup
-        .blockchain_wrapper
+        .b_mock
         .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE / 2));
-    setup.blockchain_wrapper.check_egld_balance(
+    setup.b_mock.check_egld_balance(
         setup.contract_wrapper.address_ref(),
         &rust_biguint!(USER_BALANCE / 2),
     );
 
     // unstake full
     setup
-        .blockchain_wrapper
+        .b_mock
         .execute_tx(
             &user_addr,
             &setup.contract_wrapper,
@@ -809,10 +791,10 @@ fn stake_unstake_test() {
         .assert_ok();
 
     setup
-        .blockchain_wrapper
+        .b_mock
         .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
     setup
-        .blockchain_wrapper
+        .b_mock
         .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
 }
 ```
@@ -867,7 +849,7 @@ Additionally, since we need to store this in storage, we need to tell the Rust f
 ```rust
 elrond_wasm::derive_imports!();
 
-#[derive(TypeAbi, TopEncode, TopDecode)]
+#[derive(TypeAbi, TopEncode, TopDecode, PartialEq, Debug)]
 pub struct StakingPosition<M: ManagedTypeApi> {
     pub stake_amount: BigUint<M>,
     pub last_action_block: u64,
@@ -875,6 +857,8 @@ pub struct StakingPosition<M: ManagedTypeApi> {
 ```
 
 We've also added `TypeAbi`, since this is required for ABI generation. ABIs are used by dApps and such to decode custom SC types, but this is out of scope of this tutorial.
+
+Additionally, we've added `PartialEq` and `Debug` derives, for easier use within tests. This will not affect performance in any way, as the code for these is only used during testing/debugging. `PartialEq` allows us to use `==` for comparing instances, while `Debug` will pretty-print the struct, field by field, in case of errors.
 
 If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more here: https://docs.elrond.com/developers/developer-reference/elrond-serialization-format/
 
@@ -929,6 +913,486 @@ Since we're still using BigUint division, we don't get `50.45`, but `50`. This p
 
 ## Rewards implementation
 
-Now let's see how this would look in our Rust smart contract code:
+Now let's see how this would look in our Rust smart contract code. The smart contract looks like this after doing all the specified changes:
 
---- TODO ---
+```rust
+#![no_std]
+
+elrond_wasm::imports!();
+elrond_wasm::derive_imports!();
+
+pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
+pub const MAX_PERCENTAGE: u64 = 10_000;
+
+#[derive(TypeAbi, TopEncode, TopDecode, PartialEq, Debug)]
+pub struct StakingPosition<M: ManagedTypeApi> {
+    pub stake_amount: BigUint<M>,
+    pub last_action_block: u64,
+}
+
+#[elrond_wasm::contract]
+pub trait StakingContract {
+    #[init]
+    fn init(&self, apy: u64) {
+        self.apy().set(apy);
+    }
+
+    #[payable("EGLD")]
+    #[endpoint]
+    fn stake(&self) {
+        let payment_amount = self.call_value().egld_value();
+        require!(payment_amount > 0, "Must pay more than 0");
+
+        let caller = self.blockchain().get_caller();
+        self.staking_position(&caller).update(|staking_pos| {
+            self.claim_rewards_for_user(&caller, staking_pos);
+
+            staking_pos.stake_amount += payment_amount
+        });
+        self.staked_addresses().insert(caller);
+    }
+
+    #[endpoint]
+    fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
+        let caller = self.blockchain().get_caller();
+        let stake_mapper = self.staking_position(&caller);
+        let mut staking_pos = stake_mapper.get();
+
+        let unstake_amount = match opt_unstake_amount {
+            OptionalValue::Some(amt) => amt,
+            OptionalValue::None => staking_pos.stake_amount.clone(),
+        };
+        require!(
+            unstake_amount > 0 && unstake_amount <= staking_pos.stake_amount,
+            "Invalid unstake amount"
+        );
+
+        self.claim_rewards_for_user(&caller, &mut staking_pos);
+        staking_pos.stake_amount -= &unstake_amount;
+
+        if staking_pos.stake_amount > 0 {
+            stake_mapper.set(&staking_pos);
+        } else {
+            stake_mapper.clear();
+            self.staked_addresses().swap_remove(&caller);
+        }
+
+        self.send().direct_egld(&caller, &unstake_amount);
+    }
+
+    #[endpoint(claimRewards)]
+    fn claim_rewards(&self) {
+        let caller = self.blockchain().get_caller();
+        let stake_mapper = self.staking_position(&caller);
+
+        let mut staking_pos = stake_mapper.get();
+        self.claim_rewards_for_user(&caller, &mut staking_pos);
+        stake_mapper.set(&staking_pos);
+    }
+
+    fn claim_rewards_for_user(
+        &self,
+        user: &ManagedAddress,
+        staking_pos: &mut StakingPosition<Self::Api>,
+    ) {
+        let reward_amount = self.calculate_rewards(staking_pos);
+        let current_block = self.blockchain().get_block_nonce();
+        staking_pos.last_action_block = current_block;
+
+        if reward_amount > 0 {
+            self.send().direct_egld(user, &reward_amount);
+        }
+    }
+
+    fn calculate_rewards(&self, staking_position: &StakingPosition<Self::Api>) -> BigUint {
+        let current_block = self.blockchain().get_block_nonce();
+        if current_block <= staking_position.last_action_block {
+            return BigUint::zero();
+        }
+
+        let apy = self.apy().get();
+        let block_diff = current_block - staking_position.last_action_block;
+
+        &staking_position.stake_amount * apy / MAX_PERCENTAGE * block_diff / BLOCKS_IN_YEAR
+    }
+
+    #[view(calculateRewardsForUser)]
+    fn calculate_rewards_for_user(&self, addr: ManagedAddress) -> BigUint {
+        let staking_pos = self.staking_position(&addr).get();
+        self.calculate_rewards(&staking_pos)
+    }
+
+    #[view(getStakedAddresses)]
+    #[storage_mapper("stakedAddresses")]
+    fn staked_addresses(&self) -> UnorderedSetMapper<ManagedAddress>;
+
+    #[view(getStakingPosition)]
+    #[storage_mapper("stakingPosition")]
+    fn staking_position(
+        &self,
+        addr: &ManagedAddress,
+    ) -> SingleValueMapper<StakingPosition<Self::Api>>;
+
+    #[view(getApy)]
+    #[storage_mapper("apy")]
+    fn apy(&self) -> SingleValueMapper<u64>;
+}
+```
+
+Now, let's update our test, to use our new `StakingPosition` struct, and also provide the `APY` as argument for the `init` function.  
+
+```rust
+use elrond_wasm::{elrond_codec::multi_types::OptionalValue, types::Address};
+use elrond_wasm_debug::{
+    managed_address, managed_biguint, rust_biguint, testing_framework::*, DebugApi,
+};
+use staking_contract::*;
+
+const WASM_PATH: &'static str = "output/staking-contract.wasm";
+const USER_BALANCE: u64 = 1_000_000_000_000_000_000;
+const APY: u64 = 1_000; // 10%
+
+struct ContractSetup<ContractObjBuilder>
+where
+    ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
+{
+    pub b_mock: BlockchainStateWrapper,
+    pub owner_address: Address,
+    pub user_address: Address,
+    pub contract_wrapper:
+        ContractObjWrapper<staking_contract::ContractObj<DebugApi>, ContractObjBuilder>,
+}
+
+impl<ContractObjBuilder> ContractSetup<ContractObjBuilder>
+where
+    ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
+{
+    pub fn new(sc_builder: ContractObjBuilder) -> Self {
+        let rust_zero = rust_biguint!(0u64);
+        let mut b_mock = BlockchainStateWrapper::new();
+        let owner_address = b_mock.create_user_account(&rust_zero);
+        let user_address = b_mock.create_user_account(&rust_biguint!(USER_BALANCE));
+        let sc_wrapper =
+            b_mock.create_sc_account(&rust_zero, Some(&owner_address), sc_builder, WASM_PATH);
+
+        // simulate deploy
+        b_mock
+            .execute_tx(&owner_address, &sc_wrapper, &rust_zero, |sc| {
+                sc.init(APY);
+            })
+            .assert_ok();
+
+        ContractSetup {
+            b_mock,
+            owner_address,
+            user_address,
+            contract_wrapper: sc_wrapper,
+        }
+    }
+}
+
+#[test]
+fn stake_unstake_test() {
+    let mut setup = ContractSetup::new(staking_contract::contract_obj);
+    let user_addr = setup.user_address.clone();
+
+    setup
+        .b_mock
+        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
+    setup
+        .b_mock
+        .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
+
+    // stake full
+    setup
+        .b_mock
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(USER_BALANCE),
+            |sc| {
+                sc.stake();
+
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    StakingPosition {
+                        stake_amount: managed_biguint!(USER_BALANCE),
+                        last_action_block: 0
+                    }
+                );
+            },
+        )
+        .assert_ok();
+
+    setup
+        .b_mock
+        .check_egld_balance(&user_addr, &rust_biguint!(0));
+    setup.b_mock.check_egld_balance(
+        setup.contract_wrapper.address_ref(),
+        &rust_biguint!(USER_BALANCE),
+    );
+
+    // unstake partial
+    setup
+        .b_mock
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(0),
+            |sc| {
+                sc.unstake(OptionalValue::Some(managed_biguint!(USER_BALANCE / 2)));
+
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    StakingPosition {
+                        stake_amount: managed_biguint!(USER_BALANCE / 2),
+                        last_action_block: 0
+                    }
+                );
+            },
+        )
+        .assert_ok();
+
+    setup
+        .b_mock
+        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE / 2));
+    setup.b_mock.check_egld_balance(
+        setup.contract_wrapper.address_ref(),
+        &rust_biguint!(USER_BALANCE / 2),
+    );
+
+    // unstake full
+    setup
+        .b_mock
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(0),
+            |sc| {
+                sc.unstake(OptionalValue::None);
+
+                assert!(sc
+                    .staking_position(&managed_address!(&user_addr))
+                    .is_empty());
+            },
+        )
+        .assert_ok();
+
+    setup
+        .b_mock
+        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
+    setup
+        .b_mock
+        .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
+}
+```
+
+Now let's run the test... it didn't work. You should see the following error:
+```
+storage decode error: input too short
+```
+
+But why? Everything worked fine before. This is because instead of using a simple `BigUint` for staking positions, we now use the `StakingPosition` struct. If you follow the error trace, you will see exactly where it failed:
+```
+17: staking_contract::StakingContract::stake
+             at ./src/empty.rs:29:9
+```
+
+Which leads to the following line:
+```rust
+self.staking_position(&caller).update(|staking_pos| {
+            self.claim_rewards_for_user(&caller, staking_pos);
+
+            staking_pos.stake_amount += payment_amount
+        });
+```
+
+Because we're trying to add a new user, which has no staking entry yet, the decoding fails. For as simple `BigUint`, decoding from an empty storage yields the `0` value, which is exactly what we want, but for a struct type, it cannot give us any default value.
+
+For this reason, we have to add some additional checks. The endpoint implementations will have to be changed to the following (the rest of the code remains the same):
+```rust
+    #[payable("EGLD")]
+    #[endpoint]
+    fn stake(&self) {
+        let payment_amount = self.call_value().egld_value();
+        require!(payment_amount > 0, "Must pay more than 0");
+
+        let caller = self.blockchain().get_caller();
+        let stake_mapper = self.staking_position(&caller);
+
+        let new_user = self.staked_addresses().insert(caller.clone());
+        let mut staking_pos = if !new_user {
+            stake_mapper.get()
+        } else {
+            let current_block = self.blockchain().get_block_epoch();
+            StakingPosition {
+                stake_amount: BigUint::zero(),
+                last_action_block: current_block,
+            }
+        };
+
+        self.claim_rewards_for_user(&caller, &mut staking_pos);
+        staking_pos.stake_amount += payment_amount;
+
+        stake_mapper.set(&staking_pos);
+    }
+
+    #[endpoint]
+    fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
+        let caller = self.blockchain().get_caller();
+        self.require_user_staked(&caller);
+
+        let stake_mapper = self.staking_position(&caller);
+        let mut staking_pos = stake_mapper.get();
+
+        let unstake_amount = match opt_unstake_amount {
+            OptionalValue::Some(amt) => amt,
+            OptionalValue::None => staking_pos.stake_amount.clone(),
+        };
+        require!(
+            unstake_amount > 0 && unstake_amount <= staking_pos.stake_amount,
+            "Invalid unstake amount"
+        );
+
+        self.claim_rewards_for_user(&caller, &mut staking_pos);
+        staking_pos.stake_amount -= &unstake_amount;
+
+        if staking_pos.stake_amount > 0 {
+            stake_mapper.set(&staking_pos);
+        } else {
+            stake_mapper.clear();
+            self.staked_addresses().swap_remove(&caller);
+        }
+
+        self.send().direct_egld(&caller, &unstake_amount);
+    }
+
+    #[endpoint(claimRewards)]
+    fn claim_rewards(&self) {
+        let caller = self.blockchain().get_caller();
+        self.require_user_staked(&caller);
+
+        let stake_mapper = self.staking_position(&caller);
+        let mut staking_pos = stake_mapper.get();
+        self.claim_rewards_for_user(&caller, &mut staking_pos);
+
+        stake_mapper.set(&staking_pos);
+    }
+
+    fn require_user_staked(&self, user: &ManagedAddress) {
+        require!(self.staked_addresses().contains(user), "Must stake first");
+    }
+```
+
+For the `stake` endpoint, we provide a default entry is user was not previously staked. The `insert` method of `UnorderedSetMapper` returns `true` if the entry is new, `false` if the user was already in the list, so we can use that result instead of checking for `stake_mapper.is_empty()`.
+
+For the `unstake` and `claimRewards` endpoints, we have to check if the user was already staked, and return an error otherwise (as they'd have nothing to unstake/claim anyway).
+
+Running the test after the suggested changes should work just fine now:
+```
+running 1 test
+test stake_unstake_test ... ok
+```
+
+## Rewards testing
+
+Now that we've implemented rewards logic, let's add the following test to ensure everything works as expected:
+```rust
+#[test]
+fn rewards_test() {
+    let mut setup = ContractSetup::new(staking_contract::contract_obj);
+    let user_addr = setup.user_address.clone();
+
+    // stake full
+    setup
+        .b_mock
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(USER_BALANCE),
+            |sc| {
+                sc.stake();
+
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    StakingPosition {
+                        stake_amount: managed_biguint!(USER_BALANCE),
+                        last_action_block: 0
+                    }
+                );
+            },
+        )
+        .assert_ok();
+
+    setup.b_mock.set_block_nonce(BLOCKS_IN_YEAR);
+
+    // query rewards
+    setup
+        .b_mock
+        .execute_query(&setup.contract_wrapper, |sc| {
+            let actual_rewards = sc.calculate_rewards_for_user(managed_address!(&user_addr));
+            let expected_rewards = managed_biguint!(USER_BALANCE) * APY / MAX_PERCENTAGE;
+            assert_eq!(actual_rewards, expected_rewards);
+        })
+        .assert_ok();
+
+    // claim rewards
+    setup
+        .b_mock
+        .execute_tx(
+            &user_addr,
+            &setup.contract_wrapper,
+            &rust_biguint!(0),
+            |sc| {
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    StakingPosition {
+                        stake_amount: managed_biguint!(USER_BALANCE),
+                        last_action_block: 0
+                    }
+                );
+
+                sc.claim_rewards();
+
+                assert_eq!(
+                    sc.staking_position(&managed_address!(&user_addr)).get(),
+                    StakingPosition {
+                        stake_amount: managed_biguint!(USER_BALANCE),
+                        last_action_block: BLOCKS_IN_YEAR
+                    }
+                );
+            },
+        )
+        .assert_ok();
+
+    setup.b_mock.check_egld_balance(
+        &user_addr,
+        &(rust_biguint!(USER_BALANCE) * APY / MAX_PERCENTAGE),
+    );
+
+    // query rewards after claim
+    setup
+        .b_mock
+        .execute_query(&setup.contract_wrapper, |sc| {
+            let actual_rewards = sc.calculate_rewards_for_user(managed_address!(&user_addr));
+            let expected_rewards = managed_biguint!(0);
+            assert_eq!(actual_rewards, expected_rewards);
+        })
+        .assert_ok();
+}
+```
+
+In the test, we perform the following steps:
+- stake 1 EGLD
+- set block nonce after 1 year (i.e. simulating 1 year worth of blocks passing)
+- querying rewards, which should give use 10% of 1 EGLD = 0.1 EGLD
+- claiming said rewards and checking the internal state and user balance
+- querying again after claim, to check that double-claim is not possible
+
+This test should work without any errors.
+
+## Depositing rewards
+
+Currently, there is no way to deposit rewards into the SC, unless the owner makes it payable, which is generally bad practice, and not recommded.
+
+// TODO
