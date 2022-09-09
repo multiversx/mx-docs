@@ -99,7 +99,7 @@ pub trait StakingContract {
 
 ```
 
-Since we want this function to be callable by users, we have to annotate it with `#[endpoint]`. Also,since we want to be able to receive a payment, we mark it also as `#[payable("EGLD)]`. For now, we'll use EGLD as our staking token. 
+Since we want this function to be callable by users, we have to annotate it with `#[endpoint]`. Also, since we want to be able to receive a payment, we mark it also as `#[payable("EGLD)]`. For now, we'll use EGLD as our staking token. 
 
 :::note
 The contract does NOT need to be payable for it to receive payments on endpoint calls. The payable flag at contract level is only for receiving payments without endpoint invocation.
