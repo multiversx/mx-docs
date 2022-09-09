@@ -1298,7 +1298,7 @@ For this reason, we have to add some additional checks. The endpoint implementat
     }
 ```
 
-For the `stake` endpoint, we provide a default entry is user was not previously staked. The `insert` method of `UnorderedSetMapper` returns `true` if the entry is new, `false` if the user was already in the list, so we can use that result instead of checking for `stake_mapper.is_empty()`.
+For the `stake` endpoint, in case the user was not previously staked, we provide a default entry. The `insert` method of `UnorderedSetMapper` returns `true` if the entry is new, `false` if the user was already in the list, so we can use that result instead of checking for `stake_mapper.is_empty()`.
 
 For the `unstake` and `claimRewards` endpoints, we have to check if the user was already staked, and return an error otherwise (as they'd have nothing to unstake/claim anyway).
 
