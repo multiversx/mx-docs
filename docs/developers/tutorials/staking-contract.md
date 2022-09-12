@@ -45,6 +45,7 @@ Assuming you're on Ubuntu, download the `.deb` version. Go to that folder:
 - run the following command: `sudo dpkg -i downloaded_file_name`
 
 rust-analyser: https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer
+
 Elrond VSCode extension: https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide
 
 Both can be easily installed from the "Extensions" menu in VSCode.  
