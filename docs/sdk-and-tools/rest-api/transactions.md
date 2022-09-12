@@ -17,21 +17,21 @@ This endpoint allows one to send a signed Transaction to the Blockchain.
 
 Body Parameters
 
-| Param            | Required                                  | Type     | Description                                                               |
-|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
-| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                  |
+| Param            | Required                                  | Type     | Description                                                                      |
+|------------------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                         |
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
-| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
-| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
-| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                |
-| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.              |
-| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                     |
-| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                               |
-| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
-| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                           |
-| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
-| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
-| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                  |
+| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
+| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
+| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                       |
+| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.                     |
+| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                            |
+| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                                      |
+| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
+| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                                  |
+| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
+| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
+| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                         |
 
 <!--Response-->
 
@@ -95,21 +95,21 @@ Body Parameters
 
 Array of:
 
-| Param            | Required                                  | Type     | Description                                                               |
-|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
-| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                  |
+| Param            | Required                                  | Type     | Description                                                                      |
+|------------------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                         |
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
-| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
-| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
-| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                |
-| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.              |
-| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                     |
-| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                               |
-| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
-| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                           |
-| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
-| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
-| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                  |
+| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
+| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
+| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                       |
+| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.                     |
+| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                            |
+| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                                      |
+| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
+| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                                  |
+| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
+| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
+| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                         |
 
 <!--Response-->
 
@@ -184,21 +184,21 @@ Move balance successful transaction simulation
 
 Body Parameters
 
-| Param            | Required                                  | Type     | Description                                                               |
-|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
-| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                  |
+| Param            | Required                                  | Type     | Description                                                                      |
+|------------------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                         |
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
-| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
-| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
-| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                |
-| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.              |
-| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                     |
-| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                               |
-| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
-| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                           |
-| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
-| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
-| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                  |
+| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
+| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
+| senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                       |
+| receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.                     |
+| gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                            |
+| gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                                      |
+| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
+| signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                                  |
+| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
+| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
+| options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                         |
 
 <!--Response-->
 
@@ -286,14 +286,14 @@ This endpoint allows one to estimate the cost of a transaction.
 
 Body Parameters
 
-| Param            | Required                                  | Type     | Description                                                               |
-|------------------|-------------------------------------------| -------- |---------------------------------------------------------------------------|
-| value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
-| receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                     |
-| sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                       |
-| data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
-| chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
-| version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
+| Param    | Required                                  | Type     | Description                                                                      |
+|----------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| value    | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
+| receiver | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
+| sender   | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
+| data     | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
+| chainID  | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
+| version  | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
 
 <!--Response-->
 
@@ -342,14 +342,14 @@ This endpoint allows one to query the details of a Transaction.
 Path Parameters
 
 | Param  | Required                                  | Type     | Description                               |
-| ------ | ----------------------------------------- | -------- | ----------------------------------------- |
+|--------|-------------------------------------------|----------|-------------------------------------------|
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
-| Param       | Required                                  | Type     | Description                                                 |
-| ----------- | ----------------------------------------- | -------- | ----------------------------------------------------------- |
-| sender      | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
+| Param       | Required                                  | Type     | Description                                                                                  |
+|-------------|-------------------------------------------|----------|----------------------------------------------------------------------------------------------|
+| sender      | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request.                                  |
 | withResults | <span class="text-normal">OPTIONAL</span> | `bool`   | Boolean parameter to specify if smart contract results and other details should be returned. |
 
 <!--Response-->
@@ -453,13 +453,13 @@ This endpoint allows one to query the Status of a Transaction.
 Path Parameters
 
 | Param  | Required                                  | Type     | Description                               |
-| ------ | ----------------------------------------- | -------- | ----------------------------------------- |
+|--------|-------------------------------------------|----------|-------------------------------------------|
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
 | Param  | Required                                  | Type     | Description                                                 |
-| ------ | ----------------------------------------- | -------- | ----------------------------------------------------------- |
+|--------|-------------------------------------------|----------|-------------------------------------------------------------|
 | sender | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
 
 <!--Response-->
