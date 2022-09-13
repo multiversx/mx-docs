@@ -119,7 +119,7 @@ Balance successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Username (herotag)**
 
-`https://gateway.elrond.com**/address/:bech32Address/balance**`
+`https://gateway.elrond.com**/address/:bech32Address/username**`
 
 This endpoint allows one to retrieve the username / herotag of an Address (if any).
 

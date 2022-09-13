@@ -33,32 +33,36 @@ The VM Output is retrieved successfully.
 
 ```
 {
-  "data": {
-    "ReturnData": [
-      "eyJSZ... (base64)"
-    ],
-    "ReturnCode": 0,
-    "ReturnMessage": "",
-    "GasRemaining": 1500000000,
-    "GasRefund": 0,
-    "OutputAccounts": {
-      "...": {
-        "Address": "... (base64)",
-        "Nonce": 0,
-        "Balance": null,
-        "BalanceDelta": 0,
-        "StorageUpdates": null,
-        "Code": null,
-        "CodeMetadata": null,
-        "Data": null,
-        "GasLimit": 0,
-        "CallType": 0
-      }
+    "data": {
+        "data": {
+          "ReturnData": [
+            "eyJSZ... (base64)"
+          ],
+          "ReturnCode": 0,
+          "ReturnMessage": "",
+          "GasRemaining": 1500000000,
+          "GasRefund": 0,
+          "OutputAccounts": {
+            "...": {
+              "Address": "... (base64)",
+              "Nonce": 0,
+              "Balance": null,
+              "BalanceDelta": 0,
+              "StorageUpdates": null,
+              "Code": null,
+              "CodeMetadata": null,
+              "Data": null,
+              "GasLimit": 0,
+              "CallType": 0
+            }
+          },
+          "DeletedAccounts": null,
+          "TouchedAccounts": null,
+          "Logs": null
+        }
     },
-    "DeletedAccounts": null,
-    "TouchedAccounts": null,
-    "Logs": null
-  }
+    "error": "",
+    "code": "successful"
 }
 ```
 

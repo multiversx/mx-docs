@@ -119,11 +119,15 @@ A bulk of Transactions were successfully sent.
 
 ```json
 {
-  "numOfSentTxs": 2,
-  "txsHashes": {
-    "0": "6c41c71946b5b428c2cfb560e3ea425f8a00345de4bb2eb1b784387790914277",
-    "1": "fa8195bae93d4609a6fc5972a7a6176feece39a6c4821acae2276701aee12fb0"
-  }
+  "data": {
+    "numOfSentTxs": 2,
+    "txsHashes": {
+      "0": "6c41c71946b5b428c2cfb560e3ea425f8a00345de4bb2eb1b784387790914277",
+      "1": "fa8195bae93d4609a6fc5972a7a6176feece39a6c4821acae2276701aee12fb0"
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
@@ -223,8 +227,12 @@ Transaction would be successful.
 
 ```json
 {
- "status": "success",
- "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+  "data": {
+    "status": "success",
+    "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
@@ -236,9 +244,13 @@ Invalid Transaction signature.
 
 ```json
 {
+  "data": {
     "status": "fail",
     "failReason": "higher nonce in transaction",
     "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 ---
@@ -247,7 +259,9 @@ Invalid Transaction signature.
 
 ```json
 {
-  "error": "transaction generation failed: invalid chain ID"
+  "data": null,
+  "error": "transaction generation failed: invalid chain ID",
+  "code": "bad_request"
 }
 ```
 
@@ -263,14 +277,18 @@ Example response for cross-shard transactions:
 
 ```
 {
- "receiverShard": {
-  "status": "success",
-  "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
- },
- "senderShard": {
-  "status": "success",
-  "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
- }
+    "data": {
+        "receiverShard": {
+         "status": "success",
+         "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+        },
+        "senderShard": {
+         "status": "success",
+         "hash": "bb24ccaa2da8cddd6a3a8eb162e6ff62ad4f6e1914d9aa0cacde6772246ca2dd"
+        }
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
 
@@ -303,7 +321,11 @@ The cost is estimated successfully.
 
 ```json
 {
-  "txGasUnits": "77000"
+  "data": {
+    "txGasUnits": "77000"
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
@@ -360,25 +382,29 @@ Transaction details retrieved successfully.
 
 ```
 {
-    "transaction": {
-        "type": "normal",
-        "nonce": 3,
-        "round": 186580,
-        "epoch": 12,
-        "value": "1000000000000000000",
-        "receiver": "erd1...",
-        "sender": "erd1...",
-        "gasPrice": 1000000000,
-        "gasLimit": 70000,
-        "data": "Zm9yIHRlc3Rz",
-        "signature": "1047...",
-        "sourceShard": 2,
-        "destinationShard": 1,
-        "blockNonce": 186535,
-        "miniblockHash": "e927...",
-        "blockHash": "50a1...",
-        "status": "executed"
-    }
+    "data": {
+        "transaction": {
+            "type": "normal",
+            "nonce": 3,
+            "round": 186580,
+            "epoch": 12,
+            "value": "1000000000000000000",
+            "receiver": "erd1...",
+            "sender": "erd1...",
+            "gasPrice": 1000000000,
+            "gasLimit": 70000,
+            "data": "Zm9yIHRlc3Rz",
+            "signature": "1047...",
+            "sourceShard": 2,
+            "destinationShard": 1,
+            "blockNonce": 186535,
+            "miniblockHash": "e927...",
+            "blockHash": "50a1...",
+            "status": "executed"
+        }
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
 
@@ -392,45 +418,51 @@ Response:
 
 The response can contain additional fields such as `smartContractResults`, or `receipt`
 ```
-"transaction": {
-      "type": "normal",
-      "nonce": 3,
-      "round": 186580,
-      "epoch": 12,
-      "value": "1000000000000000000",
-      "receiver": "erd1...",
-      "sender": "erd1...",
-      "gasPrice": 1000000000,
-      "gasLimit": 70000,
-      "data": "Zm9yIHRlc3Rz",
-      "signature": "1047...",
-      "sourceShard": 2,
-      "destinationShard": 1,
-      "blockNonce": 186535,
-      "miniblockHash": "e927...",
-      "blockHash": "50a1...",
-      "status": "executed",
-      "receipt": {
-        "value": 100,
-        "sender": "erd1...",
-        "data": "...",
-        "txHash": "b37..."
-      },
-      "smartContractResults": [
-        {
-          "hash": "...",
-          "nonce": 5,
-          "value": 1000,
-          "receiver": "erd1...",
-          "sender": "erd1...",
-          "data": "@6f6b",
-          "prevTxHash": "3638...",
-          "originalTxHash": "3638...",
-          "gasLimit": 0,
-          "gasPrice": 1000000000,
-          "callType": 0
+{
+    "data": {
+        "transaction": {
+              "type": "normal",
+              "nonce": 3,
+              "round": 186580,
+              "epoch": 12,
+              "value": "1000000000000000000",
+              "receiver": "erd1...",
+              "sender": "erd1...",
+              "gasPrice": 1000000000,
+              "gasLimit": 70000,
+              "data": "Zm9yIHRlc3Rz",
+              "signature": "1047...",
+              "sourceShard": 2,
+              "destinationShard": 1,
+              "blockNonce": 186535,
+              "miniblockHash": "e927...",
+              "blockHash": "50a1...",
+              "status": "executed",
+              "receipt": {
+                "value": 100,
+                "sender": "erd1...",
+                "data": "...",
+                "txHash": "b37..."
+              },
+              "smartContractResults": [
+                {
+                  "hash": "...",
+                  "nonce": 5,
+                  "value": 1000,
+                  "receiver": "erd1...",
+                  "sender": "erd1...",
+                  "data": "@6f6b",
+                  "prevTxHash": "3638...",
+                  "originalTxHash": "3638...",
+                  "gasLimit": 0,
+                  "gasPrice": 1000000000,
+                  "callType": 0
+                }
+              ]
         }
-      ]
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
 
@@ -470,7 +502,11 @@ Transaction status retrieved successfully.
 
 ```
 {
-    "status": "executed"
+    "data": {
+        "status": "executed"
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
 
@@ -479,3 +515,249 @@ Transaction status retrieved successfully.
 :::important
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
 :::
+
+## <span class="badge badge-primary">GET</span> **Get Transactions Pool**
+
+`http://local-proxy-instance/transaction/pool`
+
+:::warning
+This endpoint isn't available on public gateway. However, it can be used on a local proxy instance, by setting `AllowEntireTxPoolFetch` to `true`
+:::
+
+This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+<!--Response-->
+
+🟢 200: OK
+
+Transaction status retrieved successfully.
+
+```
+{
+    "data": {
+        "txPool": {
+            "regularTransactions": [
+                {
+                    "txFields": {
+                        "gasLimit": 10,
+                        "gasPrice": 1000,
+                        "receiver": "erd1...",
+                        "sender": "erd1...",
+                        "value": "10000000000000000000"
+                    }
+                }
+            ],
+            "smartContractResults": [
+                {
+                    "txFields": {
+                        "gasLimit": 10,
+                        "gasPrice": 1000,
+                        "receiver": "erd1...",
+                        "sender": "erd1...",
+                        "value": "10000000000000000000"
+                    }
+                }
+            ],
+            "rewards": [
+                {
+                    "txFields": {
+                        "gasLimit": 10,
+                        "gasPrice": 1000,
+                        "receiver": "erd1...",
+                        "sender": "erd1...",
+                        "value": "10000000000000000000"
+                    }
+                }
+            ]
+        }
+    },
+    "error": "",
+    "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+## <span class="badge badge-primary">GET</span> **Get Transactions Pool for a Sender**
+
+`https://gateway.elrond.com/transaction/pool?by-sender=:sender:`
+
+This endpoint allows one to fetch all the transactions of a sender from the transactions pool.
+
+### Example with no field
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+Query Parameters
+
+| Param     | Required                                  | Type     | Description                          |
+|-----------|-------------------------------------------|----------|--------------------------------------|
+| by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.           |
+| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
+
+<!--Response-->
+
+🟢 200: OK
+
+Transaction status retrieved successfully.
+
+```
+{
+  "data": {
+    "txPool": {
+      "transactions": [
+        {
+          "txFields": {
+            "hash": "1daea5..."
+          }
+        }
+      ]
+    }
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+
+### Example with custom fields
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+As seen above, if the `fields` item is empty, only the transaction hash will be displayed.
+
+Example request with fields:
+
+`https://gateway.elrond.com/transaction/pool?by-sender=erd1at9...&fields=sender,receiver,value`
+
+All possible values are:
+
+- hash           
+- nonce           
+- sender         
+- receiver      
+- gaslimit      
+- gasprice      
+- receiverusername
+- data 
+- value
+
+<!--Response-->
+
+🟢 200: OK
+
+Transaction status retrieved successfully.
+
+```
+{
+  "data": {
+    "txPool": {
+      "transactions": [
+        {
+          "txFields": {
+            "hash": "1daea...",
+            "receiver": "erd1932...",
+            "sender": "erd1at9ke...",
+            "value": 0
+          }
+        }
+      ]
+    }
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+## <span class="badge badge-primary">GET</span> **Get the latest nonce of a sender from Tx Pool**
+
+`https://gateway.elrond.com/transaction/pool?by-sender=:sender:&last-nonce=true`
+
+This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+Query Parameters
+
+| Param      | Required                                  | Type     | Description                                     |
+|------------|-------------------------------------------|----------|-------------------------------------------------|
+| by-sender  | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.                      |
+| last-nonce | <span class="text-normal">REQUIRED</span> | `bool`   | Specifies if the last nonce has to be returned. |
+
+<!--Response-->
+
+🟢 200: OK
+
+Transaction status retrieved successfully.
+
+```
+{
+  "data": {
+    "nonce": 38
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+## <span class="badge badge-primary">GET</span> **Get the nonce gaps of a sender from Tx Pool**
+
+`https://gateway.elrond.com/transaction/pool?by-sender=:sender:&nonce-gaps=true`
+
+This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+Query Parameters
+
+| Param      | Required                                  | Type     | Description                                     |
+|------------|-------------------------------------------|----------|-------------------------------------------------|
+| by-sender  | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.                      |
+| nonce-gaps | <span class="text-normal">REQUIRED</span> | `bool`   | Specifies if the nonce gaps should be returned. |
+
+<!--Response-->
+
+🟢 200: OK
+
+Transaction status retrieved successfully.
+
+```
+{
+  "data": {
+    "nonceGaps": {
+      "gaps": [
+        {
+          "from": 34,
+          "to": 35
+        },
+        {
+          "from": 37,
+          "to": 37
+        }
+      ]
+    }
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
