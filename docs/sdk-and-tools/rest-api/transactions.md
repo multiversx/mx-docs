@@ -538,12 +538,6 @@ This endpoint allows one to fetch the entire transactions pool, merging the pool
 
 <!--Request-->
 
-Query Parameters
-
-| Param     | Required                                  | Type     | Description                          |
-|-----------|-------------------------------------------|----------|--------------------------------------|
-| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
-
 Example:
 
 `http://local-proxy-instance/transaction/pool`
@@ -592,7 +586,7 @@ Query Parameters
 |-----------|-------------------------------------------|----------|--------------------------------------|
 | fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
 
-s seen above, if the `fields` item is empty, only the transaction hash will be displayed.
+As seen above, if the `fields` item is empty, only the transaction hash will be displayed.
 
 Example request with fields:
 
@@ -609,7 +603,7 @@ All possible values for fields item are:
 - receiverusername
 - data
 - value
-- 
+
 <!--Response-->
 
 🟢 200: OK
