@@ -17,13 +17,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param      | Required                                  | Type     | Description                                                                         |
-| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| Param     | Required                                  | Type     | Description                                                                         |
+|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -33,32 +33,36 @@ The VM Output is retrieved successfully.
 
 ```
 {
-  "data": {
-    "ReturnData": [
-      "eyJSZ... (base64)"
-    ],
-    "ReturnCode": 0,
-    "ReturnMessage": "",
-    "GasRemaining": 1500000000,
-    "GasRefund": 0,
-    "OutputAccounts": {
-      "...": {
-        "Address": "... (base64)",
-        "Nonce": 0,
-        "Balance": null,
-        "BalanceDelta": 0,
-        "StorageUpdates": null,
-        "Code": null,
-        "CodeMetadata": null,
-        "Data": null,
-        "GasLimit": 0,
-        "CallType": 0
-      }
+    "data": {
+        "data": {
+          "ReturnData": [
+            "eyJSZ... (base64)"
+          ],
+          "ReturnCode": 0,
+          "ReturnMessage": "",
+          "GasRemaining": 1500000000,
+          "GasRefund": 0,
+          "OutputAccounts": {
+            "...": {
+              "Address": "... (base64)",
+              "Nonce": 0,
+              "Balance": null,
+              "BalanceDelta": 0,
+              "StorageUpdates": null,
+              "Code": null,
+              "CodeMetadata": null,
+              "Data": null,
+              "GasLimit": 0,
+              "CallType": 0
+            }
+          },
+          "DeletedAccounts": null,
+          "TouchedAccounts": null,
+          "Logs": null
+        }
     },
-    "DeletedAccounts": null,
-    "TouchedAccounts": null,
-    "Logs": null
-  }
+    "error": "",
+    "code": "successful"
 }
 ```
 
@@ -73,9 +77,9 @@ Content-Type: application/json
 {
     "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqllls0lczs7",
     "funcName": "get",
-    "args": ["d98d..."],
     "caller": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
-    "value": "0"
+    "value": "0",
+    "args": ["d98d..."]
 }
 ```
 
@@ -91,13 +95,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param      | Required                                  | Type     | Description                                                                         |
-| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| Param     | Required                                  | Type     | Description                                                                         |
+|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -117,7 +121,7 @@ The output value is retrieved successfully.
 
 `https://gateway.elrond.com/vm-values/string`
 
-This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as a string.
+This endpoint allows one to execute - with no side effects - a pure function of a Smart Contract and retrieve the first output value as a string.
 
 <!--DOCUSAURUS_CODE_TABS-->
 
@@ -125,13 +129,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param      | Required                                  | Type     | Description                                                                         |
-| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| Param     | Required                                  | Type     | Description                                                                         |
+|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 
@@ -159,13 +163,13 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 
 Body Parameters
 
-| Param      | Required                                  | Type     | Description                                                                         |
-| ---------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| scAddress  | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
-| funcName   | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
-| args       | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
-| caller     | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
-| value      | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
+| Param     | Required                                  | Type     | Description                                                                         |
+|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
+| funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
+| args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
+| caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
+| value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
 <!--Response-->
 

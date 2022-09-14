@@ -11,10 +11,10 @@ The difference is that `gateway` is Elrond's infrastructure backed by the [elron
 
 ## **Proxy API vs. Observer API**
 
-Both the **Elrond Proxy** and the **Node (Observer)** are designed to expose the same HTTP endpoints, though **this doesn't always hold due to architectural constraints**. When describing each HTTP endpoint on the following pages, if there is any discrepancy or mismatch between the _Proxy endpoint_ and the _Observer endpoint_, this will be captured in a note as the one below:
+Both the **Elrond Proxy** and the **Node (Observer)** are designed to expose (almost) the same HTTP endpoints, though **this doesn't always hold due to architectural constraints**. When describing each HTTP endpoint on the following pages, if there is any discrepancy or mismatch between the _Proxy endpoint_ and the _Observer endpoint_, this will be captured in a note as the one below:
 
 :::important
-`**example/endpoint**` is only available on the Elrond Proxy.
+Proxy/Gateway endpoints are referred as `https://gateway.elrond.com/....`, while node endpoints are referred as `http://localhost:8080/....`.
 :::
 
 ## **Authentication**

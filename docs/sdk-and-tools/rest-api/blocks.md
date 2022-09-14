@@ -17,8 +17,8 @@ This endpoint allows one to query a Hyperblock by its nonce.
 
 Path Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
+| Param | Required                                  | Type     | Description               |
+|-------|-------------------------------------------|----------|---------------------------|
 | nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
 
 <!--Response-->
@@ -96,9 +96,9 @@ This endpoint allows one to query a Hyperblock by its hash.
 
 Path Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
-| hash | <span class="text-normal">OPTIONAL</span> | `string` | The Block hash. |
+| Param | Required                                  | Type     | Description     |
+|-------|-------------------------------------------|----------|-----------------|
+| hash  | <span class="text-normal">OPTIONAL</span> | `string` | The Block hash. |
 
 <!--Response-->
 
@@ -167,15 +167,15 @@ This endpoint allows one to query a Shard Block by its nonce (or height).
 
 Path Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
-| shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard. |
+| Param | Required                                  | Type     | Description               |
+|-------|-------------------------------------------|----------|---------------------------|
+| shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard.                |
 | nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
 
 Query Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
+| Param   | Required                                  | Type      | Description                                          |
+|---------|-------------------------------------------|-----------|------------------------------------------------------|
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
 <!--Response-->
@@ -186,38 +186,42 @@ Block retrieved successfully, with transactions included.
 
 ```
 {
-    "block": {
-        "nonce": 186532,
-        "round": 186576,
-        "hash": "7aa3...",
-        "prevBlockHash": "2580...",
-        "epoch": 12,
-        "shard": 2,
-        "numTxs": 1,
-        "miniBlocks": [
-            {
-                "hash": "e927...",
-                "type": "TxBlock",
-                "sourceShard": 2,
-                "destinationShard": 1,
-                "transactions": [
-                    {
-                        "type": "normal",
-                        "hash": "b035...",
-                        "nonce": 3,
-                        "value": "1000000000000000000",
-                        "receiver": "erd1...",
-                        "sender": "erd1...",
-                        "gasPrice": 1000000000,
-                        "gasLimit": 70000,
-                        "data": "Zm9yIHRlc3Rz",
-                        "signature": "1047...",
-                        "status": "partially-executed"
-                    }
-                ]
-            }
-        ]
-    }
+    "data": {
+        "block": {
+            "nonce": 186532,
+            "round": 186576,
+            "hash": "7aa3...",
+            "prevBlockHash": "2580...",
+            "epoch": 12,
+            "shard": 2,
+            "numTxs": 1,
+            "miniBlocks": [
+                {
+                    "hash": "e927...",
+                    "type": "TxBlock",
+                    "sourceShard": 2,
+                    "destinationShard": 1,
+                    "transactions": [
+                        {
+                            "type": "normal",
+                            "hash": "b035...",
+                            "nonce": 3,
+                            "value": "1000000000000000000",
+                            "receiver": "erd1...",
+                            "sender": "erd1...",
+                            "gasPrice": 1000000000,
+                            "gasLimit": 70000,
+                            "data": "Zm9yIHRlc3Rz",
+                            "signature": "1047...",
+                            "status": "partially-executed"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
 
@@ -239,15 +243,15 @@ This endpoint allows one to query a Shard Block by its hash.
 
 Path Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
-| shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard. |
-| hash | <span class="text-danger">REQUIRED</span> | `string` | The Block hash. |
+| Param | Required                                  | Type     | Description     |
+|-------|-------------------------------------------|----------|-----------------|
+| shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard.      |
+| hash  | <span class="text-danger">REQUIRED</span> | `string` | The Block hash. |
 
 Query Parameters
 
-| Param         | Required                                  | Type     | Description           |
-| ------------- | ----------------------------------------- | -------- | --------------------- |
+| Param   | Required                                  | Type      | Description                                          |
+|---------|-------------------------------------------|-----------|------------------------------------------------------|
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
 <!--Response-->
@@ -258,38 +262,42 @@ Block retrieved successfully, with transactions included.
 
 ```
 {
-    "block": {
-        "nonce": 186532,
-        "round": 186576,
-        "hash": "7aa3...",
-        "prevBlockHash": "2580...",
-        "epoch": 12,
-        "shard": 2,
-        "numTxs": 1,
-        "miniBlocks": [
-            {
-                "hash": "e927...",
-                "type": "TxBlock",
-                "sourceShard": 2,
-                "destinationShard": 1,
-                "transactions": [
-                    {
-                        "type": "normal",
-                        "hash": "b035...",
-                        "nonce": 3,
-                        "value": "1000000000000000000",
-                        "receiver": "erd1...",
-                        "sender": "erd1...",
-                        "gasPrice": 1000000000,
-                        "gasLimit": 70000,
-                        "data": "Zm9yIHRlc3Rz",
-                        "signature": "1047...",
-                        "status": "partially-executed"
-                    }
-                ]
-            }
-        ]
-    }
+    "data": {
+      "block": {
+          "nonce": 186532,
+          "round": 186576,
+          "hash": "7aa3...",
+          "prevBlockHash": "2580...",
+          "epoch": 12,
+          "shard": 2,
+          "numTxs": 1,
+          "miniBlocks": [
+              {
+                  "hash": "e927...",
+                  "type": "TxBlock",
+                  "sourceShard": 2,
+                  "destinationShard": 1,
+                  "transactions": [
+                      {
+                          "type": "normal",
+                          "hash": "b035...",
+                          "nonce": 3,
+                          "value": "1000000000000000000",
+                          "receiver": "erd1...",
+                          "sender": "erd1...",
+                          "gasPrice": 1000000000,
+                          "gasLimit": 70000,
+                          "data": "Zm9yIHRlc3Rz",
+                          "signature": "1047...",
+                          "status": "partially-executed"
+                      }
+                  ]
+              }
+          ]
+      }
+    },
+    "error": "",
+    "code": "successful"
 }
 ```
 
