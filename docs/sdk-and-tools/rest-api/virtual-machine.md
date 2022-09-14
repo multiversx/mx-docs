@@ -121,7 +121,7 @@ The output value is retrieved successfully.
 
 `https://gateway.elrond.com/vm-values/string`
 
-This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as a string.
+This endpoint allows one to execute - with no side effects - a pure function of a Smart Contract and retrieve the first output value as a string.
 
 <!--DOCUSAURUS_CODE_TABS-->
 

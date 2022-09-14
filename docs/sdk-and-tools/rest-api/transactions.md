@@ -41,7 +41,11 @@ Transaction sent with success. A Transaction Hash is returned.
 
 ```json
 {
-  "txHash": "6c41c71946b5b428c2cfb560e3ea425f8a00345de4bb2eb1b784387790914277"
+  "data": {
+    "txHash": "6c41c71946b5b428c2cfb560e3ea425f8a00345de4bb2eb1b784387790914277"
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
@@ -51,7 +55,9 @@ Invalid Transaction signature.
 
 ```json
 {
-  "error": "transaction generation failed: ed25519: invalid signature"
+  "data": null,
+  "error": "transaction generation failed: ed25519: invalid signature",
+  "code": "bad_request"
 }
 ```
 
@@ -526,10 +532,84 @@ This endpoint isn't available on public gateway. However, it can be used on a lo
 
 This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
 
+### Default
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
 
+Query Parameters
+
+| Param     | Required                                  | Type     | Description                          |
+|-----------|-------------------------------------------|----------|--------------------------------------|
+| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
+
+Example:
+
+`http://local-proxy-instance/transaction/pool`
+
+<!--Response-->
+
+🟢 200: OK
+
+Transaction status retrieved successfully.
+
+```
+{
+  "data": {
+    "txPool": {
+      "regularTransactions": [
+        {
+          "txFields": {
+            "hash": "84bb8a..."
+          }
+        },
+        {
+          "txFields": {
+            "hash": "4e2c43..."
+          }
+        }
+      ],
+      "smartContractResults": [],
+      "rewards": []
+    },
+    "error": "",
+    "code": "successful"
+}
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+### Using custom fields
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--Request-->
+
+Query Parameters
+
+| Param     | Required                                  | Type     | Description                          |
+|-----------|-------------------------------------------|----------|--------------------------------------|
+| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
+
+s seen above, if the `fields` item is empty, only the transaction hash will be displayed.
+
+Example request with fields:
+
+`https://gateway.elrond.com/transaction/pool?fields=sender,receiver,value`
+
+All possible values for fields item are:
+
+- hash
+- nonce
+- sender
+- receiver
+- gaslimit
+- gasprice
+- receiverusername
+- data
+- value
+- 
 <!--Response-->
 
 🟢 200: OK
@@ -588,7 +668,7 @@ Transaction status retrieved successfully.
 
 This endpoint allows one to fetch all the transactions of a sender from the transactions pool.
 
-### Example with no field
+### Default
 
 <!--DOCUSAURUS_CODE_TABS-->
 
@@ -599,7 +679,10 @@ Query Parameters
 | Param     | Required                                  | Type     | Description                          |
 |-----------|-------------------------------------------|----------|--------------------------------------|
 | by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.           |
-| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
+
+Example:
+
+`https://gateway.elrond.com/transaction/pool?by-sender=erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
 
 <!--Response-->
 
@@ -628,11 +711,18 @@ Transaction status retrieved successfully.
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 
-### Example with custom fields
+### Using custom fields
 
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
+Query Parameters
+
+| Param     | Required                                  | Type     | Description                          |
+|-----------|-------------------------------------------|----------|--------------------------------------|
+| by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.           |
+| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
 
 As seen above, if the `fields` item is empty, only the transaction hash will be displayed.
 
@@ -640,7 +730,7 @@ Example request with fields:
 
 `https://gateway.elrond.com/transaction/pool?by-sender=erd1at9...&fields=sender,receiver,value`
 
-All possible values are:
+All possible values for fields item are:
 
 - hash           
 - nonce           
