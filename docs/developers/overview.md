@@ -95,3 +95,4 @@ Learn about transaction's gas and how a fee is calculated
 | [Setup local testnet](/developers/setup-local-testnet)                   | How to set up a local testnet - basic solution                        |
 | [Setup local testnet advanced](/developers/setup-local-testnet-advanced) | How to set up a local testnet - advanced solution                     |
 | [Creating wallets](/developers/creating-wallets)                         | Examples on creating wallets.                                         |
+| [Reproducible builds](/developers/reproducible-contract-builds)          | How to perform reproducible contract builds.                          |
