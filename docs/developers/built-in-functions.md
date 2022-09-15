@@ -19,11 +19,24 @@ This documentation is subject to change, but at the time of writing, the current
 - SaveKeyValue
 - ESDTTransfer
 - ESDTBurn
+- ESDTFreeze
+- ESDTUnFreeze
+- ESDTWipe
+- ESDTPause
+- ESDTUnPause
+- ESDTSetRole
+- ESDTUnSetRole
+- ESDTSetLimitedTransfer
+- ESDTUnSetLimitedTransfer
 - ESDTLocalBurn
 - ESDTLocalMint
+- ESDTNFTTransfer
+- ESDTNFTCreate
 - ESDTNFTAddQuantity
 - ESDTNFTBurn
-- ESDTNFTCreate
+- ESDTNFTAddURI
+- ESDTNFTUpdateAttributes
+- MultiESDTNFTTransfer
 
 ## **ClaimDeveloperRewards**
 
