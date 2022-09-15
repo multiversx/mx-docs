@@ -59,13 +59,16 @@ There are multiple ways of converting arguments from their original format to th
 
 For manually created transactions, arguments can be encoded by using tools that can be found online. For example, `hex to string`, `hex to decimal` and so on.
 
-For programmatically created transactions, arguments can be encoded by using one of our SDKs (`erdpy`, `erdjs`, `erdjava`, and so on) or by using built-in components or other libraries
+For programmatically created transactions, arguments can be encoded by using one of our SDKs (`erdjs`, `erdpy`, `erdgo`, `erdjava`, and so on) or by using built-in components or other libraries
 of the language the transaction is created in. 
 
-There are 2 ways of formatting the data field:
+There are multiple ways of formatting the data field:
 
 - manually convert each argument, and then join the function name, alongside the argument via the `@` character.
 - use a pre-defined arguments serializer, such as [the one found in erdjs](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/smartcontracts/argSerializer.ts).
+- use erdjs's [contract calls](/sdk-and-tools/erdjs/erdjs-cookbook/#contract-interactions).
+- use erdcpp's [contract calls](https://github.com/ElrondNetwork/elrond-sdk-erdcpp/blob/main/src/smartcontracts/contract_call.cpp).
+- and so on
 
 ## Converting bech32 addresses (erd1)
 
@@ -96,7 +99,7 @@ c70cf50b238372fffaf7b7c5723b06b57859d424a2da621bcc1b2f317543aa36
 
 ### Converting addresses using online tools
 
-There are multiple (*unofficial*) tools that one can use in order to convert an address into hexadecimal encoding:
+There are multiple (*unofficial or community supported*) tools that one can use in order to convert an address into hexadecimal encoding:
 
 - https://slowli.github.io/bech32-buffer/ (go to `Data`, select `erd` as Tag and `Bech32` as Encoding)
 
@@ -112,7 +115,7 @@ erdpy wallet bech32 --decode erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefs
 
 will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 
-Alternatively, hex addresses can be converted to bech32 as follows:
+Additionally, hex addresses can be converted to bech32 as follows:
 
 ```
 erdpy wallet bech32 --encode 0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1
@@ -125,23 +128,23 @@ will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 Find more about `erdjs` [here](/sdk-and-tools/erdjs/erdjs/).
 
 ```
-import { Address } from "./address";
+import { Address } from "@elrondnetwork/erdjs";
 ...
 
-const decodedAddress = Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th");
-console.log(decodedAddress.hex());
+const address = Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th");
+console.log(address.hex());
 ```
 
 will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 
-Alternatively, hex addresses can be converted to bech32 as follows:
+Additionally, hex addresses can be converted to bech32 as follows:
 
 ```
-import { Address } from "./address";
+import { Address } from "@elrondnetwork/erdjs";
 ...
 
-const decodedAddress = Address.fromHex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1");
-console.log(decodedAddress.bech32());
+const address = Address.fromHex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1");
+console.log(address.bech32());
 ```
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
@@ -168,7 +171,7 @@ fmt.Println(hex.EncodeToString(addressObj.AddressBytes()))
 
 will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`. 
 
-Alternatively, hex addresses can be converted to bech32 as follows:
+Additionally, hex addresses can be converted to bech32 as follows:
 
 ```
 import (
@@ -198,7 +201,7 @@ System.out.println(Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3
 
 will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 
-Alternatively, hex addresses can be converted to bech32 as follows:
+Additionally, hex addresses can be converted to bech32 as follows:
 
 ```java
 System.out.println(Address.fromHex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1").bech32());
@@ -218,7 +221,7 @@ Make sure that the result has an even number of characters.
 Below you can find some examples:
 
 :::note
-By no means, these code snippets don't provide a coding guideline, but rather they are simple examples on how to perform the necessary actions.
+By no means, these code snippets provide a coding guideline; they are more of simple examples on how to perform the necessary actions.
 :::
 
 ### Examples
@@ -288,7 +291,7 @@ Make sure that the result has an even number of characters.
 Below you can find some examples. They use big integer / number libraries to ensure the code works for large values as well:
 
 :::note
-By no means, these code snippets don't provide a coding guideline, but rather they are simple examples on how to perform the necessary actions.
+By no means, these code snippets provide a coding guideline; they are more of simple examples on how to perform the necessary actions.
 :::
 
 ### Examples
@@ -315,10 +318,12 @@ console.log(bnStr);  // 25
 for converting hex-encoded string to regular number:
 
 ```
-const hexValue = 25;
+const hexValue = "25";
 let bn = new BigNumber(hexValue, 16);
 console.log(bn.toString());  // 37
 ```
+
+Also, `erdjs` includes some [utility functions](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/utils.codec.ts) for padding the results.
 
 ### Converting numeric values in go
 
