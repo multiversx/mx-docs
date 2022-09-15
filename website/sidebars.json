@@ -155,6 +155,7 @@
         ]
       },
       "developers/constants",
+      "developers/sc-calls-format",
       "developers/built-in-functions",
       "developers/account-storage",
       "developers/setup-local-testnet",

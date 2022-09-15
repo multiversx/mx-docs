@@ -53,6 +53,7 @@ Learn about transaction's gas and how a fee is calculated
 
 | Name                                                                                                                     | Description                                                                                     |
 |--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
 | [Elrond serialization format](/developers/developer-reference/elrond-serialization-format)                               | How Elrond smart contracts serialize arguments, results, and storage.                           |
 | [Elrond wasm annotations](/developers/developer-reference/elrond-wasm-annotations)                                       | How to use annotations your contracts to make use of many built-in features from the framework. |
 | [Elrond wasm modules](/developers/developer-reference/elrond-wasm-modules)                                               | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
