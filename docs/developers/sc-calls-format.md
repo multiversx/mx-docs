@@ -123,6 +123,8 @@ erdpy wallet bech32 --encode 0139472eff6886771a982f3083da5d421f24c29181e63888228
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
+The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdpy/blob/main/erdpy/wallet/bech32.py).
+
 ### Converting addresses using erdjs
 
 Find more about `erdjs` [here](/sdk-and-tools/erdjs/erdjs/).
@@ -148,6 +150,8 @@ console.log(address.bech32());
 ```
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
+
+The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/address.ts).
 
 ### Converting addresses using erdgo
 
@@ -191,6 +195,8 @@ fmt.Println(addressObj.AddressAsBech32String())
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
+The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-go-core/blob/main/core/pubkeyConverter/bech32PubkeyConverter.go).
+
 ### Converting addresses using erdjava
 
 Find more about `erdjava` [here](/sdk-and-tools/erdjava/).
@@ -208,6 +214,8 @@ System.out.println(Address.fromHex("0139472eff6886771a982f3083da5d421f24c29181e6
 ```
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
+
+The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjava/blob/main/src/main/java/elrond/Address.java).
 
 ## Converting string values
 

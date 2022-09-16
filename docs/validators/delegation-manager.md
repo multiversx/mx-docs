@@ -38,6 +38,7 @@ NewDelegationContractTransaction {
           "@" + <service fee as hundredths of percents, in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The `Receiver` address is set to `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`, which is the fixed address of the delegation manager, located on the Metachain.
 
@@ -77,6 +78,7 @@ NewDelegationContractTransaction {
           "@0ea1"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The above transaction creates a new delegation contract owned by the sender, with total delegation cap of 7231.941 EGLD and service fee of 37.45% from the rewards. Moreover, the newly created delegation contract will start with a staking pool of 1250 EGLD.
 
@@ -101,6 +103,7 @@ SetMetadataTransaction {
           "@" + <keybase.io identity of the staking pool, in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 An example for the `Data` field that sets the name to `"Elrond Staking"`, the website to `"elrond.staking"` and the keybase.io identifier to `"elrondstaking"` is:
 ```
@@ -171,6 +174,7 @@ ChangeServiceFeeTransaction {
           "@" + <service fee as hundredths of percents, in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 In the `Data` field, the only argument passed to `changeServiceFee` is the new value of the service fee, expressed as hundredths of a percent.
 
@@ -198,6 +202,7 @@ SetAutomaticActivationTransaction {
           "@" + <"true" or "false" in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The only argument passed to `setAutomaticActivation` is either `true` or `false`, as an ASCII string encoded hexadecimally. For reference, `true` is `"74727565"` and `false` is `"66616c7365"`.
 
@@ -221,6 +226,7 @@ ModifyTotalDelegationCapTransaction {
           "@" + <total delegation cap in EGLD, fully denominated, in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 In the `Data` field, the only argument passed to `modifyTotalDelegationCap` is the new value for the delegation cap. It is expressed as a fully denominated amount of EGLD, meaning that it is the number of $10^{-18}$ subdivisions of the EGLD, and not the actual number of EGLD tokens. Take sure not to encode the ASCII string representing the total delegation cap.
 
@@ -262,6 +268,7 @@ AddNodesTransaction {
           "@" + <address of the delegation contract signed with the secret BLS key of the Nth node, in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pair consists of the public BLS key of a node along with the message produced by signing the address of the delegation contract with the secret BLS key of the respective node. There are as many pairs as there are nodes to add.
 
@@ -287,6 +294,7 @@ StakeNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be staked.
 
@@ -317,6 +325,8 @@ UnstakeNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unstaked.
 
 
@@ -336,6 +346,8 @@ RestakeNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be restaked.
 
 
@@ -362,6 +374,8 @@ UnbondNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unbonded.
 
 
@@ -385,6 +399,8 @@ RemoveNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
 
 
@@ -412,6 +428,7 @@ UnjailNodesTransaction {
           "@" + <public BLS key of the Nth node in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Note that the `Value` field depends on `N`, the number of validators to unjail.
 
@@ -445,6 +462,7 @@ DelegateTransaction {
     Data: "delegate"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 If the transaction is successful, the funds' holder has become a delegator and the funds either become a top-up amount for the stake of active validators, or may trigger the staking of inactive nodes, as described above.
 
@@ -461,6 +479,7 @@ ClaimRewardsTransaction {
     Data: "claimRewards"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 If the transaction is successful, the delegator receives the proportion of rewards they are entitled to.
 
@@ -482,6 +501,7 @@ RedelegateRewardsTransaction {
     Data: "reDelegateRewards"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 If the transaction is successful, the delegator does not receive any EGLD at the moment, but the rewards they were entitled to will be added to their delegated amount.
 
@@ -518,6 +538,7 @@ UndelegateTransaction {
           "@" + <amount to undelegate in EGLD, minimum 1 EGLD, fully denominated, in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 In the `Data` field, the only argument passed to `unDelegate` is the desired amount of EGLD to undelegate and later withdraw. It is expressed as a fully denominated amount of EGLD, meaning that it is the number of $10^{-18}$ subdivisions of the EGLD, and not the actual number of EGLD tokens. The fully denominated amount must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the amount.
 
@@ -543,6 +564,7 @@ WithdrawTransaction {
     Data: "withdraw"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 If the transaction is successful, the delegator receives all the EGLD they have previously requested to undelegate. The amount is removed from the staking pool.
 

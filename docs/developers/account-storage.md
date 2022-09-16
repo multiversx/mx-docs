@@ -29,6 +29,7 @@ SaveKeyValueTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 *The gas used is computed as following:
 ```
@@ -71,6 +72,7 @@ SaveKeyValueTransaction {
           "@" + 76616c756530  // value0
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ## REST API
 
