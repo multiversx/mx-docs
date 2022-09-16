@@ -72,6 +72,7 @@ IssuanceTransaction {
           "@" + <token ticker in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Optionally, the properties can be set when issuing a token. Example:
 ```
@@ -93,6 +94,7 @@ IssuanceTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
@@ -113,6 +115,7 @@ IssuanceTransaction {
           "@" + <token ticker in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Optionally, the properties can be set when issuing a token. Example:
 ```
@@ -134,6 +137,7 @@ IssuanceTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
@@ -155,6 +159,7 @@ IssuanceTransaction {
           "@" + <number of decimals in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Optionally, the properties can be set when issuing a token. Example:
 ```
@@ -177,6 +182,7 @@ IssuanceTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
@@ -197,6 +203,7 @@ ConvertSftToMetaESDTTransaction {
           "@" + <number of decimals in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ## **Parameters format**
 
@@ -226,6 +233,8 @@ IssuanceTransaction {
           "@414c43" +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
 Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/tokens/esdt-tokens#token-management).
 
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
@@ -272,6 +281,7 @@ RolesAssigningTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 For example, `ESDTRoleNFTCreate` = `45534454526f6c654e4654437265617465`
 
@@ -389,6 +399,7 @@ NFTCreationTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Additional gas refers to:
 - Transaction payload cost: Data field length * 1500 (GasPerDataByte = 1500)
@@ -427,6 +438,7 @@ TransferCreationRoleTransaction {
           "@" + <the address to transfer the role to in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Stop NFT creation**
 
@@ -443,6 +455,7 @@ StopNFTCreationTransaction {
           "@" + <token identifier in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Change NFT Attributes**
 
@@ -465,6 +478,8 @@ ESDTNFTUpdateAttributesTransaction {
           "@" + <Attributes in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
 To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
 
@@ -487,6 +502,8 @@ ESDTNFTAddURITransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
 To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
 ### **Add quantity (SFT only)**
@@ -505,6 +522,7 @@ AddQuantityTransaction {
           "@" + <quantity to add in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 If successful, the balance of the address for the given SFT will be increased with the number specified in the argument.
 
@@ -524,6 +542,7 @@ BurnQuantityTransaction {
           "@" + <quantity to burn in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 If successful, the quantity from the argument will be decreased from the balance of the address for that given token.
 
@@ -543,6 +562,7 @@ FreezeTransaction {
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The reverse operation, unfreezing, will allow further transfers to and from the Account:
 
@@ -558,6 +578,7 @@ UnfreezeTransaction {
           "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Wiping a single NFT**
 
@@ -575,6 +596,7 @@ WipeTransaction {
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Transferring token management rights**
 
@@ -603,6 +625,7 @@ TransferTransaction {
           "@" + <destination address in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 :::tip
 Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
@@ -633,6 +656,7 @@ TransferTransaction {
           <...>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ## **Multiple tokens transfer**
 
@@ -657,6 +681,7 @@ Let's see a complete flow of creating and transferring a Semi-Fungible Token.
           "@414c43" +                 # ALC
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 **Step 2: Fetch the token identifier**
 
@@ -680,6 +705,7 @@ Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 **Step 4: Create NFT**
 
@@ -702,6 +728,7 @@ Now, the NFT creation transaction for the example case defined [here](/tokens/nf
           "@" + <additional optional URI in hexadecimal encoding> +
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 :::tip
 Note that the nonce is very important when creating an NFT. You must save the nonce after NFT creation because you will need it for further actions.
@@ -726,6 +753,7 @@ It can be fetched by viewing all the tokens for the address via API.
           "@" + <destination address in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ## **REST API**
 
