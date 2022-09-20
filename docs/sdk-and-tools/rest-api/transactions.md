@@ -582,15 +582,18 @@ Transaction status retrieved successfully.
 
 Query Parameters
 
-| Param     | Required                                  | Type     | Description                          |
-|-----------|-------------------------------------------|----------|--------------------------------------|
-| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
+| Param     | Required                                  | Type     | Description                                                   |
+|-----------|-------------------------------------------|----------|---------------------------------------------------------------|
+| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included.                          |
+| shard-id  | <span class="text-normal">OPTIONAL</span> | `string` | A specific shard id(0, 1, 2 etc. or 4294967295 for Metachain) |
 
 As seen above, if the `fields` item is empty, only the transaction hash will be displayed.
 
-Example request with fields:
+If the `shard-id` item is used, only the transactions from that specific shard's pool will be displayed.
 
-`https://gateway.elrond.com/transaction/pool?fields=sender,receiver,value`
+Example request with shard id and fields:
+
+`https://gateway.elrond.com/transaction/pool?shard-id=0&fields=sender,receiver,value`
 
 All possible values for fields item are:
 
