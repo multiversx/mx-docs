@@ -294,6 +294,7 @@ Body Parameters
 | data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).     |
 | chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                     |
 | version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                  |
+| nonce            | <span class="text-normal">OPTIONAL</span> | `number` | The Sender nonce.                                                         |
 
 <!--Response-->
 
@@ -325,7 +326,8 @@ Content-Type: application/json
     "sender": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
     "data": "dGhpcyBpcyBhbiBleGFtcGxl", #base64 representation of "this is an example"
     "chainID": "1",
-    "version": 1
+    "version": 1,
+    "nonce": 1
 }
 ```
 
