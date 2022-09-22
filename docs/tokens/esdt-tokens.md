@@ -33,6 +33,7 @@ IssuanceTransaction {
           "@" + <number of decimals in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The issuance cost is set to 0.05 EGLD. 
 
@@ -58,6 +59,7 @@ IssuanceTransaction {
           "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters (3 bytes - 6 characters hex encoded). For example, a token identifier could look like _ALC-6258d2_.
@@ -120,8 +122,9 @@ IssuanceTransaction {
           "@06"                        // 6 hex encoded  
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/developers/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/tokens/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
  In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
@@ -142,6 +145,7 @@ TransferTransaction {
           "@" + <value to transfer in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 :::important
 The value of the transaction should be set to 0 EGLD, otherwise the transaction will fail. The (token) amount to be transferred is encoded into the data field. 
@@ -166,6 +170,7 @@ TransferTransaction {
           "@0c"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Using the transaction in the example above, Alice will transfer 12 AliceTokens to Bob.
 
@@ -192,6 +197,7 @@ TransferWithCallTransaction {
           <...>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
@@ -220,6 +226,7 @@ MultiTokensTransferTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 :::tip
 Each token requires the token identifier, the nonce and the quantity to transfer.
@@ -246,6 +253,7 @@ MultiTokensTransferTransaction {
           "@03"   // 3 -> the quantity to transfer
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
 
@@ -258,11 +266,11 @@ self.send().direct_esdt(&address, &esdt_token_name, token_nonce: u64, &amount);
 
 ## **Token management**
 
-The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/developers/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
+The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/tokens/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
 
 ## **Configuration properties of an ESDT token**
 
-Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/developers/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
+Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/tokens/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
 - `canMint` - more units of this token can be minted by the token manager after initial issuance, increasing the supply
 - `canBurn` - users may "burn" some of their tokens, reducing the supply
@@ -297,6 +305,7 @@ MintTransaction {
           "@" + <supply to mint in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the manager receives that amount of tokens into their balance.
 
@@ -315,6 +324,7 @@ LocalMintTransaction {
           "@" + <supply to mint in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Burning**
 
@@ -335,6 +345,7 @@ BurnTransaction {
           "@" + <supply to burn in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
@@ -353,6 +364,7 @@ LocalBurnTransaction {
           "@" + <supply to burn in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Pausing and Unpausing**
 
@@ -368,6 +380,7 @@ PauseTransaction {
           "@" + <token identifier in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The reverse operation, unpausing, will allow transactions of the token again:
 
@@ -381,6 +394,7 @@ UnpauseTransaction {
           "@" + <token identifier in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 These two operations require that the option `canPause` is set to `true`.
 
@@ -399,6 +413,7 @@ FreezeTransaction {
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 The reverse operation, unfreezing, will allow further transfers to and from the Account:
 
@@ -413,6 +428,7 @@ UnfreezeTransaction {
           "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 These two operations require that the option `canFreeze` is set to `true`.
 
@@ -431,6 +447,7 @@ WipeTransaction {
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Setting and unsetting special roles**
 
@@ -441,7 +458,7 @@ The special roles available for basic ESDT tokens are:
 
 - **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
-For NFTs, there are different roles that can be set. You can find them [here](/developers/nft-tokens#assigning-roles).
+For NFTs, there are different roles that can be set. You can find them [here](/tokens/nft-tokens#assigning-roles).
 
 #### **Set special role**
 
@@ -460,6 +477,7 @@ RolesAssigningTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 #### **Unset special role**
 
@@ -478,6 +496,7 @@ RolesAssigningTransaction {
           ...
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ### **Transferring token management rights**
 
@@ -494,6 +513,7 @@ TransferOwnershipTransaction {
           "@" + <account address of the new token manager in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 After this transaction is processed by the Metachain, any subsequent management operations will only be permitted to the new Account, as specified by the Data field of the transaction.
 
@@ -523,6 +543,7 @@ UpgradingTransaction {
           <...>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token manager, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
 
@@ -540,6 +561,7 @@ UpgradingTransaction {
           "@74727565"               # true
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ## **Branding**
 

@@ -66,7 +66,7 @@ There are two main types of contract-to-contract calls available at the moment:
 - synchronous, same-shard calls, through execute_on_dest_context (as demonstrated above)
 - asynchronous calls
 
-### Asynchornous calls
+### Asynchronous calls
 
 Asynchronous calls can be launched either through transfer_execute (in the case you don't care about the result) or through async_call when you want to save the result from the callee contract or perform some additional computation. Keep in mind logic in callbacks should be kept at a minimum, as they usually receive very little gas to perform their duty.
 

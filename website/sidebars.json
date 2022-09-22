@@ -92,7 +92,8 @@
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
           "developers/tutorials/counter",
-          "developers/tutorials/custom-wallet-connect"
+          "developers/tutorials/custom-wallet-connect",
+          "developers/tutorials/staking-contract"
         ]
       },
       {
@@ -154,11 +155,13 @@
         ]
       },
       "developers/constants",
+      "developers/sc-calls-format",
       "developers/built-in-functions",
       "developers/account-storage",
       "developers/setup-local-testnet",
       "developers/setup-local-testnet-advanced",
-      "developers/creating-wallets"
+      "developers/creating-wallets",
+      "developers/reproducible-contract-builds"
     ],
     "SDK and Tools": [
       "sdk-and-tools/overview",
@@ -178,6 +181,7 @@
           "sdk-and-tools/rest-api/versions-and-changelog"
         ]
       },
+      "sdk-and-tools/dapp-core",
       "sdk-and-tools/proxy",
       "sdk-and-tools/elastic-search",
       {

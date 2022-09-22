@@ -19,6 +19,7 @@ Generate Contract for Validator transaction
     "@" + "<max cap>" +
     "@" + "<fee>"
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Where:
 Max cap = total delegation cap in EGLD, fully denominated, in hexadecimal encoding

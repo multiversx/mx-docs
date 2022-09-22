@@ -20,6 +20,7 @@ Whitelist Wallet For Merging
     Data: "whitelistForMerge" +
     "@" + "<Merging Validator wallet address in HEX format>"
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 :::tip
 You can obtain the HEX format of an address by first converting its bech32 (erd1...) form into binary, and then converting the resulting binary into HEX.
@@ -41,6 +42,7 @@ Whitelist Wallet For Merging
     Data: "mergeValidatorToDelegationWithWhitelist" +
     "@" "<the Delegation SC address in HEX format>"
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 :::warning
 We advise against using this method to buy or sell validator slots - it requires the transfer of private keys (validatorKey.pem) which can't be changed. This puts the buyer at risk of slashing, should the seller deploy a node with the same key, either intentionally or by mistake.

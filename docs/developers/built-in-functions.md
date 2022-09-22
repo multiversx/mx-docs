@@ -19,11 +19,24 @@ This documentation is subject to change, but at the time of writing, the current
 - SaveKeyValue
 - ESDTTransfer
 - ESDTBurn
+- ESDTFreeze
+- ESDTUnFreeze
+- ESDTWipe
+- ESDTPause
+- ESDTUnPause
+- ESDTSetRole
+- ESDTUnSetRole
+- ESDTSetLimitedTransfer
+- ESDTUnSetLimitedTransfer
 - ESDTLocalBurn
 - ESDTLocalMint
+- ESDTNFTTransfer
+- ESDTNFTCreate
 - ESDTNFTAddQuantity
 - ESDTNFTBurn
-- ESDTNFTCreate
+- ESDTNFTAddURI
+- ESDTNFTUpdateAttributes
+- MultiESDTNFTTransfer
 
 ## **ClaimDeveloperRewards**
 
@@ -39,6 +52,7 @@ ClaimDeveloperRewardsTransaction {
     Data: "ClaimDeveloperRewards"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 :::note
 The amount of available developer rewards can be viewed via [Get Address](/sdk-and-tools/rest-api/addresses/#get-address) endpoint when using the smart contract as the `bech32Address`. 
@@ -58,6 +72,7 @@ ChangeOwnerAddressTransaction {
           "@" + <new owner address in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ## **SetUserName**
 
@@ -74,6 +89,7 @@ SetUserNameTransaction {
           "@" + <username in hexadecimal encoding>
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 ## **SetKeyValue**
 

@@ -18,14 +18,15 @@ For interacting with Elrond Blockchain via SDKs or Rest API, please refer to [SD
 
 Below is a list of tutorials that one can you to get a full experience of building on Elrond
 
-| Name                                                                                | Description                                                    |
-|-------------------------------------------------------------------------------------|----------------------------------------------------------------|
-| [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.     |
-| [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.   |
-| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                |
-| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                |
-| [The Counter Smart Contract](/developers/tutorials/counter)                         | The Counter SC tutorial.                                       |
-| [Custom Wallet Connect](/developers/tutorials/custom-wallet-connect)                | Custom Wallet Connect tutorial.                                |
+| Name                                                                                | Description                                                       |
+|-------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.        |
+| [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.      |
+| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                   |
+| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                   |
+| [The Counter Smart Contract](/developers/tutorials/counter)                         | The Counter SC tutorial.                                          |
+| [Custom Wallet Connect](/developers/tutorials/custom-wallet-connect)                | Custom Wallet Connect tutorial.                                   |
+| [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract.  | 
 
 ### Signing transactions
 
@@ -52,6 +53,7 @@ Learn about transaction's gas and how a fee is calculated
 
 | Name                                                                                                                     | Description                                                                                     |
 |--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
 | [Elrond serialization format](/developers/developer-reference/elrond-serialization-format)                               | How Elrond smart contracts serialize arguments, results, and storage.                           |
 | [Elrond wasm annotations](/developers/developer-reference/elrond-wasm-annotations)                                       | How to use annotations your contracts to make use of many built-in features from the framework. |
 | [Elrond wasm modules](/developers/developer-reference/elrond-wasm-modules)                                               | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
@@ -94,3 +96,4 @@ Learn about transaction's gas and how a fee is calculated
 | [Setup local testnet](/developers/setup-local-testnet)                   | How to set up a local testnet - basic solution                        |
 | [Setup local testnet advanced](/developers/setup-local-testnet-advanced) | How to set up a local testnet - advanced solution                     |
 | [Creating wallets](/developers/creating-wallets)                         | Examples on creating wallets.                                         |
+| [Reproducible builds](/developers/reproducible-contract-builds)          | How to perform reproducible contract builds.                          |
