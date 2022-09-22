@@ -43,6 +43,7 @@ TokenTransferTransaction {
           "@<amount hex>"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Any other transaction that does not follow this structure has to be omitted. 
 

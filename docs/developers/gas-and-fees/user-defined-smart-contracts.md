@@ -125,7 +125,7 @@ Documentation in this section is preliminary and subject to change. Furthermore,
 
 Before moving forward, make sure you first have a look over the following:
  - [Asynchronous calls between contracts](/technology/the-elrond-wasm-vm/#asynchronous-calls-between-contracts)
- - [Asynchronous calls (Rust framework)](/developers/developer-reference/elrond-wasm-contract-calls/#asynchornous-calls)
+ - [Asynchronous calls (Rust framework)](/developers/developer-reference/elrond-wasm-contract-calls/#asynchronous-calls)
  - [Callbacks (Rust framework)](/developers/developer-reference/elrond-wasm-annotations/#callbacks)
 
 Suppose we have two contracts: `A` and `B`, where `A::foo(addressOfB)` asynchronously calls `B::bar()` (e.g. using `asyncCall()`).

@@ -26,7 +26,7 @@ Signing providers for dApps:
 | [erdjs-extension-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-extension-provider)           | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-extension-provider)      | Sign using the Maiar DeFi Wallet (browser extension).                                     |
 
 :::important
-For all purposes, **we recommend using [dapp-core](https://github.com/ElrondNetwork/dapp-core)** instead of integrating the signing providers on your own.
+For all purposes, **we recommend using [dapp-core](/sdk-and-tools/dapp-core)** instead of integrating the signing providers on your own.
 :::
 
 For more details about integrating a signing provider into your dApp, please follow [this guide](/sdk-and-tools/erdjs/erdjs-signing-providers) or the [erdjs examples repository](https://github.com/ElrondNetwork/elrond-sdk-erdjs-examples).

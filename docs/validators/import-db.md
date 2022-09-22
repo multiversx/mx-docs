@@ -3,7 +3,7 @@ id: import-db
 title: Import DB
 ---
 
-# Introduction
+## Introduction
 The node is able to reprocess a previously produced database by providing the database and starting 
 the node with the import-db related flags explained in the section below. <br>
 Possible use cases for the import-db process:
@@ -14,7 +14,7 @@ Possible use cases for the import-db process:
   interested in the result of an API endpoint at the block 255255, you could use import db and force the node to stop 
   at the block corresponding to that date).
   
-# How to start the process
+## How to start the process
 Let's suppose we have the following data structure:
 ```
   ~/elrond-go/cmd/node
@@ -77,3 +77,16 @@ import ended because data from epochs [x] or [y] does not exist
 The import-db process can be sped up by skipping the block header's signature check if the import-db data comes from a trustworthy source.
 In this case the node should be started with all previously mentioned flags, adding the `-import-db-no-sig-check` flag.
 :::
+
+## Import-DB with populating an Elasticsearch cluster
+
+One of the use-cases for utilizing the `import-db` mechanism is to populate an Elasticsearch cluster with data that is 
+re-processed with the help of this process. 
+
+:::tip
+Import-DB for populating an Elasticsearch cluster should be used only for a full setup (a node in each Shard + a Metachain node)
+:::
+
+The preparation implies the update of the `external.toml` file for each node. More details can be found [here](/sdk-and-tools/elastic-search/#setup).
+
+If everything is configured correctly, nodes will push the re-processed data into the Elasticsearch cluster.
