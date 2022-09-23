@@ -5,9 +5,9 @@ title: Relayed Transactions
 
 ## Introduction
 
-Relayed transactions (or meta-transactions) are transactions where a so-called relayer pays the fee for another
-transactions. In other words, addresses can interact with Smart Contracts without having any EGLD for fees, when a 
-relayer is willing to pay for that transaction.
+Relayed transactions (or meta-transactions) are transactions with the fee paid by a so-called relayer.
+In other words, if a relayer is willing to pay for an interaction, it is not mandatory that the address 
+interacting with a Smart Contract has any EGLD for fees.
 
 More details and specifications can be found on [Elrond Specs](https://github.com/ElrondNetwork/elrond-specs/blob/main/sc-meta-transactions.md).
 
@@ -52,27 +52,25 @@ structure:
 
 ```
 type Transaction struct {
-	Nonce             uint64        
-	Value             *math_big.Int 
-	ReceviverAddress  []byte        
-	RcvUserName       []byte        
-	SenderAddress     []byte        
-	SndUserName       []byte        
-	GasPrice          uint64        
-	GasLimit          uint64        
-	Data              []byte        
-	ChainID           []byte        
-	Version           uint32        
-	Signature         []byte        
-	Options           uint32        
+	Nonce           uint64        
+	Value           *math_big.Int 
+	ReceiverAddress []byte            
+	SenderAddress   []byte                
+	GasPrice        uint64        
+	GasLimit        uint64        
+	Data            []byte        
+	ChainID         []byte        
+	Version         uint32        
+	Signature       []byte        
+	Options         uint32        
 }
 ```
 
 Notice that there are some differences as compared to the regular *frontend* [transaction structure](/developers/signing-transactions/signing-transactions/#general-structure), such:
-- sender and receiver have to be byte arrays instead of bech32 addresses strings
-- value has to be a big integer, instead of a string
-- chain ID has to be a byte array instead of a string
-- signature has to be a byte array instead of the hex version of it
+- `SenderAddress` and `ReceiverAddress` have to be byte arrays instead of bech32 string addresses
+- `Value` has to be a big integer, instead of a string
+- `ChainID` has to be a byte array instead of a string
+- `Signature` has to be a byte array instead of the hex version of it
 
 ### Preparing relayed v1 transaction using erdjs
 
