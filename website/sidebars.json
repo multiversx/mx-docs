@@ -158,6 +158,7 @@
       "developers/sc-calls-format",
       "developers/built-in-functions",
       "developers/account-storage",
+      "developers/relayed-transactions",
       "developers/setup-local-testnet",
       "developers/setup-local-testnet-advanced",
       "developers/creating-wallets",
