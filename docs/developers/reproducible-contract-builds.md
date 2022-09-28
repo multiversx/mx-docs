@@ -53,7 +53,7 @@ All in all, in order to verify the bytecode equality of two given builds of a co
 
 ## Supporting reproducible builds
 
-As of October 2022, the recommended approach to support reproducible builds for your smart contract is to use a build script relying on a specially-designed,[publicly-available, tagged Docker image](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags), that includes tagged, explicit versions of the build tools (_Rust_, _wasm-opt_ etc.).
+As of October 2022, the recommended approach to support reproducible builds for your smart contract is to use a build script relying on a specially-designed, [publicly-available, tagged Docker image](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags), that includes tagged, explicit versions of the build tools (_Rust_, _wasm-opt_ etc.).
 
 This approach is recommended in order to counteract eventual pieces of non-determinism related to `cargo`'s (essential component of the Rust toolchain) sensibility on the environment.
 
@@ -125,7 +125,7 @@ Now let's build the contract by invoking the previously-downloaded build wrapper
 
 ```
 python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
-    --project=${REPOSITORY} \
+    --project=${PROJECT} \
     --output=${BUILD_OUTPUT}
 ```
 
@@ -150,13 +150,13 @@ export BUILD_OUTPUT=~/contracts/output-from-docker
 export IMAGE=elrondnetwork/build-contract-rust:frozen-001
 
 python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
-    --project=${REPOSITORY} \
+    --project=${PROJECT} \
     --output=${BUILD_OUTPUT}
 ```
 
 ### Comparing the codehashes
 
-Once the build is ready, you can check the codehash of the generated `*.wasm`, by inspecting `*.codehash.txt`
+Once the build is ready, you can check the codehash of the generated `*.wasm`, by inspecting the file `*.codehash.txt`
 
 For our example, that should be:
 
