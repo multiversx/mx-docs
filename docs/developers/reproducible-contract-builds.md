@@ -119,7 +119,7 @@ export IMAGE=elrondnetwork/build-contract-rust:frozen-001
 
 The latter export statement explicitly selects the **chosen, _frozen_ Docker image tag** to be used.
 
-### Performing the build
+### Perform the build
 
 Now let's build the contract by invoking the previously-downloaded build wrapper:
 
