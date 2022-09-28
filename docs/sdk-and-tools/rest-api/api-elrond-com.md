@@ -75,7 +75,10 @@ An API instance can be started with the following behavior:
 
 ## Rate limiting
 
-Currently, there is a rate limit mechanism that limits an IP address to a maximum of 2 requests / second.
+Public Elrond APIs have a rate limit mechanism that bring the following limitations:
+
+- api.elrond.com (*mainnet*): 2 requests / IP / second
+- devnet-api.elrond.com (*devnet*): 5 requests / IP / second
 
 ## Rest API documentation
 
