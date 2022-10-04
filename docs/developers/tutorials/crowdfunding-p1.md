@@ -12,7 +12,7 @@ The Elrond Network supports smart contracts written in any programming language,
 :::
 
 :::important
-The current tutorial revolves around **elrond-wasm-rs** version **0.33.0**, and will get updated as new versions of elrond-wasm are released.
+The current tutorial revolves around **elrond-wasm-rs** version **0.35.0**, and will get updated as new versions of elrond-wasm are released.
 :::
 
 # **Introduction**
@@ -94,10 +94,10 @@ edition = "2018"
 path = "src/crowdfunding_main.rs"
 
 [dependencies.elrond-wasm]
-version = "0.33.0"
+version = "0.35.0"
 
 [dev-dependencies.elrond-wasm-debug]
-version = "0.33.0"
+version = "0.35.0"
 
 ```
 
