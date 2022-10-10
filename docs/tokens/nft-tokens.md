@@ -337,7 +337,7 @@ Below you can find the fields involved when creating an NFT.
 - <u>Mandatory</u> field that represents the URL to a [supported](#supported-media-types) media file ending with the file extension as described in the [example](#example) below
 - Field should contain the `Uniform Resource Identifier`
 
-<u>Note</u>: As a best practice, we recommend storing the files for media & extra metadata(from attributes field) within same folder on your storage provider, ideally IPFS.
+<u>Note</u>: As a best practice, we recommend storing the files for media & extra metadata(from attributes field) within same folder on your storage provider, ideally IPFS. Also, in order to have a thumbnail generated for the uploaded file the size of the file should be less or equal to 64MB.
 
 :::important
 Please note that each argument must be encoded in hexadecimal format with an even number of characters.
@@ -352,6 +352,8 @@ Below you can find a table with the supported media types for NFTs available on 
 |.jpg|image/jpg|
 |.gif|image/gif|
 |.webp|image/webp|
+|.svg|image/svg|
+|.svg|image/svg+xml|
 |.acc|audio/acc|
 |.flac|audio/flac|
 |.m4a|audio/m4a|
