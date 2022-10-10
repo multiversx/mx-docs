@@ -140,7 +140,7 @@ It is not enough to receive the funds, the contract also needs to keep track of 
 A few things to unpack:
 
 1. This storage mapper has an extra argument, for an address. This is how we define a map in the storage. The donor argument will become part of the storage key. Any number of such key arguments can be added, but in this case we only need one. The resulting storage key will be a concatenation of the specified base key `"deposit"` and the serialized argument.
-2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with #[payable]. Notice the `#[payment_amount] payment: BigUint` argument. This is not a real argument, but just syntactic sugar to pass the paid sum to the function.
+2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with #[payable].
 3. fund needs to also be explicitly declared as an endpoint. All `#[payable]`methods need to be marked `#[endpoint]`, but not the other way around.
 
 To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `crowdfunding-fund.scen.json` .
@@ -566,9 +566,9 @@ As an exercise, try to add some more tests, especially ones involving the claim 
 
 This concludes the first Rust elrond-wasm tutorial.
 
-For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.33.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.33.0/elrond_wasm/index.html)
+For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html)
 
-If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/v0.33.0/contracts/examples
+If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/v0.35.0/contracts/examples
 
 :::tip
 When entering directly on the `elrond-wasm` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.
