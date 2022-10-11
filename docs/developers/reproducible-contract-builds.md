@@ -3,7 +3,7 @@ id: reproducible-contract-builds
 title: Reproducible Builds
 ---
 
-This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/elrondnetwork/elrond-sdk-erdpy-rust/tags). 
+This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags). 
 
 You will also learn how to reproduce a contract build, given its source code and the name (tag) of a _frozen_ Docker image that was used for its previous build (that we want to reproduce).
 
@@ -90,21 +90,21 @@ In this section, you'll learn how to run a reproducible build, or, to put it dif
 
 ### Fetch the source code
 
-Let's clone the [example source code](https://github.com/ElrondNetwork/reproducible-contract-build-example) locally, and switch to [a certain version](https://github.com/ElrondNetwork/reproducible-contract-build-example/releases/tag/v0.1.3) that we'd like to build:
+Let's clone the [example source code](https://github.com/ElrondNetwork/reproducible-contract-build-example) locally, and switch to [a certain version](https://github.com/ElrondNetwork/reproducible-contract-build-example/releases/tag/v0.1.4) that we'd like to build:
 
 ```
 mkdir -p ~/contracts && cd ~/contracts
-git clone https://github.com/ElrondNetwork/reproducible-contract-build-example.git --branch=v0.1.3 --depth=1
+git clone https://github.com/ElrondNetwork/reproducible-contract-build-example.git --branch=v0.1.4 --depth=1
 ```
 
-By inspecting the release notes, we see that [`v0.1.3`](https://github.com/ElrondNetwork/reproducible-contract-build-example/releases/tag/v0.1.3) was built using the `image:tag = elrondnetwork/build-contract-rust:frozen-001`.
+By inspecting the release notes, we see that [`v0.1.4`](https://github.com/ElrondNetwork/reproducible-contract-build-example/releases/tag/v0.1.4) was built using the `image:tag = elrondnetwork/build-contract-rust:v2.0.0`.
 
 ### Download the build wrapper
 
-The build process (via Docker) is wrapped in a easy-to-use, friendly Python [script](https://github.com/ElrondNetwork/elrond-sdk-images/tree/main/scripts). Let's download it:
+The build process (via Docker) is wrapped in a easy-to-use, friendly Python script. Let's download it:
 
 ```
-wget https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-images/main/scripts/build_contract_rust_with_docker.py
+wget https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-images-build-contract-rust/main/build_with_docker.py
 ```
 
 ### Prepare environment variables
@@ -114,7 +114,7 @@ Export the following variables:
 ```
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
-export IMAGE=elrondnetwork/build-contract-rust:frozen-001
+export IMAGE=elrondnetwork/build-contract-rust:v2.0.0
 ```
 
 The latter export statement explicitly selects the **chosen, _frozen_ Docker image tag** to be used.
@@ -136,18 +136,18 @@ In the `output` folder(s), you should see the following files (example):
  - `adder.codehash.txt`: a file containing the computed `codehash` of the contract.
  - `adder.wat`: a textual representation of the bytecode, to be displayed in text editors, if necessary;
  - `adder.imports.json`: a listing of VM API functions imported and used by the contract.
- - `adder.tar`: an (uncompressed) archive containing the source code used as input for the build.
+ - `adder-v1.2.3.zip`: a versioned archive containing the source code used as input for the build.
 
 ### TL;DR build snippet
 
 These being said, let's summarize the steps above into a single bash snippet:
 
 ```
-wget https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-images/main/scripts/build_contract_rust_with_docker.py
+wget https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-images-build-contract-rust/main/build_with_docker.py
 
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
-export IMAGE=elrondnetwork/build-contract-rust:frozen-001
+export IMAGE=elrondnetwork/build-contract-rust:v2.0.0
 
 python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
