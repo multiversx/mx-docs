@@ -326,6 +326,10 @@ LocalMintTransaction {
 ```
 *For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
+:::note
+As of [Release v1.3.42](https://elrond.com/releases/release-elrond-go---v1342), all new fungible tokens are burn-able by each holder, so setting the `ESDTRoleLocalMint` becomes redundant.
+:::
+
 ### **Burning**
 
 :::tip
