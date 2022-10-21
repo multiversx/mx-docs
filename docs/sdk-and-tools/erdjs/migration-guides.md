@@ -38,31 +38,11 @@ As a consequence, in `src/networkParams.ts` the method previously named `withTxH
     }
 ```
 
-Also changes on [elrond-sdk-erdjs-walletcore](https://github.com/ElrondNetwork/elrond-sdk-erdjs-walletcore) have been implemented and will be made available with **v3.0.1** release (see [details](https://docs.elrond.com/sdk-and-tools/erdjs/erdjs-migration-guides#elrond-sdk-erdjs-walletcore---v301-release) below).
+Also changes on [elrond-sdk-erdjs-walletcore](https://github.com/ElrondNetwork/elrond-sdk-erdjs-walletcore) have been implemented and will be made available with **v3.0.1** release (see [details](/sdk-and-tools/erdjs/erdjs-migration-guides#elrond-sdk-erdjs-walletcore---v301-release) below).
 
 ### Guarded Transaction
 
-After setting a guardian (`SetGuardian`) and sending `GuardAccount` builtin transaction to Elrond network, only guardian co-signed transactions will be accepted by the *guarded* account. For supporting this, two new fields have been added to the transaction proto (Guardian Address and Guardian Signature):
-```
-message Transaction {
-	uint64   Nonce          = 1  [(gogoproto.jsontag) = "nonce"];
-	bytes    Value          = 2  [(gogoproto.jsontag) = "value", (gogoproto.casttypewith) = "math/big.Int;github.com/ElrondNetwork/elrond-go/data.BigIntCaster"];
-	bytes    RcvAddr        = 3  [(gogoproto.jsontag) = "receiver"];
-	bytes    RcvUserName    = 4  [(gogoproto.jsontag) = "rcvUserName,omitempty"];
-	bytes    SndAddr        = 5  [(gogoproto.jsontag) = "sender"];
-	bytes    SndUserName    = 6  [(gogoproto.jsontag) = "sndUserName,omitempty"];
-	uint64   GasPrice       = 7  [(gogoproto.jsontag) = "gasPrice,omitempty"];
-	uint64   GasLimit       = 8  [(gogoproto.jsontag) = "gasLimit,omitempty"];
-	bytes    Data           = 9  [(gogoproto.jsontag) = "data,omitempty"];
-	bytes    ChainID        = 10 [(gogoproto.jsontag) = "chainID"];
-	uint32   Version        = 11 [(gogoproto.jsontag) = "version"];
-	bytes    Signature      = 12 [(gogoproto.jsontag) = "signature,omitempty"];
-	uint32   Options        = 13 [(gogoproto.jsontag) = "options,omitempty"];
-	bytes    GuardAddr      = 14 [(gogoproto.jsontag) = "guardian,omitempty"];
-	bytes    GuardSignature = 15 [(gogoproto.jsontag) = "guardianSignature,omitempty"];
-}
-```
-Once an account is guarded, only transactions with set `guardian` and `version=2`, `options=2` will be accepted.
+After setting a guardian for a wallet, only guardian co-signed transactions will be accepted for that account. For supporting this, two new fields have been added to the transaction format: **Guardian Address** and **Guardian Signature**. Once an account is guarded, only transactions with set `guardian` and `version=2`, `options=2` will be accepted.
 
 Example:
 ```
@@ -87,7 +67,7 @@ await guardian.signer.guard(transaction);
 
 ### Transaction field `sender` became mandatory with erdjs - v11
 
-This implies changes on various levels on several files.
+This implies changes on various levels on several files where a transaction was constructed:
 
 1. `smartContract.deploy({...})` receives a new mandatory input parameter `deployer`, that has been added on
 ```
@@ -155,6 +135,10 @@ export interface IGuardianSigner {
     guard(signable: ISignable): Promise<void>;
 }
 ```
+
+## Migrate **erdjs** from v10.x to v11 (July of 2022)
+
+`sender` becomes mandatory in transaction construction. This fixes the issues when a developer forgets to set a sender and ends up with an invalid signature.
 
 ## Migrate **erdjs** from v9.x to v10 (April of 2022)
 
