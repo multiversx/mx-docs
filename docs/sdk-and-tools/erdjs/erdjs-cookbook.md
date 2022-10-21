@@ -36,7 +36,7 @@ On this topic, please see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs
 ## Fetching network parameters
 
 ```
-let networkConfig = await networkProvider.getNetworkConfig();
+const networkConfig = await networkProvider.getNetworkConfig();
 console.log(networkConfig.MinGasPrice);
 console.log(networkConfig.ChainID);
 ```
@@ -48,9 +48,9 @@ console.log(networkConfig.ChainID);
 The following snippet fetches (from the Network) the **nonce** and the **balance** of an account, and updates the local representation of the account.
 
 ```
-let addressOfAlice = new Address("erd1...");
-let alice = new Account(addressOfAlice);
-let aliceOnNetwork = await networkProvider.getAccount(addressOfAlice);
+const addressOfAlice = new Address("erd1...");
+const alice = new Account(addressOfAlice);
+const aliceOnNetwork = await networkProvider.getAccount(addressOfAlice);
 alice.update(aliceOnNetwork);
 
 console.log(alice.nonce);
@@ -82,8 +82,8 @@ In **erdjs 9x**, the payments were prepared using the classes `Balance` and `Bal
 A `TokenPayment` object for **EGLD transfers** (value movements):
 
 ```
-let firstPayment = TokenPayment.egldFromAmount("1.5");
-let secondPayment = TokenPayment.egldFromBigInteger("1500000000000000000");
+const firstPayment = TokenPayment.egldFromAmount("1.5");
+const secondPayment = TokenPayment.egldFromBigInteger("1500000000000000000");
 console.log(firstPayment.valueOf(), secondPayment.valueOf());
 console.log(firstPayment.toPrettyString(), secondPayment.toPrettyString());
 ```
@@ -91,10 +91,10 @@ console.log(firstPayment.toPrettyString(), secondPayment.toPrettyString());
 A `TokenPayment` object for transferring **fungible** tokens:
 
 ```
-let identifier = "FOO-123456";
-let numDecimals = 2;
-let firstPayment = TokenPayment.fungibleFromAmount(identifier, "1.5", numDecimals);
-let secondPayment = TokenPayment.fungibleFromBigInteger(identifier, "4000", numDecimals);
+const identifier = "FOO-123456";
+const numDecimals = 2;
+const firstPayment = TokenPayment.fungibleFromAmount(identifier, "1.5", numDecimals);
+const secondPayment = TokenPayment.fungibleFromBigInteger(identifier, "4000", numDecimals);
 
 console.log(firstPayment.toString()); // Will output: 150.
 console.log(firstPayment.toPrettyString()); // Will output: 1.50 FOO-123456.
@@ -114,14 +114,14 @@ let payment = TokenPayment.semiFungible(identifier, nonce, quantity);
 A `TokenPayment` object for transferring **non-fungible** tokens (the quantity doesn't need to be specified for NFTs, as the token is only one of its kind):
 
 ```
-let nonce = 7;
-let payment = TokenPayment.nonFungible(identifier, nonce);
+const nonce = 7;
+const payment = TokenPayment.nonFungible(identifier, nonce);
 ```
 
 A `TokenPayment` object for transferring **meta-esdt** tokens:
 
 ```
-let payment = TokenPayment.metaEsdtFromAmount(identifier, nonce, "0.1", numDecimals);
+const payment = TokenPayment.metaEsdtFromAmount(identifier, nonce, "0.1", numDecimals);
 ```
 
 ## Broadcasting transactions
@@ -129,9 +129,10 @@ let payment = TokenPayment.metaEsdtFromAmount(identifier, nonce, "0.1", numDecim
 ### Preparing a simple transaction
 
 ```
-let tx = new Transaction({
+const tx = new Transaction({
     data: new TransactionPayload("helloWorld"),
     gasLimit: 70000,
+    sender: new Address("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
     receiver: new Address("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
     value: TokenPayment.egldFromAmount(1),
     chainID: "D"
@@ -153,20 +154,20 @@ Note that, for all purposes, **we recommend using [dapp-core](https://github.com
 ### Broadcast using `axios`
 
 ```
-let data = tx.toSendable();
-let url = "https://devnet-api.elrond.com/transactions";
-let response = await axios.post(url, data, {
+const data = tx.toSendable();
+const url = "https://devnet-api.elrond.com/transactions";
+const response = await axios.post(url, data, {
     headers: {
         "Content-Type": "application/json",
     },
 });
-let txHash = response.data.txHash;
+const txHash = response.data.txHash;
 ```
 
 ### Wait for transaction completion
 
 ```
-let watcher = new TransactionWatcher(networkProvider);
+const watcher = new TransactionWatcher(networkProvider);
 let transactionOnNetwork = await watcher.awaitCompleted(tx);
 ```
 
@@ -190,8 +191,8 @@ For a different awaiting strategy, also see [extending erdjs](/sdk-and-tools/erd
 ### Single ESDT transfer
 
 ```
-let payment = TokenPayment.fungibleFromAmount("COUNTER-8b028f", "100.00", 0);
-let data = new ESDTTransferPayloadBuilder()
+const payment = TokenPayment.fungibleFromAmount("COUNTER-8b028f", "100.00", 0);
+const data = new ESDTTransferPayloadBuilder()
     .setPayment(payment)
     .build();
 
@@ -207,8 +208,8 @@ transactions.push(new Transaction({
 ### Single NFT transfer
 
 ```
-let payment = TokenPayment.nonFungible("ERDJS-38f249", 1);
-let payload = new ESDTNFTTransferPayloadBuilder()
+const payment = TokenPayment.nonFungible("ERDJS-38f249", 1);
+const data = new ESDTNFTTransferPayloadBuilder()
     .setPayment(payment)
     .setDestination(new Address("erd1..."))
     .build();
@@ -226,8 +227,8 @@ transactions.push(new Transaction({
 ### Single SFT transfer
 
 ```
-let payment = TokenPayment.semiFungible("SEMI-9efd0f", 1, 5);
-let payload = new ESDTNFTTransferPayloadBuilder()
+const payment = TokenPayment.semiFungible("SEMI-9efd0f", 1, 5);
+const data = new ESDTNFTTransferPayloadBuilder()
     .setPayment(payment)
     .setDestination(new Address("erd1..."))
     .build();
@@ -245,10 +246,10 @@ transactions.push(new Transaction({
 ### Multi ESDT / NFT transfer
 
 ```
-let paymentOne = TokenPayment.nonFungible("ERDJS-38f249", 1);
-let paymentTwo = TokenPayment.fungibleFromAmount("BAR-c80d29", "10.00", 18);
-let payments = [paymentOne, paymentTwo];
-let payload = new MultiESDTNFTTransferPayloadBuilder()
+const paymentOne = TokenPayment.nonFungible("ERDJS-38f249", 1);
+const paymentTwo = TokenPayment.fungibleFromAmount("BAR-c80d29", "10.00", 18);
+const payments = [paymentOne, paymentTwo];
+const data = new MultiESDTNFTTransferPayloadBuilder()
     .setPayments(payments)
     .setDestination(new Address("erd1..."))
     .build();
@@ -372,18 +373,18 @@ let contract = new SmartContract({ address: new Address("erd1..."), abi: abi });
 ### When the ABI is not available
 
 ```
-let contractAddress = new Address("erd1qqq...");
-let contract = new SmartContract({ address: contractAddress });
-let addressOfAlice = new Address("erd1...");
+const contractAddress = new Address("erd1qqq...");
+const contract = new SmartContract({ address: contractAddress });
+const addressOfAlice = new Address("erd1...");
 
-let query = contract.createQuery({
+const query = contract.createQuery({
     func: new ContractFunction("getClaimableRewards"),
     args: [new AddressValue(addressOfAlice)],
     caller: new Address("erd1...")
 });
 
-let queryResponse = await networkProvider.queryContract(query);
-let bundle = resultsParser.parseUntypedQueryResponse(queryResponse);
+const queryResponse = await networkProvider.queryContract(query);
+const bundle = resultsParser.parseUntypedQueryResponse(queryResponse);
 console.log(bundle.returnCode);
 console.log(bundle.returnMessage);
 console.log(bundle.values);

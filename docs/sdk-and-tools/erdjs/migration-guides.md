@@ -9,9 +9,156 @@ This tutorial will guide you through the process of migrating from one major ver
 Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
 :::
 
+## Migrate **erdjs** from v11.x to v12 (October of 2022)
+
+**erdjs v12** brings a series of breaking changes that we will explain below.
+
+### Transaction version and options
+
+Starting with **erdjs v12**, support for `GuardAccount` feature will be available to use. This means that another option for transaction has been activated. Therefore, now we have: 
+
+```
+export const TRANSACTION_OPTIONS_DEFAULT = 0;
+export const TRANSACTION_OPTIONS_TX_HASH_SIGN = 1;
+export const TRANSACTION_OPTIONS_TX_GUARDED = 2;
+```
+Given this addition it means that previously `export const TRANSACTION_VERSION_TX_HASH_SIGN = 2` becomes obsolete because a *version 2* transaction will support more than one option. That's why we changed this constant to:
+
+```
+export const TRANSACTION_VERSION_WITH_TX_OPTIONS = 2;
+```
+As a consequence, in `src/networkParams.ts` the method previously named `withTxHashSignVersion()` will become:
+
+```
+    /**
+     * Creates a TransactionVersion object with the VERSION setting for enabling options
+     */
+    static withTxOptions(): TransactionVersion {
+        return new TransactionVersion(TRANSACTION_VERSION_WITH_TX_OPTIONS);
+    }
+```
+
+Also changes on [elrond-sdk-erdjs-walletcore](https://github.com/ElrondNetwork/elrond-sdk-erdjs-walletcore) have been implemented and will be made available with **v3.0.1** release (see [details](https://docs.elrond.com/sdk-and-tools/erdjs/erdjs-migration-guides#elrond-sdk-erdjs-walletcore---v301-release) below).
+
+### Guarded Transaction
+
+After setting a guardian (`SetGuardian`) and sending `GuardAccount` builtin transaction to Elrond network, only guardian co-signed transactions will be accepted by the *guarded* account. For supporting this, two new fields have been added to the transaction proto (Guardian Address and Guardian Signature):
+```
+message Transaction {
+	uint64   Nonce          = 1  [(gogoproto.jsontag) = "nonce"];
+	bytes    Value          = 2  [(gogoproto.jsontag) = "value", (gogoproto.casttypewith) = "math/big.Int;github.com/ElrondNetwork/elrond-go/data.BigIntCaster"];
+	bytes    RcvAddr        = 3  [(gogoproto.jsontag) = "receiver"];
+	bytes    RcvUserName    = 4  [(gogoproto.jsontag) = "rcvUserName,omitempty"];
+	bytes    SndAddr        = 5  [(gogoproto.jsontag) = "sender"];
+	bytes    SndUserName    = 6  [(gogoproto.jsontag) = "sndUserName,omitempty"];
+	uint64   GasPrice       = 7  [(gogoproto.jsontag) = "gasPrice,omitempty"];
+	uint64   GasLimit       = 8  [(gogoproto.jsontag) = "gasLimit,omitempty"];
+	bytes    Data           = 9  [(gogoproto.jsontag) = "data,omitempty"];
+	bytes    ChainID        = 10 [(gogoproto.jsontag) = "chainID"];
+	uint32   Version        = 11 [(gogoproto.jsontag) = "version"];
+	bytes    Signature      = 12 [(gogoproto.jsontag) = "signature,omitempty"];
+	uint32   Options        = 13 [(gogoproto.jsontag) = "options,omitempty"];
+	bytes    GuardAddr      = 14 [(gogoproto.jsontag) = "guardian,omitempty"];
+	bytes    GuardSignature = 15 [(gogoproto.jsontag) = "guardianSignature,omitempty"];
+}
+```
+Once an account is guarded, only transactions with set `guardian` and `version=2`, `options=2` will be accepted.
+
+Example:
+```
+const transaction = new Transaction({
+    nonce: sender.account.getNonceThenIncrement(),
+    sender: sender.address,
+    receiver: receiver.address,
+    value: payment,
+    gasLimit: gasLimit,
+    chainID: this.networkConfig.ChainID,
+    guardian: guardian.address,
+    options: TransactionOptions.withTxGuardedOptions(),
+    version: TransactionVersion.withTxOptions(),
+});
+```
+After adding sender's signature also guardians signature has to be added:
+```
+const guardian: IGuardianUser;
+...
+await guardian.signer.guard(transaction);
+```
+
+### Transaction field `sender` became mandatory with erdjs - v11
+
+This implies changes on various levels on several files.
+
+1. `smartContract.deploy({...})` receives a new mandatory input parameter `deployer`, that has been added on
+```
+export interface DeployArguments {
+    code: ICode;
+    codeMetadata?: ICodeMetadata;
+    initArguments?: TypedValue[];
+    value?: ITransactionValue;
+    gasLimit: IGasLimit;
+    gasPrice?: IGasPrice;
+    chainID: IChainID;
+    deployer: IAddress;
+}
+```
+2. `smartContract.upgrade({...})` receives a new mandatory input parameter `caller`, that has been added on
+```
+export interface UpgradeArguments {
+    code: ICode;
+    codeMetadata?: ICodeMetadata;
+    initArguments?: TypedValue[];
+    value?: ITransactionValue;
+    gasLimit: IGasLimit;
+    gasPrice?: IGasPrice;
+    chainID: IChainID;
+    caller: IAddress;
+}
+```
+3. `smartContract.call({...})` receives a new mandatory input parameter `caller`, that has been added on
+```
+export interface CallArguments {
+    func: IContractFunction;
+    args?: TypedValue[];
+    value?: ITransactionValue;
+    gasLimit: IGasLimit;
+    receiver?: IAddress;
+    gasPrice?: IGasPrice;
+    chainID: IChainID;
+    caller: IAddress;
+}
+```
+4. `withSender(sender: IAddress): Interaction{}` has been added to be used for adding the sender when defining an interaction:
+```
+const interaction = <Interaction>contract.methods.method1()
+    .withGasLimit(3000000)
+    .withChainID(network.ChainID)
+    .withSender(alice.address);
+``` 
+
+### elrond-sdk-erdjs-walletcore - v3.0.1 release
+
+Another `signer` has been added in support for Guard Account feature (`GuardianSigner` as an extension to `UserSigner`). 
+```
+/**
+ * An interface that defines a signing-capable object.
+ */
+export interface IGuardianSigner {
+    /**
+     * Gets the {@link Address} of the signer.
+     */
+    getAddress(): IAddress;
+
+    /**
+     * Signs a message (e.g. a transaction).
+     */
+    guard(signable: ISignable): Promise<void>;
+}
+```
+
 ## Migrate **erdjs** from v9.x to v10 (April of 2022)
 
-**erdjs 10** brought a series of breaking changes. Most importantly, the packages **walletcore**, **dapp**, **contractWrappers** and the network providers (`ApiProvider`, `ProxyProvider`) have been extracted to separate repositories - consequently, they are now distributed as separate NPM packages. **erdjs** does not depend anymore on the libraries **fs**, **crypto** and **axios**.
+**erdjs v10** brought a series of breaking changes. Most importantly, the packages **walletcore**, **dapp**, **contractWrappers** and the network providers (`ApiProvider`, `ProxyProvider`) have been extracted to separate repositories - consequently, they are now distributed as separate NPM packages. **erdjs** does not depend anymore on the libraries **fs**, **crypto** and **axios**.
 
 The classes responsible with parsing contract results or query responses, and the ones responsible with transaction completion detection have been rewritten, as well.
 
@@ -55,7 +202,7 @@ In erdjs 10, the following utility functions are not available anymore: `transac
 Instead, one should directly use the `TransactionWatcher`:
 
 ```
-let transactionWatcher = new TransactionWatcher(networkProvider);
+let watcher = new TransactionWatcher(networkProvider);
 await watcher.awaitCompleted(tx);
 ```
 
