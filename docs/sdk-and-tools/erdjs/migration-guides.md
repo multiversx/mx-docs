@@ -9,7 +9,7 @@ This tutorial will guide you through the process of migrating from one major ver
 Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
 :::
 
-## Migrate **erdjs** from v11.x to v12 (October of 2022)
+## Migrate **erdjs** from v11.x to v12 (November of 2022)
 
 **erdjs v12** brings a series of breaking changes that we will explain below.
 
