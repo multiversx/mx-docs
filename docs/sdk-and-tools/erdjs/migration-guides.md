@@ -25,7 +25,7 @@ export const TRANSACTION_OPTIONS_TX_GUARDED = 2;
 Given this addition it means that previously `export const TRANSACTION_VERSION_TX_HASH_SIGN = 2` becomes obsolete because a *version 2* transaction will support more than one option. That's why we changed this constant to:
 
 ```
-export const TRANSACTION_VERSION_WITH_TX_OPTIONS = 2;
+export const TRANSACTION_VERSION_WITH_OPTIONS = 2;
 ```
 As a consequence, in `src/networkParams.ts` the method previously named `withTxHashSignVersion()` will become:
 
