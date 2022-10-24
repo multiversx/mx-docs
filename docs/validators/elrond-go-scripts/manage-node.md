@@ -9,10 +9,14 @@ Follow these steps to manage your validator node.
 
 Let’s begin!
 
-First, you need to create an Elrond wallet. You can create this wallet on either the [devnet](https://devnet-wallet.elrond.com) or [testnet](https://testnet-wallet.elrond.com).
+First, you need to create an Elrond wallet. You can create this wallet on either the [mainnet](https://wallet.elrond.com), [devnet](https://devnet-wallet.elrond.com) or [testnet](https://testnet-wallet.elrond.com).
 
-Next, share your wallet's public address (erd1...) with an admin on the Telegram community, and you will receive test xEGLD. If a smaller amount of tokens is needed,
-you can use the [wallet's faucet](/wallet/web-wallet#testnet-and-devnet-faucet). 
+:::tip
+For devnet and testnet only:
+
+Share your wallet's public address (erd1...) with an admin on the Telegram community, and you will receive test xEGLD. If a smaller amount of tokens is needed,
+you can use the [wallet's faucet](/wallet/web-wallet#testnet-and-devnet-faucet).
+:::
 
 Once you have sufficient funds, you can use the wallet to send a stake transaction for your node, in order for it to become a Validator.
 
@@ -23,7 +27,7 @@ Select the `validatorKey.pem` file you created for your node and proceed with th
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MKj4PGWn3kQ197_YcJQ%2F-MKjC2SwfiK2OdVWTz49%2Fimage.png?alt=media&token=9d38ba79-9d47-452e-8fb3-303f0edf5740)
 
-You can check the status of your Stake transaction and other information about the validator node in the explorer at [devnet explorer](https://devnet-explorer.elrond.com) or the [testnet explorer](https://testnet-explorer.elrond.com). Make sure to check out the Validators section too.
+You can check the status of your Stake transaction and other information about the validator node in the explorer at [mainnet explorer](https://explorer.elrond.com), [devnet explorer](https://devnet-explorer.elrond.com) or the [testnet explorer](https://testnet-explorer.elrond.com). Make sure to check out the Validators section too.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MKj4PGWn3kQ197_YcJQ%2F-MKjCya_zwNCJWCZ4ryI%2Fimage.png?alt=media&token=7a1a0e1c-dc77-41ef-afcd-296dd23da18b)
 

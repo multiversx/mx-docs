@@ -32,17 +32,7 @@
       "validators/system-requirements",
       {
         "type": "subcategory",
-        "label": "Install a Mainnet Node",
-        "ids": [
-          "validators/mainnet/config-scripts",
-          "validators/mainnet/install-update",
-          "validators/mainnet/optional-configs",
-          "validators/mainnet/use-docker"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "Install a Testnet/Devnet Node",
+        "label": "Install a Mainnet/Testnet/Devnet Node",
         "ids": [
           "validators/elrond-go-scripts/config-scripts",
           "validators/elrond-go-scripts/install-update",
