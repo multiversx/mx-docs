@@ -7,11 +7,11 @@ title: Validators - Overview
 
 ### Install and maintain a node
 
-| Name                                                                            | Description                                                              |
-|---------------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| [System requirements](/validators/system-requirements)                          | System requirements for running an Elrond node.                          |
-| [Install a Mainnet Node](/validators/mainnet/config-scripts)                    | Instructions about how to get a Mainnet node up and running.             |
-| [Install a Testnet/Devnet Node](/validators/elrond-go-scripts/config-scripts)   | Instructions about how to get a Testnet or a Devnet node up and running. |
+| Name                                                                                  | Description                                                              |
+|---------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| [System requirements](/validators/system-requirements)                                | System requirements for running an Elrond node.                          |
+| [Install a Mainnet Node](/validators/mainnet/config-scripts)                          | Instructions about how to get a Mainnet node up and running.             |
+| [Install a Mainnet/Testnet/Devnet Node](/validators/elrond-go-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
 ### Keys Management
 
