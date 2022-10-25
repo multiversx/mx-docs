@@ -59,7 +59,7 @@ _Downloading_ the necessary time capsules and _unarchiving_ them is encapsulated
 
 First, choose an empty folder to serve as the workspace (working directory) of the squad instance - for example, `~/deep-history-workspace`.
 
-Afterwards, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main/reconstruction), and save it in the chosen workspace. For the fields `startCapsule` and `targetCapsule`, use URLs towards the Elrond public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
+Afterwards, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `startCapsule` and `targetCapsule`, use URLs towards the Elrond public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
 
 ```
 // ~/deep-history-workspace/reconstruction.json
@@ -95,11 +95,11 @@ Now, bootstrap the reconstruction as follows:
 
 ```
 # Download the docker-compose configuration
-wget -O docker-compose-reconstruction.yml https://github.com/ElrondNetwork/deep-history/blob/main/reconstruction/docker-compose.yml
+wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
 
 # Run the "bootstrap" Docker service
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
-    --file ./docker-compose-reconstruction.yml \
+    --file ./docker-compose.yml \
     --profile bootstrap \
     --project-name deep-history-reconstruction up --detach
 ```
@@ -116,11 +116,11 @@ Once the bootstrap step is ready, you can proceed with running the reconstructio
 
 ```
 # Download the docker-compose configuration (skip this step if performed before)
-wget -O docker-compose-reconstruction.yml https://github.com/ElrondNetwork/deep-history/blob/main/reconstruction/docker-compose.yml
+wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
 
 # Run multiple Docker services: "devnet-0", "devnet-1", "devnet-2", "devnet-metachain"
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
-    --file ./docker-compose-reconstruction.yml \
+    --file ./docker-compose.yml \
     --profile devnet-0 --profile devnet-1 --profile devnet-2 --profile devnet-metachain \
     --project-name deep-history-reconstruction up --detach
 ```
@@ -136,12 +136,12 @@ Once a container finishes reconstruction (for a shard), it will shut down. Once 
 The squad can be started using docker-compose, as follows (the example is for _devnet_):
 
 ```
-# Download the docker-compose configuration
-wget -O docker-compose-squad.yml https://github.com/ElrondNetwork/deep-history/blob/main/squad/docker-compose.yml
+# Download the docker-compose configuration (skip this step if performed before)
+wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
 
 # Run multiple Docker services: "devnet-proxy", "devnet-0", "devnet-1", "devnet-2", "devnet-metachain"
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
-    --file ./docker-compose-squad.yml \
+    --file ./docker-compose.yml \
     --profile devnet-proxy --profile devnet-0 --profile devnet-1 --profile devnet-2 --profile devnet-metachain \
     --project-name deep-history-squad-devnet up --detach
 ```
