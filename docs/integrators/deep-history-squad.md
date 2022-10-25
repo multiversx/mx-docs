@@ -7,8 +7,7 @@ title: Deep History Squad
 
 A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain, and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/ElrondNetwork/deep-history)**. 
 
-That is, a deep-history setup is able to answer questions such as:
-
+A deep-history setup is able to resolve historical account (state) queries, that is, to answer questions such as:
 
 > What was Alice's balance on [May the 4th](https://explorer.elrond.com/blocks/5f6a02d6a5d2a851fd6dc1fb53435083830c2a13121e003958d97c2389711f06)?
 
@@ -113,7 +112,7 @@ Downloading the time capsules and extracting them might take a while.
 
 #### Start the reconstruction
 
-Once the bootstrap step is ready, you can proceed with running the reconstruction containers. The example below if for devnet:
+Once the bootstrap step is ready, you can proceed with running the reconstruction containers. The example below if for _devnet_:
 
 ```
 # Download the docker-compose configuration (skip this step if performed before)
@@ -133,6 +132,21 @@ The reconstruction (which uses _import-db_ under the hood, as previosuly stated)
 Once a container finishes reconstruction (for a shard), it will shut down. Once all containers of the compose _project_ `deep-history-reconstruction` have stopped, the reconstruction is ready, and you can proceed with starting the squad (next section).
 
 ### Starting the squad
+
+The squad can be started using docker-compose, as follows (the example is for _devnet_):
+
+```
+# Download the docker-compose configuration
+wget -O docker-compose-squad.yml https://github.com/ElrondNetwork/deep-history/blob/main/squad/docker-compose.yml
+
+# Run multiple Docker services: "devnet-proxy", "devnet-0", "devnet-1", "devnet-2", "devnet-metachain"
+DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
+    --file ./docker-compose-squad.yml \
+    --profile devnet-proxy --profile devnet-0 --profile devnet-1 --profile devnet-2 --profile devnet-metachain \
+    --project-name deep-history-squad-devnet up --detach
+```
+
+**Congratulations, you've set up a deep-history observing squad!** The gateway should be ready to resolve historical account (state) queries.
 
 ## Handling storage requirements
 
