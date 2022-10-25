@@ -213,6 +213,7 @@
       "integrators/egld-integration-guide",
       "integrators/esdt-tokens-integration-guide",
       "integrators/observing-squad",
+      "integrators/deep-history-squad",
       "integrators/accounts-management",
       "integrators/creating-transactions",
       "integrators/querying-the-blockchain"
