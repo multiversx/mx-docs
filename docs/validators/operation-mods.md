@@ -21,7 +21,7 @@ Usage:
 
 The `full-archive` operation mode will change the node's configuration in order to make it able to sync from genesis and also
 be able to serve historical requests. 
-Syncing a node from genesis might take same time due to the network's full archive peers count that generally isn't that big. 
+Syncing a node from genesis might take same time since there aren't that many full archive peers to sync from. 
 
 ### Db Lookup Extension
 
