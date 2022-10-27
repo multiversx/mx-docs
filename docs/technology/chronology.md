@@ -11,6 +11,6 @@ Each round has a fixed time duration, consistent across the network, currently d
 
 ## **Epochs**
 
-An epoch is a sequence of consecutive rounds during which the configuration of the network does not change. The number of rounds in an epoch is initially calculated to produce epochs of 24 hours in length. During this timeframe.
+An epoch is a sequence of consecutive rounds during which the configuration of the network does not change. The number of rounds in an epoch is initially calculated to produce epochs of 24 hours in length.
 
 The moment between epochs is used by the network to adapt its topology according to the processing load and its size, to compute rewards for the validator nodes and to perform other tasks to close the previous epoch and prepare for the new. Read more about how the network reconfigures its topology and how it prevents node collusion in [Adaptive State Sharding](/technology/adaptive-state-sharding).
