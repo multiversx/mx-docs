@@ -13,8 +13,8 @@ title: Welcome to Elrond
   - Maiar money app with progressive security, social recovery, embedded DeFi
   - Tokens (FT, SFT, NFT) embedded into the protocol
   - Developers: royalties - 30% SC gas returned to authors, full IDE, Rust framework with debugger
-  - Validators: ~20% APR for running nodes, low system requirements
-  - Network setup: 3,200 nodes, with 4 shards (adaptivity allows throughput to increase with demand)
+  - Validators: ~13% APR for running nodes, low system requirements
+  - Network setup: 3,200 nodes, 3 shards + Metachain (adaptivity allows throughput to increase with demand)
 
 # **What is Elrond?**
 

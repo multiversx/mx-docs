@@ -21,7 +21,7 @@ Usage:
 
 The `full-archive` operation mode will change the node's configuration in order to make it able to sync from genesis and also
 be able to serve historical requests. 
-Syncing a node from genesis might take same time since there aren't that many full archive peers to sync from. 
+Syncing a node from genesis might take some time since there aren't that many full archive peers to sync from. 
 
 ### Db Lookup Extension
 
@@ -54,7 +54,7 @@ Usage:
 ./node --operation-mode lite-observer
 ```
 
-The `lite-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests, 
+The `lite-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests 
 by disabling the trie snapshotting mechanism and making sure that older data is removed. 
 
 A use-case for such an observer would be serving live balances requests, or broadcasting transactions, eliminating the costly operations 
