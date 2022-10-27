@@ -49,7 +49,7 @@ As of October 2022, a public repository with non-pruned databases for both _main
 
 An alternative to downloading a non-pruned history is to reconstruct it locally (on your own infrastructure). 
 
-Under the hood, the reconstruction process relies on the **[import-db](https://docs.elrond.com/validators/import-db/)** feature, which allows us to reprocess previosuly processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. The `import-db` requires a **start  database** (placed in the folder `node-dir/db`) and a **target database** (usually placed in the folder `node-dir/import-db/db`). In the context of deep-history squads, _archives_ of such databases are called **time capsules**.
+Under the hood, the reconstruction process relies on the **[import-db](https://docs.elrond.com/validators/import-db/)** feature, which allows us to reprocess previosuly processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. The `import-db` requires a **start  database** (placed in the folder `node-workdir/db`) and a **target database** (usually placed in the folder `node-workdir/import-db/db`). In the context of deep-history squads, _archives_ of such databases are called **time capsules**.
 
 It follows that, in order to reconstruct the history for an observer, we need (to download) **two time capsules**: a _start time capsule_ and a _target time capsule_. For reconstucting the history of a whole squad, `4 x 2` time capsules are required (to be downloaded).
 
@@ -118,10 +118,10 @@ Once the bootstrap step is ready, you can proceed with running the reconstructio
 # Download the docker-compose configuration (skip this step if performed before)
 wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
 
-# Run multiple Docker services: "devnet-0", "devnet-1", "devnet-2", "devnet-metachain"
+# Possible profiles: reconstruction-devnet, reconstruction-devnet-0, reconstruction-devnet-1, reconstruction-devnet-2, reconstruction-devnet-metachain
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
     --file ./docker-compose.yml \
-    --profile devnet-0 --profile devnet-1 --profile devnet-2 --profile devnet-metachain \
+    --profile reconstruction-devnet \
     --project-name deep-history-reconstruction up --detach
 ```
 
@@ -139,10 +139,10 @@ The squad can be started using docker-compose, as follows (the example is for _d
 # Download the docker-compose configuration (skip this step if performed before)
 wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
 
-# Run multiple Docker services: "devnet-proxy", "devnet-0", "devnet-1", "devnet-2", "devnet-metachain"
+# Possible profiles: squad-devnet, squad-devnet-0, squad-devnet-1, squad-devnet-2, squad-devnet-metachain, squad-devnet-proxy
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
     --file ./docker-compose.yml \
-    --profile devnet-proxy --profile devnet-0 --profile devnet-1 --profile devnet-2 --profile devnet-metachain \
+    --profile squad-devnet \
     --project-name deep-history-squad-devnet up --detach
 ```
 
