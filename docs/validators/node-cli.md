@@ -18,17 +18,17 @@ The **Command Line Interface** of the **Node** and its associated **Tools** is d
 For example, the following command starts an **Observer Node** in **Shard 0**:
 
 ```
-./node -rest-api-interface=localhost:8080 \
- -use-log-view -log-save -log-level=*:DEBUG -log-logger-name \
- -destination-shard-as-observer=0 -start-in-epoch\
- -validator-key-pem-file=observer0.pem
+./node --rest-api-interface=localhost:8080 \
+ --log-save --log-level=*:DEBUG --log-logger-name \
+ --destination-shard-as-observer=0 --start-in-epoch\
+ --validator-key-pem-file=observer0.pem
 ```
 
 While the following starts a Node as a **Metachain Observer**:
 
 ```
-./node -rest-api-interface=localhost:8080 \
- -use-log-view -log-save -log-level=*:DEBUG -log-logger-name \
- -destination-shard-as-observer=metachain -start-in-epoch\
- -validator-key-pem-file=observerMetachain.pem
+./node --rest-api-interface=localhost:8080 \
+ --use-log-view --log-save --log-level=*:DEBUG --log-logger-name \
+ --destination-shard-as-observer=metachain --start-in-epoch\
+ --validator-key-pem-file=observerMetachain.pem
 ```

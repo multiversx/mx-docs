@@ -66,6 +66,7 @@
       "validators/node-upgrades",
       "validators/redundancy",
       "validators/node-operation-modes",
+      "validators/node-configuration",
       "validators/import-db",
       "validators/node-cli",
       "validators/node-databases",

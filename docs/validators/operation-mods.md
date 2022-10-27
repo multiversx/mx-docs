@@ -33,7 +33,7 @@ Usage:
 The `db-lookup-extension` operation mode will change the node's configuration in order to support extended databases that are 
 able to store more data that is to be used in further Rest API requests, such as logs, links between blocks and epoch, and so on.
 
-For example, the proxy's `hyperblock` endpoint relies on the fact that it's observers have this setting enabled. Other examples 
+For example, the proxy's `hyperblock` endpoint relies on the fact that its observers have this setting enabled. Other examples 
 are `/network/esdt/supply/:tokenID` or `/transaction/:txhash?withResults=true`. 
 
 ### Historical balances
