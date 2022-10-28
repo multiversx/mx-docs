@@ -22,7 +22,7 @@ Currently, the API client has to perform the conversion from _desired timestamp_
 > How much UTK were in the [`UTK / WEGLD` Liquidity Pool](https://explorer.elrond.com/accounts/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga) on [1st of October](https://explorer.elrond.com/blocks/cefd41e1e9bbe3ba023a695f412b99cecb15ef789475648ee7c31e7d9fef31d1)?
 
 ```
-GET http://squad:8080/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga/key/726573657276650000000a55544b2d326638306539?blockNonce=11410000
+GET http://squad:8080/address/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga/key/726573657276650000000a55544b2d326638306539?blockNonce=11410000
 ```
 
 In the example above, the key `726573657276650000000a55544b2d326638306539` is decoded as `reserve\x00\x00\x00\nUTK-2f80e9`.
@@ -49,17 +49,17 @@ As of October 2022, a public repository with non-pruned databases for both _main
 
 An alternative to downloading a non-pruned history is to reconstruct it locally (on your own infrastructure). 
 
-Under the hood, the reconstruction process relies on the **[import-db](https://docs.elrond.com/validators/import-db/)** feature, which allows us to reprocess previosuly processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. The `import-db` requires a **start  database** (placed in the folder `node-workdir/db`) and a **target database** (usually placed in the folder `node-workdir/import-db/db`). In the context of deep-history squads, _archives_ of such databases are called **time capsules**.
+Under the hood, the reconstruction process relies on the **[import-db](https://docs.elrond.com/validators/import-db/)** feature, which allows us to reprocess previosuly processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. For our purposes, the `import-db` procedure requires a **target database** (placed in the folder `node-workdir/db`) and a **source database** (usually placed in the folder `node-workdir/import-db/db`).
 
-It follows that, in order to reconstruct the history for an observer, we need (to download) **two time capsules**: a _start time capsule_ and a _target time capsule_. For reconstucting the history of a whole squad, `4 x 2` time capsules are required (to be downloaded).
+It follows that, in order to reconstruct the history for an observer, we need (to download) **two database archives**: an _old archive_ and a _new archive_. For reconstucting the history of a whole squad, `4 x 2` archives are required (to be downloaded).
 
-_Downloading_ the necessary time capsules and _unarchiving_ them is encapsulated in a step called **reconstruction bootstrapping**.
+_Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a step called **reconstruction bootstrapping**.
 
 #### Bootstrapping
 
 First, choose an empty folder to serve as the workspace (working directory) of the squad instance - for example, `~/deep-history-workspace`.
 
-Afterwards, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `startCapsule` and `targetCapsule`, use URLs towards the Elrond public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
+Afterwards, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the Elrond public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
 
 ```
 // ~/deep-history-workspace/reconstruction.json
@@ -68,20 +68,20 @@ Afterwards, prepare a configuration file called `reconstruction.json`, following
         "devnet": {
             "shards": {
                 "0": {
-                    "startCapsule": "https://.../shard-0/2022-October-15.tar",
-                    "targetCapsule": "https://.../shard-0/2022-October-25.tar"
+                    "oldestArchive": "https://.../shard-0/2022-October-15.tar",
+                    "newestArchive": "https://.../shard-0/2022-October-25.tar"
                 },
                 "1": {
-                    "startCapsule": "https://.../shard-1/2022-October-15.tar",
-                    "targetCapsule": "https://.../shard-1/2022-October-25.tar"
+                    "oldestArchive": "https://.../shard-1/2022-October-15.tar",
+                    "newestArchive": "https://.../shard-1/2022-October-25.tar"
                 },
                 "2": {
-                    "startCapsule": "https://.../shard-2/2022-October-15.tar",
-                    "targetCapsule": "https://.../shard-2/2022-October-25.tar"
+                    "oldestArchive": "https://.../shard-2/2022-October-15.tar",
+                    "newestArchive": "https://.../shard-2/2022-October-25.tar"
                 },
                 "metachain": {
-                    "startCapsule": "https://.../shard-metachain/2022-October-15.tar",
-                    "targetCapsule": "https://.../shard-metachain/2022-October-25.tar"
+                    "oldestArchive": "https://.../shard-metachain/2022-October-15.tar",
+                    "newestArchive": "https://.../shard-metachain/2022-October-25.tar"
                 }
             }
         }
@@ -89,7 +89,7 @@ Afterwards, prepare a configuration file called `reconstruction.json`, following
 }
 ```
 
-Above, we've chosen (as an example) the time capsules in such a way to reconstruct the history between 15th and 25th of October (~10 days, ~120 _devnet_ epochs).
+Above, we've chosen (as an example) the archives in such a way to reconstruct the history between 15th and 25th of October (~10 days, ~120 _devnet_ epochs).
 
 Now, bootstrap the reconstruction as follows:
 
@@ -107,7 +107,7 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
 If you prefer to wait in the current shell until the bootstrap finishes, omit the `--detach` flag.
 
 :::note
-Downloading the time capsules and extracting them might take a while.
+Downloading the archives and extracting them might take a while.
 :::
 
 #### Start the reconstruction
@@ -126,7 +126,7 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
 ```
 
 :::note
-The reconstruction (which uses _import-db_ under the hood, as previosuly stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen time capsules. 
+The reconstruction (which uses _import-db_ under the hood, as previosuly stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives. 
 :::
 
 Once a container finishes reconstruction (for a shard), it will shut down. Once all containers of the compose _project_ `deep-history-reconstruction` have stopped, the reconstruction is ready, and you can proceed with starting the squad (next section).
