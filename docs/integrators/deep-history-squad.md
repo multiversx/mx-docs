@@ -5,7 +5,7 @@ title: Deep History Squad
 
 ## Overview
 
-A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain, and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/ElrondNetwork/deep-history)**. 
+A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/ElrondNetwork/deep-history)**. 
 
 A deep-history setup is able to resolve historical account (state) queries, that is, to answer questions such as:
 
@@ -49,9 +49,9 @@ As of October 2022, a public repository with non-pruned databases for both _main
 
 An alternative to downloading a non-pruned history is to reconstruct it locally (on your own infrastructure). 
 
-Under the hood, the reconstruction process relies on the **[import-db](https://docs.elrond.com/validators/import-db/)** feature, which allows us to reprocess previosuly processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. For our purposes, the `import-db` procedure requires a **target database** (placed in the folder `node-workdir/db`) and a **source database** (usually placed in the folder `node-workdir/import-db/db`).
+Under the hood, the reconstruction process relies on the **[import-db](https://docs.elrond.com/validators/import-db/)** feature, which allows us to reprocess previously processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. For our purposes, the `import-db` procedure requires a **target database** (placed in the folder `node-workdir/db`) and a **source database** (usually placed in the folder `node-workdir/import-db/db`).
 
-It follows that, in order to reconstruct the history for an observer, we need (to download) **two database archives**: an _old archive_ and a _new archive_. For reconstucting the history of a whole squad, `4 x 2` archives are required (to be downloaded).
+It follows that, in order to reconstruct the history for an observer, we need (to download) **two database archives**: an _old archive_ and a _new archive_. For reconstructing the history of a whole squad, `4 x 2` archives are required (to be downloaded).
 
 _Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a step called **reconstruction bootstrapping**.
 
@@ -59,7 +59,7 @@ _Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a
 
 First, choose an empty folder to serve as the workspace (working directory) of the squad instance - for example, `~/deep-history-workspace`.
 
-Afterwards, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the Elrond public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
+Afterward, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the Elrond public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
 
 ```
 // ~/deep-history-workspace/reconstruction.json
@@ -89,7 +89,7 @@ Afterwards, prepare a configuration file called `reconstruction.json`, following
 }
 ```
 
-Above, we've chosen (as an example) the archives in such a way to reconstruct the history between 15th and 25th of October (~10 days, ~120 _devnet_ epochs).
+Above, we've chosen (as an example) the archives in such a way as to reconstruct the history between the 15th and 25th of October (~10 days, ~120 _devnet_ epochs).
 
 Now, bootstrap the reconstruction as follows:
 
@@ -126,7 +126,7 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
 ```
 
 :::note
-The reconstruction (which uses _import-db_ under the hood, as previosuly stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives. 
+The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives. 
 :::
 
 Once a container finishes reconstruction (for a shard), it will shut down. Once all containers of the compose _project_ `deep-history-reconstruction` have stopped, the reconstruction is ready, and you can proceed with starting the squad (next section).
