@@ -1,24 +1,39 @@
 ---
-id: rating
-title: rating
+id: elastic-indices
+title: Elastic indices
 ---
 
+## Introduction
 
-| _id       | The validator BLS key and epoch<br/>{validator_bls_key}_{epoch} |
+Each entry in a Elasticsearch index will have a format similar to this:
+
+```
+{
+    "_id": "..."
+    "_source": {
+      ...
+    }
+}
+```
+
+Each index that will be explained below will be the items that are put into the `_source` field.
+
+## rating
+
+The `_id` field for this index is composed in this way: `{validator_bls_key}_{epoch}` (example: `blskey_37`)
+
+| Field     | Description                                                     |
 |-----------|-----------------------------------------------------------------|
-| _source   | Description                                                     |
 | rating    | The rating of a validator                                       |
 
+## transactions
 
----
-id: transactions
-title: transactions
----
+The `_id` field for this index is composed of transaction hash hex encoded 
 
+(example: `cad4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
 
-| _id               | The hash of the transaction                                                                                                            |
+| Field             | Description                                                                                                                            |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| _source           | Description                                                                                                                            |
 | miniBlockHash     | The miniBlockHash represents the hash of the miniblocks in which the transaction is included.                                          |
 | nonce             | The nonce field represents sequence number of transactions sent from a given address.                                                  |
 | round             | The round field represents the round of block when transaction is executed.                                                            |
