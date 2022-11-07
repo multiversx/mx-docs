@@ -65,7 +65,6 @@ The `_id` field for this index is composed of transaction hash hex encoded
 | isRelayed         | The isRelayed field  is true if the transaction is a relayed transaction.                                                              |
 | version           | The version field represents the version of the transaction.                                                                           |
 
-
 ## blocks
 
 The `_id` field for this index is composed of block hash hex encoded
