@@ -83,7 +83,7 @@ All the information that is saved in grouped in indices.
 | [rating](/sdk-and-tools/elastic-indices#rating)             | Contains information about the validatators rating in every epoch.          |
 | [transactions](/sdk-and-tools/elastic-indices#transactions) | Cotains all the transactions.                                               |
 | [blocks](/sdk-and-tools/elastic-indices#blocks)             | Contains all the executed blocks.                                           |
-| [validators](/)                                             | Contains information about the validators.                                  |
+| [validators](/sdk-and-tools/elastic-indices#validators)     | Contains information about the validators.                                  |
 | [miniblocks](/)                                             | Cointans information about the executed miniblocks.                         |
 | [rounds](/)                                                 | Cointans information about rounds.                                          |
 | [accounts](/)                                               | Cointans information about all the addresses.                               | 
