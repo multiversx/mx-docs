@@ -38,3 +38,44 @@ The `_id` field for this index is composed of transaction hash hex encoded.
 | operation         | The operation field represents the operation of the transaction based on the data field.                                               |
 | isRelayed         | The isRelayed field  is true if the transaction is a relayed transaction.                                                              |
 | version           | The version field represents the version of the transaction.                                                                           |
+
+
+## Query examples
+
+#### Fetch the latest transactions for an address
+
+```
+curl --request GET \
+  --url ${ES_URL}/transactions/_search \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"query": {
+		"bool": {
+			"should": [
+				{
+					"match": {
+						"sender": "erd..."
+					}
+				},
+				{
+					"match": {
+						"receiver": "erd..."
+					}
+				},
+				{
+					"match": {
+						"receivers": "erd..."
+					}
+				}
+			]
+		}
+	},
+	 "sort": [
+        {
+            "timestamp": {
+                "order": "desc"
+            }
+        }
+    ]
+}'
+```
