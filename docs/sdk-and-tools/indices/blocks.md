@@ -36,9 +36,23 @@ The `_id` field for this index is composed of block hash hex encoded
 | epochStartShardsData  | The epochStartShardsData contains data about the epoch start shards data.                                  |
 
 
-:::tip Example to fetch blocks for a shard 
-In order to fetch the latest blocks from one shard one has to do a query that matches the field `shardId`.
-:::
+The `metachain` block (`shardId:4294967295`) with field `epochStartBlock:true` has the field `epochStartInfo` populated with the next data:
+
+| epochStartBlock fields           | Description                                                                                                          |
+|----------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| totalSupply                      | The totalSupply field represents the EGLD supply.                                                                    |
+| totalToDistribute                | The totalToDistribute field represents the amount of EGLD that will be distributed to validators/delegators.         |
+| totalNewlyMinted                 | The totalNewlyMinted field represents the amount of the new EGLG minted.                                             |
+| rewardsPerBlock                  | The rewardsPerBlock field represents the amount of rewards in EGLD per block.                                        |
+| rewardsForProtocolSustainability | The rewardsForProtocolSustainability field represents the amount of rewards for the protocol sustainability address. |
+| nodePrice                        | The nodePrice field represents the price in EGLD for a validator.                                                    |
+| prevEpochStartRound              | The prevEpochStartRound field represents the round of the previous epoch start block.                                |
+| prevEpochStartHash               | The prevEpochStartHash field represents the hash of the previous epoch start block.                                  |
+
+## Query examples
+
+#### Fetch blocks for a shard 
+In order to fetch the latest blocks from one shard, one has to do a query that matches the field `shardId`.
 ```
 curl --request GET \
   --url ${ES_URL}/blocks/_search \
@@ -56,5 +70,24 @@ curl --request GET \
             }
         }
     ]
+}'
+```
+
+
+### Fetch the latest 10 blocks for all shards
+
+```
+curl --request GET \
+  --url ${ES_URL}/blocks/_search \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "sort": [
+        {
+            "timestamp": {
+                "order": "desc"
+            }
+        }
+    ],
+    "size":10
 }'
 ```
