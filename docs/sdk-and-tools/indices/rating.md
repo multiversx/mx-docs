@@ -1,19 +1,19 @@
 ---
-id: rating
-title: rating
+id: es-index-rating
+title: Elasticsearch index: rating
 ---
 
-The `_id` field for this index is composed in this way: `{validator_bls_key}_{epoch}` (example: `blskey_37`).
+The `_id` field of this index is composed in this way: `{validator_bls_key}_{epoch}` (example: `blskey_37`).
 
 
-| Field     | Description                                                     |
-|-----------|-----------------------------------------------------------------|
-| rating    | The rating of a validator                                       |
+| Field     | Description                                                      |
+|-----------|------------------------------------------------------------------|
+| rating    | The rating of the validator, which can be in the [0, 100] range. |
 
 
 ## Query examples
 
-#### Fetch rating of a validator for a specific epoch
+### Fetch rating of a validator for a specific epoch
 
 ```
 curl --request GET \

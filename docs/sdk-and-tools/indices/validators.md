@@ -1,9 +1,9 @@
 ---
-id: validators
-title: validators
+id: es-index-validators
+title: Elasticsearch index: validators
 ---
 
-The `_id` field for this index is composed in this way: `{shardID_epoch}` (example: `1_123`)
+The `_id` field of this index is composed in this way: `{shardID}_{epoch}` (example: `1_123`)
 
 | Field       | Description                                                                                    |
 |-------------|------------------------------------------------------------------------------------------------|
