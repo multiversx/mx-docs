@@ -1,35 +1,9 @@
 ---
-id: elastic-indices
-title: Elastic indices
+id: transactions
+title: transactions
 ---
 
-## Introduction
-
-Each entry in a Elasticsearch index will have a format similar to this:
-
-```
-{
-    "_id": "..."
-    "_source": {
-      ...
-    }
-}
-```
-
-Each index that will be explained below will be the items that are put into the `_source` field.
-
-## rating
-
-The `_id` field for this index is composed in this way: `{validator_bls_key}_{epoch}` (example: `blskey_37`)
-
-| Field     | Description                                                     |
-|-----------|-----------------------------------------------------------------|
-| rating    | The rating of a validator                                       |
-
-## transactions
-
-The `_id` field for this index is composed of transaction hash hex encoded 
-
+The `_id` field for this index is composed of transaction hash hex encoded.
 (example: `cad4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
 
 | Field             | Description                                                                                                                            |
@@ -64,45 +38,3 @@ The `_id` field for this index is composed of transaction hash hex encoded
 | operation         | The operation field represents the operation of the transaction based on the data field.                                               |
 | isRelayed         | The isRelayed field  is true if the transaction is a relayed transaction.                                                              |
 | version           | The version field represents the version of the transaction.                                                                           |
-
-## blocks
-
-The `_id` field for this index is composed of block hash hex encoded
-
-| Field                 | Description                                                                                                |
-|-----------------------|------------------------------------------------------------------------------------------------------------|
-| nonce                 | The nonce field represents sequence number of block.                                                       |
-| round                 | The round field represents the round when block was proposed and executed.                                 |
-| epoch                 | The epoch field represent the epoch when the block was proposed and executed.                              |
-| miniBlocksHashes      | The miniBlocksHashes field represents the hashed hex encoded of the miniblocks that was included in block. |
-| miniBlocksDetails     | The miniBlocksDetails field represents the details of all the miniblcoks that was included in block.       |
-| notarizedBlocksHashes | The notarizedBlocksHashes field represents the hashes of the blocks the was notarized in current block.    |
-| proposer              | The proposer field represents the index of the validator that proposed this block.                         |
-| validators            | The validators field represents the indices on the validators that have signed for this block.             |
-| pubKeyBitmap          | The pubKeyBitmap field represents the pub key bitmap.                                                      |
-| size                  | The size field represents the size of block in bytes.                                                      |
-| sizeTxs               | The sizeTxs field represents the size of transactions from block in bytes.                                 |
-| timestamp             | The timestamp field represents the timestamp when block was proposed and executed.                         |
-| stateRootHash         | The stateRootHash field represents the state root hash of tree when block was proposed and executed.       |
-| prevHash              | The prevHash field represents the hash of the previous block.                                              |
-| shardId               | The shardId field represents the shard id of block.                                                        |
-| txCount               | The txCount field represents the number of transactions that was executed in block.                        |
-| notarizedTxsCount     | The notarizedTxsCount field represents the number of transactions that was notarized in block.             |
-| accumulatedFees       | The accumulatedFees field represents the accumulated fee that was payed in block.                          |
-| developerFees         | The developerFees field represents the fee that was accumulated in block.                                  |
-| epochStartBlock       | The epochStartBlock is true if the current block is a start of epoch block.                                |
-| epochStartInfo        | The epochStartInfo field contains data about current epoch.                                                |
-| gasProvided           | The gasProvided field represents the total gas that was provided in block.                                 |
-| gasRefunded           | The gasRefunded field represents the total gas that was refunded in block.                                 |
-| gasPenalized          | The gasPenalized field represents the total gas that was penalized in block.                               |
-| maxGasLimit           | The maxGasLimit field represents the total gas that can be provided in block.                              |
-| scheduledData         | The scheduledData contains data about the scheduled execution.                                             |
-| epochStartShardsData  | The epochStartShardsData contains data about the epoch start shards data.                                  |
-
-## validators
-
-The `_id` field for this index is composed in this way: `{shardID_epoch}` (example: `1_123`)
-
-| Field       | Description                                                                                    |
-|-------------|------------------------------------------------------------------------------------------------|
-| publicKeys  | The publicKeys field contains a list of all validators' public keys for epoch from document ID |
