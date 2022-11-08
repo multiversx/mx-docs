@@ -13,7 +13,7 @@ The `_id` field for this index is composed in this way: `{validator_bls_key}_{ep
 
 ## Query examples
 
-#### Fetch rating for a validator for a specific epoch
+#### Fetch rating of a validator for a specific epoch
 
 ```
 curl --request GET \
