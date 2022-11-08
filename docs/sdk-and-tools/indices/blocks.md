@@ -11,7 +11,7 @@ The `_id` field for this index is composed of block hash hex encoded
 | round                 | The round field represents the round when block was proposed and executed.                                 |
 | epoch                 | The epoch field represent the epoch when the block was proposed and executed.                              |
 | miniBlocksHashes      | The miniBlocksHashes field represents the hashed hex encoded of the miniblocks that was included in block. |
-| miniBlocksDetails     | The miniBlocksDetails field represents the details of all the miniblcoks that was included in block.       |
+| miniBlocksDetails     | The miniBlocksDetails field represents the details of all the miniblocks that was included in block.       |
 | notarizedBlocksHashes | The notarizedBlocksHashes field represents the hashes of the blocks the was notarized in current block.    |
 | proposer              | The proposer field represents the index of the validator that proposed this block.                         |
 | validators            | The validators field represents the indices on the validators that have signed for this block.             |
@@ -34,3 +34,25 @@ The `_id` field for this index is composed of block hash hex encoded
 | maxGasLimit           | The maxGasLimit field represents the total gas that can be provided in block.                              |
 | scheduledData         | The scheduledData contains data about the scheduled execution.                                             |
 | epochStartShardsData  | The epochStartShardsData contains data about the epoch start shards data.                                  |
+
+
+:::tip Example to fetch blocks for a shard 
+In order to can fetch the latest blocks from one shard one has to do a query that matches the field `shardId`
+:::
+```
+GET ${ES_URL}/blocks/_search
+{
+    "query": {
+        "match": {
+            "shardId": "1"
+        }
+    },
+    "sort": [
+		{
+			"timestamp": {
+				"order": "desc"
+			}
+		}
+	]
+}
+```
