@@ -38,7 +38,7 @@ The `_id` field for this index is composed of block hash hex encoded
 
 The `metachain` block (`shardId:4294967295`) with field `epochStartBlock:true` has the field `epochStartInfo` populated with the next data:
 
-| epochStartBlock fields           | Description                                                                                                          |
+| epochStartInfo fields            | Description                                                                                                          |
 |----------------------------------|----------------------------------------------------------------------------------------------------------------------|
 | totalSupply                      | The totalSupply field represents the EGLD supply.                                                                    |
 | totalToDistribute                | The totalToDistribute field represents the amount of EGLD that will be distributed to validators/delegators.         |
