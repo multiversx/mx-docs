@@ -40,19 +40,21 @@ The `_id` field for this index is composed of block hash hex encoded
 In order to can fetch the latest blocks from one shard one has to do a query that matches the field `shardId`
 :::
 ```
-GET ${ES_URL}/blocks/_search
-{
+curl --request GET \
+  --url ${ES_URL}/blocks/_search \
+  --header 'Content-Type: application/json' \
+  --data '{
     "query": {
         "match": {
             "shardId": "1"
         }
     },
     "sort": [
-		{
-			"timestamp": {
-				"order": "desc"
-			}
-		}
-	]
-}
+        {
+            "timestamp": {
+                "order": "desc"
+            }
+        }
+    ]
+}'
 ```
