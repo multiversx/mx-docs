@@ -37,7 +37,7 @@ The `_id` field for this index is composed of block hash hex encoded
 
 
 :::tip Example to fetch blocks for a shard 
-In order to can fetch the latest blocks from one shard one has to do a query that matches the field `shardId`
+In order to fetch the latest blocks from one shard one has to do a query that matches the field `shardId`.
 :::
 ```
 curl --request GET \
