@@ -25,7 +25,7 @@ docker run --mount type=bind,source=${PATH_TO_BLS_KEY_FILE}/,destination=/data e
  --validator-key-pem-file="/data/validatorKey.pem"
 ```
 
-In the snippet above, make sure you adjust the path to a valid key file and also provide the appropriate command-line arguments to the Node. For more details go to [Node CLI](https://docs.elrond.com/validators/node-cli).
+In the snippet above, make sure you adjust the path to a valid key file and also provide the appropriate command-line arguments to the Node. For more details go to [Node CLI](https://docs.elrond.com/validators/node-cli).
 
 :::note Attention required
 

@@ -530,7 +530,7 @@ When the default `ResultsParser` misbehaves, please open an issue [on GitHub](ht
 ### When the ABI is not available
 
 ```
-let parser = new ResultsParser();
+let resultsParser = new ResultsParser();
 let transactionOnNetwork = await networkProvider.getTransaction(txHash);
 let { returnCode, returnMessage, values } = resultsParser.parseUntypedOutcome(transactionOnNetwork, endpointDefinition);
 ```
@@ -538,7 +538,7 @@ let { returnCode, returnMessage, values } = resultsParser.parseUntypedOutcome(tr
 ### When the ABI is available
 
 ```
-let parser = new ResultsParser();
+let resultsParser = new ResultsParser();
 let transactionOnNetwork = await networkProvider.getTransaction(txHash);
 let { returnCode } = resultsParser.parseOutcome(transactionOnNetwork, endpointDefinition);
 ```

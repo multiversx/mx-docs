@@ -14,28 +14,26 @@
       "technology/cross-shard-transactions"
     ],
     "Wallet": [
+      "wallet/overview",
       "wallet/web-wallet",
       "wallet/wallet-extension",
       "wallet/webhooks",
-      "wallet/ledger"
+      "wallet/ledger",
+      "wallet/create-a-fungible-token"
+    ],
+    "Tokens": [
+      "tokens/overview",
+      "tokens/esdt-tokens",
+      "tokens/nft-tokens"
     ],
     "Validators": [
       "validators/overview",
+      "validators/staking-providers-apr",
       "validators/staking-v4",
       "validators/system-requirements",
       {
         "type": "subcategory",
-        "label": "Install a Mainnet Node",
-        "ids": [
-          "validators/mainnet/config-scripts",
-          "validators/mainnet/install-update",
-          "validators/mainnet/optional-configs",
-          "validators/mainnet/use-docker"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "Install a Testnet/Devnet Node",
+        "label": "Install a Mainnet/Testnet/Devnet Node",
         "ids": [
           "validators/elrond-go-scripts/config-scripts",
           "validators/elrond-go-scripts/install-update",
@@ -68,6 +66,7 @@
       "validators/rating",
       "validators/node-upgrades",
       "validators/redundancy",
+      "validators/node-operation-modes",
       "validators/import-db",
       "validators/node-cli",
       "validators/node-databases",
@@ -75,6 +74,7 @@
       "validators/faq"
     ],
     "Developers": [
+      "developers/overview",
       {
         "type": "subcategory",
         "label": "Tutorials",
@@ -84,7 +84,8 @@
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
           "developers/tutorials/counter",
-          "developers/tutorials/custom-wallet-connect"
+          "developers/tutorials/custom-wallet-connect",
+          "developers/tutorials/staking-contract"
         ]
       },
       {
@@ -146,15 +147,17 @@
         ]
       },
       "developers/constants",
+      "developers/sc-calls-format",
       "developers/built-in-functions",
       "developers/account-storage",
-      "developers/esdt-tokens",
-      "developers/nft-tokens",
+      "developers/relayed-transactions",
       "developers/setup-local-testnet",
       "developers/setup-local-testnet-advanced",
-      "developers/creating-wallets"
+      "developers/creating-wallets",
+      "developers/reproducible-contract-builds"
     ],
     "SDK and Tools": [
+      "sdk-and-tools/overview",
       {
         "type": "subcategory",
         "label": "REST API",
@@ -171,6 +174,7 @@
           "sdk-and-tools/rest-api/versions-and-changelog"
         ]
       },
+      "sdk-and-tools/dapp-core",
       "sdk-and-tools/proxy",
       "sdk-and-tools/elastic-search",
       {
@@ -199,15 +203,19 @@
           "sdk-and-tools/erdjs/erdjs-signing-providers"
         ]
       },
+      "sdk-and-tools/erdnest",
       "sdk-and-tools/erdgo",
+      "sdk-and-tools/erdcpp",
       "sdk-and-tools/erdjava",
       "sdk-and-tools/erdkotlin",
       "sdk-and-tools/erdwalletjs-cli"
     ],
     "Integrators": [
+      "integrators/overview",
       "integrators/egld-integration-guide",
       "integrators/esdt-tokens-integration-guide",
       "integrators/observing-squad",
+      "integrators/deep-history-squad",
       "integrators/accounts-management",
       "integrators/creating-transactions",
       "integrators/querying-the-blockchain"

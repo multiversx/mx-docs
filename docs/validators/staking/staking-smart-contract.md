@@ -30,6 +30,7 @@ StakingTransaction {
           "@optional_reward_address_HEX_ENCODED"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Because this transaction is a call to the Staking smart contract, it passes information via the `Data` field:
 
@@ -62,6 +63,7 @@ ChangeRewardAddressTransaction {
     GasLimit: 12000000
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 # **Unstaking**
 
@@ -88,6 +90,7 @@ UnstakingTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Note that:
 
@@ -118,6 +121,7 @@ UnbondingTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Note that:
 
@@ -146,6 +150,7 @@ UnjailTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 Note that:
 
@@ -171,5 +176,6 @@ ClaimTransaction {
     GasLimit: 6000000
 }
 ```
+*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
 After this transaction is processed, the Staking smart contract will produce a transaction _back_ to the sender account, but only if the sender account has previously staked for nodes, using a staking transaction.

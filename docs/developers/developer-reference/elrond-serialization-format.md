@@ -93,7 +93,7 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 |`usize` | `0x112233`           | `0x112233`           | `0x00112233`         |
 |`usize` | `0x11223344`         | `0x11223344`         | `0x11223344`         |
 |`i8`    | `0`                  | `0x`                 | `0x00`               |
-|`i8`    | `1`                  | `0x`                 | `0x00`               |
+|`i8`    | `1`                  | `0x01`               | `0x01`               |
 |`i8`    | `-1`                 | `0xFF`               | `0xFF`               |
 |`i8`    | `127`                | `0x7F`               | `0x7F`               |
 |`i8`    | `-128`               | `0x80`               | `0x80`               |

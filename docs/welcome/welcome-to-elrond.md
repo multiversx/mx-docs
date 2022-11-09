@@ -13,8 +13,8 @@ title: Welcome to Elrond
   - Maiar money app with progressive security, social recovery, embedded DeFi
   - Tokens (FT, SFT, NFT) embedded into the protocol
   - Developers: royalties - 30% SC gas returned to authors, full IDE, Rust framework with debugger
-  - Validators: ~20% APR for running nodes, low system requirements
-  - Network setup: 3,200 nodes, with 4 shards (adaptivity allows throughput to increase with demand)
+  - Validators: ~13% APR for running nodes, low system requirements
+  - Network setup: 3,200 nodes, 3 shards + Metachain (adaptivity allows throughput to increase with demand)
 
 # **What is Elrond?**
 
@@ -60,26 +60,32 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 **Q1 2022**
 
 - Web3 Payments
-- Multisig for DAOs
-- Growth 2.0
-- NFT Marketplace
+- Maiar DeFi Wallet
+- Metastaking
 
 **Q2 2022**
 
+- Metabonding
 - Elrond SuperWave
-- Elrond Gamify
-- Staking Phase 4
+- Ad Astra Bridge
+- Jungle DEX
 
 **Q3 2022**
 
-- Maiar App 2.0
-- Onchain governance
+- Elrond Growth 2.0
+- Elrond Gamify
+- Staking Phase 4
+- NFT Marketplace
+- Multisig for DAOs
 
 **Q4 2022**
 
+- Maiar App 2.0
 - DeFi 2.0: Lending & Synthetics
 - Merchant Yield
+- Elrond Conference
 
 **Q1 2023**
 
 - Strategic Multi-country hypergrowth
+- Onchain governance

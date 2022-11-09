@@ -351,7 +351,7 @@ This step simulates a transaction to an existing smart contract. Fields:
     - `identifier` - a contract can have multiple event types, each of them has an identifier. In the API the identifier is the first topic saved. In the Rust framework the event identifier is specified explicitly in the contract.
     - `topics` - these are event arguments, provided by the contract. Off-chain they are indexed, so that users can search by these topics. All topics are currently 32 bytes in length, but this restriction might be lifted in the future.
     - `data` - same as the topics, but this is not indexed, cannot perform searches on data. Can be of any length (or sometimes empty).
-  - `gas` - here the consumed gas can be checked. To ignore this check, set to `"*"`
+  - `gas` - indicates the gas remaining for the transaction (`gasLimit` - gas consumed). To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
   
 ## **Step type: `scQuery`**
