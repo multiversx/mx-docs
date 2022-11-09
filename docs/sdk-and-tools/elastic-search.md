@@ -90,11 +90,11 @@ Each entry in an Elasticsearch index will have a format similar to this:
 
 | Name                                                         | Description                                                                 |
 |--------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [rating](/sdk-and-tools/indices/es-index-rating)             | Contains the validators' rating for every epoch.                            |
 | [transactions](/sdk-and-tools/indices/es-index-transactions) | Contains all the transactions.                                              |
 | [blocks](/sdk-and-tools/indices/es-index-blocks)             | Contains all the executed blocks.                                           |
 | [validators](/sdk-and-tools/indices/es-index-validators)     | Contains the public keys of the validators grouped by epoch and shard.      |
-| [miniblocks](/)                                              | Contains all the executed minblocks.                                        |
+| [rating](/sdk-and-tools/indices/es-index-rating)             | Contains the validators' rating for every epoch.                            |
+| [miniblocks](/sdk-and-tools/indices/es-index-miniblocks)     | Contains all the executed minblocks.                                        |
 | [rounds](/)                                                  | Contains details of each round that has passed.                             |
 | [accounts](/)                                                | Contains the addresses' balances and the timestamp when they were modified. | 
 | [accountshistory](/)                                         | Contains historical information about the address balances.                 |
