@@ -21,6 +21,7 @@
     ],
     "Validators": [
       "validators/overview",
+      "validators/staking-v4",
       "validators/system-requirements",
       {
         "type": "subcategory",
