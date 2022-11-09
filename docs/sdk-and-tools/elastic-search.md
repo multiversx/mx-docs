@@ -73,9 +73,8 @@ To get more information how to do this use the documentation from this [reposito
 
 ## Elasticsearch indices 
 
-An observing-squad with the elastic indexer enabled will save data in different indices. This data is used to solve a lot of use cases. An example is to fetch all the 
+An observing-squad with the elastic indexer enabled will save data in different indices. This data is used for multiple use cases. An example is to fetch all the 
 transactions that belong to an address or to display all the address sorted based on the EGLD balances.
-Saved data is grouped into indices.
 
 Each entry in an Elasticsearch index will have a format similar to this:
 
