@@ -11,7 +11,7 @@ The `_id` field for this index is composed of transaction hash hex encoded.
 | miniBlockHash     | The miniBlockHash represents the hash of the miniblock in which the transaction is included.                                                         |
 | nonce             | The nonce field represents the nonce of the sender at the transaction's time.                                                                        |
 | round             | The round field represents the round of the block when the transaction is executed.                                                                  |
-| value             | The value field represents the number of EGLD to be sent from the sender to the receiver.                                                            |
+| value             | The value field represents the amount of EGLD to be sent from the sender to the receiver.                                                            |
 | receiver          | The receiver field represents the destination address of the transaction.                                                                            |
 | sender            | The sender field represents the address of the transaction sender.                                                                                   |
 | receiverShard     | The receiverShard field represents the shard ID of the receiver address.                                                                             |

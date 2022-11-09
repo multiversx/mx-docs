@@ -13,13 +13,13 @@ The `_id` field of this index is represented by the block hash, in a hexadecimal
 | miniBlocksHashes      | The miniBlocksHashes field contains an array of the miniblock hashes (hexadecimal encoded) that were included in the block.                                        |
 | miniBlocksDetails     | The miniBlocksDetails field contains an array of structures indicating processing details of the miniblocks, such as the index of the first processed transaction. |
 | notarizedBlocksHashes | The notarizedBlocksHashes field represents the hashes of the blocks that was notarized in the current block.                                                       |
-| proposer              | The proposer field represents the index of the validator that proposed this block.                                                                                 |
+| proposer              | The proposer field represents the index of the validator that proposed the block.                                                                                  |
 | validators            | The validators field is an array that contains the indices of the validators that signed the block. The indices are to be found in the validators index.           |
 | pubKeyBitmap          | The pubKeyBitmap field represents the pub key bitmap.                                                                                                              |
 | size                  | The size field represents the size of the block in bytes.                                                                                                          |
 | sizeTxs               | The sizeTxs field holds the size of the block's transactions in bytes.                                                                                             |
 | timestamp             | The timestamp field represents the timestamp when the block was proposed and executed.                                                                             |
-| stateRootHash         | The stateRootHash field represents the trie' state root hash when the block was proposed and executed.                                                             |
+| stateRootHash         | The stateRootHash field represents the trie's state root hash when the block was proposed and executed.                                                            |
 | prevHash              | The prevHash field represents the hash of the previous block.                                                                                                      |
 | shardId               | The shardId field represents the shard where the block was executed.                                                                                               |
 | txCount               | The txCount field represents the number of transactions that were executed in the block.                                                                           |
