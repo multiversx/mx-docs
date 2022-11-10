@@ -3,7 +3,7 @@ id: es-index-blocks
 title: Elasticsearch index: blocks
 ---
 
-The `_id` field of this index is represented by the block hash, in a hexadecimal encoding.
+The `_id` field for this index is composed of hex encoded block hash.
 
 | Field                 | Description                                                                                                                                                        |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
