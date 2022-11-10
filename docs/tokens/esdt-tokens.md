@@ -478,7 +478,6 @@ RolesAssigningTransaction {
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <address to assign the role(s) in a hexadecimal encoding> +
           "@" + <role in hexadecimal encoding> +
-          "@" + <role in hexadecimal encoding> +
           ...
 }
 ```
@@ -496,7 +495,6 @@ RolesAssigningTransaction {
     Data: "unSetSpecialRole" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <address to unset the role(s) in a hexadecimal encoding> +
-          "@" + <role in hexadecimal encoding> +
           "@" + <role in hexadecimal encoding> +
           ...
 }
