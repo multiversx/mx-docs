@@ -98,7 +98,7 @@ Each entry in an Elasticsearch index will have a format similar to this:
 | [accounts](/sdk-and-tools/indices/es-index-accounts)               | Contains the addresses' balances and the timestamp when they were modified. | 
 | [accountshistory](/sdk-and-tools/indices/es-index-accountshistory) | Contains historical information about the address balances.                 |
 | [receipts](/sdk-and-tools/indices/es-index-receipts)               | Contains all the generated receipts.                                        |
-| [scresults](/)                                                     | Contains all the generated smart contract results.                          |
+| [scresults](/sdk-and-tools/indices/es-index-scresults)             | Contains all the generated smart contract results.                          |
 | [accountsesdt](/)                                                  | Contains the addresses' ESDT balances.                                      |
 | [accountsesdthistory](/)                                           | Contains historical information about the address ESDT balances.            |
 | [epochinfo](/)                                                     | Contains the accumulated fees and the developer fees grouped by epochs.     |

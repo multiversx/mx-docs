@@ -36,6 +36,7 @@ The `_id` field for this index is composed of hex encoded transaction hash.
 | receiversShardIDs | The receiversShardIDs field contains a list of receiver addresses shard IDs.                                                                         |
 | type              | The type field represents the type of the transaction based on the data field.                                                                       |
 | operation         | The operation field represents the operation of the transaction based on the data field.                                                             |
+| function          | The function field holds the name of the function that is called in case of a smart contract call.                                                   |
 | isRelayed         | The isRelayed field is true if the transaction is a relayed transaction.                                                                             |
 | version           | The version field represents the version of the transaction.                                                                                         |
 
