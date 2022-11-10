@@ -97,6 +97,8 @@ Staking phase 4 will be done in 3 consecutive steps, each step corresponding to 
 In the first step, we will completely **remove** the staking queue and place all nodes in an **auction list**. This
 process will be done automatically at the end of the epoch and requires no interaction from validators.
 
+![alt text](/validators/stakingV4/stakingV4-phase1.png)
+
 Important notes:
 Starting with this epoch:
 
@@ -121,6 +123,8 @@ unstaked.
 In the second step, all **shuffled out** nodes from **eligible list** will be sent to the **auction** list.
 Using the example above, this will result in waiting lists per shard to be resized from 400 nodes -> 320 nodes.
 
+![alt text](/validators/stakingV4/stakingV4-phase2.png)
+
 ## Staking v4. Phase 3.
 
 Starting with this epoch:
@@ -131,6 +135,8 @@ Starting with this epoch:
 - Distribution from `waiting` -> `eligible` list will remain unchanged
 - no rewards lost !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! because of day with 320
 
+![alt text](/validators/stakingV4/stakingV4-phase3.png)
+
 ## Staking v4. Soft auction selection mechanism
 
 Nodes from the auction list will be selected to be distributed in the waiting list based on the **soft auction**
@@ -138,7 +144,7 @@ mechanism.
 For each owner, based on his topUp, we compute how many validators he would be able to run. This mechanism ensures that
 for each owner we select as many nodes as possible, based on the available slots and a **minimum required topUp**.
 
-Suppose we have the following auction list:
+Suppose we have the following auction list, and 3 available slots:
 
 ```
 +--------+------------------+------------------+-------------------+--------------+-----------------+---------------------------+
@@ -151,25 +157,22 @@ Suppose we have the following auction list:
 +--------+------------------+------------------+-------------------+--------------+-----------------+---------------------------+  
 ```
 
+For the configuration above:
+
 - Minimum possible topUp = 666, considering owner4 will have all of his 3 auction nodes selected
     - owner4's total top up/(1 active node + 3 auction nodes) = 2666 / 4 = 666
 - Maximum possible topUp = 1333, considering owner4 will only have one of his auction nodes selected
     - owner4's total top up/(1 active node + 1 auction nodes) = 2666 / 2 = 1333
-    -
 
-Based on this configuration, we compute the minimum required topUp to be qualified, such that we maximize the number of
-owners that will be selected, as well as their number of auction nodes.
+Based on this configuration, we compute the minimum required topUp to be qualified = 1216. This ensures that we
+maximize the number of owners that will be selected, as well as their number of auction nodes:
 
-- `owner1` has 1 auction node (`pubKey2`)
-- `owner2` has 2 auction nodes (`pubKey4`, `pubKey5`) with a topUp of 851. By leaving one of his nodes in the auction, while only
-selecting one of them, his topUp would be rebalanced to 1277 (2555/2)
-- `owner3` has 1 auction node (`pubKey7`)
-- `owner4` has 3 auction nodes (`pubKey9`, `pubKey10`, `pubKey10`) with a topUp of 666. By leaving two of his nodes in the auction, while only
-    selecting one of them, his topUp would be rebalanced to 1333 (2666/2)
-
-:::note
-For each owner's auction nodes, qualified ones are selected by sorting the bls
-:::
+- `owner1` has 1 auction node (`pubKey2`) with qualified topUp = 1222 > 1216
+- `owner2` has 2 auction nodes (`pubKey4`, `pubKey5`) with a topUp of 851. By leaving one of his nodes in the auction,
+  while only selecting one of them, his topUp would be rebalanced to 1277 (2555/2) > 1216
+- `owner3` has 1 auction node (`pubKey7`) with qualified topUp = 1222 > 1216
+- `owner4` has 3 auction nodes (`pubKey9`, `pubKey10`, `pubKey10`) with a topUp of 666. By leaving two of his nodes in
+  the auction, while only selecting one of them, his topUp would be rebalanced to 1333 (2666/2) > 1216
 
 ```
 +--------+------------------+----------------+--------------+-------------------+-----------------------------+------------------+---------------------------+-----------------------------+
@@ -182,7 +185,14 @@ For each owner's auction nodes, qualified ones are selected by sorting the bls
 +--------+------------------+----------------+--------------+-------------------+-----------------------------+------------------+---------------------------+-----------------------------+
 ```
 
--> Final selected nodes from auction list
+:::note
+
+If an owner has multiple nodes in auction, but only a part of them are selected to be distributed in waiting list,
+selection will be done by sorting the bls keys.
+
+:::
+
+Final nodes selected from auction list:
 
 ```
  +--------+----------------+--------------------------+
@@ -196,12 +206,25 @@ For each owner's auction nodes, qualified ones are selected by sorting the bls
  +--------+----------------+--------------------------+
 ```
 
-The following have 1222 top up per node:
+Finally, we sort all validators based on topUp and select them based on available slots. In case two or more validators
+have the same topUp(e.g.: `pubKey2` and `pubKey7`), the selection will be random, but deterministic. Selection is done
+by a XOR between validators public keys and the current block's randomness. This ensures that validators wouldn't be
+able to "mint" their bls keys in order to gain any selection advantage, since the randomness is only known at the
+selection time.
 
-- owner1 with 1 bls key = pubKey2
-- owner3 with 1 bls key = pubKey7
+Following our example above, we have two nodes with 1222 top up per node:
 
-Since randomness = []byte("pubKey7"), nodes will be sorted based on blsKey XOR randomness, therefore:
+- `owner1` with 1 bls key = `pubKey2`
+- `owner3` with 1 bls key = `pubKey7`
 
-- XOR1 = []byte("pubKey2") XOR []byte("pubKey7") = `[0 0 0 0 0 0 5]`
-- XOR3 = []byte("pubKey7") XOR []byte("pubKey7") = `[0 0 0 0 0 0 0]`
+Suppose the result of the XOR operation between they bls keys and randomness is:
+
+- `XOR1` = `pubKey2` XOR `randomness` = `[143...]`
+- `XOR2` = `pubKey7` XOR `randomness` = `[131...]`
+
+Having `XOR1` > `XOR2`, therefore `pubKey2` will to be selected.
+
+-- EACH VALDIATOR SHOULD MONITOR HIS TOPUP AND DECIDE IF HE WANTS TO UNSTAKE HIS NODE OR ADD MORE TOPUP
+
+- EDGE CASE: mai multe locuri decat noduri in auction
+- infinite number of staked new nodes
