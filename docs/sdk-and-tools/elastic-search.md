@@ -95,7 +95,7 @@ Each entry in an Elasticsearch index will have a format similar to this:
 | [rating](/sdk-and-tools/indices/es-index-rating)             | Contains the validators' rating for every epoch.                            |
 | [miniblocks](/sdk-and-tools/indices/es-index-miniblocks)     | Contains all the executed minblocks.                                        |
 | [rounds](/sdk-and-tools/indices/es-index-rounds)             | Contains details of each round that has passed.                             |
-| [accounts](/)                                                | Contains the addresses' balances and the timestamp when they were modified. | 
+| [accounts](/sdk-and-tools/indices/es-index-accounts)         | Contains the addresses' balances and the timestamp when they were modified. | 
 | [accountshistory](/)                                         | Contains historical information about the address balances.                 |
 | [receipts](/)                                                | Contains all the generated receipts.                                        |
 | [scresults](/)                                               | Contains all the generated smart contract results.                          |
