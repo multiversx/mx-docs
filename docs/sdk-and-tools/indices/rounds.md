@@ -18,7 +18,7 @@ The `_id` field of this index is composed in this way: `{shardID}_{round}` (exam
 
 ## Query examples
 
-## Fetch the latest rounds for a shard when block was produced
+### Fetch the latest rounds for a shard when block was produced
 
 ```
 curl --request GET \
