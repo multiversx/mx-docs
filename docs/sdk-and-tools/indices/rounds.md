@@ -10,7 +10,7 @@ The `_id` field of this index is composed in this way: `{shardID}_{round}` (exam
 |------------------|------------------------------------------------------------------------------------------------------------------------|
 | round            | The round field represents the number of the round.                                                                    |
 | signersIndexes   | The signersIndexes is an array that contains the indices of the validators that should sign the block from this round. |
-| blockWasProposed | The blockWasProposed is true if a block was produced in this round.                                                    |
+| blockWasProposed | The blockWasProposed is true if a block was proposed and executed in this round.                                       |
 | shardId          | The shardId field represents the shard the round belongs to.                                                           |
 | epoch            | The epoch field represents the epoch the round belongs to.                                                             |
 | timestamp        | The timestamp field represents the timestamp of the round.                                                             |
@@ -18,7 +18,7 @@ The `_id` field of this index is composed in this way: `{shardID}_{round}` (exam
 
 ## Query examples
 
-## Fetch the latest rounds for a shard when block was produced
+### Fetch the latest rounds for a shard when block was produced
 
 ```
 curl --request GET \
