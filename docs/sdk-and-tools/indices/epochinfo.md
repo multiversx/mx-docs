@@ -17,7 +17,7 @@ The `_id` field of this index is represented by epoch.
 
 ```
 curl --request GET \
-  --url ${ES_URL}/rating/_search \
+  --url ${ES_URL}/epochinfo/_search \
   --header 'Content-Type: application/json' \
   --data '{
 	"query": {

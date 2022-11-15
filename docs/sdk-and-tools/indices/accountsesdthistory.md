@@ -22,7 +22,7 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 
 ```
 curl --request GET \
-  --url ${ES_URL}/accountshistory/_search \
+  --url ${ES_URL}/accountsesdthistory/_search \
   --header 'Content-Type: application/json' \
   --data '{
 	"query": {
