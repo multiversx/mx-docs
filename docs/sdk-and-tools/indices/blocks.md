@@ -26,7 +26,7 @@ The `_id` field of this index is represented by the block hash, in a hexadecimal
 | notarizedTxsCount     | The notarizedTxsCount field represents the number of transactions that were notarized in the block.                                                                |
 | accumulatedFees       | The accumulatedFees field represents the accumulated fees that were payed in the block.                                                                            |
 | developerFees         | The developerFees field represents the fees that were accumulated in the block.                                                                                    |
-| epochStartBlock       | The epochStartBlock is true if the current block is an epoch-start block.                                                                                          |
+| epochStartBlock       | The epochStartBlock field is true if the current block is an epoch-start block.                                                                                    |
 | epochStartInfo        | The epochStartInfo field is a structure that contains economic data, such as total supply.                                                                         |
 | gasProvided           | The gasProvided field represents the total gas that was provided in the block.                                                                                     |
 | gasRefunded           | The gasRefunded field represents the total gas that was refunded in the block.                                                                                     |
