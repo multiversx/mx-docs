@@ -29,7 +29,7 @@ The `_id` field for this index is composed of hex encoded smart contract result 
 | returnMessage     | The returnMessage field holds the message that is returned by a smart contract in case of an error.                                                                                   |
 | timestamp         | The timestamp field represents the timestamp of the block in which the smart contract result was executed.                                                                            |
 | status            | The status field holds the execution state of the smart contract result. The execution state can be `pending` or `success`.                                                           |
-| tokens            | The tokens field contains a list of ESDT tokens that are transferred based on the data field. The indices from the `tokens` list are linked with the indices from `esdtValues` list.  |
+| tokens            | The tokens field contains a list of ESDT tokens that are transferred based on the data field. The indices from the `tokens` list are linked to the indices from `esdtValues` list.  |
 | esdtValues        | The esdtValues field contains a list of ESDT values that are transferred based on the data field.                                                                                     |
 | receivers         | The receivers field contains a list of receiver addresses in case of ESDTNFTTransfer or MultiESDTTransfer.                                                                            |
 | receiversShardIDs | The receiversShardIDs field contains a list of receiver addresses' shard IDs.                                                                                                         |
