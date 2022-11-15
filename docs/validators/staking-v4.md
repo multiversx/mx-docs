@@ -76,7 +76,7 @@ either **unstaked** or **jailed**
 
 :::
 
-![alt text](/validators/stakingV4/current-staking.png)
+![](/validators/stakingV4/current-staking.png)
 
 Nodes distribution is done in the following steps:
 
@@ -101,7 +101,7 @@ In the first step, we will completely **remove the staking queue** and place all
 process will be done automatically at the end of the epoch and requires no interaction from validators. Also, nodes
 distribution remains unchanged.
 
-![alt text](/validators/stakingV4/stakingV4-phase1.png)
+![](/validators/stakingV4/stakingV4-phase1.png)
 
 :::important Important notes
 
@@ -134,7 +134,7 @@ waiting lists **will not be filled** by any shuffled out node.
 
 Using the example above, this will result in each waiting list per shard to be resized from 400 nodes to 320 nodes.
 
-![alt text](/validators/stakingV4/stakingV4-phase2.png)
+![](/validators/stakingV4/stakingV4-phase2.png)
 
 ## Staking v4. Phase 3.
 
@@ -152,7 +152,7 @@ Starting with this epoch:
   the nodes configuration is maintained.
 - Distribution from `waiting` to `eligible` list will remain unchanged
 
-![alt text](/validators/stakingV4/stakingV4-phase3.png)
+![](/validators/stakingV4/stakingV4-phase3.png)
 
 ## Staking v4. Soft auction selection mechanism
 
@@ -164,6 +164,8 @@ ensures that for each owner we select as many nodes as possible, based on the **
 `available slots`. This is a global selection, not per shard. We preselect the best global nodes at the end of epoch.
 
 Suppose we have the following auction list, and 3 available slots:
+
+![](/validators/stakingV4/soft-auction1.png)
 
 ```
 +--------+------------------+------------------+-------------------+--------------+-----------------+-------------------------+
@@ -193,6 +195,8 @@ maximize the number of owners that will be selected, as well as their number of 
 
 In this example, if we use a step of 10 EGLD in the `[666, 1333]` interval, the `minimum required topUp per node` would
 be 1216 such that:
+
+![](/validators/stakingV4/soft-auction2.png)
 
 ```
 +--------+------------------+----------------+--------------+-------------------+-----------------------------+------------------+---------------------------+-----------------------------+
@@ -266,10 +270,6 @@ Since `XOR1` > `XOR2`, `pubKey1` will to be selected, while `pubKey4` remains in
 ## Will the APR decrease?
 
 ## How much topUp should I have as a validator?
-
-EACH VALDIATOR SHOULD MONITOR HIS TOPUP AND DECIDE IF HE WANTS TO UNSTAKE HIS NODE OR ADD MORE TOPUP
-
-## Some of my nodes were sent to auction during stakingV4 phase2. Will I lose my rewards?
 
 ## What happens if there are fewer nodes in auction than available slots?
 
