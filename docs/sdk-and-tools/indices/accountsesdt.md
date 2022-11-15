@@ -8,9 +8,9 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | Field       | Description                                                                                                                           |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | identifier  | The identifier field is composed from the `token` field and the `nonce` field hex encoded.                                            |
-| address     | The address field holds the address bytes in a bech32 encoding.                                                                       |
-| balance     | The balance field holds the amount of ESDT token the address has.                                                                     |
-| balanceNum  | The balanceNum field holds the amount of ESDT token the address has in a numeric format(denominated with 10^18).                      |
+| address     | The address field holds the address in a bech32 encoding.                                                                             |
+| balance     | The balance field holds the amount of ESDT token the address possesses. It is a string that also includes the number of decimals.     |
+| balanceNum  | The balanceNum field holds the amount of ESDT token the address possesses, in a numeric format.                                       |
 | data        | The data field is a structure that contains extra data about a token, such as the creator of an NFT.                                  |
 | tokenNonce  | The tokenNonce field holds the sequence number of the token. This field can be empty in the case of `FungibleESDT`.                   |
 | token       | The token field holds the token name of the token.                                                                                    |
