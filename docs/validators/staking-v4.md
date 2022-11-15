@@ -30,29 +30,31 @@ node price (2.5k eGLD) can register to the network, but the NODE becomes a valid
 shuffling from waiting list to eligible list will not be affected at all. We will only work on the selection of the
 nodes from the auction list to waiting.
 
-This is what we call SOFT AUCTION. Doing this we democratize, making the whole validator system as a free market.
+This is what we call _SOFT AUCTION_. Doing this we democratize, making the whole validator system as a free market.
 
 The selection process of best X nodes from auction into “to be shuffled into waiting” list can be done in 2 ways.
-The first and easy version it's a strict selection where we would sort all the nodes from the auction list based on
+
+**The first** and easy version it's a strict selection where we would sort all the nodes from the auction list based on
 their topUp and select the first ones.
 
 This is strict, as the VALIDATORS have to manage their number of nodes if their topUp is close to the border of
-selection. This is because the topUp is computed as TotalStake/NumberOfNodes - 2.5k eGLD. So if a validator registered
+selection. This is because the topUp is computed as TotalStake/NumberOfNodes - 2,5k eGLD. So if a validator registers
 more nodes, their topUp is smaller.
 Example:
 
 - 10 nodes, 50k eGLD = 2.5k topUp per node
 - 20 nodes, 50k eGLD = 0 topUp
 
-In this way, if a staking provider registers all those 20 nodes, they will be at the end of the list in case of the
-auction selection. If there are 320 nodes with at least 1eGLD topUp on each of them, NONE of the 20 nodes from this
-staking provider is selected.
+In this way, if a staking provider registers all those 20 nodes, they will be at the end of the list in case of an
+auction selection. If we can only select 320 nodes out of 340, and every other node has at least 1eGLD topUp on each of
+them, NONE of the 20 nodes from this staking provider is selected.
 
-As this selection takes place at every end of epoch, those staking providers who are at the limit of the topUp per node
-according to the selection process can be easily moved out by delegating to other SPs or unDelegating from this SP. The
-SP would need to continuously monitor the limit and unStake / stake nodes at the end of the epoch, depending on the
-topUp per node of other providers. This selection is sorting nodes based on topUp, it is not protecting the SPs. There
+As this selection takes place at every end of epoch, those staking providers who are at the limit with their topUp per
+node would need to continuously monitor the limit and unStake / stake nodes at the end of the epoch, depending on the
+topUp per node of other providers. This selection of sorting nodes based on topUp is not protecting the SPs. There
 is a need for constant supervision and action from SPs.
+
+**Second version** is currently implemented and explained in the chapters below.
 
 # **Current implementation**
 
@@ -150,19 +152,16 @@ Starting with this epoch:
   the nodes configuration is maintained.
 - Distribution from `waiting` to `eligible` list will remain unchanged
 
-
-- no rewards lost !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! because of day with 320
-
 ![alt text](/validators/stakingV4/stakingV4-phase3.png)
 
 ## Staking v4. Soft auction selection mechanism
 
 Nodes from the auction list will be selected to be distributed in the waiting list based on the **soft auction**
 mechanism.
-For each owner, based on his topUp, we compute how many validators he would be able to run. This mechanism ensures that
-for each owner we select as many nodes as possible, based on the **minimum required topUp** to fill
-the `available slots`. This is a global selection, not per shard. We preselect the best global nodes at the end of
-epoch.
+For each owner, based on his topUp, we compute how many validators he would be able to run by distributing his total
+topUp per fewer nodes(considering we would not select all of his auction nodes, but only a part of them). This mechanism
+ensures that for each owner we select as many nodes as possible, based on the **minimum required topUp** to fill the
+`available slots`. This is a global selection, not per shard. We preselect the best global nodes at the end of epoch.
 
 Suppose we have the following auction list, and 3 available slots:
 
@@ -179,9 +178,9 @@ Suppose we have the following auction list, and 3 available slots:
 
 For the configuration above:
 
-- Minimum possible `topUp per node` = 666, considering `owner4` will have all of his 3 auction nodes selected
+- Minimum possible `topUp per node` = 666, considering `owner4` will have all of his **3 auction nodes selected**
     - owner4's total top up/(1 active node + 3 auction nodes) = 2666 / 4 = 666
-- Maximum possible `topUp per node` = 1333, considering `owner4` will only have one of his auction nodes selected
+- Maximum possible `topUp per node` = 1333, considering `owner4` will only have **one of his auction nodes selected**
     - owner4's total top up/(1 active node + 1 auction nodes) = 2666 / 2 = 1333
 
 Based on the above interval: `[666, 1333]`, we compute the `minimum required topUp per node` to be qualified from the
@@ -262,7 +261,37 @@ Suppose the result of the XOR operation between they bls keys and randomness is:
 
 Since `XOR1` > `XOR2`, `pubKey1` will to be selected, while `pubKey4` remains in the auction list.
 
--- EACH VALDIATOR SHOULD MONITOR HIS TOPUP AND DECIDE IF HE WANTS TO UNSTAKE HIS NODE OR ADD MORE TOPUP
+# **FAQ**
 
-- EDGE CASE: mai multe locuri decat noduri in auction
-- infinite number of staked new nodes
+## Will the APR decrease?
+
+## How much topUp should I have as a validator?
+
+EACH VALDIATOR SHOULD MONITOR HIS TOPUP AND DECIDE IF HE WANTS TO UNSTAKE HIS NODE OR ADD MORE TOPUP
+
+## Some of my nodes were sent to auction during stakingV4 phase2. Will I lose my rewards?
+
+## What happens if there are fewer nodes in auction than available slots?
+
+In this case all nodes will be selected, regardless of their topUP.
+
+## One of my nodes was sent to auction during stakingV4 phase2. Will I loose rewards?
+
+If one of your nodes is shuffled out into auction list during phase2 it will enter in competition with the other
+existing nodes. In case you have enough topUP, **nothing changes, no rewards will be lost**. For owners that
+contribute to the ecosystem and keep a nice topUp, this change will not have any negative impact. Of course, in case you
+have low topUp, or close to zero, your nodes might be unqualified and remain in auction list.
+
+## Why downsize the waiting list?
+
+Short answer: _to keep the APR unchanged_.
+
+Before stakingV4, in case a node was shuffled out and moved to waiting list, it was guaranteed that it would only be
+"idle"(not participating in consensus) for 5 epochs. During this time, the node would not gain any rewards.
+
+During stakingV4 phase2, no node from waiting is moved to active. If we were to keep the same configuration, a shuffled
+out node from this phase would have to wait 6 epochs until eligible(if selected from auction) and therefore decreasing
+overall APR:
+
+- wait **1 epoch** in stakingV4 phase in auction list
+- **if** selected from auction, wait **another 5 epochs** in waiting list.
