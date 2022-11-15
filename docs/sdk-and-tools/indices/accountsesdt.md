@@ -41,7 +41,7 @@ curl --request GET \
     "query": {
         "match": {
          "identifier": {
-           "token": "MY-TOKEN-aaabbb",
+           "query": "MY-TOKEN-aaabbb",
            "operator": "AND"
          }
        }
