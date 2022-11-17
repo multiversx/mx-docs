@@ -71,4 +71,3 @@ curl --request GET \
 	}
 }'
 ```
-+
