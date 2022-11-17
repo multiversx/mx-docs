@@ -38,7 +38,7 @@ curl --request GET \
 				},
 				{
 					"match": {
-						"token": "erd..."
+						"address": "erd..."
 					}
 				}
 			]
