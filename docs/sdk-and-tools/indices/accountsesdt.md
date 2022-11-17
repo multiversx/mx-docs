@@ -7,7 +7,7 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 
 | Field       | Description                                                                                                                           |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| identifier  | The identifier field is composed from the `token` field and the `nonce` field hex encoded.                                            |
+| identifier  | The identifier field consists of `token` field and the `nonce` field hex encoded.                                                     |
 | address     | The address field holds the address in a bech32 encoding.                                                                             |
 | balance     | The balance field holds the amount of ESDT token the address possesses. It is a string that also includes the number of decimals.     |
 | balanceNum  | The balanceNum field holds the amount of ESDT token the address possesses, in a numeric format.                                       |
@@ -18,15 +18,15 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | type        | The type field represents the type of the ESDT token. It can be `FungibleESDT`, `NonFungibleESDT`, `SemiFungibleESDT`, or `MetaESDT`. |
 
 
-The docs with the field `tokenNonce` non-empty can have the `data` field populated with the fields below:
+Docs with a non-empty `tokenNonce` field will have the `data` field populated with the following structure:
 
 | data fields        | Description                                                                     |
 |--------------------|---------------------------------------------------------------------------------|
-| uris               | The uris field holds a URL or a web address.                                    |
-| creator            | The creator field holds the address bech32 encoded of the creator of the token. |
+| uris               | The uris field holds an URL or a web address.                                   |
+| creator            | The creator field holds the bech32 encoded address of the creator of the token. |
 | whiteListedStorage | The whiteListedStorage field is true if the token has white-listed storage.     |
 | attributes         | The attributes field contains the attributes of the token.                      |
-| nonEmptyURIs       | The nonEmptyURIs field is true if the token has nonce empty uris.               |
+| nonEmptyURIs       | The nonEmptyURIs field is true if the token has non empty uris.                 |
 
 
 ## Query examples

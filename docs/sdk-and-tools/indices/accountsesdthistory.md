@@ -9,16 +9,16 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | Field      | Description                                                                                                         |
 |------------|---------------------------------------------------------------------------------------------------------------------|
 | address    | The address field holds the address in a bech32 encoding.                                                           |
-| balance    | The balance field holds the amount of ESDT token the address possesses.                                             |
-| token      | he token field holds the token name of the token.                                                                   |
-| identifier | The identifier field is composed from the `token` field and the `nonce` field hex encoded.                          |
+| balance    | The balance field holds the amount of ESDT tokens the address possesses.                                            |
+| token      | The token field holds the token name of the token.                                                                  |
+| identifier | The identifier field is composed of the `token` field and the `nonce` field, hex encoded.                           |
 | tokenNonce | The tokenNonce field holds the sequence number of the token. This field can be empty in the case of `FungibleESDT`. |
 | timestamp  | The timestamp field represents the timestamp when the address balance was changed.                                  |
 
 
 ## Query examples
 
-### Fetch the latest 10 entries for an address by token sorted by timestamp
+### Fetch the latest 10 entries of an address' tokens sorted by timestamp
 
 ```
 curl --request GET \

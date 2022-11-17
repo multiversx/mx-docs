@@ -12,7 +12,7 @@ The `_id` field of this index is represented by a bech32 encoded smart contract 
 | timestamp     | The timestamp field represents the timestamp of the block in which the smart contract was deployed. |
 | upgrades      | The upgrades field holds a list with details about the upgrades of the smart contract.              |
 
-The `upgrades` field populated with the fields below:
+The `upgrades` field is populated with the fields below:
 
 | upgrades fields | Description                                                                                                  |
 |-----------------|--------------------------------------------------------------------------------------------------------------|
