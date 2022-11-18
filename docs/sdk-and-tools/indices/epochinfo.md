@@ -1,6 +1,6 @@
 ---
 id: es-index-epochinfo
-title: Elasticsearch index: epochinfo
+title: epochinfo
 ---
 
 The `_id` field of this index is represented by epoch.

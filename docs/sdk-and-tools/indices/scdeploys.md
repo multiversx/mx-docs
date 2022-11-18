@@ -1,6 +1,6 @@
 ---
 id: es-index-scdeploys
-title: Elasticsearch index: scdeploys
+title: scdeploys
 ---
 
 The `_id` field of this index is represented by a bech32 encoded smart contract address.

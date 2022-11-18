@@ -1,6 +1,6 @@
 ---
 id: es-index-miniblocks
-title: Elasticsearch index: miniblocks
+title: miniblocks
 ---
 
 The _id field of this index is represented by the miniblock hash, in a hexadecimal encoding.

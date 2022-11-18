@@ -1,6 +1,6 @@
 ---
 id: es-index-tokens
-title: Elasticsearch index: tokens
+title: tokens
 ---
 
 The `_id` field of this index is represented by token identifier of an ESDT token.

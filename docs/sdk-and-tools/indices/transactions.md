@@ -1,6 +1,6 @@
 ---
 id: es-index-transactions
-title: Elasticsearch index: transactions
+title: transactions
 ---
 
 The `_id` field for this index is composed of hex encoded transaction hash.

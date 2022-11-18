@@ -1,6 +1,6 @@
 ---
 id: es-index-operations
-title: Elasticsearch index: operations
+title: operations
 ---
 
 The _id field of this index is represented by the transactions OR smart contract result hash, in a hexadecimal encoding.

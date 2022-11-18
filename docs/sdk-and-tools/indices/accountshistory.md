@@ -1,6 +1,6 @@
 ---
 id: es-index-accountshistory
-title: Elasticsearch index: accountshistory
+title: accountshistory
 ---
 
 The `_id` field of this index is composed in this way: `{bech32address}_{timestamp}` (example: `erd.._1234`).

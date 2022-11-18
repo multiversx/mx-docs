@@ -1,6 +1,6 @@
 ---
 id: es-index-tags
-title: Elasticsearch index: tags
+title: tags
 ---
 
 The `_id` field of this index is represented by the tag name in a base64 encoding.

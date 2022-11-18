@@ -1,6 +1,6 @@
 ---
 id: es-index-delegators
-title: Elasticsearch index: delegators
+title: delegators
 ---
 
 The `_id` field of this index is composed in this way: `blake2bHash(delegatorAddress+stakingProviderAddress)`, in a base64 encoding (example: `YZNG+r3ZwFtOj0c057MnpVnXAfmSqLai15lusLWg+KM=`).

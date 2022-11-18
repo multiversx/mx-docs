@@ -1,6 +1,6 @@
 ---
 id: es-index-accountsesdt
-title: Elasticsearch index: accountsesdt
+title: accountsesdt
 ---
 
 The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}` (example: `erd.._abcd-0123-01`).

@@ -1,6 +1,6 @@
 ---
 id: es-index-scresults
-title: Elasticsearch index: scresults
+title: scresults
 ---
 
 The `_id` field for this index is composed of hex encoded smart contract result hash.

@@ -1,6 +1,6 @@
 ---
 id: es-index-rounds
-title: Elasticsearch index: rounds
+title: rounds
 ---
 
 The `_id` field of this index is composed in this way: `{shardID}_{round}` (example: `2_10905514`)

@@ -1,6 +1,6 @@
 ---
 id: es-index-collections
-title: Elasticsearch index: collections
+title: collections
 ---
 
 The `_id` field of this index is represented by a bech32 encoded address.
