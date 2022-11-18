@@ -3,8 +3,12 @@ id: es-index-rounds
 title: rounds
 ---
 
+
+## _id
+
 The `_id` field of this index is composed in this way: `{shardID}_{round}` (example: `2_10905514`)
 
+## Fields
 
 | Field            | Description                                                                                                            |
 |------------------|------------------------------------------------------------------------------------------------------------------------|

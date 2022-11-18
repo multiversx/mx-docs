@@ -3,8 +3,12 @@ id: es-index-accountsesdthistory
 title: accountsesdthistory
 ---
 
+
+## _id
+
 The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}_{timestamp}` (example: `erd.._abcd-0123-01`).
 
+## Fields
 
 | Field      | Description                                                                                                         |
 |------------|---------------------------------------------------------------------------------------------------------------------|

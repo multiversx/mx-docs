@@ -3,9 +3,13 @@ id: es-index-scresults
 title: scresults
 ---
 
+
+## _id
+
 The `_id` field for this index is composed of hex encoded smart contract result hash.
 (example: `cbd4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
 
+## Fields
 
 | Field             | Description                                                                                                                                                                        |
 |-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

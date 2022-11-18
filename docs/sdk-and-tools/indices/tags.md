@@ -3,8 +3,12 @@ id: es-index-tags
 title: tags
 ---
 
+
+## _id
+
 The `_id` field of this index is represented by the tag name in a base64 encoding.
 
+## Fields
 
 | Field | Description                                                                          |
 |-------|--------------------------------------------------------------------------------------|

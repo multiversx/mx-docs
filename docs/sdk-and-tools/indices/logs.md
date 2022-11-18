@@ -3,7 +3,12 @@ id: es-index-logs
 title: logs
 ---
 
+
+## _id
+
 The `_id` field for this index is composed of hex-encoded hash of the transaction of the smart contract result that generated the log.
+
+## Fields
 
 | Field          | Description                                                                                                                                                                                                                 |
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

@@ -3,7 +3,12 @@ id: es-index-tokens
 title: tokens
 ---
 
+
+## _id
+
 The `_id` field of this index is represented by token identifier of an ESDT token.
+
+## Fields
 
 | Field         | Description                                                                                                                 |
 |---------------|-----------------------------------------------------------------------------------------------------------------------------|

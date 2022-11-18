@@ -3,7 +3,12 @@ id: es-index-validators
 title: validators
 ---
 
+
+## _id
+
 The `_id` field of this index is composed in this way: `{shardID}_{epoch}` (example: `1_123`)
+
+## Fields
 
 | Field       | Description                                                                                     |
 |-------------|-------------------------------------------------------------------------------------------------|

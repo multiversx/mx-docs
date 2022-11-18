@@ -3,7 +3,12 @@ id: es-index-operations
 title: operations
 ---
 
+
+## _id
+
 The _id field of this index is represented by the transactions OR smart contract result hash, in a hexadecimal encoding.
+
+## Fields
 
 This index contains both transactions and smart contract results. This is useful because one can query both of them in a single request.
 

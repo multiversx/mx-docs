@@ -3,8 +3,12 @@ id: es-index-epochinfo
 title: epochinfo
 ---
 
+
+## _id
+
 The `_id` field of this index is represented by epoch.
 
+## Fields
 
 | Field            | Description                                                                                |
 |------------------|--------------------------------------------------------------------------------------------|

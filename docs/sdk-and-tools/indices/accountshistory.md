@@ -3,7 +3,12 @@ id: es-index-accountshistory
 title: accountshistory
 ---
 
+
+## _id
+
 The `_id` field of this index is composed in this way: `{bech32address}_{timestamp}` (example: `erd.._1234`).
+
+## Fields
 
 | Field     | Description                                                                                                                                                                           |
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

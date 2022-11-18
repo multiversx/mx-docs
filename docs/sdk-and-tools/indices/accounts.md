@@ -3,7 +3,11 @@ id: es-index-accounts
 title: accounts
 ---
 
+## _id
+
 The `_id` field of this index is represented by a bech32 encoded address.
+
+## Fields
 
 | Field      | Description                                                                                                                                                                          |
 |------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

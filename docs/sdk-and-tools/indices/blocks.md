@@ -3,7 +3,12 @@ id: es-index-blocks
 title: blocks
 ---
 
+
+## _id
+
 The `_id` field of this index is represented by the block hash, in a hexadecimal encoding.
+
+## Fields
 
 | Field                 | Description                                                                                                                                                        |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
