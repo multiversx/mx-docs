@@ -12,16 +12,16 @@ The `_id` field of this index is composed in this way: `blake2bHash(delegatorAdd
 ## Fields
 
 
-| Field          | Description                                                                                                                          |
-|----------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| address        | The address field holds the address in a bech32 encoding of the delegator.                                                           |
-| contract       | The contract field holds the address in a bech32 encoding of the staking provider contract.                                          |
-| activeStake    | The activeStake field holds the EGLD amount of the active stake (not undelegated, unbondable).                                       |
-| activeStakeNum | The activeStake field holds the EGLD amount of the active stake (not undelegated, unbondable), in a numeric format. . Example: 1.5.  |
+| Field          | Description                                                                                                                           |
+|----------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| address        | The contract field holds the bech32 encoded address of the staking provider contract the address delegated to.                        |
+| contract       | The contract field holds the address in a bech32 encoding of the staking provider contract.                                           |
+| activeStake    | The activeStake field holds the EGLD amount of the active stake (not undelegated or unbondable).                                      |
+| activeStakeNum | The activeStake field holds the EGLD amount of the active stake (not undelegated or unbondable), in a numeric format. . Example: 1.5. |
 
 ## Query examples
 
-### Fetch all records for an address
+### Fetch all delegations of an address
 
 ```
 curl --request GET \

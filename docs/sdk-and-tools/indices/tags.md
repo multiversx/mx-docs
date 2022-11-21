@@ -10,14 +10,14 @@ The `_id` field of this index is represented by the tag name in a base64 encodin
 
 ## Fields
 
-| Field | Description                                                                          |
-|-------|--------------------------------------------------------------------------------------|
-| count | The count field represents the number of NFTs that have the tag from the tag field.  |
-| tag   | The tag field contains the tag in alphanumeric format.                               |
+| Field | Description                                                          |
+|-------|----------------------------------------------------------------------|
+| count | The count field represents the number of NFTs with the current tag.  |
+| tag   | The tag field contains the tag in alphanumeric format.               |
 
 ## Query examples
 
-### Fetch the number of NFTs with the given tag.
+### Fetch NFTs count with a given tag
 
 ```
 curl --request GET \
