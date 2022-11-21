@@ -177,7 +177,7 @@ Using the transaction in the example above, Alice will transfer 12 AliceTokens t
 ### Transfers gas limit
 
 When computing the gas limit required for an ESDT transfer, our recommendation is to use 500_000 since it includes a buffer, 
-and the remaining gas will be refunded into the sender's account.
+and the remaining gas will be refunded to the sender's account.
 
 However, if one wants to calculate the exact amount of gas needed, here's the formula:
 
