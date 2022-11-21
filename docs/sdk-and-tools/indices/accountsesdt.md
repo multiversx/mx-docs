@@ -11,9 +11,9 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 
 | Field       | Description                                                                                                                           |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| identifier  | The identifier field consists of `token` field and the `nonce` field hex encoded.                                                     |
+| identifier  | The identifier field consists of `token` field and the `nonce` field hex encoded (example: `TOKEN-01abdc-01`).                        |
 | address     | The address field holds the address in a bech32 encoding.                                                                             |
-| balance     | The balance field holds the amount of ESDT token the address possesses.                                                               |
+| balance     | The balance field holds the amount of ESDT token the address possesses. It includes the number of decimals.                           |
 | balanceNum  | The balanceNum field holds the amount of ESDT tokens the address possesses, in a numeric format.                                      |
 | data        | The data field is a structure that contains extra data about a token, such as the creator of an NFT.                                  |
 | tokenNonce  | The tokenNonce field holds the sequence number of the token. This field is empty in the case of `FungibleESDT`.                       |
@@ -24,13 +24,13 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 
 Docs with a non-empty `tokenNonce` field will have the `data` field populated with the following structure:
 
-| data fields        | Description                                                                 |
-|--------------------|-----------------------------------------------------------------------------|
-| uris               | The uris field holds a list of URIs.                                        |
-| creator            | The creator field holds the bech32 encoded address of the token's creator.  |
-| whiteListedStorage | The whiteListedStorage field is true if the token has white-listed storage. |
-| attributes         | The attributes field contains the attributes of the token.                  |
-| nonEmptyURIs       | The nonEmptyURIs field is true if the token has non empty uris.             |
+| data fields        | Description                                                                                                                                                                                                       |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| uris               | The uris field holds a list of URIs.                                                                                                                                                                              |
+| creator            | The creator field holds the bech32 encoded address of the token's creator.                                                                                                                                        |
+| whiteListedStorage | The whiteListedStorage field is true if the token has white-listed storage. An NFT/SFT has white-listed storage if the URI belongs to one of the allowed decentralized storage services, such as IPFS or Pinata.  |
+| attributes         | The attributes field contains the attributes of the token.                                                                                                                                                        |
+| nonEmptyURIs       | The nonEmptyURIs field is true if the token has non empty uris.                                                                                                                                                   |
 
 
 ## Query examples
