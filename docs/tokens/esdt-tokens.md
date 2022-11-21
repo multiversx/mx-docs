@@ -201,7 +201,7 @@ Therefore, knowing these values, the gas units needed for pre-calculating the ES
 
 **Example**
 
-Let's take an example. For example, if one wants to transfer `20,000 MEX`, the data field of the transaction would look like:
+Let's take an example. If one wants to transfer `20,000 MEX`, the data field of the transaction would look like:
 - `ESDTTransfer@4d45582d343535633537@043c33c1937564800000`
 It's length is 54 characters.
 
