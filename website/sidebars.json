@@ -185,7 +185,6 @@
           "sdk-and-tools/indices/es-index-accountsesdthistory",
           "sdk-and-tools/indices/es-index-accountshistory",
           "sdk-and-tools/indices/es-index-blocks",
-          "sdk-and-tools/indices/es-index-collections",
           "sdk-and-tools/indices/es-index-delegators",
           "sdk-and-tools/indices/es-index-epochinfo",
           "sdk-and-tools/indices/es-index-logs",
