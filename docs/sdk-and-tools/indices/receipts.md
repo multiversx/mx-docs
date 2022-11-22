@@ -1,10 +1,15 @@
 ---
 id: es-index-receipts
-title: Elasticsearch index: receipts
+title: receipts
 ---
+
+
+## _id
 
 The `_id` field of this index is composed of hex encoded receipt hash.
 (example: `ced4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
+
+## Fields
 
 | Field     | Description                                                                                         |
 |-----------|-----------------------------------------------------------------------------------------------------|

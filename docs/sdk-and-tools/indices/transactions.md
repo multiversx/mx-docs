@@ -1,10 +1,15 @@
 ---
 id: es-index-transactions
-title: Elasticsearch index: transactions
+title: transactions
 ---
+
+
+## _id
 
 The `_id` field for this index is composed of hex encoded transaction hash.
 (example: `cad4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
+
+## Fields
 
 | Field             | Description                                                                                                                                                                           |
 |-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

@@ -1,10 +1,14 @@
 ---
 id: es-index-rating
-title: Elasticsearch index: rating
+title: rating
 ---
+
+
+## _id
 
 The `_id` field of this index is composed in this way: `{validator_bls_key}_{epoch}` (example: `blskey_37`).
 
+## Fields
 
 | Field     | Description                                                      |
 |-----------|------------------------------------------------------------------|
