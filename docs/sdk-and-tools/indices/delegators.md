@@ -12,12 +12,12 @@ The `_id` field of this index is composed in this way: `blake2bHash(delegatorAdd
 ## Fields
 
 
-| Field          | Description                                                                                                                           |
-|----------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| address        | The address field holds the address in a bech32 encoding of the delegator.                                                            |
-| contract       | The contract field holds the bech32 encoded address of the staking provider contract the address delegated to.                        |
-| activeStake    | The activeStake field holds the EGLD amount of the active stake (not undelegated or unbondable).                                      |
-| activeStakeNum | The activeStake field holds the EGLD amount of the active stake (not undelegated or unbondable), in a numeric format. . Example: 1.5. |
+| Field          | Description                                                                                                                          |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| address        | The address field holds the address in a bech32 encoding of the delegator.                                                           |
+| contract       | This field holds the bech32 encoded address of the staking provider contract the address to whom it was delegated to.                |
+| activeStake    | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable).                                    |
+| activeStakeNum | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable), in a numeric format. Example: 1.5. |
 
 ## Query examples
 
@@ -36,7 +36,7 @@ curl --request GET \
 }'
 ```
 
-### Fetch all delegators from a staking provider
+### Fetch all delegators to a staking provider
 
 ```
 curl --request GET \

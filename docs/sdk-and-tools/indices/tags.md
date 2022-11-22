@@ -10,10 +10,10 @@ The `_id` field of this index is represented by the tag name in a base64 encodin
 
 ## Fields
 
-| Field | Description                                                          |
-|-------|----------------------------------------------------------------------|
-| count | The count field represents the number of NFTs with the current tag.  |
-| tag   | The tag field contains the tag in alphanumeric format.               |
+| Field | Description                                                         |
+|-------|---------------------------------------------------------------------|
+| count | The count field represents the number of NFTs with the current tag. |
+| tag   | This field represents the tag in a alphanumeric format.             |
 
 ## Query examples
 
