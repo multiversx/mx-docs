@@ -15,7 +15,7 @@ The `_id` field of this index is composed in this way: `blake2bHash(delegatorAdd
 | Field          | Description                                                                                                                          |
 |----------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | address        | The address field holds the address in a bech32 encoding of the delegator.                                                           |
-| contract       | This field holds the bech32 encoded address of the staking provider contract the address to whom it was delegated to.                |
+| contract       | This field holds the bech32 encoded address of the staking provider contract to whom it was delegated to.                            |
 | activeStake    | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable).                                    |
 | activeStakeNum | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable), in a numeric format. Example: 1.5. |
 

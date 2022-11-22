@@ -24,6 +24,8 @@ The unified structure will contain an extra field in order to be able to differe
 ### Fetch the latest operations of an address
 
 ```
+ADDRESS="erd1..."
+
 curl --request GET \
   --url ${ES_URL}/operations/_search \
   --header 'Content-Type: application/json' \
@@ -33,17 +35,17 @@ curl --request GET \
 			"should": [
 				{
 					"match": {
-						"sender": "erd..."
+						"sender": "${ADDRESS}"
 					}
 				},
 				{
 					"match": {
-						"receiver": "erd..."
+						"receiver": "${ADDRESS}"
 					}
 				},
 				{
 					"match": {
-						"receivers": "erd..."
+						"receivers": "${ADDRESS}"
 					}
 				}
 			]
