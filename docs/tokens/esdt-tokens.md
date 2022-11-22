@@ -174,6 +174,92 @@ TransferTransaction {
 
 Using the transaction in the example above, Alice will transfer 12 AliceTokens to Bob.
 
+### Transfers gas limit
+
+When computing the gas limit required for an ESDT transfer, our recommendation is to use 500_000 since it includes a buffer, 
+and the remaining gas will be refunded to the sender's account.
+
+However, if one wants to calculate the exact amount of gas needed, here's the formula:
+
+```
+ESDT_TRANSFER_GAS_LIMIT = MIN_GAS_LIMIT + data_length * GAS_PER_DATA_BYTE + ESDT_TRANSFER_FUNCTION_COST
+```
+
+Where the constants represent:
+- `MIN_GAS_LIMIT` - the minimum gas limit of a transaction. Each transaction will have at least this cost. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
+- `GAS_PER_DATA_BYTE` - the amount of gas to be used for each character of the data field. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
+- `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.elrond.com/network/gas-configs).
+
+The current values of these constants are:
+```
+MIN_GAS_LIMIT = 50,000
+GAS_PER_DATA_BYTE = 1,500
+ESDT_TRANSFER_FUNCTION_COST = 200,000
+```
+
+Therefore, knowing these values, the gas units needed for pre-calculating the ESDT transfers gas limit, the transaction's data length is the only variable.
+
+**Example**
+
+Let's take an example. If one wants to transfer `20,000 MEX`, the data field of the transaction would look like:
+- `ESDTTransfer@4d45582d343535633537@043c33c1937564800000`
+Its length is 54 characters.
+
+Following the formula, we'll get:
+
+```
+ESDT_TRANSFER_GAS_LIMIT = MIN_GAS_LIMIT + data_length * GAS_PER_DATA_BYTE + ESDT_TRANSFER_FUNCTION_COST
+                        =     50,000    +     54      *      1,500        +          200,000
+                        = 331,000
+```
+
+### Transfers fee
+
+When computing the fee, it isn't enough to multiply the obtained gas limit with the gas price, since there is a reduction 
+of fee in case of a Smart Contract call or a Built-In function call (which is the current case).
+
+Therefore, the formula for computing the fee is:
+
+```
+ESDT_TRANSFER_FEE = gas_price * gas_cost
+                  = gas_price * [MIN_GAS_LIMIT + (data_length * GAS_PER_DATA_BYTE) + (ESDT_TRANSFER_FUNCTION_COST * GAS_PRICE_MODIFIER)]
+```
+
+Most of the constants can be found in the [Transfers gas limit section](/tokens/esdt-tokens#transfers-gas-limit), beside the `GAS_PRICE_MODIFIER` which can
+be found [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
+
+Currently, the constants values are:
+
+```
+MIN_GAS_LIMIT = 50,000
+GAS_PER_DATA_BYTE = 1,500
+ESDT_TRANSFER_FUNCTION_COST = 200,000
+GAS_PRICE_MODIFIER = 0.01
+```
+
+**Example**
+
+Let's take an example. If one wants to transfer `20,000 MEX`, the data field of the transaction would look like:
+```
+TransferTransaction {
+    ...
+    gasPrice: 1000000000
+    data: ESDTTransfer@4d45582d343535633537@043c33c1937564800000
+}
+```
+
+We can see that the data length is 54, while the gas price is the network's minimum, that is, `1000000000`.
+
+Following the formula, we'll get:
+
+```
+ESDT_TRANSFER_FEE = gas_price * gas_cost
+                  = 1000000000    * [ MIN_GAS_LIMIT + (data_length * GAS_PER_DATA_BYTE) + (ESDT_TRANSFER_FUNCTION_COST * GAS_PRICE_MODIFIER)]
+                  = 1,000,000,000 * [    50,000     + (     54     *      1500        ) + (         200,000            *        0.01       )]
+                  = 133000000000000
+                  = 0.000133 EGLD
+```
+
 ## **Transfers to a smart contract**
 
 Smart contracts may hold ESDT tokens and perform any kind of transaction with them, just like any Account. However, there are a few extra ESDT features dedicated to smart contracts:

@@ -36,8 +36,8 @@ An example of a configuration is:
     Username          = "elastic-username"
     Password          = "elastic-password"
     # EnabledIndexes represents a slice of indexes that will be enabled for indexing. Full list is:
-    # ["rating", "transactions", "blocks", "validators", "miniblocks", "rounds", "accounts", "accountshistory", "receipts", "scresults", "accountsesdt", "accountsesdthistory", "epochinfo", "scdeploys", "tokens", "tags", "logs", "delegators", "operations", "collections"]
-    EnabledIndexes    = ["rating", "transactions", "blocks", "validators", "miniblocks", "rounds", "accounts", "accountshistory", "receipts", "scresults", "accountsesdt", "accountsesdthistory", "epochinfo", "scdeploys", "tokens", "tags", "logs", "delegators", "operations", "collections"]
+    # ["rating", "transactions", "blocks", "validators", "miniblocks", "rounds", "accounts", "accountshistory", "receipts", "scresults", "accountsesdt", "accountsesdthistory", "epochinfo", "scdeploys", "tokens", "tags", "logs", "delegators", "operations"]
+    EnabledIndexes    = ["rating", "transactions", "blocks", "validators", "miniblocks", "rounds", "accounts", "accountshistory", "receipts", "scresults", "accountsesdt", "accountsesdthistory", "epochinfo", "scdeploys", "tokens", "tags", "logs", "delegators", "operations"]
 ```
 
 `Kibana` can be used for visualizing Elastic Data. Kikana's path must be `_plugin/kibana/api` (as seen in AWS managed instances).
@@ -67,6 +67,45 @@ In case of a single machine, our recommendation is as follows:
 
 ## Clone an Elasticsearch cluster
 
-In order to have all the information about the Elrond chain in an Elasticsearch cluster (from genessis to current time) one has to copy all the data with a specific tool from an Elasticsearch cluster to another.
+In order to have all the information about the Elrond chain in an Elasticsearch cluster (from genesis to current time) one has to copy all the data with a specific tool from an Elasticsearch cluster to another.
 To get more information how to do this use the documentation from this [repository](https://github.com/ElrondNetwork/elrond-tools-go/tree/main/elasticreindexer).
+
+
+## Elasticsearch indices 
+
+An observing-squad with the elastic indexer enabled will save data in different indices. This data is used for multiple use cases. An example is to fetch all the 
+transactions that belong to an address or to display all the address sorted based on the EGLD balances.
+
+Each entry in an Elasticsearch index will have a format similar to this:
+
+```
+{
+    "_id": "..."
+    "_source": {
+      ...
+    }
+}
+```
+
+| Name                                                                       | Description                                                                 |
+|----------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| [transactions](/sdk-and-tools/indices/es-index-transactions)               | Contains all transactions.                                                  |
+| [blocks](/sdk-and-tools/indices/es-index-blocks)                           | Contains all executed blocks.                                               |
+| [validators](/sdk-and-tools/indices/es-index-validators)                   | Contains the public keys of the validators grouped by epoch and shard.      |
+| [rating](/sdk-and-tools/indices/es-index-rating)                           | Contains the validators' rating for every epoch.                            |
+| [miniblocks](/sdk-and-tools/indices/es-index-miniblocks)                   | Contains all executed minblocks.                                            |
+| [rounds](/sdk-and-tools/indices/es-index-rounds)                           | Contains details of each round that has passed.                             |
+| [accounts](/sdk-and-tools/indices/es-index-accounts)                       | Contains the addresses' balances and the timestamp when they were modified. | 
+| [accountshistory](/sdk-and-tools/indices/es-index-accountshistory)         | Contains historical information about the address balances.                 |
+| [receipts](/sdk-and-tools/indices/es-index-receipts)                       | Contains all generated receipts.                                            |
+| [scresults](/sdk-and-tools/indices/es-index-scresults)                     | Contains all generated smart contract results.                              |
+| [accountsesdt](/sdk-and-tools/indices/es-index-accountsesdt)               | Contains the addresses' ESDT balances.                                      |
+| [accountsesdthistory](/sdk-and-tools/indices/es-index-accountsesdthistory) | Contains historical information about the address ESDT balances.            |
+| [epochinfo](/sdk-and-tools/indices/es-index-epochinfo)                     | Contains the accumulated fees and the developer fees grouped by epochs.     |
+| [scdeploys](/sdk-and-tools/indices/es-index-scdeploys)                     | Contains details about all the deployed smart contracts.                    |
+| [tokens](/sdk-and-tools/indices/es-index-tokens)                           | Contains all created ESDT tokens.                                           |
+| [tags](/sdk-and-tools/indices/es-index-tags)                               | Contains the NFTs' tags.                                                    |
+| [logs](/sdk-and-tools/indices/es-index-logs)                               | Contains all the logs generated by transactions and smart contract results. |
+| [delegators](/sdk-and-tools/indices/es-index-delegators)                   | Contains details about all the delegators.                                  |
+| [operations](/sdk-and-tools/indices/es-index-operations)                   | Contains all transactions and smart contract results.                       |
 

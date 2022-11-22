@@ -178,6 +178,31 @@
       "sdk-and-tools/elastic-search",
       {
         "type": "subcategory",
+        "label": "Elasticsearch indices",
+        "ids": [
+          "sdk-and-tools/indices/es-index-accounts",
+          "sdk-and-tools/indices/es-index-accountsesdt",
+          "sdk-and-tools/indices/es-index-accountsesdthistory",
+          "sdk-and-tools/indices/es-index-accountshistory",
+          "sdk-and-tools/indices/es-index-blocks",
+          "sdk-and-tools/indices/es-index-delegators",
+          "sdk-and-tools/indices/es-index-epochinfo",
+          "sdk-and-tools/indices/es-index-logs",
+          "sdk-and-tools/indices/es-index-miniblocks",
+          "sdk-and-tools/indices/es-index-operations",
+          "sdk-and-tools/indices/es-index-rating",
+          "sdk-and-tools/indices/es-index-receipts",
+          "sdk-and-tools/indices/es-index-rounds",
+          "sdk-and-tools/indices/es-index-scdeploys",
+          "sdk-and-tools/indices/es-index-scresults",
+          "sdk-and-tools/indices/es-index-tags",
+          "sdk-and-tools/indices/es-index-tokens",
+          "sdk-and-tools/indices/es-index-transactions",
+          "sdk-and-tools/indices/es-index-validators"
+        ]
+      },
+      {
+        "type": "subcategory",
         "label": "erdpy",
         "ids": [
           "sdk-and-tools/erdpy/erdpy",
