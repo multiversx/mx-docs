@@ -121,19 +121,26 @@ Create a safe backup for them on storage outside of the server running your node
 
 ## **Migration from old scripts**
 
-Before the release of `elrond-go-scripts`, there were `elrond-go-scripts-testnet` and `elrond-go-scripts-devnet` for setting up nodes
-on testnet of devnet. If one wants to migrate from the old scripts to the new ones, these are the steps to be followed:
+Before the release of the current `elrond-go-scripts`, there were the `elrond-go-scripts-testnet`, `elrond-go-scripts-devnet` and `elrond-go-scripts-mainnet` for setting up nodes
+on the testnet, devnet and mainnet respectively. Those three repositories have been deprecated because `elrond-go-scripts` can be used to manage nodes regardless of their target network (`testnet`, `devnet` or `mainnet`).
 
-- the migration is possible while preventing the keys, DB, logs and the current node installation, in general
-- just clone the `elrond-go-scripts` repo near the old one (`elrond-go-scripts-testnet`/`elrond-go-scripts-testnet`), configure it as stated and
-  call the `migrate` operation on the scripts:
+If one wants to migrate from the old scripts to the new ones, it is generally possible to do so while preserving the validator keys, current node installation, DB and logs.
+These are the steps to be followed:
+
+- clone the `elrond-go-scripts` repo near the old one (`elrond-go-scripts-testnet`/`elrond-go-scripts-devnet`/`elrond-go-scripts-mainnet`); assuming the old scripts were located in the home directory, run the following:
+```
+cd ~
+git clone https://github.com/ElrondNetwork/elrond-go-scripts
+```
+- configure the new scripts as described in the sections above;
+- make sure you set the new `ENVIRONMENT` variable declared within `~/elrond-go-scripts/config/variables.cfg`; it must contain one of `"testnet"`, `"devnet"` or `"mainnet"`;
+- call the `migrate` operation on the scripts:
 ```
 cd ~/elrond-go-scripts
 ./script.sh migrate
 ```
 
-this will tell the scripts the current environment on which the previous installation was done. Be careful as to
-not mix the previous installation network with the new one. This might lead to unpredictable results
+Be careful as to not mix the previous installation network with the new one. This might lead to unpredictable results.
 
 ## **Choosing a custom configuration tag or branch**
 
