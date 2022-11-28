@@ -31,10 +31,10 @@ git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v0.1.0#egg=er
 
 ### Creating wallets
 
-Mnemonic generation is based on [`trezor/python-mnemonic`](https://github.com/trezor/python-mnemonic) and is performed as follows:
+Mnemonic generation is based on [`trezor/python-mnemonic`](https://github.com/trezor/python-mnemonic) and can be achieved as follows:
 
 ```
-from erdpy_wallet.mnemonic import Mnemonic
+from erdpy_wallet import Mnemonic
 
 mnemonic = Mnemonic.generate()
 words = mnemonic.get_words()
@@ -55,6 +55,8 @@ print("Public key", public_key.hex())
 A keypair can be saved as a JSON wallet (recommended):
 
 ```
+from erdpy_wallet import UserWallet
+
 wallet = UserWallet(secret_key, "password")
 wallet.save("wallet.json")
 ```
@@ -67,7 +69,46 @@ from erdpy_wallet import pem
 pem.write("wallet.pem", secret_key.buffer, public_key.buffer)
 ```
 
+### Loading a keypair
+
+:::note
+This is not a common use-case. 
+:::
+
+From a JSON wallet:
+
+```
+from erdpy_wallet import UserWallet
+
+secret_key = UserWallet.decrypt_secret_key_from_file(Path("alice.json"), "password")
+public_key = secret_key.generate_public_key()
+
+print("Secret key", secret_key.hex())
+print("Public key", public_key.hex())
+```
+
+From a PEM file:
+
+```
+from erdpy_wallet import pem
+
+buffer, _ = pem.parse(path, index)
+secret_key = UserSecretKey(buffer)
+public_key = secret_key.generate_public_key()
+
+print("Secret key", secret_key.hex())
+print("Public key", public_key.hex())
+```
+
 ### Creating a `UserSigner`
+
+From a JSON wallet:
+
+```
+from erdpy_wallet import UserSigner
+
+signer = UserSigner.from_wallet(Path("alice.json", "password")
+```
 
 From a PEM file:
 
@@ -75,9 +116,25 @@ From a PEM file:
 signer = UserSigner.from_pem_file(Path("alice.pem")
 ```
 
-From a JSON wallet:
+### Signing objects
+
+Signable objects (message or transaction) must adhere to the following interface:
 
 ```
-signer = UserSigner.from_wallet(Path("alice.json", "password")
+class ISignable(Protocol):
+    def serialize_for_signing(self) -> bytes:
+        return bytes()
 ```
 
+### Verifying signatures
+
+For objects to support signature verification, they must adhere to the following interface:
+
+```
+class IVerifiable(Protocol):
+    def serialize_for_signing(self) -> bytes:
+        return bytes()
+
+    def get_signature(self) -> ISignature:
+        return bytes()
+```
