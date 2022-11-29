@@ -5,16 +5,77 @@ title: Smart Contract Build Reference
 
 ## How to: basic build
 
-To build a contract, it is enough to ...
+To build a contract, it is enough to navigate in your contract crate and run
 
+```sh
+erdpy contract build
+```
+Alternativelly you can go to your installed `Elrond Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`  
 
-
+![alt text](ide.png "Build Contract from the Elrond Workspace Explorer extension")
 ## How to: Multi contract build
 
-To get a multi-contract build, it is enough to add a `multicontract.toml` file to the smart contract root.
+To get a multi-contract build, it is enough to add a `multicontract.toml` file to the smart contract root, following running again the build command.
 
+The `multicontract.toml` file is an optional file that if added to your smart contract will enable the multi-contract build. Its absence does not influence at all the basic build functionality. Here is an example of a `multicontract.toml` :
+```toml
+[settings]
+main = "multi-contract-main"
 
+[contracts.multi-contract-main]
+# main contract can have any id and any name
+name = "multi-contract-features"
+add-unlabelled = true
 
+[contracts.multi-contract-features-view]
+# name is optional, if missing this ^^^ id will be used
+external-view = true
+add-labels = ["mcs-external-view"]
+```
+And now an example of contract that uses this multi-contract configuration file:
+
+```rust
+![no_std]
+
+elrond_wasm::imports!();
+
+#[elrond_wasm::contract]
+pub trait MultiContractFeatures {
+    #[init]
+    fn init(&self, sample_value: BigUint) {
+        self.sample_value().set(sample_value);
+    }
+
+    #[view]
+    #[storage_mapper("sample-value")]
+    fn sample_value(&self) -> SingleValueMapper<BigUint>;
+
+    #[view]
+    #[label("mcs-external-view")]
+    fn external_pure(&self) -> i32 {
+        1
+    }
+
+    #[view]
+    #[label("mcs-external-view")]
+    fn sample_value_external_get(&self) -> BigUint {
+        self.sample_value().get()
+    }
+
+    /// This is not really a view.
+    /// Designed to check what happens if we try to write to storage from an external view.
+    #[endpoint]
+    #[label("mcs-external-view")]
+    fn sample_value_external_set(&self, sample_value: BigUint) {
+        self.sample_value().set(sample_value);
+    }
+}
+
+```
+
+In the contract one may label endpoints and in the `multicontract.toml` file to decide in what to do with the certain label. A label ca be added to multiple contracts inside the `add-labels` component resulting the endpoints being added to the multiple specific contracts.
+
+A contract may have a specific name in the toml file but can be generated with a differnet one by specifying its `name` field.
 
 ## Contract build process overview
 
