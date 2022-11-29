@@ -21,6 +21,12 @@ pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@
 pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v0.1.0#egg=erdpy_network_providers
 ```
 
+## Core components
+
+:::important
+Documentation in this section is preliminary and subject to change.
+:::
+
 ## Wallet components
 
 In order to use erdpy's wallet components, reference the following package in your `requirements.txt`:
@@ -176,3 +182,9 @@ Verifying a signature:
 is_ok = verifier.verify(verifiableObject)
 print(is_ok)
 ```
+
+## Network providers
+
+:::important
+Documentation in this section is preliminary and subject to change.
+:::
