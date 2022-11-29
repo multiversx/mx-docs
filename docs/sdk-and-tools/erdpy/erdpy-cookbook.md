@@ -100,9 +100,9 @@ print("Secret key", secret_key.hex())
 print("Public key", public_key.hex())
 ```
 
-### Creating a `UserSigner`
+### Signing objects
 
-From a JSON wallet:
+Creating a `UserSigner` from a JSON wallet:
 
 ```
 from erdpy_wallet import UserSigner
@@ -110,13 +110,12 @@ from erdpy_wallet import UserSigner
 signer = UserSigner.from_wallet(Path("alice.json", "password")
 ```
 
-From a PEM file:
+Creating a `UserSigner` from a PEM file:
 
 ```
 signer = UserSigner.from_pem_file(Path("alice.pem")
 ```
 
-### Signing objects
 
 Signable objects (message or transaction) must adhere to the following interface:
 
@@ -126,7 +125,37 @@ class ISignable(Protocol):
         return bytes()
 ```
 
+Both `Transaction` and `Message`, defined in `erdpy_core`, implement `ISignable`.
+
+Signing a transaction:
+
+```
+from erdpy_core import Transaction
+
+tx = Transaction(...)
+signature = signer.sign(tx)
+tx.set_signature(signature)
+```
+
+Signing an arbitrary message:
+
+```
+from erdpy_core import Message
+
+message = Message.from_string("hello")
+signature = signer.sign(message)
+message.set_signature(message)
+```
+
 ### Verifying signatures
+
+Creating a `UserVerifier`:
+
+```
+from erdpy_wallet import UserVerifier
+
+verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+```
 
 For objects to support signature verification, they must adhere to the following interface:
 
@@ -137,4 +166,13 @@ class IVerifiable(Protocol):
 
     def get_signature(self) -> ISignature:
         return bytes()
+```
+
+Both `Transaction` and `Message`, defined in `erdpy_core`, implement `IVerifiable`.
+
+Verifying a signature:
+
+```
+is_ok = verifier.verify(verifiableObject)
+print(is_ok)
 ```
