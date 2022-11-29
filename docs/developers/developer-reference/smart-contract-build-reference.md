@@ -12,12 +12,28 @@ erdpy contract build
 ```
 Alternativelly you can go to your installed `Elrond Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`  
 
-![alt text](ide.png "Build Contract from the Elrond Workspace Explorer extension")
+![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the Elrond Workspace Explorer extension")
+
 ## How to: Multi contract build
+
+### Rationale
+
+Starting with `elrond-wasm 0.37`, it is possible to configure a so-called "multi contract build".
+
+The idea is to produce several smart contract binaries from the same smart contract project. These "output" contracts may or may not share most of their endpoints and logic, but they always originate from the same code base. Think of them as flavors of the same contract.
+
+The main rationale of this system (for now at least) are the "external view" contracts. It is very common for contracts to have certain endpoints that are very useful for grabbing data off-chain, but are very rarely used on-chain, if ever. Their code is basically bloating the main contract, and the idea is to extract them into a separate contract. This second contract, called an "external view" is allowed to read data directly from the main contract storage, but not write anything back.
+
+The framework does the storage access rerouting automatically behind the scenes. The contract code cannot even tell the difference between a view that belongs in the same contract and one that has been relegated to an external view.
+
+Even more so, the same view endpoint can function both as external view and as regular view in different configurations/output contracts.
+
+### Configuration
 
 To get a multi-contract build, it is enough to add a `multicontract.toml` file to the smart contract root, following running again the build command.
 
-The `multicontract.toml` file is an optional file that if added to your smart contract will enable the multi-contract build. Its absence does not influence at all the basic build functionality. Here is an example of a `multicontract.toml` :
+The `multicontract.toml` file is an optional file that if added to your smart contract will enable the multi-contract build. Its absence does not influence at all the basic build functionality. Here is an example of a `multicontract.toml`:
+
 ```toml
 [settings]
 main = "multi-contract-main"
