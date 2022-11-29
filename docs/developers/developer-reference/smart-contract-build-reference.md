@@ -3,7 +3,7 @@ id: smart-contract-build-reference
 title: Smart Contract Build Reference
 ---
 
-## How to: basic build
+## How to: Basic build
 
 To build a contract, it is enough to navigate in your contract crate and run
 
@@ -14,7 +14,10 @@ Alternativelly you can go to your installed `Elrond Workspace Explorer` VS Code 
 
 ![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the Elrond Workspace Explorer extension")
 
+
+
 ## How to: Multi contract build
+
 
 ### Rationale
 
@@ -22,78 +25,187 @@ Starting with `elrond-wasm 0.37`, it is possible to configure a so-called "multi
 
 The idea is to produce several smart contract binaries from the same smart contract project. These "output" contracts may or may not share most of their endpoints and logic, but they always originate from the same code base. Think of them as flavors of the same contract.
 
-The main rationale of this system (for now at least) are the "external view" contracts. It is very common for contracts to have certain endpoints that are very useful for grabbing data off-chain, but are very rarely used on-chain, if ever. Their code is basically bloating the main contract, and the idea is to extract them into a separate contract. This second contract, called an "external view" is allowed to read data directly from the main contract storage, but not write anything back.
+The main rationale of this system (for now at least) are the "external view" contracts. It is very common for contracts to have certain endpoints that are very useful for grabbing data off-chain, but are very rarely used on-chain, if ever. Their code is basically bloating the main contract, and the idea is to extract them into a separate contract. This second contract (called an "external view contract") works because contracts can read from the storage of other contracts directly.
 
-The framework does the storage access rerouting automatically behind the scenes. The contract code cannot even tell the difference between a view that belongs in the same contract and one that has been relegated to an external view.
+The framework does the storage access rerouting automatically behind the scenes. The contract code cannot even tell the difference between a regular view from the same contract and one that has been relegated to an external view. Even more so, the same view endpoint can function both as external view and as regular view in different configurations/output contracts.
 
-Even more so, the same view endpoint can function both as external view and as regular view in different configurations/output contracts.
+It is possible that this component becomes a building block of a more advanced versioning system, but we have not experimented with that yet.
 
-### Configuration
 
-To get a multi-contract build, it is enough to add a `multicontract.toml` file to the smart contract root, following running again the build command.
+### Configuration example
 
-The `multicontract.toml` file is an optional file that if added to your smart contract will enable the multi-contract build. Its absence does not influence at all the basic build functionality. Here is an example of a `multicontract.toml`:
+To get a multi-contract build, it is enough to add a `multicontract.toml` file to the smart contract root. The build is triggered the same way as for basic builds.
+
+The `multicontract.toml` file contains data on what the output contracts are, and what endpoints go in which.
+
+We will use the multisig contract as an example. In this contracts we have several endpoints that are never used on-chain: `getPendingActionFullInfo`, `userRole`, `getAllBoardMembers`, `getAllProposers`, `getActionData`, `getActionSigners`, `getActionSignerCount`, `getActionValidSignerCount`. We want to place these contracts in an external view contract.
+
+In order to make configuration easier, we label them in code, as can be seen in the excerpt below:
+
+```rust
+#[elrond_wasm::module]
+pub trait MultisigStateModule {
+    // ...
+
+    /// Serialized action data of an action with index.
+    #[label("multisig-external-view")]
+    #[view(getActionData)]
+    fn get_action_data(&self, action_id: usize) -> Action<Self::Api> {
+        // ...
+    }
+
+    /// Gets addresses of all users who signed an action.
+    #[label("multisig-external-view")]
+    #[view(getActionSigners)]
+    fn get_action_signers(&self, action_id: usize) -> ManagedVec<ManagedAddress> {
+        // ...
+    }
+
+    // ...
+}
+
+```
+
+Labels don't do anything more than provide a handy way to refer to groups of endpoints in the `multicontract.toml`.
+
+
+Now for the `multicontract.toml` config itself, with explanations in comments:
 
 ```toml
 [settings]
-main = "multi-contract-main"
+# one of the output contracts is considered "multisig-main"
+# it can have any id
+main = "multisig-main"
 
-[contracts.multi-contract-main]
-# main contract can have any id and any name
-name = "multi-contract-features"
+# contracts are identified by a contract id
+# this id is only relevant in this file and in test setup
+[contracts.multisig-main]
+# the contract name is the important one,
+# the output will be <contract-name>.wasm/<contract-name>.abi.json
+name = "multisig"
+# we can choose to add all unlabelled endpoints to a contract
 add-unlabelled = true
 
-[contracts.multi-contract-features-view]
-# name is optional, if missing this ^^^ id will be used
+# this is the external view contract, here we call it "view"
+[contracts.view]
+# the output will be multisig-view.wasm/multisig-view.abi.json
+name = "multisig-view"
+# this is how we signal that this contract will be built as an external view
 external-view = true
-add-labels = ["mcs-external-view"]
+# we only add the endpoints labelled "multisig-external-view", as in the code snippet above
+# any number of labels can be added
+add-labels = ["multisig-external-view"]
+
+# this is how you get a version of the contract with all endpoints
+# (main and external view, as defined above), 
+[contracts.full]
+name = "multisig-full"
+add-unlabelled = true
+add-labels = ["multisig-external-view"]
 ```
-And now an example of contract that uses this multi-contract configuration file:
 
-```rust
-![no_std]
 
-elrond_wasm::imports!();
+### The external view contract
 
-#[elrond_wasm::contract]
-pub trait MultiContractFeatures {
-    #[init]
-    fn init(&self, sample_value: BigUint) {
-        self.sample_value().set(sample_value);
-    }
+An _external view_ contract has a behavior different from that of a regular contract. There is some logic added by the framework to such a contract, which is invisible to the developer. There are 2 main points:
 
-    #[view]
-    #[storage_mapper("sample-value")]
-    fn sample_value(&self) -> SingleValueMapper<BigUint>;
-
-    #[view]
-    #[label("mcs-external-view")]
-    fn external_pure(&self) -> i32 {
-        1
-    }
-
-    #[view]
-    #[label("mcs-external-view")]
-    fn sample_value_external_get(&self) -> BigUint {
-        self.sample_value().get()
-    }
-
-    /// This is not really a view.
-    /// Designed to check what happens if we try to write to storage from an external view.
-    #[endpoint]
-    #[label("mcs-external-view")]
-    fn sample_value_external_set(&self, sample_value: BigUint) {
-        self.sample_value().set(sample_value);
+1. Storage access is different. All storage reads are done from the target contract given in the constructor.
+2. The constructor is different. Be mindful of this when deploying the external view contract.
+    - The original constructor is ignored, [a specific constructor](https://docs.rs/elrond-wasm/0.36.1/elrond_wasm/external_view_contract/fn.external_view_contract_constructor.html) is always provided instead.
+    - This constructor always takes one single argument, which is the address of the target contract to read from. From this on, the target address can no longer be changed.
+    - The external view constructor ABI is always as follows:
+```json
+{
+    "constructor": {
+        "docs": [
+            "The external view init prepares a contract that looks in another contract's storage.",
+            "It takes a single argument, the other contract's address",
+            "You won't find this constructors' definition in the contract, it gets injected automatically by the framework. See `elrond_wasm::external_view_contract`."
+        ],
+        "inputs": [
+            {
+                "name": "target_contract_address",
+                "type": "Address"
+            }
+        ],
+        "outputs": []
     }
 }
 
 ```
 
-In the contract one may label endpoints and in the `multicontract.toml` file to decide in what to do with the certain label. A label ca be added to multiple contracts inside the `add-labels` component resulting the endpoints being added to the multiple specific contracts.
 
-A contract may have a specific name in the toml file but can be generated with a differnet one by specifying its `name` field.
+### Testing with multi-contracts
 
-## Contract build process overview
+It is possible (and recommended) to use the contracts in Mandos as they would be used on-chain.
+
+The mandos-go tests will work with the produced contract binaries without further ado. Calling an endpoint that is not available in a certain output contract will fail, even if said endpoint exists in the original contract code.
+
+To achieve the same effect in the mandos-rs tests, configure as in the following snippet. This is an actual excerpt from `multisig_mandos_rs_test.rs`, one of the multisig test files.
+
+```rust
+fn world() -> BlockchainMock {
+    // Initialize the blockchain mock, the same as for a regular test.
+    let mut blockchain = BlockchainMock::new();
+    blockchain.set_current_dir_from_workspace("contracts/examples/multisig");
+
+    // Contracts that have no multi-contract config are provided the same as before.
+    blockchain.register_contract("file:test-contracts/adder.wasm", adder::ContractBuilder);
+
+    // For multi-contract outputs we need to provide:
+    // - the ABI, via the generated AbiProvider type
+    // - a mandos expression to bind to, same as for simple contracts
+    // - a contract builder, same as for simple contracts
+    // - the contract name, as specified in multicontract.toml
+    blockchain.register_partial_contract::<multisig::AbiProvider, _>(
+        "file:output/multisig.wasm",
+        multisig::ContractBuilder,
+        "multisig",
+    );
+
+    // The same goes for the external view contract.
+    // There is no need to specify here that it is an external view,
+    // the framework gets all the data from multicontract.toml.
+    blockchain.register_partial_contract::<multisig::AbiProvider, _>(
+        "file:output/multisig-view.wasm",
+        multisig::ContractBuilder,
+        "multisig-view",
+    );
+
+    blockchain
+}
+```
+
+### The `multicontract.toml` specification
+
+- `settings`
+    - `main` - The contract id of the main wasm crate. The only thing special about this contract's crate is that it is simply called `wasm` and that its `Cargo.toml` is the basis for the `Cargo.toml` configs in all other output contract wasm crates.
+- `contracts` map, indexed by contract id. Each contract has:
+    - `name` (optional) - The output contract name. If missing, the contract id will be used. 
+    - `external-view` - Specifies that a contract should be built as an external view contract. False if unspecified.
+    - `add-unlabelled` - Specifies that all unlabelled endpoints should be added to this contract. False if unspecified.
+    - `add-labels` - A list of labels. All endpoints labelled with at least one of these labels will be added to the contract.
+    - `add-endpoints` - A list of endpoint names to be added directly to this contract. It bypasses the label system.
+- `labels-for-contracts` - It is also possible to map in reverse, labels to contracts. It contains a mapping from labels to lists of contract ids. It can be a little harder to read than the contract to label map, but it can be used. It 
+
+
+### Build CLI specification
+
+A build can be triggered by calling either `erdpy contract build <project>` or `cargo run build` in the meta crate. In fact, erdpy calls the meta crate itself.
+
+Several arguments can be added to both routes:
+    - `--wasm-symbols`: Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
+    - `--no-wasm-opt`: Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
+    - `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts.
+    - `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
+    - `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. Erdpy always sets this explicitly.
+
+In order to investigate the contract binary test format (WAT format), call with these arguments:
+`cargo run build --wasm-symbols --no-wasm-opt --wasm-suffix "dbg"`, then optionally `wasm2wat <contract-dbg.wasm>`
+
+
+
+## Contract build process deep dive
 
 This section provides an overview for those who want to understand the system on a deeper level. If you are simply looking to build some contracts, feel free to skip this.
 
@@ -188,16 +300,6 @@ The optimizer `wasm-opt` is also run on each of the resulting binaries (unless o
 The rust compiler places the result in the designated `target` folder, but for convenience, the meta crate moves the executables to the contract's `output` folder and renames them according to the configured names.
 
 You might have performed this step automatically from erdpy, but erdpy actually just calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it that easily.
-
-There are several options for this task:
-    - `--wasm-symbols`: Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
-    - `--no-wasm-opt`: Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
-    - `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts. => {
-    - `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
-    - `--target-dir` specifies which target folder the rust compiler should use. In case more contract are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. Erdpy always sets this for this reason.
-
-These are especially useful for building debug versions of the binaries, call like this to get the full wat files:
-`cargo run build --wasm-symbols --wasm-suffix "dbg" --no-wasm-opt`, then optionally `wasm2wat <contract-dbg.wasm>`
 
 ### f. Cleaning a project
 
