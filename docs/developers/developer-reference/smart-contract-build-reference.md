@@ -10,7 +10,7 @@ To build a contract, it is enough to navigate in your contract crate and run
 ```sh
 erdpy contract build
 ```
-Alternativelly you can go to your installed `Elrond Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`  
+Alternatively you can go to your installed `Elrond Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`  
 
 ![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the Elrond Workspace Explorer extension")
 
@@ -209,7 +209,7 @@ In order to investigate the contract binary test format (WAT format), call with 
 
 This section provides an overview for those who want to understand the system on a deeper level. If you are simply looking to build some contracts, feel free to skip this.
 
-Building a contract is a complex process, but luckily it gets handles invisibly by the framework. We will follow the components step by step and give some justification for this architecture.
+Building a contract is a complex process, but luckily it gets handled invisibly by the framework. We will follow the components step by step and give some justification for this architecture.
 
 ### a. The smart contract itself
 
@@ -253,7 +253,7 @@ Each contract must contain at least one `wasm` crate. This is a separate crate f
 
 The separation is important, because it means that the smart contract crate can act as a pure rust crate, with no knowledge of WebAssembly. This makes it easy to test, coverage, and integrate in other unrelated technologies.
 
-The `wasm` crates, do not add any meaningful code to the the smart contract, everything they need to do is to provide an adapter to the WASM function syntax. More specifically, they expose an external function for each desired endpoint, which simply forwards execution to the corresponding smart contract method.
+The `wasm` crates do not add any meaningful code to the the smart contract, everything they need to do is to provide an adapter to the WASM function syntax. More specifically, they expose an external function for each desired endpoint, which simply forwards execution to the corresponding smart contract method.
 
 If we are not careful, there is a risk of adding unwanted endpoints to the contract. A classic example is when we have a crate with multiple modules, of which only one is imported into the smart contract. In some older versions you might have gotten unwanted endpoints from the other modules of that crate. In order to avoid this, we are using the ABI to generate a curated list of endpoints in each `wasm` crate. This way, our contracts always have the exact same endpoints as the ones specified in the ABIs.
 
