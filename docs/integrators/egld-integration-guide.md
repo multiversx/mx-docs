@@ -11,7 +11,7 @@ In order to make possible for a platform to integrate EGLD transactions for its 
 - [setting up an observing squad](/integrators/observing-squad)
 - [setting up a mechanism for accounts management](/integrators/accounts-management)
 - [setting up a mechanism for creating and signing transactions](/integrators/creating-transactions)
-- [setting up a mechanism that queries the blockchain for new transactions to process](/integrators/creating-transactions)
+- [setting up a mechanism that queries the blockchain for new transactions to process](/integrators/querying-the-blockchain/#querying-hyperblocks-and-fully-executed-transactions)
 
 ## Integration workflow
 
