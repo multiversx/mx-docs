@@ -189,7 +189,9 @@ fn world() -> BlockchainMock {
 - `labels-for-contracts` - It is also possible to map in reverse, labels to contracts. It contains a mapping from labels to lists of contract ids. It can be a little harder to read than the contract to label map, but it can be used. It 
 
 
-### CLI specification: `build`
+## CLI specification
+
+### Calling `build`
 
 A build can be triggered by calling either `erdpy contract build <project>` or `cargo run build` in the meta crate. In fact, erdpy calls the meta crate itself.
 
@@ -218,7 +220,7 @@ Several arguments can be added to the `build` command, both in erdpy and directl
 - `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. Erdpy always sets this explicitly.
 
 
-### CLI specification: `build-dbg`
+### Calling `build-dbg`
 
 There is another command, provided for convenience: `cargo run build-dbg`. Calling this is equivalent to `cargo run build --wasm-symbols --no-wasm-opt --wasm-suffix "dbg" --wat --no-imports`. It is ideal for developers who want to investigate the WebAssembly output produced by the compiler.
 
@@ -240,12 +242,12 @@ output
 It accepts all the arguments from `build`, so `--target-dir` works here too.
 
 
-### CLI specification: `clean`
+### Calling `clean`
 
 Calling `erdpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
 
 
-### CLI specification: `snippets`
+### Calling `snippets`
 
 Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplace code for building an interactor for the current contract.
 
@@ -362,6 +364,8 @@ Calling `cargo run clean` in the meta crate will run `cargo clean` in all wasm c
 
 `erdpy contract clean` also just forwards to this.
 
+Note that even the clean operation relies on the ABI, in order to reach all the wasm crates.
+
 ### Build process summary
 
 To recap, the build process steps are as follows:
@@ -373,7 +377,7 @@ To recap, the build process steps are as follows:
 5. Save the ABI as JSON in the output folder (one for each output contract);
 6. Generate the wasm crates for all output contracts (all sources generated, Cargo.toml contents copied from the main wasm crate);
 7. Build all wasm crates;
-8. Apply `wasm-opt` for each;
-9. Copy binaries from `target` folder to `output`.
+8. Copy binaries from the `target` folder(s) to `output`.
+9. Perform post-processing for each contract: `wasm-opt`, `wasm2wat`, imports;
 
 Luckily, the framework can do all of this automatically, with a single click.
