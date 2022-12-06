@@ -249,7 +249,7 @@ Calling `erdpy contract clean <project>` or `cargo run clean` in the meta crate 
 
 ### Calling `snippets`
 
-Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplace code for building an interactor for the current contract.
+Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
 
 An interactor is a small tool, meant for developers to interact with the contract on-chain. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. There will be more documentation in the works on this topic.
 
