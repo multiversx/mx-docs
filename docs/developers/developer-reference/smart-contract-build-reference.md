@@ -107,7 +107,7 @@ add-labels = ["multisig-external-view"]
 
 ### The external view contract
 
-An _external view_ contract has a behavior different from that of a regular contract. There is some logic added by the framework to such a contract, which is invisible to the developer. There are 2 main points:
+An _external view_ contract has a behavior different from that of a regular contract. The framework adds some logic to such a contract, which is invisible to the developer. There are two main points:
 
 1. Storage access is different. All storage reads are done from the target contract given in the constructor.
 2. The constructor is different. Be mindful of this when deploying the external view contract.
