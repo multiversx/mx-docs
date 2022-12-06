@@ -122,7 +122,7 @@ A more detailed explanation on how they work in [the contract calls reference](/
 ### Storage
 
 
-It is possible for a developer to access storage manually in a contract, but this is error-prone and involves a lot of boilerplace code. For this reason, `elrond-wasm` offers storage annotations that manage and serialize the keys and values behind the scenes.
+It is possible for a developer to access storage manually in a contract, but this is error-prone and involves a lot of boilerplate code. For this reason, `elrond-wasm` offers storage annotations that manage and serialize the keys and values behind the scenes.
 
 Each contract has a storage where arbitrary data can be stored on-chain. This storage is organized as a map of arbitrary length keys and values. The blockchain has no concept of storage key or value types, they are all stored as raw bytes. It is the job of the contract to interpret these values.
 
