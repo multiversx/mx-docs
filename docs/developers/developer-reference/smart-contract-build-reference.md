@@ -335,7 +335,7 @@ The `elrond_wasm_node` macros help keep even this generated code to a minimum.
 
 For multi-contract builds, one `wasm` crate needs to be generated for each of the output contracts:
 - The main wasm crate must always reside in the `wasm` folder. The source file is auto-generated, but the `Cargo.toml` must be provided by the developer.
-- The other wasm contracts (called "secondary") receive a crate folder starting with `wasm-`, e.g. `wasm-multisig-view`. These crates are fully generated based on data from `multicontract.toml`. The respective `Cargo.toml` files are based on the the `Cargo.toml` of the main wasm crate. All configs are taken from there, except for the crate name.
+- The other wasm contracts (called "secondary") receive a crate folder starting with `wasm-`, e.g. `wasm-multisig-view`. These crates are fully generated based on data from `multicontract.toml`. The respective `Cargo.toml` files are based on the `Cargo.toml` of the main wasm crate. All configs are taken from there, except for the crate name.
 - Warning: Any folders starting with `wasm-` that are unaccounted for will be removed without prompt. This is to keep the folder structure clean in case of renames.
 
 
