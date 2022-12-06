@@ -189,19 +189,67 @@ fn world() -> BlockchainMock {
 - `labels-for-contracts` - It is also possible to map in reverse, labels to contracts. It contains a mapping from labels to lists of contract ids. It can be a little harder to read than the contract to label map, but it can be used. It 
 
 
-### Build CLI specification
+### CLI specification: `build`
 
 A build can be triggered by calling either `erdpy contract build <project>` or `cargo run build` in the meta crate. In fact, erdpy calls the meta crate itself.
 
-Several arguments can be added to both routes:
-    - `--wasm-symbols`: Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
-    - `--no-wasm-opt`: Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
-    - `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts.
-    - `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
-    - `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. Erdpy always sets this explicitly.
+By default, this command will produce three files for each output contract: the ABI (`<contract>.abi.json`), the contract (`<contract>.wasm`) and a json file with all the used VM EI imported functions (`<contract>.imports.json`). For the multisig example above, the produced files are as follows:
 
-In order to investigate the contract binary test format (WAT format), call with these arguments:
-`cargo run build --wasm-symbols --no-wasm-opt --wasm-suffix "dbg"`, then optionally `wasm2wat <contract-dbg.wasm>`
+```text
+output
+├── multisig-full.abi.json
+├── multisig-full.imports.json
+├── multisig-full.wasm
+├── multisig-view.abi.json
+├── multisig-view.imports.json
+├── multisig-view.wasm
+├── multisig.abi.json
+├── multisig.imports.json
+└── multisig.wasm
+```
+
+Several arguments can be added to the `build` command, both in erdpy and directly:
+- `--wasm-symbols`: Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
+- `--no-wasm-opt`: Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
+- `--wat`: Also generates a WAT file for each of the contract outputs. It does so by calling `wasm2wat`.
+- `--no-imports`: Does not generate an EI imports JSON file for each contract, as is the default.
+- `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts.
+- `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
+- `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. Erdpy always sets this explicitly.
+
+
+### CLI specification: `build-dbg`
+
+There is another command, provided for convenience: `cargo run build-dbg`. Calling this is equivalent to `cargo run build --wasm-symbols --no-wasm-opt --wasm-suffix "dbg" --wat --no-imports`. It is ideal for developers who want to investigate the WebAssembly output produced by the compiler.
+
+The output for `build-dbg` in the multisig example would be:
+
+```text
+output
+├── multisig.abi.json
+├── multisig-dbg.wasm
+├── multisig-dbg.wat
+├── multisig-full.abi.json
+├── multisig-full-dbg.wasm
+├── multisig-full-dbg.wat
+├── multisig-view.abi.json
+├── multisig-view-dbg.wasm
+└── multisig-view-dbg.wat
+```
+
+It accepts all the arguments from `build`, so `--target-dir` works here too.
+
+
+### CLI specification: `clean`
+
+Calling `erdpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
+
+
+### CLI specification: `snippets`
+
+Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplace code for building an interactor for the current contract.
+
+An interactor is a small tool, meant for developers to interact with the contract on-chain. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. There will be more documentation in the works on this topic.
 
 
 
@@ -295,13 +343,20 @@ The previous two steps happen by just calling `cargo run` in the meta crate, but
 
 With the ABI information and the code generated, the meta crate can now build all the WASM contracts, one for each output contract.
 
-The optimizer `wasm-opt` is also run on each of the resulting binaries (unless opted-out in the configs).
+The rust compiler places the result in the designated `target` folder, but for convenience, the meta crate moves the executables to the project `output` folder and renames them according to the configured names.
 
-The rust compiler places the result in the designated `target` folder, but for convenience, the meta crate moves the executables to the contract's `output` folder and renames them according to the configured names.
+You might have performed this step automatically from erdpy, but erdpy simply calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it easily.
 
-You might have performed this step automatically from erdpy, but erdpy simply calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it that easily.
 
-### f. Cleaning a project
+### f. Meta crate: build post-processing
+
+After building the contracts, there are three more operations left to perform, based on the compiled WebAssembly outputs:
+1. All contracts are optimized, using `wasm-opt`. This operation can be disabled (via `--no-wasm-opt`).
+2. A WAT file id generated for each contract. Not enabled by default, can be enabled (via `--wat`). The framework simply calls the `wasm2wat` tool to do this.
+3. An `.imports.json` file is generated for each contract. Can be disabled (via `--no-imports`). The framework uses the `wasm-objdump` tool to retrieve the imports. It parses the output and saves it as JSON.
+
+
+### g. Cleaning a project
 
 Calling `cargo run clean` in the meta crate will run `cargo clean` in all wasm crates and delete the `output` folder.
 
