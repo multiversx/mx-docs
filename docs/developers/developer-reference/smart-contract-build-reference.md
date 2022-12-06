@@ -251,11 +251,11 @@ This is also the step where the meta crate parses and processes the `multicontra
 
 Each contract must contain at least one `wasm` crate. This is separate from the contract crate because it has a different purpose: it only needs to be the basis for compiling wasm. Please take it as an intermediary step between the contract logic and the Rust to WASM compiler. This is also where the WASM compilation options are specified (e.g. the optimization level). These options can be seen in the `Cargo.toml` file of the `wasm` crate.
 
-The separation is important, because it means that the smart contract crate can act as a pure rust crate, with no knowledge of WebAssembly. This makes it easy to test, coverage, and integrate in other unrelated technologies.
+The separation is helpful because, in this way, the smart contract crate can act as a pure Rust crate with no knowledge of WebAssembly. This makes testing and coverage easy, as well as enabling integration with other unrelated technologies.
 
-The `wasm` crates do not add any meaningful code to the the smart contract, everything they need to do is to provide an adapter to the WASM function syntax. More specifically, they expose an external function for each desired endpoint, which simply forwards execution to the corresponding smart contract method.
+The `wasm` crates do not add any meaningful code to the smart contract. Everything they need to do is to provide an adapter to the WASM function syntax. More specifically, they expose an external function for each desired endpoint, which forwards execution to the corresponding smart contract method.
 
-If we are not careful, there is a risk of adding unwanted endpoints to the contract. A classic example is when we have a crate with multiple modules, of which only one is imported into the smart contract. In some older versions you might have gotten unwanted endpoints from the other modules of that crate. In order to avoid this, we are using the ABI to generate a curated list of endpoints in each `wasm` crate. This way, our contracts always have the exact same endpoints as the ones specified in the ABIs.
+If we are not careful, we risk adding unwanted endpoints to the contract. A classic example is when we have a crate with multiple modules, of which only one is imported into the smart contract. In some older versions, you might have gotten unwanted endpoints from the other modules of that crate. To avoid this, we are using the ABI to generate a curated list of endpoints in each `wasm` crate. This way, our contracts always have the exact same endpoints as the ones specified in the ABIs.
 
 This requires code generation. The `meta` crate will handle this code generation too. An example of such generated code lies below:
 
@@ -291,15 +291,15 @@ For multi-contract builds, one `wasm` crate needs to be generated for each of th
 
 ### e. Meta crate: the actual WASM build
 
-The previous two steps happen by just calling `cargo run` in the meta crate, but to actually perform a build, one must call `cargo run build`.
+The previous two steps happen by just calling `cargo run` in the meta crate, but to perform a build, one must call `cargo run build`.
 
-With the ABI information and the code generated, the meta crate can now actually build all the WASM contracts, one for each output contract.
+With the ABI information and the code generated, the meta crate can now build all the WASM contracts, one for each output contract.
 
 The optimizer `wasm-opt` is also run on each of the resulting binaries (unless opted-out in the configs).
 
 The rust compiler places the result in the designated `target` folder, but for convenience, the meta crate moves the executables to the contract's `output` folder and renames them according to the configured names.
 
-You might have performed this step automatically from erdpy, but erdpy actually just calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it that easily.
+You might have performed this step automatically from erdpy, but erdpy simply calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it that easily.
 
 ### f. Cleaning a project
 
