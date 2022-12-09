@@ -123,7 +123,7 @@ signer = UserSigner.from_pem_file(Path("alice.pem")
 ```
 
 
-Signable objects (message or transaction) must adhere to the following interface:
+Signable objects (messages, transactions) must adhere to the following interface:
 
 ```
 class ISignable(Protocol):
@@ -131,7 +131,7 @@ class ISignable(Protocol):
         return bytes()
 ```
 
-Both `Transaction` and `Message`, defined in `erdpy_core`, implement `ISignable`.
+Both `Transaction` and `Message` - defined in `erdpy_core` - implement `ISignable`.
 
 Signing a transaction:
 
@@ -158,9 +158,11 @@ message.set_signature(message)
 Creating a `UserVerifier`:
 
 ```
+from erdpy_core import Address
 from erdpy_wallet import UserVerifier
 
-verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+address = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+verifier = UserVerifier.from_address(address)
 ```
 
 For objects to support signature verification, they must adhere to the following interface:
@@ -174,7 +176,7 @@ class IVerifiable(Protocol):
         return bytes()
 ```
 
-Both `Transaction` and `Message`, defined in `erdpy_core`, implement `IVerifiable`.
+Both `Transaction` and `Message` - defined in `erdpy_core` - implement `IVerifiable`.
 
 Verifying a signature:
 
