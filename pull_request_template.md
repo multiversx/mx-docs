@@ -4,12 +4,12 @@
 
 
 #### Did you test the changes locally ?
-- [X] yes
+- [ ] yes
 - [ ] no
 
 #### Which category (categories) does this pull request belong to?
 - [ ] document new feature
 - [ ] update documentation that is not relevant anymore
 - [ ] add examples or more information about a component
-- [X] fix grammar issues
+- [ ] fix grammar issues
 - [ ] other
