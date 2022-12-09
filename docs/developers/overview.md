@@ -65,6 +65,7 @@ Learn about transaction's gas and how a fee is calculated
 | [Rust testing framework](/developers/developer-reference/rust-testing-framework)                                         | Test your Smart Contract directly in Rust.                                                      |
 | [Rust testing framework functions reference](/developers/developer-reference/rust-testing-framework-functions-reference) | A list of available functions to be used when testing your Smart Contract in Rust.              |
 | [Rust smart contract debugging](/developers/developer-reference/rust-smart-contract-debugging)                           | How to debug your Smart Contract.                                                               |
+| [Rust smart contract build reference](/developers/developer-reference/smart-contract-build-reference)                    | How to build and organize your Smart Contract.                                                  |
 | [Random numbers in smart contracts](/developers/developer-reference/random-numbers-in-smart-contracts)                   | How to generate random number in Smart Contracts.                                               |
 
 ### Smart Contract Developers Best Practices
