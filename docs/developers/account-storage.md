@@ -20,7 +20,7 @@ SaveKeyValueTransaction {
     Sender: <account address of the wallet owner>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 300000 + additional gas limit*
+    GasLimit: required_gas*
     Data: "SaveKeyValue" +
           "@" + <key in hexadecimal encoding> +
           "@" + <value in hexadecimal encoding> +
