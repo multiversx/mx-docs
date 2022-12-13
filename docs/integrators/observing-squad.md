@@ -35,19 +35,27 @@ These specs are only a recommendation. Depending on the load over the API or the
 
 # **Setup via the Mainnet scripts**
 
+:::warning
+`elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `elrond-go-scripts`, explained below.
+:::
+
+# **Setup via elrond-go-scripts**
+
 ## **Installation and Configuration**
 
-The Observing Squad can be set up using the [installation scripts](/validators/mainnet/config-scripts). Within the installation process, the `LookupDatabaseExtension` feature (required by the Hyperblock API) will be enabled by default.
+The Observing Squad can be set up using the [installation scripts](/validators/elrond-go-scripts/config-scripts/). Within the installation process, the `DBLookupExtension` feature (required by the Hyperblock API) will be enabled by default.
 
 Clone the installer repository:
 
 ```
-git clone https://github.com/ElrondNetwork/elrond-go-scripts-mainnet.git
+git clone https://github.com/ElrondNetwork/elrond-go-scripts.git
 ```
 
 Edit `config/variables.cfg` accordingly. For example:
 
 ```
+ENVIRONMENT="mainnet"
+...
 CUSTOM_HOME="/home/ubuntu"
 CUSTOM_USER="ubuntu"
 ```
@@ -76,73 +84,19 @@ In order to check the status of the Observing Squad, please see the section **Mo
 
 ## **Upgrading the Observing Squad**
 
-The Observing Squad can be updated using the Mainnet installation scripts.
-
-### **April 2021 upgrade**
-
-In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
-
-```
-$ cd ~/elrond-go-scripts-mainnet
-$ ./script.sh github_pull
-$ ./script.sh stop
-$ ./script.sh upgrade_squad
-$ ./script.sh upgrade_proxy
-$ ./script.sh start
-```
-
-### **March 2021 upgrade**
-
-In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
-
-```
-$ cd ~/elrond-go-scripts-mainnet
-$ ./script.sh github_pull
-$ ./script.sh stop
-$ ./script.sh upgrade_squad
-$ ./script.sh upgrade_proxy
-$ ./script.sh start
-```
-
-### **January 2021 upgrade**
-
-In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
-
-```
-$ cd ~/elrond-go-scripts-mainnet
-$ ./script.sh github_pull
-$ ./script.sh stop
-$ ./script.sh upgrade_squad
-$ ./script.sh upgrade_proxy
-$ ./script.sh start
-```
-
-### **Prerequisites for the November 2020 upgrade**
-
-Observing Squads set up before November 2020 have been installed using a special branch of the Mainnet installation scripts: **exchanges-integration**. This special branch has been removed, in favor of the main branch of the installation scripts.
-
-In order to upgrade an Observing Squad set up before November 2020, **one has to first follow these steps**:
-
-```
-$ cd ~/elrond-go-scripts-mainnet
-MANUALLY BACKUP FILE config/variables.cfg
-
-# IN ORDER TO ALLOW THE SUBSEQUENT SWITCH TO MAIN BRANCH
-$ git checkout config/variables.cfg
-# SWITCH TO MAIN BRANCH
-$ git checkout master
-
-MANUALLY RESTORE FILE config/variables.cfg
-```
-
-After following the steps above, the upgrade procedure shall continue as described in the next section.
+The Observing Squad can be updated using the installation scripts.
 
 ### **General upgrade procedure**
 
+:::important
+`elrond-go-scripts-mainnet` are deprecated as of November 2022. Users of these scripts have to migrate to [elrond-go-scripts](/validators/elrond-go-scripts/config-scripts/).
+The migration guide can he found [here](/validators/elrond-go-scripts/install-update/#migration-from-old-scripts).
+:::
+
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
 ```
-$ cd ~/elrond-go-scripts-mainnet
+$ cd ~/elrond-go-scripts
 $ ./script.sh github_pull
 $ ./script.sh stop
 $ ./script.sh upgrade_squad

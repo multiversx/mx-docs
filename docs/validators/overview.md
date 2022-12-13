@@ -7,11 +7,10 @@ title: Validators - Overview
 
 ### Install and maintain a node
 
-| Name                                                                            | Description                                                              |
-|---------------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| [System requirements](/validators/system-requirements)                          | System requirements for running an Elrond node.                          |
-| [Install a Mainnet Node](/validators/mainnet/config-scripts)                    | Instructions about how to get a Mainnet node up and running.             |
-| [Install a Testnet/Devnet Node](/validators/elrond-go-scripts/config-scripts)   | Instructions about how to get a Testnet or a Devnet node up and running. |
+| Name                                                                                  | Description                                                              |
+|---------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| [System requirements](/validators/system-requirements)                                | System requirements for running an Elrond node.                          |
+| [Install a Mainnet/Testnet/Devnet Node](/validators/elrond-go-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
 ### Keys Management
 
@@ -40,16 +39,17 @@ title: Validators - Overview
 
 ### Useful
 
-| Name                                                | Description                                                                                                       |
-|-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
-| [Rating](/validators/rating)                        | Learn about the nodes' rating, how it increases and decreases and how does it impact the earnings.                |
-| [Node Upgrade](/validators/node-upgrades)           | Learn about the periodical or emergency upgrades that nodes' owner have to do.                                    |
-| [Node Redundancy / Back-up](/validators/redundancy) | How to set up a back-up node for your main machine.                                                               |
-| [Import DB](/validators/import-db)                  | Learn how to start the node in import-db mode, that allows reprocessing of old data, without syncing the network. |
-| [Node CLI](/validators/node-cli)                    | How to use the Command Line Interface of the Node.                                                                |
-| [Node Databases](/validators/node-databases)        | How to use the nodes' databases and how to copy them from a node to another.                                      |
-| [Useful link & tools](/validators/useful-links)     | Useful links about the explorer, wallet and some guides.                                                          |
-| [FAQ](/validators/faq)                              | Frequently Asked Questions about nodes.                                                                           |
+| Name                                                     | Description                                                                                                       |
+|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| [Node operation modes](/validators/node-operation-modes) | Learn about the nodes' operation modes and how to use them for setting up node for various use-cases.             |
+| [Rating](/validators/rating)                             | Learn about the nodes' rating, how it increases and decreases and how does it impact the earnings.                |
+| [Node Upgrade](/validators/node-upgrades)                | Learn about the periodical or emergency upgrades that nodes' owner have to do.                                    |
+| [Node Redundancy / Back-up](/validators/redundancy)      | How to set up a back-up node for your main machine.                                                               |
+| [Import DB](/validators/import-db)                       | Learn how to start the node in import-db mode, that allows reprocessing of old data, without syncing the network. |
+| [Node CLI](/validators/node-cli)                         | How to use the Command Line Interface of the Node.                                                                |
+| [Node Databases](/validators/node-databases)             | How to use the nodes' databases and how to copy them from a node to another.                                      |
+| [Useful link & tools](/validators/useful-links)          | Useful links about the explorer, wallet and some guides.                                                          |
+| [FAQ](/validators/faq)                                   | Frequently Asked Questions about nodes.                                                                           |
 
 ## Overview
 

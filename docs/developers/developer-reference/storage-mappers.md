@@ -809,7 +809,7 @@ fn iter() -> Iter<usize>
 
 Provides an iterator over all the IDs.
 
-# Comparisons between the different mappers
+## Comparisons between the different mappers
 
 ### SingleValueMapper vs old storage_set/storage_get pairs
 

@@ -32,17 +32,7 @@
       "validators/system-requirements",
       {
         "type": "subcategory",
-        "label": "Install a Mainnet Node",
-        "ids": [
-          "validators/mainnet/config-scripts",
-          "validators/mainnet/install-update",
-          "validators/mainnet/optional-configs",
-          "validators/mainnet/use-docker"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "Install a Testnet/Devnet Node",
+        "label": "Install a Mainnet/Testnet/Devnet Node",
         "ids": [
           "validators/elrond-go-scripts/config-scripts",
           "validators/elrond-go-scripts/install-update",
@@ -75,6 +65,7 @@
       "validators/rating",
       "validators/node-upgrades",
       "validators/redundancy",
+      "validators/node-operation-modes",
       "validators/import-db",
       "validators/node-cli",
       "validators/node-databases",
@@ -130,6 +121,7 @@
           "developers/developer-reference/rust-testing-framework",
           "developers/developer-reference/rust-testing-framework-functions-reference",
           "developers/developer-reference/rust-smart-contract-debugging",
+          "developers/developer-reference/smart-contract-build-reference",
           "developers/developer-reference/random-numbers-in-smart-contracts"
         ]
       },
@@ -158,6 +150,7 @@
       "developers/sc-calls-format",
       "developers/built-in-functions",
       "developers/account-storage",
+      "developers/relayed-transactions",
       "developers/setup-local-testnet",
       "developers/setup-local-testnet-advanced",
       "developers/creating-wallets",
@@ -184,6 +177,31 @@
       "sdk-and-tools/dapp-core",
       "sdk-and-tools/proxy",
       "sdk-and-tools/elastic-search",
+      {
+        "type": "subcategory",
+        "label": "Elasticsearch indices",
+        "ids": [
+          "sdk-and-tools/indices/es-index-accounts",
+          "sdk-and-tools/indices/es-index-accountsesdt",
+          "sdk-and-tools/indices/es-index-accountsesdthistory",
+          "sdk-and-tools/indices/es-index-accountshistory",
+          "sdk-and-tools/indices/es-index-blocks",
+          "sdk-and-tools/indices/es-index-delegators",
+          "sdk-and-tools/indices/es-index-epochinfo",
+          "sdk-and-tools/indices/es-index-logs",
+          "sdk-and-tools/indices/es-index-miniblocks",
+          "sdk-and-tools/indices/es-index-operations",
+          "sdk-and-tools/indices/es-index-rating",
+          "sdk-and-tools/indices/es-index-receipts",
+          "sdk-and-tools/indices/es-index-rounds",
+          "sdk-and-tools/indices/es-index-scdeploys",
+          "sdk-and-tools/indices/es-index-scresults",
+          "sdk-and-tools/indices/es-index-tags",
+          "sdk-and-tools/indices/es-index-tokens",
+          "sdk-and-tools/indices/es-index-transactions",
+          "sdk-and-tools/indices/es-index-validators"
+        ]
+      },
       {
         "type": "subcategory",
         "label": "erdpy",
@@ -222,6 +240,7 @@
       "integrators/egld-integration-guide",
       "integrators/esdt-tokens-integration-guide",
       "integrators/observing-squad",
+      "integrators/deep-history-squad",
       "integrators/accounts-management",
       "integrators/creating-transactions",
       "integrators/querying-the-blockchain"
