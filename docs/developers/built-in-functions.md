@@ -91,9 +91,9 @@ SetUserNameTransaction {
 ```
 *For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
-## **SetKeyValue**
+## **SaveKeyValue**
 
-`SetKeyValue` is used to store a given key-value under an address's storage. More details and transaction's format are 
+`SaveKeyValue` is used to store a given key-value under an address's storage. More details and the transaction's format are 
 already covered [here](/developers/account-storage).
 
 
