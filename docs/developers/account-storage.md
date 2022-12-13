@@ -20,7 +20,7 @@ SaveKeyValueTransaction {
     Sender: <account address of the wallet owner>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: required_gas*
+    GasLimit: <required_gas>
     Data: "SaveKeyValue" +
           "@" + <key in hexadecimal encoding> +
           "@" + <value in hexadecimal encoding> +
@@ -31,7 +31,7 @@ SaveKeyValueTransaction {
 ```
 *For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
-*The gas used is computed as following:
+The gas used is computed as following:
 ```
 required_gas =  save_key_value_cost +
                 move_balance_cost + 
@@ -43,19 +43,19 @@ required_gas =  save_key_value_cost +
 
 For a real case example, the cost would be:
 
-`SaveKeyValue@6b657930@76616c756530` would cost `751000` gas units.
+`SaveKeyValue@6b657930@76616c756530` would cost `271000` gas units.
 
 If we break down the gas usage operations, using the costs in the moment of writing, we would get:
 
 ```
-required_gas =  250000    + // save key value function cost
+required_gas =  100000    + // save key value function cost
                 50000     + // move balance cost
                 1500 * 34 + // cost_per_byte * length(txData)
-                10000 * 4 + // persist_per_byte * length(key)
-                10000 * 6 + // persist_per_byte * length(value)
-                50000 * 6 + // store_per_byte * length(value)
+                1000 * 4 + // persist_per_byte * length(key)
+                1000 * 6 + // persist_per_byte * length(value)
+                10000 * 6 + // store_per_byte * length(value)
                 
-             =  751000
+             =  271000
 ```
 
 ## Example 
@@ -66,7 +66,7 @@ SaveKeyValueTransaction {
     Sender: <account address of the wallet owner>
     Receiver: <same as sender>
     Value: 0
-    GasLimit: 751000
+    GasLimit: 271000
     Data: "SaveKeyValue" +
           "@" + 6b657930 +    // key0
           "@" + 76616c756530  // value0
