@@ -101,7 +101,7 @@ print(address.is_smart_contract())
 In order to use erdpy's wallet components, reference the following package in your `requirements.txt`:
 
 ```
-git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v0.1.0#egg=erdpy_wallet
+git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v0.2.0#egg=erdpy_wallet
 ```
 
 ### Creating wallets
@@ -136,12 +136,13 @@ wallet = UserWallet(secret_key, "password")
 wallet.save("wallet.json")
 ```
 
-... or as a PEM wallet (not recommended):
+... or as a PEM wallet (usually not recommended):
 
 ```
-from erdpy_wallet import pem
+from erdpy_wallet import UserPEM
 
-pem.write("wallet.pem", secret_key.buffer, public_key.buffer)
+pem = UserPEM(label="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", secret_key)
+pem.save("wallet.pem")
 ```
 
 ### Loading a keypair
@@ -162,17 +163,15 @@ print("Secret key", secret_key.hex())
 print("Public key", public_key.hex())
 ```
 
-From a PEM file:
+From a PEM file (usually not recommended):
 
 ```
-from erdpy_wallet import pem
+from erdpy_wallet import UserPEM
 
-buffer, _ = pem.parse(path, index)
-secret_key = UserSecretKey(buffer)
-public_key = secret_key.generate_public_key()
+pem = UserPEM.from_file("wallet.pem)
 
-print("Secret key", secret_key.hex())
-print("Public key", public_key.hex())
+print("Secret key", pem.secret_key.hex())
+print("Public key", pem.public_key.hex())
 ```
 
 ### Signing objects
@@ -196,8 +195,7 @@ Signable objects (messages, transactions) must adhere to the following interface
 
 ```
 class ISignable(Protocol):
-    def serialize_for_signing(self) -> bytes:
-        return bytes()
+    def serialize_for_signing(self) -> bytes: ...
 ```
 
 Both `Transaction` and `Message` - defined in `erdpy_core` - implement `ISignable`.
@@ -208,8 +206,7 @@ Signing a transaction:
 from erdpy_core import Transaction
 
 tx = Transaction(...)
-signature = signer.sign(tx)
-tx.set_signature(signature)
+tx.signature = signer.sign(tx)
 ```
 
 Signing an arbitrary message:
@@ -218,8 +215,7 @@ Signing an arbitrary message:
 from erdpy_core import Message
 
 message = Message.from_string("hello")
-signature = signer.sign(message)
-message.set_signature(message)
+message.signature = signer.sign(message)
 ```
 
 ### Verifying signatures
@@ -238,11 +234,8 @@ For objects to support signature verification, they must adhere to the following
 
 ```
 class IVerifiable(Protocol):
-    def serialize_for_signing(self) -> bytes:
-        return bytes()
-
-    def get_signature(self) -> ISignature:
-        return bytes()
+    signature: ISignature
+    def serialize_for_signing(self) -> bytes: ...
 ```
 
 Both `Transaction` and `Message` - defined in `erdpy_core` - implement `IVerifiable`.
