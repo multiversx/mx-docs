@@ -14,11 +14,11 @@ We are going to make use of `erdpy vNext` (currently nicknamed _erdpy-eggs_), wh
 These packages should be installed **directly from GitHub**, as opposed to being installed from **PyPI**. For example:
 
 ```
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v0.1.0#egg=erdpy_core
+pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v0.2.0#egg=erdpy_core
 
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v0.1.0#egg=erdpy_wallet
+pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v0.2.0#egg=erdpy_wallet
 
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v0.1.0#egg=erdpy_network_providers
+pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v0.2.0#egg=erdpy_network_providers
 ```
 
 ## Core components
@@ -26,6 +26,75 @@ pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-provider
 :::important
 Documentation in this section is preliminary and subject to change.
 :::
+
+### Addresses
+
+Create an `Address` object from a _bech32-encoded_ string:
+
+```
+from erdpy_core import Address
+
+address = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th");
+```
+
+... or from a _hex-encoded_ string - note that you have to provide the address prefix, also known as the **HRP** (_human-readable part_ of the address):
+
+```
+address = Address.from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1", "erd");
+```
+
+... or from a raw public key:
+
+```
+pubkey = bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
+address = Address(pubkey, "erd")
+```
+
+Alternatively, you can use an `AddressFactory` (initialized with a specific **HRP**) to create addresses:
+
+```
+from erdpy_core import AddressFactory
+
+factory = AddressFactory("erd")
+
+address = factory.create_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+address = factory.create_from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
+address = factory.create_from_pubkey(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
+```
+
+Addresses can be converted from one representation to another as follows:
+
+```
+print(address.bech32())
+print(address.hex())
+```
+
+... or using a converter:
+
+```
+from erdpy_core import AddressConverter
+
+converter = AddressConverter("erd")
+
+pubkey = converter.bech32_to_pubkey("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+bech32 = converter.pubkey_to_bech32(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
+```
+
+Getting the shard of an address:
+
+```
+address = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+
+print(address.get_shard())
+```
+
+Checking whether an address is a smart contract:
+
+```
+address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+
+print(address.is_smart_contract())
+```
 
 ## Wallet components
 
