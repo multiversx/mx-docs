@@ -23,8 +23,8 @@ pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-provider
 
 ## Core components
 
-:::important
-Documentation in this section is preliminary and subject to change.
+:::note
+Core components are defined in the package `erdpy_core`.
 :::
 
 ### Addresses
@@ -96,7 +96,13 @@ address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07g
 print(address.is_smart_contract())
 ```
 
+### Transactions
+
 ## Wallet components
+
+:::note
+Wallet components are defined in the package `erdpy_wallet`.
+:::
 
 In order to use erdpy's wallet components, reference the following package in your `requirements.txt`:
 
@@ -190,7 +196,6 @@ Creating a `UserSigner` from a PEM file:
 signer = UserSigner.from_pem_file(Path("alice.pem")
 ```
 
-
 Signable objects (messages, transactions) must adhere to the following interface:
 
 ```
@@ -248,6 +253,82 @@ print(is_ok)
 ```
 
 ## Network providers
+
+:::note
+Core components are defined in the package `erdpy_network`.
+:::
+
+:::important
+It's recommended to use the `erdpy_network` components **as a starting point**. As your application matures, **switch to using your own network provider (e.g. deriving from the default ones)**, tailored to your requirements.
+:::
+
+Creating an API provider:
+
+```
+from erdpy_network import ApiNetworkProvider
+
+provider = ApiNetworkProvider("https://devnet-api.elrond.com");
+```
+
+Creating a Proxy provider:
+
+```
+from erdpy_network import ProxyNetworkProvider
+
+provider = ProxyNetworkProvider("https://devnet-gateway.elrond.com");
+```
+
+### Fetching network parameters
+
+```
+config = provider.get_network_config();
+
+print(config.min_gas_price);
+print(config.chain_id);
+```
+
+### Working with accounts
+
+The following snippet fetches (from the Network) the **nonce** and the **balance** of an account:
+
+```
+address = Address.from_bech32("erd1...")
+account_on_network = provider.get_account(address)
+
+print(account_on_network.nonce)
+print(account_on_network.balance)
+```
+
+When sending a bunch of transactions, you usually have to first fetch the account nonce from the network (see above), then manage it locally (e.g. increment upon signing & broadcasting a transaction):
+
+```
+from erdpy_core import AccountNonceHolder
+
+nonce_holder = AccountNonceHolder(address)
+nonce_holder.nonce = account_on_network.nonce
+
+tx.nonce = nonce_holder.get_nonce_then_increment()
+# ... sign transaction
+# ... broadcast transaction
+```
+
+For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
+
+### Broadcasting transactions
+
+Broadcast a single transaction:
+
+```
+hash = provider.send_transaction(tx)
+```
+
+Broadcast multiple transactions:
+
+```
+hashes = provider.send_transactions([tx1, tx2, tx3])
+```
+
+### Wait for transaction completion
 
 :::important
 Documentation in this section is preliminary and subject to change.
