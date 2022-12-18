@@ -14,11 +14,11 @@ We are going to make use of `erdpy vNext` (currently nicknamed _erdpy-eggs_), wh
 These packages should be installed **directly from GitHub**, as opposed to being installed from **PyPI**. For example:
 
 ```
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v0.2.0#egg=erdpy_core
+pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v1.2.3#egg=erdpy_core
 
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v0.2.0#egg=erdpy_wallet
+pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v4.5.6#egg=erdpy_wallet
 
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v0.2.0#egg=erdpy_network_providers
+pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network_providers
 ```
 
 ## Core components
@@ -97,6 +97,132 @@ print(address.is_smart_contract())
 ```
 
 ### Transactions
+
+In this section, we'll learn to build several types of transactions.
+
+In order to sign transactions, follow [this](#signing-objects).
+
+In order to broadcast transactions, follow [this](#broadcasting-transactions).
+
+### EGLD transfers
+
+```
+from erdpy_core import TokenPayment, Transaction
+
+tx = Transaction(
+    nonce=90,
+    sender=Address.from_bech32("erd1..."),
+    receiver=Address.from_bech32("erd1..."),
+    value=TokenPayment.egld_from_amount("1.0"),
+    gas_limit=50000,
+    gas_price=1000000000,
+    chain_id="D",
+    version=1
+)
+```
+
+Same as above, but with a payload (data):
+
+```
+data = TransactionPayload.from_str("for the book")
+
+tx = Transaction(
+    nonce=90,
+    sender=Address.from_bech32("erd1..."),
+    receiver=Address.from_bech32("erd1..."),
+    value=TokenPayment.egld_from_amount("1.0"),
+    data=data,
+    gas_limit=50000 + 1500 * data.length(),
+    gas_price=1000000000,
+    chain_id="D",
+    version=1
+)
+```
+
+### Token transfers
+
+Create a single ESDT transfer:
+
+```
+from erdpy_core import ESDTTransferBuilder
+
+payment = TokenPayment.fungible_from_amount("COUNTER-8b028f", "100.00", num_decimals=2);
+data = ESDTTransferBuilder(payment).build()
+
+tx = Transaction(
+    nonce=7,
+    sender=Address.from_bech32("erd1..."),
+    receiver=Address.from_bech32("erd1..."),
+    data=data,
+    gas_limit=50000 + 1500 * data.length() + 300000,
+    chain_id="D"
+)
+```
+
+Create a single NFT transfer:
+
+```
+from erdpy_core import ESDTNFTTransferBuilder
+
+payment = TokenPayment.non_fungible("ERDPY-38f249", 1)
+destination = Address.from_bech32("erd1...")
+data = ESDTNFTTransferBuilder(payment, destination).build()
+
+tx = Transaction(
+    nonce=7,
+    sender=Address.from_bech32("erd1..."),
+    # Same as sender address!
+    receiver=Address.from_bech32("erd1..."),
+    data=data,
+    gas_limit=50000 + 1500 * data.length() + 1000000,
+    chain_id="D"
+)
+```
+
+Create a single SFT transfer:
+
+```
+payment = TokenPayment.semi_fungible("SEMI-9efd0f", 1, 5)
+destination = Address.from_bech32("erd1...")
+data = ESDTNFTTransferBuilder(payment, destination).build()
+
+tx = Transaction(
+    nonce=7,
+    sender=Address.from_bech32("erd1..."),
+    # Same as sender address!
+    receiver=Address.from_bech32("erd1..."),
+    data=data,
+    gas_limit=50000 + 1500 * data.length() + 1000000,
+    chain_id="D"
+)
+```
+
+Create a multiple ESDT / NFT transfer
+
+```
+from erdpy_core import MultiESDTNFTTransferBuilder
+
+payment_one = TokenPayment.non_fungible("ERDPY-38f249", 1)
+payment_two = TokenPayment.fungible_from_amount("BAR-c80d29", "10.00", 18)
+payments = [payment_one, payment_two]
+data = MultiNFTTransferBuilder(payments, destination).build()
+
+tx = Transaction(
+    nonce=7,
+    sender=Address.from_bech32("erd1..."),
+    # Same as sender address!
+    receiver=Address.from_bech32("erd1..."),
+    data=data,
+    gas_limit=50000 + 1500 * data.length() + 1000000 * payments.length,
+    chain_id="D"
+)
+```
+
+### Contract deployments
+
+### Contract calls
+
+### Contract queries
 
 ## Wallet components
 
