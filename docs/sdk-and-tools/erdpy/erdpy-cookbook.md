@@ -30,7 +30,7 @@ git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v7.8.9#
 These packages are distributed separately and have individual release schedules (make sure to check the **release tags on GitHub**), but they are designed to work together, with as little impedance mismatch as possible.
 
 :::important
-Documentation is preliminary and subject to change (the packages might suffer a series of breaking changes in January 2022).
+Documentation is preliminary and subject to change (the packages might suffer a series of breaking changes in January 2023).
 :::
 
 ## Addresses
