@@ -220,7 +220,7 @@ print("Transaction:", tx.to_dictionary())
 print("Transaction data:", tx.data)
 ```
 
-Create a single SFT transfer (almost the same as above, with only difference that for the token payment object we have to add also an integer, as quantity):
+Create a single SFT transfer (almost the same as above, the only difference being that for the token payment object we additionally use a quantity, as an integer):
 
 ```
 payment = TokenPayment.semi_fungible("SEMI-9efd0f", 1, 5)
