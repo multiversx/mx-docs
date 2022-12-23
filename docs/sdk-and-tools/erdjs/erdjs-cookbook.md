@@ -190,13 +190,14 @@ For a different awaiting strategy, also see [extending erdjs](/sdk-and-tools/erd
 ### Single ESDT transfer
 
 ```
-let payment = TokenPayment.fungibleFromAmount("COUNTER-8b028f", "100.00", 0);
+let payment = TokenPayment.fungibleFromAmount("COUNTER-8b028f", "100.00", 2);
 let data = new ESDTTransferPayloadBuilder()
     .setPayment(payment)
     .build();
 
 transactions.push(new Transaction({
     nonce: 7,
+    sender: new Address("erd1..."),
     receiver: new Address("erd1..."),
     data: data,
     gasLimit: 50000 + 1500 * data.length() + 300000,
@@ -215,6 +216,7 @@ let payload = new ESDTNFTTransferPayloadBuilder()
 
 transactions.push(new Transaction({
     nonce: 7,
+    sender: new Address("erd1..."),
     // Same as sender address!
     receiver: new Address("erd1..."),
     data: data,
@@ -234,6 +236,7 @@ let payload = new ESDTNFTTransferPayloadBuilder()
 
 transactions.push(new Transaction({
     nonce: 7,
+    sender: new Address("erd1..."),
     // Same as sender address!
     receiver: new Address("erd1..."),
     data: data,
@@ -255,6 +258,7 @@ let payload = new MultiESDTNFTTransferPayloadBuilder()
 
 transactions.push(new Transaction({
     nonce: 7,
+    sender: new Address("erd1..."),
     // Same as sender address!
     receiver: new Address("erd1..."),
     data: data,
