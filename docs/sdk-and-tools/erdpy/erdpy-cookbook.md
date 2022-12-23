@@ -9,7 +9,7 @@ This page will guide you through the process of handling common tasks using **er
 All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/ElrondNetwork/sdk-erdpy-examples)**. 
 :::
 
-We are going to make use of the packages [erdpy_core](https://github.com/ElrondNetwork/sdk-erdpy-core), [erdpy_wallet](https://github.com/ElrondNetwork/sdk-erdpy-wallet) and [erdpy_network](https://github.com/ElrondNetwork/sdk-erdpy-network-providers) (available as of December 2022), which were previously nicknamed _erdpy-eggs_. These packages should be installed **directly from GitHub** whenever possible (although they are published on **PyPI**, as well). For example:
+We are going to make use of the packages [erdpy_core](https://github.com/ElrondNetwork/sdk-erdpy-core), [erdpy_wallet](https://github.com/ElrondNetwork/sdk-erdpy-wallet) and [erdpy_network](https://github.com/ElrondNetwork/sdk-erdpy-network-providers) (available as of December 2022), which were previously nicknamed _erdpy-eggs_. These packages should be installed **directly from GitHub** whenever possible (although they are published on [**PyPI**](https://pypi.org/user/elrond/), as well). For example:
 
 ```
 pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v1.2.3#egg=erdpy_core
