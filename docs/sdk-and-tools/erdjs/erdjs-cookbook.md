@@ -561,6 +561,126 @@ let endpointDefinition = smartContract.getEndpoint("myFunction");
 
 For customizing the default parser, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
 
+
+## Signing objects
+
+:::note
+For **dApps**, use the available **[signing providers](/sdk-and-tools/erdjs/erdjs-signing-providers)** instead.
+:::
+
+Creating a `UserSigner` from a JSON wallet:
+
+```
+import { UserSigner } from "@elrondnetwork/erdjs-walletcore";
+
+const walletObject = JSON.parse(fs.readFileSync(filePath, { encoding: "utf8" }));
+const signer = UserSigner.fromWallet(walletObject, "password");
+```
+
+Creating a `UserSigner` from a PEM file:
+
+```
+const pemText = fs.readFileSync(filePath, { encoding: "utf8" });
+const signer = UserSigner.fromPem(pemText));
+```
+
+Signable objects (messages, transactions) must adhere to the following interface:
+
+```
+interface ISignable {
+    serializeForSigning(signedBy: IAddress): Buffer;
+    applySignature(signature: ISignature, signedBy: IAddress): void;
+}
+```
+
+Both `Transaction` and `Message` - defined in `erdjs` - implement `ISignable`.
+
+Signing a transaction:
+
+```
+import { Transaction } from "@elrondnetwork/erdjs";
+
+const transaction = new Transaction({ ... });
+
+await signer.sign(transaction);
+console.log("Transaction signature", transaction.getSignature().hex());
+console.log("Transaction hash", transaction.getHash().hex());
+```
+
+Signing an arbitrary message:
+
+```
+import { SignableMessage } from "@elrondnetwork/erdjs";
+
+const dataExample = `${address}hello{}`;
+const message = new SignableMessage({
+    message: Buffer.from(dataExample)
+});
+
+await signer.sign(message);
+const signature = message.getSignature().hex();
+console.log("Message signature", signature);
+```
+
+## Verifying signatures
+
+Creating a `UserVerifier`:
+
+```
+import { UserVerifier } from "@elrondnetwork/erdjs-walletcore";
+
+const alice = Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th");
+const bob = Address.fromBech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx");
+const aliceVerifier = UserVerifier.fromAddress(alice);
+const bobVerifier = UserVerifier.fromAddress(bob);
+```
+
+For objects to support signature verification, they must adhere to the following interface:
+
+```
+interface IVerifiable {
+    serializeForSigning(signedBy?: IAddress): Buffer;
+    getSignature(): ISignature;
+}
+```
+
+Both `Transaction` and `Message` - defined in `erdjs` - implement `IVerifiable`.
+
+Suppose we have the following transaction:
+
+```
+const tx = Transaction.fromPlainObject({
+    nonce: 42,
+    value: "12345",
+    sender: alice.bech32(),
+    receiver: "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+    gasPrice: 1000000000,
+    gasLimit: 50000,
+    chainID: "D",
+    version: 1,
+    signature: "3c5eb2d1c9b3ab2f578541e62dcfa5008976d11f85644a48884a8a6c4d2980fa14954ab2924d6e67c051562488096d2e79cd3c0378edf234a52e648e672d1b0a"
+});
+```
+
+And / or the following message:
+
+```
+const dataExample = `${alice.bech32()}hello{}`;
+const message = new SignableMessage({
+    message: Buffer.from(dataExample),
+    signature: { hex: () => "5a7de64fb45bb11fc540839bff9de5276e1b17de542e7750b002e4663aea327b9834d4ac46b2c9531653113b7eb3eb000aef89943bd03fd96353fbcf03512809" }
+});
+```
+
+We can verify their signatures as follows:
+
+```
+console.log("Is signature of Alice?", aliceVerifier.verify(tx));
+console.log("Is signature of Alice?", aliceVerifier.verify(message));
+console.log("Is signature of Bob?", bobVerifier.verify(tx));
+console.log("Is signature of Bob?", bobVerifier.verify(message));
+```
+
 ## Decoding transaction metadata
 
 ### Using the `transaction-decoder`
