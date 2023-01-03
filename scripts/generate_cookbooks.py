@@ -16,36 +16,46 @@ cookbooks: List[Path] = [
 
 def main():
     for path in cookbooks:
-        should_copy = True
-        input_lines = read_lines(path)
-        output_lines: List[str] = []
+        render_notebooks_into_file(path)
 
-        for line in input_lines:
-            if DIRECTIVE_BEGIN_NOTEBOOK in line:
+
+def render_notebooks_into_file(path: Path):
+    should_copy_input_to_output = True
+    input_lines = read_lines(path)
+    output_lines: List[str] = []
+
+    for line in input_lines:
+        if DIRECTIVE_BEGIN_NOTEBOOK in line:
+            output_lines.append(line)
+
+            begin_directive = parse_directive(line)
+            notebook_url = begin_directive["url"]
+            render_notebook(notebook_url, output_lines)
+
+            should_copy_input_to_output = False
+        elif DIRECTIVE_END_NOTEBOOK in line:
+            output_lines.append(line)
+            should_copy_input_to_output = True
+        else:
+            if should_copy_input_to_output:
                 output_lines.append(line)
-                should_copy = False
 
-                begin_directive = parse_directive(line)
-                notebook_url = begin_directive["url"]
-                render_notebook(notebook_url, output_lines)
-            elif DIRECTIVE_END_NOTEBOOK in line:
-                output_lines.append(line)
-                should_copy = True
-            else:
-                if should_copy:
-                    output_lines.append(line)
-
-        write_lines(path, output_lines)
+    write_lines(path, output_lines)
 
 
 def parse_directive(line: str) -> Dict[str, Any]:
+    """
+    Parses "directives", such as:
+
+    <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/ElrondNetwork/.../Cookbook.ipynb" } -->
+    """
     content = line.replace("<!--", "").replace("-->", "").strip()
     [_, payload_json] = content.split(maxsplit=1)
     payload = json.loads(payload_json)
     return payload
 
 
-def render_notebook(url: str, output_lines: List[str]):
+def render_notebook(url: str, output: List[str]):
     cells, _ = fetch_notebook(url)
 
     for cell in cells:
@@ -53,19 +63,27 @@ def render_notebook(url: str, output_lines: List[str]):
         cell_source = cell["source"]
 
         if cell_type == "markdown":
-            for item in cell_source:
-                item = item.replace(DOCS_URL_ROOT + "/", "/")
-                output_lines.append("\n")
-                output_lines.append(item.rstrip())
+            render_cell_markdown(cell_source, output)
         elif cell_type == "code":
-            output_lines.append("\n```\n")
+            render_cell_code(cell_source, output)
 
-            for item in cell_source:
-                output_lines.append(item)
+        output.append("\n")
 
-            output_lines.append("\n```")
 
-        output_lines.append("\n")
+def render_cell_markdown(source: List[str], output: List[str]):
+    for item in source:
+        item = item.replace(DOCS_URL_ROOT + "/", "/")
+        output.append("\n")
+        output.append(item.rstrip())
+
+
+def render_cell_code(source: List[str], output: List[str]):
+    output.append("\n```\n")
+
+    for item in source:
+        output.append(item)
+
+    output.append("\n```")
 
 
 def read_lines(path: Path) -> List[str]:
