@@ -16,12 +16,12 @@ Querying a _recently_ broadcasted transaction may not return the _hyperblock coo
 
 For **regular transfer transactions**, the transaction `status` has the following meaning:
 
-| Status                                                | Meaning                                                                                                                                                   |
-| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **success** or **executed**                           | The transaction has been fully executed - with respect to Elrond's sharded architecture, it has been executed in both source shard and destination shard. |
-| **invalid**                                           | The transaction has been processed with failure (not enough balance at sender's side).                                                                    |
-| **pending** or **received** or **partially-executed** | The transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).                                              |
-| **fail** or **not-executed**                          | Regular transfer transactions cannot reach this status.                                                                                                   |
+| Status                                                | Meaning                                                                                                                                                                           |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **success** or **executed**                           | The transaction has been fully executed - with respect to MultiversX's (previously Elrond) sharded architecture, it has been executed in both source shard and destination shard. |
+| **invalid**                                           | The transaction has been processed with failure (not enough balance at sender's side).                                                                                            |
+| **pending** or **received** or **partially-executed** | The transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).                                                                      |
+| **fail** or **not-executed**                          | Regular transfer transactions cannot reach this status.                                                                                                                           |
 
 :::warning
 The statuses are (broadly speaking) directly fetched from the Observer Nodes themselves. The Node [v1.1.6](https://github.com/ElrondNetwork/elrond-go/releases/tag/v1.1.6) returns different statuses than previous versions. For example, the status **executed** has been renamed to **success**, while the statuses **received** and **partially-executed** have been merged under the status **pending**.

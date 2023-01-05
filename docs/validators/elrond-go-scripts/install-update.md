@@ -7,11 +7,11 @@ title: Installing a Validator Node
 
 After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Devnet and Testnet Network.
 
-- *Note: This process installs a validator node for all Elrond networks (mainnet, devnet, and testnet).*
+- _Note: This process installs a validator node for all MultiversX (previously Elrond) networks (mainnet, devnet, and testnet)._
 
-Following these few steps, we will work on installing the Elrond Network validator node to get it up and running on your local machine.
+Following these few steps, we will work on installing the MultiversX (previously Elrond) Network validator node to get it up and running on your local machine.
 
- For installation use `1 - install`
+For installation use `1 - install`
 
 ```bash
  ~/elrond-go-scripts/script.sh
@@ -43,21 +43,21 @@ Create a new folder "VALIDATOR_KEYS" to serve as a local backup when updating:
 ```bash
 cd ~
 mkdir -p ~/VALIDATOR_KEYS
-    
+
 ```
 
 Generate a certificate file containing your Validator key by running the `keygenerator` :
 
- ```bash
+```bash
 ./elrond-utils/keygenerator
-    
+
 ```
 
 Copy the generated `validatorKey.pem` file to the `config` folder of your node(s), and repeat for each node.
 
 ```bash
     cp validatorKey.pem ~/elrond-nodes/node-0/config/
-    
+
 ```
 
 :::tip
@@ -69,7 +69,7 @@ Then copy the `validatorKey.pem` file - in ZIP form - to the `$HOME/VALIDATOR_KE
 ```bash
 zip node-0.zip validatorKey.pem
 mv node-0.zip $HOME/VALIDATOR_KEYS/
-    
+
 ```
 
 Repeat the above process for all your “n” nodes. When complete, please refer to our Key management section for instructions about how to properly backup and protect your keys.
@@ -91,7 +91,7 @@ cd $HOME/elrond-utils
 
 :::tip
 
- Your first node is called `node-0` and it is a REST API that will run on port `8080` by default. The next node is `node-1`on port `8081`, and so on.
+Your first node is called `node-0` and it is a REST API that will run on port `8080` by default. The next node is `node-1`on port `8081`, and so on.
 :::
 
 ## **Update your node(s)**
@@ -107,7 +107,7 @@ Upgrade your node by running the script and selecting either of these options:
 ~/elrond-go-scripts/script.sh
 ```
 
-These are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts/blob/master/README.md). You can also ask any questions in the Elrond [Validators chat](https://t.me/ElrondValidators)
+These are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts/blob/master/README.md). You can also ask any questions in the MultiversX (previously Elrond) [Validators chat](https://t.me/ElrondValidators)
 
 ## **Mandatory: Backup your keys**
 
@@ -128,13 +128,16 @@ If one wants to migrate from the old scripts to the new ones, it is generally po
 These are the steps to be followed:
 
 - clone the `elrond-go-scripts` repo near the old one (`elrond-go-scripts-testnet`/`elrond-go-scripts-devnet`/`elrond-go-scripts-mainnet`); assuming the old scripts were located in the home directory, run the following:
+
 ```
 cd ~
 git clone https://github.com/ElrondNetwork/elrond-go-scripts
 ```
+
 - configure the new scripts as described in the sections above;
 - make sure you set the new `ENVIRONMENT` variable declared within `~/elrond-go-scripts/config/variables.cfg`; it must contain one of `"testnet"`, `"devnet"` or `"mainnet"`;
 - call the `migrate` operation on the scripts:
+
 ```
 cd ~/elrond-go-scripts
 ./script.sh migrate
@@ -153,10 +156,12 @@ The power of the scripts set has been leveraged with a new addition: the possibi
 or branch (not recommended using a branch due to the fact that an unsigned commit might bring malicious code or configs)
 
 To accomplish this, edit the variables.cfg file
+
 ```
 cd ~/elrond-go-scripts/config
 nano variables.cfg
 ```
+
 locate the `OVERRIDE_CONFIGVER` option and input a value there, something like `tags/T1.3.14.0`.
 The `tags/` prefix will tell the scripts to use the tag and not search a branch called `T1.3.14.0`.
 Call the `upgrade` command on the scripts to install the desired configuration version.

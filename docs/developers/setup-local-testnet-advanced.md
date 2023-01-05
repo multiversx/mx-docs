@@ -3,7 +3,7 @@ id: setup-local-testnet-advanced
 title: Set up a Local Testnet (advanced)
 ---
 
-How to set up a local Elrond Testnet on a workstation.
+How to set up a local MultiversX (previously Elrond) Testnet on a workstation.
 
 # **Prerequisites**
 
@@ -149,7 +149,7 @@ $ ./reset.sh
 
 ## **Inspecting the Proxy**
 
-By default, the local Testnet also includes a local Elrond Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/rest-api).
+By default, the local Testnet also includes a local MultiversX (previously Elrond) Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/rest-api).
 
 ```
 $ curl http://localhost:7950/network/config

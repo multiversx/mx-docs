@@ -15,10 +15,10 @@ The code samples depicted on this page can also be found on the [**erdjs example
 
 The following signing providers are available:
 
- - Web Wallet Provider
- - Extension Provider (Maiar DeFi Wallet)
- - Wallet Connect provider
- - Hardware Wallet (Ledger) Provider
+- Web Wallet Provider
+- Extension Provider (Maiar DeFi Wallet)
+- Wallet Connect provider
+- Hardware Wallet (Ledger) Provider
 
 ## The Web Wallet Provider
 
@@ -64,7 +64,7 @@ const callbackUrl = window.location.href.split("?")[0];
 await provider.logout({ callbackUrl: callbackUrl });
 ```
 
-Sometimes, a dApp (and its backend) might want to reliably assign an off-chain user identity to an Elrond address. In this context, the web wallet provider supports an extra parameter to the `login()` method: a custom authentication token, **completely opaque to the web wallet**, to be signed with the user's wallet, at login-time:
+Sometimes, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX (previously Elrond) address. In this context, the web wallet provider supports an extra parameter to the `login()` method: a custom authentication token, **completely opaque to the web wallet**, to be signed with the user's wallet, at login-time:
 
 ```
 // An identity token, provided by an identity provider (server-side)
@@ -72,7 +72,7 @@ Sometimes, a dApp (and its backend) might want to reliably assign an off-chain u
 const authToken = "aaaabbbbaaaabbbb";
 
 // A server-side handler used to acknowledge, validate and honour
-// the relationship between "authToken" and the Elrond address of the user
+// the relationship between "authToken" and the MultiversX (previously Elrond) address of the user
 const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
 await provider.login({ callbackUrl, token: authToken });
 ```
@@ -88,7 +88,7 @@ const firstTransaction = new Transaction({ ... });
 const secondTransaction = new Transaction({ ... });
 
 await provider.signTransactions(
-    [firstTransaction, secondTransaction], 
+    [firstTransaction, secondTransaction],
     { callbackUrl: callbackUrl }
 );
 ```
@@ -270,7 +270,6 @@ openModal(connectorUri);
 
 Once the user confirms the login, the `onClientLogin()` callback (declared above) is executed.
 
-
 In order to log out, do as follows:
 
 ```
@@ -318,7 +317,7 @@ import { HWProvider } from "@elrondnetwork/erdjs-hw-provider";
 const provider = new HWProvider();
 ```
 
-Before performing any operation, make sure to initialize the provider (also, the Elrond application has to be open on the device):
+Before performing any operation, make sure to initialize the provider (also, the MultiversX (previously Elrond) application has to be open on the device):
 
 ```
 await provider.init();
@@ -400,7 +399,7 @@ console.log(message.toJSON());
 
 ## Verifying the signature of a login token
 
-As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an Elrond address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
+As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX (previously Elrond) address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
 
 ```
 export function verifyAuthTokenSignature(address, authToken, signature) {
@@ -412,7 +411,7 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
     // Note that the verification API will be improved in a future version of erdjs-walletcore.
     // As of @elrondnetwork/erdjs-walletcore@v1.0.0, this API is a bit tedious:
     const verifier = UserVerifier.fromAddress(new Address(address));
-    
+
     const message = new SignableMessage({
         signature: { hex: () => signature },
         message: Buffer.from(`${address}${authToken}{}`)

@@ -34,7 +34,6 @@ You have the option of staking through the online Wallet at [https://wallet.elro
 
 ![staking4](/validators/staking4.png)
 
-
 9. You can review the transaction in your history. Based on the current staking capacity of the network, you will get an OK message indicating that your node has become a validator, or a response indicating that the network staking is at capacity and your node has been put in the Queue.
 
 ![staking5](/validators/staking5.png)
@@ -43,7 +42,6 @@ You have the option of staking through the online Wallet at [https://wallet.elro
 11. You can further interact with your node(s) by clicking on the three vertical dots next to the public key, which brings up a menu for performing actions such as Unjail, Unstake and Unbond.
 
 ![staking6](/validators/staking6.png)
-
 
 ## **Staking through erdpy**
 
@@ -61,7 +59,7 @@ Make sure `erdpy` is installed and has the latest version before continuing.
 
 # **Your Wallet PEM file**
 
-To send transactions on your behalf _without_ using the online Elrond Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
+To send transactions on your behalf _without_ using the online MultiversX (previously Elrond) Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
 Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `erdpy` commands.
 
@@ -74,7 +72,7 @@ The following commands assume that the PEM file for your Wallet was saved with t
 The command to submit a staking transaction with `erdpy` is this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
@@ -105,7 +103,7 @@ Notice also that there is no calculation for "Gas Limit". If you provide the `--
 Here's an example for a staking command for one node:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 :::note important
@@ -115,7 +113,7 @@ You must take **denomination** into account when specifying the `value` paramete
 For two nodes, it becomes this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 # **The --reward-address parameter**
@@ -127,7 +125,7 @@ Alternatively, you can tell `erdpy` to specify another wallet to which your rewa
 For example, a staking command for a single node, with a reward address specified, looks like this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --reward-address="erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg" --value="2500000000000000000000" --number-of-nodes=1  --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.elrond.com --estimate-gas --recall-nonce
+erdpy --verbose validator stake --pem=walletKey.pem --reward-address="erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg" --value="2500000000000000000000" --number-of-nodes=1  --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 The above command will submit a staking command and will also inform the Staking SmartContract that the rewards should be transferred to the wallet `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg` .

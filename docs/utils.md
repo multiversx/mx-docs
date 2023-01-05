@@ -41,7 +41,7 @@ _italicized text_
 
 ### Link
 
-[absolute URL](https://www.elrond.com)
+[absolute URL](https://www.multiversx.com)
 
 [relative URL](/developers/esdt-tokens#token-management)
 
@@ -173,7 +173,7 @@ For example:
 
 Path Parameters
 
-`https://gateway.elrond.com/transaction/*param*`
+`https://gateway.multiversx.com/transaction/*param*`
 
 | Param         | Required                                  | Type     | Description                           |
 | ------------- | ----------------------------------------- | -------- | ------------------------------------- |
@@ -246,7 +246,7 @@ $$
 
 ## First Version
 
-[![Elrond IDE](https://img.youtube.com/vi/bXbBfJCRVqE/maxresdefault.jpg)](http://www.youtube.com/watch?v=bXbBfJCRVqE "Elrond IDE")
+[![MultiversX (previously Elrond) IDE](https://img.youtube.com/vi/bXbBfJCRVqE/maxresdefault.jpg)](http://www.youtube.com/watch?v=bXbBfJCRVqE "MultiversX (previously Elrond) IDE")
 
 ## Second version
 

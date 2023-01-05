@@ -5,7 +5,7 @@ title: Signing Transactions
 
 How to serialize and sign the Transaction payload
 
-Transactions must be **signed** with the Sender's Private Key before submitting them to the Elrond Network. Signing is performed with the [Ed25519](https://ed25519.cr.yp.to/) algorithm.
+Transactions must be **signed** with the Sender's Private Key before submitting them to the MultiversX (previously Elrond) Network. Signing is performed with the [Ed25519](https://ed25519.cr.yp.to/) algorithm.
 
 ## **General structure**
 
@@ -81,7 +81,7 @@ Then it's serialized form (step 5 is omitted in this example) is as follows:
 
 ## **Ed25519 signature**
 
-Elrond uses the [Ed25519](https://ed25519.cr.yp.to/) algorithm to sign transactions. In order to obtain the signature, one can use generic software libraries such as [PyNaCl](https://pynacl.readthedocs.io/en/stable/signing/), [tweetnacl-js](https://github.com/dchest/tweetnacl-js#signatures) or components of Elrond SDK such as [erdjs-walletcore](https://github.com/ElrondNetwork/elrond-sdk-erdjs-walletcore), [erdpy-wallet](https://github.com/ElrondNetwork/mx-sdk-erdpy-wallet), [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo), [erdjava](https://github.com/ElrondNetwork/elrond-sdk-erdjava), [erdwalletjs-cli](https://github.com/ElrondNetwork/erdwalletjs-cli) etc.
+MultiversX (previously Elrond) uses the [Ed25519](https://ed25519.cr.yp.to/) algorithm to sign transactions. In order to obtain the signature, one can use generic software libraries such as [PyNaCl](https://pynacl.readthedocs.io/en/stable/signing/), [tweetnacl-js](https://github.com/dchest/tweetnacl-js#signatures) or components of MultiversX (previously Elrond) SDK such as [erdjs-walletcore](https://github.com/ElrondNetwork/elrond-sdk-erdjs-walletcore), [erdpy-wallet](https://github.com/ElrondNetwork/mx-sdk-erdpy-wallet), [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo), [erdjava](https://github.com/ElrondNetwork/elrond-sdk-erdjava), [erdwalletjs-cli](https://github.com/ElrondNetwork/erdwalletjs-cli) etc.
 
 The raw signature consisting of 64 bytes has to be **hex-encoded** afterwards and placed in the transaction object.
 

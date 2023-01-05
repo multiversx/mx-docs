@@ -3,17 +3,17 @@ id: observing-squad
 title: Observing Squad
 ---
 
-The N+1 setup for connecting to the Elrond Network
+The N+1 setup for connecting to the MultiversX (previously Elrond) Network
 
-In order to integrate with the Elrond Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
+In order to integrate with the MultiversX (previously Elrond) Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
 
-An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
+An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**MultiversX (previously Elrond) Proxy**](/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
 
 :::tip
-Currently the Elrond Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
+Currently the MultiversX (previously Elrond) Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
 :::
 
-By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of Elrond's sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
+By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of MultiversX's (previously Elrond) sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
 
 ## **System requirements**
 
@@ -165,11 +165,13 @@ cd mainnet
 ```
 
 In order to check if the Observing Squad is running, you can list the running containers:
+
 ```
 docker ps
 ```
 
 In order to check the status inside a container, you can check the logs on the machine for the last synchronized block nonce:
+
 ```
 docker exec -it 'CONTAINER ID' /bin/bash
 cat logs/elrond-go-.......log

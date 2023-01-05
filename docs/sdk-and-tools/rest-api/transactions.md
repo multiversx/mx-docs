@@ -7,7 +7,7 @@ Send Transactions to the Blockchain and query information about them.
 
 ## <span class="badge badge-success">POST</span> Send Transaction
 
-`https://gateway.elrond.com/transaction/send`
+`https://gateway.multiversx.com/transaction/send`
 
 This endpoint allows one to send a signed Transaction to the Blockchain.
 
@@ -18,7 +18,7 @@ This endpoint allows one to send a signed Transaction to the Blockchain.
 Body Parameters
 
 | Param            | Required                                  | Type     | Description                                                                      |
-|------------------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| ---------------- | ----------------------------------------- | -------- | -------------------------------------------------------------------------------- |
 | nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                         |
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
@@ -70,7 +70,7 @@ For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **o
 Here's an example of a request:
 
 ```
-POST https://gateway.elrond.com/transaction/send HTTP/1.1
+POST https://gateway.multiversx.com/transaction/send HTTP/1.1
 Content-Type: application/json
 
 {
@@ -89,7 +89,7 @@ Content-Type: application/json
 
 ## <span class="badge badge-success">POST</span> Send Multiple Transactions
 
-`https://gateway.elrond.com/transaction/send-multiple`
+`https://gateway.multiversx.com/transaction/send-multiple`
 
 This endpoint allows one to send a bulk of Transactions to the Blockchain.
 
@@ -102,7 +102,7 @@ Body Parameters
 Array of:
 
 | Param            | Required                                  | Type     | Description                                                                      |
-|------------------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| ---------------- | ----------------------------------------- | -------- | -------------------------------------------------------------------------------- |
 | nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                         |
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
@@ -146,7 +146,7 @@ For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **o
 Here's an example of a request:
 
 ```
-POST https://gateway.elrond.com/transaction/send-multiple HTTP/1.1
+POST https://gateway.multiversx.com/transaction/send-multiple HTTP/1.1
 Content-Type: application/json
 
 [
@@ -181,13 +181,14 @@ Content-Type: application/json
 
 **Nodes and observers**
 
-`https://gateway.elrond.com/transaction/simulate`
+`https://gateway.multiversx.com/transaction/simulate`
 
 This endpoint allows one to send a signed Transaction to the Blockchain in order to simulate its execution.
 This can be useful in order to check if the transaction will be successfully executed before actually sending it.
 It receives the same request as the `/transaction/send` endpoint.
 
 Move balance successful transaction simulation
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
@@ -195,7 +196,7 @@ Move balance successful transaction simulation
 Body Parameters
 
 | Param            | Required                                  | Type     | Description                                                                      |
-|------------------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| ---------------- | ----------------------------------------- | -------- | -------------------------------------------------------------------------------- |
 | nonce            | <span class="text-danger">REQUIRED</span> | `number` | The Nonce of the Sender.                                                         |
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
@@ -213,15 +214,14 @@ Body Parameters
 <!--Response-->
 
 A full response contains the fields above:
-*SimulationResults*
-| Field      | Type                      | Description       |
+_SimulationResults_
+| Field | Type | Description |
 |------------|---------------------------|-------------------|
-| status     | string                    | success, fail ... |
-| failReason | string                    | the error message |
-| scResults  | []ApiSmartContractResult  | an array of smart contract results (if any) |
-| receipts   | []ApiReceipt              | an array of the receipts (if any) |
-| hash       | string                    | the hash of the transaction |
-
+| status | string | success, fail ... |
+| failReason | string | the error message |
+| scResults | []ApiSmartContractResult | an array of smart contract results (if any) |
+| receipts | []ApiReceipt | an array of the receipts (if any) |
+| hash | string | the hash of the transaction |
 
 ❕ Note that fields that are empty won't be included in the response. This can be seen in the examples below
 
@@ -259,6 +259,7 @@ Invalid Transaction signature.
   "code": "successful"
 }
 ```
+
 ---
 
 🔴 400: Bad request
@@ -300,7 +301,7 @@ Example response for cross-shard transactions:
 
 ## <span class="badge badge-success">POST</span> Estimate Cost of Transaction
 
-`https://gateway.elrond.com/transaction/cost`
+`https://gateway.multiversx.com/transaction/cost`
 
 This endpoint allows one to estimate the cost of a transaction.
 
@@ -311,14 +312,14 @@ This endpoint allows one to estimate the cost of a transaction.
 Body Parameters
 
 | Param    | Required                                  | Type     | Description                                                                      |
-|----------|-------------------------------------------|----------|----------------------------------------------------------------------------------|
+| -------- | ----------------------------------------- | -------- | -------------------------------------------------------------------------------- |
 | value    | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
 | sender   | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
 | data     | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
 | chainID  | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
 | version  | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
-| nonce            | <span class="text-normal">OPTIONAL</span> | `number` | The Sender nonce.                                                         |
+| nonce    | <span class="text-normal">OPTIONAL</span> | `number` | The Sender nonce.                                                                |
 
 <!--Response-->
 
@@ -345,7 +346,7 @@ This endpoint returns the cost on the transaction in **gas units**. The returned
 Here's an example of a request:
 
 ```
-POST https://gateway.elrond.com/transaction/cost HTTP/1.1
+POST https://gateway.multiversx.com/transaction/cost HTTP/1.1
 Content-Type: application/json
 
 {
@@ -361,7 +362,7 @@ Content-Type: application/json
 
 ## <span class="badge badge-primary">GET</span> **Get Transaction**
 
-`https://gateway.elrond.com/transaction/:txHash`
+`https://gateway.multiversx.com/transaction/:txHash`
 
 This endpoint allows one to query the details of a Transaction.
 
@@ -372,13 +373,13 @@ This endpoint allows one to query the details of a Transaction.
 Path Parameters
 
 | Param  | Required                                  | Type     | Description                               |
-|--------|-------------------------------------------|----------|-------------------------------------------|
+| ------ | ----------------------------------------- | -------- | ----------------------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
 | Param       | Required                                  | Type     | Description                                                                                  |
-|-------------|-------------------------------------------|----------|----------------------------------------------------------------------------------------------|
+| ----------- | ----------------------------------------- | -------- | -------------------------------------------------------------------------------------------- |
 | sender      | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request.                                  |
 | withResults | <span class="text-normal">OPTIONAL</span> | `bool`   | Boolean parameter to specify if smart contract results and other details should be returned. |
 
@@ -420,11 +421,12 @@ Transaction details retrieved successfully.
 
 Request URL:
 
-`https://gateway.elrond.com/transaction/:txHash?withResults=true`
+`https://gateway.multiversx.com/transaction/:txHash?withResults=true`
 
-Response: 
+Response:
 
 The response can contain additional fields such as `smartContractResults`, or `receipt`
+
 ```
 {
     "data": {
@@ -482,7 +484,7 @@ The optional query parameter **`sender`** is only applicable to requests against
 
 ## <span class="badge badge-primary">GET</span> **Get Transaction Status**
 
-`https://gateway.elrond.com/transaction/:txHash/status`
+`https://gateway.multiversx.com/transaction/:txHash/status`
 
 This endpoint allows one to query the Status of a Transaction.
 
@@ -493,13 +495,13 @@ This endpoint allows one to query the Status of a Transaction.
 Path Parameters
 
 | Param  | Required                                  | Type     | Description                               |
-|--------|-------------------------------------------|----------|-------------------------------------------|
+| ------ | ----------------------------------------- | -------- | ----------------------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
 
 Query Parameters
 
 | Param  | Required                                  | Type     | Description                                                 |
-|--------|-------------------------------------------|----------|-------------------------------------------------------------|
+| ------ | ----------------------------------------- | -------- | ----------------------------------------------------------- |
 | sender | <span class="text-normal">OPTIONAL</span> | `string` | The Address of the sender - a hint to optimize the request. |
 
 <!--Response-->
@@ -584,10 +586,10 @@ Transaction status retrieved successfully.
 
 Query Parameters
 
-| Param     | Required                                  | Type     | Description                                                   |
-|-----------|-------------------------------------------|----------|---------------------------------------------------------------|
-| fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included.                          |
-| shard-id  | <span class="text-normal">OPTIONAL</span> | `string` | A specific shard id(0, 1, 2 etc. or 4294967295 for Metachain) |
+| Param    | Required                                  | Type     | Description                                                   |
+| -------- | ----------------------------------------- | -------- | ------------------------------------------------------------- |
+| fields   | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included.                          |
+| shard-id | <span class="text-normal">OPTIONAL</span> | `string` | A specific shard id(0, 1, 2 etc. or 4294967295 for Metachain) |
 
 As seen above, if the `fields` item is empty, only the transaction hash will be displayed.
 
@@ -595,7 +597,7 @@ If the `shard-id` item is used, only the transactions from that specific shard's
 
 Example request with shard id and fields:
 
-`https://gateway.elrond.com/transaction/pool?shard-id=0&fields=sender,receiver,value`
+`https://gateway.multiversx.com/transaction/pool?shard-id=0&fields=sender,receiver,value`
 
 All possible values for fields item are:
 
@@ -663,7 +665,7 @@ Transaction status retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get Transactions Pool for a Sender**
 
-`https://gateway.elrond.com/transaction/pool?by-sender=:sender:`
+`https://gateway.multiversx.com/transaction/pool?by-sender=:sender:`
 
 This endpoint allows one to fetch all the transactions of a sender from the transactions pool.
 
@@ -675,13 +677,13 @@ This endpoint allows one to fetch all the transactions of a sender from the tran
 
 Query Parameters
 
-| Param     | Required                                  | Type     | Description                          |
-|-----------|-------------------------------------------|----------|--------------------------------------|
-| by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.           |
+| Param     | Required                                  | Type     | Description                |
+| --------- | ----------------------------------------- | -------- | -------------------------- |
+| by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender. |
 
 Example:
 
-`https://gateway.elrond.com/transaction/pool?by-sender=erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
+`https://gateway.multiversx.com/transaction/pool?by-sender=erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
 
 <!--Response-->
 
@@ -709,7 +711,6 @@ Transaction status retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-
 ### Using custom fields
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -719,7 +720,7 @@ Transaction status retrieved successfully.
 Query Parameters
 
 | Param     | Required                                  | Type     | Description                          |
-|-----------|-------------------------------------------|----------|--------------------------------------|
+| --------- | ----------------------------------------- | -------- | ------------------------------------ |
 | by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.           |
 | fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
 
@@ -727,18 +728,18 @@ As seen above, if the `fields` item is empty, only the transaction hash will be 
 
 Example request with fields:
 
-`https://gateway.elrond.com/transaction/pool?by-sender=erd1at9...&fields=sender,receiver,value`
+`https://gateway.multiversx.com/transaction/pool?by-sender=erd1at9...&fields=sender,receiver,value`
 
 All possible values for fields item are:
 
-- hash           
-- nonce           
-- sender         
-- receiver      
-- gaslimit      
-- gasprice      
+- hash
+- nonce
+- sender
+- receiver
+- gaslimit
+- gasprice
 - receiverusername
-- data 
+- data
 - value
 
 <!--Response-->
@@ -772,7 +773,7 @@ Transaction status retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get the latest nonce of a sender from Tx Pool**
 
-`https://gateway.elrond.com/transaction/pool?by-sender=:sender:&last-nonce=true`
+`https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&last-nonce=true`
 
 This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
 
@@ -783,7 +784,7 @@ This endpoint allows one to fetch the entire transactions pool, merging the pool
 Query Parameters
 
 | Param      | Required                                  | Type     | Description                                     |
-|------------|-------------------------------------------|----------|-------------------------------------------------|
+| ---------- | ----------------------------------------- | -------- | ----------------------------------------------- |
 | by-sender  | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.                      |
 | last-nonce | <span class="text-normal">REQUIRED</span> | `bool`   | Specifies if the last nonce has to be returned. |
 
@@ -807,7 +808,7 @@ Transaction status retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get the nonce gaps of a sender from Tx Pool**
 
-`https://gateway.elrond.com/transaction/pool?by-sender=:sender:&nonce-gaps=true`
+`https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&nonce-gaps=true`
 
 This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
 
@@ -818,7 +819,7 @@ This endpoint allows one to fetch the entire transactions pool, merging the pool
 Query Parameters
 
 | Param      | Required                                  | Type     | Description                                     |
-|------------|-------------------------------------------|----------|-------------------------------------------------|
+| ---------- | ----------------------------------------- | -------- | ----------------------------------------------- |
 | by-sender  | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.                      |
 | nonce-gaps | <span class="text-normal">REQUIRED</span> | `bool`   | Specifies if the nonce gaps should be returned. |
 

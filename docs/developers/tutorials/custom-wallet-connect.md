@@ -7,19 +7,19 @@ title: Custom Wallet Connect
 
 Our custom Wallet Connect is a platform that allows you to connect decentralized applications (dApps) to your wallet. The dApp can send transaction requests to your wallet once you have authorized a connection request from it through our custom Wallet Connect.
 
-In this guide, we will walk you through the process of connecting a dApp to our WalletConnect. This will provide users with the bridge that securely connects their Elrond wallets to dApps. 
+In this guide, we will walk you through the process of connecting a dApp to our WalletConnect. This will provide users with the bridge that securely connects their MultiversX (previously Elrond) wallets to dApps.
 
 ## **Prerequisites**
 
-Before we begin, a few requirements are needed to get you running. 
+Before we begin, a few requirements are needed to get you running.
 
 - Set up a working dApp.
 
-We have created a tutorial on how to **[build a dApp](https://docs.elrond.com/developers/tutorials/your-first-dapp/)** on the Elrond blockchain in a few minutes. 
+We have created a tutorial on how to **[build a dApp](https://docs.multiversx.com/developers/tutorials/your-first-dapp/)** on the MultiversX (previously Elrond) blockchain in a few minutes.
 
 - Purchase a domain for your Wallet Connect server.
 
-To connect to our custom WalletConnect server, we need an HTTPS connection. This domain name will be used when configuring the Nginx host. 
+To connect to our custom WalletConnect server, we need an HTTPS connection. This domain name will be used when configuring the Nginx host.
 
 All set? Let’s get started! 🚀.
 
@@ -27,7 +27,7 @@ All set? Let’s get started! 🚀.
 
 With everything in place, let's set up the Wallet Connect application. To begin, launch a new instance on an [Ubuntu 18.04](https://ubuntu.com/) server and configure the Wallet Connect server.
 
-**Install Dependencies** 
+**Install Dependencies**
 
 Spin up your terminal and run this command to install the dependencies:
 
@@ -35,14 +35,14 @@ Spin up your terminal and run this command to install the dependencies:
 sudo apt-get update && sudo apt-get install certbot python3-certbot-nginx docker.io docker-compose nginx -y
 ```
 
-By default, *nginx* configuration is saved to the directory. Remove the *nginx* configuration from the default directory and create the required directories. 
+By default, _nginx_ configuration is saved to the directory. Remove the _nginx_ configuration from the default directory and create the required directories.
 
 ```bash
 sudo rm -f /etc/nginx/sites-enabled/default
 mkdir -p /etc/nginx/sites-enabled
 ```
 
-Navigate to your text editor and create a *walletconnect* file in the `/etc/nginx/sites-enabled` location. Add these lines of code to the file:
+Navigate to your text editor and create a _walletconnect_ file in the `/etc/nginx/sites-enabled` location. Add these lines of code to the file:
 
 ```bash
 cat << EOF > /etc/nginx/sites-enabled/walletconnect
@@ -70,19 +70,19 @@ server {
 EOF
 ```
 
-Due to the significant configuration changes we have made, we need to fully restart *nginx*. Execute this command to restart and enable the server. 
+Due to the significant configuration changes we have made, we need to fully restart _nginx_. Execute this command to restart and enable the server.
 
 ```bash
 systemctl restart nginx.service && systemctl enable nginx.service
 ```
 
-Next, request your *certbot* certificates.
+Next, request your _certbot_ certificates.
 
 ```bash
 certbot --nginx -d1 mycustomwalletconnect.com
 ```
 
-Run this command to download *Redis* and its dependencies. Next check if *Redis* is functioning properly using the `status` command.
+Run this command to download _Redis_ and its dependencies. Next check if _Redis_ is functioning properly using the `status` command.
 
 ```bash
 sudo apt-get install -y redis
@@ -93,7 +93,7 @@ sudo systemctl status redis
 We also need to install `nodejs` which will run in production.
 
 ```bash
-curl -sL https://deb.nodesource.com/setup_14.x -o /tmp/setup_14.sh && chmod +x /tmp/setup_14.sh 
+curl -sL https://deb.nodesource.com/setup_14.x -o /tmp/setup_14.sh && chmod +x /tmp/setup_14.sh
 
 sudo apt-get install -y nodejs
 ```
@@ -101,12 +101,12 @@ sudo apt-get install -y nodejs
 Lastly, we will set up a wallet connection bridge server for sending Wallet Connect connections. Run the commands below.
 
 ```bash
-mkdir ~/wallet-connect 
-cd ~/wallet-connect 
-git clone https://github.com/WalletConnect/node-walletconnect-bridge 
-cd ~/wallet-connect/node-walletconnect-bridge 
-npm install --no-optional 
-npm run build 
+mkdir ~/wallet-connect
+cd ~/wallet-connect
+git clone https://github.com/WalletConnect/node-walletconnect-bridge
+cd ~/wallet-connect/node-walletconnect-bridge
+npm install --no-optional
+npm run build
 nohup npm run start > wallet_connect_log 2>&1 &
 ```
 
@@ -124,23 +124,23 @@ In your `config.tsx` file, add the following lines of code:
 export const walletConnectBridgeAddresses = ['https://mycustomwalletconnect.com:5000'];
 ```
 
-Next, create an `app.tsx` file, where we will import the array into the application and submit the array as a *key/value* pair for the `customNetworkConfig` parameter when the `DappProvider` component is launched.
+Next, create an `app.tsx` file, where we will import the array into the application and submit the array as a _key/value_ pair for the `customNetworkConfig` parameter when the `DappProvider` component is launched.
 
-Add these codes to your `app.tsx` file, 
+Add these codes to your `app.tsx` file,
 
 ```jsx
-import { walletConnectBridgeAddresses } from 'config'; 
-	<DappProvider 
-		environment={environment} 
+import { walletConnectBridgeAddresses } from 'config';
+	<DappProvider
+		environment={environment}
 		customNetworkConfig={{
-			name: 'customConfig', 
-			apiTimeout: 6000, 
-			walletConnectBridgeAddresses 
-		}} 
-		completedTransactionsDelay={200} 
+			name: 'customConfig',
+			apiTimeout: 6000,
+			walletConnectBridgeAddresses
+		}}
+		completedTransactionsDelay={200}
 	>
 ```
 
-Restart the application. 
+Restart the application.
 
 **Congratulations!** Now, when a user connects to a dApp through wallet connect, they will be using our custom wallet connect server. 🎉

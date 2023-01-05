@@ -10,7 +10,7 @@ The mini-testnet contains:
 - **Validator Nodes** (two, by default)
 - **Observer Nodes** (two, by default)
 - A **Seednode**
-- An **Elrond Proxy**
+- An **MultiversX (previously Elrond) Proxy**
 
 If not specified otherwise, the mini-testnet starts with one Shard plus the Metachain (each with one Validator and one Observer).
 
@@ -53,7 +53,7 @@ port_proxy = 7950
 ```
 
 :::tip
-erdpy allows you to customize the configuration of the local mini-testnet in much greater detail, but for the sake of simplicity, in the example above we've only set the TCP port of the Elrond Proxy.
+erdpy allows you to customize the configuration of the local mini-testnet in much greater detail, but for the sake of simplicity, in the example above we've only set the TCP port of the MultiversX (previously Elrond) Proxy.
 :::
 
 Then, configure and build the local testnet as follows:

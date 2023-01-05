@@ -7,7 +7,7 @@ Query blocks information.
 
 ## <span class="badge badge-primary">GET</span> **Get Hyperblock by Nonce**
 
-`https://gateway.elrond.com/hyperblock/by-nonce/:nonce`
+`https://gateway.multiversx.com/hyperblock/by-nonce/:nonce`
 
 This endpoint allows one to query a Hyperblock by its nonce.
 
@@ -18,7 +18,7 @@ This endpoint allows one to query a Hyperblock by its nonce.
 Path Parameters
 
 | Param | Required                                  | Type     | Description               |
-|-------|-------------------------------------------|----------|---------------------------|
+| ----- | ----------------------------------------- | -------- | ------------------------- |
 | nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
 
 <!--Response-->
@@ -86,7 +86,7 @@ A **hyperblock** is composed using a **metablock** as a starting point - therefo
 
 ## <span class="badge badge-primary">GET</span> **Get Hyperblock by Hash**
 
-`https://gateway.elrond.com/hyperblock/by-hash/:hash`
+`https://gateway.multiversx.com/hyperblock/by-hash/:hash`
 
 This endpoint allows one to query a Hyperblock by its hash.
 
@@ -97,7 +97,7 @@ This endpoint allows one to query a Hyperblock by its hash.
 Path Parameters
 
 | Param | Required                                  | Type     | Description     |
-|-------|-------------------------------------------|----------|-----------------|
+| ----- | ----------------------------------------- | -------- | --------------- |
 | hash  | <span class="text-normal">OPTIONAL</span> | `string` | The Block hash. |
 
 <!--Response-->
@@ -157,7 +157,7 @@ This endpoint is only is only defined by the Proxy. The Observer does not expose
 
 ## <span class="badge badge-primary">GET</span> **Get Block by Nonce**
 
-`https://gateway.elrond.com/block/:shard/by-nonce/:nonce`
+`https://gateway.multiversx.com/block/:shard/by-nonce/:nonce`
 
 This endpoint allows one to query a Shard Block by its nonce (or height).
 
@@ -168,14 +168,14 @@ This endpoint allows one to query a Shard Block by its nonce (or height).
 Path Parameters
 
 | Param | Required                                  | Type     | Description               |
-|-------|-------------------------------------------|----------|---------------------------|
+| ----- | ----------------------------------------- | -------- | ------------------------- |
 | shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard.                |
 | nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
 
 Query Parameters
 
 | Param   | Required                                  | Type      | Description                                          |
-|---------|-------------------------------------------|-----------|------------------------------------------------------|
+| ------- | ----------------------------------------- | --------- | ---------------------------------------------------- |
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
 <!--Response-->
@@ -233,7 +233,7 @@ For Observers, the `shard` parameter should not be set.
 
 ## <span class="badge badge-primary">GET</span> **Get Block by Hash**
 
-`https://gateway.elrond.com/block/:shard/by-hash/:hash`
+`https://gateway.multiversx.com/block/:shard/by-hash/:hash`
 
 This endpoint allows one to query a Shard Block by its hash.
 
@@ -244,14 +244,14 @@ This endpoint allows one to query a Shard Block by its hash.
 Path Parameters
 
 | Param | Required                                  | Type     | Description     |
-|-------|-------------------------------------------|----------|-----------------|
+| ----- | ----------------------------------------- | -------- | --------------- |
 | shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard.      |
 | hash  | <span class="text-danger">REQUIRED</span> | `string` | The Block hash. |
 
 Query Parameters
 
 | Param   | Required                                  | Type      | Description                                          |
-|---------|-------------------------------------------|-----------|------------------------------------------------------|
+| ------- | ----------------------------------------- | --------- | ---------------------------------------------------- |
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
 <!--Response-->

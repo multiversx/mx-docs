@@ -3,11 +3,11 @@ id: config-scripts
 title: Scripts & User config
 ---
 
-Elrond provides scripts designed to streamline the process of installing an Elrond node. This validator script is a general script for accessing the Mainnet, Devnet and Testnet networks.
+MultiversX (previously Elrond) provides scripts designed to streamline the process of installing an MultiversX (previously Elrond) node. This validator script is a general script for accessing the Mainnet, Devnet and Testnet networks.
 
 To get started, you will begin by getting a copy of the latest version of the scripts from Github and configure it to match your local setup.
 
-## **Download the Elrond Scripts**
+## **Download the MultiversX (previously Elrond) Scripts**
 
 ```bash
 cd ~

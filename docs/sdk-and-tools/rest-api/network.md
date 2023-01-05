@@ -7,7 +7,7 @@ Query information about the Network.
 
 ## <span class="badge badge-primary">GET</span> **Get Network Configuration**
 
-`https://gateway.elrond.com/network/config`
+`https://gateway.multiversx.com/network/config`
 
 This endpoint allows one to query basic details about the configuration of the Network.
 
@@ -50,7 +50,7 @@ Configuration details retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get Shard Status**
 
-`https://gateway.elrond.com/network/status/:shardId`
+`https://gateway.multiversx.com/network/status/:shardId`
 
 This endpoint allows one to query the status of a given Shard.
 
@@ -61,7 +61,7 @@ This endpoint allows one to query the status of a given Shard.
 Path Parameters
 
 | Param   | Required                                  | Type     | Description                                                                |
-|---------|-------------------------------------------|----------|----------------------------------------------------------------------------|
+| ------- | ----------------------------------------- | -------- | -------------------------------------------------------------------------- |
 | shardID | <span class="text-danger">REQUIRED</span> | `number` | The Shard ID. 0, 1, 2 etc. Use 4294967295 in order to query the Metachain. |
 
 <!--Response-->
@@ -84,7 +84,7 @@ Shard Status retrieved successfully.
             "erd_rounds_passed_in_current_epoch": 14254,
             "erd_rounds_per_epoch": 14400
         }
-    }, 
+    },
     "error": "",
     "code": "successful"
 }

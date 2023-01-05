@@ -3,10 +3,10 @@ id: erdpy-cookbook
 title: Cookbook
 ---
 
-This page will guide you through the process of handling common tasks using **erdpy** _as a library_ (as opposed to _as a CLI tool_). 
+This page will guide you through the process of handling common tasks using **erdpy** _as a library_ (as opposed to _as a CLI tool_).
 
 :::note
-All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/ElrondNetwork/sdk-erdpy-examples)**. 
+All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/ElrondNetwork/sdk-erdpy-examples)**.
 :::
 
 We are going to make use of the packages [erdpy_core](https://github.com/ElrondNetwork/sdk-erdpy-core), [erdpy_wallet](https://github.com/ElrondNetwork/sdk-erdpy-wallet) and [erdpy_network](https://github.com/ElrondNetwork/sdk-erdpy-network-providers) (available as of December 2022), which were previously nicknamed _erdpy-eggs_. These packages should be installed **directly from GitHub** whenever possible (although they are published on [**PyPI**](https://pypi.org/user/elrond/), as well). For example:
@@ -371,7 +371,7 @@ builder = ContractQueryBuilder(
 
 query = builder.build()
 
-network_provider = ApiNetworkProvider("https://devnet-api.elrond.com")
+network_provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
 response = network_provider.query_contract(query)
 
 print("Return code:", response.return_code)
@@ -545,7 +545,7 @@ Creating an API provider:
 ```
 from erdpy_network import ApiNetworkProvider
 
-provider = ApiNetworkProvider("https://devnet-api.elrond.com");
+provider = ApiNetworkProvider("https://devnet-api.multiversx.com");
 ```
 
 Creating a Proxy provider:
@@ -553,7 +553,7 @@ Creating a Proxy provider:
 ```
 from erdpy_network import ProxyNetworkProvider
 
-provider = ProxyNetworkProvider("https://devnet-gateway.elrond.com");
+provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
 ## Fetching network parameters

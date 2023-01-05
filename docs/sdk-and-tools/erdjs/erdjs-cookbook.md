@@ -16,7 +16,7 @@ Creating an API provider:
 ```
 import { ApiNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
-let networkProvider = new ApiNetworkProvider("https://devnet-api.elrond.com");
+let networkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com");
 ```
 
 Creating a Proxy provider:
@@ -24,11 +24,11 @@ Creating a Proxy provider:
 ```
 import { ProxyNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
-let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.elrond.com");
+let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
 :::important
-Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the Elrond API (or Gateway).
+Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX (previously Elrond) API (or Gateway).
 
 On this topic, please see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
 :::
@@ -154,7 +154,7 @@ Note that, for all purposes, **we recommend using [dapp-core](https://github.com
 
 ```
 let data = tx.toSendable();
-let url = "https://devnet-api.elrond.com/transactions";
+let url = "https://devnet-api.multiversx.com/transactions";
 let response = await axios.post(url, data, {
     headers: {
         "Content-Type": "application/json",
@@ -316,7 +316,7 @@ let transaction = contract.deploy({
 });
 ```
 
-Then, set the transaction nonce. 
+Then, set the transaction nonce.
 
 Note that the account nonce must be synchronized beforehand. Also, locally increment the nonce of the deployer (optional).
 
@@ -504,7 +504,7 @@ Given an interaction:
 let interaction = contract.methods.doStuff([]);
 ```
 
-One can apply token transfers to the smart contract call, as well. 
+One can apply token transfers to the smart contract call, as well.
 
 For single payments, do as follows:
 
@@ -560,7 +560,6 @@ let endpointDefinition = smartContract.getEndpoint("myFunction");
 ```
 
 For customizing the default parser, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
-
 
 ## Signing objects
 
@@ -703,11 +702,11 @@ let metadata = new TransactionDecoder().getTransactionMetadata({
 
 ### Using the `esdtHelpers` and `scArgumentsParser` of `erdjs 9x`
 
-The classes `esdtHelpers` and `scArgumentsParser` have been removed in `erdjs 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above). 
+The classes `esdtHelpers` and `scArgumentsParser` have been removed in `erdjs 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above).
 
-However, you can still find the previous implementations at the following location: 
- - [esdtHelpers](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
- - [esdtHelpers examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
- - [scArgumentsParser](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
- - [scArgumentsParser examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)
- 
+However, you can still find the previous implementations at the following location:
+
+- [esdtHelpers](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
+- [esdtHelpers examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
+- [scArgumentsParser](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
+- [scArgumentsParser examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)

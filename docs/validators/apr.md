@@ -5,14 +5,14 @@ title: Staking Providers APR
 
 ## Introduction
 
-By using the [Delegation Manager](/validators/delegation-manager/) system smart contract, a new staking provider can be 
+By using the [Delegation Manager](/validators/delegation-manager/) system smart contract, a new staking provider can be
 set up. According to the initial deposits (half of the minimum node stake) + delegations from other users (or even the owner itself)
 the staking contract can spawn new nodes. Currently, the minimum node cost is 2500 EGLD, so, for example, if a staking contract
 gathered 7500 EGLD it can spawn 3 new nodes.
 
 ### Base stake and top-up
 
-As stated, a validator node requires at least 2500 EGLD. So multiple nodes would mean at least *2500 multiplied by the number of nodes* EGLD in the contract. 
+As stated, a validator node requires at least 2500 EGLD. So multiple nodes would mean at least _2500 multiplied by the number of nodes_ EGLD in the contract.
 The difference is considered top-up. Also, the staking provider owner can choose to keep the tokens as top-up, even
 if the top-up is enough to spawn a new validator node.
 
@@ -21,10 +21,11 @@ Let's take some examples:
 a). A Staking Contract has 2550 EGLD. This would mean a base stake of 2500 EGLD + 50 EGLD top-up
 
 b). A Staking Contract has 5200 EGLD. This could mean:
+
 - a base stake of 2500 EGLD (1 node) + 2700 EGLD top-up
 - a base stake of 5000 EGLD (2 nodes) + 200 EGLD top-up
 
-Network-wise, the base stake is currently limited to 8,000,000 EGLD (3200 nodes * 2500 EGLD / node). However, current staking
+Network-wise, the base stake is currently limited to 8,000,000 EGLD (3200 nodes \* 2500 EGLD / node). However, current staking
 metrics indicate that the total EGLD staked is around 13,000,000 EGLD, resulting in a base stake of 8 millions EGLD + ~5 millions EGLD top-up.
 
 ### Service Fee
@@ -32,15 +33,15 @@ metrics indicate that the total EGLD staked is around 13,000,000 EGLD, resulting
 At each epoch change, the delegation contract receives the rewards in accordance to its stake. Over those rewards,
 a service fee applies so the owner can cover the hosting and nodes management costs.
 
-So for example, if the rewards are 10 EGLD in an epoch, and the service fee is set to 10%, the owner of the staking 
+So for example, if the rewards are 10 EGLD in an epoch, and the service fee is set to 10%, the owner of the staking
 contract will be eligible for 1 EGLD, while the difference (9 EGLD) will be allocated to the delegators.
 
 ### Inflation Rate
 
-Elrond's economics model is based on an inflation rate that decreases each year. More about this can be read on the 
-[blog](https://elrond.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper/).
+MultiversX's (previously Elrond) economics model is based on an inflation rate that decreases each year. More about this can be read on the
+[blog](https://multiversx.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper/).
 
-This means that for each year the estimated rewards for a validator will change. This has to be taken into account 
+This means that for each year the estimated rewards for a validator will change. This has to be taken into account
 when computing the APR.
 
 The configuration for the inflation rate can be found [here](https://github.com/ElrondNetwork/elrond-config-mainnet/blob/master/economics.toml) (`YearSettings`).
@@ -48,7 +49,7 @@ The configuration for the inflation rate can be found [here](https://github.com/
 The approximated inflation rate is as follows:
 
 | Year | Inflation rate |
-|------|----------------|
+| ---- | -------------- |
 | 1    | 10.84%         |
 | 2    | 9.7%           |
 | 3    | 8.56%          |
@@ -61,19 +62,17 @@ The approximated inflation rate is as follows:
 | 10   | 0.57%          |
 | 11   | 0%             |
 
-
 ### Protocol Sustainability
 
-In accordance to the Mainnet's [configuration](https://github.com/ElrondNetwork/elrond-config-mainnet/blob/master/economics.toml#L35)  (`ProtocolSustainabilityPercentage`).
+In accordance to the Mainnet's [configuration](https://github.com/ElrondNetwork/elrond-config-mainnet/blob/master/economics.toml#L35) (`ProtocolSustainabilityPercentage`).
 at each epoch change, when new tokens are distributed among the validators, 10% of the value goes to Protocol Sustainability Address.
 
 This also has to be taken into account when calculating the APR.
 
-
 ## Rewards calculation
 
 When wanting to calculate the APR (Annual Percentage Return) of a Staking Provider, there are multiple factors that have
-to be taken into account, such as total value locked at Network-level, the inflation based on the current year, the 
+to be taken into account, such as total value locked at Network-level, the inflation based on the current year, the
 staking provider base stake and top-up stake, and so on.
 
 ### Network Top-Up rewards
@@ -85,14 +84,15 @@ topUpRewards(e) = \frac{2 * topUpRewardLimit(e)}{\pi} * atan(\frac{eligibleCumul
 $$
 
 Where:
+
 - `e` represents the given epoch
 - `topUpRewardLimit(e)` represents the maximum top-up rewards that can be distributed in the given epoch. This can be viewed
-as the maximum value out of the epoch rewards that can be distributed as rewards for the top-up stake, and depends 
-on the total rewards to be distributed in the epoch and a configured network parameter that defines the proportion out of the total rewards.
-- `eligibleCumulatedTopUp(e)` represents the rewards distributed in the epoch for signing and proposing blocks. 
-This does not include the protocol sustainability rewards, developer fees or the penalty for missed blocks.
-- `p` represents a chosen parameter to control the gradient of top-up rewards. It can be viewed as the cumulated top-up stake 
-where the given top-up rewards reach ½ of the top-up rewards set limit. It is currently set to 2M EGLD.
+  as the maximum value out of the epoch rewards that can be distributed as rewards for the top-up stake, and depends
+  on the total rewards to be distributed in the epoch and a configured network parameter that defines the proportion out of the total rewards.
+- `eligibleCumulatedTopUp(e)` represents the rewards distributed in the epoch for signing and proposing blocks.
+  This does not include the protocol sustainability rewards, developer fees or the penalty for missed blocks.
+- `p` represents a chosen parameter to control the gradient of top-up rewards. It can be viewed as the cumulated top-up stake
+  where the given top-up rewards reach ½ of the top-up rewards set limit. It is currently set to 2M EGLD.
 
 ### Network base rewards
 
@@ -101,20 +101,20 @@ baseRewards(e) = blocksRewards(e) - topUpReward(e)
 $$
 
 Where:
-- `blocksRewards(e)` represents the rewards received by the validators by either signing or proposing blocks during the epoch that are now
-part of the canonical chain
-- `topUpReward(e)` is computed above
 
+- `blocksRewards(e)` represents the rewards received by the validators by either signing or proposing blocks during the epoch that are now
+  part of the canonical chain
+- `topUpReward(e)` is computed above
 
 ## APR calculation
 
 After determining the base and the top-up rewards for an epoch, the APR can be calculated for a Staking Provider.
 
-First, we have to determine the maximum rewards that can be reached in ideal situations (no missed block in an epoch). 
+First, we have to determine the maximum rewards that can be reached in ideal situations (no missed block in an epoch).
 
 ### Staking Provider base stake rewards
 
-We have to calculate the estimated rewards received by a Staking Provider in one epoch for the base stake. 
+We have to calculate the estimated rewards received by a Staking Provider in one epoch for the base stake.
 
 This is done by calculating the share of the total rewards in accordance to the provider's number of nodes.
 
@@ -127,7 +127,7 @@ $$
 
 ### Top-Up rewards
 
-Similar to base stake rewards, the rewards for top-up are estimated by computing the share of the provider's top-up in 
+Similar to base stake rewards, the rewards for top-up are estimated by computing the share of the provider's top-up in
 accordance to the network's total top-up.
 
 $$
@@ -149,10 +149,9 @@ $$
 apr = \frac{100 - fee}{100} * aprWithoutFee
 $$
 
-
 ## Example
 
-The formulas and all the mathematics involved might be quite complicated, so let's take an example. 
+The formulas and all the mathematics involved might be quite complicated, so let's take an example.
 
 Let's say we have the following parameters:
 
@@ -193,8 +192,9 @@ maximumRewardsInADay(e) = 4783 EGLD
 ```
 
 The maximum top-up reward for the epoch is:
+
 ```
-topUpRewardLimit(e) = topUpFactor * maximumRewardsInADay(e) = 0.5 * 4783 =~ 2391 EGLD 
+topUpRewardLimit(e) = topUpFactor * maximumRewardsInADay(e) = 0.5 * 4783 =~ 2391 EGLD
 ```
 
 Therefore, the network top-up would be:
@@ -209,7 +209,7 @@ The base rewards would be:
 baseRewards(e) = blocksRewards(e) - topUpReward(e) = maximumRewardsInADay(e) - topUpReward(e) = 4783 - 1385 = 3398 EGLD
 ```
 
-Moving to the staking provider: 
+Moving to the staking provider:
 
 ```
 stakingProviderBaseStakeRewards(e) = stakingProviderNumberOfNodes / totalNodes * baseRewards(e) = 10 / 3200 * 3398 = 10.61 EGLD

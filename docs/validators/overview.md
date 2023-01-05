@@ -8,14 +8,14 @@ title: Validators - Overview
 ### Install and maintain a node
 
 | Name                                                                                  | Description                                                              |
-|---------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| [System requirements](/validators/system-requirements)                                | System requirements for running an Elrond node.                          |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [System requirements](/validators/system-requirements)                                | System requirements for running an MultiversX node.                      |
 | [Install a Mainnet/Testnet/Devnet Node](/validators/elrond-go-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
 ### Keys Management
 
 | Name                                                            | Description                         |
-|-----------------------------------------------------------------|-------------------------------------|
+| --------------------------------------------------------------- | ----------------------------------- |
 | [Validator keys](/validators/key-management/validator-keys)     | Learn about a validator key.        |
 | [Wallet keys](/validators/key-management/wallet-keys)           | Learn about a wallet key.           |
 | [Protecting your keys](/validators/key-management/protect-keys) | Learn how you can secure your keys. |
@@ -23,7 +23,7 @@ title: Validators - Overview
 ### Staking
 
 | Name                                                                                | Description                                                   |
-|-------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | [Staking, unstaking and unjailing](/validators/staking/staking-unstaking-unjailing) | Learn about how to stake, unstake or unjail a Node.           |
 | [How to Stake a Node](/validators/staking/staking)                                  | Learn how to stake a node via a step-by-step tutorial.        |
 | [How to unJail a Node](/validators/staking/unjailing)                               | Learn how to unJail a node.                                   |
@@ -32,7 +32,7 @@ title: Validators - Overview
 ### Delegation Manager
 
 | Name                                                                                                                         | Description                                                                                  |
-|------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | [Delegation Manager](/validators/delegation-manager)                                                                         | Learn how to create a new Staking Provider, how to configure it and how to interact with it. |
 | [How to convert an existing Validator into a Staking Pool](/validators/staking/convert-existing-validator-into-staking-pool) | Learn how to create a new Staking Provider, starting from an existing Validator.             |
 | [Merge an existing Validator into a Staking Pool](/validators/staking/merge-validator-delegation-sc)                         | Learn how to merge a validator into a Staking Provider.                                      |
@@ -40,7 +40,7 @@ title: Validators - Overview
 ### Useful
 
 | Name                                                     | Description                                                                                                       |
-|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | [Node operation modes](/validators/node-operation-modes) | Learn about the nodes' operation modes and how to use them for setting up node for various use-cases.             |
 | [Rating](/validators/rating)                             | Learn about the nodes' rating, how it increases and decreases and how does it impact the earnings.                |
 | [Node Upgrade](/validators/node-upgrades)                | Learn about the periodical or emergency upgrades that nodes' owner have to do.                                    |
@@ -53,15 +53,15 @@ title: Validators - Overview
 
 ## Overview
 
-The Elrond network is made up of nodes and their interconnectivity - balanced by virtue of its design, secured through its size and fast, _very_ fast, because efficiency is what motivated its development. Every time a node joins the network, it adds more security and efficiency. The network, in turn, rewards the nodes for their contribution, generating a virtuous cycle.
+The MultiversX (previously Elrond) network is made up of nodes and their interconnectivity - balanced by virtue of its design, secured through its size and fast, _very_ fast, because efficiency is what motivated its development. Every time a node joins the network, it adds more security and efficiency. The network, in turn, rewards the nodes for their contribution, generating a virtuous cycle.
 
-We will call a _node_ any running instance of the software application developed by the Elrond team, [publicly available as open source](https://github.com/ElrondNetwork/elrond-go). Anyone can run a node on their machine - great care was taken to make the node consume as little computing resources as possible. Mid-level recent hardware can effortlessly run multiple individual nodes at the same time, earning more rewards for the same physical machine.
+We will call a _node_ any running instance of the software application developed by the MultiversX (previously Elrond) team, [publicly available as open source](https://github.com/ElrondNetwork/elrond-go). Anyone can run a node on their machine - great care was taken to make the node consume as little computing resources as possible. Mid-level recent hardware can effortlessly run multiple individual nodes at the same time, earning more rewards for the same physical machine.
 
 We will call a _node operator_ any person or entity who manages one or more nodes. These pages are for them.
 
 ## Background
 
-Elrond is a decentralized blockchain network. This means that its nodes collaborate to create sequential **blocks** with strict regularity - blocks which contain the results of operations that were requested by the users of the network. Such operations may be simple transfers of tokens, or may be calls to SmartContracts. Either way, _all_ operations take the form of **transactions**.
+MultiversX (previously Elrond) is a decentralized blockchain network. This means that its nodes collaborate to create sequential **blocks** with strict regularity - blocks which contain the results of operations that were requested by the users of the network. Such operations may be simple transfers of tokens, or may be calls to SmartContracts. Either way, _all_ operations take the form of **transactions**.
 
 Any user who submits a transaction to the network must pay a fee, in EGLD tokens. These fees are what produces **rewards** for the nodes.
 
@@ -80,4 +80,3 @@ The opposite is also true: a validator which is either offline during consensus 
 This implies that a node with high rating produces far more rewards than a node with low rating, so it is essential that operators maintain their validators online, up-to-date and responsive.
 
 Moreover, if the rating of a validator becomes too low, it will be **jailed**. A jailed validator will not be selected for consensus - thus earning no rewards. To restore the validator, it must be **unjailed**, which requires a fine to be paid, currently set to 2.5 EGLD.
-

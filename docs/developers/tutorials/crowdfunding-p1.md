@@ -5,10 +5,10 @@ title: The Crowdfunding Smart Contract (part 1)
 
 Write, build and deploy a simple smart contract written in Rust
 
-This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the Elrond Network, written in Rust.
+This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the MultiversX (previously Elrond) Network, written in Rust.
 
 :::important
-The Elrond Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
+The MultiversX (previously Elrond) Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
 :::
 
 :::important
@@ -17,7 +17,7 @@ The current tutorial revolves around **elrond-wasm-rs** version **0.35.0**, and 
 
 # **Introduction**
 
-Let's say you need to raise EGLD for a cause that you believe in. They will obviously be well spent, but you need to get the EGLD first. For this reason, you decided to run a crowdfunding campaign on the Elrond Network, which naturally means that you'll use a smart contract for the campaign. This tutorial will teach you how to do just that: write a crowdfunding smart contract, how to deploy it and how to use it.
+Let's say you need to raise EGLD for a cause that you believe in. They will obviously be well spent, but you need to get the EGLD first. For this reason, you decided to run a crowdfunding campaign on the MultiversX (previously Elrond) Network, which naturally means that you'll use a smart contract for the campaign. This tutorial will teach you how to do just that: write a crowdfunding smart contract, how to deploy it and how to use it.
 
 The idea is simple: the smart contract will accept transfers until a deadline is reached, and it will keep track of all the people who sent EGLD.
 
@@ -47,11 +47,11 @@ Automated testing is exceptionally important for the development of smart contra
 
 # **Prerequisites**
 
-The best way to build on Elrond is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
+The best way to build on MultiversX (previously Elrond) is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
 
-Elrond IDE is an extension for Visual Studio Code that offers development support for Elrond Smart Contracts.
+MultiversX (previously Elrond) IDE is an extension for Visual Studio Code that offers development support for MultiversX (previously Elrond) Smart Contracts.
 
-Elrond IDE supports the following programming languages:
+MultiversX (previously Elrond) IDE supports the following programming languages:
 
 - Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via elrond-wasm-debug and CodeLLDB.
 - C / C++
@@ -75,7 +75,7 @@ code crowdfunding
 
 You may choose any location you want for your smart contract. The above is just an example. Either way, now that you are in the folder dedicated to the smart contract, we can begin.
 
-Straight away you get a project that works - `erdpy` created your project out of a template. These templates are contracts written and tested by Elrond, which can be used by anybody as starting points. The `adder` template is pretty much the simplest contract you can imagine.
+Straight away you get a project that works - `erdpy` created your project out of a template. These templates are contracts written and tested by MultiversX (previously Elrond), which can be used by anybody as starting points. The `adder` template is pretty much the simplest contract you can imagine.
 
 The last line also opens the new project in a new VS Code instance.
 
@@ -104,7 +104,7 @@ version = "0.35.0"
 Let's see what this means:
 
 - The package is unsurprisingly named `crowdfunding`, and has the version `0.0.1`. You can set any version you like, just make sure it has 3 numbers separated by dots. It's a requirement.
-- This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the Elrond Network, you'll need 3 special and very helpful packages, developed by Elrond.
+- This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the MultiversX (previously Elrond) Network, you'll need 3 special and very helpful packages, developed by MultiversX (previously Elrond).
 - The file `src/crowdfunding_main.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
 - The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
@@ -131,7 +131,7 @@ Let's take a look at the code. The first three lines declare some characteristic
 
 ### **Bring in the framework**
 
-The 3rd line contains the command `elrond_wasm::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the Elrond framework for Rust smart contracts, which is designed to simplify the code enormously.
+The 3rd line contains the command `elrond_wasm::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the MultiversX (previously Elrond) framework for Rust smart contracts, which is designed to simplify the code enormously.
 
 The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
 
@@ -147,7 +147,7 @@ Your smart contract effectively starts at line 9. We could have gotten here quic
 
 It helps to know what a trait is in Rust, before continuing (the [Rust book explains it well](https://doc.rust-lang.org/book/ch10-02-traits.html)).
 
-For now, you only need to remember that you write your smart contract as the `trait Crowdfunding`, in order to allow the Elrond framework to generate the support code for you, resulting in a hidden `struct CrowdfundingImpl`.
+For now, you only need to remember that you write your smart contract as the `trait Crowdfunding`, in order to allow the MultiversX (previously Elrond) framework to generate the support code for you, resulting in a hidden `struct CrowdfundingImpl`.
 
 ### **Init**
 
@@ -205,7 +205,7 @@ In this step you will use the `init` method to persist some values in the storag
 
 ### **Storage mappers**
 
-Every smart contract is allowed to store key-value pairs into a persistent structure, created for the smart contract at the moment of its deployment on the Elrond Network.
+Every smart contract is allowed to store key-value pairs into a persistent structure, created for the smart contract at the moment of its deployment on the MultiversX (previously Elrond) Network.
 
 The storage of a smart contract is, for all intents and purposes, a generic hash map or dictionary. When you want to store some arbitrary value, you store it under a specific key. To get the value back, you need to know the key you stored it under.
 
@@ -218,7 +218,7 @@ fn target(&self) -> SingleValueMapper<BigUint>;
 
 The methods above treat the stored value as having a specific **type**, namely the type `BigUint`. Under the hood, `BigUint` is a big unsigned number, handled by the VM. There is no need to import any library, big number arithmetic is provided for all contracts out of the box.
 
-Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The Elrond framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically.  
+Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The MultiversX (previously Elrond) framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically.
 
 ### **Setting some targets**
 
@@ -304,64 +304,61 @@ Let's define the first test scenario. Open the file `mandos/crowdfunding-init.sc
 
 ```json
 {
-    "name": "crowdfunding deployment test",
-    "steps": [
-        {
-            "step": "setState",
-            "accounts": {
-                "address:my_address": {
-                    "nonce": "0",
-                    "balance": "1,000,000"
-                }
-            },
-            "newAddresses": [
-                {
-                    "creatorAddress": "address:my_address",
-                    "creatorNonce": "0",
-                    "newAddress": "sc:crowdfunding"
-                }
-            ]
-        },
-        {
-            "step": "scDeploy",
-            "txId": "deploy",
-            "tx": {
-                "from": "address:my_address",
-                "contractCode": "file:../output/crowdfunding.wasm",
-                "arguments": [
-                    "500,000,000,000"
-                ],
-                "gasLimit": "5,000,000",
-                "gasPrice": "0"
-            },
-            "expect": {
-                "out": [],
-                "status": "0",
-                "gas": "*",
-                "refund": "*"
-            }
-        },
-        {
-            "step": "checkState",
-            "accounts": {
-                "address:my_address": {
-                    "nonce": "1",
-                    "balance": "1,000,000",
-                    "storage": {}
-                },
-                "sc:crowdfunding": {
-                    "nonce": "0",
-                    "balance": "0",
-                    "storage": {
-                        "str:target": "500,000,000,000"
-                    },
-                    "code": "file:../output/crowdfunding.wasm"
-                }
-            }
+  "name": "crowdfunding deployment test",
+  "steps": [
+    {
+      "step": "setState",
+      "accounts": {
+        "address:my_address": {
+          "nonce": "0",
+          "balance": "1,000,000"
         }
-    ]
+      },
+      "newAddresses": [
+        {
+          "creatorAddress": "address:my_address",
+          "creatorNonce": "0",
+          "newAddress": "sc:crowdfunding"
+        }
+      ]
+    },
+    {
+      "step": "scDeploy",
+      "txId": "deploy",
+      "tx": {
+        "from": "address:my_address",
+        "contractCode": "file:../output/crowdfunding.wasm",
+        "arguments": ["500,000,000,000"],
+        "gasLimit": "5,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "out": [],
+        "status": "0",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:my_address": {
+          "nonce": "1",
+          "balance": "1,000,000",
+          "storage": {}
+        },
+        "sc:crowdfunding": {
+          "nonce": "0",
+          "balance": "0",
+          "storage": {
+            "str:target": "500,000,000,000"
+          },
+          "code": "file:../output/crowdfunding.wasm"
+        }
+      }
+    }
+  ]
 }
-
 ```
 
 Save the file. Do you want to try it out first? Go ahead and issue this command on your terminal:
@@ -382,7 +379,7 @@ You need to understand the contents of this JSON file - again, the importance of
 
 ### **So what just happened?**
 
-You ran a testing command which interpreted a JSON scenario. Line number 2 contains the name of this scenario, namely `crowdfunding deployment test`. This test was executed in an isolated environment, which contains the Elrond WASM VM and a simulated blockchain. It's as close to the real Elrond Network as you can get — save from running your own local testnet, of course, but you don't need to think about that right now.
+You ran a testing command which interpreted a JSON scenario. Line number 2 contains the name of this scenario, namely `crowdfunding deployment test`. This test was executed in an isolated environment, which contains the MultiversX (previously Elrond) WASM VM and a simulated blockchain. It's as close to the real MultiversX (previously Elrond) Network as you can get — save from running your own local testnet, of course, but you don't need to think about that right now.
 
 A scenario has steps, which will be executed in the sequence they appear in the JSON file. Observe on line 3 that the field `steps` is a JSON list, containing three scenario steps.
 
@@ -410,9 +407,9 @@ There is only one account defined - the one that will perform the deployment dur
 
 ```
 
-This defines the account with the address `my_address`, which the testing environment will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000`. Note: EGLD has 18 decimals, so 1 EGLD would be equal to `1,000,000,000,000,000,000` (10^18), but you rarely need to work with such big values in tests.  
+This defines the account with the address `my_address`, which the testing environment will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000`. Note: EGLD has 18 decimals, so 1 EGLD would be equal to `1,000,000,000,000,000,000` (10^18), but you rarely need to work with such big values in tests.
 
-Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing environment to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`, and all smart contracts with `sc:`.  
+Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing environment to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`, and all smart contracts with `sc:`.
 
 ### **Imaginary address generator**
 
@@ -459,7 +456,7 @@ Remember to run `erdpy contract build` before running the test, especially if yo
 
 "You" also sent exactly `value: 0` EGLD out of the `1,000,000` to the deployed smart contract. It wouldn't need them anyway, because your Crowdfunding smart contract won't be transferring any EGLD to anyone, unless they donate it first.
 
-The fields `gasLimit` and `gasPrice` shouldn't concern you too much. It's important that `gasLimit` needs to be high, and `gasPrice` may be 0. Just so you know, the real Elrond Network would calculate the transaction fee from these values. On the real Elrond Network, you cannot set a `gasPrice` of 0, for obvious reasons.
+The fields `gasLimit` and `gasPrice` shouldn't concern you too much. It's important that `gasLimit` needs to be high, and `gasPrice` may be 0. Just so you know, the real MultiversX (previously Elrond) Network would calculate the transaction fee from these values. On the real MultiversX (previously Elrond) Network, you cannot set a `gasPrice` of 0, for obvious reasons.
 
 ### **The result of the deployment**
 
@@ -474,7 +471,7 @@ Once the testing environment executes the deployment transaction described above
 }
 ```
 
-The only important field here is `"status": "0"`, which is the actual return code coming from the Elrond VM after it executed the deployment transaction. `0` means success, of course.
+The only important field here is `"status": "0"`, which is the actual return code coming from the MultiversX (previously Elrond) VM after it executed the deployment transaction. `0` means success, of course.
 
 The `out` array would contain values returned by your smart contract call (in this case, the `init` function doesn't return anything, but it could if the developer wanted).
 
@@ -501,7 +498,7 @@ The final scenario step mirrors the first scenario step. There's an `accounts` f
 }
 ```
 
-Notice that there are two accounts now, not just one. There's evidently the account `my_address`, which we knew it existed, after defining it ourselves in the first scenario step. But a new account appeared, `the_crowdfunding_contract`, as a result of the deployment transaction executed in the second scenario step. This is because smart contracts _are_ accounts in the Elrond Network, accounts with associated code, which can be executed when transactions are sent to them.
+Notice that there are two accounts now, not just one. There's evidently the account `my_address`, which we knew it existed, after defining it ourselves in the first scenario step. But a new account appeared, `the_crowdfunding_contract`, as a result of the deployment transaction executed in the second scenario step. This is because smart contracts _are_ accounts in the MultiversX (previously Elrond) Network, accounts with associated code, which can be executed when transactions are sent to them.
 
 The account `my_address` now has the nonce `1`, because a transaction has been executed, sent from it. Its balance remains unchanged - the deployment transaction did not cost anything, because the `gasPrice` field was set to `0` in the second scenario step. This is only allowed in tests, of course.
 

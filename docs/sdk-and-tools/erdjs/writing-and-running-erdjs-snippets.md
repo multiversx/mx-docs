@@ -17,8 +17,8 @@ This tutorial will guide you through the process of (system) testing smart contr
 
 In order to follow the steps in this tutorial, you need **Visual Studio Code** with the following extensions installed:
 
- - [Elrond IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
- - [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
+- [MultiversX (previously Elrond) IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
+- [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
 
 ## Setup steps
 
@@ -27,16 +27,16 @@ In order to follow the steps in this tutorial, you need **Visual Studio Code** w
 First, you need to open in Visual Studio Code a folder that will hold both the smart contracts and the interaction snippets. Upon opening a folder, you need to invoke the command `Elrond: Setup workspace`.
 
 :::note
-Make sure the latest Elrond SDK is available in your environment. In order to do so, invoke the command `Elrond: Install SDK`.
+Make sure the latest MultiversX (previously Elrond) SDK is available in your environment. In order to do so, invoke the command `Elrond: Install SDK`.
 :::
 
 ### Add one or more smart contracts
 
-In the **Templates** view of the Elrond IDE, choose the template `adder` and click on **New Contract**. Then, choose the template `lottery-esdt` and click on **New Contract**. By doing so, Elrond IDE will create one folder for each of the chosen smart contracts
+In the **Templates** view of the MultiversX (previously Elrond) IDE, choose the template `adder` and click on **New Contract**. Then, choose the template `lottery-esdt` and click on **New Contract**. By doing so, MultiversX (previously Elrond) IDE will create one folder for each of the chosen smart contracts
 
 An **additional folder** called `erdjs-snippets` gets created, as well. That's a **nodejs** package, holding the source code for the **contract interaction** and for the test **snippets**.
 
-Before moving further, make sure you build the two contracts (from the **Smart Contracts** view of the Elrond IDE or using the command line, as desired).
+Before moving further, make sure you build the two contracts (from the **Smart Contracts** view of the MultiversX (previously Elrond) IDE or using the command line, as desired).
 
 ### Setup the snippets
 
@@ -59,7 +59,7 @@ Now that your workspace and the snippets are set up, let's dive deeper. In the n
 
 ## Anatomy of an erdjs snippet
 
-An erdjs **snippet** is, actually, a file that defines a suite of _mocha_ tests, having the extension `*.spec.ts` or `*.snippet.ts`. A **snippet step** is an individual test-like construct. 
+An erdjs **snippet** is, actually, a file that defines a suite of _mocha_ tests, having the extension `*.spec.ts` or `*.snippet.ts`. A **snippet step** is an individual test-like construct.
 
 When executing one or more steps, they execute within a **test session**, selected by the following instruction of the snippet:
 
@@ -75,7 +75,7 @@ The test session is configured by means of a `nameOfMySession.session.json` file
 {
     "networkProvider": {
         "type": "ProxyNetworkProvider",
-        "url": "https://devnet-gateway.elrond.com",
+        "url": "https://devnet-gateway.multiversx.com",
         "timeout": 5000
     },
     "users": {
@@ -105,7 +105,7 @@ Another example, using the `ApiNetworkProvider` instead of `ProxyNetworkProvider
 {
     "networkProvider": {
         "type": "ApiNetworkProvider",
-        "url": "https://devnet-api.elrond.com",
+        "url": "https://devnet-api.multiversx.com",
         "timeout": 5000
     },
     "users": {
@@ -230,7 +230,7 @@ The resulted keys can be used as seen in the section [session configuration](/sd
 
 ### Writing events in the audit log
 
-At some point within the snippets or  _interactor_ objects (more on that later), it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or take account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
+At some point within the snippets or _interactor_ objects (more on that later), it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or take account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
 
 The recorded events will be listed in the session report(s) - more on that later.
 
@@ -272,7 +272,7 @@ In order to configure the reporting feature, define an additional entry in the s
 ```
 "reporting": {
     "explorerUrl": "https://devnet-explorer.elrond.com",
-    "apiUrl": "https://devnet-api.elrond.com",
+    "apiUrl": "https://devnet-api.multiversx.com",
     "outputFolder": "~/reports"
 }
 ```
@@ -296,12 +296,13 @@ The most important dependency of a snippet is the **contract interactor**, which
 In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain _almost_ production-ready code to call and query your contracts, code which is _generally_ copy-paste-able into your dApps.
 
 Generally speaking, an interactor component (class) depends on the following objects (defined by `erdjs` or by satellites of `erdjs`):
- - a `SmartContract` (composed with its `SmartContractAbi`)
- - an `INetworkProvider`, to broadcast / retrieve transactions and perform contract queries
- - a snapshot of the `INetworkConfig`
- - a `TransactionWatcher`, to properly detect the completion of a transaction
- - a `ResultsParser`, to parse the outcome of contract queries or contract interactions
- - optionally, an `IAudit` object to record certain events within the test session
+
+- a `SmartContract` (composed with its `SmartContractAbi`)
+- an `INetworkProvider`, to broadcast / retrieve transactions and perform contract queries
+- a snapshot of the `INetworkConfig`
+- a `TransactionWatcher`, to properly detect the completion of a transaction
+- a `ResultsParser`, to parse the outcome of contract queries or contract interactions
+- optionally, an `IAudit` object to record certain events within the test session
 
 ### Creation of an interactor
 
@@ -543,6 +544,7 @@ const interaction = <Interaction>this.contract.methods
     .withGasLimit(new GasLimit(10000000))
     .withNonce(caller.account.getNonceThenIncrement());
 ```
+
 ```
 // Example 2 - automatic type inference (lottery)
 const interaction = <Interaction>this.contract.methods
@@ -560,6 +562,7 @@ const interaction = <Interaction>this.contract.methods
     .withGasLimit(new GasLimit(20000000))
     .withNonce(owner.account.getNonceThenIncrement());
 ```
+
 ```
 // Example 2 - explicit types (lottery)
 const interaction = <Interaction>this.contract.methodsExplicit
@@ -577,6 +580,7 @@ const interaction = <Interaction>this.contract.methodsExplicit
     .withGasLimit(new GasLimit(20000000))
     .withNonce(owner.account.getNonceThenIncrement());
 ```
+
 ```
 // Example 3 - automatic type inference (lottery)
 const interaction = <Interaction>this.contract.methods

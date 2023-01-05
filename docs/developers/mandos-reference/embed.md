@@ -5,7 +5,7 @@ title: Embedding Mandos code in Go
 
 # **Embedding in Go**
 
-Mandos steps can be embedded in Go, in order to program for more flexible behavior. One can even save dynamically generated Mandos scenarios. For a comprehensive example on how to do that, check out the [delegation contract fuzzer in Elrond VM](https://github.com/ElrondNetwork/wasm-vm/tree/master/fuzz/delegation) or the [DNS contract deployment scenario test generator](https://github.com/ElrondNetwork/wasm-vm/tree/master/cmd/testgen/dns). Just a snippet from the fuzzer:
+Mandos steps can be embedded in Go, in order to program for more flexible behavior. One can even save dynamically generated Mandos scenarios. For a comprehensive example on how to do that, check out the [delegation contract fuzzer in MultiversX (previously Elrond) VM](https://github.com/ElrondNetwork/wasm-vm/tree/master/fuzz/delegation) or the [DNS contract deployment scenario test generator](https://github.com/ElrondNetwork/wasm-vm/tree/master/cmd/testgen/dns). Just a snippet from the fuzzer:
 
 ```
 _, err = pfe.executeTxStep(fmt.Sprintf(`

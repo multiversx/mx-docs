@@ -3,7 +3,7 @@ id: ledger
 title: Ledger
 ---
 
-You can safely store your EGLD by installing the Elrond EGLD app on your Ledger Nano S or Ledger Nano X device. We recommend using a hardware wallet for managing large amounts of EGLD.
+You can safely store your EGLD by installing the MultiversX (previously Elrond) EGLD app on your Ledger Nano S or Ledger Nano X device. We recommend using a hardware wallet for managing large amounts of EGLD.
 
 ## Before you begin‌
 
@@ -11,27 +11,27 @@ You can safely store your EGLD by installing the Elrond EGLD app on your Ledger 
 2. [Download](https://www.ledger.com/ledger-live/download) the Ledger Live application
 3. [Upgrade](https://support.ledger.com/hc/en-us/articles/360002731113) your device with the latest firmware‌
 
-## **Install the Elrond EGLD app on your Ledger**‌
+## **Install the MultiversX (previously Elrond) EGLD app on your Ledger**‌
 
-Teach your Ledger device to work with EGLD by installing the Elrond app on it.‌
+Teach your Ledger device to work with EGLD by installing the MultiversX (previously Elrond) app on it.‌
 
 - Open the Ledger Live application
 - Click on the “Manager” section in the app
 - Connect and unlock your Ledger device
 - If prompted, allow the Manager on your device by pressing the two buttons
-- In the App catalog search for “Elrond”
-- Click the “Install” button next to the Elrond app
+- In the App catalog search for “MultiversX"
+- Click the “Install” button next to the MultiversX (previously Elrond) app
 - Your Ledger device will display “Processing” as the app installs
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJ_-qiYVWEus-jzmZK%2F-MIJ_axFeyPBUDa-t7Qq%2Fimage.png?alt=media&token=eb949ec0-6ca2-4f5e-be17-eaf0c39597a6)
 
 Awesome, you did everything perfectly!
 
-## Log into your Elrond wallet using the Ledger device
+## Log into your MultiversX (previously Elrond) wallet using the Ledger device
 
 - Make sure your Ledger device is connected to your computer
 - Log into your Ledger device
-- Navigate to the Elrond Network app & open it by pushing both buttons on your device
+- Navigate to the MultiversX (previously Elrond) Network app & open it by pushing both buttons on your device
 - In your web browser navigate to https://wallet.elrond.com
 - Select "Ledger" from the Login options
 
@@ -41,7 +41,7 @@ Awesome, you did everything perfectly!
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJYD3eLB-qPT94-W4_%2F-MIJYe-r2OH3LpNU-jiT%2Fimage.png?alt=media&token=76c1200c-bd7f-43f1-9f90-9b601281e0ce)
 
-Your Elrond Wallet will now open.‌
+Your MultiversX (previously Elrond) Wallet will now open.‌
 
 ## Overview of your EGLD balance‌
 
@@ -56,7 +56,7 @@ After logging into your wallet, your EGLD balances are immediately visible and d
 
 ## Send a transaction using the Ledger‌
 
-In the Elrond web wallet:‌
+In the MultiversX (previously Elrond) web wallet:‌
 
 - Click "Send"
 - Input the destination address & amount
@@ -84,4 +84,4 @@ You can also click "Receive" on the left-hand side to see a QR code for the addr
 
 ## **Need help?**‌
 
-- Reach out to Elrond on your [preferred channel](https://linktr.ee/Elrond)
+- Reach out to MultiversX (previously Elrond) on your [preferred channel](https://linktr.ee/MultiversX)

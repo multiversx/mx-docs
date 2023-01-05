@@ -7,7 +7,7 @@ Query values stored within Smart Contracts.
 
 ## <span class="badge badge-success">POST</span> Compute Output of Pure Function
 
-`https://gateway.elrond.com/vm-values/query`
+`https://gateway.multiversx.com/vm-values/query`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the execution results (the Virtual Machine Output).
 
@@ -18,7 +18,7 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
@@ -71,7 +71,7 @@ The VM Output is retrieved successfully.
 Here's an example of a request:
 
 ```
-POST https://gateway.elrond.com/vm-values/query HTTP/1.1
+POST https://gateway.multiversx.com/vm-values/query HTTP/1.1
 Content-Type: application/json
 
 {
@@ -85,7 +85,7 @@ Content-Type: application/json
 
 ## <span class="badge badge-success">POST</span> Compute Hex Output of Pure Function
 
-`https://gateway.elrond.com/vm-values/hex`
+`https://gateway.multiversx.com/vm-values/hex`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as a hex-encoded string.
 
@@ -96,7 +96,7 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
@@ -119,7 +119,7 @@ The output value is retrieved successfully.
 
 ## <span class="badge badge-success">POST</span> Compute String Output of Pure Function
 
-`https://gateway.elrond.com/vm-values/string`
+`https://gateway.multiversx.com/vm-values/string`
 
 This endpoint allows one to execute - with no side effects - a pure function of a Smart Contract and retrieve the first output value as a string.
 
@@ -130,7 +130,7 @@ This endpoint allows one to execute - with no side effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
@@ -153,7 +153,7 @@ The output value is retrieved successfully.
 
 ## <span class="badge badge-success">POST</span> Get Integer Output of Pure Function
 
-`https://gateway.elrond.com/vm-values/int`
+`https://gateway.multiversx.com/vm-values/int`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as an integer.
 
@@ -164,7 +164,7 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |

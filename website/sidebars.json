@@ -1,7 +1,7 @@
 {
   "docs": {
-    "Welcome to Elrond": [
-      "welcome/welcome-to-elrond"
+    "Welcome to MultiversX (previously Elrond)": [
+      "welcome/welcome-to-multiversx"
     ],
     "Technology": [
       "technology/architecture-overview",
@@ -21,11 +21,7 @@
       "wallet/ledger",
       "wallet/create-a-fungible-token"
     ],
-    "Tokens": [
-      "tokens/overview",
-      "tokens/esdt-tokens",
-      "tokens/nft-tokens"
-    ],
+    "Tokens": ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     "Validators": [
       "validators/overview",
       "validators/staking-providers-apr",
@@ -163,7 +159,7 @@
         "label": "REST API",
         "ids": [
           "sdk-and-tools/rest-api/rest-api",
-          "sdk-and-tools/rest-api/api-elrond-com",
+          "sdk-and-tools/rest-api/api-multiversx-com",
           "sdk-and-tools/rest-api/gateway-overview",
           "sdk-and-tools/rest-api/addresses",
           "sdk-and-tools/rest-api/transactions",

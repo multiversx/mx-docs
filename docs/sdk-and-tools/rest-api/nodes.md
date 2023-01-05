@@ -7,7 +7,7 @@ Query Nodes (Peers) information.
 
 ## <span class="badge badge-primary">GET</span> **Get Heartbeat Status**
 
-`https://gateway.elrond.com/node/heartbeatstatus`
+`https://gateway.multiversx.com/node/heartbeatstatus`
 
 This endpoint allows one to query the status of the Nodes.
 
@@ -168,7 +168,6 @@ P2P status retrieved successfully.
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
-
 
 :::important
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.

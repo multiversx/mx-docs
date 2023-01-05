@@ -4,14 +4,13 @@ title: Scripts & User config
 ---
 
 :::warning
-This section is deprecated. We are now using the elrond-go-scripts unified script repo. 
+This section is deprecated. We are now using the elrond-go-scripts unified script repo.
 Check this section [Install a Mainnet/Testnet/Devnet Node](/validators/elrond-go-scripts/config-scripts) instead.
 :::
 
+MultiversX (previously Elrond) provides scripts designed to streamline the process of installing an MultiversX (previously Elrond) node. You will start by getting a copy of the latest version of the scripts from GitHub, and configure it to match your local setup.
 
-Elrond provides scripts designed to streamline the process of installing an Elrond node. You will start by getting a copy of the latest version of the scripts from GitHub, and configure it to match your local setup.
-
-## **Download the Elrond Scripts**
+## **Download the MultiversX (previously Elrond) Scripts**
 
 ```
 cd ~

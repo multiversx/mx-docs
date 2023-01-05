@@ -10,14 +10,12 @@ To build a contract, it is enough to navigate in your contract crate and run
 ```sh
 erdpy contract build
 ```
-Alternatively you can go to your installed `Elrond Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`  
 
-![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the Elrond Workspace Explorer extension")
+Alternatively you can go to your installed `MultiversX (previously Elrond) Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`
 
-
+![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the MultiversX (previously Elrond) Workspace Explorer extension")
 
 ## How to: Multi contract build
-
 
 ### Rationale
 
@@ -30,7 +28,6 @@ The main rationale of this system (for now at least) are the "external view" con
 The framework does the storage access rerouting automatically behind the scenes. The contract code cannot even tell the difference between a regular view from the same contract and one that has been relegated to an external view. Even more so, the same view endpoint can function both as external view and as regular view in different configurations/output contracts.
 
 It is possible that this component becomes a building block of a more advanced versioning system, but we have not experimented with that yet.
-
 
 ### Configuration example
 
@@ -68,7 +65,6 @@ pub trait MultisigStateModule {
 
 Labels don't do anything more than provide a handy way to refer to groups of endpoints in the `multicontract.toml`.
 
-
 Now for the `multicontract.toml` config itself, with explanations in comments:
 
 ```toml
@@ -97,13 +93,12 @@ external-view = true
 add-labels = ["multisig-external-view"]
 
 # this is how you get a version of the contract with all endpoints
-# (main and external view, as defined above), 
+# (main and external view, as defined above),
 [contracts.full]
 name = "multisig-full"
 add-unlabelled = true
 add-labels = ["multisig-external-view"]
 ```
-
 
 ### The external view contract
 
@@ -111,29 +106,28 @@ An _external view_ contract has a behavior different from that of a regular cont
 
 1. Storage access is different. All storage reads are done from the target contract given in the constructor.
 2. The constructor is different. Be mindful of this when deploying the external view contract.
-    - The original constructor is ignored, [a specific constructor](https://docs.rs/elrond-wasm/0.36.1/elrond_wasm/external_view_contract/fn.external_view_contract_constructor.html) is always provided instead.
-    - This constructor always takes one single argument, which is the address of the target contract to read from. From this on, the target address can no longer be changed.
-    - The external view constructor ABI is always as follows:
+   - The original constructor is ignored, [a specific constructor](https://docs.rs/elrond-wasm/0.36.1/elrond_wasm/external_view_contract/fn.external_view_contract_constructor.html) is always provided instead.
+   - This constructor always takes one single argument, which is the address of the target contract to read from. From this on, the target address can no longer be changed.
+   - The external view constructor ABI is always as follows:
+
 ```json
 {
-    "constructor": {
-        "docs": [
-            "The external view init prepares a contract that looks in another contract's storage.",
-            "It takes a single argument, the other contract's address",
-            "You won't find this constructors' definition in the contract, it gets injected automatically by the framework. See `elrond_wasm::external_view_contract`."
-        ],
-        "inputs": [
-            {
-                "name": "target_contract_address",
-                "type": "Address"
-            }
-        ],
-        "outputs": []
-    }
+  "constructor": {
+    "docs": [
+      "The external view init prepares a contract that looks in another contract's storage.",
+      "It takes a single argument, the other contract's address",
+      "You won't find this constructors' definition in the contract, it gets injected automatically by the framework. See `elrond_wasm::external_view_contract`."
+    ],
+    "inputs": [
+      {
+        "name": "target_contract_address",
+        "type": "Address"
+      }
+    ],
+    "outputs": []
+  }
 }
-
 ```
-
 
 ### Testing with multi-contracts
 
@@ -179,15 +173,14 @@ fn world() -> BlockchainMock {
 ### The `multicontract.toml` specification
 
 - `settings`
-    - `main` - The contract id of the main wasm crate. The only thing special about this contract's crate is that it is simply called `wasm` and that its `Cargo.toml` is the basis for the `Cargo.toml` configs in all other output contract wasm crates.
+  - `main` - The contract id of the main wasm crate. The only thing special about this contract's crate is that it is simply called `wasm` and that its `Cargo.toml` is the basis for the `Cargo.toml` configs in all other output contract wasm crates.
 - `contracts` map, indexed by contract id. Each contract has:
-    - `name` (optional) - The output contract name. If missing, the contract id will be used. 
-    - `external-view` - Specifies that a contract should be built as an external view contract. False if unspecified.
-    - `add-unlabelled` - Specifies that all unlabelled endpoints should be added to this contract. False if unspecified.
-    - `add-labels` - A list of labels. All endpoints labelled with at least one of these labels will be added to the contract.
-    - `add-endpoints` - A list of endpoint names to be added directly to this contract. It bypasses the label system.
-- `labels-for-contracts` - It is also possible to map in reverse, labels to contracts. It contains a mapping from labels to lists of contract ids. It can be a little harder to read than the contract to label map, but it can be used. It 
-
+  - `name` (optional) - The output contract name. If missing, the contract id will be used.
+  - `external-view` - Specifies that a contract should be built as an external view contract. False if unspecified.
+  - `add-unlabelled` - Specifies that all unlabelled endpoints should be added to this contract. False if unspecified.
+  - `add-labels` - A list of labels. All endpoints labelled with at least one of these labels will be added to the contract.
+  - `add-endpoints` - A list of endpoint names to be added directly to this contract. It bypasses the label system.
+- `labels-for-contracts` - It is also possible to map in reverse, labels to contracts. It contains a mapping from labels to lists of contract ids. It can be a little harder to read than the contract to label map, but it can be used. It
 
 ## CLI specification
 
@@ -211,6 +204,7 @@ output
 ```
 
 Several arguments can be added to the `build` command, both in erdpy and directly:
+
 - `--wasm-symbols`: Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
 - `--no-wasm-opt`: Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
 - `--wat`: Also generates a WAT file for each of the contract outputs. It does so by calling `wasm2wat`.
@@ -218,7 +212,6 @@ Several arguments can be added to the `build` command, both in erdpy and directl
 - `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts.
 - `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
 - `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. Erdpy always sets this explicitly.
-
 
 ### Calling `build-dbg`
 
@@ -241,19 +234,15 @@ output
 
 It accepts all the arguments from `build`, so `--target-dir` works here too.
 
-
 ### Calling `clean`
 
 Calling `erdpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
-
 
 ### Calling `snippets`
 
 Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
 
 An interactor is a small tool, meant for developers to interact with the contract on-chain. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. There will be more documentation in the works on this topic.
-
-
 
 ## Contract build process deep dive
 
@@ -296,7 +285,6 @@ The meta crate has access to the ABI generator, because it always has a dependen
 
 This is also the step where the meta crate parses and processes the `multicontract.toml` file. If there are multiple outputs, one ABI will be produced for each.
 
-
 ### d. Meta crate: generating `wasm` crate code
 
 Each contract must contain at least one `wasm` crate. This is separate from the contract crate because it has a different purpose: it only needs to be the basis for compiling wasm. Please take it as an intermediary step between the contract logic and the Rust to WASM compiler. This is also where the WASM compilation options are specified (e.g. the optimization level). These options can be seen in the `Cargo.toml` file of the `wasm` crate.
@@ -334,10 +322,10 @@ elrond_wasm_node::wasm_empty_callback! {}
 The `elrond_wasm_node` macros help keep even this generated code to a minimum.
 
 For multi-contract builds, one `wasm` crate needs to be generated for each of the output contracts:
+
 - The main wasm crate must always reside in the `wasm` folder. The source file is auto-generated, but the `Cargo.toml` must be provided by the developer.
 - The other wasm contracts (called "secondary") receive a crate folder starting with `wasm-`, e.g. `wasm-multisig-view`. These crates are fully generated based on data from `multicontract.toml`. The respective `Cargo.toml` files are based on the `Cargo.toml` of the main wasm crate. All configs are taken from there, except for the crate name.
 - Warning: Any folders starting with `wasm-` that are unaccounted for will be removed without prompt. This is to keep the folder structure clean in case of renames.
-
 
 ### e. Meta crate: the actual WASM build
 
@@ -349,14 +337,13 @@ The rust compiler places the result in the designated `target` folder, but for c
 
 You might have performed this step automatically from erdpy, but erdpy simply calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it easily.
 
-
 ### f. Meta crate: build post-processing
 
 After building the contracts, there are three more operations left to perform, based on the compiled WebAssembly outputs:
+
 1. All contracts are optimized, using `wasm-opt`. This operation can be disabled (via `--no-wasm-opt`).
 2. A WAT file id generated for each contract. Not enabled by default, can be enabled (via `--wat`). The framework simply calls the `wasm2wat` tool to do this.
 3. An `.imports.json` file is generated for each contract. Can be disabled (via `--no-imports`). The framework uses the `wasm-objdump` tool to retrieve the imports. It parses the output and saves it as JSON.
-
 
 ### g. Cleaning a project
 

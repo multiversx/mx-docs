@@ -3,9 +3,10 @@ id: use-docker
 title: How to use the Docker Image
 ---
 
-As an alternative to the recommended installation flow, one could choose to run an Elrond Node using the official Docker image: [elrondnetwork/elrond-go-node-mainnet](https://hub.docker.com/r/elrondnetwork/elrond-go-node-mainnet).
+As an alternative to the recommended installation flow, one could choose to run an MultiversX (previously Elrond) Node using the official Docker image: [elrondnetwork/elrond-go-node-mainnet](https://hub.docker.com/r/elrondnetwork/elrond-go-node-mainnet).
 
-Pull the latest image of an Elrond node with mainnet config from Dockerhub
+Pull the latest image of an MultiversX (previously Elrond) node with mainnet config from Dockerhub
+
 ```
 docker pull elrondnetwork/elrond-go-node-mainnet:latest
 ```

@@ -15,5 +15,5 @@ Official resources:
 Community resources:
 
 - Zabbix monitoring guide: https://thepalmtree.network/zabbix-elrond-guide
-- Elrond Zabbix plugin: https://github.com/arcsoft-ro/zabbix-elrond-plugin
+- MultiversX (previously Elrond) Zabbix plugin: https://github.com/arcsoft-ro/zabbix-elrond-plugin
 - Configure Validator API & NetData https access: https://gist.github.com/hiddentao/e6283952b9fffe3f6b42dfeec87c684e

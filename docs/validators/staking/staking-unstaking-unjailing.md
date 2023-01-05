@@ -11,7 +11,7 @@ A validator node produces rewards, which are transferred to the node operator at
 
 If a validator has poor performance, the network will _jail_ it, which means that it will not be able to participate in consensus anymore, nor will it produce rewards. The node must be **unjailed** before it can resume its role as a validator.
 
-The processes mentioned above (staking, unstaking, unbonding, changing the reward address and unjailing) are performed by interacting with the Staking SmartContract, integrated into the Elrond protocol.
+The processes mentioned above (staking, unstaking, unbonding, changing the reward address and unjailing) are performed by interacting with the Staking SmartContract, integrated into the MultiversX (previously Elrond) protocol.
 
 Each such process requires a transaction to be sent to the Staking SmartContract. These transactions must contain all the required information, encoded properly, and must provide a high enough gas limit to allow for successful execution. These details are described in the following pages.
 

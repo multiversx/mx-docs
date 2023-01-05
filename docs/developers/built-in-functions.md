@@ -5,9 +5,9 @@ title: Built-In Functions
 
 ## **Introduction**
 
-Elrond protocol has a set of built-in functions. A built-in function is a special protocol-side function that doesn't 
+MultiversX (previously Elrond) protocol has a set of built-in functions. A built-in function is a special protocol-side function that doesn't
 require a specific smart contract address as receiver of the transaction. When such a function is called via a transaction,
-built-in handlers are triggered and will execute it. 
+built-in handlers are triggered and will execute it.
 
 Calls to these functions are considered `built-in function calls` and are treated different than other smart contract calls.
 
@@ -52,15 +52,16 @@ ClaimDeveloperRewardsTransaction {
     Data: "ClaimDeveloperRewards"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::note
-The amount of available developer rewards can be viewed via [Get Address](/sdk-and-tools/rest-api/addresses/#get-address) endpoint when using the smart contract as the `bech32Address`. 
+The amount of available developer rewards can be viewed via [Get Address](/sdk-and-tools/rest-api/addresses/#get-address) endpoint when using the smart contract as the `bech32Address`.
 :::
 
 ## **ChangeOwnerAddress**
 
-`ChangeOwnerAddress` is the function to be called by a Smart Contract's owner when a new owner is desired. 
+`ChangeOwnerAddress` is the function to be called by a Smart Contract's owner when a new owner is desired.
 
 ```
 ChangeOwnerAddressTransaction {
@@ -72,7 +73,8 @@ ChangeOwnerAddressTransaction {
           "@" + <new owner address in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ## **SetUserName**
 
@@ -89,15 +91,15 @@ SetUserNameTransaction {
           "@" + <username in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ## **SaveKeyValue**
 
-`SaveKeyValue` is used to store a given key-value under an address's storage. More details and the transaction's format are 
+`SaveKeyValue` is used to store a given key-value under an address's storage. More details and the transaction's format are
 already covered [here](/developers/account-storage).
-
 
 ## **ESDT and NFT built-in functions**
 
-Most of the ESDT and NFT related built-in function are already described in the [ESDT](/developers/esdt-tokens/) and 
-[NFT](/developers/nft-tokens) sections. 
+Most of the ESDT and NFT related built-in function are already described in the [ESDT](/developers/esdt-tokens/) and
+[NFT](/developers/nft-tokens) sections.

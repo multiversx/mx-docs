@@ -9,7 +9,7 @@ Follow these steps to manage your validator node.
 
 Let’s begin!
 
-First, you need to create an Elrond wallet. You can create this wallet on either the [mainnet](https://wallet.elrond.com), [devnet](https://devnet-wallet.elrond.com) or [testnet](https://testnet-wallet.elrond.com).
+First, you need to create an MultiversX (previously Elrond) wallet. You can create this wallet on either the [mainnet](https://wallet.elrond.com), [devnet](https://devnet-wallet.elrond.com) or [testnet](https://testnet-wallet.elrond.com).
 
 :::tip
 For devnet and testnet only:

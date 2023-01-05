@@ -3,7 +3,7 @@ id: install-update
 title: Installing a Validator Node
 ---
 
-An Elrond node requires a host (computer) with the aforementioned specifications, with the OS - preferably Ubuntu 18.04 - installed. First you will deploy the Elrond scripts, tune its parameters and ensure proper user permissions. Then you will install the node, backup its private keys and start it. Further steps include optional configurations, such as setting up monitoring.
+A MultiversX (previously Elrond) node requires a host (computer) with the aforementioned specifications, with the OS - preferably Ubuntu 18.04 - installed. First you will deploy the MultiversX (previously Elrond) scripts, tune its parameters and ensure proper user permissions. Then you will install the node, backup its private keys and start it. Further steps include optional configurations, such as setting up monitoring.
 
 Let's dig in.
 
@@ -98,7 +98,7 @@ Upgrade your node by running the script and selecting options:
 ~/elrond-go-scripts-mainnet/script.sh
 ```
 
-Those are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts-mainnet/blob/master/README.md) and make sure to ask any questions in the Elrond [Validators chat](https://t.me/ElrondValidators).
+Those are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts-mainnet/blob/master/README.md) and make sure to ask any questions in the MultiversX (previously Elrond) [Validators chat](https://t.me/ElrondValidators).
 
 ## **Mandatory: Backup your keys**
 

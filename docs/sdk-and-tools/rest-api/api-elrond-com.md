@@ -1,20 +1,20 @@
 ---
-id: api-elrond-com
-title: api.elrond.com
+id: api-multiversx-com
+title: api.multiversx.com
 ---
 
-## About api.elrond.com
+## About api.multiversx.com
 
-`api.elrond.com` is a wrapper over `gateway.elrond.com` that brings a robust caching mechanism, alongside Elasticsearch 
-historical queries support, tokens media support, delegation & staking data, and many others. 
+`api.multiversx.com` is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch
+historical queries support, tokens media support, delegation & staking data, and many others.
 
 ## Public URLs
 
-Mainnet: [https://api.elrond.com](https://api.elrond.com).
+Mainnet: [https://api.multiversx.com](https://api.multiversx.com).
 
-Testnet: [https://testnet-api.elrond.com](https://testnet-api.elrond.com).
+Testnet: [https://testnet-api.multiversx.com](https://testnet-api.multiversx.com).
 
-Devnet: [https://devnet-api.elrond.com](https://devnet-api.elrond.com).
+Devnet: [https://devnet-api.multiversx.com](https://devnet-api.multiversx.com).
 
 ## External Providers
 
@@ -28,19 +28,20 @@ Checkout information about [pricing](https://blastapi.io/pricing) and API [limit
 
 More details on how to get your private endpoint can be found [here](https://docs.blastapi.io/blast-documentation/tutorials-and-guides/using-blast-to-get-a-blockchain-endpoint-1).
 
-
 ## Dependencies
 
-### Core dependencies 
-For its basic functionality (without including caching or storage improvements), api.elrond.com depends on the following external systems:
+### Core dependencies
+
+For its basic functionality (without including caching or storage improvements), api.multiversx.com depends on the following external systems:
 
 - `gateway`: also referred as Proxy, provides access to node information, such as network settings, account balance, sending transactions, etc
-        docs: [Proxy](/sdk-and-tools/proxy).
+  docs: [Proxy](/sdk-and-tools/proxy).
 - `index`: a database that indexes data that can be queries, such as transactions, blocks, nfts, etc.
-        docs: [Elasticsearch](/sdk-and-tools/elastic-search).
+  docs: [Elasticsearch](/sdk-and-tools/elastic-search).
 - `delegation`: a microservice used to fetch providers list from the delegation API. Not currently open for public access.
 
 ### Other dependencies
+
 It uses on the following internal systems:
 
 - redis: used to cache various data, for performance purposes
@@ -62,7 +63,7 @@ It uses the following optional internal systems:
 - mysql database: used to store mainly NFT media & metadata information
 - mongo database: used to store mainly NFT media & metadata information
 
-## Ways to start api.elrond.com
+## Ways to start api.multiversx.com
 
 An API instance can be started with the following behavior:
 
@@ -75,18 +76,18 @@ An API instance can be started with the following behavior:
 
 ## Rate limiting
 
-Public Elrond APIs have a rate limit mechanism that brings the following limitations:
+Public MultiversX (previously Elrond) APIs have a rate limit mechanism that brings the following limitations:
 
-- api.elrond.com (*mainnet*): 2 requests / IP / second
-- devnet-api.elrond.com (*devnet*): 5 requests / IP / second
+- api.multiversx.com (_mainnet_): 2 requests / IP / second
+- devnet-api.multiversx.com (_devnet_): 5 requests / IP / second
 
 ## Rest API documentation
 
-Rest API documentation of `api.elrond.com` can be found on the [Swagger docs](https://api.elrond.com).
+Rest API documentation of `api.multiversx.com` can be found on the [Swagger docs](https://api.multiversx.com).
 
 ## References:
 
-- Github repository: [https://github.com/ElrondNetwork/api.elrond.com](https://github.com/ElrondNetwork/api.elrond.com)
-- Swagger docs: [https://api.elrond.com](https://api.elrond.com)
-- Raw JSON Swagger OpenAPI definitions: [https://api.elrond.com/-json](https://api.elrond.com/-json)
-- Elrond blog: [https://elrond.com/blog/elrond-api-internet-scale-defi](https://elrond.com/blog/elrond-api-internet-scale-defi)
+- Github repository: [https://github.com/ElrondNetwork/api.multiversx.com](https://github.com/ElrondNetwork/api.multiversx.com)
+- Swagger docs: [https://api.multiversx.com](https://api.multiversx.com)
+- Raw JSON Swagger OpenAPI definitions: [https://api.multiversx.com/-json](https://api.multiversx.com/-json)
+- MultiversX (previously Elrond) blog: [https://multiversx.com/blog/elrond-api-internet-scale-defi](https://multiversx.com/blog/elrond-api-internet-scale-defi)
