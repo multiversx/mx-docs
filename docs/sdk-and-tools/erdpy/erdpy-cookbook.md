@@ -3,6 +3,8 @@ id: erdpy-cookbook
 title: Cookbook
 ---
 
+## Overview
+
 This page will guide you through the process of handling common tasks using **erdpy** _as a library_ (as opposed to _as a CLI tool_). 
 
 :::note
@@ -12,19 +14,19 @@ All examples depicted here are captured in **(interactive) [Jupyter notebooks](h
 We are going to make use of the packages [erdpy_core](https://github.com/ElrondNetwork/sdk-erdpy-core), [erdpy_wallet](https://github.com/ElrondNetwork/sdk-erdpy-wallet) and [erdpy_network](https://github.com/ElrondNetwork/sdk-erdpy-network-providers) (available as of December 2022), which were previously nicknamed _erdpy-eggs_. These packages should be installed **directly from GitHub** whenever possible (although they are published on [**PyPI**](https://pypi.org/user/elrond/), as well). For example:
 
 ```
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v1.2.3#egg=erdpy_core
+pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-core.git@v1.2.3#egg=erdpy_core
 
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-wallet.git@v4.5.6#egg=erdpy_wallet
+pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-wallet.git@v4.5.6#egg=erdpy_wallet
 
-pip3 install git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network_providers
+pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network_providers
 ```
 
 If you are using a `requirements.txt` file, reference them as follows (example):
 
 ```
-git+https://git@github.com/ElrondNetwork/sdk-erdpy-core.git@v1.2.3#egg=erdpy_core
-git+https://git@github.com/ElrondNetwork/sdk-erdpy-wallet.git@v4.5.6#egg=erdpy_wallet
-git+https://git@github.com/ElrondNetwork/sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network
+git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-core.git@v1.2.3#egg=erdpy_core
+git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-wallet.git@v4.5.6#egg=erdpy_wallet
+git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network_providers
 ```
 
 These packages are distributed separately and have individual release schedules (make sure to check the **release tags on GitHub**), but they are designed to work together, with as little impedance mismatch as possible.
@@ -32,6 +34,8 @@ These packages are distributed separately and have individual release schedules 
 :::important
 Documentation is preliminary and subject to change (the packages might suffer a series of breaking changes in January 2023).
 :::
+
+<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/ElrondNetwork/mx-sdk-erdpy-examples/main/Cookbook.ipynb" } -->
 
 ## Addresses
 
@@ -358,7 +362,7 @@ In order to create a contract query and run it against a network provider (more 
 ```
 from erdpy_core import ContractQueryBuilder
 from erdpy_core.interfaces import IAddress
-from erdpy_network import ApiNetworkProvider
+from erdpy_network_providers import ApiNetworkProvider
 
 contract: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqpgqnzm7yhayarylux045qlm4lgzmtcsgrqg396qr9kupx")
 
@@ -538,12 +542,12 @@ print(f"Is signature of Bob?", bob_verifier.verify(message))
 
 ## Creating network providers
 
-It's recommended to use the `erdpy_network` components **as a starting point**. As your application matures, switch to using your own network provider (e.g. deriving from the default ones), tailored to your requirements.
+It's recommended to use the `erdpy_network_providers` components **as a starting point**. As your application matures, switch to using your own network provider (e.g. deriving from the default ones), tailored to your requirements.
 
 Creating an API provider:
 
 ```
-from erdpy_network import ApiNetworkProvider
+from erdpy_network_providers import ApiNetworkProvider
 
 provider = ApiNetworkProvider("https://devnet-api.elrond.com");
 ```
@@ -551,7 +555,7 @@ provider = ApiNetworkProvider("https://devnet-api.elrond.com");
 Creating a Proxy provider:
 
 ```
-from erdpy_network import ProxyNetworkProvider
+from erdpy_network_providers import ProxyNetworkProvider
 
 provider = ProxyNetworkProvider("https://devnet-gateway.elrond.com");
 ```
@@ -586,7 +590,7 @@ from erdpy_core import AccountNonceHolder
 nonce_holder = AccountNonceHolder(account_on_network.nonce)
 
 tx.nonce = nonce_holder.get_nonce_then_increment()
-# Then, sign transaction & broadcast the transaction(s).
+# Then, sign & broadcast the transaction(s).
 ```
 
 For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
@@ -660,3 +664,4 @@ tx_on_network = provider.get_transaction("09e3b68d39f3759913239b927c7feb9ac871c8
 print("Status:", tx_on_network.status)
 print("Is completed:", tx_on_network.is_completed)
 ```
+<!-- END_NOTEBOOK -->
