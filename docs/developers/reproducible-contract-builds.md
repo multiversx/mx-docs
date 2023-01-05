@@ -104,7 +104,7 @@ By inspecting the release notes, we see that [`v0.1.4`](https://github.com/Elron
 The build process (via Docker) is wrapped in a easy-to-use, friendly Python script. Let's download it:
 
 ```
-wget https://raw.githubusercontent.com/MultiversXNetwork/elrond-sdk-images-build-contract-rust/main/build_with_docker.py
+wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 ```
 
 ### Prepare environment variables
@@ -124,7 +124,7 @@ The latter export statement explicitly selects the **chosen, _frozen_ Docker ima
 Now let's build the contract by invoking the previously-downloaded build wrapper:
 
 ```
-python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
+python3 ./build_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
     --output=${BUILD_OUTPUT}
 ```
@@ -143,7 +143,7 @@ In the `output` folder(s), you should see the following files (example):
 These being said, let's summarize the steps above into a single bash snippet:
 
 ```
-wget https://raw.githubusercontent.com/MultiversXNetwork/elrond-sdk-images-build-contract-rust/main/build_with_docker.py
+wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker

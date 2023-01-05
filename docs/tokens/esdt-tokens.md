@@ -4,7 +4,7 @@ title: ESDT tokens
 ---
 
 ## **Introduction**
-**ESDT** stands for *Electronic Standard Digital Token*.
+**ESDT** stands for *eStandard Digital Token*.
 
 Custom tokens at native speed and scalability, without ERC20
 

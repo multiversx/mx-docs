@@ -81,7 +81,7 @@ In addition to erdjs, one could use the following Javascript library for perform
 | Name                                                                     | Description                                                       |
 |--------------------------------------------------------------------------|-------------------------------------------------------------------|
 | [Rest API](/sdk-and-tools/rest-api/rest-api)                             | High level overview over the MultiversX's Rest API.                   |
-| [api.multiversx.com](/sdk-and-tools/rest-api/api-elrond-com)                 | MultiversX's main API instance.                                       |
+| [api.multiversx.com](/sdk-and-tools/rest-api/multiversx-api)             | MultiversX's main API instance.                                       |
 | [Gateway overview](/sdk-and-tools/rest-api/gateway-overview)             | Gateway overview - public proxy instance.                         |
 | [Addresses](/sdk-and-tools/rest-api/addresses)                           | Rest API endpoints dedicated to addresses.                        |
 | [Transactions](/sdk-and-tools/rest-api/transactions)                     | Rest API endpoints dedicated to transactions.                     |

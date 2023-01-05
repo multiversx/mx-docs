@@ -163,7 +163,7 @@
         "label": "REST API",
         "ids": [
           "sdk-and-tools/rest-api/rest-api",
-          "sdk-and-tools/rest-api/api-multiversx-com",
+          "sdk-and-tools/rest-api/multiversx-api",
           "sdk-and-tools/rest-api/gateway-overview",
           "sdk-and-tools/rest-api/addresses",
           "sdk-and-tools/rest-api/transactions",

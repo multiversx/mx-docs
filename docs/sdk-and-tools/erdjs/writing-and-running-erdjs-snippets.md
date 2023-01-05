@@ -17,14 +17,14 @@ This tutorial will guide you through the process of (system) testing smart contr
 
 In order to follow the steps in this tutorial, you need **Visual Studio Code** with the following extensions installed:
 
- - [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=MultiversX.vscode-elrond-ide)
+ - [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
  - [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
 
 ## Setup steps
 
 ### Setup the workspace
 
-First, you need to open in Visual Studio Code a folder that will hold both the smart contracts and the interaction snippets. Upon opening a folder, you need to invoke the command `MultiversX: Setup workspace`.
+First, you need to open in Visual Studio Code a folder that will hold both the smart contracts and the interaction snippets. Upon opening a folder, you need to invoke the command `Elrond: Setup workspace`.
 
 :::note
 Make sure the latest MultiversX SDK is available in your environment. In order to do so, invoke the command `MultiversX: Install SDK`.
@@ -40,7 +40,7 @@ Before moving further, make sure you build the two contracts (from the **Smart C
 
 ### Setup the snippets
 
-Now that you've created two contracts using the provided templates (and built them), let's tell the IDE (and the Mocha Test Explorer) where the snippets are located, by invoking the command `MultiversX: Setup erdjs-snippets`. When asked to specify the folder containing the snippets, choose the already existing folder `erdjs-snippets`.
+Now that you've created two contracts using the provided templates (and built them), let's tell the IDE (and the Mocha Test Explorer) where the snippets are located, by invoking the command `Elrond: Setup erdjs-snippets`. When asked to specify the folder containing the snippets, choose the already existing folder `erdjs-snippets`.
 
 As previously mentioned, the folder `erdjs-snippets` is a nodejs package. Let's install its dependencies by running the following commands within the integrated terminal:
 

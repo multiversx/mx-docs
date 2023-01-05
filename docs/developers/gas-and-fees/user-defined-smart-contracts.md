@@ -175,7 +175,7 @@ The simulated cost represents the **actual gas cost** for invoking `A::foo()`, `
 
 Upon reaching the call to `B::bar()` inside `A::foo()`, the MultiversX VM inspects the **remaining gas _at runtime_** and **temporarily locks (reserves) a portion of it**, to allow for the execution of `A::callBack()` once the call to `B::bar()` returns.
 
-With respect to the [VM Gas Schedule](https://github.com/ElrondNetwork/elrond-config-mainnet/tree/master/gasSchedules), the aforementioned **remaining gas _at runtime_** has to satisfy the following conditions in order for the **temporary gas lock reservation** to succeed:
+With respect to the [VM Gas Schedule](https://github.com/multiversx/mx-chain-mainnet-config/tree/master/gasSchedules), the aforementioned **remaining gas _at runtime_** has to satisfy the following conditions in order for the **temporary gas lock reservation** to succeed:
 
 ```
 onTheSpotRemainingGas > gasToLockForCallback

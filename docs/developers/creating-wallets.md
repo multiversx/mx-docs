@@ -5,7 +5,7 @@ title: Creating Wallets
 
 How to create wallets using the CLI or programmatically
 
-Although wallets are commonly created through the [MultiversX Web Wallet](https://wallet.multiversx.com/) or the [MultiversX Ledger App](https://github.com/ElrondNetwork/ledger-elrond), one can also use the CLI or the SDK.
+Although wallets are commonly created through the [MultiversX Web Wallet](https://wallet.multiversx.com/) or the [MultiversX Ledger App](/wallet/ledger), one can also use the CLI or the SDK.
 
 ## **Generate a new mnemonic**
 

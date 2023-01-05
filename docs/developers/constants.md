@@ -7,15 +7,15 @@ MultiversX uses some constants, which are specific to each chain (Mainnet, Testn
 
 **Mainnet**:
 - https://gateway.multiversx.com/network/config
-- https://github.com/ElrondNetwork/elrond-config-mainnet
+- https://github.com/multiversx/mx-chain-mainnet-config
 
 **Testnet**:
 - https://testnet-gateway.multiversx.com/network/config
-- https://github.com/ElrondNetwork/elrond-config-testnet
+- https://github.com/multiversx/mx-chain-testnet-config
 
 **Devnet**:
 - https://devnet-gateway.multiversx.com/network/config
-- https://github.com/ElrondNetwork/elrond-config-devnet
+- https://github.com/multiversx/mx-chain-devnet-config
 
 :::important
 Each transaction requires a `chainID` field that represents the network's identifier. It adds protection so that transactions cannot be replayed from a network to another. 

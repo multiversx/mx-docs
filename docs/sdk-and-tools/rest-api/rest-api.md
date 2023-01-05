@@ -14,4 +14,4 @@ These 2 layers of REST APIs are:
 
 - `https://api.multiversx.com`: the higher level layer (backed by `api.multiversx.com` repository) that uses the gateway level underneath,
   but also integrates Elasticsearch (historical) queries, battle-tested caching mechanisms, friendly fields formatting and so on. More details
-  can be found [here](/sdk-and-tools/rest-api/api-elrond-com).
+  can be found [here](/sdk-and-tools/rest-api/multiversx-api).

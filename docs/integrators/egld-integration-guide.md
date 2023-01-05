@@ -102,6 +102,6 @@ MultiversX SDKs or tools can be used for signing transactions and performing acc
 A complete list and more detailed information can be found on the [accounts management](/integrators/accounts-management) and 
 [signing transaction](/integrators/creating-transactions) sections.
 
-There is also an example that matches the above-presented workflow and can be found on the Go SDK for MultiversX, [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
+There is also an example that matches the above-presented workflow and can be found on the Go SDK for MultiversX, [erdgo](https://github.com/multiversx/mx-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
 
 However, other SDKs can be used as well for handling accounts management or transaction signing.

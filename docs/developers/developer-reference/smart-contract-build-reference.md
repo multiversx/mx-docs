@@ -10,9 +10,9 @@ To build a contract, it is enough to navigate in your contract crate and run
 ```sh
 erdpy contract build
 ```
-Alternatively you can go to your installed `MultiversX Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`  
+Alternatively you can go to your installed `Elrond Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`  
 
-![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the MultiversX Workspace Explorer extension")
+![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the Elrond Workspace Explorer extension")
 
 
 

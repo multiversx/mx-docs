@@ -47,7 +47,7 @@ Automated testing is exceptionally important for the development of smart contra
 
 # **Prerequisites**
 
-The best way to build on MultiversX is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=MultiversX.vscode-elrond-ide), which you should install before proceeding.
+The best way to build on MultiversX is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
 
 MultiversX IDE is an extension for Visual Studio Code that offers development support for MultiversX Smart Contracts.
 
