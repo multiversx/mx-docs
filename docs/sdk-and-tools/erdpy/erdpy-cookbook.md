@@ -14,9 +14,9 @@ All examples depicted here are captured in **(interactive) [Jupyter notebooks](h
 We are going to make use of the packages [erdpy_core](https://github.com/ElrondNetwork/sdk-erdpy-core), [erdpy_wallet](https://github.com/ElrondNetwork/sdk-erdpy-wallet) and [erdpy_network](https://github.com/ElrondNetwork/sdk-erdpy-network-providers) (available as of December 2022), which were previously nicknamed _erdpy-eggs_. These packages should be installed **directly from GitHub** whenever possible (although they are published on [**PyPI**](https://pypi.org/user/elrond/), as well). For example:
 
 ```
-pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-eggs-core.git@v1.2.3#egg=erdpy_core
+pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-core.git@v1.2.3#egg=erdpy_core
 
-pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-eggs-wallet.git@v4.5.6#egg=erdpy_wallet
+pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-wallet.git@v4.5.6#egg=erdpy_wallet
 
 pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network_providers
 ```
