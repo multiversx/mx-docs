@@ -3,7 +3,7 @@ id: dapp-core
 title: dapp-core
 ---
 
-Library used to build React dApps on Elrond Network.
+Library used to build React dApps on MultiversX Network.
 
 :::important
 The following documentation is based on dapp-core 2.0.0+
@@ -11,7 +11,7 @@ The following documentation is based on dapp-core 2.0.0+
 
 ## Introduction
 
-dapp-core is a library that holds core functional logic that can be used to create a dApp on Elrond Network. 
+dapp-core is a library that holds core functional logic that can be used to create a dApp on MultiversX Network. 
 
 It is built for applications that use React.
 
@@ -67,7 +67,7 @@ yarn add @elrondnetwork/dapp-core --no-optional
 
 ## Usage
 
-dapp-core aims to abstract and simplify the process of interacting with users' wallets and with the Elrond Network, allowing developers to easily get started with a new application or integrate dapp-core into an existing application.
+dapp-core aims to abstract and simplify the process of interacting with users' wallets and with the MultiversX Network, allowing developers to easily get started with a new application or integrate dapp-core into an existing application.
 
 This library covers two main areas: **User Identity** and **Transactions**. The API for interacting with library's logic is exposed via hooks and methods that can be called for logging in the user, getting the status of the user or sending transactions.
 

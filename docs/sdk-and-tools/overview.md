@@ -31,7 +31,7 @@ In addition to erdjs, one could use the following Javascript library for perform
 
 | Name                                   | Description                                                                                                                                                                                                                                                                                |
 |----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [dapp-core](/sdk-and-tools/dapp-core)  | React library aimed to help developers create dApps based on Elrond Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
+| [dapp-core](/sdk-and-tools/dapp-core)  | React library aimed to help developers create dApps based on MultiversX Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
 
 ### erdpy - Python SDK
 
@@ -50,38 +50,38 @@ In addition to erdjs, one could use the following Javascript library for perform
 
 | Name                          | Description                                            |
 |-------------------------------|--------------------------------------------------------|
-| [erdnest](/sdk-and-tools/erdnest) | NestJS SDK commonly used in the Elrond Microservice ecosystem. |
+| [erdnest](/sdk-and-tools/erdnest) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
 
 ### erdgo - Golang SDK
 
 | Name                          | Description                                            |
 |-------------------------------|--------------------------------------------------------|
-| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with Elrond Blockchain. |
+| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with MultiversX Blockchain. |
 
 ### erdjava - Java SDK
 
 | Name                              | Description                                       |
 |-----------------------------------|---------------------------------------------------|
-| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with Elrond Blockchain. |
+| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with MultiversX Blockchain. |
 
 ### erdcpp - C++ SDK
 
 | Name                            | Description                                      |
 |---------------------------------|--------------------------------------------------|
-| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with Elrond Blockchain. |
+| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with MultiversX Blockchain. |
 
 ### erdkotlin - Kotlin SDK
 
 | Name                                  | Description                                         |
 |---------------------------------------|-----------------------------------------------------|
-| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with Elrond Blockchain. |
+| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with MultiversX Blockchain. |
 
 ### Node Rest API
 
 | Name                                                                     | Description                                                       |
 |--------------------------------------------------------------------------|-------------------------------------------------------------------|
-| [Rest API](/sdk-and-tools/rest-api/rest-api)                             | High level overview over the Elrond's Rest API.                   |
-| [api.elrond.com](/sdk-and-tools/rest-api/api-elrond-com)                 | Elrond's main API instance.                                       |
+| [Rest API](/sdk-and-tools/rest-api/rest-api)                             | High level overview over the MultiversX's Rest API.                   |
+| [api.multiversx.com](/sdk-and-tools/rest-api/api-elrond-com)                 | MultiversX's main API instance.                                       |
 | [Gateway overview](/sdk-and-tools/rest-api/gateway-overview)             | Gateway overview - public proxy instance.                         |
 | [Addresses](/sdk-and-tools/rest-api/addresses)                           | Rest API endpoints dedicated to addresses.                        |
 | [Transactions](/sdk-and-tools/rest-api/transactions)                     | Rest API endpoints dedicated to transactions.                     |
@@ -93,16 +93,16 @@ In addition to erdjs, one could use the following Javascript library for perform
 
 ### Proxy 
 
-Proxy is an abstraction layer over the Elrond Network's sharding. It routes the API request to the desired shard and 
+Proxy is an abstraction layer over the MultiversX Network's sharding. It routes the API request to the desired shard and 
 merges results when needed.
 
 | Name                                 | Description                                          |
 |--------------------------------------|------------------------------------------------------|
-| [Elrond Proxy](/sdk-and-tools/proxy) | A Rest API requests handler that abstracts sharding. |
+| [MultiversX Proxy](/sdk-and-tools/proxy) | A Rest API requests handler that abstracts sharding. |
 
 ### Elasticsearch
 
-Elrond Network uses Elasticsearch to index historical data. Find out more about how it can be configured.
+MultiversX Network uses Elasticsearch to index historical data. Find out more about how it can be configured.
 
 | Name                                           | Description                                                                  |
 |------------------------------------------------|------------------------------------------------------------------------------|

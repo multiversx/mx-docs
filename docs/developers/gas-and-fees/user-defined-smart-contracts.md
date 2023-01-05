@@ -173,7 +173,7 @@ The simulated cost represents the **actual gas cost** for invoking `A::foo()`, `
 
 **However, the simulated cost above isn't the value we are going to use as `gasLimit`.** If we were to do so, we would be presented the error `not enough gas`.
 
-Upon reaching the call to `B::bar()` inside `A::foo()`, the Elrond VM inspects the **remaining gas _at runtime_** and **temporarily locks (reserves) a portion of it**, to allow for the execution of `A::callBack()` once the call to `B::bar()` returns.
+Upon reaching the call to `B::bar()` inside `A::foo()`, the MultiversX VM inspects the **remaining gas _at runtime_** and **temporarily locks (reserves) a portion of it**, to allow for the execution of `A::callBack()` once the call to `B::bar()` returns.
 
 With respect to the [VM Gas Schedule](https://github.com/ElrondNetwork/elrond-config-mainnet/tree/master/gasSchedules), the aforementioned **remaining gas _at runtime_** has to satisfy the following conditions in order for the **temporary gas lock reservation** to succeed:
 

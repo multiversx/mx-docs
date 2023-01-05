@@ -3,7 +3,7 @@ id: erdjs
 title: erdjs
 ---
 
-Elrond SDK for TypeScript and JavaScript
+MultiversX SDK for TypeScript and JavaScript
 
 **erdjs** consists of TypeScript / JavaScript helpers and utilities for interacting with the Blockchain (in general) and with Smart Contracts (in particular).
 
@@ -19,9 +19,9 @@ Signing providers for dApps:
 
 | Package                                                                                                     | Source code                                                                         | Description                                                                               |
 |-------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| [dapp-core](https://www.npmjs.com/package/@elrondnetwork/dapp-core)                                         | [Github](https://github.com/ElrondNetwork/dapp-core)                                | A library that holds the core functional & signing logic of a dapp on the Elrond Network. |
+| [dapp-core](https://www.npmjs.com/package/@elrondnetwork/dapp-core)                                         | [Github](https://github.com/ElrondNetwork/dapp-core)                                | A library that holds the core functional & signing logic of a dapp on the MultiversX Network. |
 | [erdjs-hw-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-hw-provider)                         | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-hw-provider)             | Sign using the hardware wallet (Ledger).                                                  |
-| [erdjs-web-wallet-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-web-wallet-provider)         | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-web-wallet-provider)     | Sign using the Elrond web wallet.                                                         |
+| [erdjs-web-wallet-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-web-wallet-provider)         | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-web-wallet-provider)     | Sign using the MultiversX web wallet.                                                         |
 | [erdjs-wallet-connect-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-wallet-connect-provider) | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider) | Sign using Wallet Connect.                                                                |
 | [erdjs-extension-provider](https://www.npmjs.com/package/@elrondnetwork/erdjs-extension-provider)           | [Github](https://github.com/ElrondNetwork/elrond-sdk-erdjs-extension-provider)      | Sign using the Maiar DeFi Wallet (browser extension).                                     |
 

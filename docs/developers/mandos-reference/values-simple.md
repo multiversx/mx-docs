@@ -19,7 +19,7 @@ We chose to create a single universal format to be used everywhere in a Mandos f
 
 The advantage of this unique value format is that it is enough to understand it once to then use it everywhere.
 
-The Mandos value format is closely related to the [Elrond serialization format](/developers/developer-reference/elrond-serialization-format). This is not by accident, Mandos is designed to make it easy to interact Elrond contracts and their data.
+The Mandos value format is closely related to the [MultiversX serialization format](/developers/developer-reference/elrond-serialization-format). This is not by accident, Mandos is designed to make it easy to interact MultiversX contracts and their data.
 
 Exceptions: `txId`, `comment` and `asyncCallData` are simple strings. `asyncCallData` might be changed to the default value format in the future and/or reworked.
 
@@ -172,7 +172,7 @@ Addresses need to be 32 bytes long, so
 
 `sc:` constructs a dummy smart contract address. 
 
-On Elrond, smart contract addresses have a different format than user address - they start with 8 bytes of zero.
+On MultiversX, smart contract addresses have a different format than user address - they start with 8 bytes of zero.
 
 :::important
 Mandos requires that all accounts with addresses in SC format must have non-empty code.

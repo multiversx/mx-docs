@@ -3,18 +3,18 @@ id: constants
 title: Constants
 ---
 
-Elrond uses some constants, which are specific to each chain (Mainnet, Testnet or Devnet). The updated values can be found at these sources:
+MultiversX uses some constants, which are specific to each chain (Mainnet, Testnet or Devnet). The updated values can be found at these sources:
 
 **Mainnet**:
-- https://gateway.elrond.com/network/config
+- https://gateway.multiversx.com/network/config
 - https://github.com/ElrondNetwork/elrond-config-mainnet
 
 **Testnet**:
-- https://testnet-gateway.elrond.com/network/config
+- https://testnet-gateway.multiversx.com/network/config
 - https://github.com/ElrondNetwork/elrond-config-testnet
 
 **Devnet**:
-- https://devnet-gateway.elrond.com/network/config
+- https://devnet-gateway.multiversx.com/network/config
 - https://github.com/ElrondNetwork/elrond-config-devnet
 
 :::important

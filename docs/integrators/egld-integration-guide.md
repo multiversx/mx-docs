@@ -3,7 +3,7 @@ id: egld-integration-guide
 title: EGLD integration guide
 ---
 
-This section provides high-level technical requirements of integrating the Elrond's native coin, EGLD in a platform that handles EGLD transactions for their users.
+This section provides high-level technical requirements of integrating the MultiversX's native coin, EGLD in a platform that handles EGLD transactions for their users.
 
 ## Overview
 
@@ -97,11 +97,11 @@ addresses. This can be performed via [Get address balance endpoint](/sdk-and-too
 
 ## Useful tools and examples
 
-Elrond SDKs or tools can be used for signing transactions and performing accounts management. 
+MultiversX SDKs or tools can be used for signing transactions and performing accounts management. 
 
 A complete list and more detailed information can be found on the [accounts management](/integrators/accounts-management) and 
 [signing transaction](/integrators/creating-transactions) sections.
 
-There is also an example that matches the above-presented workflow and can be found on the Go SDK for Elrond, [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
+There is also an example that matches the above-presented workflow and can be found on the Go SDK for MultiversX, [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
 
 However, other SDKs can be used as well for handling accounts management or transaction signing.

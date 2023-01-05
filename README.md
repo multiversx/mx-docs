@@ -1,6 +1,6 @@
-# Elrond docs
+# MultiversX docs
 
-The repository containing the [documentation](https://docs.elrond.com) for the Elrond Network protocol.
+The repository containing the [documentation](https://docs.multiversx.com) for the MultiversX Network protocol.
 
 ## About
 
@@ -50,14 +50,14 @@ Anyone can contribute to the docs. Any help is appreciated. Here are some ways i
 - the documentation pages are to be found inside the `docs` directory at the corresponding category.
 - please follow `docs/utils.md` for Markdown examples.
 
-A web version of the Markdown examples is available [here](https://docs.elrond.com/utils/).
+A web version of the Markdown examples is available [here](https://docs.multiversx.com/utils/).
 
 ### Opening a `pull request`
 
 - create a new branch starting from `external`.
 - push the changes to the new branch.
 - open a `pull request` from your branch to `external` branch.
-- wait for Elrond members to review your pull request.
+- wait for MultiversX members to review your pull request.
 
 Once approved, the pull request will be merged into the `external` branch. From time to time (and depending on the emergency of the changes) we will merge the `external` branch into `development` or `master` branches.
 

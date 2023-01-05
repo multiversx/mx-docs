@@ -16,7 +16,7 @@ Creating an API provider:
 ```
 import { ApiNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
-let networkProvider = new ApiNetworkProvider("https://devnet-api.elrond.com");
+let networkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com");
 ```
 
 Creating a Proxy provider:
@@ -24,11 +24,11 @@ Creating a Proxy provider:
 ```
 import { ProxyNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
-let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.elrond.com");
+let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
 :::important
-Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the Elrond API (or Gateway).
+Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
 On this topic, please see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
 :::
@@ -154,7 +154,7 @@ Note that, for all purposes, **we recommend using [dapp-core](https://github.com
 
 ```
 let data = tx.toSendable();
-let url = "https://devnet-api.elrond.com/transactions";
+let url = "https://devnet-api.multiversx.com/transactions";
 let response = await axios.post(url, data, {
     headers: {
         "Content-Type": "application/json",

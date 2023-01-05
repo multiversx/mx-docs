@@ -6,13 +6,13 @@ title: Smart Contract Calls Data Format
 ## Introduction
 
 Besides regular move-balance transactions (address A sends the amount X to address B, while optionally including a note in the `data` field), 
-Elrond transactions can trigger a Smart Contract call, or a [built-in function call](/developers/built-in-functions). 
+MultiversX transactions can trigger a Smart Contract call, or a [built-in function call](/developers/built-in-functions). 
 
 This can happen in the following situations:
 - the receiver of the transaction is a Smart Contract Address and the data field begins with a valid function of the contract.
 - the data field of the transaction begins with a valid built-in function name.
 
-Calls to Smart Contracts functions (or built-in functions) on Elrond have the following format:
+Calls to Smart Contracts functions (or built-in functions) on MultiversX have the following format:
 
 ```
 ScCallTransaction {
@@ -72,7 +72,7 @@ There are multiple ways of formatting the data field:
 
 ## Converting bech32 addresses (erd1)
 
-Elrond uses `bech32` addresses with the HRP `erd`. Therefore, an address would look like:
+MultiversX uses `bech32` addresses with the HRP `erd`. Therefore, an address would look like:
 
 `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
 

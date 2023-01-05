@@ -7,14 +7,14 @@ title: Installing a Validator Node
 
 After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Devnet and Testnet Network.
 
-- *Note: This process installs a validator node for all Elrond networks (mainnet, devnet, and testnet).*
+- *Note: This process installs a validator node for all MultiversX networks (mainnet, devnet, and testnet).*
 
-Following these few steps, we will work on installing the Elrond Network validator node to get it up and running on your local machine.
+Following these few steps, we will work on installing the MultiversX Network validator node to get it up and running on your local machine.
 
  For installation use `1 - install`
 
 ```bash
- ~/elrond-go-scripts/script.sh
+ ~/mx-chain-scripts/script.sh
  1) install
  2) observing_squad
  3) upgrade
@@ -46,14 +46,14 @@ mkdir -p ~/VALIDATOR_KEYS
     
 ```
 
-Generate a certificate file containing your Validator key by running the `keygenerator` :
+Generate a certificate file containing your Validator key by running the `keygenerator`:
 
  ```bash
 ./elrond-utils/keygenerator
     
 ```
 
-Copy the generated `validatorKey.pem` file to the `config` folder of your node(s), and repeat for each node.
+Copy the generated `validatorKey.pem` file to the `config` folder of your node(s), and repeat for each node.
 
 ```bash
     cp validatorKey.pem ~/elrond-nodes/node-0/config/
@@ -77,7 +77,7 @@ Repeat the above process for all your “n” nodes. When complete, please refer
 ### **Start the node(s)**
 
 ```bash
-~/elrond-go-scripts/script.sh start
+~/mx-chain-scripts/script.sh start
 ```
 
 ### **Start the node visual interface**
@@ -104,10 +104,10 @@ Upgrade your node by running the script and selecting either of these options:
 - `14 - quit`
 
 ```bash
-~/elrond-go-scripts/script.sh
+~/mx-chain-scripts/script.sh
 ```
 
-These are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts/blob/master/README.md). You can also ask any questions in the Elrond [Validators chat](https://t.me/ElrondValidators)
+These are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/ElrondNetwork/elrond-go-scripts/blob/master/README.md). You can also ask any questions in the MultiversX [Validators chat](https://t.me/MultiversXValidators)
 
 ## **Mandatory: Backup your keys**
 
@@ -121,22 +121,22 @@ Create a safe backup for them on storage outside of the server running your node
 
 ## **Migration from old scripts**
 
-Before the release of the current `elrond-go-scripts`, there were the `elrond-go-scripts-testnet`, `elrond-go-scripts-devnet` and `elrond-go-scripts-mainnet` for setting up nodes
+Before the release of the current `mx-chain-scripts`, there were the `elrond-go-scripts-testnet`, `elrond-go-scripts-devnet` and `elrond-go-scripts-mainnet` for setting up nodes
 on the testnet, devnet and mainnet respectively. Those three repositories have been deprecated because `elrond-go-scripts` can be used to manage nodes regardless of their target network (`testnet`, `devnet` or `mainnet`).
 
 If one wants to migrate from the old scripts to the new ones, it is generally possible to do so while preserving the validator keys, current node installation, DB and logs.
 These are the steps to be followed:
 
-- clone the `elrond-go-scripts` repo near the old one (`elrond-go-scripts-testnet`/`elrond-go-scripts-devnet`/`elrond-go-scripts-mainnet`); assuming the old scripts were located in the home directory, run the following:
+- clone the `mx-chain-scripts` repo near the old one (`elrond-go-scripts-testnet`/`elrond-go-scripts-devnet`/`elrond-go-scripts-mainnet`); assuming the old scripts were located in the home directory, run the following:
 ```
 cd ~
-git clone https://github.com/ElrondNetwork/elrond-go-scripts
+git clone https://github.com/multiversx/mx-chain-scripts
 ```
 - configure the new scripts as described in the sections above;
-- make sure you set the new `ENVIRONMENT` variable declared within `~/elrond-go-scripts/config/variables.cfg`; it must contain one of `"testnet"`, `"devnet"` or `"mainnet"`;
+- make sure you set the new `ENVIRONMENT` variable declared within `~/mx-chain-scripts/config/variables.cfg`; it must contain one of `"testnet"`, `"devnet"` or `"mainnet"`;
 - call the `migrate` operation on the scripts:
 ```
-cd ~/elrond-go-scripts
+cd ~/mx-chain-scripts
 ./script.sh migrate
 ```
 
@@ -154,7 +154,7 @@ or branch (not recommended using a branch due to the fact that an unsigned commi
 
 To accomplish this, edit the variables.cfg file
 ```
-cd ~/elrond-go-scripts/config
+cd ~/mx-chain-scripts/config
 nano variables.cfg
 ```
 locate the `OVERRIDE_CONFIGVER` option and input a value there, something like `tags/T1.3.14.0`.

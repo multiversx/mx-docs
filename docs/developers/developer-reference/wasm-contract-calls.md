@@ -1,5 +1,5 @@
 ---
-id: elrond-wasm-contract-calls
+id: wasm-contract-calls
 title: Smart contract to smart contract calls
 ---
 

@@ -7,7 +7,7 @@ Let's build a microservice for your decentralized App
 
 :::important
 This guide extends the [**Build a dApp in 15 minutes** guide](/developers/tutorials/your-first-dapp), please follow it before following this one.
-We'll work on the Devnet, so you should create and manage a web wallet [here](https://devnet-wallet.elrond.com).
+We'll work on the Devnet, so you should create and manage a web wallet [here](https://devnet-wallet.multiversx.com).
 :::
 
 This guide has been made available in video format as well:
@@ -68,7 +68,7 @@ then, we will have to see a log line like this one:
 
 ## The microservice
 
-Ok, let's get started with the microservice. First, we'll clone the template provided by the Elrond team.
+Ok, let's get started with the microservice. First, we'll clone the template provided by the MultiversX team.
 
 ```sh
 git clone https://github.com/ElrondNetwork/ping-pong-microservice microservice
@@ -272,7 +272,7 @@ Now we provide you a starting point in order to build your ideas and projects.
 
 ## Where to go next?
 
-Break down this guide and learn more about how to extend the microservice, the dapp and the smart contract. Learn more on the Elrond official documentation site here: [https://docs.elrond.com](/).
+Break down this guide and learn more about how to extend the microservice, the dapp and the smart contract. Learn more on the MultiversX official documentation site here: [https://docs.multiversx.com](/).
 
 If you have any questions, feel free to ask them using stackoverflow here:
 [https://stackoverflow.com/questions/tagged/elrond](https://stackoverflow.com/questions/tagged/elrond).

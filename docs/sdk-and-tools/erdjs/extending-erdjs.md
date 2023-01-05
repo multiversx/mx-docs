@@ -11,11 +11,11 @@ This tutorial will guide you through the process of extending and tailoring cert
 
 ## Extending the Network Providers
 
-The default classes from `@elrondnetwork/erdjs-network-providers` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the Elrond API (or Gateway).
+The default classes from `@elrondnetwork/erdjs-network-providers` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
 ### Performing HTTP requests from scratch
 
-One can broadcast transactions and GET resources from the Elrond API (or Gateway) by performing simple HTTP requests using the `axios` utility. Below are a few examples: 
+One can broadcast transactions and GET resources from the MultiversX API (or Gateway) by performing simple HTTP requests using the `axios` utility. Below are a few examples: 
 
 Broadcasting a transaction:
 
@@ -25,7 +25,7 @@ import axios, { AxiosResponse } from "axios";
 let tx = new Transaction({ /* provide the fields */ });
 // ... sign the transaction using a dApp / signing provider
 let data = tx.toSendable();
-let url = "https://devnet-api.elrond.com/transactions";
+let url = "https://devnet-api.multiversx.com/transactions";
 let response: AxiosResponse = await axios.post(url, data, {
     headers: {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ let txHash = response.data.txHash;
 Fetching a transaction:
 
 ```
-let url = `https://devnet-api.elrond.com/transactions/${txHash}`;
+let url = `https://devnet-api.multiversx.com/transactions/${txHash}`;
 let response = await axios.get(url);
 let transactionOnNetwork = TransactionOnNetwork.fromApiHttpResponse(txHash, response.data);
 ```
@@ -51,7 +51,7 @@ let query = contract.createQuery({
     caller: new Address("erd1...")
 });
 
-let url = "https://devnet-api.elrond.com/query";
+let url = "https://devnet-api.multiversx.com/query";
 let data = {
     scAddress: query.address.bech32(),
     caller: query.caller?.bech32() ? query.caller.bech32() : undefined,

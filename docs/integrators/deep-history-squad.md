@@ -9,7 +9,7 @@ A variant of the standard [observing squad](/integrators/observing-squad) is one
 
 A deep-history setup is able to resolve historical account (state) queries, that is, to answer questions such as:
 
-> What was Alice's balance on [May the 4th](https://explorer.elrond.com/blocks/5f6a02d6a5d2a851fd6dc1fb53435083830c2a13121e003958d97c2389711f06)?
+> What was Alice's balance on [May the 4th](https://explorer.multiversx.com/blocks/5f6a02d6a5d2a851fd6dc1fb53435083830c2a13121e003958d97c2389711f06)?
 
 ```
 GET http://squad:8080/address/erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th?blockNonce=9250000
@@ -19,7 +19,7 @@ GET http://squad:8080/address/erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypef
 Currently, the API client has to perform the conversion from _desired timestamp_ to _block nonce_. In a future release, the API will directly support timestamp-based queries.
 :::
 
-> How much UTK were in the [`UTK / WEGLD` Liquidity Pool](https://explorer.elrond.com/accounts/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga) on [1st of October](https://explorer.elrond.com/blocks/cefd41e1e9bbe3ba023a695f412b99cecb15ef789475648ee7c31e7d9fef31d1)?
+> How much UTK were in the [`UTK / WEGLD` Liquidity Pool](https://explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga) on [1st of October](https://explorer.multiversx.com/blocks/cefd41e1e9bbe3ba023a695f412b99cecb15ef789475648ee7c31e7d9fef31d1)?
 
 ```
 GET http://squad:8080/address/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga/key/726573657276650000000a55544b2d326638306539?blockNonce=11410000
@@ -49,7 +49,7 @@ As of October 2022, a public repository with non-pruned databases for both _main
 
 An alternative to downloading a non-pruned history is to reconstruct it locally (on your own infrastructure). 
 
-Under the hood, the reconstruction process relies on the **[import-db](https://docs.elrond.com/validators/import-db/)** feature, which allows us to reprocess previously processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. For our purposes, the `import-db` procedure requires a **target database** (placed in the folder `node-workdir/db`) and a **source database** (usually placed in the folder `node-workdir/import-db/db`).
+Under the hood, the reconstruction process relies on the **[import-db](https://docs.multiversx.com/validators/import-db/)** feature, which allows us to reprocess previously processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. For our purposes, the `import-db` procedure requires a **target database** (placed in the folder `node-workdir/db`) and a **source database** (usually placed in the folder `node-workdir/import-db/db`).
 
 It follows that, in order to reconstruct the history for an observer, we need (to download) **two database archives**: an _old archive_ and a _new archive_. For reconstructing the history of a whole squad, `4 x 2` archives are required (to be downloaded).
 
@@ -59,7 +59,7 @@ _Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a
 
 First, choose an empty folder to serve as the workspace (working directory) of the squad instance - for example, `~/deep-history-workspace`.
 
-Afterward, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the Elrond public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
+Afterward, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the MultiversX public archive (which are available [on request](https://t.me/MultiversXDevelopers)). The URLs in the example below are mere placeholders.
 
 ```
 // ~/deep-history-workspace/reconstruction.json

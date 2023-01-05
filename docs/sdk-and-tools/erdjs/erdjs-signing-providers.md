@@ -64,7 +64,7 @@ const callbackUrl = window.location.href.split("?")[0];
 await provider.logout({ callbackUrl: callbackUrl });
 ```
 
-Sometimes, a dApp (and its backend) might want to reliably assign an off-chain user identity to an Elrond address. In this context, the web wallet provider supports an extra parameter to the `login()` method: a custom authentication token, **completely opaque to the web wallet**, to be signed with the user's wallet, at login-time:
+Sometimes, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX address. In this context, the web wallet provider supports an extra parameter to the `login()` method: a custom authentication token, **completely opaque to the web wallet**, to be signed with the user's wallet, at login-time:
 
 ```
 // An identity token, provided by an identity provider (server-side)
@@ -72,7 +72,7 @@ Sometimes, a dApp (and its backend) might want to reliably assign an off-chain u
 const authToken = "aaaabbbbaaaabbbb";
 
 // A server-side handler used to acknowledge, validate and honour
-// the relationship between "authToken" and the Elrond address of the user
+// the relationship between "authToken" and the MultiversX address of the user
 const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
 await provider.login({ callbackUrl, token: authToken });
 ```
@@ -318,7 +318,7 @@ import { HWProvider } from "@elrondnetwork/erdjs-hw-provider";
 const provider = new HWProvider();
 ```
 
-Before performing any operation, make sure to initialize the provider (also, the Elrond application has to be open on the device):
+Before performing any operation, make sure to initialize the provider (also, the MultiversX application has to be open on the device):
 
 ```
 await provider.init();
@@ -400,7 +400,7 @@ console.log(message.toJSON());
 
 ## Verifying the signature of a login token
 
-As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an Elrond address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
+As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
 
 ```
 export function verifyAuthTokenSignature(address, authToken, signature) {

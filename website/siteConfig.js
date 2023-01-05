@@ -11,7 +11,7 @@
 const siteConfig = {
   title: "Docs", // Title for your website.
   tagline: "The Internet Scale Blockchain",
-  url: "https://docs.elrond.com", // Your website URL
+  url: "https://docs.multiversx.com", // Your website URL
   baseUrl: "/", // Base URL for your project */
   docsUrl: "",
   // For github.io type URLs, you would set the url and baseUrl like:
@@ -20,7 +20,7 @@ const siteConfig = {
 
   // Used for publishing and more
   projectName: "docs",
-  organizationName: "Elrond Network",
+  organizationName: "MultiversX",
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
@@ -60,7 +60,7 @@ const siteConfig = {
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} Elrond Network. All rights reserved.`,
+  copyright: `Copyright © ${new Date().getFullYear()} MultiversX Network. All rights reserved.`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
@@ -107,10 +107,10 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: "Discover Elrond",
+      title: "Discover MultiversX",
       content:
         "Meet the blockchain that can offer true internet-scale performance.",
-      docName: "welcome/welcome-to-elrond",
+      docName: "welcome/welcome-to-multiversx",
       icon: "💡",
     },
     {
@@ -134,21 +134,21 @@ const siteConfig = {
     },
     {
       title: "Manage a Wallet",
-      content: "Create a wallet to send, receive and store Elrond tokens.",
+      content: "Create a wallet to send, receive and store MultiversX tokens.",
       docName: "wallet/overview",
       icon: "📱",
     },
     {
       title: "Create a Token",
       content:
-        "Issue your own ESDT token, Elrond's improved equivalent of ERC-20.",
+        "Issue your own ESDT token, MultiversX's improved equivalent of ERC-20.",
       docName: "tokens/overview",
       icon: "🔷",
     },
     {
-      title: "Learn How Elrond Works",
+      title: "Learn How MultiversX Works",
       content:
-        "Explore Adaptive state sharding, Secure Proof of Stake, and the Elrond WASM VM.",
+        "Explore Adaptive state sharding, Secure Proof of Stake, and the MultiversX WASM VM.",
       docName: "technology/architecture-overview",
       icon: "🔬",
     },

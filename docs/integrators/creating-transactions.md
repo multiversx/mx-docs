@@ -24,7 +24,7 @@ As described in section [Signing Transactions](/developers/signing-transactions/
 
 ## **SDK and tools support for creating and signing transactions**
 
-There are SDKs or tools with support for interacting with the Elrond blockchain, so one can use one of the following SDKs to perform
+There are SDKs or tools with support for interacting with the MultiversX blockchain, so one can use one of the following SDKs to perform
 transactions creation and signing:
 
 - [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)

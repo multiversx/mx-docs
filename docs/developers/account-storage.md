@@ -5,7 +5,7 @@ title: Account storage
 
 ## Description
 
-The Elrond protocol offers the possibility of storing additional data under an account as key-value pairs. This can be useful for many use cases.
+The MultiversX protocol offers the possibility of storing additional data under an account as key-value pairs. This can be useful for many use cases.
 
 A wallet owner can store key-value pairs by using the built-in function `SaveKeyValue` that receives any number of key-value pairs.
 

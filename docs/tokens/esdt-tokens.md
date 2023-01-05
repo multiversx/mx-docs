@@ -4,17 +4,17 @@ title: ESDT tokens
 ---
 
 ## **Introduction**
-**ESDT** stands for *Elrond Standard Digital Token*.
+**ESDT** stands for *Electronic Standard Digital Token*.
 
 Custom tokens at native speed and scalability, without ERC20
 
-The Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native EGLD token itself.**
+The MultiversX network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native EGLD token itself.**
 
 Users also do not need to worry about sharding when transacting custom tokens, because the protocol employs the same handling mechanisms for ESDT transactions across shards as the mechanisms used for the EGLD token. Sharding is therefore automatically handled and invisible to the user.
 
 Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of _any number of custom tokens_, in addition to the native EGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
 
-ESDT tokens can be issued, owned and held by any Account on the Elrond network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
+ESDT tokens can be issued, owned and held by any Account on the MultiversX network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
 ## **Issuance of fungible ESDT tokens**
 
@@ -188,7 +188,7 @@ ESDT_TRANSFER_GAS_LIMIT = MIN_GAS_LIMIT + data_length * GAS_PER_DATA_BYTE + ESDT
 Where the constants represent:
 - `MIN_GAS_LIMIT` - the minimum gas limit of a transaction. Each transaction will have at least this cost. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
 - `GAS_PER_DATA_BYTE` - the amount of gas to be used for each character of the data field. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
-- `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.elrond.com/network/gas-configs).
+- `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.multiversx.com/network/gas-configs).
 
 The current values of these constants are:
 ```
@@ -656,7 +656,7 @@ UpgradingTransaction {
 
 ## **Branding**
 
-Anyone can create an ESDT token on Elrond Network. There are also no limits in tokens names or tickers. For example,
+Anyone can create an ESDT token on MultiversX Network. There are also no limits in tokens names or tickers. For example,
 one issues an `AliceToken` with the ticker `ALC`. Anyone else is free to create a new token with the same token name and
 the same token ticker. The only difference will be the random sequence of the token identifier. So the "original" token
 could have received the random sequence `1q2w3e` resulting in the `ALC-1q2w3e` identifier, while the second token could
@@ -664,21 +664,21 @@ have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`.
 
 In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a
 branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens.
-An example of a branded token is MEX, the Maiar Exchange's token. Elrond products such as Explorer, Wallet and so on
+An example of a branded token is MEX, the Maiar Exchange's token. MultiversX products such as Explorer, Wallet and so on
 will display tokens in accordance to their branding, if any.
 
-A token owner can submit a branding request by opening a Pull Request on [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets).
+A token owner can submit a branding request by opening a Pull Request on [https://github.com/multiversx/mx-assets/](https://github.com/multiversx/mx-assets/).
 
 ### **Submitting a branding request**
 
-Project owners can create a PR against [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets) repository with the logo in `.png` and `.svg` format, as well as a `.json` file containing all the relevant information.
+Project owners can create a PR against [https://github.com/multiversx/mx-assets/](https://github.com/multiversx/mx-assets/) repository with the logo in `.png` and `.svg` format, as well as a `.json` file containing all the relevant information.
 
 Here’s a prefilled template for the .json file to get you started:
 
 ``` json
 {
-  "website": "https://www.elrondtoken.com",
-  "description": "The ERD token is the utility token of Elrond Token",
+  "website": "https://www.multiversxoken.com",
+  "description": "The MXT token is the utility token of MultiversX Token",
   "social": {
     "email": "erd-token@elrond.com",
     "blog": "https://www.elrondtoken.com/ERD-token-blog",
@@ -691,7 +691,7 @@ Here’s a prefilled template for the .json file to get you started:
 }
 ```
 
-The ledgerSignature will be generated by Elrond. It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
+The ledgerSignature will be generated by MultiversX. It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
 
 ## **REST API**
 
@@ -704,7 +704,7 @@ There are a number of API endpoints that one can use to interact with ESDT data.
 Returns an array of ESDT Tokens that the specified address has interacted with (issued, sent or received).
 
 ```
-https://gateway.elrond.com/address/*bech32Address*/esdt
+https://gateway.multiversx.com/address/*bech32Address*/esdt
 ```
 
 | Param         | Required                                  | Type     | Description                            |
@@ -734,7 +734,7 @@ https://gateway.elrond.com/address/*bech32Address*/esdt
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
-https://gateway.elrond.com/address/*bech32Address*/esdt/*tokenIdentifier*
+https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 
 | Param           | Required                                  | Type     | Description                            |
@@ -769,7 +769,7 @@ For example:
 <!--Request-->
 
 ```
-https://gateway.elrond.com/address/*bech32Address*/esdts/roles
+https://gateway.multiversx.com/address/*bech32Address*/esdts/roles
 ```
 
 <!--Response-->
@@ -808,7 +808,7 @@ initial minted value, burnt value, minted value and total supply value.
 | tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier (example: `WEGLD-bd4d79)` |
 
 ```
-https://gateway.elrond.com/network/esdt/supply/*token name*
+https://gateway.multiversx.com/network/esdt/supply/*token name*
 ```
 
 <!--Response-->
@@ -839,7 +839,7 @@ For example:
 <!--Request-->
 
 ```
-https://gateway.elrond.com/network/esdts
+https://gateway.multiversx.com/network/esdts
 ```
 
 <!--Response-->
@@ -866,7 +866,7 @@ https://gateway.elrond.com/network/esdts
 <!--Request-->
 
 ```
-https://gateway.elrond.com/network/esdt/fungible-tokens
+https://gateway.multiversx.com/network/esdt/fungible-tokens
 ```
 
 <!--Response-->
@@ -893,7 +893,7 @@ https://gateway.elrond.com/network/esdt/fungible-tokens
 <!--Request-->
 
 ```
-https://gateway.elrond.com/network/esdt/semi-fungible-tokens
+https://gateway.multiversx.com/network/esdt/semi-fungible-tokens
 ```
 
 <!--Response-->
@@ -920,7 +920,7 @@ https://gateway.elrond.com/network/esdt/semi-fungible-tokens
 <!--Request-->
 
 ```
-https://gateway.elrond.com/network/esdt/non-fungible-tokens
+https://gateway.multiversx.com/network/esdt/non-fungible-tokens
 ```
 
 <!--Response-->
@@ -954,7 +954,7 @@ In order to get the logs and events generated by the transfer, one should know t
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash of the transaction |
 
 ```
-https://gateway.elrond.com/transaction/*txHash*?withResults=true
+https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 
 <!--Response-->
@@ -1005,7 +1005,7 @@ For example:
 <!--Request-->
 
 ```
-https://gateway.elrond.com/vm-values/query
+https://gateway.multiversx.com/vm-values/query
 ```
 
 ```json
@@ -1106,7 +1106,7 @@ For example:
 
 <!--Request-->
 ```
-https://gateway.elrond.com/vm-values/query
+https://gateway.multiversx.com/vm-values/query
 ```
 
 ```json

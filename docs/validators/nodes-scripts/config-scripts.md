@@ -3,15 +3,15 @@ id: config-scripts
 title: Scripts & User config
 ---
 
-Elrond provides scripts designed to streamline the process of installing an Elrond node. This validator script is a general script for accessing the Mainnet, Devnet and Testnet networks.
+MultiversX provides scripts designed to streamline the process of installing an MultiversX node. This validator script is a general script for accessing the Mainnet, Devnet and Testnet networks.
 
 To get started, you will begin by getting a copy of the latest version of the scripts from Github and configure it to match your local setup.
 
-## **Download the Elrond Scripts**
+## **Download the MultiversX Scripts**
 
 ```bash
 cd ~
-git clone https://github.com/ElrondNetwork/elrond-go-scripts
+git clone https://github.com/multiversx/mx-chain-scripts
 ```
 
 ## **Configure the scripts correctly**
@@ -26,14 +26,14 @@ whoami
 
 Next, in the `variables.cfg` file, edit and add your username in the following variables:
 
-- `ENVIRONMENT`: The Elrond network to be used: mainnet, testnet or devnet.
+- `ENVIRONMENT`: The MultiversX network to be used: mainnet, testnet or devnet.
 - `CUSTOM_HOME`: This refers to the folder on the computer in which you will install your node.
 - `CUSTOM_USER`: which is the username on the computer under which you will run the installation, upgrade, and other processes
 
 Open `variables.cfg` in the `nano` editor:
 
 ```bash
-cd ~/elrond-go-scripts/config
+cd ~/mx-chain-scripts/config
 nano variables.cfg
 ```
 
