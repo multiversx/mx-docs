@@ -12,6 +12,7 @@
 html {
   font-size: 16px;
 }
+
 .font-montserrat {
   font-family: Montserrat, sans-serif;
 }
@@ -87,6 +88,7 @@ html {
 }
 
 /* -------------------- Start Header Container ------------------- */
+
 .fixedHeaderContainer {
   background: #fff;
   height: 3.75rem;
@@ -95,6 +97,17 @@ html {
   justify-content: center;
   z-index: 2;
 }
+
+.fixedHeaderContainer .logo {
+  width: 8rem;
+}
+
+@media (min-width: 768px) {
+  .fixedHeaderContainer .logo {
+    width: auto;
+  }
+}
+
 .fixedHeaderContainer header img {
   height: 24px;
   min-width: 96px;
