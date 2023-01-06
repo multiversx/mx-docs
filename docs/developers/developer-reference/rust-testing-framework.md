@@ -452,4 +452,4 @@ fn test_failed_cf() {
 
 ## Conclusion
 
-This tests cover pretty much every flow in the crowdfunding smart contract. Keep in mind that code can be deduplicated even more by having functions similar to the `setup_crowdfunding` function, but for the sake of the example, we've kept this as simple as possible. We hope this will make writing tests and debugging a lot easier moving forward!  
+These tests cover pretty much every flow in the crowdfunding smart contract. Keep in mind that code can be deduplicated even more by having functions similar to the `setup_crowdfunding` function, but for the sake of the example, we've kept this as simple as possible. We hope this will make writing tests and debugging a lot easier moving forward!  
