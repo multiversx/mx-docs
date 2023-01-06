@@ -60,3 +60,5 @@ Keep in mind your main contract has to implement all modules that any sub-module
 ## Conclusion
 
 We hope this module system will make it a lot easier to write maintainable smart contract code, and even reusable modules.  
+
+More modules and examples can be found here: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/modules
