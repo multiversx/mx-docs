@@ -68,7 +68,7 @@ In case of a single machine, our recommendation is as follows:
 ## Clone an Elasticsearch cluster
 
 In order to have all the information about the MultiversX chain in an Elasticsearch cluster (from genesis to current time) one has to copy all the data with a specific tool from an Elasticsearch cluster to another.
-To get more information how to do this use the documentation from this [repository](https://github.com/ElrondNetwork/elrond-tools-go/tree/main/elasticreindexer).
+To get more information how to do this use the documentation from this [repository](https://github.com/multiversx/mx-chain-tools-go/tree/main/elasticreindexer).
 
 
 ## Elasticsearch indices 

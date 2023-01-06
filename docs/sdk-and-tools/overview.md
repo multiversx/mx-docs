@@ -48,9 +48,9 @@ In addition to erdjs, one could use the following Javascript library for perform
 
 ### erdnest - NestJS SDK
 
-| Name                          | Description                                            |
-|-------------------------------|--------------------------------------------------------|
-| [erdnest](/sdk-and-tools/erdnest) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
+| Name                                  | Description                                            |
+|---------------------------------------|--------------------------------------------------------|
+| [nesdtjs sdk](/sdk-and-tools/erdnest) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
 
 ### erdgo - Golang SDK
 

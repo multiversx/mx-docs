@@ -20,7 +20,7 @@ Once owning a quantity of a NFT/SFT, users will have their data store directly u
 
 In addition to NFTs and SFTs, MultiversX introduced Meta ESDTs.
 Meta ESDTs are a special case of semi-fungible-tokens. They can be seen as regular ESDT fungible tokens that also have properties.
-In a particular example, LKMEX is a Meta ESDT and its properties help implement the release schedule.
+In a particular example, LKMEX or XMEX are MetaESDTs and their properties help implement the release schedule.
 
 ## **Branding**
 
@@ -34,22 +34,22 @@ In order to differentiate between an original token and other tokens with the sa
 branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens. MultiversX products such as Explorer, Wallet and so on
 will display tokens in accordance to their branding, if any.
 
-A token owner can submit a branding request by opening a Pull Request on https://github.com/ElrondNetwork/assets.
+A token owner can submit a branding request by opening a Pull Request on https://github.com/multiversx/mx-assets.
 
 ### **Submitting a branding request**
 
-Token owners can create a PR to the https://github.com/ElrondNetwork/assets with the logo in .png and .svg format, as well as a .json file containing all the relevant information.
+Token owners can create a PR to the https://github.com/multiversx/mx-assets with the logo in .png and .svg format, as well as a .json file containing all the relevant information.
 
 Here’s a prefilled template for the .json file to get you started:
 
 ``` json
 {
-  "website": "https://www.elrondtoken.com",
+  "website": "https://www.multiversxtoken.com",
   "description": "MultiversX Token is a collection of 10.000 unique and randomly generated tokens.",
   "social": {
-    "email": "erd-token@elrond.com",
-    "blog": "https://www.elrondtoken.com/ERD-token-blog",
-    "twitter": "https://twitter.com/ERD-token-twitter"
+    "email": "mxt-token@multiversxtoken.com",
+    "blog": "https://www.multiversxtoken.com/MXT-token-blog",
+    "twitter": "https://twitter.com/MXT-token-twitter"
   },
   "status": "active"
 }
@@ -634,7 +634,7 @@ Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
 
 The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`. Note that the `05dc` is hexadecimal encoded, it represents decimal 1500.
 
-Also note that an MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
+Also note that an MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/multiversx/mx-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 :::
 
 ## **Transfers to a Smart Contract**

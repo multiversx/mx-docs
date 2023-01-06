@@ -664,7 +664,7 @@ have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`.
 
 In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a
 branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens.
-An example of a branded token is MEX, the Maiar Exchange's token. MultiversX products such as Explorer, Wallet and so on
+An example of a branded token is MEX, the xExchange's token. MultiversX products such as Explorer, Wallet and so on
 will display tokens in accordance to their branding, if any.
 
 A token owner can submit a branding request by opening a Pull Request on [https://github.com/multiversx/mx-assets/](https://github.com/multiversx/mx-assets/).
@@ -677,15 +677,15 @@ Here’s a prefilled template for the .json file to get you started:
 
 ``` json
 {
-  "website": "https://www.multiversxoken.com",
+  "website": "https://www.multiversxtoken.com",
   "description": "The MXT token is the utility token of MultiversX Token",
   "social": {
-    "email": "erd-token@elrond.com",
-    "blog": "https://www.elrondtoken.com/ERD-token-blog",
-    "twitter": "https://twitter.com/ERD-token-twitter",
-    "whitepaper": "https://www.elrondtoken.com/ERD-token-whitepaper.pdf",
-    "coinmarketcap": "https://coinmarketcap.com/currencies/ERD-token",
-    "coingecko": "https://www.coingecko.com/en/coins/ERD-token"
+    "email": "mxt-token@multiversxtoken.com",
+    "blog": "https://www.multiversxtoken.com/MXT-token-blog",
+    "twitter": "https://twitter.com/MXT-token-twitter",
+    "whitepaper": "https://www.multiversxtoken.com/MXT-token-whitepaper.pdf",
+    "coinmarketcap": "https://coinmarketcap.com/currencies/MXT-token",
+    "coingecko": "https://www.coingecko.com/en/coins/MXT-token"
   },
   "status": "active"
 }

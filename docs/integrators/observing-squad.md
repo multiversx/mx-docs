@@ -36,7 +36,7 @@ These specs are only a recommendation. Depending on the load over the API or the
 # **Setup via the Mainnet scripts**
 
 :::warning
-`elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `elrond-go-scripts`, explained below.
+`elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `mx-chain-scripts`, explained below.
 :::
 
 # **Setup via mx-chain-scripts**
@@ -89,7 +89,7 @@ The Observing Squad can be updated using the installation scripts.
 ### **General upgrade procedure**
 
 :::important
-`elrond-go-scripts-mainnet` are deprecated as of November 2022. Users of these scripts have to migrate to [elrond-go-scripts](/validators/elrond-go-scripts/config-scripts/).
+`elrond-go-scripts-mainnet` are deprecated as of November 2022. Users of these scripts have to migrate to [mx-chain-scripts](/validators/elrond-go-scripts/config-scripts/).
 The migration guide can he found [here](/validators/nodes-scripts/install-update/#migration-from-old-scripts).
 :::
 
@@ -172,7 +172,7 @@ docker ps
 In order to check the status inside a container, you can check the logs on the machine for the last synchronized block nonce:
 ```
 docker exec -it 'CONTAINER ID' /bin/bash
-cat logs/elrond-go-.......log
+cat logs/mx-chain-.......log
 ```
 
 More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/multiversx/mx-chain-observing-squad.git). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).

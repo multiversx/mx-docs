@@ -19,7 +19,7 @@ This is the API launched at the Genesis.
 
 This API version brought new features such as the [_hyperblock_-related endpoints](/sdk-and-tools/rest-api/blocks#get-hyperblock-by-nonce), useful for monitoring the blockchain. Furthermore, the `GET transaction` endpoint has been adjusted to include extra fields - for example, the so-called _hyperblock coordinates_ (the _nonce_ and the _hash_ of the containing hyperblock).
 
-This API **has never been deployed to the central instance** of the MultiversX Proxy, available at [gateway.multiversx.com](https://gateway.multiversx.com/). However, until November 2020, **this API has been deployed on-premises** to several partners and 3rd party services (such as Exchange systems) - in the shape of [Observing Squads](/integrators/observing-squad), set up via the Mainnet installation scripts - version [e1.0.0](https://github.com/ElrondNetwork/elrond-go-scripts-mainnet/releases/tag/e1.0.0).
+This API **has never been deployed to the central instance** of the MultiversX Proxy, available at [gateway.multiversx.com](https://gateway.multiversx.com/). However, until November 2020, **this API has been deployed on-premises** to several partners and 3rd party services (such as Exchange systems) - in the shape of [Observing Squads](/integrators/observing-squad), set up via the nodes scripts - [mx-chain-scripts](https://github.com/multiversx/mx-chain-scripts).
 
 This version of the API requires Observer Nodes with tag [e1.1.0](https://github.com/multiversx/mx-chain-go/releases/tag/v1.1.6/releases/tag/e1.1.0) or greater.
 
