@@ -29,7 +29,7 @@ Signing providers for dApps:
 For all purposes, **we recommend using [dapp-core](/sdk-and-tools/dapp-core)** instead of integrating the signing providers on your own.
 :::
 
-For more details about integrating a signing provider into your dApp, please follow [this guide](/sdk-and-tools/erdjs/erdjs-signing-providers) or the [erdjs examples repository](https://github.com/ElrondNetwork/elrond-sdk-erdjs-examples).
+For more details about integrating a signing provider into your dApp, please follow [this guide](/sdk-and-tools/erdjs/erdjs-signing-providers) or the [erdjs examples repository](https://github.com/multiversx/mx-sdk-erdjs-examples).
 
 Additional utility packages:
 

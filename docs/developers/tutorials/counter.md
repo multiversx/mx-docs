@@ -17,7 +17,7 @@ In a folder of your choice, run the following command:
 erdpy contract new --template="simple-counter" mycounter
 ```
 
-This creates a new folder named `mycounter` which contains the C source code for a simple Smart Contract - based on the template [simple-counter](https://github.com/ElrondNetwork/sc-examples/tree/master/simple-counter). The file `counter.c` is the implementation of the Smart Contract, which defines the following functions:
+This creates a new folder named `mycounter` which contains the C source code for a simple Smart Contract - based on the template [simple-counter](https://github.com/multiversx/mx-sc-examples/tree/master/simple-counter). The file `counter.c` is the implementation of the Smart Contract, which defines the following functions:
 
 - `init()`: this function is executed when the contract is deployed on the Blockchain
 - `increment()` and `decrement()`: these functions modify the internal state of the Smart Contract

@@ -71,7 +71,7 @@ then, we will have to see a log line like this one:
 Ok, let's get started with the microservice. First, we'll clone the template provided by the MultiversX team.
 
 ```sh
-git clone https://github.com/ElrondNetwork/ping-pong-microservice microservice
+git clone https://github.com/multiversx/mx-ping-pong-sc microservice
 ```
 
 ```sh
@@ -202,7 +202,7 @@ We can now verify that on the dashboard we still have the countdown and the Pong
 
 You can also find the complete code on our public repository for the dApp in the branch `microservice`:
 ```
-https://github.com/ElrondNetwork/dapp-template/blob/microservice/src/pages/Dashboard/Actions/index.tsx
+https://github.com/multiversx/mx-template-dapp/blob/microservice/src/pages/Dashboard/Actions/index.tsx
 ```
 
 

@@ -133,11 +133,11 @@ Our owner wallet is completely set now, we can move on to our backend, the block
 
 Clone the Ping-Pong Sample Smart Contract
 
-Let's start with our smart contract. We'll first clone the sample contract repository from here [https://github.com/ElrondNetwork/ping-pong-smart-contract](https://github.com/ElrondNetwork/ping-pong-smart-contract)
+Let's start with our smart contract. We'll first clone the sample contract repository from here [https://github.com/multiversx/mx-ping-pong-sc](https://github.com/multiversx/mx-ping-pong-sc)
 
 ```sh
 cd ~/ping-pong
-git clone https://github.com/ElrondNetwork/ping-pong-smart-contract contract
+git clone https://github.com/multiversx/mx-ping-pong-sc contract
 cd contract/ping-pong
 ```
 
@@ -228,7 +228,7 @@ All right, let's move on to the application layer.
 We will clone a very simple dApp template that implements the calls to our newly deployed smart contract.
 
 ```sh
-git clone https://github.com/ElrondNetwork/dapp-template dapp
+git clone https://github.com/multiversx/mx-template-dapp dapp
 cd dapp
 ```
 

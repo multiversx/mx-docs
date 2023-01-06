@@ -158,4 +158,4 @@ let tx = interaction
 
 ## Migrate **erdjs-snippets** from v2.x to v3.x (May of 2022)
 
-In order to migrate from `erdjs-snippets v2.x` to `erdjs-snippets v3.x`, please follow the changes depicted [here](https://github.com/ElrondNetwork/elrond-wasm-rs/pull/712).
+In order to migrate from `erdjs-snippets v2.x` to `erdjs-snippets v3.x`, please follow the changes depicted [here](https://github.com/multiversx/mx-sdk-rs/pull/712).

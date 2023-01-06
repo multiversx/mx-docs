@@ -6,11 +6,11 @@ title: Signing Providers for dApps
 This page will guide you through the process of integrating the **erdjs signing providers** in a dApp which isn't based on `dapp-core`.
 
 :::important
-Note that for most purposes, **we recommend using [dapp-core](https://github.com/ElrondNetwork/dapp-core)** instead of integrating the signing providers on your own.
+Note that for most purposes, **we recommend using [dapp-core](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 :::important
-The code samples depicted on this page can also be found on the [**erdjs examples repository**](https://github.com/ElrondNetwork/elrond-sdk-erdjs-examples).
+The code samples depicted on this page can also be found on the [**erdjs examples repository**](https://github.com/multiversx/mx-sdk-erdjs-examples).
 :::
 
 The following signing providers are available:
@@ -26,7 +26,7 @@ The following signing providers are available:
 Make sure you have a look over the [webhooks](/wallet/webhooks), in advance.
 :::
 
-[`@elrondnetwork/erdjs-web-wallet-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-web-wallet-provider) allows the users of a dApp to login and sign transactions using the [Web Wallet](/wallet/web-wallet).
+[`@elrondnetwork/erdjs-web-wallet-provider`](https://github.com/multiversx/mx-sdk-erdjs-web-wallet-provider) allows the users of a dApp to login and sign transactions using the [Web Wallet](/wallet/web-wallet).
 
 In order to create an instance of the provider, do as follows:
 
@@ -36,7 +36,7 @@ import { WalletProvider, WALLET_PROVIDER_DEVNET } from "@elrondnetwork/erdjs-web
 const provider = new WalletProvider(WALLET_PROVIDER_DEVNET);
 ```
 
-The following provider URLs [are defined](https://github.com/ElrondNetwork/elrond-sdk-erdjs-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
+The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-erdjs-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
 
 ### Login and logout
 
@@ -129,7 +129,7 @@ As of July 2022, the web wallet provider does not allow one to sign arbitrary me
 Make sure you have a look over [this page](/wallet/wallet-extension), in advance.
 :::
 
-[`@elrondnetwork/erdjs-extension-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
+[`@elrondnetwork/erdjs-extension-provider`](https://github.com/multiversx/mx-sdk-erdjs-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
 
 In order to aquire the instance (singleton) of the provider, do as follows:
 
@@ -207,7 +207,7 @@ console.log(message.toJSON());
 
 ## The Wallet Connect provider
 
-[`@elrondnetwork/erdjs-wallet-connect-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
+[`@elrondnetwork/erdjs-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-erdjs-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
 
 First, let's see a (simple) way to build a QR dialog using [`qrcode`](https://www.npmjs.com/package/qrcode) (and bootstrap):
 
@@ -308,7 +308,7 @@ As of July 2022, erdjs' Wallet Connect provider does not allow one to sign arbit
 Make sure you have a look over [this page](/wallet/ledger), in advance.
 :::
 
-[`@elrondnetwork/erdjs-hw-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
+[`@elrondnetwork/erdjs-hw-provider`](https://github.com/multiversx/mx-sdk-erdjs-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
 
 In order to create an instance of the provider, do as follows:
 

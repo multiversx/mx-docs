@@ -31,9 +31,8 @@ transactions creation and signing:
 - [erdpy - Python SDK](/sdk-and-tools/erdpy/erdpy)
 - [erdgo - Golang SDK](/sdk-and-tools/erdgo)
 - [erdjava - Java SDK](/sdk-and-tools/erdjava)
-- [elrond-core-js](https://github.com/ElrondNetwork/elrond-core-js) library
-- [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli) wrapper over our [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
-- [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http), which wraps the [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
+- [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli)
+- [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http)
 
 
 ## **General network parameters**

@@ -125,5 +125,5 @@ export class MyTailoredResultsParser extends ResultsParser {
 ```
 
 :::important
-When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/ElrondNetwork/elrond-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
+When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/multiversx/mx-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
 :::

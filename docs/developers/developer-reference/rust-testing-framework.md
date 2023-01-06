@@ -34,7 +34,7 @@ num-traits = "0.2"
 hex = "0.4"
 ```
 
-For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/examples/crowdfunding-esdt
+For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding-esdt
 
 You need a `tests` and a `mandos` folder in your contract. Create a `.rs` file in your `tests` folder.
 

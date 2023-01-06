@@ -38,7 +38,7 @@ Documentation for setting up a Proxy is preliminary and subject to change
 In order to host a Proxy instance on a web server, one has to first clone and build the repository:
 
 ```
-git clone https://github.com/ElrondNetwork/elrond-proxy-go.git
+git clone https://github.com/multiversx/mx-chain-proxy-go.git
 cd elrond-proxy-go/cmd/proxy
 go build .
 ```
