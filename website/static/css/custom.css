@@ -25,6 +25,7 @@ html {
 }
 .docsContainer .post a {
   color: #000;
+  text-decoration: underline;
 }
 .docsContainer .post a:hover,
 .docsContainer .post a:active {
