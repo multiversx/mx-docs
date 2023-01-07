@@ -17,7 +17,7 @@ Many basic Rust types (like `String` and `Vec<T>`) are dynamically allocated on 
 
 The main issue is that basic Rust types are quite eager with dynamic memory allocation: they ask for more memory than they actually need. For ordinary programs, this is great for performance, but for smart contracts, where every instruction costs gas, can be quite impactful, on both cost and even runtime failures.
 
-The alternative is to use **managed types** instead of the usual Rust types. All managed types, like `BigUint`,  `ManagedBuffer` etc. store all their contents inside the VM's memory, as opposed to the contract memory, so they have a great performance advantage. But you don't need to be concerned with "where" the contents are, because managed types automatically keep track of the contents with help from the VM.
+The alternative is to use **managed types** instead of the usual Rust types. All managed types, like `BigUint`, `ManagedBuffer` etc. store all their contents inside the VM's memory, as opposed to the contract memory, so they have a great performance advantage. But you don't need to be concerned with "where" the contents are, because managed types automatically keep track of the contents with help from the VM.
 
 The managed types work by only storing a `handle` within the contract memory, which is a `u32` index, while the actual payload resides in reserved VM memory. So whenever you have to add two `BigUint`s for example, the `+` operation in your code will only pass the three handles: the result, the first operand, and the second operand. This way, there is very little data being passed around, which in turn makes everything cheaper. And since these types only store a handle, their memory allocation is fixed in size, so it can be allocated on the stack instead of having to be allocated on the heap.
 
@@ -61,4 +61,3 @@ Make sure you migrate to the managed types **incrementally** and **thoroughly te
 :::tip
 You can use the `erdpy contract report` command to verify whether your contract still requires dynamic allocation or not.
 :::
-

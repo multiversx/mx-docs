@@ -34,7 +34,6 @@ You have the option of staking through the online Wallet at [https://wallet.mult
 
 ![staking4](/validators/staking4.png)
 
-
 9. You can review the transaction in your history. Based on the current staking capacity of the network, you will get an OK message indicating that your node has become a validator, or a response indicating that the network staking is at capacity and your node has been put in the Queue.
 
 ![staking5](/validators/staking5.png)
@@ -43,7 +42,6 @@ You have the option of staking through the online Wallet at [https://wallet.mult
 11. You can further interact with your node(s) by clicking on the three vertical dots next to the public key, which brings up a menu for performing actions such as Unjail, Unstake and Unbond.
 
 ![staking6](/validators/staking6.png)
-
 
 ## **Staking through erdpy**
 

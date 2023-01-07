@@ -18,7 +18,7 @@ This endpoint allows one to query a Hyperblock by its nonce.
 Path Parameters
 
 | Param | Required                                  | Type     | Description               |
-|-------|-------------------------------------------|----------|---------------------------|
+| ----- | ----------------------------------------- | -------- | ------------------------- |
 | nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
 
 <!--Response-->
@@ -97,7 +97,7 @@ This endpoint allows one to query a Hyperblock by its hash.
 Path Parameters
 
 | Param | Required                                  | Type     | Description     |
-|-------|-------------------------------------------|----------|-----------------|
+| ----- | ----------------------------------------- | -------- | --------------- |
 | hash  | <span class="text-normal">OPTIONAL</span> | `string` | The Block hash. |
 
 <!--Response-->
@@ -168,14 +168,14 @@ This endpoint allows one to query a Shard Block by its nonce (or height).
 Path Parameters
 
 | Param | Required                                  | Type     | Description               |
-|-------|-------------------------------------------|----------|---------------------------|
+| ----- | ----------------------------------------- | -------- | ------------------------- |
 | shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard.                |
 | nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
 
 Query Parameters
 
 | Param   | Required                                  | Type      | Description                                          |
-|---------|-------------------------------------------|-----------|------------------------------------------------------|
+| ------- | ----------------------------------------- | --------- | ---------------------------------------------------- |
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
 <!--Response-->
@@ -244,14 +244,14 @@ This endpoint allows one to query a Shard Block by its hash.
 Path Parameters
 
 | Param | Required                                  | Type     | Description     |
-|-------|-------------------------------------------|----------|-----------------|
+| ----- | ----------------------------------------- | -------- | --------------- |
 | shard | <span class="text-normal">OPTIONAL</span> | `number` | The Shard.      |
 | hash  | <span class="text-danger">REQUIRED</span> | `string` | The Block hash. |
 
 Query Parameters
 
 | Param   | Required                                  | Type      | Description                                          |
-|---------|-------------------------------------------|-----------|------------------------------------------------------|
+| ------- | ----------------------------------------- | --------- | ---------------------------------------------------- |
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
 <!--Response-->

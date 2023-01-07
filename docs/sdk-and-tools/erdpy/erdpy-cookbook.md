@@ -5,10 +5,10 @@ title: Cookbook
 
 ## Overview
 
-This page will guide you through the process of handling common tasks using **erdpy** _as a library_ (as opposed to _as a CLI tool_). 
+This page will guide you through the process of handling common tasks using **erdpy** _as a library_ (as opposed to _as a CLI tool_).
 
 :::note
-All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/ElrondNetwork/sdk-erdpy-examples)**. 
+All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/ElrondNetwork/sdk-erdpy-examples)**.
 :::
 
 We are going to make use of the packages [erdpy_core](https://github.com/ElrondNetwork/sdk-erdpy-core), [erdpy_wallet](https://github.com/ElrondNetwork/sdk-erdpy-wallet) and [erdpy_network](https://github.com/ElrondNetwork/sdk-erdpy-network-providers) (available as of December 2022), which were previously nicknamed _erdpy-eggs_. These packages should be installed **directly from GitHub** whenever possible (although they are published on [**PyPI**](https://pypi.org/user/elrond/), as well). For example:
@@ -664,4 +664,5 @@ tx_on_network = provider.get_transaction("09e3b68d39f3759913239b927c7feb9ac871c8
 print("Status:", tx_on_network.status)
 print("Is completed:", tx_on_network.is_completed)
 ```
+
 <!-- END_NOTEBOOK -->

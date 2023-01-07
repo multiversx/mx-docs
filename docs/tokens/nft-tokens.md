@@ -6,11 +6,13 @@ title: NFT tokens
 ## **Introduction**
 
 ### NFT and SFT
+
 The MultiversX protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/tokens/esdt-tokens).
 This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, as well as an assignable URI.
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/tokens/nft-tokens#nftsft-fields).
 
 **The flow of issuing and transferring non-fungible or semi-fungible tokens is:**
+
 - register/issue the token
 - set roles to the address that will create the NFT/SFTs
 - create the NFT/SFT
@@ -42,7 +44,7 @@ Token owners can create a PR to the https://github.com/multiversx/mx-assets with
 
 Here’s a prefilled template for the .json file to get you started:
 
-``` json
+```json
 {
   "website": "https://www.multiversxtoken.com",
   "description": "MultiversX Token is a collection of 10.000 unique and randomly generated tokens.",
@@ -54,7 +56,6 @@ Here’s a prefilled template for the .json file to get you started:
   "status": "active"
 }
 ```
-
 
 ## **Issuance of Non-Fungible Tokens**
 
@@ -72,9 +73,11 @@ IssuanceTransaction {
           "@" + <token ticker in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Optionally, the properties can be set when issuing a token. Example:
+
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
@@ -94,7 +97,8 @@ IssuanceTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
@@ -115,9 +119,11 @@ IssuanceTransaction {
           "@" + <token ticker in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Optionally, the properties can be set when issuing a token. Example:
+
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
@@ -137,7 +143,8 @@ IssuanceTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
@@ -159,9 +166,11 @@ IssuanceTransaction {
           "@" + <number of decimals in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Optionally, the properties can be set when issuing a token. Example:
+
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
@@ -182,15 +191,15 @@ IssuanceTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
 
-
 ### **Converting an SFT into Meta-ESDT**
 
-An already existing *semi-fungible token* can be converted into a Meta-ESDT token if the owner sends the following transaction:
+An already existing _semi-fungible token_ can be converted into a Meta-ESDT token if the owner sends the following transaction:
 
 ```
 ConvertSftToMetaESDTTransaction {
@@ -203,7 +212,8 @@ ConvertSftToMetaESDTTransaction {
           "@" + <number of decimals in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ## **Parameters format**
 
@@ -211,7 +221,6 @@ Token Name:
 
 - length between 3 and 20 characters
 - alphanumeric characters only
-
 
 Token Ticker:
 
@@ -233,40 +242,42 @@ IssuanceTransaction {
           "@414c43" +
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/tokens/esdt-tokens#token-management).
 
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [REST API - Get NFT data](/tokens/nft-tokens#get-nft-data-for-an-address) ).
 
-## **Roles** ##
+## **Roles**
 
 In order to be able to perform actions over a token, one needs to have roles assigned.
 The existing roles are:
 
 For NFT:
-* ESDTRoleNFTCreate : this role allows one to create a new NFT
-* ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
-* ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
-* ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
-* ESDTTransferRole : this role enables transfer only to specified addresses. The owner of the NFT and the address with the ESDTTransferRole should be located on the same shard. The addresses with the transfer role can transfer anywhere.
+
+- ESDTRoleNFTCreate : this role allows one to create a new NFT
+- ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
+- ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
+- ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
+- ESDTTransferRole : this role enables transfer only to specified addresses. The owner of the NFT and the address with the ESDTTransferRole should be located on the same shard. The addresses with the transfer role can transfer anywhere.
 
 For SFT:
-* ESDTRoleNFTCreate : this role allows one to create a new SFT
-* ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
-* ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
-* ESDTTransferRole : this role enables transfer only to specified addresses. The owner of the SFT and the address with the ESDTTransferRole should be located on the same shard. The addresses with the transfer role can transfer anywhere.
 
+- ESDTRoleNFTCreate : this role allows one to create a new SFT
+- ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
+- ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
+- ESDTTransferRole : this role enables transfer only to specified addresses. The owner of the SFT and the address with the ESDTTransferRole should be located on the same shard. The addresses with the transfer role can transfer anywhere.
 
 To see how roles can be assigned, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
-
-## **Assigning roles** ##
+## **Assigning roles**
 
 Roles can be assigned by sending a transaction to the Metachain from the ESDT manager.
 
 Within a transaction of this kind, any number of roles can be assigned (minimum 1).
+
 ```
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
@@ -281,7 +292,8 @@ RolesAssigningTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 For example, `ESDTRoleNFTCreate` = `45534454526f6c654e4654437265617465`
 
@@ -292,23 +304,29 @@ Unset transactions are very similar. You can find an example [here](/tokens/esdt
 Below you can find the fields involved when creating an NFT.
 
 **NFT Name**
+
 - The name of the NFT or SFT
 
 **Quantity**
+
 - The quantity of the token. If NFT, it must be `1`
 
 **Royalties**
+
 - Allows the creator to receive royalties for any transaction involving their NFT
 - Base format is a numeric value between 0 an 10000 (0 meaning 0% and 10000 meaning 100%)
 
 **Hash**
+
 - Arbitrary field that should contain the hash of the NFT metadata
 - Optional filed, should be left `null` when building the transaction to create the NFT
 
 **Attributes**
+
 - Represents additional information about the NFT or SFT, like picture traits or tags for your NFT/collection
 - The field should follow a `metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3` format
 - Below you can find a sample for the extra metadata format that should be stored on IPFS:
+
 ```
 {
   "description": "This is a sample description",
@@ -334,6 +352,7 @@ Below you can find the fields involved when creating an NFT.
 ```
 
 **URI(s)**
+
 - <u>Mandatory</u> field that represents the URL to a [supported](#supported-media-types) media file ending with the file extension as described in the [example](#example) below
 - Field should contain the `Uniform Resource Identifier`
 
@@ -344,6 +363,7 @@ Please note that each argument must be encoded in hexadecimal format with an eve
 :::
 
 ### **Supported Media Types**
+
 Below you can find a table with the supported media types for NFTs available on MultiversX network.
 |**Media Extension**|**Media Type**|
 |-------------------|--------------|
@@ -365,19 +385,21 @@ Below you can find a table with the supported media types for NFTs available on 
 |.webm|video/webm|
 
 ### **Example**
+
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
 | Property | Plain value | Encoded value |
 |----------|-------------|---------------|
 |**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 |
 |**Quantity**| 1 | 01|
-|**Royalties**| 7500 *=75%* | 1d4c |
+|**Royalties**| 7500 _=75%_ | 1d4c |
 |**Hash** | 00 | 00 |
-|**Attributes**| metadata:*ipfsCID/song.json*;tags:song,beautiful,music |  6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963 |
-|**URI**| *URL_to_decentralized_storage/song.mp3* | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
+|**Attributes**| metadata:_ipfsCID/song.json_;tags:song,beautiful,music | 6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963 |
+|**URI**| _URL_to_decentralized_storage/song.mp3_ | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
 
 In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
 
 ## **Creation of an NFT**
+
 A single address can own the role of creating an NFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
 
 An NFT can be created on top of an existing ESDT by sending a transaction to self that contains the function call that triggers the creation.
@@ -401,11 +423,13 @@ NFTCreationTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Additional gas refers to:
-- Transaction payload cost: Data field length * 1500 (GasPerDataByte = 1500)
-- Storage cost: Size of NFT data * 50000 (StorePerByte = 50000)
+
+- Transaction payload cost: Data field length \* 1500 (GasPerDataByte = 1500)
+- Storage cost: Size of NFT data \* 50000 (StorePerByte = 50000)
 
 To see more about the required fields, please refer to [this](/tokens/nft-tokens#nftsft-fields) section.
 
@@ -428,6 +452,7 @@ This role can be transferred only if the `canTransferNFTCreateRole` property of 
 :::
 
 The role of creating an NFT can be transferred by a Transaction like this:
+
 ```
 TransferCreationRoleTransaction {
     Sender: <address of the current creation role owner>
@@ -440,7 +465,8 @@ TransferCreationRoleTransaction {
           "@" + <the address to transfer the role to in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ### **Stop NFT creation**
 
@@ -457,7 +483,8 @@ StopNFTCreationTransaction {
           "@" + <token identifier in hexadecimal encoding> +
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ### **Change NFT Attributes**
 
@@ -480,10 +507,10 @@ ESDTNFTUpdateAttributesTransaction {
           "@" + <Attributes in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
-
 
 ### **Add URIs to NFT**
 
@@ -504,7 +531,8 @@ ESDTNFTAddURITransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
@@ -524,7 +552,8 @@ AddQuantityTransaction {
           "@" + <quantity to add in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 If successful, the balance of the address for the given SFT will be increased with the number specified in the argument.
 
@@ -544,7 +573,8 @@ BurnQuantityTransaction {
           "@" + <quantity to burn in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 If successful, the quantity from the argument will be decreased from the balance of the address for that given token.
 
@@ -564,7 +594,8 @@ FreezeTransaction {
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 The reverse operation, unfreezing, will allow further transfers to and from the Account:
 
@@ -580,7 +611,8 @@ UnfreezeTransaction {
           "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ### **Wiping a single NFT**
 
@@ -598,17 +630,17 @@ WipeTransaction {
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ### **Transferring token management rights**
 
 The manager of an ESDT token can transfer the ownership if the ESDT was created as upgradable. Check the [ESDT - Upgrading (changing properties)](/tokens/esdt-tokens#upgrading-changing-properties) section for more details.
 
-
 ### **Upgrading (changing properties)**
+
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable.
 Check the [ESDT - Transferring token management rights](/tokens/esdt-tokens#transferring-token-management-rightss) section for more details.
-
 
 ## **Transfers**
 
@@ -627,7 +659,8 @@ TransferTransaction {
           "@" + <destination address in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::tip
 Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
@@ -658,7 +691,8 @@ TransferTransaction {
           <...>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ## **Multiple tokens transfer**
 
@@ -683,7 +717,8 @@ Let's see a complete flow of creating and transferring a Semi-Fungible Token.
           "@414c43" +                 # ALC
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 **Step 2: Fetch the token identifier**
 
@@ -693,6 +728,7 @@ It will look similar to `@ok@414c432d317132773365`. The `414c432d317132773365` r
 **Step 3: Set roles**
 
 Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You can set these roles to your very own address.
+
 ```
 {
     Sender: <your address>
@@ -707,7 +743,8 @@ Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 **Step 4: Create NFT**
 
@@ -730,7 +767,8 @@ Now, the NFT creation transaction for the example case defined [here](/tokens/nf
           "@" + <additional optional URI in hexadecimal encoding> +
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::tip
 Note that the nonce is very important when creating an NFT. You must save the nonce after NFT creation because you will need it for further actions.
@@ -755,24 +793,28 @@ It can be fetched by viewing all the tokens for the address via API.
           "@" + <destination address in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ## **REST API**
 
 There are a number of API endpoints that one can use to interact with ESDT NFT data. These are:
 
 ### <span class="badge badge-primary">GET</span> **Get NFT data for an address**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
 https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
+https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 ```
 
 | Param           | Required                                  | Type      | Description                            |
-|-----------------|-------------------------------------------|-----------|----------------------------------------|
+| --------------- | ----------------------------------------- | --------- | -------------------------------------- |
 | bech32Address   | <span class="text-danger">REQUIRED</span> | `string`  | The Address to query in bech32 format. |
 | tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string`  | The token identifier.                  |
 | nonce           | <span class="text-danger">REQUIRED</span> | `numeric` | The nonce after the NFT creation.      |
@@ -792,29 +834,31 @@ https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/non
       "properties": "",
       "royalties": "9000",
       "tokenIdentifier": "4W97C-32b5ce",
-      "uris": [
-        "bmZ0IHVyaQ=="
-      ]
+      "uris": ["bmZ0IHVyaQ=="]
     }
   },
   "error": "",
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get NFTs/SFTs registered by an address**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 Returns the identifiers of the tokens that have been registered by the provided address.
 
 ```
 https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
+https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 ```
 
 | Param         | Required                                  | Type     | Description                            |
-|---------------|-------------------------------------------|----------|----------------------------------------|
+| ------------- | ----------------------------------------- | -------- | -------------------------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 
 <!--Response-->
@@ -822,28 +866,30 @@ https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 ```json
 {
   "data": {
-    "tokens": [
-      "ABC-36tg72"
-    ]
+    "tokens": ["ABC-36tg72"]
   },
   "error": "",
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get tokens where an address has a given role**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 Returns the identifiers of the tokens where the given address has the given role.
 
 ```
 https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
+https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 ```
 
 | Param         | Required                                  | Type     | Description                            |
-|---------------|-------------------------------------------|----------|----------------------------------------|
+| ------------- | ----------------------------------------- | -------- | -------------------------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 | role          | <span class="text-danger">REQUIRED</span> | `string` | The role to query for.                 |
 
@@ -854,16 +900,14 @@ The role can be one of the roles specified in the documentation (for example: ES
 ```json
 {
   "data": {
-    "tokens": [
-      "ABC-36tg72"
-    ]
+    "tokens": ["ABC-36tg72"]
   },
   "error": "",
   "code": "successful"
 }
 ```
-<!--END_DOCUSAURUS_CODE_TABS-->
 
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Parse non/semi fungible tokens transfer logs**
 
@@ -876,10 +920,11 @@ In order to get the logs and events generated by the transfer, one should know t
 <!--Request-->
 
 | Param  | Required                                  | Type     | Description                 |
-|--------|-------------------------------------------|----------|-----------------------------|
+| ------ | ----------------------------------------- | -------- | --------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash of the transaction |
 
 ```
+https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 
@@ -912,6 +957,7 @@ https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 
 The event with the identifier `ESDTNFTTransfer` will have the following topics:
+
 - 1st topic: token identifier (decoding: base64 to string)
 - 2nd topic: token nonce (decoding: base64 to hex string + hex string to big number / integer)
 - 3rd topic: the amount to be sent (decoding: base64 to hex string + hex string to big number)

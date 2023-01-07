@@ -5,7 +5,7 @@ title: Deep History Squad
 
 ## Overview
 
-A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/ElrondNetwork/deep-history)**. 
+A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/ElrondNetwork/deep-history)**.
 
 A deep-history setup is able to resolve historical account (state) queries, that is, to answer questions such as:
 
@@ -47,7 +47,7 @@ As of October 2022, a public repository with non-pruned databases for both _main
 
 ### Reconstructing non-pruned database
 
-An alternative to downloading a non-pruned history is to reconstruct it locally (on your own infrastructure). 
+An alternative to downloading a non-pruned history is to reconstruct it locally (on your own infrastructure).
 
 Under the hood, the reconstruction process relies on the **[import-db](https://docs.multiversx.com/validators/import-db/)** feature, which allows us to reprocess previously processed blocks - and, while doing so, for our purposes, we'll also retain the whole, non-pruned history. For our purposes, the `import-db` procedure requires a **target database** (placed in the folder `node-workdir/db`) and a **source database** (usually placed in the folder `node-workdir/import-db/db`).
 
@@ -126,7 +126,7 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
 ```
 
 :::note
-The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives. 
+The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives.
 :::
 
 Once a container finishes reconstruction (for a shard), it will shut down. Once all containers of the compose _project_ `deep-history-reconstruction` have stopped, the reconstruction is ready, and you can proceed with starting the squad (next section).

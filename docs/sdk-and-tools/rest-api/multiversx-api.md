@@ -5,8 +5,8 @@ title: MultiversX API
 
 ## About MultiversX API
 
-`api.multiversx.com` is the public instance of MultiversX API and is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch 
-historical queries support, tokens media support, delegation & staking data, and many others. 
+`api.multiversx.com` is the public instance of MultiversX API and is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch
+historical queries support, tokens media support, delegation & staking data, and many others.
 
 ## Public URLs
 
@@ -28,19 +28,20 @@ Checkout information about [pricing](https://blastapi.io/pricing) and API [limit
 
 More details on how to get your private endpoint can be found [here](https://docs.blastapi.io/blast-documentation/tutorials-and-guides/using-blast-to-get-a-blockchain-endpoint-1).
 
-
 ## Dependencies
 
-### Core dependencies 
+### Core dependencies
+
 For its basic functionality (without including caching or storage improvements), api.multiversx.com depends on the following external systems:
 
 - `gateway`: also referred as Proxy, provides access to node information, such as network settings, account balance, sending transactions, etc
-        docs: [Proxy](/sdk-and-tools/proxy).
+  docs: [Proxy](/sdk-and-tools/proxy).
 - `index`: a database that indexes data that can be queries, such as transactions, blocks, nfts, etc.
-        docs: [Elasticsearch](/sdk-and-tools/elastic-search).
+  docs: [Elasticsearch](/sdk-and-tools/elastic-search).
 - `delegation`: a microservice used to fetch providers list from the delegation API. Not currently open for public access.
 
 ### Other dependencies
+
 It uses on the following internal systems:
 
 - redis: used to cache various data, for performance purposes
@@ -77,8 +78,8 @@ An API instance can be started with the following behavior:
 
 Public MultiversX APIs have a rate limit mechanism that brings the following limitations:
 
-- api.multiversx.com (*mainnet*): 2 requests / IP / second
-- devnet-api.multiversx.com (*devnet*): 5 requests / IP / second
+- api.multiversx.com (_mainnet_): 2 requests / IP / second
+- devnet-api.multiversx.com (_devnet_): 5 requests / IP / second
 
 ## Rest API documentation
 

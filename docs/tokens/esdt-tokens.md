@@ -4,7 +4,8 @@ title: ESDT tokens
 ---
 
 ## **Introduction**
-**ESDT** stands for *eStandard Digital Token*.
+
+**ESDT** stands for _eStandard Digital Token_.
 
 Custom tokens at native speed and scalability, without ERC20
 
@@ -33,11 +34,13 @@ IssuanceTransaction {
           "@" + <number of decimals in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
-The issuance cost is set to 0.05 EGLD. 
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+The issuance cost is set to 0.05 EGLD.
 
 Optionally, the properties can be set when issuing a token. Example:
+
 ```
 IssuanceTransaction {
     Sender: <account address of the token manager>
@@ -59,7 +62,8 @@ IssuanceTransaction {
           "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters (3 bytes - 6 characters hex encoded). For example, a token identifier could look like _ALC-6258d2_.
@@ -75,22 +79,24 @@ Token Name:
 - length between 3 and 20 characters
 - alphanumeric characters only
 
-
 Token Ticker:
 
 - length between 3 and 10 characters
 - alphanumeric UPPERCASE only
 
 Number of decimals:
+
 - should be a numerical value between _0_ and _18_
 - hexadecimal encoded
 
 Numerical values, such as initial supply or number of decimals, should be the hexadecimal encoding of the decimal numbers representing them. Additionally, they should have an even number of characters. Examples:
-- **10** _decimal_      => **0a** _hex encoded_
-- **48** _decimal_      => **30** _hex encoded_
+
+- **10** _decimal_ => **0a** _hex encoded_
+- **48** _decimal_ => **30** _hex encoded_
 - **1000000** _decimal_ => **0f4240** _hex encoded_
 
 ### **Number of decimals usage**
+
 Front-end applications will use the number of decimals in order to display balances.
 Therefore, you must adapt the supply according to the number of decimals parameter.
 
@@ -109,6 +115,7 @@ This is only relevant when performing operations via manual transactions over ES
 For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" with the ticker "ALC". Also, the number of decimals is 6.
 
 As stated above, if the user wants 4091 tokens with 6 decimals, then the initial supply has to be $4091 * 10^6$ tokens so a total of `4091000000`.
+
 ```
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
@@ -119,15 +126,16 @@ IssuanceTransaction {
           "@416c696365546f6b656e73" +  // "AliceTokens" hex encoded
           "@414c43" +                  // "ALC" hex encoded
           "@f3d7b4c0" +                // 4091000000 hex encoded
-          "@06"                        // 6 hex encoded  
+          "@06"                        // 6 hex encoded
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**, and is granted a balance of `4091000000` AliceTokens with `6` decimals (resulting in `4091` tokens). She can increase the total supply of tokens at a later time if needed. For more operations available to ESDT token managers, see [Token management](/tokens/esdt-tokens#token-management).
 
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
- In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
+In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also below).
 
 ## **Transfers**
@@ -145,10 +153,11 @@ TransferTransaction {
           "@" + <value to transfer in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::important
-The value of the transaction should be set to 0 EGLD, otherwise the transaction will fail. The (token) amount to be transferred is encoded into the data field. 
+The value of the transaction should be set to 0 EGLD, otherwise the transaction will fail. The (token) amount to be transferred is encoded into the data field.
 :::
 
 While this transaction may superficially resemble a smart contract call, it is not. The differences are the following:
@@ -170,13 +179,14 @@ TransferTransaction {
           "@0c"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Using the transaction in the example above, Alice will transfer 12 AliceTokens to Bob.
 
 ### Transfers gas limit
 
-When computing the gas limit required for an ESDT transfer, our recommendation is to use 500_000 since it includes a buffer, 
+When computing the gas limit required for an ESDT transfer, our recommendation is to use 500_000 since it includes a buffer,
 and the remaining gas will be refunded to the sender's account.
 
 However, if one wants to calculate the exact amount of gas needed, here's the formula:
@@ -186,11 +196,14 @@ ESDT_TRANSFER_GAS_LIMIT = MIN_GAS_LIMIT + data_length * GAS_PER_DATA_BYTE + ESDT
 ```
 
 Where the constants represent:
+
 - `MIN_GAS_LIMIT` - the minimum gas limit of a transaction. Each transaction will have at least this cost. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
 - `GAS_PER_DATA_BYTE` - the amount of gas to be used for each character of the data field. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
 - `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.multiversx.com/network/gas-configs).
+- `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.multiversx.com/network/gas-configs).
 
 The current values of these constants are:
+
 ```
 MIN_GAS_LIMIT = 50,000
 GAS_PER_DATA_BYTE = 1,500
@@ -202,8 +215,9 @@ Therefore, knowing these values, the gas units needed for pre-calculating the ES
 **Example**
 
 Let's take an example. If one wants to transfer `20,000 MEX`, the data field of the transaction would look like:
+
 - `ESDTTransfer@4d45582d343535633537@043c33c1937564800000`
-Its length is 54 characters.
+  Its length is 54 characters.
 
 Following the formula, we'll get:
 
@@ -215,7 +229,7 @@ ESDT_TRANSFER_GAS_LIMIT = MIN_GAS_LIMIT + data_length * GAS_PER_DATA_BYTE + ESDT
 
 ### Transfers fee
 
-When computing the fee, it isn't enough to multiply the obtained gas limit with the gas price, since there is a reduction 
+When computing the fee, it isn't enough to multiply the obtained gas limit with the gas price, since there is a reduction
 of fee in case of a Smart Contract call or a Built-In function call (which is the current case).
 
 Therefore, the formula for computing the fee is:
@@ -240,6 +254,7 @@ GAS_PRICE_MODIFIER = 0.01
 **Example**
 
 Let's take an example. If one wants to transfer `20,000 MEX`, the data field of the transaction would look like:
+
 ```
 TransferTransaction {
     ...
@@ -283,7 +298,8 @@ TransferWithCallTransaction {
           <...>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
@@ -292,8 +308,8 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple
 fungible, semi-fungible or non-fungible tokens via a single transaction.
 
-
 A multi-token transfer transaction has the following form:
+
 ```
 MultiTokensTransferTransaction {
     Sender: <account address of the sender>
@@ -312,7 +328,8 @@ MultiTokensTransferTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::tip
 Each token requires the token identifier, the nonce and the quantity to transfer.
@@ -339,12 +356,14 @@ MultiTokensTransferTransaction {
           "@03"   // 3 -> the quantity to transfer
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
 
 ## **Transfers done programmatically**
-The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several ways in which you can transfer ESDT tokens. For example, in order to transfer _amount_ of _esdt\_token\_name_ to _address_, one would do the following:
+
+The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several ways in which you can transfer ESDT tokens. For example, in order to transfer _amount_ of _esdt_token_name_ to _address_, one would do the following:
 
 ```
 self.send().direct_esdt(&address, &esdt_token_name, token_nonce: u64, &amount);
@@ -391,13 +410,14 @@ MintTransaction {
           "@" + <supply to mint in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the manager receives that amount of tokens into their balance.
 
 This operation requires that the option `canMint` is set to `true` for the token.
 
-Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:  
+Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:
 
 ```
 LocalMintTransaction {
@@ -410,7 +430,8 @@ LocalMintTransaction {
           "@" + <supply to mint in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ### **Burning**
 
@@ -431,13 +452,14 @@ BurnTransaction {
           "@" + <supply to burn in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
 This operation requires that the option `canBurn` is set to `true` for the token.
 
-Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:  
+Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:
 
 ```
 LocalBurnTransaction {
@@ -450,10 +472,11 @@ LocalBurnTransaction {
           "@" + <supply to burn in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::note
-Tokens issued after [release v1.3.42](https://elrond.com/releases/release-elrond-go---v1342) (*October 2022*), are burn-able by each holder, so setting the role for these tokens becomes redundant.
+Tokens issued after [release v1.3.42](https://multiversx.com/releases/release-elrond-go---v1342) (_October 2022_), are burn-able by each holder, so setting the role for these tokens becomes redundant.
 However, for older tokens, a transaction that will set the special role `ESDTRoleLocalBurn` is still necessary. Docs [here](#setting-and-unsetting-special-roles).
 :::
 
@@ -471,7 +494,8 @@ PauseTransaction {
           "@" + <token identifier in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 The reverse operation, unpausing, will allow transactions of the token again:
 
@@ -485,7 +509,8 @@ UnpauseTransaction {
           "@" + <token identifier in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 These two operations require that the option `canPause` is set to `true`.
 
@@ -504,7 +529,8 @@ FreezeTransaction {
           "@" + <account address to freeze in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 The reverse operation, unfreezing, will allow further transfers to and from the Account:
 
@@ -519,7 +545,8 @@ UnfreezeTransaction {
           "@" + <account address to unfreeze in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 These two operations require that the option `canFreeze` is set to `true`.
 
@@ -538,7 +565,8 @@ WipeTransaction {
           "@" + <account address to wipe in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ### **Setting and unsetting special roles**
 
@@ -554,6 +582,7 @@ For NFTs, there are different roles that can be set. You can find them [here](/t
 #### **Set special role**
 
 One or more roles for an address can be set by the owner by performing a transaction like:
+
 ```
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
@@ -568,11 +597,13 @@ RolesAssigningTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 #### **Unset special role**
 
 One or more roles for an address can be unset by the owner by performing a transaction like:
+
 ```
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
@@ -587,7 +618,8 @@ RolesAssigningTransaction {
           ...
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ### **Transferring token management rights**
 
@@ -604,7 +636,8 @@ TransferOwnershipTransaction {
           "@" + <account address of the new token manager in hexadecimal encoding>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 After this transaction is processed by the Metachain, any subsequent management operations will only be permitted to the new Account, as specified by the Data field of the transaction.
 
@@ -634,7 +667,8 @@ UpgradingTransaction {
           <...>
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token manager, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
 
@@ -652,7 +686,8 @@ UpgradingTransaction {
           "@74727565"               # true
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 ## **Branding**
 
@@ -675,7 +710,7 @@ Project owners can create a PR against [https://github.com/multiversx/mx-assets/
 
 Here’s a prefilled template for the .json file to get you started:
 
-``` json
+```json
 {
   "website": "https://www.multiversxtoken.com",
   "description": "The MXT token is the utility token of MultiversX Token",
@@ -698,9 +733,11 @@ The ledgerSignature will be generated by MultiversX. It will give your token “
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
 
 ### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 Returns an array of ESDT Tokens that the specified address has interacted with (issued, sent or received).
 
 ```
@@ -708,7 +745,7 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt
 ```
 
 | Param         | Required                                  | Type     | Description                            |
-|---------------|-------------------------------------------|----------|----------------------------------------|
+| ------------- | ----------------------------------------- | -------- | -------------------------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 
 <!--Response-->
@@ -716,21 +753,21 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt
 ```json
 {
   "data": {
-    "tokens": [
-      "ABC-0d0060",
-      "DEF-d00600"
-    ]
+    "tokens": ["ABC-0d0060", "DEF-d00600"]
   },
   "error": "",
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get balance for an address and an ESDT token**
+
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 Returns the balance of an address for specific ESDT Tokens.
 
 ```
@@ -738,7 +775,7 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 
 | Param           | Required                                  | Type     | Description                            |
-|-----------------|-------------------------------------------|----------|----------------------------------------|
+| --------------- | ----------------------------------------- | -------- | -------------------------------------- |
 | bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 | tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier.                  |
 
@@ -757,6 +794,7 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Get all roles for tokens of an address**
@@ -778,13 +816,8 @@ https://gateway.multiversx.com/address/*bech32Address*/esdts/roles
 {
   "data": {
     "roles": {
-      "TCK-0cv5hj": [
-        "ESDTRoleNFTAddQuantity",
-        "ESDTRoleNFTBurn"
-      ],
-      "TCK-ft90kn": [
-        "ESDTRoleLocalBurn"
-       ] 
+      "TCK-0cv5hj": ["ESDTRoleNFTAddQuantity", "ESDTRoleNFTBurn"],
+      "TCK-ft90kn": ["ESDTRoleLocalBurn"]
     }
   },
   "error": "",
@@ -796,7 +829,7 @@ https://gateway.multiversx.com/address/*bech32Address*/esdts/roles
 
 ### <span class="badge badge-primary">GET</span> **Get token's supply, burnt and minted values**
 
-This involves a basic request that contains the token name. It will gather data from all shards and compute the 
+This involves a basic request that contains the token name. It will gather data from all shards and compute the
 initial minted value, burnt value, minted value and total supply value.
 
 <!--DOCUSAURUS_CODE_TABS-->
@@ -804,7 +837,7 @@ initial minted value, burnt value, minted value and total supply value.
 <!--Request-->
 
 | Param           | Required                                  | Type     | Description                                    |
-|-----------------|-------------------------------------------|----------|------------------------------------------------|
+| --------------- | ----------------------------------------- | -------- | ---------------------------------------------- |
 | tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier (example: `WEGLD-bd4d79)` |
 
 ```
@@ -815,14 +848,14 @@ https://gateway.multiversx.com/network/esdt/supply/*token name*
 
 ```json
 {
- "data": {
-  "supply": "95000000000000000000",
-  "minted": "5000000000000000000",
-  "burned": "10000000000000000000",
-  "initialMinted": "100000000000000000000"
- },
- "error": "",
- "code": "successful"
+  "data": {
+    "supply": "95000000000000000000",
+    "minted": "5000000000000000000",
+    "burned": "10000000000000000000",
+    "initialMinted": "100000000000000000000"
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
@@ -856,6 +889,7 @@ https://gateway.multiversx.com/network/esdts
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ---
@@ -883,6 +917,7 @@ https://gateway.multiversx.com/network/esdt/fungible-tokens
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ---
@@ -910,6 +945,7 @@ https://gateway.multiversx.com/network/esdt/semi-fungible-tokens
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ---
@@ -937,6 +973,7 @@ https://gateway.multiversx.com/network/esdt/non-fungible-tokens
   "code": "successful"
 }
 ```
+
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### <span class="badge badge-primary">GET</span> **Parse fungible tokens transfer logs**
@@ -950,7 +987,7 @@ In order to get the logs and events generated by the transfer, one should know t
 <!--Request-->
 
 | Param  | Required                                  | Type     | Description                 |
-|--------|-------------------------------------------|----------|-----------------------------|
+| ------ | ----------------------------------------- | -------- | --------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash of the transaction |
 
 ```
@@ -986,6 +1023,7 @@ https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 
 The event with the identifier `ESDTTransfer` will have the following topics:
+
 - 1st topic: token identifier (decoding: base64 to string)
 - 2nd topic: token nonce (used for NFTs only, not applicable here)
 - 3rd topic: the amount to be sent (decoding: base64 to hex string + hex string to big number)
@@ -1010,11 +1048,12 @@ https://gateway.multiversx.com/vm-values/query
 
 ```json
 {
-	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-	"funcName": "getTokenProperties",
-	"args": ["474c442d306430303630"]
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+  "funcName": "getTokenProperties",
+  "args": ["474c442d306430303630"]
 }
 ```
+
 The argument must be the token identifier, hexadecimal encoded. In the example, `474c442d306430303630` = `GLD-0d0060`.
 
 <!--Response-->
@@ -1071,6 +1110,7 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
 ```
 
 The `returnData` member will contain an array of the properties in a fixed order (base64 encoded). For the example response, the meaning is:
+
 ```
 "returnData": [
   "QWxpY2VUb2tlbnM=",                             | token name                   | AliceTokens
@@ -1089,8 +1129,8 @@ The `returnData` member will contain an array of the properties in a fixed order
   "Q2FuV2lwZS10cnVl",                             | can wipe                     | CanWipe-true
   "Q2FuQWRkU3BlY2lhbFJvbGVzLXRydWU=",             | can add special roles        | CanAddSpecialRoles-true
   "Q2FuVHJhbnNmZXJORlRDcmVhdGVSb2xlLWZhbHNl",     | can transfer nft create role | CanTransferNFTCreateRole-false
-  "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",             | nft creation stopped         | NFTCreateStopped-false  
-  "TnVtV2lwZWQtMA=="                              | number of wiped quantity     | NumWiped-0                              
+  "TkZUQ3JlYXRlU3RvcHBlZC1mYWxzZQ==",             | nft creation stopped         | NFTCreateStopped-false
+  "TnVtV2lwZWQtMA=="                              | number of wiped quantity     | NumWiped-0
 ],
 ```
 
@@ -1105,15 +1145,16 @@ For example:
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!--Request-->
+
 ```
 https://gateway.multiversx.com/vm-values/query
 ```
 
 ```json
 {
-	"scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-	"funcName": "getSpecialRoles",
-	"args": ["474c442d306430303630"]
+  "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+  "funcName": "getSpecialRoles",
+  "args": ["474c442d306430303630"]
 }
 ```
 
@@ -1135,7 +1176,8 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
 ```
 
 In this example, converting the 2 messages from base64 to string would result in:
-* `erd136rl878j09mev24gzpy70k2wfm3xmvj5ucwxffs9v5t5sk3kshtszz25z9:ESDTRoleLocalBurn`
-* `erd1kzzv2uw97q5k9mt458qk3q9u3cwhwqykvyk598q2f6wwx7gvrd9s8kszxk:ESDTRoleNFTAddQuantity,ESDTRoleNFTBurn`
+
+- `erd136rl878j09mev24gzpy70k2wfm3xmvj5ucwxffs9v5t5sk3kshtszz25z9:ESDTRoleLocalBurn`
+- `erd1kzzv2uw97q5k9mt458qk3q9u3cwhwqykvyk598q2f6wwx7gvrd9s8kszxk:ESDTRoleNFTAddQuantity,ESDTRoleNFTBurn`
 
 <!--END_DOCUSAURUS_CODE_TABS-->

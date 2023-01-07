@@ -15,10 +15,10 @@ The code samples depicted on this page can also be found on the [**erdjs example
 
 The following signing providers are available:
 
- - Web Wallet Provider
- - Extension Provider (Maiar DeFi Wallet)
- - Wallet Connect provider
- - Hardware Wallet (Ledger) Provider
+- Web Wallet Provider
+- Extension Provider (Maiar DeFi Wallet)
+- Wallet Connect provider
+- Hardware Wallet (Ledger) Provider
 
 ## The Web Wallet Provider
 
@@ -88,7 +88,7 @@ const firstTransaction = new Transaction({ ... });
 const secondTransaction = new Transaction({ ... });
 
 await provider.signTransactions(
-    [firstTransaction, secondTransaction], 
+    [firstTransaction, secondTransaction],
     { callbackUrl: callbackUrl }
 );
 ```
@@ -270,7 +270,6 @@ openModal(connectorUri);
 
 Once the user confirms the login, the `onClientLogin()` callback (declared above) is executed.
 
-
 In order to log out, do as follows:
 
 ```
@@ -412,7 +411,7 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
     // Note that the verification API will be improved in a future version of erdjs-walletcore.
     // As of @elrondnetwork/erdjs-walletcore@v1.0.0, this API is a bit tedious:
     const verifier = UserVerifier.fromAddress(new Address(address));
-    
+
     const message = new SignableMessage({
         signature: { hex: () => signature },
         message: Buffer.from(`${address}${authToken}{}`)

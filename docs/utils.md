@@ -41,7 +41,7 @@ _italicized text_
 
 ### Link
 
-[absolute URL](https://www.elrond.com)
+[absolute URL](https://www.multiversx.com)
 
 [relative URL](/developers/esdt-tokens#token-management)
 

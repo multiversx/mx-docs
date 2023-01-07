@@ -34,7 +34,6 @@ transactions creation and signing:
 - [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli)
 - [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http)
 
-
 ## **General network parameters**
 
 General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/sdk-and-tools/rest-api/network#get-network-configuration).

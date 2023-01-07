@@ -359,54 +359,52 @@ To test this method, we append one more step to the last test we worked on, `tes
 
 ```json
 {
-    "name": "trying to fund one block too late",
-    "steps": [
-        {
-            "step": "externalSteps",
-            "path": "crowdfunding-fund.scen.json"
-        },
-        {
-            "step": "setState",
-            "currentBlockInfo": {
-                "blockTimestamp": "123,001"
-            }
-        },
-        {
-            "step": "scCall",
-            "txId": "fund-too-late",
-            "tx": {
-                "from": "address:donor1",
-                "to": "sc:crowdfunding",
-                "egldValue": "10,000,000,000",
-                "function": "fund",
-                "arguments": [],
-                "gasLimit": "100,000,000",
-                "gasPrice": "0"
-            },
-            "expect": {
-                "out": [],
-                "status": "4",
-                "message": "str:cannot fund after deadline",
-                "gas": "*",
-                "refund": "*"
-            }
-        },
-        {
-            "step": "scQuery",
-            "txId": "check-status",
-            "tx": {
-                "to": "sc:crowdfunding",
-                "function": "status",
-                "arguments": []
-            },
-            "expect": {
-                "out": [
-                    "2"
-                ],
-                "status": "0"
-            }
-        }
-    ]
+  "name": "trying to fund one block too late",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "crowdfunding-fund.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "123,001"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "fund-too-late",
+      "tx": {
+        "from": "address:donor1",
+        "to": "sc:crowdfunding",
+        "egldValue": "10,000,000,000",
+        "function": "fund",
+        "arguments": [],
+        "gasLimit": "100,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "out": [],
+        "status": "4",
+        "message": "str:cannot fund after deadline",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "scQuery",
+      "txId": "check-status",
+      "tx": {
+        "to": "sc:crowdfunding",
+        "function": "status",
+        "arguments": []
+      },
+      "expect": {
+        "out": ["2"],
+        "status": "0"
+      }
+    }
+  ]
 }
 ```
 
@@ -448,12 +446,11 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
     }
 ```
 
-The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.  
+The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.
 
 # **The final contract code**
 
 If you followed all the steps presented until now, you should have ended up with a contract that looks something like:
-
 
 ```rust,file=final.rs
 #![no_std]

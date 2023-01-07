@@ -6,7 +6,7 @@ title: Relayed Transactions
 ## Introduction
 
 Relayed transactions (or meta-transactions) are transactions with the fee paid by a so-called relayer.
-In other words, if a relayer is willing to pay for an interaction, it is not mandatory that the address 
+In other words, if a relayer is willing to pay for an interaction, it is not mandatory that the address
 interacting with a Smart Contract has any EGLD for fees.
 
 More details and specifications can be found on [MultiversX Specs](https://github.com/ElrondNetwork/elrond-specs/blob/main/sc-meta-transactions.md).
@@ -18,9 +18,9 @@ but v2 comes with optimisations in terms of gas usage, making it our recommendat
 
 ## Relayed transactions version 1
 
-A relayed transaction version 1 relies on having the inner transaction JSON serialized and given as an argument to the `relayedTx` protocol function. 
+A relayed transaction version 1 relies on having the inner transaction JSON serialized and given as an argument to the `relayedTx` protocol function.
 
-It would look like: 
+It would look like:
 
 ```
 RelayedV1Transaction {
@@ -47,26 +47,27 @@ RelayedV1InnerTransaction {
 }
 ```
 
-However, unlike regular transactions' JSON serialization, the inner transaction that has to be signed has a different 
+However, unlike regular transactions' JSON serialization, the inner transaction that has to be signed has a different
 structure:
 
 ```
 type Transaction struct {
-	Nonce           uint64        
-	Value           *math_big.Int 
-	ReceiverAddress []byte            
-	SenderAddress   []byte                
-	GasPrice        uint64        
-	GasLimit        uint64        
-	Data            []byte        
-	ChainID         []byte        
-	Version         uint32        
-	Signature       []byte        
-	Options         uint32        
+	Nonce           uint64
+	Value           *math_big.Int
+	ReceiverAddress []byte
+	SenderAddress   []byte
+	GasPrice        uint64
+	GasLimit        uint64
+	Data            []byte
+	ChainID         []byte
+	Version         uint32
+	Signature       []byte
+	Options         uint32
 }
 ```
 
-Notice that there are some differences as compared to the regular *frontend* [transaction structure](/developers/signing-transactions/signing-transactions/#general-structure), such:
+Notice that there are some differences as compared to the regular _frontend_ [transaction structure](/developers/signing-transactions/signing-transactions/#general-structure), such:
+
 - `SenderAddress` and `ReceiverAddress` have to be byte arrays instead of bech32 string addresses
 - `Value` has to be a big integer, instead of a string
 - `ChainID` has to be a byte array instead of a string
@@ -74,10 +75,11 @@ Notice that there are some differences as compared to the regular *frontend* [tr
 
 ### Preparing relayed v1 transaction using erdjs
 
-`erdjs` has built-in support for relayed transactions version 1, by using a builder which allows one to prepare such 
-a transaction. 
+`erdjs` has built-in support for relayed transactions version 1, by using a builder which allows one to prepare such
+a transaction.
 
 Resources:
+
 - [relayedTransactionV1Builder](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV1Builder.ts)
 - [tests/example](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV1Builder.spec.ts)
 
@@ -91,20 +93,20 @@ will pay the computation fee
 
 ```json
 {
-  "nonce":2627,
-  "value":"0",
-  "receiver":"erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
-  "sender":"erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-  "gasPrice":1000000000,
-  "gasLimit":61040000,
-  "data":"cmVsYXllZFR4QDdiMjI2ZTZmNmU2MzY1MjIzYTMxMzkzODJjMjI3MzY1NmU2NDY1NzIyMjNhMjI2NzQ1NmU1NzRmNjU1NzZkNmQ0MTMwNjMzMDZhNmI3MTc2NGQzNTQyNDE3MDdhNjE2NDRiNDY1NzRlNTM0ZjY5NDE3NjQzNTc1MTYzNzc2ZDQ3NTA2NzNkMjIyYzIyNzI2NTYzNjU2OTc2NjU3MjIyM2EyMjQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0NjQxNDIzNDc1NTk1MjcxNjMzNDY1NDQ0OTM0Nzk2NzM4N2E0ODc3NjI0NDMwNWE2ODZiNTg0MjM1NzAzMTc3M2QyMjJjMjI3NjYxNmM3NTY1MjIzYTMwMmMyMjY3NjE3MzUwNzI2OTYzNjUyMjNhMzEzMDMwMzAzMDMwMzAzMDMwMzAyYzIyNjc2MTczNGM2OTZkNjk3NDIyM2EzNjMwMzAzMDMwMzAzMDMwMmMyMjY0NjE3NDYxMjIzYTIyNTk1NzUyNmIyMjJjMjI3MzY5Njc2ZTYxNzQ3NTcyNjUyMjNhMjI0ZTMwNzIzMTcwNmYzNzZiNzY0ZjU0NGI0OTQ3NDcyZjc1NmI2NzcyMzg1YTYyNTc2NDU4NjczMTY2NTEzMDc2NmQ3NTYyMzU3OTM0NGY3MzUzNDE3MTM0N2EyZjU5Mzc2YzQ2NTI3OTU3NzM2NzM0NGUyYjZmNGE2OTQ5NDk1Nzc3N2E2YjZkNmM2YTQ5NDE3MjZkNjkzMTY5NTg0ODU0NzkzNDRiNjc0MTQxM2QzZDIyMmMyMjYzNjg2MTY5NmU0OTQ0MjIzYTIyNTY0MTNkM2QyMjJjMjI3NjY1NzI3MzY5NmY2ZTIyM2EzMTdk",
-  "chainID":"T",
+  "nonce": 2627,
+  "value": "0",
+  "receiver": "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+  "sender": "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+  "gasPrice": 1000000000,
+  "gasLimit": 61040000,
+  "data": "cmVsYXllZFR4QDdiMjI2ZTZmNmU2MzY1MjIzYTMxMzkzODJjMjI3MzY1NmU2NDY1NzIyMjNhMjI2NzQ1NmU1NzRmNjU1NzZkNmQ0MTMwNjMzMDZhNmI3MTc2NGQzNTQyNDE3MDdhNjE2NDRiNDY1NzRlNTM0ZjY5NDE3NjQzNTc1MTYzNzc2ZDQ3NTA2NzNkMjIyYzIyNzI2NTYzNjU2OTc2NjU3MjIyM2EyMjQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0NjQxNDIzNDc1NTk1MjcxNjMzNDY1NDQ0OTM0Nzk2NzM4N2E0ODc3NjI0NDMwNWE2ODZiNTg0MjM1NzAzMTc3M2QyMjJjMjI3NjYxNmM3NTY1MjIzYTMwMmMyMjY3NjE3MzUwNzI2OTYzNjUyMjNhMzEzMDMwMzAzMDMwMzAzMDMwMzAyYzIyNjc2MTczNGM2OTZkNjk3NDIyM2EzNjMwMzAzMDMwMzAzMDMwMmMyMjY0NjE3NDYxMjIzYTIyNTk1NzUyNmIyMjJjMjI3MzY5Njc2ZTYxNzQ3NTcyNjUyMjNhMjI0ZTMwNzIzMTcwNmYzNzZiNzY0ZjU0NGI0OTQ3NDcyZjc1NmI2NzcyMzg1YTYyNTc2NDU4NjczMTY2NTEzMDc2NmQ3NTYyMzU3OTM0NGY3MzUzNDE3MTM0N2EyZjU5Mzc2YzQ2NTI3OTU3NzM2NzM0NGUyYjZmNGE2OTQ5NDk1Nzc3N2E2YjZkNmM2YTQ5NDE3MjZkNjkzMTY5NTg0ODU0NzkzNDRiNjc0MTQxM2QzZDIyMmMyMjYzNjg2MTY5NmU0OTQ0MjIzYTIyNTY0MTNkM2QyMjJjMjI3NjY1NzI3MzY5NmY2ZTIyM2EzMTdk",
+  "chainID": "T",
   "signature": "44889e788581c8913a00e03f711f9ed3522119030a48fe6c1b3434656670b4b93867213f7a7b5453eafe0884f7447361e1154d26c6e7b2cfa40510159e0e1008",
-  "version":1
+  "version": 1
 }
 ```
 
-The data field (after decoding from base64 to string) is converted to: 
+The data field (after decoding from base64 to string) is converted to:
 
 ```
 relayedTx@7b226e6f6e6365223a3139382c2273656e646572223a2267456e574f65576d6d413063306a6b71764d354241707a61644b46574e534f69417643575163776d4750673d222c227265636569766572223a22414141414141414141414146414234755952716334654449347967387a48776244305a686b5842357031773d222c2276616c7565223a302c226761735072696365223a313030303030303030302c226761734c696d6974223a36303030303030302c2264617461223a225957526b222c227369676e6174757265223a224e307231706f376b764f544b4947472f756b6772385a625764586731665130766d75623579344f73534171347a2f59376c465279577367344e2b6f4a69494957777a6b6d6c6a4941726d69316958485479344b6741413d3d222c22636861696e4944223a2256413d3d222c2276657273696f6e223a317d
@@ -128,6 +130,7 @@ Furthermore, the inner transaction can be easily decoded (hex string to string),
 ```
 
 Decoding the base64 fields, we'll get:
+
 - sender: `erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx`
 - receiver: `erd1qqqqqqqqqqqqqpgqrchxzx5uu8sv3ceg8nx8cxc0gesezure5awqn46gtd`
 - data: `add`
@@ -144,7 +147,7 @@ gasLimit = 61040000  // just like the gas limit set in the relayed transaction
 
 ## Relayed transactions version 2
 
-In contrast with version 1, relayed transactions version 2 have only certain fields of the inner transaction included 
+In contrast with version 1, relayed transactions version 2 have only certain fields of the inner transaction included
 in the data field, making the payload smaller, therefore the tx fee smaller. It also eliminates the need of calculating
 the matching gas limit values between the relayed and inner transactions.
 
@@ -180,6 +183,7 @@ Therefore, when one wants to build such a transaction, the steps would be:
 a transaction.
 
 Resources:
+
 - [relayedTransactionV2Builder](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV2Builder.ts)
 - [tests/example](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV2Builder.spec.ts)
 
@@ -193,16 +197,16 @@ will pay the computation fee
 
 ```json
 {
-   "nonce":37,
-   "value":"0",
-   "receiver":"erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
-   "sender":"erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-   "gasPrice":1000000000,
-   "gasLimit":60372500,
-   "data":"cmVsYXllZFR4VjJAMDAwMDAwMDAwMDAwMDAwMDA1MDAxZTJlNjExYTljZTFlMGM4ZTMyODNjY2M3YzFiMGY0NjYxOTE3MDc5YTc1Y0AwZkA2MTY0NjRAOWFiZDEzZjRmNTNmM2YyMzU5Nzc0NGQ2NWZjNWQzNTFiYjY3NzNlMDVhOTU0YjQxOWMwOGQxODU5M2QxYzY5MjYyNzlhNGQxNjE0NGQzZjg2NmE1NDg3ODAzMTQyZmNmZjBlYWI2YWQ1ODgyMDk5NjlhY2I3YWJlZDIxMDIwMGI=",
-   "chainID":"T",
-   "signature":"2a448b92c16a564a0b1dc8d02fb3a73408decc0aa47d0780a4faa108234d767dc262057b376a9f3c4d9283018c90cb751b55d27c42f59d63cce3ca6213a5ac0a",
-   "version":1
+  "nonce": 37,
+  "value": "0",
+  "receiver": "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+  "sender": "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+  "gasPrice": 1000000000,
+  "gasLimit": 60372500,
+  "data": "cmVsYXllZFR4VjJAMDAwMDAwMDAwMDAwMDAwMDA1MDAxZTJlNjExYTljZTFlMGM4ZTMyODNjY2M3YzFiMGY0NjYxOTE3MDc5YTc1Y0AwZkA2MTY0NjRAOWFiZDEzZjRmNTNmM2YyMzU5Nzc0NGQ2NWZjNWQzNTFiYjY3NzNlMDVhOTU0YjQxOWMwOGQxODU5M2QxYzY5MjYyNzlhNGQxNjE0NGQzZjg2NmE1NDg3ODAzMTQyZmNmZjBlYWI2YWQ1ODgyMDk5NjlhY2I3YWJlZDIxMDIwMGI=",
+  "chainID": "T",
+  "signature": "2a448b92c16a564a0b1dc8d02fb3a73408decc0aa47d0780a4faa108234d767dc262057b376a9f3c4d9283018c90cb751b55d27c42f59d63cce3ca6213a5ac0a",
+  "version": 1
 }
 ```
 

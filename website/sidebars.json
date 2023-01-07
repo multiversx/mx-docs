@@ -1,8 +1,6 @@
 {
   "docs": {
-    "Welcome to MultiversX": [
-      "welcome/welcome-to-multiversx"
-    ],
+    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
     "Technology": [
       "technology/architecture-overview",
       "technology/glossary",
@@ -21,11 +19,7 @@
       "wallet/ledger",
       "wallet/create-a-fungible-token"
     ],
-    "Tokens": [
-      "tokens/overview",
-      "tokens/esdt-tokens",
-      "tokens/nft-tokens"
-    ],
+    "Tokens": ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     "Validators": [
       "validators/overview",
       "validators/staking-providers-apr",

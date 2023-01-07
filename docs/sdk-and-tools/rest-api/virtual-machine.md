@@ -18,7 +18,7 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
@@ -96,7 +96,7 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
@@ -130,7 +130,7 @@ This endpoint allows one to execute - with no side effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |
@@ -164,7 +164,7 @@ This endpoint allows one to execute - with no side-effects - a pure function of 
 Body Parameters
 
 | Param     | Required                                  | Type     | Description                                                                         |
-|-----------|-------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| --------- | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | scAddress | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Smart Contract.                                         |
 | funcName  | <span class="text-danger">REQUIRED</span> | `string` | The name of the Pure Function to execute.                                           |
 | args      | <span class="text-danger">REQUIRED</span> | `array`  | The arguments of the Pure Function, as hex-encoded strings. The array can be empty. |

@@ -15,7 +15,7 @@ The Observer Nodes of the Proxy thus act as a **default dedicated entry point in
 
 It is worth repeating here, though, that submitting a Transaction through the Proxy is completely optional - any Node of the Network will accept Transactions to propagate, given it has not disabled its REST API.
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M93nKd9VLSYHsguW1PH%2F-M93o5wmBtDFoPSwcwmw%2FElrond%20Proxy%20-%20Purpose%20(overview).png?alt=media&token=55699234-8846-407d-aa16-a0646f6c3748)
+![img](<https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M93nKd9VLSYHsguW1PH%2F-M93o5wmBtDFoPSwcwmw%2FElrond%20Proxy%20-%20Purpose%20(overview).png?alt=media&token=55699234-8846-407d-aa16-a0646f6c3748>)
 
 Overview of the MultiversX Proxy
 
@@ -54,6 +54,6 @@ The Proxy holds its configuration within the `config` folder:
 
 ## **Dependency on Elasticsearch**
 
-Currently, Proxy uses the dependency to Elasticsearch in order to satisfy the [Get Address Transactions](/sdk-and-tools/rest-api/addresses/#get-address-transactions) endpoint. 
+Currently, Proxy uses the dependency to Elasticsearch in order to satisfy the [Get Address Transactions](/sdk-and-tools/rest-api/addresses/#get-address-transactions) endpoint.
 
 In order to connect a Proxy instance to an Elasticsearch cluster, one must update the `external.toml` file.

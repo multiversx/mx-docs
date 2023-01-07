@@ -13,7 +13,7 @@ Wallet Keys are extremely sensitive because:
 - if you lose the keys, you can't recover your stake or claim your rewards -> you lose all the money
 - if someone steals your keys, they can send an unstake transaction from it and claim the EGLD -> the bad guys steal your money
 
- How to protect them:
+How to protect them:
 
 - make multiple safe backups of the private keys & files
   - paper

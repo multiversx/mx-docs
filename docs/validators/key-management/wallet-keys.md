@@ -10,4 +10,3 @@ This wallet is the only one that can be used to send an un-stake transaction, me
 A Wallet Ket can be created via multiple ways that are described on the [Wallets section](/wallet/overview/).
 
 The wallets use the bip44 standard with the mention that because MultiversX uses Ed25519 only hardened paths are used. Our coin_type is 508, making the path for the first address:m/44'/508'/0'/0'/0’
-

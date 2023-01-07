@@ -18,7 +18,7 @@ This endpoint allows one to retrieve basic information about an Address (Account
 Path Parameters
 
 | Param         | Required                                  | Type     | Description           |
-|---------------|-------------------------------------------|----------|-----------------------|
+| ------------- | ----------------------------------------- | -------- | --------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
@@ -62,7 +62,7 @@ This endpoint allows one to retrieve the nonce of an Address.
 Path Parameters
 
 | Param         | Required                                  | Type     | Description           |
-|---------------|-------------------------------------------|----------|-----------------------|
+| ------------- | ----------------------------------------- | -------- | --------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
@@ -96,7 +96,7 @@ This endpoint allows one to retrieve the balance of an Address.
 Path Parameters
 
 | Param         | Required                                  | Type     | Description           |
-|---------------|-------------------------------------------|----------|-----------------------|
+| ------------- | ----------------------------------------- | -------- | --------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
@@ -130,7 +130,7 @@ This endpoint allows one to retrieve the username / herotag of an Address (if an
 Path Parameters
 
 | Param         | Required                                  | Type     | Description           |
-|---------------|-------------------------------------------|----------|-----------------------|
+| ------------- | ----------------------------------------- | -------- | --------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
@@ -154,6 +154,7 @@ Balance successfully retrieved.
 ## <span class="badge badge-primary">GET</span> **Get Address Transactions**
 
 `https://gateway.multiversx.com/address/:bech32Address/transactions`
+`https://gateway.multiversx.com/address/:bech32Address/transactions`
 
 This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
 
@@ -163,9 +164,9 @@ This endpoint allows one to retrieve the latest 20 Transactions sent from an Add
 
 Path Parameters
 
-| Param         | Required                                   | Type     | Description           |
-|---------------|--------------------------------------------|----------|-----------------------|
-| bech32Address | <span class="text-danger">REQUIRED</span>  | `string` | The Address to query. |
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
 
@@ -238,6 +239,7 @@ This endpoint requires the presence of an Elasticsearch instance (populated thro
 ## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**
 
 `https://gateway.multiversx.com/address/:bech32Address/key/:key`
+`https://gateway.multiversx.com/address/:bech32Address/key/:key`
 
 This endpoint allows one to retrieve a value stored within the Blockchain for a given Address.
 
@@ -248,7 +250,7 @@ This endpoint allows one to retrieve a value stored within the Blockchain for a 
 Path Parameters
 
 | Param         | Required                                  | Type     | Description             |
-|---------------|-------------------------------------------|----------|-------------------------|
+| ------------- | ----------------------------------------- | -------- | ----------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query.   |
 | key           | <span class="text-danger">REQUIRED</span> | `string` | The key entry to fetch. |
 
@@ -275,6 +277,7 @@ Value (hex-encoded) successfully retrieved.
 ## <span class="badge badge-primary">GET</span> **Get all storage for Address**
 
 `https://gateway.multiversx.com/address/:bech32Address/keys`
+`https://gateway.multiversx.com/address/:bech32Address/keys`
 
 This endpoint allows one to retrieve all the key-value pairs stored under a given account.
 
@@ -284,9 +287,9 @@ This endpoint allows one to retrieve all the key-value pairs stored under a give
 
 Path Parameters
 
-| Param         | Required                                  | Type      | Description           |
-|---------------|-------------------------------------------|-----------|-----------------------|
-| bech32Address | <span class="text-danger">REQUIRED</span> | `string`  | The Address to query. |
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 <!--Response-->
 
@@ -315,5 +318,4 @@ There are a number of ESDT tokens endpoints that one can use to check all tokens
 specific fungible or non-fungible tokens or so on.
 
 Fungible tokens endpoints can be found [here](/developers/esdt-tokens/#rest-api) and non-fungible tokens
-endpoints can be found [here](/developers/nft-tokens/#rest-api). 
-
+endpoints can be found [here](/developers/nft-tokens/#rest-api).

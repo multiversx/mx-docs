@@ -19,7 +19,6 @@ In order to ensure that the new added content is correctly aligned and every Mar
 
 ### Steps:
 
-
 - clone the repository
 - go to the `website` directory from a terminal
 - run `npm install` (only for the first usage)
@@ -37,6 +36,7 @@ Once a proposal to update the documentation is submitted, it will be subject to 
 ### Audience
 
 Anyone can contribute to the docs. Any help is appreciated. Here are some ways in which you can contribute:
+
 - update parts of the documentation that no longer match the actual behaviour.
 - document features that aren't documented yet.
 - add additional information about a component.

@@ -11,7 +11,7 @@ The following documentation is based on dapp-core 2.0.0+
 
 ## Introduction
 
-dapp-core is a library that holds core functional logic that can be used to create a dApp on MultiversX Network. 
+dapp-core is a library that holds core functional logic that can be used to create a dApp on MultiversX Network.
 
 It is built for applications that use React.
 
@@ -19,13 +19,13 @@ It is built for applications that use React.
 
 The GitHub repository can be found here: [https://github.com/ElrondNetwork/dapp-core/](https://github.com/ElrondNetwork/dapp-core/)
 
-### npmjs 
+### npmjs
 
 dapp-core can be found on npmjs as well: https://www.npmjs.com/package/@elrondnetwork/dapp-core
 
 ### Live demo: dapp-template
 
-The [dapp-template](https://github.com/ElrondNetwork/dapp-template/) that is used in [Build a dApp in 15 minutes](/developers/tutorials/your-first-dapp) is based on `dapp-core`.  
+The [dapp-template](https://github.com/ElrondNetwork/dapp-template/) that is used in [Build a dApp in 15 minutes](/developers/tutorials/your-first-dapp) is based on `dapp-core`.
 
 A live demo of the dapp-template is available at [https://dapp-template.elrond.com/](https://dapp-template.elrond.com/).
 
@@ -126,6 +126,7 @@ import { DappProvider } from '@elrondnetwork/dapp-core/wrappers';
     customNetworkConfig={customNetworkConfig}
 >
 ```
+
 `environment` is a required key that is needed to configure the app's endpoints for a specific environment. Accepted values are `testnet`, `devnet` and `mainnet` (also configured in `EnvironmentsEnum`).
 
 DappProvider also accepts an optional `customNetworkConfig` object with a couple of keys.
@@ -149,7 +150,6 @@ This allows using different APIs and different connection providers to configure
   apiTimeout?: 4000;
 }
 ```
-
 
   </details>
 
@@ -324,7 +324,6 @@ you can easily import and use them.
 All login buttons and hooks accept a prop called `redirectAfterLogin` which specifies of the user should be redirected automatically after login.
 The default value for this boolean is false, since most apps listen for the "isLoggedIn" boolean and redirect programmatically.
 
-
 Another handly component is AuthenticatedRoutesWrapper, which can be used to protect certain routes and redirect the user to login page if the user is not authenticated.
 
 Import from dapp-core:
@@ -368,6 +367,7 @@ Login hooks
 This area covers the login hooks, which expose a trigger function and the login data, ready to be rendered.
 
 These hooks are exposed as named exports, which can be imported from dapp-core:
+
 ```
 import { useExtensionLogin, useWalletConnectLogin, useLedgerLogin, useWebWalletLogin } from '@elrondnetwork/dapp-core/hooks';
 or
@@ -410,13 +410,13 @@ const [initiateLogin, genericLoginReturnType, customLoginReturnType] = useLoginH
 
 - **customLoginReturnType** is an object that is custom for each hook and returns specific data for that login:
 
-    - null for useExtensionLogin;
+  - null for useExtensionLogin;
 
-    - null for useWebWalletConnect;
+  - null for useWebWalletConnect;
 
-    - `{ uriDeepLink: string, qrCodeSvg: svgElement }` for useWalletConnectLogin;
+  - `{ uriDeepLink: string, qrCodeSvg: svgElement }` for useWalletConnectLogin;
 
-    -
+  -
 
 ```
 {
@@ -447,10 +447,11 @@ Once logged in, the user's session is persisted and can be read and deleted via 
 For logging out, the library exposes a simple function called **logout**, which can be called to clear the user data.
 
 the function accepts 2 arguments:
+
 - `callbackUrl: string (optional)` the url to redirect the user to after logging him out
 - `onRedirect: (callbackUrl: string) => void (optional)` a function that will be called instead of redirecting the user.
   This allows you to control how the redirect is done, for example, with react-router-dom, instead of window.location.href assignment.
-  *Important* this function will not be called for web wallet logout
+  _Important_ this function will not be called for web wallet logout
 
 You can opt-in for using the `useIdleTimer` hook, which logs out the user after a period of inactivity (default set to 10 minutes). Optionally it accepts an `onLogout` function that fulfills your dapp's specific logout business logic. Make sure to call the above `logout` function inside this `onLogout` callback.
 
@@ -500,7 +501,7 @@ It returns a Promise that will be fulfilled with `{error?: string; sessionId: st
 
 `sessionId` is the transaction's batch id which can be used to track a transaction's status and react to it.
 
-**Important! For the transaction to be signed, you will have to use either  `SignTransactionsModals` defined above, in the `Prerequisites` section,
+**Important! For the transaction to be signed, you will have to use either `SignTransactionsModals` defined above, in the `Prerequisites` section,
 or the `useSignTransactions` hook defined below. If you don't use one of these, the transactions won't be signed**
 
 </details>
@@ -677,6 +678,7 @@ When `TransactionToastList` is also used for displaying custom toasts, is enough
 **Important**: This has to be inside the `<DappProvider/>` children.
 
 In case you don't want to use `TransactionToastList` and just display a custom toast, then you have to import `CustomToast` component
+
 ```
 const customToast = addNewCustomToast(
   {
@@ -699,6 +701,7 @@ Removing transactions manually
   </summary>
 
 ### Removing transactions manually
+
 Dapp-core takes care to change transactions' statuses and removes them when needed,
 but if you need to do this manually, you can use the exposed functions for this:
 
@@ -713,7 +716,9 @@ but if you need to do this manually, you can use the exposed functions for this:
 </details>
 
 ## Unit testing with Jest
+
 The dapp-core library exposes bundles for both CommonJS and ESModules, however, in some enviornments, Jest might require manual mapping of the CommonJS output. To implement it, add the following snippet inside your jest config file.
+
 ```
 moduleNameMapper: {
     '@elrondnetwork/dapp-core/(.*)':
@@ -736,7 +741,9 @@ for example, these 2 imports are both valid:
 ```
 import { useExtensionLogin, useGetAccountInfo } from '@elrondnetwork/dapp-core/hooks';
 ```
+
 and
+
 ```
 import { useExtensionLogin } from '@elrondnetwork/dapp-core/hooks/login';
 import { useGetAccountInfo } from '@elrondnetwork/dapp-core/hooks/account';
@@ -773,6 +780,7 @@ import {
 ```
 
 #### Account
+
 ```
 import {
   useGetAccountInfo,
@@ -782,6 +790,7 @@ import {
 ```
 
 #### Transactions
+
 ```
 import {
   useCheckTransactionStatus,
@@ -806,6 +815,7 @@ import {
 ```
 
 #### Misc
+
 ```
 import {
   useDebounce,
@@ -914,7 +924,6 @@ import {
   useIdleTimer
 } from '@elrondnetwork/dapp-core/web';
 ```
-
 
 ### UI
 

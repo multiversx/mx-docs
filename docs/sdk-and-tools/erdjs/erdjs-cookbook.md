@@ -316,7 +316,7 @@ let transaction = contract.deploy({
 });
 ```
 
-Then, set the transaction nonce. 
+Then, set the transaction nonce.
 
 Note that the account nonce must be synchronized beforehand. Also, locally increment the nonce of the deployer (optional).
 
@@ -504,7 +504,7 @@ Given an interaction:
 let interaction = contract.methods.doStuff([]);
 ```
 
-One can apply token transfers to the smart contract call, as well. 
+One can apply token transfers to the smart contract call, as well.
 
 For single payments, do as follows:
 
@@ -560,7 +560,6 @@ let endpointDefinition = smartContract.getEndpoint("myFunction");
 ```
 
 For customizing the default parser, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
-
 
 ## Signing objects
 
@@ -703,11 +702,11 @@ let metadata = new TransactionDecoder().getTransactionMetadata({
 
 ### Using the `esdtHelpers` and `scArgumentsParser` of `erdjs 9x`
 
-The classes `esdtHelpers` and `scArgumentsParser` have been removed in `erdjs 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above). 
+The classes `esdtHelpers` and `scArgumentsParser` have been removed in `erdjs 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above).
 
-However, you can still find the previous implementations at the following location: 
- - [esdtHelpers](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
- - [esdtHelpers examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
- - [scArgumentsParser](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
- - [scArgumentsParser examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)
- 
+However, you can still find the previous implementations at the following location:
+
+- [esdtHelpers](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
+- [esdtHelpers examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
+- [scArgumentsParser](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
+- [scArgumentsParser examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)

@@ -15,7 +15,7 @@ The default classes from `@elrondnetwork/erdjs-network-providers` should **only 
 
 ### Performing HTTP requests from scratch
 
-One can broadcast transactions and GET resources from the MultiversX API (or Gateway) by performing simple HTTP requests using the `axios` utility. Below are a few examples: 
+One can broadcast transactions and GET resources from the MultiversX API (or Gateway) by performing simple HTTP requests using the `axios` utility. Below are a few examples:
 
 Broadcasting a transaction:
 

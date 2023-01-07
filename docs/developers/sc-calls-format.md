@@ -5,10 +5,11 @@ title: Smart Contract Calls Data Format
 
 ## Introduction
 
-Besides regular move-balance transactions (address A sends the amount X to address B, while optionally including a note in the `data` field), 
-MultiversX transactions can trigger a Smart Contract call, or a [built-in function call](/developers/built-in-functions). 
+Besides regular move-balance transactions (address A sends the amount X to address B, while optionally including a note in the `data` field),
+MultiversX transactions can trigger a Smart Contract call, or a [built-in function call](/developers/built-in-functions).
 
 This can happen in the following situations:
+
 - the receiver of the transaction is a Smart Contract Address and the data field begins with a valid function of the contract.
 - the data field of the transaction begins with a valid built-in function name.
 
@@ -27,10 +28,10 @@ ScCallTransaction {
 }
 ```
 
-The number of arguments is specific to each function. 
+The number of arguments is specific to each function.
 
-*Example*. We have a smart contract A with the address `erd1qqqqqqqqqqqqqpgqrchxzx5uu8sv3ceg8nx8cxc0gesezure5awqn46gtd`. The contract
-has a function `add(numberToAdd numeric)` which adds the `numberToAdd` to an internally managed sum. If we want to call the 
+_Example_. We have a smart contract A with the address `erd1qqqqqqqqqqqqqpgqrchxzx5uu8sv3ceg8nx8cxc0gesezure5awqn46gtd`. The contract
+has a function `add(numberToAdd numeric)` which adds the `numberToAdd` to an internally managed sum. If we want to call the
 function and add `15` to the internal sum, the transaction would look like:
 
 ```
@@ -55,12 +56,12 @@ The next section of this page will focus on how different data types have to be 
 
 ## How to convert arguments for Smart Contract calls
 
-There are multiple ways of converting arguments from their original format to the hexadecimal encoding. 
+There are multiple ways of converting arguments from their original format to the hexadecimal encoding.
 
 For manually created transactions, arguments can be encoded by using tools that can be found online. For example, `hex to string`, `hex to decimal` and so on.
 
 For programmatically created transactions, arguments can be encoded by using one of our SDKs (`erdjs`, `erdpy`, `erdgo`, `erdjava`, and so on) or by using built-in components or other libraries
-of the language the transaction is created in. 
+of the language the transaction is created in.
 
 There are multiple ways of formatting the data field:
 
@@ -77,19 +78,20 @@ MultiversX uses `bech32` addresses with the HRP `erd`. Therefore, an address wou
 `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
 
 :::warning
-Converting a bech32 address into hexadecimal encoding *is not* a simple `string to hex` operation, but requires specialized
+Converting a bech32 address into hexadecimal encoding _is not_ a simple `string to hex` operation, but requires specialized
 tools or helpers.
 :::
 
-There are many smart contract calls (or built-in function calls) that receive an address as one of their arguments. Obviously, 
-they have to be hexadecimal encoded. 
+There are many smart contract calls (or built-in function calls) that receive an address as one of their arguments. Obviously,
+they have to be hexadecimal encoded.
 
 ### Examples
 
 bech32 --> hex
+
 ```
-erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th 
---> 
+erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+-->
 0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1
 
 erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r
@@ -99,7 +101,7 @@ c70cf50b238372fffaf7b7c5723b06b57859d424a2da621bcc1b2f317543aa36
 
 ### Converting addresses using online tools
 
-There are multiple (*unofficial or community supported*) tools that one can use in order to convert an address into hexadecimal encoding:
+There are multiple (_unofficial or community supported_) tools that one can use in order to convert an address into hexadecimal encoding:
 
 - https://slowli.github.io/bech32-buffer/ (go to `Data`, select `erd` as Tag and `Bech32` as Encoding)
 
@@ -173,7 +175,7 @@ if err != nil {
 fmt.Println(hex.EncodeToString(addressObj.AddressBytes()))
 ```
 
-will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`. 
+will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 
 Additionally, hex addresses can be converted to bech32 as follows:
 
@@ -219,7 +221,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 ## Converting string values
 
-For situations when a string argument is desired for a smart contract call, it can be simply obtained by using 
+For situations when a string argument is desired for a smart contract call, it can be simply obtained by using
 built-in libraries to convert them into hexadecimal format.
 
 :::important
@@ -235,6 +237,7 @@ By no means, these code snippets provide a coding guideline; they are more of si
 ### Examples
 
 string --> hex
+
 ```
 ok          --> 6f6b
 MEX-455c57  --> 4d45582d343535633537
@@ -253,6 +256,7 @@ console.log(Buffer.from("6f6b", "hex").toString()); // ok
 ```
 
 ### Converting string values in java
+
 ```
 String inputHex = Hex.encodeHexString("ok".getBytes(StandardCharsets.UTF_8));
 if (inputHex.length() % 2 != 0) {
@@ -305,6 +309,7 @@ By no means, these code snippets provide a coding guideline; they are more of si
 ### Examples
 
 numeric --> hex
+
 ```
 7  --> 07
 10 --> 0a
@@ -354,4 +359,3 @@ if err != nil {
 bi := big.NewInt(0).SetBytes(decodedHex)
 fmt.Println(bi.String()) // 37
 ```
-

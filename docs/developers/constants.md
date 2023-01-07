@@ -6,24 +6,28 @@ title: Constants
 MultiversX uses some constants, which are specific to each chain (Mainnet, Testnet or Devnet). The updated values can be found at these sources:
 
 **Mainnet**:
+
 - https://gateway.multiversx.com/network/config
 - https://github.com/multiversx/mx-chain-mainnet-config
 
 **Testnet**:
+
 - https://testnet-gateway.multiversx.com/network/config
 - https://github.com/multiversx/mx-chain-testnet-config
 
 **Devnet**:
+
 - https://devnet-gateway.multiversx.com/network/config
 - https://github.com/multiversx/mx-chain-devnet-config
 
 :::important
-Each transaction requires a `chainID` field that represents the network's identifier. It adds protection so that transactions cannot be replayed from a network to another. 
+Each transaction requires a `chainID` field that represents the network's identifier. It adds protection so that transactions cannot be replayed from a network to another.
 The values are:
+
 - Mainnet: `1`
 - Testnet: `T`
 - Devnet: `D`
-:::
+  :::
 
 At the time of writing, the most used constants values for mainnet were:
 

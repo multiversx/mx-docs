@@ -218,7 +218,7 @@ fn target(&self) -> SingleValueMapper<BigUint>;
 
 The methods above treat the stored value as having a specific **type**, namely the type `BigUint`. Under the hood, `BigUint` is a big unsigned number, handled by the VM. There is no need to import any library, big number arithmetic is provided for all contracts out of the box.
 
-Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The MultiversX framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically.  
+Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The MultiversX framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically.
 
 ### **Setting some targets**
 
@@ -304,64 +304,61 @@ Let's define the first test scenario. Open the file `mandos/crowdfunding-init.sc
 
 ```json
 {
-    "name": "crowdfunding deployment test",
-    "steps": [
-        {
-            "step": "setState",
-            "accounts": {
-                "address:my_address": {
-                    "nonce": "0",
-                    "balance": "1,000,000"
-                }
-            },
-            "newAddresses": [
-                {
-                    "creatorAddress": "address:my_address",
-                    "creatorNonce": "0",
-                    "newAddress": "sc:crowdfunding"
-                }
-            ]
-        },
-        {
-            "step": "scDeploy",
-            "txId": "deploy",
-            "tx": {
-                "from": "address:my_address",
-                "contractCode": "file:../output/crowdfunding.wasm",
-                "arguments": [
-                    "500,000,000,000"
-                ],
-                "gasLimit": "5,000,000",
-                "gasPrice": "0"
-            },
-            "expect": {
-                "out": [],
-                "status": "0",
-                "gas": "*",
-                "refund": "*"
-            }
-        },
-        {
-            "step": "checkState",
-            "accounts": {
-                "address:my_address": {
-                    "nonce": "1",
-                    "balance": "1,000,000",
-                    "storage": {}
-                },
-                "sc:crowdfunding": {
-                    "nonce": "0",
-                    "balance": "0",
-                    "storage": {
-                        "str:target": "500,000,000,000"
-                    },
-                    "code": "file:../output/crowdfunding.wasm"
-                }
-            }
+  "name": "crowdfunding deployment test",
+  "steps": [
+    {
+      "step": "setState",
+      "accounts": {
+        "address:my_address": {
+          "nonce": "0",
+          "balance": "1,000,000"
         }
-    ]
+      },
+      "newAddresses": [
+        {
+          "creatorAddress": "address:my_address",
+          "creatorNonce": "0",
+          "newAddress": "sc:crowdfunding"
+        }
+      ]
+    },
+    {
+      "step": "scDeploy",
+      "txId": "deploy",
+      "tx": {
+        "from": "address:my_address",
+        "contractCode": "file:../output/crowdfunding.wasm",
+        "arguments": ["500,000,000,000"],
+        "gasLimit": "5,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "out": [],
+        "status": "0",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "checkState",
+      "accounts": {
+        "address:my_address": {
+          "nonce": "1",
+          "balance": "1,000,000",
+          "storage": {}
+        },
+        "sc:crowdfunding": {
+          "nonce": "0",
+          "balance": "0",
+          "storage": {
+            "str:target": "500,000,000,000"
+          },
+          "code": "file:../output/crowdfunding.wasm"
+        }
+      }
+    }
+  ]
 }
-
 ```
 
 Save the file. Do you want to try it out first? Go ahead and issue this command on your terminal:
@@ -410,9 +407,9 @@ There is only one account defined - the one that will perform the deployment dur
 
 ```
 
-This defines the account with the address `my_address`, which the testing environment will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000`. Note: EGLD has 18 decimals, so 1 EGLD would be equal to `1,000,000,000,000,000,000` (10^18), but you rarely need to work with such big values in tests.  
+This defines the account with the address `my_address`, which the testing environment will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000`. Note: EGLD has 18 decimals, so 1 EGLD would be equal to `1,000,000,000,000,000,000` (10^18), but you rarely need to work with such big values in tests.
 
-Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing environment to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`, and all smart contracts with `sc:`.  
+Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing environment to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`, and all smart contracts with `sc:`.
 
 ### **Imaginary address generator**
 

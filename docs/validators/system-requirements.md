@@ -24,7 +24,7 @@ If the system chosen to host the node is a VPS, the host should have dedicated C
 :::
 
 :::tip
-We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw` 
+We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw`
 :::
 
 :::warning
@@ -46,7 +46,7 @@ sudo ufw allow 37373:38383/tcp
 ```
 
 :::note
-The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/p2p.toml#L7). 
+The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/p2p.toml#L7).
 :::
 
 :::warning

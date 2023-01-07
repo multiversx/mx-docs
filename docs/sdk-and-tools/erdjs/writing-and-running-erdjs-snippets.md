@@ -17,8 +17,8 @@ This tutorial will guide you through the process of (system) testing smart contr
 
 In order to follow the steps in this tutorial, you need **Visual Studio Code** with the following extensions installed:
 
- - [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
- - [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
+- [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
+- [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
 
 ## Setup steps
 
@@ -59,7 +59,7 @@ Now that your workspace and the snippets are set up, let's dive deeper. In the n
 
 ## Anatomy of an erdjs snippet
 
-An erdjs **snippet** is, actually, a file that defines a suite of _mocha_ tests, having the extension `*.spec.ts` or `*.snippet.ts`. A **snippet step** is an individual test-like construct. 
+An erdjs **snippet** is, actually, a file that defines a suite of _mocha_ tests, having the extension `*.spec.ts` or `*.snippet.ts`. A **snippet step** is an individual test-like construct.
 
 When executing one or more steps, they execute within a **test session**, selected by the following instruction of the snippet:
 
@@ -230,7 +230,7 @@ The resulted keys can be used as seen in the section [session configuration](/sd
 
 ### Writing events in the audit log
 
-At some point within the snippets or  _interactor_ objects (more on that later), it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or take account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
+At some point within the snippets or _interactor_ objects (more on that later), it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or take account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
 
 The recorded events will be listed in the session report(s) - more on that later.
 
@@ -296,12 +296,13 @@ The most important dependency of a snippet is the **contract interactor**, which
 In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain _almost_ production-ready code to call and query your contracts, code which is _generally_ copy-paste-able into your dApps.
 
 Generally speaking, an interactor component (class) depends on the following objects (defined by `erdjs` or by satellites of `erdjs`):
- - a `SmartContract` (composed with its `SmartContractAbi`)
- - an `INetworkProvider`, to broadcast / retrieve transactions and perform contract queries
- - a snapshot of the `INetworkConfig`
- - a `TransactionWatcher`, to properly detect the completion of a transaction
- - a `ResultsParser`, to parse the outcome of contract queries or contract interactions
- - optionally, an `IAudit` object to record certain events within the test session
+
+- a `SmartContract` (composed with its `SmartContractAbi`)
+- an `INetworkProvider`, to broadcast / retrieve transactions and perform contract queries
+- a snapshot of the `INetworkConfig`
+- a `TransactionWatcher`, to properly detect the completion of a transaction
+- a `ResultsParser`, to parse the outcome of contract queries or contract interactions
+- optionally, an `IAudit` object to record certain events within the test session
 
 ### Creation of an interactor
 
@@ -543,6 +544,7 @@ const interaction = <Interaction>this.contract.methods
     .withGasLimit(new GasLimit(10000000))
     .withNonce(caller.account.getNonceThenIncrement());
 ```
+
 ```
 // Example 2 - automatic type inference (lottery)
 const interaction = <Interaction>this.contract.methods
@@ -560,6 +562,7 @@ const interaction = <Interaction>this.contract.methods
     .withGasLimit(new GasLimit(20000000))
     .withNonce(owner.account.getNonceThenIncrement());
 ```
+
 ```
 // Example 2 - explicit types (lottery)
 const interaction = <Interaction>this.contract.methodsExplicit
@@ -577,6 +580,7 @@ const interaction = <Interaction>this.contract.methodsExplicit
     .withGasLimit(new GasLimit(20000000))
     .withNonce(owner.account.getNonceThenIncrement());
 ```
+
 ```
 // Example 3 - automatic type inference (lottery)
 const interaction = <Interaction>this.contract.methods

@@ -165,11 +165,13 @@ cd mainnet
 ```
 
 In order to check if the Observing Squad is running, you can list the running containers:
+
 ```
 docker ps
 ```
 
 In order to check the status inside a container, you can check the logs on the machine for the last synchronized block nonce:
+
 ```
 docker exec -it 'CONTAINER ID' /bin/bash
 cat logs/mx-chain-.......log

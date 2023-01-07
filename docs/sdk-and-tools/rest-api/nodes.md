@@ -169,7 +169,6 @@ P2P status retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-
 :::important
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.
 :::

@@ -3,7 +3,7 @@ id: reproducible-contract-builds
 title: Reproducible Builds
 ---
 
-This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags). 
+This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags).
 
 You will also learn how to reproduce a contract build, given its source code and the name (tag) of a _frozen_ Docker image that was used for its previous build (that we want to reproduce).
 
@@ -70,7 +70,7 @@ LABEL rust=nightly-2022-08-23
 LABEL wasm-opt-binaryen=version_105
 ```
 
-For a new smart contract that isn't released yet (deployed on the network), it's recommended to pick the tag with the **largest index number**, which tipically includes recent versions of `rust` and other necessary dependencies. 
+For a new smart contract that isn't released yet (deployed on the network), it's recommended to pick the tag with the **largest index number**, which tipically includes recent versions of `rust` and other necessary dependencies.
 
 However, for minor releases or patches, it's wise to stick to the previously chosen image tag, for the same (nuanced) reasons you would not embrace an update of your development tools in the middle of fixing a critical bug (in any development context).
 
@@ -131,12 +131,12 @@ python3 ./build_with_docker.py --image=${IMAGE} \
 
 In the `output` folder(s), you should see the following files (example):
 
- - `adder.wasm`: the actual bytecode of the smart contract, to be deployed on the network;
- - `adder.abi.json`: the ABI of the smart contract (a listing of endpoints and types definitions), to be used when developing dApps or simply interacting with the contract (e.g. using _erdjs_);
- - `adder.codehash.txt`: a file containing the computed `codehash` of the contract.
- - `adder.wat`: a textual representation of the bytecode, to be displayed in text editors, if necessary;
- - `adder.imports.json`: a listing of VM API functions imported and used by the contract.
- - `adder-v1.2.3.zip`: a versioned archive containing the source code used as input for the build.
+- `adder.wasm`: the actual bytecode of the smart contract, to be deployed on the network;
+- `adder.abi.json`: the ABI of the smart contract (a listing of endpoints and types definitions), to be used when developing dApps or simply interacting with the contract (e.g. using _erdjs_);
+- `adder.codehash.txt`: a file containing the computed `codehash` of the contract.
+- `adder.wat`: a textual representation of the bytecode, to be displayed in text editors, if necessary;
+- `adder.imports.json`: a listing of VM API functions imported and used by the contract.
+- `adder-v1.2.3.zip`: a versioned archive containing the source code used as input for the build.
 
 ### TL;DR build snippet
 
