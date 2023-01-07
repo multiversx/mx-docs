@@ -11,7 +11,7 @@
 const siteConfig = {
   tagline: "The Internet Scale Blockchain",
   url: "https://docs.multiversx.com", // Your website URL
-  url: "https://docs.multiversx.com", // Your website URL
+  title: "Docs",
   baseUrl: "/", // Base URL for your project */
   docsUrl: "",
   // For github.io type URLs, you would set the url and baseUrl like:
@@ -20,7 +20,6 @@ const siteConfig = {
 
   // Used for publishing and more
   projectName: "docs",
-  organizationName: "MultiversX",
   organizationName: "MultiversX",
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
