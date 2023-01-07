@@ -19,12 +19,12 @@ Before diving into contract build reproducibility, let's grasp the concept of `c
 
 When a smart contract is deployed, the network stores the bytecode, and also computes its `blake2b` checksum (using a digest length of 256 bits). This is called the `codehash`.
 
-Assume that we are interested into the following contract, deployed on _devnet_: [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.elrond.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy). It's source code is published on [GitHub](https://github.com/ElrondNetwork/reproducible-contract-build-example).
+Assume that we are interested into the following contract, deployed on _devnet_: [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy). It's source code is published on [GitHub](https://github.com/ElrondNetwork/reproducible-contract-build-example).
 
 We can fetch the _codehash_ of the contract from the API:
 
 ```
-curl -s https://devnet-api.elrond.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy \
+curl -s https://devnet-api.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy \
 | jq -r -j .codeHash \
 | base64 -d \
 | xxd -p \
@@ -104,7 +104,7 @@ By inspecting the release notes, we see that [`v0.1.4`](https://github.com/Elron
 The build process (via Docker) is wrapped in a easy-to-use, friendly Python script. Let's download it:
 
 ```
-wget https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-images-build-contract-rust/main/build_with_docker.py
+wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 ```
 
 ### Prepare environment variables
@@ -124,7 +124,7 @@ The latter export statement explicitly selects the **chosen, _frozen_ Docker ima
 Now let's build the contract by invoking the previously-downloaded build wrapper:
 
 ```
-python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
+python3 ./build_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
     --output=${BUILD_OUTPUT}
 ```
@@ -143,7 +143,7 @@ In the `output` folder(s), you should see the following files (example):
 These being said, let's summarize the steps above into a single bash snippet:
 
 ```
-wget https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-images-build-contract-rust/main/build_with_docker.py
+wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
@@ -164,6 +164,6 @@ For our example, that should be:
 adder.codehash.txt: 58c6e78f40bd6ccc30d8a01f952b34a13ebfdad796a2526678be17c5d7820174
 ```
 
-We can see that it matches the previously fetched (or computed) codehash. That is, the contract deployed at [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.elrond.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy) is guaranteed to have been built from the same source code version as the one that we've checked out.
+We can see that it matches the previously fetched (or computed) codehash. That is, the contract deployed at [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy) is guaranteed to have been built from the same source code version as the one that we've checked out.
 
 **Congratulations!** You've achieved a reproducible contract build 🎉

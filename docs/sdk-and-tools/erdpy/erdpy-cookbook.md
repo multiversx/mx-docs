@@ -375,7 +375,7 @@ builder = ContractQueryBuilder(
 
 query = builder.build()
 
-network_provider = ApiNetworkProvider("https://devnet-api.elrond.com")
+network_provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
 response = network_provider.query_contract(query)
 
 print("Return code:", response.return_code)
@@ -549,7 +549,7 @@ Creating an API provider:
 ```
 from erdpy_network_providers import ApiNetworkProvider
 
-provider = ApiNetworkProvider("https://devnet-api.elrond.com");
+provider = ApiNetworkProvider("https://devnet-api.multiversx.com");
 ```
 
 Creating a Proxy provider:
@@ -557,7 +557,7 @@ Creating a Proxy provider:
 ```
 from erdpy_network_providers import ProxyNetworkProvider
 
-provider = ProxyNetworkProvider("https://devnet-gateway.elrond.com");
+provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
 ## Fetching network parameters

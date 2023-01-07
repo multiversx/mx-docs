@@ -7,7 +7,7 @@ Send Transactions to the Blockchain and query information about them.
 
 ## <span class="badge badge-success">POST</span> Send Transaction
 
-`https://gateway.elrond.com/transaction/send`
+`https://gateway.multiversx.com/transaction/send`
 
 This endpoint allows one to send a signed Transaction to the Blockchain.
 
@@ -70,7 +70,7 @@ For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **o
 Here's an example of a request:
 
 ```
-POST https://gateway.elrond.com/transaction/send HTTP/1.1
+POST https://gateway.multiversx.com/transaction/send HTTP/1.1
 Content-Type: application/json
 
 {
@@ -89,7 +89,7 @@ Content-Type: application/json
 
 ## <span class="badge badge-success">POST</span> Send Multiple Transactions
 
-`https://gateway.elrond.com/transaction/send-multiple`
+`https://gateway.multiversx.com/transaction/send-multiple`
 
 This endpoint allows one to send a bulk of Transactions to the Blockchain.
 
@@ -146,7 +146,7 @@ For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **o
 Here's an example of a request:
 
 ```
-POST https://gateway.elrond.com/transaction/send-multiple HTTP/1.1
+POST https://gateway.multiversx.com/transaction/send-multiple HTTP/1.1
 Content-Type: application/json
 
 [
@@ -181,7 +181,7 @@ Content-Type: application/json
 
 **Nodes and observers**
 
-`https://gateway.elrond.com/transaction/simulate`
+`https://gateway.multiversx.com/transaction/simulate`
 
 This endpoint allows one to send a signed Transaction to the Blockchain in order to simulate its execution.
 This can be useful in order to check if the transaction will be successfully executed before actually sending it.
@@ -300,7 +300,7 @@ Example response for cross-shard transactions:
 
 ## <span class="badge badge-success">POST</span> Estimate Cost of Transaction
 
-`https://gateway.elrond.com/transaction/cost`
+`https://gateway.multiversx.com/transaction/cost`
 
 This endpoint allows one to estimate the cost of a transaction.
 
@@ -345,7 +345,7 @@ This endpoint returns the cost on the transaction in **gas units**. The returned
 Here's an example of a request:
 
 ```
-POST https://gateway.elrond.com/transaction/cost HTTP/1.1
+POST https://gateway.multiversx.com/transaction/cost HTTP/1.1
 Content-Type: application/json
 
 {
@@ -361,7 +361,7 @@ Content-Type: application/json
 
 ## <span class="badge badge-primary">GET</span> **Get Transaction**
 
-`https://gateway.elrond.com/transaction/:txHash`
+`https://gateway.multiversx.com/transaction/:txHash`
 
 This endpoint allows one to query the details of a Transaction.
 
@@ -420,7 +420,7 @@ Transaction details retrieved successfully.
 
 Request URL:
 
-`https://gateway.elrond.com/transaction/:txHash?withResults=true`
+`https://gateway.multiversx.com/transaction/:txHash?withResults=true`
 
 Response: 
 
@@ -482,7 +482,7 @@ The optional query parameter **`sender`** is only applicable to requests against
 
 ## <span class="badge badge-primary">GET</span> **Get Transaction Status**
 
-`https://gateway.elrond.com/transaction/:txHash/status`
+`https://gateway.multiversx.com/transaction/:txHash/status`
 
 This endpoint allows one to query the Status of a Transaction.
 
@@ -595,7 +595,7 @@ If the `shard-id` item is used, only the transactions from that specific shard's
 
 Example request with shard id and fields:
 
-`https://gateway.elrond.com/transaction/pool?shard-id=0&fields=sender,receiver,value`
+`https://gateway.multiversx.com/transaction/pool?shard-id=0&fields=sender,receiver,value`
 
 All possible values for fields item are:
 
@@ -663,7 +663,7 @@ Transaction status retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get Transactions Pool for a Sender**
 
-`https://gateway.elrond.com/transaction/pool?by-sender=:sender:`
+`https://gateway.multiversx.com/transaction/pool?by-sender=:sender:`
 
 This endpoint allows one to fetch all the transactions of a sender from the transactions pool.
 
@@ -681,7 +681,7 @@ Query Parameters
 
 Example:
 
-`https://gateway.elrond.com/transaction/pool?by-sender=erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
+`https://gateway.multiversx.com/transaction/pool?by-sender=erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
 
 <!--Response-->
 
@@ -727,7 +727,7 @@ As seen above, if the `fields` item is empty, only the transaction hash will be 
 
 Example request with fields:
 
-`https://gateway.elrond.com/transaction/pool?by-sender=erd1at9...&fields=sender,receiver,value`
+`https://gateway.multiversx.com/transaction/pool?by-sender=erd1at9...&fields=sender,receiver,value`
 
 All possible values for fields item are:
 
@@ -772,7 +772,7 @@ Transaction status retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get the latest nonce of a sender from Tx Pool**
 
-`https://gateway.elrond.com/transaction/pool?by-sender=:sender:&last-nonce=true`
+`https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&last-nonce=true`
 
 This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
 
@@ -807,7 +807,7 @@ Transaction status retrieved successfully.
 
 ## <span class="badge badge-primary">GET</span> **Get the nonce gaps of a sender from Tx Pool**
 
-`https://gateway.elrond.com/transaction/pool?by-sender=:sender:&nonce-gaps=true`
+`https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&nonce-gaps=true`
 
 This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
 

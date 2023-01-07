@@ -3,17 +3,17 @@ id: observing-squad
 title: Observing Squad
 ---
 
-The N+1 setup for connecting to the Elrond Network
+The N+1 setup for connecting to the MultiversX Network
 
-In order to integrate with the Elrond Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
+In order to integrate with the MultiversX Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
 
-An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**Elrond Proxy**](/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
+An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**MultiversX Proxy**](/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
 
 :::tip
-Currently the Elrond Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
+Currently the MultiversX Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
 :::
 
-By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of Elrond's sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
+By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of MultiversX's sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
 
 ## **System requirements**
 
@@ -36,19 +36,19 @@ These specs are only a recommendation. Depending on the load over the API or the
 # **Setup via the Mainnet scripts**
 
 :::warning
-`elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `elrond-go-scripts`, explained below.
+`elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `mx-chain-scripts`, explained below.
 :::
 
-# **Setup via elrond-go-scripts**
+# **Setup via mx-chain-scripts**
 
 ## **Installation and Configuration**
 
-The Observing Squad can be set up using the [installation scripts](/validators/elrond-go-scripts/config-scripts/). Within the installation process, the `DBLookupExtension` feature (required by the Hyperblock API) will be enabled by default.
+The Observing Squad can be set up using the [installation scripts](/validators/nodes-scripts/config-scripts/). Within the installation process, the `DBLookupExtension` feature (required by the Hyperblock API) will be enabled by default.
 
 Clone the installer repository:
 
 ```
-git clone https://github.com/ElrondNetwork/elrond-go-scripts.git
+git clone https://github.com/multiversx/mx-chain-scripts
 ```
 
 Edit `config/variables.cfg` accordingly. For example:
@@ -89,14 +89,14 @@ The Observing Squad can be updated using the installation scripts.
 ### **General upgrade procedure**
 
 :::important
-`elrond-go-scripts-mainnet` are deprecated as of November 2022. Users of these scripts have to migrate to [elrond-go-scripts](/validators/elrond-go-scripts/config-scripts/).
-The migration guide can he found [here](/validators/elrond-go-scripts/install-update/#migration-from-old-scripts).
+`elrond-go-scripts-mainnet` are deprecated as of November 2022. Users of these scripts have to migrate to [mx-chain-scripts](/validators/elrond-go-scripts/config-scripts/).
+The migration guide can he found [here](/validators/nodes-scripts/install-update/#migration-from-old-scripts).
 :::
 
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
 ```
-$ cd ~/elrond-go-scripts
+$ cd ~/mx-chain-scripts
 $ ./script.sh github_pull
 $ ./script.sh stop
 $ ./script.sh upgrade_squad
@@ -148,7 +148,7 @@ The Observing Squad can be also set up using Docker.
 Clone the Observing Squad repository:
 
 ```
-git clone https://github.com/ElrondNetwork/observing-squad.git
+git clone https://github.com/multiversx/mx-chain-observing-squad.git
 ```
 
 Install docker-compose if not already installed:
@@ -172,7 +172,7 @@ docker ps
 In order to check the status inside a container, you can check the logs on the machine for the last synchronized block nonce:
 ```
 docker exec -it 'CONTAINER ID' /bin/bash
-cat logs/elrond-go-.......log
+cat logs/mx-chain-.......log
 ```
 
-More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/ElrondNetwork/observing-squad). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).
+More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/multiversx/mx-chain-observing-squad.git). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).

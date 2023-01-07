@@ -3,19 +3,19 @@ id: constants
 title: Constants
 ---
 
-Elrond uses some constants, which are specific to each chain (Mainnet, Testnet or Devnet). The updated values can be found at these sources:
+MultiversX uses some constants, which are specific to each chain (Mainnet, Testnet or Devnet). The updated values can be found at these sources:
 
 **Mainnet**:
-- https://gateway.elrond.com/network/config
-- https://github.com/ElrondNetwork/elrond-config-mainnet
+- https://gateway.multiversx.com/network/config
+- https://github.com/multiversx/mx-chain-mainnet-config
 
 **Testnet**:
-- https://testnet-gateway.elrond.com/network/config
-- https://github.com/ElrondNetwork/elrond-config-testnet
+- https://testnet-gateway.multiversx.com/network/config
+- https://github.com/multiversx/mx-chain-testnet-config
 
 **Devnet**:
-- https://devnet-gateway.elrond.com/network/config
-- https://github.com/ElrondNetwork/elrond-config-devnet
+- https://devnet-gateway.multiversx.com/network/config
+- https://github.com/multiversx/mx-chain-devnet-config
 
 :::important
 Each transaction requires a `chainID` field that represents the network's identifier. It adds protection so that transactions cannot be replayed from a network to another. 

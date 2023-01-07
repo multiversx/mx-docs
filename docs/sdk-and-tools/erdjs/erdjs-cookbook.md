@@ -16,7 +16,7 @@ Creating an API provider:
 ```
 import { ApiNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
-let networkProvider = new ApiNetworkProvider("https://devnet-api.elrond.com");
+let networkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com");
 ```
 
 Creating a Proxy provider:
@@ -24,11 +24,11 @@ Creating a Proxy provider:
 ```
 import { ProxyNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
 
-let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.elrond.com");
+let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
 :::important
-Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the Elrond API (or Gateway).
+Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
 On this topic, please see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
 :::
@@ -147,14 +147,14 @@ let txHash = await networkProvider.sendTransaction(tx);
 Note that the transaction needs to be signed before broadcasting it. Signing can be achieved using a signing provider.
 
 :::important
-Note that, for all purposes, **we recommend using [dapp-core](https://github.com/ElrondNetwork/dapp-core)** instead of integrating the signing providers on your own.
+Note that, for all purposes, **we recommend using [dapp-core](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 ### Broadcast using `axios`
 
 ```
 let data = tx.toSendable();
-let url = "https://devnet-api.elrond.com/transactions";
+let url = "https://devnet-api.multiversx.com/transactions";
 let response = await axios.post(url, data, {
     headers: {
         "Content-Type": "application/json",
@@ -528,7 +528,7 @@ interaction.withMultiESDTNFTTransfer([
 ## Parsing contract results
 
 :::important
-When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/ElrondNetwork/elrond-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
+When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/multiversx/mx-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
 :::
 
 ### When the ABI is not available
@@ -706,8 +706,8 @@ let metadata = new TransactionDecoder().getTransactionMetadata({
 The classes `esdtHelpers` and `scArgumentsParser` have been removed in `erdjs 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above). 
 
 However, you can still find the previous implementations at the following location: 
- - [esdtHelpers](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
- - [esdtHelpers examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
- - [scArgumentsParser](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
- - [scArgumentsParser examples](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)
+ - [esdtHelpers](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
+ - [esdtHelpers examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
+ - [scArgumentsParser](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
+ - [scArgumentsParser examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)
  

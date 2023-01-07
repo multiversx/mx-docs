@@ -3,11 +3,11 @@ id: addresses
 title: Addresses
 ---
 
-Get information about an Elrond Address.
+Get information about an MultiversX Address.
 
 ## <span class="badge badge-primary">GET</span> **Get Address**
 
-`https://gateway.elrond.com/address/:bech32Address`
+`https://gateway.multiversx.com/address/:bech32Address`
 
 This endpoint allows one to retrieve basic information about an Address (Account).
 
@@ -51,7 +51,7 @@ Address information successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Nonce**
 
-`https://gateway.elrond.com/address/:bech32Address/nonce`
+`https://gateway.multiversx.com/address/:bech32Address/nonce`
 
 This endpoint allows one to retrieve the nonce of an Address.
 
@@ -85,7 +85,7 @@ Nonce successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Balance**
 
-`https://gateway.elrond.com/address/:bech32Address/balance`
+`https://gateway.multiversx.com/address/:bech32Address/balance`
 
 This endpoint allows one to retrieve the balance of an Address.
 
@@ -119,7 +119,7 @@ Balance successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Username (herotag)**
 
-`https://gateway.elrond.com/address/:bech32Address/username`
+`https://gateway.multiversx.com/address/:bech32Address/username`
 
 This endpoint allows one to retrieve the username / herotag of an Address (if any).
 
@@ -153,7 +153,7 @@ Balance successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get Address Transactions**
 
-`https://gateway.elrond.com/address/:bech32Address/transactions`
+`https://gateway.multiversx.com/address/:bech32Address/transactions`
 
 This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
 
@@ -228,16 +228,16 @@ Transactions successfully retrieved.
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 :::warning
-This endpoint is not available on Observer Nodes. It is only available on Elrond Proxy.
+This endpoint is not available on Observer Nodes. It is only available on MultiversX Proxy.
 
-**Currently, this endpoint is only available on the Official Elrond Proxy instance.**
+**Currently, this endpoint is only available on the Official MultiversX Proxy instance.**
 
 This endpoint requires the presence of an Elasticsearch instance (populated through Observers) as well.
 :::
 
 ## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**
 
-`https://gateway.elrond.com/address/:bech32Address/key/:key`
+`https://gateway.multiversx.com/address/:bech32Address/key/:key`
 
 This endpoint allows one to retrieve a value stored within the Blockchain for a given Address.
 
@@ -274,7 +274,7 @@ Value (hex-encoded) successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get all storage for Address**
 
-`https://gateway.elrond.com/address/:bech32Address/keys`
+`https://gateway.multiversx.com/address/:bech32Address/keys`
 
 This endpoint allows one to retrieve all the key-value pairs stored under a given account.
 

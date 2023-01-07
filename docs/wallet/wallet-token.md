@@ -5,20 +5,20 @@ title: Web Wallet Tokens
 
 ## **Introduction**
 
-**ESDT** stands for *Elrond Standard Digital Token*.
+**ESDT** stands for *eStandard Digital Token*.
 
-Elrond network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases.
-You can create and issue an ESDT token from [Elrond web wallet](https://wallet.elrond.com/) in a few steps. Let's go over these steps.
+MultiversX network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases.
+You can create and issue an ESDT token from [MultiversX web wallet](https://wallet.multiversx.com/) in a few steps. Let's go over these steps.
 
 ## **Prerequisites**
 
-- A wallet on Elrond Network.
+- A wallet on MultiversX Network.
 - 0.05 EGLD issuance fee
 - fees for transactions
 
 ## **Creating a fungible token from Web Wallet**
 
-To get started, open up the [Elrond web wallet](https://wallet.elrond.com/). You can create a new wallet if you do not have one or import your existing wallet. Here is a [guide](https://docs.elrond.com/wallet/web-wallet/) to help you navigate.
+To get started, open up the [MultiversX web wallet](https://wallet.multiversx.com/). You can create a new wallet if you do not have one or import your existing wallet. Here is a [guide](https://docs.multiversx.com/wallet/web-wallet/) to help you navigate.
 
 On the left sidebar, you will notice the **ISSUE** section.
 
@@ -60,7 +60,7 @@ On the right side, choose `Smart` and you will able to see the decoded parameter
 
 ## **Transfer a token from your wallet**
 
-You can transfer an amount of a token to another account. To get started, open up the [Elrond web wallet](https://wallet.elrond.com/).
+You can transfer an amount of a token to another account. To get started, open up the [MultiversX web wallet](https://wallet.multiversx.com/).
 
 Navigate to the `Tokens` tab, and click on `Send` for the token you want to transfer. 
 

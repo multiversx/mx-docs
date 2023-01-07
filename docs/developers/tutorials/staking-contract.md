@@ -7,17 +7,17 @@ title: Staking smart contract tutorial
 
 This tutorial aims to teach you how to write a simple staking contract, and to illustrate and correct the common pitfalls new smart contract developers might fall into.  
 
-If you find anything not answered here, feel free to ask further questions on the Elrond Developers Telegram channel: https://t.me/ElrondDevelopers
+If you find anything not answered here, feel free to ask further questions on the MultiversX Developers Telegram channel: https://t.me/ElrondDevelopers
 
 ## Prerequisites
 
 ### erdpy
 
-First and foremost, you need to have erdpy installed: https://docs.elrond.com/sdk-and-tools/erdpy/installing-erdpy/
+First and foremost, you need to have erdpy installed: https://docs.multiversx.com/sdk-and-tools/erdpy/installing-erdpy/
 
 If you already have erdpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
-We're going to use erdpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.elrond.com/sdk-and-tools/erdpy/smart-contract-interactions/
+We're going to use erdpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/erdpy/smart-contract-interactions/
 
 ### Rust
 
@@ -46,7 +46,7 @@ Assuming you're on Ubuntu, download the `.deb` version. Go to that folder:
 
 rust-analyser: https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer
 
-Elrond VSCode extension: https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide
+MultiversX VSCode extension: https://marketplace.visualstudio.com/items?itemName=MultiversX.vscode-elrond-ide
 
 Both can be easily installed from the "Extensions" menu in VSCode.  
 
@@ -66,9 +66,9 @@ For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "
 
 ## Setting up the workspace
 
-Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "Elrond: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
+Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "MultiversX: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
 
-Now let's open the Elrond VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
+Now let's open the MultiversX VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
 ![img](/developers/staking-contract-tutorial-img/elrond_ide_extension.png)
 
 Alternatively, you can run `erdpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
@@ -140,15 +140,15 @@ pub trait StakingContract {
 
 `require!` is a macro that is a shortcut for `if !condition { signal_error(msg) }`. Signalling an error will terminate the execution and revert any changes made to the internal state, including token transfers from and to the SC. In this case, there is no reason to continue if the user did not pay anything.
 
-We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.elrond.com/developers/developer-reference/elrond-wasm-annotations/
+We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.multiversx.com/developers/developer-reference/elrond-wasm-annotations/
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
-- https://docs.elrond.com/developers/developer-reference/elrond-wasm-api-functions/
-- https://docs.elrond.com/developers/developer-reference/storage-mappers/
+- https://docs.multiversx.com/developers/developer-reference/elrond-wasm-api-functions/
+- https://docs.multiversx.com/developers/developer-reference/storage-mappers/
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
 
-Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.elrond.com/developers/best-practices/biguint-operations/
+Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.multiversx.com/developers/best-practices/biguint-operations/
 
 Secondly, the `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
 
@@ -193,7 +193,7 @@ Every smart contract needs to have a function annotated with `#[init]`. This fun
 
 ## Trying it out on devnet
 
-To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the Elrond IDE extension. More on this in a bit. Your new folder structure should look like this:  
+To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the MultiversX IDE extension. More on this in a bit. Your new folder structure should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_3.png)
 
 ### Creating a devnet wallet
@@ -202,9 +202,9 @@ To deploy and interact with the contract, we need to write some snippets. Create
 You can skip this section if you already have a devnet wallet setup.
 :::
 
-Let's create a devnet wallet. Go to https://devnet-wallet.elrond.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
+Let's create a devnet wallet. Go to https://devnet-wallet.multiversx.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
-Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.elrond.com/sdk-and-tools/erdpy/deriving-the-wallet-pem-file/
+Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/erdpy/deriving-the-wallet-pem-file/
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 ```
@@ -221,7 +221,7 @@ Now that we've created a wallet, it's time to deploy our contract. Open your `sn
 
 ```bash
 USER_PEM="~/Downloads/tutorialKey.pem"
-PROXY="https://devnet-gateway.elrond.com"
+PROXY="https://devnet-gateway.multiversx.com"
 CHAIN_ID="D"
 
 deploy() {
@@ -234,14 +234,14 @@ deploy() {
 ```
 
 :::note  
-If you wanted to use testnet, the proxy would be "https://testnet-gateway.elrond.com" and the chain ID would be "T". For mainnet, it would be "https://gateway.elrond.com" and chain ID "1". 
+If you wanted to use testnet, the proxy would be "https://testnet-gateway.multiversx.com" and the chain ID would be "T". For mainnet, it would be "https://gateway.multiversx.com" and chain ID "1". 
 
 More details can be found [here](/developers/constants/).
 :::
 
 The only thing you need to edit is the USER_PEM variable with the previously created PEM file's path.
 
-To run this snippet, we're going to use the Elrond IDE extension again. Open the extension in VSCode from the left-hand menu, right-click on the contract name, and select the `Run Contract Snippet` option. This should open a menu in at the top:  
+To run this snippet, we're going to use the MultiversX IDE extension again. Open the extension in VSCode from the left-hand menu, right-click on the contract name, and select the `Run Contract Snippet` option. This should open a menu in at the top:  
 ![img](/developers/staking-contract-tutorial-img/snippet.png)
 
 For now, we only have one option, as we only have a single function in our file, but any bash function we write in the snippets.sh file will appear there. Now, select the deploy option and let's deploy the contract.  
@@ -250,7 +250,7 @@ For now, we only have one option, as we only have a single function in our file,
 
 You're going to see an error like the following:  
 ```bash
-CRITICAL:cli:Proxy request error for url [https://devnet-gateway.elrond.com/transaction/send]: {'data': None, 'error': 'transaction generation failed: account not found for address erd1... and shard 1, err: account was not found', 'code': 'internal_issue'}
+CRITICAL:cli:Proxy request error for url [https://devnet-gateway.multiversx.com/transaction/send]: {'data': None, 'error': 'transaction generation failed: account not found for address erd1... and shard 1, err: account was not found', 'code': 'internal_issue'}
 ```
 
 This is because your account has no EGLD in it, so as far as the blockchain is concerned, the account does not exist, as it has no transactions from or to it.  
@@ -258,7 +258,7 @@ This is because your account has no EGLD in it, so as far as the blockchain is c
 But still, how come you're seeing the contract's address if the deployment failed?
 ```bash
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
-INFO:utils:View this contract address in the Elrond Devnet Explorer: https://devnet-explorer.elrond.com/accounts/erd1qqqqqqqqqqqqq...
+INFO:utils:View this contract address in the MultiversX Devnet Explorer: https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqq...
 ```
 
 This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So erdpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.  
@@ -271,7 +271,7 @@ There are two ways of getting EGLD on devnet:
 
 #### Getting EGLD through devnet wallet
 
-Go to https://devnet-wallet.elrond.com and login to your devnet account with your PEM file. On the left side menu, select the "faucet" option:  
+Go to https://devnet-wallet.multiversx.com and login to your devnet account with your PEM file. On the left side menu, select the "faucet" option:  
 ![img](/developers/staking-contract-tutorial-img/wallet_faucet.png)
 
 Request the tokens. After a couple seconds, refresh the page, and you should have 30 xEGLD in your wallet.  
@@ -304,7 +304,7 @@ This is NOT an error. This simply means you provided way more gas than needed, s
 Let's add a snippet for the staking function:
 ```bash
 USER_PEM="~/Downloads/tutorialKey.pem"
-PROXY="https://devnet-gateway.elrond.com"
+PROXY="https://devnet-gateway.multiversx.com"
 CHAIN_ID="D"
 
 SC_ADDRESS=erd1qqqqqqqqqqqqq...
@@ -566,7 +566,7 @@ This makes it so if someone wants to perform a full unstake, they can simply not
 
 ### Unstaking our devnet tokens
 
-Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the Elrond IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
+Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
 
 ```bash
 UNSTAKE_AMOUNT=500000000000000000
@@ -665,7 +665,7 @@ As you might've noticed, it can be quite a chore to keep upgrading the contract 
 - full unstake
 
 :::note
-A more detailed explanation of Rust tests can be found here: https://docs.elrond.com/developers/developer-reference/rust-testing-framework/
+A more detailed explanation of Rust tests can be found here: https://docs.multiversx.com/developers/developer-reference/rust-testing-framework/
 :::
 
 To test the previously described scenario, we're going to need a user address, and a new test function. Replace the contents of the `./tests/empty_rust_test.rs` file with the following:
@@ -823,7 +823,7 @@ Then, we've staked the user's entire balance, unstaked half, then unstaked fully
 To run a test, you can use click on the `Run Test` button from under the test name.
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
 
-There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.elrond.com/developers/developer-reference/rust-smart-contract-debugging/
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.multiversx.com/developers/developer-reference/rust-smart-contract-debugging/
 
 Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
 ```bash
@@ -874,7 +874,7 @@ We've also added `TypeAbi`, since this is required for ABI generation. ABIs are 
 
 Additionally, we've added `PartialEq` and `Debug` derives, for easier use within tests. This will not affect performance in any way, as the code for these is only used during testing/debugging. `PartialEq` allows us to use `==` for comparing instances, while `Debug` will pretty-print the struct, field by field, in case of errors.
 
-If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more here: https://docs.elrond.com/developers/developer-reference/elrond-serialization-format/
+If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more here: https://docs.multiversx.com/developers/developer-reference/elrond-serialization-format/
 
 ### Rewards formula
 

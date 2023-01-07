@@ -5,18 +5,18 @@ title: Developers - Overview
 
 ## Developer documentation
 
-Get started with Elrond by learning to write your first Smart Contract, build your first dApp or learn how to use our
+Get started with MultiversX by learning to write your first Smart Contract, build your first dApp or learn how to use our
 API.
 
 :::important
-For interacting with Elrond Blockchain via SDKs or Rest API, please refer to [SDKs & Tools](/sdk-and-tools/overview).
+For interacting with MultiversX Blockchain via SDKs or Rest API, please refer to [SDKs & Tools](/sdk-and-tools/overview).
 :::
 
 ## Table of contents
 
 ### Tutorials
 
-Below is a list of tutorials that one can you to get a full experience of building on Elrond
+Below is a list of tutorials that one can you to get a full experience of building on MultiversX
 
 | Name                                                                                | Description                                                       |
 |-------------------------------------------------------------------------------------|-------------------------------------------------------------------|
@@ -54,13 +54,13 @@ Learn about transaction's gas and how a fee is calculated
 | Name                                                                                                                     | Description                                                                                     |
 |--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
-| [Elrond serialization format](/developers/developer-reference/elrond-serialization-format)                               | How Elrond smart contracts serialize arguments, results, and storage.                           |
-| [Elrond wasm annotations](/developers/developer-reference/elrond-wasm-annotations)                                       | How to use annotations your contracts to make use of many built-in features from the framework. |
-| [Elrond wasm modules](/developers/developer-reference/elrond-wasm-modules)                                               | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
-| [Elrond wasm contract calls](/developers/developer-reference/elrond-wasm-contract-calls)                                 | Learn how to call a Smart Contract from another Smart Contract.                                 |
-| [Smart contract developer best practices](/developers/developer-reference/smart-contract-developer-best-practices)       | Few tips on how to write clean and efficient contracts on Elrond.                               |
+| [MultiversX serialization format](/developers/developer-reference/elrond-serialization-format)                               | How MultiversX smart contracts serialize arguments, results, and storage.                           |
+| [MultiversX wasm annotations](/developers/developer-reference/elrond-wasm-annotations)                                       | How to use annotations your contracts to make use of many built-in features from the framework. |
+| [MultiversX wasm modules](/developers/developer-reference/elrond-wasm-modules)                                               | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
+| [MultiversX wasm contract calls](/developers/developer-reference/elrond-wasm-contract-calls)                                 | Learn how to call a Smart Contract from another Smart Contract.                                 |
+| [Smart contract developer best practices](/developers/developer-reference/smart-contract-developer-best-practices)       | Few tips on how to write clean and efficient contracts on MultiversX.                               |
 | [Code metadata](/developers/developer-reference/code-metadata)                                                           | Choose the properties / eligible actions of your Smart Contract.                                |
-| [Elrond wasm api functions](/developers/developer-reference/elrond-wasm-api-functions)                                   | Make use of the Elrond VM API functions to query relevant data from the blockchain.             |
+| [MultiversX wasm api functions](/developers/developer-reference/elrond-wasm-api-functions)                                   | Make use of the MultiversX VM API functions to query relevant data from the blockchain.             |
 | [Storage mappers](/developers/developer-reference/storage-mappers)                                                       | Decide from multiple ways of storing data in your SC, by considering performance.               |
 | [Rust testing framework](/developers/developer-reference/rust-testing-framework)                                         | Test your Smart Contract directly in Rust.                                                      |
 | [Rust testing framework functions reference](/developers/developer-reference/rust-testing-framework-functions-reference) | A list of available functions to be used when testing your Smart Contract in Rust.              |
@@ -91,7 +91,7 @@ Learn about transaction's gas and how a fee is calculated
 
 | Name                                                                     | Description                                                                      |
 |--------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| [Constants](/developers/constants)                                       | A list of useful constants that governs the Elrond Mainnet.                      |
+| [Constants](/developers/constants)                                       | A list of useful constants that governs the MultiversX Mainnet.                      |
 | [Built in functions](/developers/built-in-functions)                     | Built-in functions - protocol-side functions.                                    |
 | [Account storage](/developers/account-storage)                           | How the data is stored under an account + how to query and change it.            |
 | [Relayed/meta transactions](/developers/relayed-transactions)            | How to prepare transactions whose fee is not paid by the user, but by a relayer. |

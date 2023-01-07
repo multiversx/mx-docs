@@ -1,20 +1,20 @@
 ---
-id: api-elrond-com
-title: api.elrond.com
+id: multiversx-api
+title: MultiversX API
 ---
 
-## About api.elrond.com
+## About MultiversX API
 
-`api.elrond.com` is a wrapper over `gateway.elrond.com` that brings a robust caching mechanism, alongside Elasticsearch 
+`api.multiversx.com` is the public instance of MultiversX API and is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch 
 historical queries support, tokens media support, delegation & staking data, and many others. 
 
 ## Public URLs
 
-Mainnet: [https://api.elrond.com](https://api.elrond.com).
+Mainnet: [https://api.multiversx.com](https://api.multiversx.com).
 
-Testnet: [https://testnet-api.elrond.com](https://testnet-api.elrond.com).
+Testnet: [https://testnet-api.multiversx.com](https://testnet-api.multiversx.com).
 
-Devnet: [https://devnet-api.elrond.com](https://devnet-api.elrond.com).
+Devnet: [https://devnet-api.multiversx.com](https://devnet-api.multiversx.com).
 
 ## External Providers
 
@@ -32,7 +32,7 @@ More details on how to get your private endpoint can be found [here](https://doc
 ## Dependencies
 
 ### Core dependencies 
-For its basic functionality (without including caching or storage improvements), api.elrond.com depends on the following external systems:
+For its basic functionality (without including caching or storage improvements), api.multiversx.com depends on the following external systems:
 
 - `gateway`: also referred as Proxy, provides access to node information, such as network settings, account balance, sending transactions, etc
         docs: [Proxy](/sdk-and-tools/proxy).
@@ -62,7 +62,7 @@ It uses the following optional internal systems:
 - mysql database: used to store mainly NFT media & metadata information
 - mongo database: used to store mainly NFT media & metadata information
 
-## Ways to start api.elrond.com
+## Ways to start MultiversX API
 
 An API instance can be started with the following behavior:
 
@@ -75,18 +75,18 @@ An API instance can be started with the following behavior:
 
 ## Rate limiting
 
-Public Elrond APIs have a rate limit mechanism that brings the following limitations:
+Public MultiversX APIs have a rate limit mechanism that brings the following limitations:
 
-- api.elrond.com (*mainnet*): 2 requests / IP / second
-- devnet-api.elrond.com (*devnet*): 5 requests / IP / second
+- api.multiversx.com (*mainnet*): 2 requests / IP / second
+- devnet-api.multiversx.com (*devnet*): 5 requests / IP / second
 
 ## Rest API documentation
 
-Rest API documentation of `api.elrond.com` can be found on the [Swagger docs](https://api.elrond.com).
+Rest API documentation of `api.multiversx.com` can be found on the [Swagger docs](https://api.multiversx.com).
 
 ## References:
 
-- Github repository: [https://github.com/ElrondNetwork/api.elrond.com](https://github.com/ElrondNetwork/api.elrond.com)
-- Swagger docs: [https://api.elrond.com](https://api.elrond.com)
-- Raw JSON Swagger OpenAPI definitions: [https://api.elrond.com/-json](https://api.elrond.com/-json)
-- Elrond blog: [https://elrond.com/blog/elrond-api-internet-scale-defi](https://elrond.com/blog/elrond-api-internet-scale-defi)
+- Github repository: [https://github.com/multiversx/mx-api-service](https://github.com/multiversx/mx-api-service)
+- Swagger docs: [https://api.multiversx.com](https://api.multiversx.com)
+- Raw JSON Swagger OpenAPI definitions: [https://api.multiversx.com/-json](https://api.multiversx.com/-json)
+- MultiversX blog: [https://elrond.com/blog/elrond-api-internet-scale-defi](https://elrond.com/blog/elrond-api-internet-scale-defi)

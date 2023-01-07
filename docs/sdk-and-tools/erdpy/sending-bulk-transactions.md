@@ -79,7 +79,7 @@ declare -a TRANSACTIONS=(
 
 # DO NOT MODIFY ANYTHING FROM HERE ON
 
-PROXY="https://gateway.elrond.com"
+PROXY="https://gateway.multiversx.com"
 DENOMINATION="000000000000000000"
 
 # We recall the nonce of the wallet

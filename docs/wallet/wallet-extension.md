@@ -3,9 +3,9 @@ id: wallet-extension
 title: Maiar Web Wallet Extension
 ---
 
-Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. It is a powerful browser extension for the Elrond Wallet that effectively automates and reduces the steps and time required for users to interact with Elrond Decentralized apps.
+Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. It is a powerful browser extension for the MultiversX Wallet that effectively automates and reduces the steps and time required for users to interact with MultiversX Decentralized apps.
 
-The Maiar DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the Elrond mainnet, and store Elrond tokens such as EGLD, ESDT, or NFTs on the Elrond Network with easy accessibility.
+The Maiar DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the MultiversX mainnet, and store MultiversX tokens such as EGLD, ESDT, or NFTs on the MultiversX Network with easy accessibility.
 
 Let's walk through the steps how to install and set up the Maiar DeFi Wallet extension:
 
@@ -135,7 +135,7 @@ On the wallet extension dashboard, the wallet records all transactions sent and 
 
 ### Networks
 
-In the settings section on your extension dashboard, you can connect to the different networks provided by Elrond, such as the mainnet, testnet, and devnet.
+In the settings section on your extension dashboard, you can connect to the different networks provided by MultiversX, such as the mainnet, testnet, and devnet.
 
 Choose either of these networks.
 

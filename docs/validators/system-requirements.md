@@ -3,11 +3,11 @@ id: system-requirements
 title: System Requirements
 ---
 
-# **Elrond Nodes explained**
+# **MultiversX Nodes explained**
 
-Nodes are computers running the Elrond software, so they contribute to the Elrond network by relaying information and validating it. Each node needs to stake 2500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
+Nodes are computers running the MultiversX software, so they contribute to the MultiversX network by relaying information and validating it. Each node needs to stake 2500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
 
-# **Minimum System Requirements for running 1 Elrond Node**
+# **Minimum System Requirements for running 1 MultiversX Node**
 
 - 4 x dedicated/physical CPUs, either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 8 GB RAM
@@ -28,7 +28,7 @@ We are promoting using processors that support the `fma` or `fma3` instruction s
 :::
 
 :::warning
-In case a decision to run multiple Elrond Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
+In case a decision to run multiple MultiversX Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
 :::
 
 ### **Networking**
@@ -46,7 +46,7 @@ sudo ufw allow 37373:38383/tcp
 ```
 
 :::note
-The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/ElrondNetwork/elrond-go/blob/master/cmd/node/config/p2p.toml#L7). 
+The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/p2p.toml#L7). 
 :::
 
 :::warning

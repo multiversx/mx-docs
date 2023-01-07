@@ -29,7 +29,7 @@ brew install ncurses
 In order to install **erdpy** using the `erdpy-up` installation script, run the following commands in a terminal:
 
 ```
-wget -O erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk-erdpy/master/erdpy-up.py
+wget -O erdpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-erdpy/main/erdpy-up.py
 python3.8 erdpy-up.py
 ```
 
