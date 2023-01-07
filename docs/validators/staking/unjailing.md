@@ -7,7 +7,7 @@ In the unfortunate situation of losing too much **rating score**, a validator wi
 
 You can reinstate one of your jailed validators using an **unjailing transaction**. This transaction effectively represents the payment of a fine. After the transaction is successfully executed, your validator will return to the network in the next epoch, and treated as if the validator is brand new, with the rating reset to `50`.
 
-It is easy to submit an unjailing transaction. You have the option of unjailing your validators either through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/), or by using `erdpy` in the command-line.
+It is easy to submit an unjailing transaction. You have the option of unjailing your validators either through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/), or by using `erdpy` in the command-line.
 
 You'll see some BLS public keys in the examples on this page. Make sure you don't copy-paste them into your staking transaction. These BLS keys have been randomly generated and do not belong to any real node.
 
@@ -20,7 +20,7 @@ In order to submit an unjailing transaction, you require the following:
 
 # **Unjailing through the Wallet**
 
-Open your wallet on [https://wallet.elrond.com](https://wallet.elrond.com/) and click the "Send" button. Carefully fill the form with the following information. Make sure it is clear to you what this information is, and where to adjust it with your own information.
+Open your wallet on [https://wallet.multiversx.com](https://wallet.multiversx.com/) and click the "Send" button. Carefully fill the form with the following information. Make sure it is clear to you what this information is, and where to adjust it with your own information.
 
 In the "To" field, paste the address of the Staking SmartContract, which also handles unjailing: `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l`
 
@@ -104,7 +104,7 @@ Make sure `erdpy` is installed and has the latest version before continuing.
 
 ## **Your Wallet PEM file**
 
-To send transactions on your behalf _without_ using the online MultiversX (previously Elrond) Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
+To send transactions on your behalf _without_ using the online MultiversX Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
 Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `erdpy` commands.
 

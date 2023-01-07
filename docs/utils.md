@@ -246,7 +246,7 @@ $$
 
 ## First Version
 
-[![MultiversX (previously Elrond) IDE](https://img.youtube.com/vi/bXbBfJCRVqE/maxresdefault.jpg)](http://www.youtube.com/watch?v=bXbBfJCRVqE "MultiversX (previously Elrond) IDE")
+[![MultiversX IDE](https://img.youtube.com/vi/bXbBfJCRVqE/maxresdefault.jpg)](http://www.youtube.com/watch?v=bXbBfJCRVqE "MultiversX IDE")
 
 ## Second version
 

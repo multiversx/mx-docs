@@ -1,5 +1,5 @@
 ---
-id: elrond-wasm-annotations
+id: wasm-annotations
 title: Smart contract annotations
 ---
 

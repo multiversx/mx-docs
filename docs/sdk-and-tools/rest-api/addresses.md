@@ -3,7 +3,7 @@ id: addresses
 title: Addresses
 ---
 
-Get information about an MultiversX (previously Elrond) Address.
+Get information about an MultiversX Address.
 
 ## <span class="badge badge-primary">GET</span> **Get Address**
 
@@ -154,6 +154,7 @@ Balance successfully retrieved.
 ## <span class="badge badge-primary">GET</span> **Get Address Transactions**
 
 `https://gateway.multiversx.com/address/:bech32Address/transactions`
+`https://gateway.multiversx.com/address/:bech32Address/transactions`
 
 This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
 
@@ -228,15 +229,16 @@ Transactions successfully retrieved.
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 :::warning
-This endpoint is not available on Observer Nodes. It is only available on MultiversX (previously Elrond) Proxy.
+This endpoint is not available on Observer Nodes. It is only available on MultiversX Proxy.
 
-**Currently, this endpoint is only available on the Official MultiversX (previously Elrond) Proxy instance.**
+**Currently, this endpoint is only available on the Official MultiversX Proxy instance.**
 
 This endpoint requires the presence of an Elasticsearch instance (populated through Observers) as well.
 :::
 
 ## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**
 
+`https://gateway.multiversx.com/address/:bech32Address/key/:key`
 `https://gateway.multiversx.com/address/:bech32Address/key/:key`
 
 This endpoint allows one to retrieve a value stored within the Blockchain for a given Address.
@@ -274,6 +276,7 @@ Value (hex-encoded) successfully retrieved.
 
 ## <span class="badge badge-primary">GET</span> **Get all storage for Address**
 
+`https://gateway.multiversx.com/address/:bech32Address/keys`
 `https://gateway.multiversx.com/address/:bech32Address/keys`
 
 This endpoint allows one to retrieve all the key-value pairs stored under a given account.

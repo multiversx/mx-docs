@@ -10,11 +10,11 @@ In order to submit a staking transaction, you must have the following:
 - 2500 EGLD for each node and 0.006 EGLD per node as transaction fee
 - A unique `validatorKey.pem` file of each node
 
-You have the option of staking through the online Wallet at [https://wallet.elrond.com](https://wallet.elrond.com/) or by using `erdpy`.
+You have the option of staking through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/) or by using `erdpy`.
 
 ## **Staking through the Wallet**
 
-1. Go to https://wallet.elrond.com and log into your wallet
+1. Go to https://wallet.multiversx.com and log into your wallet
 2. Go to the Validate section
 3. Press "Stake now"
 
@@ -59,7 +59,7 @@ Make sure `erdpy` is installed and has the latest version before continuing.
 
 # **Your Wallet PEM file**
 
-To send transactions on your behalf _without_ using the online MultiversX (previously Elrond) Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
+To send transactions on your behalf _without_ using the online MultiversX Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
 Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `erdpy` commands.
 

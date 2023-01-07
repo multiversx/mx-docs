@@ -3,26 +3,26 @@ id: setup-local-testnet-advanced
 title: Set up a Local Testnet (advanced)
 ---
 
-How to set up a local MultiversX (previously Elrond) Testnet on a workstation.
+How to set up a local MultiversX Testnet on a workstation.
 
 # **Prerequisites**
 
-First, clone [elrond-go](https://github.com/ElrondNetwork/elrond-go) and [elrond-proxy-go](https://github.com/ElrondNetwork/elrond-proxy-go) in a directory of your choice.
+First, clone [mx-chain-go](https://github.com/multiversx/mx-chain-go) and [mx-chain-proxy-go](https://github.com/multiversx/mx-chain-proxy-go) in a directory of your choice.
 
 ```
 $ mkdir mytestnet && cd mytestnet
-$ git clone git@github.com:ElrondNetwork/elrond-go.git
-$ git clone git@github.com:ElrondNetwork/elrond-proxy-go.git
+$ git clone git@github.com:multiversx/mx-chain-go.git
+$ git clone git@github.com:multiversx/mx-chain-proxy-go.git
 ```
 
 Then, run the `prerequisites` command.
 
 ```
-$ cd elrond-go/scripts/testnet
+$ cd mx-chain-go/scripts/testnet
 $ ./prerequisites.sh
 ```
 
-This will install some packages and also clone the [elrond-deploy-go](https://github.com/ElrondNetwork/elrond-deploy-go) repository, as a sibling of the previously cloned `elrond-go`.
+This will install some packages and also clone the [mx-chain-deploy-go](https://github.com/multiversx/mx-chain-deploy-go) repository, as a sibling of the previously cloned `mx-chain-go`.
 
 Depending on your Linux distribution, you may need to run the following commands as well:
 
@@ -149,7 +149,7 @@ $ ./reset.sh
 
 ## **Inspecting the Proxy**
 
-By default, the local Testnet also includes a local MultiversX (previously Elrond) Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/rest-api).
+By default, the local Testnet also includes a local MultiversX Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/rest-api).
 
 ```
 $ curl http://localhost:7950/network/config

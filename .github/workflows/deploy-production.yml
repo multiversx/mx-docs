@@ -2,7 +2,7 @@ name: deploy-production
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   repository_dispatch:
     types: deploy-production
   workflow_dispatch:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:

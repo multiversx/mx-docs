@@ -17,7 +17,7 @@ This tutorial will guide you through the process of (system) testing smart contr
 
 In order to follow the steps in this tutorial, you need **Visual Studio Code** with the following extensions installed:
 
-- [MultiversX (previously Elrond) IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
+- [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
 - [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
 
 ## Setup steps
@@ -27,16 +27,16 @@ In order to follow the steps in this tutorial, you need **Visual Studio Code** w
 First, you need to open in Visual Studio Code a folder that will hold both the smart contracts and the interaction snippets. Upon opening a folder, you need to invoke the command `Elrond: Setup workspace`.
 
 :::note
-Make sure the latest MultiversX (previously Elrond) SDK is available in your environment. In order to do so, invoke the command `Elrond: Install SDK`.
+Make sure the latest MultiversX SDK is available in your environment. In order to do so, invoke the command `MultiversX: Install SDK`.
 :::
 
 ### Add one or more smart contracts
 
-In the **Templates** view of the MultiversX (previously Elrond) IDE, choose the template `adder` and click on **New Contract**. Then, choose the template `lottery-esdt` and click on **New Contract**. By doing so, MultiversX (previously Elrond) IDE will create one folder for each of the chosen smart contracts
+In the **Templates** view of the MultiversX IDE, choose the template `adder` and click on **New Contract**. Then, choose the template `lottery-esdt` and click on **New Contract**. By doing so, MultiversX IDE will create one folder for each of the chosen smart contracts
 
 An **additional folder** called `erdjs-snippets` gets created, as well. That's a **nodejs** package, holding the source code for the **contract interaction** and for the test **snippets**.
 
-Before moving further, make sure you build the two contracts (from the **Smart Contracts** view of the MultiversX (previously Elrond) IDE or using the command line, as desired).
+Before moving further, make sure you build the two contracts (from the **Smart Contracts** view of the MultiversX IDE or using the command line, as desired).
 
 ### Setup the snippets
 
@@ -271,7 +271,7 @@ In order to configure the reporting feature, define an additional entry in the s
 
 ```
 "reporting": {
-    "explorerUrl": "https://devnet-explorer.elrond.com",
+    "explorerUrl": "https://devnet-explorer.multiversx.com",
     "apiUrl": "https://devnet-api.multiversx.com",
     "outputFolder": "~/reports"
 }

@@ -7,7 +7,7 @@ title: NFT tokens
 
 ### NFT and SFT
 
-The MultiversX (previously Elrond) protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/tokens/esdt-tokens).
+The MultiversX protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/tokens/esdt-tokens).
 This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, as well as an assignable URI.
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/tokens/nft-tokens#nftsft-fields).
 
@@ -20,38 +20,38 @@ Once owning a quantity of a NFT/SFT, users will have their data store directly u
 
 ### Meta ESDT
 
-In addition to NFTs and SFTs, MultiversX (previously Elrond) introduced Meta ESDTs.
+In addition to NFTs and SFTs, MultiversX introduced Meta ESDTs.
 Meta ESDTs are a special case of semi-fungible-tokens. They can be seen as regular ESDT fungible tokens that also have properties.
-In a particular example, LKMEX is a Meta ESDT and its properties help implement the release schedule.
+In a particular example, LKMEX or XMEX are MetaESDTs and their properties help implement the release schedule.
 
 ## **Branding**
 
-Anyone can create NFTs and SFTs tokens on MultiversX (previously Elrond) Network. There are also no limits in tokens names or tickers. For example,
+Anyone can create NFTs and SFTs tokens on MultiversX Network. There are also no limits in tokens names or tickers. For example,
 one issues an `AliceToken` with the ticker `ALC`. Anyone else is free to create a new token with the same token name and
 the same token ticker. The only difference will be the random sequence of the token identifier. So the "original" token
 could have received the random sequence `1q2w3e` resulting in the `ALC-1q2w3e` identifier, while the second token could
 have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`.
 
 In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a
-branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens. MultiversX (previously Elrond) products such as Explorer, Wallet and so on
+branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens. MultiversX products such as Explorer, Wallet and so on
 will display tokens in accordance to their branding, if any.
 
-A token owner can submit a branding request by opening a Pull Request on https://github.com/ElrondNetwork/assets.
+A token owner can submit a branding request by opening a Pull Request on https://github.com/multiversx/mx-assets.
 
 ### **Submitting a branding request**
 
-Token owners can create a PR to the https://github.com/ElrondNetwork/assets with the logo in .png and .svg format, as well as a .json file containing all the relevant information.
+Token owners can create a PR to the https://github.com/multiversx/mx-assets with the logo in .png and .svg format, as well as a .json file containing all the relevant information.
 
 Here’s a prefilled template for the .json file to get you started:
 
 ```json
 {
-  "website": "https://www.elrondtoken.com",
-  "description": "MultiversX (previously Elrond) Token is a collection of 10.000 unique and randomly generated tokens.",
+  "website": "https://www.multiversxtoken.com",
+  "description": "MultiversX Token is a collection of 10.000 unique and randomly generated tokens.",
   "social": {
-    "email": "erd-token@elrond.com",
-    "blog": "https://www.elrondtoken.com/ERD-token-blog",
-    "twitter": "https://twitter.com/ERD-token-twitter"
+    "email": "mxt-token@multiversxtoken.com",
+    "blog": "https://www.multiversxtoken.com/MXT-token-blog",
+    "twitter": "https://twitter.com/MXT-token-twitter"
   },
   "status": "active"
 }
@@ -364,7 +364,7 @@ Please note that each argument must be encoded in hexadecimal format with an eve
 
 ### **Supported Media Types**
 
-Below you can find a table with the supported media types for NFTs available on MultiversX (previously Elrond) network.
+Below you can find a table with the supported media types for NFTs available on MultiversX network.
 |**Media Extension**|**Media Type**|
 |-------------------|--------------|
 |.png|image/png|
@@ -667,7 +667,7 @@ Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
 
 The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`. Note that the `05dc` is hexadecimal encoded, it represents decimal 1500.
 
-Also note that an MultiversX (previously Elrond) address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
+Also note that an MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/multiversx/mx-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 :::
 
 ## **Transfers to a Smart Contract**
@@ -810,6 +810,7 @@ Returns the balance of an address for specific ESDT Tokens.
 
 ```
 https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
+https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 ```
 
 | Param           | Required                                  | Type      | Description                            |
@@ -853,6 +854,7 @@ Returns the identifiers of the tokens that have been registered by the provided 
 
 ```
 https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
+https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 ```
 
 | Param         | Required                                  | Type     | Description                            |
@@ -882,6 +884,7 @@ https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 Returns the identifiers of the tokens where the given address has the given role.
 
 ```
+https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 ```
 
@@ -921,6 +924,7 @@ In order to get the logs and events generated by the transfer, one should know t
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash of the transaction |
 
 ```
+https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 

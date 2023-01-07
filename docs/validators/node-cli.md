@@ -7,11 +7,11 @@ Command Line Interface for the Node and the associated Tools
 
 The **Command Line Interface** of the **Node** and its associated **Tools** is described at the following locations:
 
-- [Node](https://github.com/ElrondNetwork/elrond-go/blob/development/cmd/node/CLI.md)
-- [SeedNode](https://github.com/ElrondNetwork/elrond-go/blob/development/cmd/seednode/CLI.md)
-- [Keygenerator](https://github.com/ElrondNetwork/elrond-go/blob/development/cmd/keygenerator/CLI.md)
-- [TermUI](https://github.com/ElrondNetwork/elrond-go/blob/development/cmd/termui/CLI.md)
-- [Logviewer](https://github.com/ElrondNetwork/elrond-go/blob/development/cmd/logviewer/CLI.md)
+- [Node](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/CLI.md)
+- [SeedNode](https://github.com/multiversx/mx-chain-go/blob/master/cmd/seednode/CLI.md)
+- [Keygenerator](https://github.com/multiversx/mx-chain-go/blob/master/cmd/keygenerator/CLI.md)
+- [TermUI](https://github.com/multiversx/mx-chain-go/blob/master/cmd/termui/CLI.md)
+- [Logviewer](https://github.com/multiversx/mx-chain-go/blob/master/cmd/logviewer/CLI.md)
 
 ## **Examples**
 

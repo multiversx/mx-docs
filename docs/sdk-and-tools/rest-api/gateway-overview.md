@@ -3,15 +3,15 @@ id: gateway-overview
 title: Gateway overview
 ---
 
-## Overview of MultiversX (previously Elrond) Gateway REST API
+## Overview of MultiversX Gateway REST API
 
-The MultiversX's (previously Elrond) Gateway REST API can be used by any application - dApp, desktop or server application - to interact with the Blockchain.
+The MultiversX's Gateway REST API can be used by any application - dApp, desktop or server application - to interact with the Blockchain.
 The Gateway is backed by the [proxy](/sdk-and-tools/proxy) and the names Gateway or Proxy are often referred as the same thing.
-The difference is that `gateway` is MultiversX's (previously Elrond) infrastructure backed by the [elrond-proxy-go](https://github.com/ElrondNetwork/elrond-proxy-go) repository.
+The difference is that `gateway` is MultiversX's infrastructure backed by the [mx-chain-proxy-go](https://github.com/multiversx/mx-chain-proxy-go) repository.
 
 ## **Proxy API vs. Observer API**
 
-Both the **MultiversX (previously Elrond) Proxy** and the **Node (Observer)** are designed to expose (almost) the same HTTP endpoints, though **this doesn't always hold due to architectural constraints**. When describing each HTTP endpoint on the following pages, if there is any discrepancy or mismatch between the _Proxy endpoint_ and the _Observer endpoint_, this will be captured in a note as the one below:
+Both the **MultiversX Proxy** and the **Node (Observer)** are designed to expose (almost) the same HTTP endpoints, though **this doesn't always hold due to architectural constraints**. When describing each HTTP endpoint on the following pages, if there is any discrepancy or mismatch between the _Proxy endpoint_ and the _Observer endpoint_, this will be captured in a note as the one below:
 
 :::important
 Proxy/Gateway endpoints are referred as `https://gateway.multiversx.com/....`, while node endpoints are referred as `http://localhost:8080/....`.
@@ -23,7 +23,7 @@ Currently, authentication is not needed to access the API.
 
 ## **HTTP Response format**
 
-Each request against the MultiversX (previously Elrond) API will resolve to a JSON response having the following structure:
+Each request against the MultiversX API will resolve to a JSON response having the following structure:
 
 ```
 {

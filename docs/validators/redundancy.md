@@ -3,7 +3,7 @@ id: redundancy
 title: Node redundancy
 ---
 
-MultiversX (previously Elrond) Validator Nodes can be configured to have one or more hot-standby nodes.
+MultiversX Validator Nodes can be configured to have one or more hot-standby nodes.
 This means additional nodes will run on different servers, in sync with the Main Validator node.
 Their role is to stand in for the Main Validator node in case it fails, to ensure high availability.
 

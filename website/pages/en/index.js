@@ -42,7 +42,7 @@ class Index extends React.Component {
           <div className="row justify-content-center">
             <div className="col text-center title-container mt-5 mt-lg-0">
               <h1 className="m-0 font-montserrat">
-                Welcome to the MultiversX (previously Elrond) docs!
+                Welcome to the MultiversX docs!
                 <br />
               </h1>
               <h2 className="m-0 font-montserrat">

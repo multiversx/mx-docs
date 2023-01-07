@@ -26,6 +26,7 @@ html {
 }
 .docsContainer .post a {
   color: #000;
+  text-decoration: underline;
 }
 .docsContainer .post a:hover,
 .docsContainer .post a:active {
@@ -114,12 +115,7 @@ html {
   margin-right: 0.8rem;
 }
 .fixedHeaderContainer header .headerTitleWithLogo {
-  font-size: 1.2rem;
-  line-height: 1.8rem;
-  font-weight: 300;
-  border-left: 1px solid #e4e5e5;
-  padding-left: 0.7rem;
-  color: #6c757d;
+  display: none;
 }
 
 .headerWrapper.wrapper,

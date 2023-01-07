@@ -11,6 +11,7 @@
 const siteConfig = {
   tagline: "The Internet Scale Blockchain",
   url: "https://docs.multiversx.com", // Your website URL
+  title: "Docs",
   baseUrl: "/", // Base URL for your project */
   docsUrl: "",
   // For github.io type URLs, you would set the url and baseUrl like:
@@ -59,7 +60,7 @@ const siteConfig = {
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} MultiversX. All rights reserved.`,
+  copyright: `Copyright © ${new Date().getFullYear()} MultiversX Network. All rights reserved.`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
@@ -106,7 +107,7 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   highlightPanels: [
     {
-      title: "Discover MultiversX (previously Elrond)",
+      title: "Discover MultiversX",
       content:
         "Meet the blockchain that can offer true internet-scale performance.",
       docName: "welcome/welcome-to-multiversx",
@@ -133,22 +134,21 @@ const siteConfig = {
     },
     {
       title: "Manage a Wallet",
-      content:
-        "Create a wallet to send, receive and store MultiversX (previously Elrond) tokens.",
+      content: "Create a wallet to send, receive and store MultiversX tokens.",
       docName: "wallet/overview",
       icon: "📱",
     },
     {
       title: "Create a Token",
       content:
-        "Issue your own ESDT token, MultiversX's (previously Elrond) improved equivalent of ERC-20.",
+        "Issue your own ESDT token, MultiversX's improved equivalent of ERC-20.",
       docName: "tokens/overview",
       icon: "🔷",
     },
     {
-      title: "Learn How MultiversX (previously Elrond) Works",
+      title: "Learn How MultiversX Works",
       content:
-        "Explore Adaptive state sharding, Secure Proof of Stake, and the MultiversX (previously Elrond) WASM VM.",
+        "Explore Adaptive state sharding, Secure Proof of Stake, and the MultiversX WASM VM.",
       docName: "technology/architecture-overview",
       icon: "🔬",
     },

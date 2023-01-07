@@ -19,7 +19,7 @@ Validators gain or lose rating points in a round depending on their role in that
 Rating gains and losses on the metashard are different from the gains and losses on the normal shards.
 :::
 
-The past and current rating of an individual validator can be found in the MultiversX (previously Elrond) Network Explorer at https://explorer.elrond.com/nodes. Use the "Search" box to find a validator and click on its entry in the list. The "Node Details" page opens, which contains status information about the validator.
+The past and current rating of an individual validator can be found in the MultiversX Network Explorer at https://explorer.multiversx.com/nodes. Use the "Search" box to find a validator and click on its entry in the list. The "Node Details" page opens, which contains status information about the validator.
 
 The "Node Details" page displays a plot of the validator rating during the past epochs:
 

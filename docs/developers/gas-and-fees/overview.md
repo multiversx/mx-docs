@@ -5,7 +5,7 @@ title: Overview
 
 ## Cost of processing (gas units)
 
-Each MultiversX (previously Elrond) transaction has a **processing cost**, expressed as **an amount of _gas units_**. At broadcast time, each transaction must be provided a **gas limit** (`gasLimit`), which acts as an _upper limit_ of the processing cost.
+Each MultiversX transaction has a **processing cost**, expressed as **an amount of _gas units_**. At broadcast time, each transaction must be provided a **gas limit** (`gasLimit`), which acts as an _upper limit_ of the processing cost.
 
 ### Constraints
 

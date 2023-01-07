@@ -35,7 +35,7 @@ The deadline being a block timestamp can be expressed as a regular 64-bits unsig
 
 Try to avoid the signed version as much as possible (unless negative values are really possible and needed). There are some caveats with BigInt argument serialization that can lead to subtle bugs.
 
-Also note that BigUint logic does not reside in the contract, but is built into the MultiversX (previously Elrond) VM API, to not bloat the contract code.
+Also note that BigUint logic does not reside in the contract, but is built into the MultiversX VM API, to not bloat the contract code.
 
 Let's test that initialization works.
 
@@ -565,7 +565,7 @@ This concludes the first Rust elrond-wasm tutorial.
 
 For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html)
 
-If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/v0.35.0/contracts/examples
+If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/multiversx/mx-sdk-rs/tree/v0.35.0/contracts/examples
 
 :::tip
 When entering directly on the `elrond-wasm` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.

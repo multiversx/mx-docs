@@ -15,7 +15,7 @@ The Rust testing framework was developed as an alternative to manually writing M
 
 The only disadvantage is that you need to learn something new! Jokes aside, keep in mind that this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work identically with the current VM version deployed on the mainnet.
 
-This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our MultiversX (previously Elrond) VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
+This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our MultiversX VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
 
 Please note that mandos generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.
 
@@ -35,7 +35,7 @@ num-traits = "0.2"
 hex = "0.4"
 ```
 
-For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/examples/crowdfunding-esdt
+For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding-esdt
 
 You need a `tests` and a `mandos` folder in your contract. Create a `.rs` file in your `tests` folder.
 
@@ -455,4 +455,4 @@ fn test_failed_cf() {
 
 ## Conclusion
 
-This tests cover pretty much every flow in the crowdfunding smart contract. Keep in mind that code can be deduplicated even more by having functions similar to the `setup_crowdfunding` function, but for the sake of the example, we've kept this as simple as possible. We hope this will make writing tests and debugging a lot easier moving forward!
+These tests cover pretty much every flow in the crowdfunding smart contract. Keep in mind that code can be deduplicated even more by having functions similar to the `setup_crowdfunding` function, but for the sake of the example, we've kept this as simple as possible. We hope this will make writing tests and debugging a lot easier moving forward!

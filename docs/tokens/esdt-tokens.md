@@ -5,17 +5,17 @@ title: ESDT tokens
 
 ## **Introduction**
 
-**ESDT** stands for _Elrond Standard Digital Token_.
+**ESDT** stands for _eStandard Digital Token_.
 
 Custom tokens at native speed and scalability, without ERC20
 
-The MultiversX (previously Elrond) network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native EGLD token itself.**
+The MultiversX network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases. And due to the native in-protocol support, transactions with custom tokens do not require the VM at all. In effect, this means that custom tokens are **as fast and as scalable as the native EGLD token itself.**
 
 Users also do not need to worry about sharding when transacting custom tokens, because the protocol employs the same handling mechanisms for ESDT transactions across shards as the mechanisms used for the EGLD token. Sharding is therefore automatically handled and invisible to the user.
 
 Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of _any number of custom tokens_, in addition to the native EGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
 
-ESDT tokens can be issued, owned and held by any Account on the MultiversX (previously Elrond) network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
+ESDT tokens can be issued, owned and held by any Account on the MultiversX network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
 ## **Issuance of fungible ESDT tokens**
 
@@ -200,6 +200,7 @@ Where the constants represent:
 - `MIN_GAS_LIMIT` - the minimum gas limit of a transaction. Each transaction will have at least this cost. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
 - `GAS_PER_DATA_BYTE` - the amount of gas to be used for each character of the data field. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
 - `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.multiversx.com/network/gas-configs).
+- `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.multiversx.com/network/gas-configs).
 
 The current values of these constants are:
 
@@ -362,7 +363,7 @@ Using the transaction in the example above, the receiver should be credited `12 
 
 ## **Transfers done programmatically**
 
-The [Rust framework](https://github.com/ElrondNetwork/elrond-wasm-rs) exposes several ways in which you can transfer ESDT tokens via [SendApi](https://github.com/ElrondNetwork/elrond-wasm-rs/blob/master/elrond-wasm/src/api/send_api.rs). For example, in order to transfer _amount_ of _esdt_token_name_ to _address_, one would do the following:
+The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several ways in which you can transfer ESDT tokens. For example, in order to transfer _amount_ of _esdt_token_name_ to _address_, one would do the following:
 
 ```
 self.send().direct_esdt(&address, &esdt_token_name, token_nonce: u64, &amount);
@@ -690,7 +691,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ## **Branding**
 
-Anyone can create an ESDT token on MultiversX (previously Elrond) Network. There are also no limits in tokens names or tickers. For example,
+Anyone can create an ESDT token on MultiversX Network. There are also no limits in tokens names or tickers. For example,
 one issues an `AliceToken` with the ticker `ALC`. Anyone else is free to create a new token with the same token name and
 the same token ticker. The only difference will be the random sequence of the token identifier. So the "original" token
 could have received the random sequence `1q2w3e` resulting in the `ALC-1q2w3e` identifier, while the second token could
@@ -698,34 +699,34 @@ have received the sequence `3e4r5t` resulting in `ALC-3e4r5t`.
 
 In order to differentiate between an original token and other tokens with the same name or ticker, we have introduced a
 branding mechanism that allows tokens owners to provide a logo, a description, a website, as well as social link for their tokens.
-An example of a branded token is MEX, the Maiar Exchange's token. MultiversX (previously Elrond) products such as Explorer, Wallet and so on
+An example of a branded token is MEX, the xExchange's token. MultiversX products such as Explorer, Wallet and so on
 will display tokens in accordance to their branding, if any.
 
-A token owner can submit a branding request by opening a Pull Request on [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets).
+A token owner can submit a branding request by opening a Pull Request on [https://github.com/multiversx/mx-assets/](https://github.com/multiversx/mx-assets/).
 
 ### **Submitting a branding request**
 
-Project owners can create a PR against [https://github.com/ElrondNetwork/assets](https://github.com/ElrondNetwork/assets) repository with the logo in `.png` and `.svg` format, as well as a `.json` file containing all the relevant information.
+Project owners can create a PR against [https://github.com/multiversx/mx-assets/](https://github.com/multiversx/mx-assets/) repository with the logo in `.png` and `.svg` format, as well as a `.json` file containing all the relevant information.
 
 Here’s a prefilled template for the .json file to get you started:
 
 ```json
 {
-  "website": "https://www.elrondtoken.com",
-  "description": "The ERD token is the utility token of MultiversX (previously Elrond) Token",
+  "website": "https://www.multiversxtoken.com",
+  "description": "The MXT token is the utility token of MultiversX Token",
   "social": {
-    "email": "erd-token@elrond.com",
-    "blog": "https://www.elrondtoken.com/ERD-token-blog",
-    "twitter": "https://twitter.com/ERD-token-twitter",
-    "whitepaper": "https://www.elrondtoken.com/ERD-token-whitepaper.pdf",
-    "coinmarketcap": "https://coinmarketcap.com/currencies/ERD-token",
-    "coingecko": "https://www.coingecko.com/en/coins/ERD-token"
+    "email": "mxt-token@multiversxtoken.com",
+    "blog": "https://www.multiversxtoken.com/MXT-token-blog",
+    "twitter": "https://twitter.com/MXT-token-twitter",
+    "whitepaper": "https://www.multiversxtoken.com/MXT-token-whitepaper.pdf",
+    "coinmarketcap": "https://coinmarketcap.com/currencies/MXT-token",
+    "coingecko": "https://www.coingecko.com/en/coins/MXT-token"
   },
   "status": "active"
 }
 ```
 
-The ledgerSignature will be generated by MultiversX (previously Elrond). It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
+The ledgerSignature will be generated by MultiversX. It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
 
 ## **REST API**
 

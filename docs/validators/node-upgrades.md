@@ -1,12 +1,12 @@
 ---
 id: node-upgrades
-title: MultiversX (previously Elrond) Node upgrades
+title: MultiversX Node upgrades
 ---
 
 ## **Introduction**
 
 Once a new node's binary is ready to be deployed on one of the networks (mainnet, testnet or devnet), nodes operators must
-perform the upgrade to the newest version. These releases are always announced on MultiversX (previously Elrond) [Validators chat](https://t.me/ElrondValidators)
+perform the upgrade to the newest version. These releases are always announced on MultiversX [Validators chat](https://t.me/ElrondValidators)
 plus via other communication channels, depending on the case.
 
 ## **Types of upgrades**
@@ -27,7 +27,7 @@ transactions selection improvements and so on). Observers (nodes that don't have
 ## **Activation epochs**
 
 In order to make the upgrades as smooth as possible and to ensure that each node has the same view over the network at a given moment,
-MultiversX (previously Elrond) has a so called _activation epoch_ mechanism that allows the node to implement both behaviors of the protocol -
+MultiversX has a so called _activation epoch_ mechanism that allows the node to implement both behaviors of the protocol -
 the old (current) one, and the new one, planned for activation at a specific epoch. This mechanisms ensures that,
 **until the protocol change becomes active**, nodes with an upgraded codebase / binary remain compatible with nodes that
 did not perform the upgrade, and consensus is held. Although this happens in 99.9% cases, this is not 100% guaranteed due
@@ -43,7 +43,7 @@ Since the height of the first block in an epoch cannot be known in advance (due 
 where a feature becomes effective cannot be calculated.
 
 However, the time when a new feature of a bugfix becomes effective can be calculated, as epochs have fixed lengths in rounds.
-Currently, MultiversX (previously Elrond) Mainnet has epochs of `14,400` rounds and a round is `6 sec`. This results in a `24h` epoch. However,
+Currently, MultiversX Mainnet has epochs of `14,400` rounds and a round is `6 sec`. This results in a `24h` epoch. However,
 there can be delays of a few rounds, due to rollbacks of the start of epoch metablocks.
 
 ### _Activation epoch example_
@@ -53,7 +53,7 @@ will allow them to receive EGLD or other tokens from other smart contracts.
 
 _Timeline example_
 
-- the MultiversX (previously Elrond) Mainnet is at epoch `590`.
+- the MultiversX Mainnet is at epoch `590`.
 - currently, the node binary doesn't know about the `PayableBySC` metadata so if one wants to try it, an error like `invalid metadata`
   will be returned.
 - at epoch `600`, we release a new node binary that contains the `PayableBySC` metadata that will become active starting with epoch `613`.

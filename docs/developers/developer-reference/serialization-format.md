@@ -1,13 +1,15 @@
 ---
-id: multiversx-serialization-format
-title: The MultiversX (previously Elrond) Serialization Format
+id: serialization-format
+title: The MultiversX Serialization Format
 ---
 
 _How MultiversX (previously Elrond) smart contracts serialize arguments, results, and storage_
 
-In MultiversX (previously Elrond), there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
+_How MultiversX smart contracts serialize arguments, results, and storage_
 
-In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [repo](https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-codec), [doc](https://docs.rs/elrond-codec/0.8.5/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
+In MultiversX, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
+
+In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [doc](https://docs.rs/elrond-codec/0.8.5/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
 
 ## Rationale
 
@@ -122,7 +124,7 @@ This means that to represent even just 1 EGLD we use the number 10<sup>18</sup>,
 **Rust types**: `BigUint`, `BigInt`,
 
 :::important
-These types are managed by MultiversX (previously Elrond) VM, in many cases the contract never sees the data, only a handle.
+These types are managed by MultiversX VM, in many cases the contract never sees the data, only a handle.
 This is to reduce the burden on the smart contract.
 :::
 

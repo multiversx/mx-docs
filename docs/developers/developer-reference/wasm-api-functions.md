@@ -1,11 +1,16 @@
 ---
-id: elrond-wasm-api-functions
+id: wasm-api-functions
 title: Smart Contract API Functions
 ---
 
 ## Introduction
 
-The Rust framework provides a wrapper over the MultiversX (previously Elrond) VM API functions and over account-level built-in functions. They are split into multiple modules, grouped by category:
+The Rust framework provides a wrapper over the MultiversX VM API functions and over account-level built-in functions. They are split into multiple modules, grouped by category:
+
+- BlockchainApi: Provides general blockchain information, which ranges from account balances, NFT metadata/roles to information about the current and previous block (nonce, epoch, etc.)
+- CallValueApi: Used in payable endpoints, providing information about the tokens received as payment (token type, nonce, amount)
+- CryptoApi: Provides support for cryptographic functions like hashing and signature checking
+- SendApi: Handles all types of transfers to accounts and smart contract calls/deploys/upgrades, as well as support for ESDT local built-in functions
 
 - BlockchainApi: Provides general blockchain information, which ranges from account balances, NFT metadata/roles to information about the current and previous block (nonce, epoch, etc.)
 - CallValueApi: Used in payable endpoints, providing information about the tokens received as payment (token type, nonce, amount)
@@ -433,7 +438,7 @@ This API is accessible through `self.send()`. It provides functionalities like s
 
 We will not describe every single function in the API, as that would create confusion. We will only describe those that are recommended to be used (as they're mostly wrappers around more complicated low-level functions).
 
-For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](elrond-wasm-contract-calls.md) section.
+For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](wasm-contract-calls.md) section.
 
 Without further ado, let's take a look at the available functions:
 

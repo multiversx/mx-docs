@@ -1,11 +1,11 @@
 ---
-id: api-multiversx-com
-title: api.multiversx.com
+id: multiversx-api
+title: MultiversX API
 ---
 
-## About api.multiversx.com
+## About MultiversX API
 
-`api.multiversx.com` is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch
+`api.multiversx.com` is the public instance of MultiversX API and is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch
 historical queries support, tokens media support, delegation & staking data, and many others.
 
 ## Public URLs
@@ -63,7 +63,7 @@ It uses the following optional internal systems:
 - mysql database: used to store mainly NFT media & metadata information
 - mongo database: used to store mainly NFT media & metadata information
 
-## Ways to start api.multiversx.com
+## Ways to start MultiversX API
 
 An API instance can be started with the following behavior:
 
@@ -76,7 +76,7 @@ An API instance can be started with the following behavior:
 
 ## Rate limiting
 
-Public MultiversX (previously Elrond) APIs have a rate limit mechanism that brings the following limitations:
+Public MultiversX APIs have a rate limit mechanism that brings the following limitations:
 
 - api.multiversx.com (_mainnet_): 2 requests / IP / second
 - devnet-api.multiversx.com (_devnet_): 5 requests / IP / second
@@ -87,7 +87,7 @@ Rest API documentation of `api.multiversx.com` can be found on the [Swagger docs
 
 ## References:
 
-- Github repository: [https://github.com/ElrondNetwork/api.multiversx.com](https://github.com/ElrondNetwork/api.multiversx.com)
+- Github repository: [https://github.com/multiversx/mx-api-service](https://github.com/multiversx/mx-api-service)
 - Swagger docs: [https://api.multiversx.com](https://api.multiversx.com)
 - Raw JSON Swagger OpenAPI definitions: [https://api.multiversx.com/-json](https://api.multiversx.com/-json)
-- MultiversX (previously Elrond) blog: [https://multiversx.com/blog/elrond-api-internet-scale-defi](https://multiversx.com/blog/elrond-api-internet-scale-defi)
+- MultiversX blog: [https://elrond.com/blog/elrond-api-internet-scale-defi](https://elrond.com/blog/elrond-api-internet-scale-defi)

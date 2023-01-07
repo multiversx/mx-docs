@@ -7,7 +7,7 @@ title: Staking smart contract tutorial
 
 This tutorial aims to teach you how to write a simple staking contract, and to illustrate and correct the common pitfalls new smart contract developers might fall into.
 
-If you find anything not answered here, feel free to ask further questions on the MultiversX (previously Elrond) Developers Telegram channel: https://t.me/ElrondDevelopers
+If you find anything not answered here, feel free to ask further questions on the MultiversX Developers Telegram channel: https://t.me/ElrondDevelopers
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ Assuming you're on Ubuntu, download the `.deb` version. Go to that folder:
 
 rust-analyser: https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer
 
-MultiversX (previously Elrond) VSCode extension: https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide
+MultiversX VSCode extension: https://marketplace.visualstudio.com/items?itemName=MultiversX.vscode-elrond-ide
 
 Both can be easily installed from the "Extensions" menu in VSCode.
 
@@ -70,9 +70,9 @@ For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "
 
 ## Setting up the workspace
 
-Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "Elrond: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
+Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "MultiversX: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
 
-Now let's open the MultiversX (previously Elrond) VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
+Now let's open the MultiversX VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
 ![img](/developers/staking-contract-tutorial-img/elrond_ide_extension.png)
 
 Alternatively, you can run `erdpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
@@ -201,7 +201,7 @@ Every smart contract needs to have a function annotated with `#[init]`. This fun
 
 ## Trying it out on devnet
 
-To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the MultiversX (previously Elrond) IDE extension. More on this in a bit. Your new folder structure should look like this:  
+To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the MultiversX IDE extension. More on this in a bit. Your new folder structure should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_3.png)
 
 ### Creating a devnet wallet
@@ -210,7 +210,7 @@ To deploy and interact with the contract, we need to write some snippets. Create
 You can skip this section if you already have a devnet wallet setup.
 :::
 
-Let's create a devnet wallet. Go to https://devnet-wallet.elrond.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
+Let's create a devnet wallet. Go to https://devnet-wallet.multiversx.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
 Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/erdpy/deriving-the-wallet-pem-file/
 
@@ -250,7 +250,7 @@ More details can be found [here](/developers/constants/).
 
 The only thing you need to edit is the USER_PEM variable with the previously created PEM file's path.
 
-To run this snippet, we're going to use the MultiversX (previously Elrond) IDE extension again. Open the extension in VSCode from the left-hand menu, right-click on the contract name, and select the `Run Contract Snippet` option. This should open a menu in at the top:  
+To run this snippet, we're going to use the MultiversX IDE extension again. Open the extension in VSCode from the left-hand menu, right-click on the contract name, and select the `Run Contract Snippet` option. This should open a menu in at the top:  
 ![img](/developers/staking-contract-tutorial-img/snippet.png)
 
 For now, we only have one option, as we only have a single function in our file, but any bash function we write in the snippets.sh file will appear there. Now, select the deploy option and let's deploy the contract.
@@ -269,7 +269,7 @@ But still, how come you're seeing the contract's address if the deployment faile
 
 ```bash
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
-INFO:utils:View this contract address in the MultiversX (previously Elrond) Devnet Explorer: https://devnet-explorer.elrond.com/accounts/erd1qqqqqqqqqqqqq...
+INFO:utils:View this contract address in the MultiversX Devnet Explorer: https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqq...
 ```
 
 This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So erdpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.
@@ -283,7 +283,7 @@ There are two ways of getting EGLD on devnet:
 
 #### Getting EGLD through devnet wallet
 
-Go to https://devnet-wallet.elrond.com and login to your devnet account with your PEM file. On the left side menu, select the "faucet" option:  
+Go to https://devnet-wallet.multiversx.com and login to your devnet account with your PEM file. On the left side menu, select the "faucet" option:  
 ![img](/developers/staking-contract-tutorial-img/wallet_faucet.png)
 
 Request the tokens. After a couple seconds, refresh the page, and you should have 30 xEGLD in your wallet.
@@ -592,7 +592,7 @@ This makes it so if someone wants to perform a full unstake, they can simply not
 
 ### Unstaking our devnet tokens
 
-Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX (previously Elrond) IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
+Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
 
 ```bash
 UNSTAKE_AMOUNT=500000000000000000

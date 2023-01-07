@@ -9,7 +9,7 @@ A **staking pool** is defined as a custom delegation smart contract, the associa
 
 Staking pools bridge the gap between node operators, who need funds to stake for their nodes, and fund holders who wish to earn rewards by staking their funds, but are not interested in managing validator nodes.
 
-Node operators can set up a staking pool to manage one or more validator nodes. For this purpose, they may use the **delegation manager** built into the MultiversX (previously Elrond) Protocol to create their own **delegation contract**. A delegation contract automates certain tasks required for the management of a staking pool, such as keeping track of every account that has funded the staking pool, keeping track of the nodes themselves, as well as providing information to the delegators.
+Node operators can set up a staking pool to manage one or more validator nodes. For this purpose, they may use the **delegation manager** built into the MultiversX Protocol to create their own **delegation contract**. A delegation contract automates certain tasks required for the management of a staking pool, such as keeping track of every account that has funded the staking pool, keeping track of the nodes themselves, as well as providing information to the delegators.
 
 :::important
 A staking pool requires 1250 EGLD deposited by the node operator at the moment of its creation. However, 2500 EGLD is required to stake a single validator node and start earning rewards.
@@ -19,9 +19,9 @@ This page describes how to request a new delegation contract from the delegation
 
 Note that the delegation manager is not required to set up a staking pool. For example, it is also possible to set up delegation using a regular smart contract, although that is a more complex process and is not discussed here.
 
-Node operators may also choose to set up a delegation dashboard, although they may use any user interface or none whatsoever. As an example, the boilerplate for such a delegation dashboard can be found here: https://github.com/ElrondNetwork/delegation-dashboard.elrond.com. Alternatively, the old boilerplate is located here: https://github.com/ElrondNetwork/starter-dapp/tree/master/react-delegationdashboard.
+Node operators may also choose to set up a delegation dashboard, although they may use any user interface or none whatsoever. As an example, the boilerplate for such a delegation dashboard can be found here: https://github.com/multiversx/mx-delegation-dapp. Alternatively, the old boilerplate is located here: https://github.com/multiversx/mx-deprecated-starter-dapp/tree/master/react-delegationdashboard.
 
-A detailed description of the delegation process can be consulted at https://github.com/ElrondNetwork/elrond-specs/blob/main/sc-delegation-specs.md.
+A detailed description of the delegation process can be consulted at https://github.com/multiversx/mx-specs/blob/main/sc-delegation-specs.md.
 
 ## Creating a new delegation contract
 
@@ -108,13 +108,13 @@ SetMetadataTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-An example for the `Data` field that sets the name to `"Elrond Staking"`, the website to `"elrond.staking"` and the keybase.io identifier to `"elrondstaking"` is:
+An example for the `Data` field that sets the name to `"MultiversX Staking"`, the website to `"multiversx.staking"` and the keybase.io identifier to `"multiversxstaking"` is:
 
 ```
     "setMetaData" +
-    "@456c726f6e64205374616b696e67"     //Elrond Staking
-    "@656c726f6e642e7374616b696e67"     //elrond.staking
-    "@656c726f6e647374616b696e67"       //elrondstaking
+    "@4d756c74697665727358205374616b696e67" // MultiversX Staking
+    "@6d756c746976657273782e7374616b696e67" // multiversx.staking
+    "@6d756c746976657273787374616b696e67"   // multiversxstaking
 ```
 
 :::important
@@ -127,10 +127,10 @@ To customize the information for your delegation contract, which will be availab
 
 In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/elrond/` folder.
 
-An example for the path to the empty file for the `"elrondstaking"` keybase.io identity would be:
+An example for the path to the empty file for the `"multiversxstaking"` keybase.io identity would be:
 
 ```
- public/elrondstaking/elrond/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+ public/multiversxstaking/elrond/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
 ```
 
 :::important
@@ -141,7 +141,7 @@ The **second step** in connecting the delegation contract and the keybase.io ide
 To be able to connect a **testnet** or **devnet** contract to a keybase.io identity, a new folder - named `"testnet"` for the testnet, or `"devnet"` for the devnet, has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` would be:
 
 ```
-public/elrondstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+public/multiversxstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
 ```
 
 :::
@@ -159,7 +159,7 @@ To also connect the validators themselves to a specific keybase.io staking pool 
 ```
 [Preferences]
    # Identity represents the keybase's identity
-   Identity = "<keybase.io identity>"    // e.g.  Identity = "elrondstaking"
+   Identity = "<keybase.io identity>"    // e.g.  Identity = "multiversxstaking"
 ```
 
 :::

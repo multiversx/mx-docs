@@ -11,11 +11,11 @@ This tutorial will guide you through the process of extending and tailoring cert
 
 ## Extending the Network Providers
 
-The default classes from `@elrondnetwork/erdjs-network-providers` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX (previously Elrond) API (or Gateway).
+The default classes from `@elrondnetwork/erdjs-network-providers` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
 ### Performing HTTP requests from scratch
 
-One can broadcast transactions and GET resources from the MultiversX (previously Elrond) API (or Gateway) by performing simple HTTP requests using the `axios` utility. Below are a few examples:
+One can broadcast transactions and GET resources from the MultiversX API (or Gateway) by performing simple HTTP requests using the `axios` utility. Below are a few examples:
 
 Broadcasting a transaction:
 
@@ -125,5 +125,5 @@ export class MyTailoredResultsParser extends ResultsParser {
 ```
 
 :::important
-When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/ElrondNetwork/elrond-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
+When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/multiversx/mx-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
 :::

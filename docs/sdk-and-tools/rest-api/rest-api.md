@@ -5,7 +5,7 @@ title: REST API overview
 
 ## Introduction
 
-MultiversX (previously Elrond) has 2 layers of REST APIs that can be publicly accessed. Both of them can be recreated by anyone that
+MultiversX has 2 layers of REST APIs that can be publicly accessed. Both of them can be recreated by anyone that
 wants to have the same infrastructure, but self-hosted.
 
 These 2 layers of REST APIs are:
@@ -15,4 +15,4 @@ These 2 layers of REST APIs are:
 
 - `https://api.multiversx.com`: the higher level layer (backed by `api.multiversx.com` repository) that uses the gateway level underneath,
   but also integrates Elasticsearch (historical) queries, battle-tested caching mechanisms, friendly fields formatting and so on. More details
-  can be found [here](/sdk-and-tools/rest-api/api-multiversx-com).
+  can be found [here](/sdk-and-tools/rest-api/multiversx-api).

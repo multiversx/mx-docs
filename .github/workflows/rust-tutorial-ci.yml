@@ -17,4 +17,4 @@ jobs:
           default: true
           toolchain: nightly
       - name: Run rust tests
-        run: ./rust-tutorial-ci.sh
+        run: ./scripts/rust-tutorial-ci.sh

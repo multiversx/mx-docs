@@ -7,10 +7,10 @@ title: Validators - Overview
 
 ### Install and maintain a node
 
-| Name                                                                                  | Description                                                              |
-| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [System requirements](/validators/system-requirements)                                | System requirements for running an MultiversX node.                      |
-| [Install a Mainnet/Testnet/Devnet Node](/validators/elrond-go-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
+| Name                                                                              | Description                                                              |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [System requirements](/validators/system-requirements)                            | System requirements for running an MultiversX node.                      |
+| [Install a Mainnet/Testnet/Devnet Node](/validators/nodes-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
 ### Keys Management
 
@@ -53,15 +53,15 @@ title: Validators - Overview
 
 ## Overview
 
-The MultiversX (previously Elrond) network is made up of nodes and their interconnectivity - balanced by virtue of its design, secured through its size and fast, _very_ fast, because efficiency is what motivated its development. Every time a node joins the network, it adds more security and efficiency. The network, in turn, rewards the nodes for their contribution, generating a virtuous cycle.
+The MultiversX network is made up of nodes and their interconnectivity - balanced by virtue of its design, secured through its size and fast, _very_ fast, because efficiency is what motivated its development. Every time a node joins the network, it adds more security and efficiency. The network, in turn, rewards the nodes for their contribution, generating a virtuous cycle.
 
-We will call a _node_ any running instance of the software application developed by the MultiversX (previously Elrond) team, [publicly available as open source](https://github.com/ElrondNetwork/elrond-go). Anyone can run a node on their machine - great care was taken to make the node consume as little computing resources as possible. Mid-level recent hardware can effortlessly run multiple individual nodes at the same time, earning more rewards for the same physical machine.
+We will call a _node_ any running instance of the software application developed by the MultiversX team, [publicly available as open source](https://github.com/multiversx/mx-chain-go). Anyone can run a node on their machine - great care was taken to make the node consume as little computing resources as possible. Mid-level recent hardware can effortlessly run multiple individual nodes at the same time, earning more rewards for the same physical machine.
 
 We will call a _node operator_ any person or entity who manages one or more nodes. These pages are for them.
 
 ## Background
 
-MultiversX (previously Elrond) is a decentralized blockchain network. This means that its nodes collaborate to create sequential **blocks** with strict regularity - blocks which contain the results of operations that were requested by the users of the network. Such operations may be simple transfers of tokens, or may be calls to SmartContracts. Either way, _all_ operations take the form of **transactions**.
+MultiversX is a decentralized blockchain network. This means that its nodes collaborate to create sequential **blocks** with strict regularity - blocks which contain the results of operations that were requested by the users of the network. Such operations may be simple transfers of tokens, or may be calls to SmartContracts. Either way, _all_ operations take the form of **transactions**.
 
 Any user who submits a transaction to the network must pay a fee, in EGLD tokens. These fees are what produces **rewards** for the nodes.
 

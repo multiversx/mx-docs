@@ -6,7 +6,7 @@ title: The dynamic allocation problem
 ### Avoiding memory allocation
 
 :::warning
-**Smart contracts must avoid dynamic allocation**. Due to the performance penalty incurred by dynamic allocation, the MultiversX (previously Elrond) Virtual Machine is configured with hard limits and will stop a contract that attempts too much allocation.
+**Smart contracts must avoid dynamic allocation**. Due to the performance penalty incurred by dynamic allocation, the MultiversX Virtual Machine is configured with hard limits and will stop a contract that attempts too much allocation.
 :::
 
 Here are a few simple guidelines you can use to ensure your contract performs efficiently. By following them, you might notice a considerable reduction of gas consumption when your contract is called. It is also likely that the WASM binary resulting from compilation may become smaller in size, thus faster and cheaper to call overall.
@@ -27,7 +27,7 @@ If you need to update older code to take advantage of managed types, please take
 
 ### Base Rust types vs managed types
 
-Below is a table of unmanaged types (basic Rust types) and their managed counterparts, provided by the MultiversX (previously Elrond) framework:
+Below is a table of unmanaged types (basic Rust types) and their managed counterparts, provided by the MultiversX framework:
 
 | Unmanaged (safe to use) | Unmanaged (allocates on the heap) |                   Managed                    |
 | :---------------------: | :-------------------------------: | :------------------------------------------: |

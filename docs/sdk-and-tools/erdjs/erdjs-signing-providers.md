@@ -6,11 +6,11 @@ title: Signing Providers for dApps
 This page will guide you through the process of integrating the **erdjs signing providers** in a dApp which isn't based on `dapp-core`.
 
 :::important
-Note that for most purposes, **we recommend using [dapp-core](https://github.com/ElrondNetwork/dapp-core)** instead of integrating the signing providers on your own.
+Note that for most purposes, **we recommend using [dapp-core](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 :::important
-The code samples depicted on this page can also be found on the [**erdjs examples repository**](https://github.com/ElrondNetwork/elrond-sdk-erdjs-examples).
+The code samples depicted on this page can also be found on the [**erdjs examples repository**](https://github.com/multiversx/mx-sdk-erdjs-examples).
 :::
 
 The following signing providers are available:
@@ -26,7 +26,7 @@ The following signing providers are available:
 Make sure you have a look over the [webhooks](/wallet/webhooks), in advance.
 :::
 
-[`@elrondnetwork/erdjs-web-wallet-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-web-wallet-provider) allows the users of a dApp to login and sign transactions using the [Web Wallet](/wallet/web-wallet).
+[`@elrondnetwork/erdjs-web-wallet-provider`](https://github.com/multiversx/mx-sdk-erdjs-web-wallet-provider) allows the users of a dApp to login and sign transactions using the [Web Wallet](/wallet/web-wallet).
 
 In order to create an instance of the provider, do as follows:
 
@@ -36,7 +36,7 @@ import { WalletProvider, WALLET_PROVIDER_DEVNET } from "@elrondnetwork/erdjs-web
 const provider = new WalletProvider(WALLET_PROVIDER_DEVNET);
 ```
 
-The following provider URLs [are defined](https://github.com/ElrondNetwork/elrond-sdk-erdjs-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
+The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-erdjs-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
 
 ### Login and logout
 
@@ -64,7 +64,7 @@ const callbackUrl = window.location.href.split("?")[0];
 await provider.logout({ callbackUrl: callbackUrl });
 ```
 
-Sometimes, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX (previously Elrond) address. In this context, the web wallet provider supports an extra parameter to the `login()` method: a custom authentication token, **completely opaque to the web wallet**, to be signed with the user's wallet, at login-time:
+Sometimes, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX address. In this context, the web wallet provider supports an extra parameter to the `login()` method: a custom authentication token, **completely opaque to the web wallet**, to be signed with the user's wallet, at login-time:
 
 ```
 // An identity token, provided by an identity provider (server-side)
@@ -72,7 +72,7 @@ Sometimes, a dApp (and its backend) might want to reliably assign an off-chain u
 const authToken = "aaaabbbbaaaabbbb";
 
 // A server-side handler used to acknowledge, validate and honour
-// the relationship between "authToken" and the MultiversX (previously Elrond) address of the user
+// the relationship between "authToken" and the MultiversX address of the user
 const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
 await provider.login({ callbackUrl, token: authToken });
 ```
@@ -129,7 +129,7 @@ As of July 2022, the web wallet provider does not allow one to sign arbitrary me
 Make sure you have a look over [this page](/wallet/wallet-extension), in advance.
 :::
 
-[`@elrondnetwork/erdjs-extension-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
+[`@elrondnetwork/erdjs-extension-provider`](https://github.com/multiversx/mx-sdk-erdjs-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
 
 In order to aquire the instance (singleton) of the provider, do as follows:
 
@@ -207,7 +207,7 @@ console.log(message.toJSON());
 
 ## The Wallet Connect provider
 
-[`@elrondnetwork/erdjs-wallet-connect-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
+[`@elrondnetwork/erdjs-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-erdjs-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
 
 First, let's see a (simple) way to build a QR dialog using [`qrcode`](https://www.npmjs.com/package/qrcode) (and bootstrap):
 
@@ -307,7 +307,7 @@ As of July 2022, erdjs' Wallet Connect provider does not allow one to sign arbit
 Make sure you have a look over [this page](/wallet/ledger), in advance.
 :::
 
-[`@elrondnetwork/erdjs-hw-provider`](https://github.com/ElrondNetwork/elrond-sdk-erdjs-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
+[`@elrondnetwork/erdjs-hw-provider`](https://github.com/multiversx/mx-sdk-erdjs-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
 
 In order to create an instance of the provider, do as follows:
 
@@ -317,7 +317,7 @@ import { HWProvider } from "@elrondnetwork/erdjs-hw-provider";
 const provider = new HWProvider();
 ```
 
-Before performing any operation, make sure to initialize the provider (also, the MultiversX (previously Elrond) application has to be open on the device):
+Before performing any operation, make sure to initialize the provider (also, the MultiversX application has to be open on the device):
 
 ```
 await provider.init();
@@ -399,7 +399,7 @@ console.log(message.toJSON());
 
 ## Verifying the signature of a login token
 
-As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX (previously Elrond) address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
+As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to an MultiversX address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
 
 ```
 export function verifyAuthTokenSignature(address, authToken, signature) {

@@ -3,13 +3,13 @@ id: manage-node
 title: Manage a validator node
 ---
 
-Your node will start as an observer. In order to make it into a validator, you will need to have 2500 xEGLD tokens. You can reach out to an admin in our [Telegram community](https://t.me/ElrondValidators) who will gladly help.
+Your node will start as an observer. In order to make it into a validator, you will need to have 2500 xEGLD tokens. You can reach out to an admin in our [Telegram community](https://t.me/MultiversXValidators) who will gladly help.
 
 Follow these steps to manage your validator node.
 
 Let’s begin!
 
-First, you need to create an MultiversX (previously Elrond) wallet. You can create this wallet on either the [mainnet](https://wallet.elrond.com), [devnet](https://devnet-wallet.elrond.com) or [testnet](https://testnet-wallet.elrond.com).
+First, you need to create an MultiversX wallet. You can create this wallet on either the [mainnet](https://wallet.multiversx.com), [devnet](https://devnet-wallet.multiversx.com) or [testnet](https://testnet-wallet.multiversx.com).
 
 :::tip
 For devnet and testnet only:
@@ -27,7 +27,7 @@ Select the `validatorKey.pem` file you created for your node and proceed with th
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MKj4PGWn3kQ197_YcJQ%2F-MKjC2SwfiK2OdVWTz49%2Fimage.png?alt=media&token=9d38ba79-9d47-452e-8fb3-303f0edf5740)
 
-You can check the status of your Stake transaction and other information about the validator node in the explorer at [mainnet explorer](https://explorer.elrond.com), [devnet explorer](https://devnet-explorer.elrond.com) or the [testnet explorer](https://testnet-explorer.elrond.com). Make sure to check out the Validators section too.
+You can check the status of your Stake transaction and other information about the validator node in the explorer at [mainnet explorer](https://explorer.multiversx.com), [devnet explorer](https://devnet-explorer.multiversx.com) or the [testnet explorer](https://testnet-explorer.multiversx.com). Make sure to check out the Validators section too.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MKj4PGWn3kQ197_YcJQ%2F-MKjCya_zwNCJWCZ4ryI%2Fimage.png?alt=media&token=7a1a0e1c-dc77-41ef-afcd-296dd23da18b)
 

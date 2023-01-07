@@ -13,7 +13,7 @@ This is useful when you need to find the user's wallet address. A common use cas
 
 __URL Parameters__
 
-`https://wallet.elrond.com/hook/login?callbackUrl=https://example.com/`
+`https://wallet.multiversx.com/hook/login?callbackUrl=https://example.com/`
 
 | Param           | Required                                  | Description                                           |
 | -------------   | ----------------------------------------- | ----------------------------------------------------- |
@@ -35,7 +35,7 @@ This is useful when you need to prepopulate a transaction required to send an EG
 
 __URL Parameters__
 
-`https://wallet.elrond.com/hook/transaction?receiver=erd1qqqqqqqqqqqqqpgqxwakt2g7u9atsnr03gqcgmhcv38pt7mkd94q6shuwt&value=0&gasLimit=250000000&data=claimRewards&callbackUrl=https://example.com/`
+`https://wallet.multiversx.com/hook/transaction?receiver=erd1qqqqqqqqqqqqqpgqxwakt2g7u9atsnr03gqcgmhcv38pt7mkd94q6shuwt&value=0&gasLimit=250000000&data=claimRewards&callbackUrl=https://example.com/`
 
 | Param         | Required                                  | Description                                           |
 | ------------- | ----------------------------------------- | ----------------------------------------------------- |

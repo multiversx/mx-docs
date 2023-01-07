@@ -1,8 +1,6 @@
 {
   "docs": {
-    "Welcome to MultiversX (previously Elrond)": [
-      "welcome/welcome-to-multiversx"
-    ],
+    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
     "Technology": [
       "technology/architecture-overview",
       "technology/glossary",
@@ -10,7 +8,7 @@
       "technology/chronology",
       "technology/secure-proof-of-stake",
       "technology/adaptive-state-sharding",
-      "technology/the-elrond-wasm-vm",
+      "technology/the-wasm-vm",
       "technology/cross-shard-transactions"
     ],
     "Wallet": [
@@ -30,10 +28,10 @@
         "type": "subcategory",
         "label": "Install a Mainnet/Testnet/Devnet Node",
         "ids": [
-          "validators/elrond-go-scripts/config-scripts",
-          "validators/elrond-go-scripts/install-update",
-          "validators/elrond-go-scripts/manage-node",
-          "validators/elrond-go-scripts/use-docker"
+          "validators/nodes-scripts/config-scripts",
+          "validators/nodes-scripts/install-update",
+          "validators/nodes-scripts/manage-node",
+          "validators/nodes-scripts/use-docker"
         ]
       },
       {
@@ -106,13 +104,13 @@
         "type": "subcategory",
         "label": "Developer reference",
         "ids": [
-          "developers/developer-reference/elrond-serialization-format",
-          "developers/developer-reference/elrond-wasm-annotations",
-          "developers/developer-reference/elrond-wasm-modules",
-          "developers/developer-reference/elrond-wasm-contract-calls",
+          "developers/developer-reference/serialization-format",
+          "developers/developer-reference/wasm-annotations",
+          "developers/developer-reference/wasm-modules",
+          "developers/developer-reference/wasm-contract-calls",
           "developers/developer-reference/smart-contract-developer-best-practices",
           "developers/developer-reference/code-metadata",
-          "developers/developer-reference/elrond-wasm-api-functions",
+          "developers/developer-reference/wasm-api-functions",
           "developers/developer-reference/storage-mappers",
           "developers/developer-reference/rust-testing-framework",
           "developers/developer-reference/rust-testing-framework-functions-reference",
@@ -159,7 +157,7 @@
         "label": "REST API",
         "ids": [
           "sdk-and-tools/rest-api/rest-api",
-          "sdk-and-tools/rest-api/api-multiversx-com",
+          "sdk-and-tools/rest-api/multiversx-api",
           "sdk-and-tools/rest-api/gateway-overview",
           "sdk-and-tools/rest-api/addresses",
           "sdk-and-tools/rest-api/transactions",

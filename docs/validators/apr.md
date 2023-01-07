@@ -38,13 +38,13 @@ contract will be eligible for 1 EGLD, while the difference (9 EGLD) will be allo
 
 ### Inflation Rate
 
-MultiversX's (previously Elrond) economics model is based on an inflation rate that decreases each year. More about this can be read on the
-[blog](https://multiversx.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper/).
+MultiversX's economics model is based on an inflation rate that decreases each year. More about this can be read on the
+[blog](https://elrond.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper/).
 
 This means that for each year the estimated rewards for a validator will change. This has to be taken into account
 when computing the APR.
 
-The configuration for the inflation rate can be found [here](https://github.com/ElrondNetwork/elrond-config-mainnet/blob/master/economics.toml) (`YearSettings`).
+The configuration for the inflation rate can be found [here](https://github.com/multiversx/mx-chain-mainnet-config/blob/master/economics.toml) (`YearSettings`).
 
 The approximated inflation rate is as follows:
 
@@ -64,7 +64,7 @@ The approximated inflation rate is as follows:
 
 ### Protocol Sustainability
 
-In accordance to the Mainnet's [configuration](https://github.com/ElrondNetwork/elrond-config-mainnet/blob/master/economics.toml#L35) (`ProtocolSustainabilityPercentage`).
+In accordance to the Mainnet's [configuration](https://github.com/multiversx/mx-chain-mainnet-config/blob/master/economics.toml#L35) (`ProtocolSustainabilityPercentage`).
 at each epoch change, when new tokens are distributed among the validators, 10% of the value goes to Protocol Sustainability Address.
 
 This also has to be taken into account when calculating the APR.

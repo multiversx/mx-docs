@@ -5,7 +5,7 @@ title: Built-In Functions
 
 ## **Introduction**
 
-MultiversX (previously Elrond) protocol has a set of built-in functions. A built-in function is a special protocol-side function that doesn't
+MultiversX protocol has a set of built-in functions. A built-in function is a special protocol-side function that doesn't
 require a specific smart contract address as receiver of the transaction. When such a function is called via a transaction,
 built-in handlers are triggered and will execute it.
 

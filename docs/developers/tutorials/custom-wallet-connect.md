@@ -7,7 +7,7 @@ title: Custom Wallet Connect
 
 Our custom Wallet Connect is a platform that allows you to connect decentralized applications (dApps) to your wallet. The dApp can send transaction requests to your wallet once you have authorized a connection request from it through our custom Wallet Connect.
 
-In this guide, we will walk you through the process of connecting a dApp to our WalletConnect. This will provide users with the bridge that securely connects their MultiversX (previously Elrond) wallets to dApps.
+In this guide, we will walk you through the process of connecting a dApp to our WalletConnect. This will provide users with the bridge that securely connects their MultiversX wallets to dApps.
 
 ## **Prerequisites**
 
@@ -15,7 +15,7 @@ Before we begin, a few requirements are needed to get you running.
 
 - Set up a working dApp.
 
-We have created a tutorial on how to **[build a dApp](https://docs.multiversx.com/developers/tutorials/your-first-dapp/)** on the MultiversX (previously Elrond) blockchain in a few minutes.
+We have created a tutorial on how to **[build a dApp](https://docs.multiversx.com/developers/tutorials/your-first-dapp/)** on the MultiversX blockchain in a few minutes.
 
 - Purchase a domain for your Wallet Connect server.
 
