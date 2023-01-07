@@ -5,8 +5,8 @@
   "lang": "en",
   "start_url": "/",
   "display": "minimal-ui",
-  "background_color": "#f8f9ff",
-  "theme_color": "#f8f9ff",
+  "background_color": "black",
+  "theme_color": "black",
   "description": "A highly scalable, fast and secure blockchain platform for distributed apps, enterprise use cases and the new internet economy.",
   "icons": [
     {

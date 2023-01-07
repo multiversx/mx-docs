@@ -13,6 +13,11 @@ html {
   font-size: 16px;
 }
 
+body {
+  background-color: #18191a;
+  color: #fff;
+}
+
 .font-montserrat {
   font-family: Montserrat, sans-serif;
 }
@@ -25,8 +30,7 @@ html {
   top: 60px;
 }
 .docsContainer .post a {
-  color: #000;
-  text-decoration: underline;
+  color: #23f7dd;
 }
 .docsContainer .post a:hover,
 .docsContainer .post a:active {
@@ -35,7 +39,7 @@ html {
 
 /* Main Page */
 .landing-page.mainContainer {
-  background: #f8f9ff;
+  background-color: #18191a;
   padding-bottom: 0;
 }
 .navPusher {
@@ -43,10 +47,11 @@ html {
   z-index: unset;
 }
 .title-container h1 {
-  color: #000;
+  color: #fff;
 }
 .title-container h2 {
-  color: #727272;
+  color: #fff;
+  opacity: 0.6;
   font-size: 20px;
   font-weight: 600;
   line-height: 1.25;
@@ -55,12 +60,12 @@ html {
 /* Highlight Panel */
 .highlightPanel {
   height: 100%;
-  background-color: #fff;
+  background: #242526;
   padding: 1.5rem 1.8rem 1.7rem;
   border: none;
   border-radius: 0.65rem;
-  border: 1px solid rgba(228, 229, 229, 0.3);
-  box-shadow: 0 8px 24px 4px rgba(228, 229, 229, 0.85);
+  border: 1px solid rgba(36, 37, 38, 0.3);
+  box-shadow: 0 8px 24px 4px rgba(36, 37, 38, 0.85);
   transition-property: all;
   transition-duration: 0.2s;
 }
@@ -78,14 +83,15 @@ html {
 }
 .highlightPanel h3 {
   font-weight: 700;
-  color: #000;
+  color: #23f7dd;
 }
 .highlightPanel p {
   font-weight: 300;
+  color: #fff;
 }
 .highlightPanel:hover p,
 .highlightPanel:active p {
-  color: #000;
+  color: #23f7dd;
 }
 
 /* -------------------- Start Header Container ------------------- */
@@ -124,17 +130,19 @@ html {
   margin: 0;
   padding: 1rem;
   width: 100%;
+  background: #242526;
 }
 .navigationSlider .slidingNav ul li > a {
-  color: #444;
+  color: #fff;
   font-weight: 400;
+  transition: all 400ms ease;
 }
 .navigationSlider .slidingNav ul li > a:focus,
 .navigationSlider .slidingNav ul li > a:hover,
 .navigationSlider .slidingNav ul li.siteNavItemActive > a,
 .navigationSlider .slidingNav ul li.siteNavGroupActive > a {
-  color: #000;
-  background: #fff;
+  color: #23f7dd;
+  background-color: transparent;
 }
 /* -------------------- End Header Container ------------------- */
 
@@ -144,36 +152,36 @@ html {
 .reactNavSearchWrapper input#search_input_react:focus,
 .reactNavSearchWrapper input#search_input_react:active {
   height: 100%;
-  border: 1px solid #e4e5e5;
+  border: 1px solid #fff;
   padding-top: 6px;
   padding-bottom: 6px;
-  color: #6c757d;
+  color: #fff;
   background: transparent;
 }
 .reactNavSearchWrapper input#search_input_react:focus,
 .reactNavSearchWrapper input#search_input_react:active {
-  color: #6c757d;
-  border-color: #000;
+  color: #fff;
+  border-color: #23f7dd;
   box-shadow: 0 0.313rem 0.719rem rgba(27, 70, 194, 0.1),
     0 0.156rem 0.125rem rgba(0, 0, 0, 0.06);
 }
 .reactNavSearchWrapper input#search_input_react::placeholder {
-  color: #6c757d;
+  color: #fff;
 }
 .reactNavSearchWrapper .aa-dropdown-menu {
   background: #fff;
-  border: 1px solid #e4e5e5;
+  border: 1px solid #fff;
 }
 .reactNavSearchWrapper
   .aa-dropdown-menu
   .algolia-docsearch-suggestion--category-header {
   background: #f8f9ff;
-  color: #444;
-  border-bottom: 1px solid #e4e5e5;
+  color: #fff;
+  border-bottom: 1px solid #fff;
 }
 .reactNavSearchWrapper .algolia-docsearch-footer {
-  border-top: 1px solid #e4e5e5;
-  color: #444;
+  border-top: 1px solid #fff;
+  color: #fff;
 }
 .aa-cursor .algolia-docsearch-suggestion {
   background: #f8f9ff;
@@ -216,24 +224,26 @@ html {
   display: flex;
 }
 #app-links .app-menu-entry {
-  color: #444;
+  color: #fff;
   margin-left: 0.5rem;
+  transition: all 400ms ease;
 }
 #app-links .app-menu-entry .app-icon {
   width: 16px;
+  transition: all 400ms ease;
   height: 16px;
-  fill: #444;
+  fill: #fff;
 }
 #app-links .app-menu-entry:hover,
 #app-links .app-menu-entry:focus,
 #app-links .app-menu-entry.active {
-  color: #000;
+  color: #23f7dd;
 }
 #app-links .app-menu-entry:hover .app-icon,
 #app-links .app-menu-entry:focus .app-icon,
 #app-links .app-menu-entry.active .app-icon,
 #app-links .app-switcher-icon.active {
-  fill: #000;
+  fill: #23f7dd;
 }
 #app-links .app-switcher-icon {
   cursor: pointer;
@@ -267,20 +277,19 @@ html {
   font-size: 0.925rem;
   line-height: 1.155rem;
   height: 4rem;
-  background: #000;
+  background: #242526;
 }
 .footer a.footer-text {
   color: #fff;
+  transition: all 400ms ease;
 }
 .footer a.footer-text:hover {
-  text-decoration: underline;
+  color: #23f7dd;
 }
 footer a.footer-text svg {
   width: 1em;
 }
-.separateOnPageNav .footer {
-  background: #000;
-}
+
 /* -------------------- End Footer ------------------- */
 
 /* -------------------- Start Tabs ------------------------- */
@@ -559,6 +568,21 @@ footer a.footer-text svg {
   }
 }
 
+.docsNavContainer::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #18191a !important;
+  background-color: #18191a !important;
+}
+
+.docsNavContainer::-webkit-scrollbar {
+  width: 12px;
+  background-color: #18191a;
+}
+
+.docsNavContainer::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #555;
+}
+
 @media only screen and (max-width: 1023px) {
   .navigationSlider .slidingNav ul {
     background-color: #fff;
@@ -588,4 +612,51 @@ footer a.footer-text svg {
   #app-links .menu-text {
     display: none;
   }
+}
+.toc .toggleNav .navGroup .navGroupCategoryTitle,
+.toc .toggleNav .navGroup .navGroupSubcategoryTitle {
+  color: #fff;
+}
+.toc .toggleNav ul li a {
+  color: #fff;
+}
+
+.toc .toggleNav ul li.navListItemActive a {
+  color: #23f7dd;
+}
+
+.toc .toggleNav ul li a:hover {
+  color: #23f7dd;
+}
+
+.button {
+  border-color: #fff;
+  color: #fff;
+}
+
+.button:hover {
+  color: #23f7dd;
+  border-color: #23f7dd;
+  background-color: transparent;
+}
+
+table tr:nth-child(2n) {
+  background-color: #242526;
+}
+
+.onPageNav a {
+  transition: all 400ms ease;
+  color: #fff;
+}
+
+.onPageNav a:hover {
+  color: #23f7dd;
+}
+
+.onPageNav a {
+  color: #fff;
+}
+.onPageNav .toc-headings > li > a.active,
+.onPageNav .toc-headings > li > a.hover {
+  color: #23f7dd;
 }

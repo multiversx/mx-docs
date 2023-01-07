@@ -4,6 +4,7 @@
 	 viewBox="0 0 322.9 47.3" style="enable-background:new 0 0 322.9 47.3;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#23F7DD;}
+	path:not(.st0){fill:#ffffff;}
 </style>
 <g>
 	<path d="M15.5,29.1l8.7-20.9h6.5v27.2h-4.3v-23l-9.6,23.2h-3.1l-9.6-23v22.9H0V8.2h6.8L15.5,29.1z"/>
