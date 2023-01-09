@@ -67,6 +67,7 @@
         "label": "The Delegation Manager",
         "ids": [
           "validators/delegation-manager",
+          "validators/delegation-dashboard",
           "validators/staking/convert-existing-validator-into-staking-pool",
           "validators/staking/merge-validator-delegation-sc",
           "validators/staking-provider-apr"
@@ -81,7 +82,14 @@
           "validators/key-management/protect-keys"
         ]
       },
-      "validators/faq"
+      {
+        "type": "subcategory",
+        "label": "FAQs and tools",
+        "ids": [
+          "validators/faq",
+          "validators/useful-links"
+        ]
+      }
     ],
     "Developers": [
       "developers/overview",

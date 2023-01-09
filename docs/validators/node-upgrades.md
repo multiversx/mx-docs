@@ -9,6 +9,12 @@ Once a new node's binary is ready to be deployed on one of the networks (mainnet
 perform the upgrade to the newest version. These releases are always announced on MultiversX [Validators chat](https://t.me/ElrondValidators)
 plus via other communication channels, depending on the case.
 
+## **When to upgrade**
+
+Subscribe to email notifications for new releases from the official GitHub repositories that hold the chain configuration ([mx-chain-mainnet-config](https://github.com/multiversx/mx-chain-mainnet-config), [mx-chain-testnet-config](https://github.com/multiversx/mx-chain-mainnet-config) and [mx-chain-devnet-config](https://github.com/multiversx/mx-chain-mainnet-config). Also, make sure to join the Validators Telegram channel.
+
+Setup monitoring and get alerts for new updates. As last resort, check the status of your validator software version using the relevant Explorer section https://explorer.multiversx.com/nodes - outdated versions will be marked with ⚠
+
 ## **Types of upgrades**
 
 Currently, we have the following types of upgrades:
