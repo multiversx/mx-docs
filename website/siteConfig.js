@@ -42,7 +42,7 @@ const siteConfig = {
 
   /* path to images for header/footer */
   headerIcon: "img/logos/logo.svg",
-  footerIcon: "img/logos/elrond.svg",
+  footerIcon: "img/logos/logo.svg",
   favicon: "img/favicon/favicon-32x32.png",
 
   manifest: "manifest/manifest.json",

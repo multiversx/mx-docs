@@ -1,6 +1,6 @@
 ---
 id: esdt-tokens
-title: ESDT tokens
+title: Simple tokens (fungible)
 ---
 
 ## **Introduction**

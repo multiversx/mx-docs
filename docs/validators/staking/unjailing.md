@@ -3,6 +3,8 @@ id: unjailing
 title: Unjailing
 ---
 
+## **Introduction**
+
 In the unfortunate situation of losing too much **rating score**, a validator will be **jailed**, which means that they will be taken out of the shards, they will not participate in consensus, and thus they will not earn any more rewards. Currently, the rating limit at which a node will be jailed is `10`. Read more on the [Ratings](/validators/rating) page.
 
 You can reinstate one of your jailed validators using an **unjailing transaction**. This transaction effectively represents the payment of a fine. After the transaction is successfully executed, your validator will return to the network in the next epoch, and treated as if the validator is brand new, with the rating reset to `50`.
@@ -11,7 +13,16 @@ It is easy to submit an unjailing transaction. You have the option of unjailing 
 
 You'll see some BLS public keys in the examples on this page. Make sure you don't copy-paste them into your staking transaction. These BLS keys have been randomly generated and do not belong to any real node.
 
-# **Prerequisites**
+Each unjailing process requires a transaction to be sent to the Staking Smart Contract. These transactions must contain all the required information, encoded properly, and must provide a high enough gas limit to allow for successful execution. These details are described in the following pages.
+
+There are currently 2 supported methods of constructing and submitting these transactions to the Staking SmartContract:
+
+- Manually constructing the transaction, then submitting it to [wallet.multiversx.com](https://wallet.multiversx.com/);
+- Automatically constructing the transaction and submitting it using the `erdpy` command-line tool.
+
+The following pages will describe both approaches in each specific case.
+
+## **Prerequisites**
 
 In order to submit an unjailing transaction, you require the following:
 

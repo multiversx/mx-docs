@@ -1,13 +1,13 @@
 ---
 id: nft-tokens
-title: NFT tokens
+title: NFT & SFT tokens
 ---
 
 ## **Introduction**
 
 ### NFT and SFT
 
-The MultiversX protocol introduces native NFT support by adding metadata and attributes on top of the already existing [ESDT](/tokens/esdt-tokens).
+The MultiversX protocol introduces native NFT support by adding metadata and attributes on top of the already existing [Fungible tokens](/tokens/esdt-tokens).
 This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, as well as an assignable URI.
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/tokens/nft-tokens#nftsft-fields).
 
