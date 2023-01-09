@@ -4,7 +4,7 @@
 const math = require("remark-math");
 const katex = require("rehype-katex");
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
+const lightCodeTheme = require("prism-react-renderer/themes/vsDark");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
@@ -66,10 +66,16 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        defaultMode: "dark",
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
+      },
       navbar: {
         logo: {
           alt: "MultiversX Docs",
-          src: "img/logo.svg",
+          src: "img/logo_dark.svg",
+          srcDark: "img/logo.svg",
         },
         items: [
           {
@@ -114,6 +120,13 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
         additionalLanguages: ["rust", "tsx", "jsonp"],
+      },
+      algolia: {
+        // The application ID provided by Algolia
+        appId: `${process.env.REACT_APP_ALGOLIA_APP_ID}`,
+        // Public API key: it is safe to commit it
+        apiKey: `${process.env.REACT_APP_ALGOLIA_SEARCH_KEY}`,
+        indexName: "elrond",
       },
     }),
 };
