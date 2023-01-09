@@ -7,7 +7,7 @@ title: Staking & Unstaking
 
 Before staking, a node is a mere observer. After staking, the node becomes a validator, which means that it will be eligible for consensus and will earn rewards. Validators play a central role in the operation of the network.
 
-**Staking** is the process by which the operator of the node sends a sum of 2500 EGLD to be locked in a system SmartContract. Multiple nodes can be staked for at once, and their operator must lock 2500 EGLD for each of the nodes. This sum acts as a collateral, and it will be released back to the node operator through the process of **unstaking**, with a final step called **unbonding**.
+**Staking** is the process by which the operator of the node sends a sum of 2500 EGLD to be locked in a system SmartContract. Multiple nodes can be staked at once, and their operator must lock 2500 EGLD for each of the nodes. This sum acts as a collateral, and it will be released back to the node operator through the process of **unstaking**, with a final step called **unbonding**.
 
 A validator node produces rewards, which are transferred to the node operator at their **reward address** of choice, decided upon during the staking process. The reward address may be changed after staking as well.
 

@@ -15,9 +15,9 @@ The ESDT standard is used to manage fungible, semi-fungible and non-fungible tok
 
 Users also do not need to worry about sharding when transacting custom tokens, because the protocol employs the same handling mechanisms for ESDT transactions across shards as the mechanisms used for the EGLD token. Sharding is therefore automatically handled and invisible to the user.
 
-Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of any number of custom tokens, in addition to the native EGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
+Technically, the balances of ESDT tokens held by an account are stored directly under the data trie of that Account. It also implies that an account can hold balances of any number of custom tokens, in addition to the native EGLD balance. The protocol guarantees that no account can modify the storage of ESDT tokens, neither its own nor of other accounts.
 
-ESDT tokens can be issued, owned and held by any Account on the MultiversX network, which means that both users and smart contracts have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
+ESDT tokens can be issued, owned and held by any account on the MultiversX network, which means that both users and smart contracts have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
 
 ## Table of contents
