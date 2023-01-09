@@ -66,4 +66,4 @@ To produce a shard configuration for the new epoch, the metachain performs the f
 3. For each shard, the nodes that have previously spent an epoch synchronizing in the waiting list are promoted to _eligible validators_ in that shard;
 4. The nodes in the network-wide waiting list (including those that have been unassigned from their shards at step 1) are redistributed randomly and uniformly to all shards and put into their waiting lists, where they'll spend the next epoch synchronizing with the new shard.
 
-As described before, the reconfiguration of shards at the start of epochs and the [arbitrary selection of validators]() within rounds both discourage the creation of unfair coalitions and diminish the possibility of DDoS and bribery attacks, while maintaining decentralization and a high transactions throughput.
+As described before, the reconfiguration of shards at the start of epochs and the arbitrary selection of validators within rounds both discourage the creation of unfair coalitions and diminish the possibility of DDoS and bribery attacks, while maintaining decentralization and a high transactions throughput.

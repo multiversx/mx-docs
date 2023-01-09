@@ -276,7 +276,7 @@ npm run start
 
 **Run it on local machine (or host it on your server)**
 If you start the development server on the local machine, then open [http://localhost:3000](http://localhost:3000) in your browser.
-If you start it on your own server, then you can access [http://<ip>:3000](http://ip:3000). The built version only contains static files, so any hosting provider will do.
+If you start it on your own server, then you can access [http://ip:3000](http://ip:3000). The built version only contains static files, so any hosting provider will do.
 
 After you start the development server, when you see the Sign in screen, this means the application is up and running.
 

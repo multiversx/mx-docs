@@ -45,10 +45,6 @@ _italicized text_
 
 [relative URL](/developers/esdt-tokens#token-management)
 
-### Image
-
-![alt text](image.jpg)
-
 ## Extended Syntax
 
 ### Table
@@ -60,7 +56,7 @@ _italicized text_
 
 ### Fenced Code Block
 
-```
+```json
 {
   "firstName": "John",
   "lastName": "Smith",

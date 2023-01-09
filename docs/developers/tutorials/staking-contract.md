@@ -150,7 +150,7 @@ We've also added #[view] annotation for the storage mappers, so we can later per
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
-- https://docs.multiversx.com/developers/developer-reference/elrond-wasm-api-functions/
+- https://docs.multiversx.com/developers/developer-reference/wasm-api-functions/
 - https://docs.multiversx.com/developers/developer-reference/storage-mappers/
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
