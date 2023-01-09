@@ -66,7 +66,7 @@ Submitting the staking transaction using `erdpy` avoids having to write the "Dat
 
 Make sure `erdpy` is installed by issuing this command on a terminal:
 
-```
+```bash
 erdpy --version
 ```
 
@@ -88,7 +88,7 @@ The following commands assume that the PEM file for your Wallet was saved with t
 
 The command to submit a staking transaction with `erdpy` is this:
 
-```
+```bash
 erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
@@ -97,16 +97,16 @@ Notice that we are using the `walletKey.pem` file. Moreover, before executing th
 - Replace `<stake-value>` with the amount you are staking. You need to calculate this value with respect to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
 - Replace `<validators-json-file>` with the JSON file that lists the nodes you are staking for. This JSON file should look like this:
 
-```
+```json
 {
-  "validators" : [
+  "validators": [
     {
       "pemFile": "valPem1.pem"
     },
     {
       "pemFile": "valPem2.pem"
     },
-      {
+    {
       "pemFile": "valPem3.pem"
     }
   ]

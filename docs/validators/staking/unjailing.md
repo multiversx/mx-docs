@@ -97,7 +97,9 @@ unJail@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa
 
 You can write the text for the "Data" field for _any_ number of nodes. The general format looks like this:
 
+```
 unJail@<BLS1>@<BLS2>@…@<BLS99>
+```
 
 # **Unjailing through erdpy**
 

@@ -15,7 +15,7 @@ This can happen in the following situations:
 
 Calls to Smart Contracts functions (or built-in functions) on MultiversX have the following format:
 
-```
+```rust
 ScCallTransaction {
     Sender: <account address of the sender>
     Receiver: <account address of the receiver> # can be a SC, or other address in case of built in functions
@@ -34,7 +34,7 @@ _Example_. We have a smart contract A with the address `erd1qqqqqqqqqqqqqpgqrchx
 has a function `add(numberToAdd numeric)` which adds the `numberToAdd` to an internally managed sum. If we want to call the
 function and add `15` to the internal sum, the transaction would look like:
 
-```
+```rust
 ExampleScCallTransaction {
     Sender: <account address of the sender>
     Receiver: erd1qqqqqqqqqqqqqpgqrchxzx5uu8sv3ceg8nx8cxc0gesezure5awqn46gtd
@@ -111,7 +111,7 @@ There are multiple (_unofficial or community supported_) tools that one can use 
 
 Make sure you have `erdpy` [installed](/sdk-and-tools/erdpy/installing-erdpy/).
 
-```
+```bash
 erdpy wallet bech32 --decode erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
 ```
 
@@ -119,7 +119,7 @@ will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 
 Additionally, hex addresses can be converted to bech32 as follows:
 
-```
+```bash
 erdpy wallet bech32 --encode 0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1
 ```
 
@@ -131,7 +131,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 Find more about `erdjs` [here](/sdk-and-tools/erdjs/erdjs/).
 
-```
+```js
 import { Address } from "@elrondnetwork/erdjs";
 ...
 
@@ -143,7 +143,7 @@ will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 
 Additionally, hex addresses can be converted to bech32 as follows:
 
-```
+```js
 import { Address } from "@elrondnetwork/erdjs";
 ...
 
@@ -159,7 +159,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 Find more about `erdgo` [here](/sdk-and-tools/erdgo/).
 
-```
+```js
 import (
     ...
     "github.com/ElrondNetwork/elrond-sdk-erdgo/data"
@@ -179,7 +179,7 @@ will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 
 Additionally, hex addresses can be converted to bech32 as follows:
 
-```
+```js
 import (
     ...
     "github.com/ElrondNetwork/elrond-sdk-erdgo/data"
@@ -245,19 +245,19 @@ MEX-455c57  --> 4d45582d343535633537
 
 ### Converting string values in javascript
 
-```
-console.log(Buffer.from("ok").toString("hex"));  // 6f6b
+```js
+console.log(Buffer.from("ok").toString("hex")); // 6f6b
 ```
 
 for converting hex-encoded string to regular string:
 
-```
+```js
 console.log(Buffer.from("6f6b", "hex").toString()); // ok
 ```
 
 ### Converting string values in java
 
-```
+```java
 String inputHex = Hex.encodeHexString("ok".getBytes(StandardCharsets.UTF_8));
 if (inputHex.length() % 2 != 0) {
    inputHex = "0" + inputex;
@@ -268,7 +268,7 @@ System.out.println(inputHex);  // 6f6b
 
 for converting hex-encoded string to regular string:
 
-```
+```java
 byte[] bytes = Hex.decodeHex("6f6b".toCharArray());
 
 String result = new String(bytes, StandardCharsets.UTF_8); // ok
@@ -276,13 +276,13 @@ String result = new String(bytes, StandardCharsets.UTF_8); // ok
 
 ### Converting string values in go
 
-```
+```go
 fmt.Println(hex.EncodeToString([]byte("ok"))) // 6f6b
 ```
 
 for converting hex-encoded string to regular string:
 
-```
+```go
 decodedInput, err := hex.DecodeString("6f6b")
 if err != nil {
     return err
@@ -318,29 +318,29 @@ numeric --> hex
 
 ### Converting numeric values in javascript
 
-```
+```js
 const intValue = 37;
 const bn = new BigNumber(intValue, 10);
 let bnStr = bn.toString(16);
-if(bnStr.length % 2 != 0) {
-    bnStr = "0" + bnStr;
+if (bnStr.length % 2 != 0) {
+  bnStr = "0" + bnStr;
 }
-console.log(bnStr);  // 25
+console.log(bnStr); // 25
 ```
 
 for converting hex-encoded string to regular number:
 
-```
+```js
 const hexValue = "25";
 let bn = new BigNumber(hexValue, 16);
-console.log(bn.toString());  // 37
+console.log(bn.toString()); // 37
 ```
 
 Also, `erdjs` includes some [utility functions](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/utils.codec.ts) for padding the results.
 
 ### Converting numeric values in go
 
-```
+```go
 inputNum := int64(37)
 
 bi := big.NewInt(inputNum)
@@ -349,7 +349,7 @@ fmt.Println(hex.EncodeToString(bi.Bytes())) // 25
 
 for converting hex-encoded number to regular number:
 
-```
+```go
 hexString := "25"
 
 decodedHex, err := hex.DecodeString(hexString)

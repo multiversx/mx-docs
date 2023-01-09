@@ -7,18 +7,18 @@ title: Creating Transactions
 
 As described in section [Signing Transactions](/developers/signing-transactions/signing-transactions), a ready-to-broadcast transaction is structured as follows:
 
-```
+```json
 {
-    "nonce": 42,
-    "value": "100000000000000000",
-    "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
-    "sender": "erd1ylzm22ngxl2tspgvwm0yth2myr6dx9avtx83zpxpu7rhxw4qltzs9tmjm9",
-    "gasPrice": 1000000000,
-    "gasLimit": 70000,
-    "data": "Zm9vZCBmb3IgY2F0cw==",
-    "chainID": "1",
-    "version": 1,
-    "signature": "5845301de8ca3a8576166fb3b7dd25124868ce54b07eec7022ae3ffd8d4629540dbb7d0ceed9455a259695e2665db614828728d0f9b0fb1cc46c07dd669d2f0e"
+  "nonce": 42,
+  "value": "100000000000000000",
+  "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
+  "sender": "erd1ylzm22ngxl2tspgvwm0yth2myr6dx9avtx83zpxpu7rhxw4qltzs9tmjm9",
+  "gasPrice": 1000000000,
+  "gasLimit": 70000,
+  "data": "Zm9vZCBmb3IgY2F0cw==",
+  "chainID": "1",
+  "version": 1,
+  "signature": "5845301de8ca3a8576166fb3b7dd25124868ce54b07eec7022ae3ffd8d4629540dbb7d0ceed9455a259695e2665db614828728d0f9b0fb1cc46c07dd669d2f0e"
 }
 ```
 
@@ -38,7 +38,7 @@ transactions creation and signing:
 
 General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/sdk-and-tools/rest-api/network#get-network-configuration).
 
-```
+```json
 {
     "config": {
         "erd_chain_id": "1",

@@ -11,7 +11,7 @@ There are two steps required for this action: The owner of the Delegation SC has
 
 From the Delegation Smart Contract owner's wallet, send a transaction with the following parameters:
 
-```
+```rust
 Whitelist Wallet For Merging
     Sender: <account address that owns the delegation smart contract>
     Receiver: <delegation smart contract address>
@@ -20,7 +20,8 @@ Whitelist Wallet For Merging
     Data: "whitelistForMerge" +
     "@" + "<Merging Validator wallet address in HEX format>"
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::tip
 You can obtain the HEX format of an address by first converting its bech32 (erd1...) form into binary, and then converting the resulting binary into HEX.
@@ -28,12 +29,14 @@ You can obtain the HEX format of an address by first converting its bech32 (erd1
 
 2. The Merging Validator sends the merge transaction from the whitelisted wallet:
 
+```rust
 To: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
 Value: 0
 Gas limit: 510000000
 Data: mergeValidatorToDelegationWithWhitelist@<the Delegation SC address in HEX format>
-
 ```
+
+```rust
 Whitelist Wallet For Merging
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
@@ -42,7 +45,8 @@ Whitelist Wallet For Merging
     Data: "mergeValidatorToDelegationWithWhitelist" +
     "@" "<the Delegation SC address in HEX format>"
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::warning
 We advise against using this method to buy or sell validator slots - it requires the transfer of private keys (validatorKey.pem) which can't be changed. This puts the buyer at risk of slashing, should the seller deploy a node with the same key, either intentionally or by mistake.

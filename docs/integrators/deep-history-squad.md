@@ -11,17 +11,17 @@ A deep-history setup is able to resolve historical account (state) queries, that
 
 > What was Alice's balance on [May the 4th](https://explorer.multiversx.com/blocks/5f6a02d6a5d2a851fd6dc1fb53435083830c2a13121e003958d97c2389711f06)?
 
-```
+```bash
 GET http://squad:8080/address/erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th?blockNonce=9250000
 ```
 
-:::note
+:::tip
 Currently, the API client has to perform the conversion from _desired timestamp_ to _block nonce_. In a future release, the API will directly support timestamp-based queries.
 :::
 
 > How much UTK were in the [`UTK / WEGLD` Liquidity Pool](https://explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga) on [1st of October](https://explorer.multiversx.com/blocks/cefd41e1e9bbe3ba023a695f412b99cecb15ef789475648ee7c31e7d9fef31d1)?
 
-```
+```markup
 GET http://squad:8080/address/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zsaj2jpsglugga/key/726573657276650000000a55544b2d326638306539?blockNonce=11410000
 ```
 
@@ -29,7 +29,7 @@ In the example above, the key `726573657276650000000a55544b2d326638306539` is de
 
 ## Public instance
 
-:::note
+:::tip
 As of October 2022, a public deep-history squad isn't yet available. The instance is being prepared and should be ready in November 2022.
 :::
 
@@ -41,7 +41,7 @@ Since each observer of a deep-history squad must have a non-pruned history, thei
 
 ### Downloading non-pruned database
 
-:::note
+:::tip
 As of October 2022, a public repository with non-pruned databases for both _mainnet_ and _devnet_ is under construction. This repository would take the shape of a _Digital Ocean (S3-compatible) Space_. Once the repository is ready, the data can be downloaded via **[db-archive-scripts](https://github.com/ElrondNetwork/db-archive-scripts)** - documentation will follow.
 :::
 
@@ -106,7 +106,7 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
 
 If you prefer to wait in the current shell until the bootstrap finishes, omit the `--detach` flag.
 
-:::note
+:::tip
 Downloading the archives and extracting them might take a while.
 :::
 
@@ -125,7 +125,7 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
     --project-name deep-history-reconstruction up --detach
 ```
 
-:::note
+:::tip
 The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives.
 :::
 

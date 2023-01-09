@@ -15,7 +15,7 @@ Nodes are _promoted_ to the role of **validator** when their operator sends a _s
 
 For example, if an operator manages two individual nodes with the 96-byte-long BLS keys `45e7131ba....294812f004` and `ecf6fdbf5....70f1d251f7`, then the staking transaction would be built as follows:
 
-```
+```rust
 StakingTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -30,7 +30,8 @@ StakingTransaction {
           "@optional_reward_address_HEX_ENCODED"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Because this transaction is a call to the Staking smart contract, it passes information via the `Data` field:
 
@@ -54,7 +55,7 @@ The reward address can also be changed at a later time, with a special transacti
 
 For example, changing the reward address for two nodes requires the following transaction:
 
-```
+```rust
 ChangeRewardAddressTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -63,7 +64,8 @@ ChangeRewardAddressTransaction {
     GasLimit: 12000000
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 # **Unstaking**
 
@@ -79,7 +81,7 @@ Moreover, the amount of EGLD which was previously locked as stake will not retur
 
 Continuing the example in the previous section, an unstaking transaction for the two nodes contains the following:
 
-```
+```rust
 UnstakingTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -90,7 +92,8 @@ UnstakingTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Note that:
 
@@ -110,7 +113,7 @@ The unbonding transaction is almost identical to the unstaking transaction, and 
 
 Following the example in the previous sections, an unbonding transaction for the two nodes contains the following information:
 
-```
+```rust
 UnbondingTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -121,7 +124,8 @@ UnbondingTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Note that:
 
@@ -150,7 +154,8 @@ UnjailTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Note that:
 
@@ -176,6 +181,7 @@ ClaimTransaction {
     GasLimit: 6000000
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 After this transaction is processed, the Staking smart contract will produce a transaction _back_ to the sender account, but only if the sender account has previously staked for nodes, using a staking transaction.
