@@ -585,7 +585,7 @@ footer a.footer-text svg {
 
 @media only screen and (max-width: 1023px) {
   .navigationSlider .slidingNav ul {
-    background-color: #fff;
+    background-color: #242526;
     border-bottom: 1px solid #e4e5e5 !important;
     box-shadow: 0 0.625rem 0.625rem -0.325rem rgba(27, 70, 194, 0.12);
   }
