@@ -40,6 +40,8 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 - Smart Contracts, Staking & Delegation, Tokens
 - Validated through multiple audits from Trial of Bits & others
 
+The official roadmap can be found here: https://multiversx.com/roadmap
+
 **Q2 2021**
 
 - ESDT token
@@ -80,12 +82,24 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 
 **Q4 2022**
 
-- Maiar App 2.0
 - DeFi 2.0: Lending & Synthetics
 - Merchant Yield
 - MultiversX Conference
 
 **Q1 2023**
 
-- Strategic Multi-country hypergrowth
-- Onchain governance
+- xSpotlight
+- MultiversX Explorer
+- MultiversX Wallet
+
+**Q2 2023**
+
+- xPortal (Maiar 2.0)
+- MultiversX Bridges
+- xMoney (UTRUST & Twispay)
+
+**Q3 2023**
+
+- xWorlds Metaverse
+- xFabric blockchain module
+- xLaunchpad

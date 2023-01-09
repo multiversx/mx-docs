@@ -1,6 +1,8 @@
 {
   "docs": {
-    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
+    "Welcome to MultiversX": [
+      "welcome/welcome-to-multiversx"
+    ],
     "Technology": [
       "technology/architecture-overview",
       "technology/glossary",
@@ -19,24 +21,61 @@
       "wallet/ledger",
       "wallet/create-a-fungible-token"
     ],
-    "Tokens": ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
+    "Tokens": [
+      "tokens/overview",
+      "tokens/esdt-tokens",
+      "tokens/nft-tokens"
+    ],
     "Validators": [
       "validators/overview",
-      "validators/staking-providers-apr",
       "validators/system-requirements",
       {
         "type": "subcategory",
-        "label": "Install a Mainnet/Testnet/Devnet Node",
+        "label": "Setup",
         "ids": [
           "validators/nodes-scripts/config-scripts",
-          "validators/nodes-scripts/install-update",
+          "validators/nodes-scripts/install-update"
+        ]
+      },
+      "validators/node-upgrades",
+      {
+        "type": "subcategory",
+        "label": "Nodes Management",
+        "ids": [
           "validators/nodes-scripts/manage-node",
-          "validators/nodes-scripts/use-docker"
+          "validators/nodes-scripts/use-docker",
+          "validators/rating",
+          "validators/redundancy",
+          "validators/node-operation-modes",
+          "validators/import-db",
+          "validators/node-cli",
+          "validators/node-databases",
+          "validators/useful-links"
         ]
       },
       {
         "type": "subcategory",
-        "label": "Manage your keys",
+        "label": "Staking, Unstaking, Unjailing",
+        "ids": [
+          "validators/staking/staking",
+          "validators/staking/unjailing",
+          "validators/staking/staking-smart-contract"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "The Delegation Manager",
+        "ids": [
+          "validators/delegation-manager",
+          "validators/delegation-dashboard",
+          "validators/staking/convert-existing-validator-into-staking-pool",
+          "validators/staking/merge-validator-delegation-sc",
+          "validators/staking-provider-apr"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Keys management",
         "ids": [
           "validators/key-management/validator-keys",
           "validators/key-management/wallet-keys",
@@ -45,26 +84,12 @@
       },
       {
         "type": "subcategory",
-        "label": "Staking, Unstaking, Unjailing",
+        "label": "FAQs and tools",
         "ids": [
-          "validators/staking/staking-unstaking-unjailing",
-          "validators/staking/staking",
-          "validators/staking/unjailing",
-          "validators/staking/staking-smart-contract"
+          "validators/faq",
+          "validators/useful-links"
         ]
-      },
-      "validators/delegation-manager",
-      "validators/staking/convert-existing-validator-into-staking-pool",
-      "validators/staking/merge-validator-delegation-sc",
-      "validators/rating",
-      "validators/node-upgrades",
-      "validators/redundancy",
-      "validators/node-operation-modes",
-      "validators/import-db",
-      "validators/node-cli",
-      "validators/node-databases",
-      "validators/useful-links",
-      "validators/faq"
+      }
     ],
     "Developers": [
       "developers/overview",
