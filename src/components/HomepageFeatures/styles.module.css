@@ -5,7 +5,38 @@
   width: 100%;
 }
 
-.featureSvg {
-  height: 200px;
-  width: 200px;
+.container {
+  max-width: 1140px;
+}
+.row {
+  justify-content: center;
+}
+.icon {
+  font-size: 1.5rem;
+}
+
+[data-theme="dark"] .card {
+  box-shadow: 0 8px 24px 4px rgba(28, 29, 29, 0.85);
+}
+.card {
+  height: 100%;
+  color: var(--ifm-font-color-base);
+  border-radius: 0.65rem;
+  box-shadow: 0 8px 24px 4px rgba(228, 229, 229, 0.85);
+  transition-property: all;
+  transition-duration: 0.2s;
+  padding: 1.5rem 1.8rem 1.7rem;
+}
+.card h3 {
+  font-size: 1.15rem;
+  color: var(--ifm-color-primary);
+}
+.card p {
+  margin-bottom: 0;
+}
+.card:hover {
+  text-decoration: none;
+}
+.card:hover p {
+  color: var(--ifm-color-primary);
 }

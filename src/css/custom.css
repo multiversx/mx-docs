@@ -6,15 +6,26 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #1b46c2;
+  --ifm-color-primary-dark: #003fba;
+  --ifm-color-primary-darker: #001079;
+  --ifm-color-primary-darkest: #001079;
+  --ifm-color-primary-light: #5265e7;
+  --ifm-color-primary-lighter: #7c85ff;
+  --ifm-color-primary-lightest: #a3a7ff;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --ifm-h1-font-size: 2rem;
+  --ifm-h2-font-size: 1.5rem;
+  --ifm-h3-font-size: 1.25rem;
+  --ifm-h4-font-size: 1rem;
+  --ifm-h5-font-size: 0.875rem;
+  --ifm-h6-font-size: 0.75rem;
+
+  --ifm-heading-font-weight: 600;
+
+  --ifm-footer-padding-vertical: 1.25rem;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -27,6 +38,8 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  --ifm-footer-background-color: #242526;
 }
 
 .theme-doc-sidebar-menu {
@@ -37,3 +50,68 @@
   font-weight: 400;
   font-size: 14px;
 }
+
+/* -------------------- Start Navbar ------------------- */
+.navbar .navbar__items .navbar__item.first-link {
+  margin-left: calc(50% - 226px);
+}
+
+/* -------------------- Start Navbar ------------------- */
+
+/* -------------------- Start Footer ------------------- */
+
+.footer-favicon {
+  width: 1em;
+  color: #dc3545;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  margin-bottom: -0.125rem;
+}
+.footer-link {
+  color: var(--ifm-font-color-base);
+}
+.footer-link:hover {
+  text-decoration: none;
+}
+/* -------------------- End Footer ------------------- */
+
+/* -------------------- Start Markdown ------------------- */
+.markdown {
+  --ifm-h1-vertical-rhythm-top: 2;
+  --ifm-h2-vertical-rhythm-top: 2;
+  --ifm-h3-vertical-rhythm-top: 2;
+  --ifm-heading-vertical-rhythm-top: 1.25;
+
+  --ifm-h1-vertical-rhythm-bottom: 2;
+  --ifm-heading-vertical-rhythm-bottom: 1.25;
+}
+.markdown h1:first-child {
+  --ifm-h1-font-size: 2rem;
+  margin-bottom: calc(
+    var(--ifm-h1-vertical-rhythm-bottom) * var(--ifm-leading)
+  );
+}
+.markdown > h2 {
+  --ifm-h2-font-size: 1.5rem;
+  margin-bottom: calc(
+    var(--ifm-heading-vertical-rhythm-bottom) * var(--ifm-leading)
+  );
+  margin-top: calc(var(--ifm-h2-vertical-rhythm-top) * var(--ifm-leading));
+}
+.markdown > h3 {
+  --ifm-h3-font-size: 1.25rem;
+  margin-bottom: calc(
+    var(--ifm-heading-vertical-rhythm-bottom) * var(--ifm-leading)
+  );
+  margin-top: calc(var(--ifm-h3-vertical-rhythm-top) * var(--ifm-leading));
+}
+
+.markdown > h4,
+.markdown > h5,
+.markdown > h6 {
+  margin-bottom: calc(
+    var(--ifm-heading-vertical-rhythm-bottom) * var(--ifm-leading)
+  );
+  margin-top: calc(var(--ifm-heading-vertical-rhythm-top) * var(--ifm-leading));
+}
+/* -------------------- End Markdown ------------------- */

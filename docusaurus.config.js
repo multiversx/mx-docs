@@ -61,6 +61,11 @@ const config = {
         "sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM",
       crossorigin: "anonymous",
     },
+    {
+      href: "https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap",
+      type: "text/css",
+      crossorigin: "anonymous",
+    },
   ],
 
   themeConfig:
@@ -82,6 +87,7 @@ const config = {
             href: "/developers/overview",
             label: "Develop",
             position: "left",
+            class: "navbar__item navbar__link first-link",
           },
           {
             href: "/validators/overview",
@@ -112,7 +118,7 @@ const config = {
       },
       image: "img/share.png",
       footer: {
-        style: "dark",
+        style: "light",
         links: [],
         copyright: `Copyright © ${new Date().getFullYear()} MultiversX. All rights reserved.`,
       },
@@ -126,7 +132,8 @@ const config = {
         appId: `${process.env.REACT_APP_ALGOLIA_APP_ID}`,
         // Public API key: it is safe to commit it
         apiKey: `${process.env.REACT_APP_ALGOLIA_SEARCH_KEY}`,
-        indexName: "elrond",
+        indexName: "multiversx",
+        contextualSearch: true,
       },
     }),
 };
