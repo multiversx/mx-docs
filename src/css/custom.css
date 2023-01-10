@@ -86,7 +86,7 @@
 
 .navbar__items--right .dropdown.dropdown--right + div {
   order: 4;
-  margin-left: 1rem;
+  margin-right: 0.5rem;
 }
 .navbar__items--right .dropdown.dropdown--right {
   order: 5;
