@@ -1033,7 +1033,7 @@ In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge--success">POST</span> **Get ESDT token properties**
+### <span class="badge badge--success">POST</span> **Get ESDT token properties** {#get-esdt-token-properties}
 
 This involves a `vm query` request to the `ESDT` address.
 For example:
@@ -1136,7 +1136,7 @@ The `returnData` member will contain an array of the properties in a fixed order
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge--success">POST</span> **Get special roles for a token**
+### <span class="badge badge--success">POST</span> **Get special roles for a token** {#get-special-roles-for-a-token}
 
 This involves a `vm query` request to the `ESDT` address. It will return all addresses that have roles assigned for the token
 with the provided identifier.

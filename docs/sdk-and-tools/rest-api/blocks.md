@@ -3,17 +3,24 @@ id: blocks
 title: Blocks
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 Query blocks information.
 
-## <span class="badge badge-primary">GET</span> **Get Hyperblock by Nonce**
+## <span class="badge badge--primary">GET</span> **Get Hyperblock by Nonce** {#get-hyperblock-by-nonce}
 
 `https://gateway.multiversx.com/hyperblock/by-nonce/:nonce`
 
 This endpoint allows one to query a Hyperblock by its nonce.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Path Parameters
 
@@ -21,58 +28,60 @@ Path Parameters
 | ----- | ----------------------------------------- | -------- | ------------------------- |
 | nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
 Block details retrieved successfully.
 
-```
+```json
 {
-    "hyperblock": {
-        "nonce": 185833,
-        "round": 186582,
-        "hash": "6a33...",
-        "prevBlockHash": "aa7e...",
-        "epoch": 12,
-        "numTxs": 1,
-        "shardBlocks": [
-            {
-                "hash": "cba4...",
-                "nonce": 186556,
-                "shard": 0
-            },
-            {
-                "hash": "50a16...",
-                "nonce": 186535,
-                "shard": 1
-            },
-            {
-                "hash": "7981...",
-                "nonce": 186536,
-                "shard": 2
-            }
-        ],
-        "transactions": [
-            {
-                "type": "normal",
-                "hash": "b035...",
-                "nonce": 3,
-                "value": "1000000000000000000",
-                "receiver": "erd1...",
-                "sender": "erd1...",
-                "gasPrice": 1000000000,
-                "gasLimit": 70000,
-                "data": "Zm9yIHRlc3Rz",
-                "signature": "1047...",
-                "status": "executed"
-            }
-        ]
-    }
+  "hyperblock": {
+    "nonce": 185833,
+    "round": 186582,
+    "hash": "6a33...",
+    "prevBlockHash": "aa7e...",
+    "epoch": 12,
+    "numTxs": 1,
+    "shardBlocks": [
+      {
+        "hash": "cba4...",
+        "nonce": 186556,
+        "shard": 0
+      },
+      {
+        "hash": "50a16...",
+        "nonce": 186535,
+        "shard": 1
+      },
+      {
+        "hash": "7981...",
+        "nonce": 186536,
+        "shard": 2
+      }
+    ],
+    "transactions": [
+      {
+        "type": "normal",
+        "hash": "b035...",
+        "nonce": 3,
+        "value": "1000000000000000000",
+        "receiver": "erd1...",
+        "sender": "erd1...",
+        "gasPrice": 1000000000,
+        "gasLimit": 70000,
+        "data": "Zm9yIHRlc3Rz",
+        "signature": "1047...",
+        "status": "executed"
+      }
+    ]
+  }
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 :::important
 This endpoint is only defined by the Proxy. The Observer does not expose this endpoint.
@@ -84,7 +93,7 @@ A **Hyperblock** is a block-like abstraction that reunites the data from all sha
 A **hyperblock** is composed using a **metablock** as a starting point - therefore, the `nonce` or `hash` of a hyperblock is the same as the `nonce` or `hash` of the base metablock.
 :::
 
-## <span class="badge badge-primary">GET</span> **Get Hyperblock by Hash**
+## <span class="badge badge--primary">GET</span> **Get Hyperblock by Hash** {#get-hyperblock-by-hash}
 
 `https://gateway.multiversx.com/hyperblock/by-hash/:hash`
 
@@ -104,48 +113,48 @@ Path Parameters
 
 🟢 200: OK
 
-```
+```json
 {
-    "hyperblock": {
-        "nonce": 185833,
-        "round": 186582,
-        "hash": "6a33...",
-        "prevBlockHash": "aa7e...",
-        "epoch": 12,
-        "numTxs": 1,
-        "shardBlocks": [
-            {
-                "hash": "cba4...",
-                "nonce": 186556,
-                "shard": 0
-            },
-            {
-                "hash": "50a16...",
-                "nonce": 186535,
-                "shard": 1
-            },
-            {
-                "hash": "7981...",
-                "nonce": 186536,
-                "shard": 2
-            }
-        ],
-        "transactions": [
-            {
-                "type": "normal",
-                "hash": "b035...",
-                "nonce": 3,
-                "value": "1000000000000000000",
-                "receiver": "erd1...",
-                "sender": "erd1...",
-                "gasPrice": 1000000000,
-                "gasLimit": 70000,
-                "data": "Zm9yIHRlc3Rz",
-                "signature": "1047...",
-                "status": "executed"
-            }
-        ]
-    }
+  "hyperblock": {
+    "nonce": 185833,
+    "round": 186582,
+    "hash": "6a33...",
+    "prevBlockHash": "aa7e...",
+    "epoch": 12,
+    "numTxs": 1,
+    "shardBlocks": [
+      {
+        "hash": "cba4...",
+        "nonce": 186556,
+        "shard": 0
+      },
+      {
+        "hash": "50a16...",
+        "nonce": 186535,
+        "shard": 1
+      },
+      {
+        "hash": "7981...",
+        "nonce": 186536,
+        "shard": 2
+      }
+    ],
+    "transactions": [
+      {
+        "type": "normal",
+        "hash": "b035...",
+        "nonce": 3,
+        "value": "1000000000000000000",
+        "receiver": "erd1...",
+        "sender": "erd1...",
+        "gasPrice": 1000000000,
+        "gasLimit": 70000,
+        "data": "Zm9yIHRlc3Rz",
+        "signature": "1047...",
+        "status": "executed"
+      }
+    ]
+  }
 }
 ```
 
@@ -155,7 +164,7 @@ Path Parameters
 This endpoint is only is only defined by the Proxy. The Observer does not expose this endpoint.
 :::
 
-## <span class="badge badge-primary">GET</span> **Get Block by Nonce**
+## <span class="badge badge--primary">GET</span> **Get Block by Nonce**
 
 `https://gateway.multiversx.com/block/:shard/by-nonce/:nonce`
 
@@ -184,44 +193,44 @@ Query Parameters
 
 Block retrieved successfully, with transactions included.
 
-```
+```json
 {
-    "data": {
-        "block": {
-            "nonce": 186532,
-            "round": 186576,
-            "hash": "7aa3...",
-            "prevBlockHash": "2580...",
-            "epoch": 12,
-            "shard": 2,
-            "numTxs": 1,
-            "miniBlocks": [
-                {
-                    "hash": "e927...",
-                    "type": "TxBlock",
-                    "sourceShard": 2,
-                    "destinationShard": 1,
-                    "transactions": [
-                        {
-                            "type": "normal",
-                            "hash": "b035...",
-                            "nonce": 3,
-                            "value": "1000000000000000000",
-                            "receiver": "erd1...",
-                            "sender": "erd1...",
-                            "gasPrice": 1000000000,
-                            "gasLimit": 70000,
-                            "data": "Zm9yIHRlc3Rz",
-                            "signature": "1047...",
-                            "status": "partially-executed"
-                        }
-                    ]
-                }
-            ]
+  "data": {
+    "block": {
+      "nonce": 186532,
+      "round": 186576,
+      "hash": "7aa3...",
+      "prevBlockHash": "2580...",
+      "epoch": 12,
+      "shard": 2,
+      "numTxs": 1,
+      "miniBlocks": [
+        {
+          "hash": "e927...",
+          "type": "TxBlock",
+          "sourceShard": 2,
+          "destinationShard": 1,
+          "transactions": [
+            {
+              "type": "normal",
+              "hash": "b035...",
+              "nonce": 3,
+              "value": "1000000000000000000",
+              "receiver": "erd1...",
+              "sender": "erd1...",
+              "gasPrice": 1000000000,
+              "gasLimit": 70000,
+              "data": "Zm9yIHRlc3Rz",
+              "signature": "1047...",
+              "status": "partially-executed"
+            }
+          ]
         }
-    },
-    "error": "",
-    "code": "successful"
+      ]
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
@@ -231,7 +240,7 @@ Block retrieved successfully, with transactions included.
 For Observers, the `shard` parameter should not be set.
 :::
 
-## <span class="badge badge-primary">GET</span> **Get Block by Hash**
+## <span class="badge badge--primary">GET</span> **Get Block by Hash**
 
 `https://gateway.multiversx.com/block/:shard/by-hash/:hash`
 
@@ -260,44 +269,44 @@ Query Parameters
 
 Block retrieved successfully, with transactions included.
 
-```
+```json
 {
-    "data": {
-      "block": {
-          "nonce": 186532,
-          "round": 186576,
-          "hash": "7aa3...",
-          "prevBlockHash": "2580...",
-          "epoch": 12,
-          "shard": 2,
-          "numTxs": 1,
-          "miniBlocks": [
-              {
-                  "hash": "e927...",
-                  "type": "TxBlock",
-                  "sourceShard": 2,
-                  "destinationShard": 1,
-                  "transactions": [
-                      {
-                          "type": "normal",
-                          "hash": "b035...",
-                          "nonce": 3,
-                          "value": "1000000000000000000",
-                          "receiver": "erd1...",
-                          "sender": "erd1...",
-                          "gasPrice": 1000000000,
-                          "gasLimit": 70000,
-                          "data": "Zm9yIHRlc3Rz",
-                          "signature": "1047...",
-                          "status": "partially-executed"
-                      }
-                  ]
-              }
+  "data": {
+    "block": {
+      "nonce": 186532,
+      "round": 186576,
+      "hash": "7aa3...",
+      "prevBlockHash": "2580...",
+      "epoch": 12,
+      "shard": 2,
+      "numTxs": 1,
+      "miniBlocks": [
+        {
+          "hash": "e927...",
+          "type": "TxBlock",
+          "sourceShard": 2,
+          "destinationShard": 1,
+          "transactions": [
+            {
+              "type": "normal",
+              "hash": "b035...",
+              "nonce": 3,
+              "value": "1000000000000000000",
+              "receiver": "erd1...",
+              "sender": "erd1...",
+              "gasPrice": 1000000000,
+              "gasLimit": 70000,
+              "data": "Zm9yIHRlc3Rz",
+              "signature": "1047...",
+              "status": "partially-executed"
+            }
           ]
-      }
-    },
-    "error": "",
-    "code": "successful"
+        }
+      ]
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 

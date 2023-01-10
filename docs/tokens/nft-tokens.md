@@ -976,10 +976,10 @@ One can use [get all esdt tokens for an address endpoint](/tokens/esdt-tokens#ge
 
 One can use [get all issued esdt tokens endpoint](/tokens/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
 
-### <span class="badge badge--success">POST</span> **Get ESDT properties**
+### <span class="badge badge--success">POST</span> **Get ESDT properties** {#get-esdt-properties}
 
 Properties can be queried via the [getTokenProperties function](/tokens/esdt-tokens#get-esdt-token-properties) provided by ESDT.
 
-### <span class="badge badge--success">POST</span> **Get special roles**
+### <span class="badge badge--success">POST</span> **Get special roles** {#get-special-roles}
 
 Special roles can be queried via the [getSpecialRoles function](/tokens/esdt-tokens#get-special-roles-for-a-token) provided by ESDT.
