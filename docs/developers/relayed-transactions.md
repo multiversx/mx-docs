@@ -66,7 +66,7 @@ type Transaction struct {
 }
 ```
 
-Notice that there are some differences as compared to the regular _frontend_ [transaction structure](/developers/signing-transactions/signing-transactions/#general-structure), such:
+Notice that there are some differences as compared to the regular _frontend_ [transaction structure](/developers/signing-transactions/#general-structure), such:
 
 - `SenderAddress` and `ReceiverAddress` have to be byte arrays instead of bech32 string addresses
 - `Value` has to be a big integer, instead of a string

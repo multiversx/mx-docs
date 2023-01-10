@@ -5,7 +5,7 @@ title: Creating Transactions
 
 ## **Transaction structure**
 
-As described in section [Signing Transactions](/developers/signing-transactions/signing-transactions), a ready-to-broadcast transaction is structured as follows:
+As described in section [Signing Transactions](/developers/signing-transactions), a ready-to-broadcast transaction is structured as follows:
 
 ```json
 {
@@ -28,7 +28,7 @@ There are SDKs or tools with support for interacting with the MultiversX blockch
 transactions creation and signing:
 
 - [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)
-- [erdpy - Python SDK](/sdk-and-tools/erdpy/erdpy)
+- [erdpy - Python SDK](/sdk-and-tools/erdpy)
 - [erdgo - Golang SDK](/sdk-and-tools/erdgo)
 - [erdjava - Java SDK](/sdk-and-tools/erdjava)
 - [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli)
@@ -100,7 +100,7 @@ Please follow [Gas and Fees](/developers/gas-and-fees/overview/).
 
 ## **Signing transactions**
 
-Please follow [Signing Transactions](/developers/signing-transactions/signing-transactions).
+Please follow [Signing Transactions](/developers/signing-transactions).
 
 ## **Simulate transaction execution**
 

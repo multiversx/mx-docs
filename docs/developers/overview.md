@@ -34,7 +34,7 @@ The following content explain the structure of a transaction, how to sign or sen
 
 | Name                                                                                 | Description                                             |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------- |
-| [Signing transactions](/developers/signing-transactions/signing-transactions)        | How to serialize and sign transactions.                 |
+| [Signing transactions](/developers/signing-transactions)                             | How to serialize and sign transactions.                 |
 | [Tools for signing](/developers/signing-transactions/tools-for-signing)              | What to use in order to generate and sign transactions. |
 | [Signing programatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
 

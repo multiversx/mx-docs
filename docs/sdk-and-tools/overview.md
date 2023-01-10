@@ -13,7 +13,7 @@ Follow the following table to guide you towards the action you are interested in
 
 | Name                                                                                                  | Description                                        |
 | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [erdjs](/sdk-and-tools/erdjs/erdjs)                                                                   | High level overview about erdjs.                   |
+| [erdjs](/sdk-and-tools/erdjs)                                                                         | High level overview about erdjs.                   |
 | [erdjs cookbook](/sdk-and-tools/erdjs/erdjs-cookbook)                                                 | Learn how to handle common tasks by using erdjs.   |
 | [Extending erdjs](/sdk-and-tools/erdjs/extending-erdjs)                                               | How to extend and tailor certain modules of erdjs. |
 | [Writing and testing erdjs interactions](/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions) | Write erdjs interactions for Visual Studio Code    |
@@ -36,7 +36,7 @@ In addition to erdjs, one could use the following Javascript library for perform
 
 | Name                                                                                        | Description                                              |
 | ------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| [erdpy](/sdk-and-tools/erdpy/erdpy)                                                         | High level overview about erdpy.                         |
+| [erdpy](/sdk-and-tools/erdpy/)                                                              | High level overview about erdpy.                         |
 | [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy)                                   | How to install and get started with erdpy.               |
 | [Configuring erdpy](/sdk-and-tools/erdpy/configuring-erdpy)                                 | Change erdpy's basic configurations.                     |
 | [erdpy cli](/sdk-and-tools/erdpy/erdpy-cli)                                                 | How to use the Command Line Interface.                   |
@@ -79,7 +79,7 @@ In addition to erdjs, one could use the following Javascript library for perform
 
 | Name                                                                     | Description                                                       |
 | ------------------------------------------------------------------------ | ----------------------------------------------------------------- |
-| [Rest API](/sdk-and-tools/rest-api/rest-api)                             | High level overview over the MultiversX's Rest API.               |
+| [Rest API](/sdk-and-tools/rest-api/)                                     | High level overview over the MultiversX's Rest API.               |
 | [api.multiversx.com](/sdk-and-tools/rest-api/multiversx-api)             | MultiversX's main API instance.                                   |
 | [Gateway overview](/sdk-and-tools/rest-api/gateway-overview)             | Gateway overview - public proxy instance.                         |
 | [Addresses](/sdk-and-tools/rest-api/addresses)                           | Rest API endpoints dedicated to addresses.                        |

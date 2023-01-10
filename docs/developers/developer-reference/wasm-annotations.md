@@ -35,7 +35,7 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 
 ### `#[elrond_wasm::proxy]`
 
-The `proxy` annotation must always be placed on a trait and will automatically make that trait a smart contract call proxy. More about smart contract proxies in [the contract calls reference](/developers/developer-reference/elrond-wasm-contract-calls).
+The `proxy` annotation must always be placed on a trait and will automatically make that trait a smart contract call proxy. More about smart contract proxies in [the contract calls reference](/developers/developer-reference/wasm-contract-calls).
 
 In short, contracts always get an auto-generated proxy. However, if such an auto-generated proxy of another contract is not available, it is possible to define such a "contract interface" by hand, using the `proxy` attribute.
 
@@ -111,7 +111,7 @@ Callbacks are special methods that get called automatically when the response co
 
 They also act as closures, since they can retain some of the context of the transaction that performed the asynchronous call in the first place.
 
-A more detailed explanation on how they work in [the contract calls reference](/developers/developer-reference/elrond-wasm-contract-calls).
+A more detailed explanation on how they work in [the contract calls reference](/developers/developer-reference/wasm-contract-calls).
 
 ### Storage
 

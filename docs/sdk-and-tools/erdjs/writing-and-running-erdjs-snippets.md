@@ -44,7 +44,7 @@ Now that you've created two contracts using the provided templates (and built th
 
 As previously mentioned, the folder `erdjs-snippets` is a nodejs package. Let's install its dependencies by running the following commands within the integrated terminal:
 
-```
+```bash
 cd ./erdjs-snippets
 npm install
 ```
@@ -63,7 +63,7 @@ An erdjs **snippet** is, actually, a file that defines a suite of _mocha_ tests,
 
 When executing one or more steps, they execute within a **test session**, selected by the following instruction of the snippet:
 
-```
+```js
 session = await TestSession.load("nameOfMySession", __dirname);
 ```
 
@@ -71,37 +71,37 @@ session = await TestSession.load("nameOfMySession", __dirname);
 
 The test session is configured by means of a `nameOfMySession.session.json` file, located near the snippet(s) or one level above. In this file, you can configure the URL of the network provider, the test wallets to use etc. For example:
 
-```
+```json
 {
-    "networkProvider": {
-        "type": "ProxyNetworkProvider",
-        "url": "https://devnet-gateway.multiversx.com",
-        "timeout": 5000
-    },
-    "users": {
-        "individuals": [
-            {
-                "name": "alice",
-                "pem": "~/elrondsdk/testwallets/latest/users/alice.pem"
-            },
-            {
-                "name": "bob",
-                "pem": "~/elrondsdk/testwallets/latest/users/bob.pem"
-            }
-        ],
-        "groups": [
-            {
-                "name": "friends",
-                "folder": "~/elrondsdk/testwallets/latest/users"
-            }
-        ]
-    }
+  "networkProvider": {
+    "type": "ProxyNetworkProvider",
+    "url": "https://devnet-gateway.multiversx.com",
+    "timeout": 5000
+  },
+  "users": {
+    "individuals": [
+      {
+        "name": "alice",
+        "pem": "~/elrondsdk/testwallets/latest/users/alice.pem"
+      },
+      {
+        "name": "bob",
+        "pem": "~/elrondsdk/testwallets/latest/users/bob.pem"
+      }
+    ],
+    "groups": [
+      {
+        "name": "friends",
+        "folder": "~/elrondsdk/testwallets/latest/users"
+      }
+    ]
+  }
 }
 ```
 
 Another example, using the `ApiNetworkProvider` instead of `ProxyNetworkProvider`:
 
-```
+```json
 {
     "networkProvider": {
         "type": "ApiNetworkProvider",
@@ -121,9 +121,9 @@ One of the main responsibilities of the test session object is to hold state amo
 :::note
 One way to destroy the session is to delete it's `*.sqlite` file. Another way is to define a special step in your snippets, as follows:
 
-```
+```js
 it("destroy session", async function () {
-    await session.destroy();
+  await session.destroy();
 });
 ```
 
@@ -132,7 +132,7 @@ However, in practice, sessions can be reused indefinitely.
 
 For example, in an early step you can save the address of a deployed contract, the identifier of an issued token or some arbitrary data:
 
-```
+```js
 await session.saveAddress({ name: "myContractAddress", address: addressOfMyContract });
 ...
 await session.saveToken({ name: "lotteryToken", token: myLotteryToken });
@@ -142,7 +142,7 @@ await session.saveBreadcrumb({ name: "someArbitraryData", value: { someValue: 42
 
 Then, in a subsequent step, you can load the previously stored contract address, token and arbitrary data:
 
-```
+```js
 const myLotteryToken = await session.loadToken("lotteryToken");
 ...
 const addressOfMyContract = await session.loadAddress("myContractAddress");
@@ -154,7 +154,7 @@ const someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
 
 It's recommended to make use of _assert_ statements, which makes the snippets more valuable and meaningful. For example:
 
-```
+```js
 assert.isTrue(returnCode.isSuccess());
 ...
 assert.equal(lotteryInfo.getFieldValue("token_identifier"), "myToken");
@@ -165,7 +165,7 @@ assert.equal(lotteryStatus, "someStatus");
 
 A test session provides a set of test users to engage in smart contract interactions. Given the session configuration provided as an example above, one can access the test users as follows:
 
-```
+```js
 const alice: ITestUser = session.users.getUser("alice");
 const bob: ITestUser = session.users.getUser("bob");
 const friends: ITestUser[] = session.users.getGroup("friends");
@@ -177,52 +177,52 @@ const friends: ITestUser[] = session.users.getGroup("friends");
 
 For example, let's create the file `myGenerator.json`:
 
-```
+```json
 {
-    "individuals": [
-        {
-            "shard": 0,
-            "pem": "~/test-wallets/zero.pem"
-        },
-        {
-            "shard": 1,
-            "pem": "~/test-wallets/one.pem"
-        },
-        {
-            "shard": 2,
-            "pem": "~/test-wallets/two.pem"
-        }
-    ],
-    "groups": [
-        {
-            "size": 3,
-            "shard": 0,
-            "pem": "~/test-wallets/manyZero.pem"
-        },
-        {
-            "size": 3,
-            "shard": 1,
-            "pem": "~/test-wallets/manyOne.pem"
-        },
-        {
-            "size": 3,
-            "shard": 2,
-            "pem": "~/test-wallets/manyTwo.pem"
-        }
-    ]
+  "individuals": [
+    {
+      "shard": 0,
+      "pem": "~/test-wallets/zero.pem"
+    },
+    {
+      "shard": 1,
+      "pem": "~/test-wallets/one.pem"
+    },
+    {
+      "shard": 2,
+      "pem": "~/test-wallets/two.pem"
+    }
+  ],
+  "groups": [
+    {
+      "size": 3,
+      "shard": 0,
+      "pem": "~/test-wallets/manyZero.pem"
+    },
+    {
+      "size": 3,
+      "shard": 1,
+      "pem": "~/test-wallets/manyOne.pem"
+    },
+    {
+      "size": 3,
+      "shard": 2,
+      "pem": "~/test-wallets/manyTwo.pem"
+    }
+  ]
 }
 ```
 
 Then, in order to actually generate the test users (secret keys), add a step in an arbitrary snippet file and run it:
 
-```
+```js
 describe("user operations snippet", async function () {
-    it("generate keys", async function () {
-        this.timeout(OneMinuteInMilliseconds);
+  it("generate keys", async function () {
+    this.timeout(OneMinuteInMilliseconds);
 
-        const config = readJson<ISecretKeysGeneratorConfig>("myGenerator.json");
-        await generateSecretKeys(config);
-    });
+    const config = readJson < ISecretKeysGeneratorConfig > "myGenerator.json";
+    await generateSecretKeys(config);
+  });
 });
 ```
 
@@ -236,25 +236,39 @@ The recorded events will be listed in the session report(s) - more on that later
 
 For example, in the _interactor_:
 
-```
+```js
 const transactionHash = await this.networkProvider.sendTransaction(transaction);
-await this.audit.onTransactionSent({ action: "add", args: [value], transactionHash: transactionHash });
+await this.audit.onTransactionSent({
+  action: "add",
+  args: [value],
+  transactionHash: transactionHash,
+});
 
-const transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
-await this.audit.onTransactionCompleted({ transactionHash: transactionHash, transaction: transactionOnNetwork });
+const transactionOnNetwork = await this.transactionWatcher.awaitCompleted(
+  transaction
+);
+await this.audit.onTransactionCompleted({
+  transactionHash: transactionHash,
+  transaction: transactionOnNetwork,
+});
 ```
 
 For example, in the snippet file:
 
-```
+```js
 const sumBefore = await interactor.getSum();
-const snapshotBefore = await session.audit.onSnapshot({ state: { sum: sumBefore } });
+const snapshotBefore = await session.audit.onSnapshot({
+  state: { sum: sumBefore },
+});
 
 const returnCode = await interactor.add(owner, 3);
 await session.audit.onContractOutcome({ returnCode });
 
 const sumAfter = await interactor.getSum();
-await session.audit.onSnapshot({ state: { sum: sumBefore }, comparableTo: snapshotBefore });
+await session.audit.onSnapshot({
+  state: { sum: sumBefore },
+  comparableTo: snapshotBefore,
+});
 ```
 
 Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated session report will include a difference between the two snapshots in question (**this feature isn't available as of `erdjs-snippets 3.0.0`**).
@@ -269,7 +283,7 @@ As of `erdjs-snippets 3.0.0`, report generation is experimental. It will improve
 
 In order to configure the reporting feature, define an additional entry in the session configuration file:
 
-```
+```json
 "reporting": {
     "explorerUrl": "https://devnet-explorer.multiversx.com",
     "apiUrl": "https://devnet-api.multiversx.com",
@@ -279,9 +293,9 @@ In order to configure the reporting feature, define an additional entry in the s
 
 Then, in order to generate a report, add an extra snippet step:
 
-```
+```js
 it("generate report", async function () {
-    await session.generateReport();
+  await session.generateReport();
 });
 ```
 
@@ -310,7 +324,7 @@ Let's see how to construct an interactor (we use the lottery contract as an exam
 
 First, you have to load the ABI:
 
-```
+```js
 const registry = await loadAbiRegistry(PathToAbi);
 const abi = new SmartContractAbi(registry);
 ```
@@ -321,7 +335,7 @@ Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookboo
 
 Then, create a `SmartContract` object as follows:
 
-```
+```js
 const contract = new SmartContract({ address: address, abi: abi });
 ```
 
@@ -329,42 +343,54 @@ If the address of the contract is yet unknown (e.g. prior deployment), then omit
 
 Afterwards, hold a reference to the `NetworkProvider` and the `NetworkConfig` snapshot provided by the test session:
 
-```
+```js
 const networkProvider = session.networkProvider;
 const networkConfig = session.getNetworkConfig();
 ```
 
 Finally, create the interactor:
 
-```
-const interactor = new LotteryInteractor(contract, networkProvider, networkConfig);
+```js
+const interactor = new LotteryInteractor(
+  contract,
+  networkProvider,
+  networkConfig
+);
 ```
 
 In our examples, the `TransactionWatcher` and the `ResultsParser` are usually instantiated by the interactor class (e.g. in the constructor) instead of being provided as a dependency. This should not be considered a guideline though. Here is how you would create the transaction watcher and the results parser:
 
-```
+```js
 const transactionWatcher = new TransactionWatcher(networkProvider);
 const resultsParser = new ResultsParser();
 ```
 
 In the end, the code that creates an interactor looks as follows:
 
-```
-export async function createLotteryInteractor(session: ITestSession, contractAddress?: IAddress): Promise<LotteryInteractor> {
-    const registry = await loadAbiRegistry(PathToAbi);
-    const abi = new SmartContractAbi(registry);
-    const contract = new SmartContract({ address: contractAddress, abi: abi });
-    const networkProvider = session.networkProvider;
-    const networkConfig = session.getNetworkConfig();
-    const audit = session.audit;
-    const interactor = new LotteryInteractor(contract, networkProvider, networkConfig, audit);
-    return interactor;
+```js
+export async function createLotteryInteractor(
+  session: ITestSession,
+  contractAddress?: IAddress
+): Promise<LotteryInteractor> {
+  const registry = await loadAbiRegistry(PathToAbi);
+  const abi = new SmartContractAbi(registry);
+  const contract = new SmartContract({ address: contractAddress, abi: abi });
+  const networkProvider = session.networkProvider;
+  const networkConfig = session.getNetworkConfig();
+  const audit = session.audit;
+  const interactor = new LotteryInteractor(
+    contract,
+    networkProvider,
+    networkConfig,
+    audit
+  );
+  return interactor;
 }
 ```
 
 Where the class `LotteryInteractor` is defined like this:
 
-```
+```js
 export class LotteryInteractor {
     private readonly contract: SmartContract;
     private readonly networkProvider: INetworkProvider;
@@ -400,7 +426,7 @@ Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookboo
 
 In order to implement a contract query as a method of your interactor, you first need to the prepare the `Interaction` object:
 
-```
+```js
 // Example 1 (adder contract)
 const interaction = <Interaction>this.contract.methods.getSum();
 
@@ -433,35 +459,48 @@ Above, you may notice there are two possible ways for providing the arguments to
 
 Afterwards, you should verify the interaction object with respect to the ABI (skip this step if you are using the _auto mode_). It will throw an error if the ABI (more specifically, the input parameters of the endpoint) is not followed:
 
-```
+```js
 interaction.check();
 ```
 
 Now Let's run the query:
 
-```
+```js
 let queryResponse = await this.networkProvider.queryContract(query);
 ```
 
 Then parse the results:
 
-```
+```js
 // Example 1
-const { firstValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const { firstValue } = this.resultsParser.parseQueryResponse(
+  queryResponse,
+  interaction.getEndpoint()
+);
 
 // Example 2
-const { firstValue, secondValue, thirdValue } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const { firstValue, secondValue, thirdValue } =
+  this.resultsParser.parseQueryResponse(
+    queryResponse,
+    interaction.getEndpoint()
+  );
 
 // Example 3
-const { values, returnCode } = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const { values, returnCode } = this.resultsParser.parseQueryResponse(
+  queryResponse,
+  interaction.getEndpoint()
+);
 
 // Example 4
-const bundle = this.resultsParser.parseQueryResponse(queryResponse, interaction.getEndpoint());
+const bundle = this.resultsParser.parseQueryResponse(
+  queryResponse,
+  interaction.getEndpoint()
+);
 ```
 
 In the end, you would (optionally) cast, then interpret the values in the bundle (when necessary), before returning them to the caller of the interactor function (method):
 
-```
+```js
 // Example 1
 const firstValueAsBigUInt = <BigUIntValue>firstValue;
 return firstValueAsBigUInt.valueOf().toNumber();
@@ -483,7 +522,7 @@ Now let's put the code together and see some full examples.
 
 Getting the status of a lottery **(enum)**:
 
-```
+```js
 // Interactor method:
 async getStatus(lotteryName: string): Promise<string> {
     // Prepare the interaction
@@ -506,7 +545,7 @@ console.log(status);
 
 Getting the lottery info **(struct)**:
 
-```
+```js
 // Interactor method:
 async getLotteryInfo(lotteryName: string): Promise<Struct> {
     // Prepare the interaction
@@ -537,7 +576,7 @@ Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookboo
 
 In order to implement a contract call as a method of your interactor, you first need to the prepare the `Interaction` object:
 
-```
+```js
 // Example 1 (adder)
 const interaction = <Interaction>this.contract.methods
     .add([new BigUIntValue(value)])
@@ -545,7 +584,7 @@ const interaction = <Interaction>this.contract.methods
     .withNonce(caller.account.getNonceThenIncrement());
 ```
 
-```
+```js
 // Example 2 - automatic type inference (lottery)
 const interaction = <Interaction>this.contract.methods
     .start([
@@ -563,7 +602,7 @@ const interaction = <Interaction>this.contract.methods
     .withNonce(owner.account.getNonceThenIncrement());
 ```
 
-```
+```js
 // Example 2 - explicit types (lottery)
 const interaction = <Interaction>this.contract.methodsExplicit
     .start([
@@ -581,7 +620,7 @@ const interaction = <Interaction>this.contract.methodsExplicit
     .withNonce(owner.account.getNonceThenIncrement());
 ```
 
-```
+```js
 // Example 3 - automatic type inference (lottery)
 const interaction = <Interaction>this.contract.methods
     .buy_ticket([lotteryName])
@@ -600,41 +639,52 @@ The account nonce must be synchronized beforehand (that is, before calling the i
 
 Afterwards, you should verify the interaction object with respect to the ABI (skip this step if you are using the _auto mode_), then build the transaction object:
 
-```
+```js
 let transaction = interaction.check().buildTransaction();
 ```
 
 Then, use a signer (e.g. a dApp provider) to sign the transaction. In the snippets, we use the `ITestUser` object to perform the signing:
 
-```
+```js
 await owner.signer.sign(transaction);
 ```
 
 Now let's broadcast the transaction and await its completion:
 
-```
+```js
 await this.networkProvider.sendTransaction(transaction);
-const transactionOnNetwork = await this.transactionWatcher.awaitCompleted(transaction);
+const transactionOnNetwork = await this.transactionWatcher.awaitCompleted(
+  transaction
+);
 ```
 
 In the end, we parse the results into an object called `TypedOutcomeBundle` (just like for query responses):
 
-```
+```js
 // Example 1
-const { returnCode } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
+const { returnCode } = this.resultsParser.parseOutcome(
+  transactionOnNetwork,
+  interaction.getEndpoint()
+);
 
 // Example 2
-const bundle = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
+const bundle = this.resultsParser.parseOutcome(
+  transactionOnNetwork,
+  interaction.getEndpoint()
+);
 
 // Example 3
-const { returnCode, firstValue } = this.resultsParser.parseOutcome(transactionOnNetwork, interaction.getEndpoint());
+const { returnCode, firstValue } = this.resultsParser.parseOutcome(
+  transactionOnNetwork,
+  interaction.getEndpoint()
+);
 ```
 
 Then, for interpreting the results, follow the same guidelines as for query results (section above).
 
 Now let's put the code together and see a full example:
 
-```
+```js
 async buyTicket(user: ITestUser, lotteryName: string, amount: TokenPayment): Promise<ReturnCode> {
     console.log(`LotteryInteractor.buyTicket(): address = ${user.address}, amount = ${amount.toPrettyString()}`);
 

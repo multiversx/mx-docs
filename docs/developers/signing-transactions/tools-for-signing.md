@@ -3,9 +3,9 @@ id: tools-for-signing
 title: Tools for signing
 ---
 
-In order to sign a transaction without actually dispatching it, one can use [erdpy](/sdk-and-tools/erdpy/erdpy) or [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli).
+In order to sign a transaction without actually dispatching it, one can use [erdpy](/sdk-and-tools/erdpy) or [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli).
 
-## **Sign using [erdpy](/sdk-and-tools/erdpy/erdpy) (Command Line Interface)**
+## **Sign using [erdpy](/sdk-and-tools/erdpy/) (Command Line Interface)**
 
 Using a **pem** file:
 

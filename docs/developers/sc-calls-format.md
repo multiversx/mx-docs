@@ -129,7 +129,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 ### Converting addresses using erdjs
 
-Find more about `erdjs` [here](/sdk-and-tools/erdjs/erdjs/).
+Find more about `erdjs` [here](/sdk-and-tools/erdjs/).
 
 ```js
 import { Address } from "@elrondnetwork/erdjs";

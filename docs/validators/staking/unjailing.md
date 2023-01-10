@@ -29,7 +29,7 @@ In order to submit an unjailing transaction, you require the following:
 - A wallet with at least 2.5 EGLD (the cost of unjailing a _single validator_). If you want to unjail multiple validators at once, you need to multiply that minimum amount with the number of validators. For example, unjailing 3 validators at once will require 7.5 EGLD. Make sure you have enough in your wallet.
 - The **BLS public keys** of the validators you want to unjail. You absolutely **do not require the secret key** of the validators. The BLS public keys of the validators are found in the `validatorKey.pem` files. Please read [Validator Keys](/validators/key-management/validator-keys) to find out how to extract the public key only. Remember that the BLS public key consists of exactly 192 hexadecimal characters (that is, `0` to `9` and `a` to `f` only).
 
-# **Unjailing through the Wallet**
+## **Unjailing through the Wallet**
 
 Open your wallet on [https://wallet.multiversx.com](https://wallet.multiversx.com/) and click the "Send" button. Carefully fill the form with the following information. Make sure it is clear to you what this information is, and where to adjust it with your own information.
 
@@ -49,7 +49,7 @@ When writing in the "Data" field, you must adhere to a strict format, described 
 
 If you want to unjail a single node, the format of the "Data" field is simple:
 
-```
+```python
 unJail@<BLS1>
 ```
 
@@ -69,19 +69,19 @@ Unjailing more than one node at a time isn't very different from unjailing a sin
 
 For a _single_ node, as explained in the previous subsection, the format is this one:
 
-```
+```python
 unJail@<BLS1>
 ```
 
 For _two_ nodes, the format is as follows:
 
-```
+```python
 unJail@<BLS1>@<BLS2>
 ```
 
 And for _three_ nodes, the format is:
 
-```
+```python
 unJail@<BLS1>@<BLS2>@<BLS3>
 ```
 
@@ -97,17 +97,17 @@ unJail@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa
 
 You can write the text for the "Data" field for _any_ number of nodes. The general format looks like this:
 
-```
+```python
 unJail@<BLS1>@<BLS2>@…@<BLS99>
 ```
 
-# **Unjailing through erdpy**
+## **Unjailing through erdpy**
 
 Submitting the unjailing transaction using `erdpy` avoids having to write the "Data" field manually. Instead, the transaction is constructed automatically by `erdpy` and submitted to the network directly, in a single command.
 
 Make sure `erdpy` is installed by issuing this command on a terminal:
 
-```
+```python
 erdpy --version
 ```
 
@@ -129,7 +129,7 @@ The following commands assume that the PEM file for your Wallet was saved with t
 
 The command to submit an unjailing transaction with `erdpy` is this:
 
-```
+```python
 erdpy --verbose validator unjail --pem=walletKey.pem --value="<unjail-value>" --nodes-public-keys="<BLS1>,<BLS2>,...,<BLS99>" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
@@ -142,7 +142,7 @@ Notice also that there is no calculation for "Gas Limit". If you provide the `--
 
 Here's an example for an unjailing command for one validator:
 
-```
+```python
 erdpy --verbose validator unjail --pem=walletKey.pem --value="2500000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
@@ -152,7 +152,7 @@ You must take **denomination** into account when specifying the `value` paramete
 
 For two validators, the command becomes this one:
 
-```
+```python
 erdpy --verbose validator unjail --pem=walletKey.pem --value="5000000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27,f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 

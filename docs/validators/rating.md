@@ -53,7 +53,7 @@ The only way to increase the rating of a validator is to keep it up-to-date, kee
 Running **multiple validators on a single machine** will impact your rating and consequently _your rewards,_ if the machine doesn't have the as many times the minimum requirements as there are validators running on it.
 :::
 
-# **Consensus probabilities**
+## **Consensus probabilities**
 
 Rating affects the probability of a validator to be selected in the consensus group of a round. This is done by applying **rating modifiers** on the probability of selection for each validator.
 

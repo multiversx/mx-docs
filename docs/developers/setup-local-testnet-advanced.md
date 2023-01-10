@@ -149,7 +149,7 @@ $ ./reset.sh
 
 ## **Inspecting the Proxy**
 
-By default, the local Testnet also includes a local MultiversX Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/rest-api).
+By default, the local Testnet also includes a local MultiversX Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/).
 
 ```bash
 $ curl http://localhost:7950/network/config
