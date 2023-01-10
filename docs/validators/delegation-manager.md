@@ -3,6 +3,9 @@ id: delegation-manager
 title: The Delegation Manager
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 ## Introducing staking pools
 
 A **staking pool** is defined as a custom delegation smart contract, the associated nodes and the funds staked in the pool by participants. **Node operators** may wish to set up a staking pool for their nodes, which can then be funded by anyone in exchange for a proportion of the validator rewards. This form of funding the stake for validators is called **delegation**.
@@ -27,7 +30,7 @@ A detailed description of the delegation process can be consulted at https://git
 
 The delegation contract for a new staking pool can be created by issuing a request to the delegation manager. This is done by submitting a transaction of the following form:
 
-```
+```rust
 NewDelegationContractTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
@@ -69,7 +72,7 @@ Setting the service fee to 0 (`"00"` in hexadecimal) specifies that no rewards a
 
 The following is a complete example of a transaction requesting the creation of a new delegation contract:
 
-```
+```rust
 NewDelegationContractTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
@@ -93,7 +96,7 @@ The owner of the delegation contract has a number of operations at their disposa
 
 The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated keybase.io identity.
 
-```
+```rust
 SetMetadataTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -110,7 +113,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 An example for the `Data` field that sets the name to `"MultiversX Staking"`, the website to `"multiversx.staking"` and the keybase.io identifier to `"multiversxstaking"` is:
 
-```
+```rust
     "setMetaData" +
     "@4d756c74697665727358205374616b696e67" // MultiversX Staking
     "@6d756c746976657273782e7374616b696e67" // multiversx.staking
@@ -129,7 +132,7 @@ In order to complete the matching between the delegation contract and keybase.io
 
 An example for the path to the empty file for the `"multiversxstaking"` keybase.io identity would be:
 
-```
+```rust
  public/multiversxstaking/elrond/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
 ```
 
@@ -140,7 +143,7 @@ The **second step** in connecting the delegation contract and the keybase.io ide
 :::tip
 To be able to connect a **testnet** or **devnet** contract to a keybase.io identity, a new folder - named `"testnet"` for the testnet, or `"devnet"` for the devnet, has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` would be:
 
-```
+```rust
 public/multiversxstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
 ```
 
@@ -156,7 +159,7 @@ To also connect the validators themselves to a specific keybase.io staking pool 
 1. Create an empty file with the name set to the `"<BLS key>"` for every validator and add the empty file to the `/elrond` folder on your keybase.io identity: `public/<keybase.io identity>/elrond/<BLS key>`
 2. Set the `Identity` of each validator in the `config/prefs.toml` file to the keybase.io staking pool identity.
 
-```
+```rust
 [Preferences]
    # Identity represents the keybase's identity
    Identity = "<keybase.io identity>"    // e.g.  Identity = "multiversxstaking"
@@ -170,7 +173,7 @@ The service fee is a percentage of the validator rewards that will be reserved f
 
 The service fee can be changed at any time using a transaction of the form:
 
-```
+```rust
 ChangeServiceFeeTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -199,7 +202,7 @@ When automatic activation is enabled, the delegation contract will activate (sta
 
 Automatic activation can be enabled or disabled using a transaction of the form:
 
-```
+```rust
 SetAutomaticActivationTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -224,7 +227,7 @@ The total delegation cap is the maximum possible size amount of EGLD which can b
 
 The total delegation cap can be modified at any time using a transaction of the form:
 
-```
+```rust
 ModifyTotalDelegationCapTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -261,7 +264,7 @@ Adding nodes requires the BLS key pairs belonging to each of them, which the own
 
 Adding `N` nodes to the delegation contract is done by submitting a transaction with the values set as follows:
 
-```
+```rust
 AddNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -290,7 +293,7 @@ This subsection describes the _manual_ staking (activation) of nodes. To automat
 
 To stake specific nodes manually, a transaction of the following form can be submitted:
 
-```
+```rust
 StakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -322,7 +325,7 @@ To cancel the deactivation before the unstaking is complete, the nodes can be [r
 
 To begin the deactivation process for a selection of validator nodes, a transaction of the following form is used:
 
-```
+```rust
 UnstakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -344,7 +347,7 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 
 Validator nodes that have been unstaked can be restaked (reactivated) before their deactivation is complete. To cancel their deactivation, a transaction of the following form is used:
 
-```
+```rust
 RestakeNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -372,7 +375,7 @@ Validators are demoted to observer status at the beginning of the next epoch _af
 
 Validator nodes that have been unbonded cannot be restaked (reactivated). They must be staked anew.
 
-```
+```rust
 UnbondNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -398,7 +401,7 @@ Unlike [adding nodes](/validators/delegation-manager#adding-nodes), this step do
 
 Removing `N` nodes from the delegation contract is done by submitting a transaction with the values set as follows:
 
-```
+```rust
 RemoveNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -428,7 +431,7 @@ A jailed validator does not lose its stake nor its status. It remains active, bu
 
 Recovering a validator from jail and restoring it is called **unjailing**, for which a fine of 2.5 EGLD must be paid. Multiple validators can be recovered from jail at the same time by paying 2.5 EGLD for each validator. The format of the unjailing transaction is as follows:
 
-```
+```rust
 UnjailNodesTransaction {
     Sender: <account address of the delegation contract owner>
     Receiver: <address of the delegation contract>
@@ -466,7 +469,7 @@ But if gas is insufficient, or if automatic activation is disabled, the amount r
 
 Funds can be delegated by any fund holder by submitting a transaction of the following form:
 
-```
+```rust
 DelegateTransaction {
     Sender: <account address of funds holder>
     Receiver: <address of the delegation contract>
@@ -484,7 +487,7 @@ If the transaction is successful, the funds' holder has become a delegator and t
 
 A portion of the rewards earned by validator nodes is reserved for each delegator. To claim the rewards, a delegator may issue a transaction of the following form:
 
-```
+```rust
 ClaimRewardsTransaction {
     Sender: <account address of existing delegator>
     Receiver: <address of the delegation contract>
@@ -508,7 +511,7 @@ Just like delegation, redelegation of rewards takes into account the status of [
 
 Rewards are redelegated using a transaction of the form:
 
-```
+```rust
 RedelegateRewardsTransaction {
     Sender: <account address of existing delegator>
     Receiver: <address of the delegation contract>
@@ -544,7 +547,7 @@ After 144000 blocks, the funds can be [withdrawn](/validators/delegation-manager
 
 To express the intention of future withdrawal of funds from the staking pool, a delegator may submit the following transaction:
 
-```
+```rust
 UndelegateTransaction {
     Sender: <account address of existing delegator>
     Receiver: <address of the delegation contract>
@@ -571,7 +574,7 @@ This action withdraws _all the currently undelegated funds_ belonging to the spe
 
 Withdrawing funds is done using a transaction of the following form:
 
-```
+```rust
 WithdrawTransaction {
     Sender: <account address of existing delegator>
     Receiver: <address of the delegation contract>
@@ -611,15 +614,19 @@ The following documentation sections only show the value of the relevant `return
 }
 ```
 
-### <span class="badge badge-success">POST</span> Contract config
+### <span class="badge badge--success">POST</span> Contract config {#contract-config}
 
 The response contains an array of the properties in a fixed order (base64 encoded): owner address, service fee, maximum delegation cap, initial owner funds, automatic activation, with delegation cap, can change service fee, check cap on redelegate, nonce on creation and unbond period.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -630,7 +637,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -680,17 +688,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Contract metadata
+### <span class="badge badge--success">POST</span> Contract metadata {#contract-metadata}
 
 The response contains an array of the properties in a fixed order (base64 encoded): staking provider name, website and identifier.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -701,7 +714,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -738,17 +752,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Number of delegators
+### <span class="badge badge--success">POST</span> Number of delegators {#number-of-delegators}
 
 The response contains a value representing the number of delegators in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -759,7 +778,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -790,17 +810,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Number of nodes
+### <span class="badge badge--success">POST</span> Number of nodes {#number-of-nodes}
 
 The response contains the number of nodes in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -811,7 +836,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -842,17 +868,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Nodes states
+### <span class="badge badge--success">POST</span> Nodes states {#nodes-states}
 
 The response contains an enumeration of alternating status codes and BLS keys. Each status code is followed by the BLS key of the node it describes. Both status codes and BLS keys are encoded in base64.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -863,7 +894,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -902,17 +934,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Total active stake
+### <span class="badge badge--success">POST</span> Total active stake {#total-active-stake}
 
 The response contains a value representing the total active stake in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -923,7 +960,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -952,17 +990,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Total unstaked stake
+### <span class="badge badge--success">POST</span> Total unstaked stake {#total-unstaked-stake}
 
 The response contains a value representing the total unstaked stake in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -973,7 +1016,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1004,17 +1048,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Total cumulated rewards
+### <span class="badge badge--success">POST</span> Total cumulated rewards {#total-cumulated-rewards}
 
 The response contains a value representing the sum of all accumulated rewards in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1026,7 +1075,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1058,17 +1108,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Delegator claimable rewards
+### <span class="badge badge--success">POST</span> Delegator claimable rewards {#delegator-claimable-rewards}
 
 The response contains a value representing the total claimable rewards for the delegator in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1082,7 +1137,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1114,17 +1170,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Delegator total accumulated rewards
+### <span class="badge badge--success">POST</span> Delegator total accumulated rewards {#delegator-total-accumulated-rewards}
 
 The response contains a value representing the total accumulated rewards for the delegator in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1138,7 +1199,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1170,17 +1232,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Delegator active stake
+### <span class="badge badge--success">POST</span> Delegator active stake {#delegator-active-stake}
 
 The response contains a value representing the active stake for the delegator in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1194,7 +1261,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1224,17 +1292,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Delegator unstaked stake
+### <span class="badge badge--success">POST</span> Delegator unstaked stake {#delegator-unstaked-stake}
 
 The response contains a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1248,7 +1321,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1280,17 +1354,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Delegator unbondable stake
+### <span class="badge badge--success">POST</span> Delegator unbondable stake {#delegator-unbondable-stake}
 
 The response contains a value representing the unbondable stake in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1304,7 +1383,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1336,17 +1416,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Delegator undelegated stake
+### <span class="badge badge--success">POST</span> Delegator undelegated stake {#delegator-undelegated-stake}
 
 The response contains an enumeration representing the different undelegated stake values in base64 encoding of the hex encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1360,7 +1445,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1390,17 +1476,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Delegator funds data
+### <span class="badge badge--success">POST</span> Delegator funds data {#delegator-funds-data}
 
 The response contains an enumeration for the delegator encoded base64 of the hexadecimal encoding of the following: active stake, unclaimed rewards, unstaked stake and unbondable stake.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1414,7 +1505,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1449,17 +1541,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Get reward data for epoch
+### <span class="badge badge--success">POST</span> Get reward data for epoch {#get-reward-data-for-epoch}
 
 The response contains an enumeration for the specified epoch representing the base64 encoding of the hexadecimal encoding for the rewards to distribute, total active stake and service fee.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1471,7 +1568,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1503,19 +1601,24 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 ## Delegation mananger view functions
 
-### <span class="badge badge-success">POST</span> All contract addresses
+### <span class="badge badge--success">POST</span> All contract addresses {#all-contract-addresses}
 
 The response contains an enumeration of bech32 keys bytes in base64 encoding.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1526,7 +1629,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1567,17 +1671,22 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> Contract config
+### <span class="badge badge--success">POST</span> Contract config {#contract-config-1}
 
 The response contains an enumeration of the properties in a fixed order (base64 encoded): current number of contracts, last created contract address, minimum and maximum service fee, minimum deposit and delegation.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://proxy:port/vm-values/query
 ```
 
@@ -1588,7 +1697,8 @@ https://proxy:port/vm-values/query
 }
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 Only `returnData` shown below; see [view functions](/validators/delegation-manager#delegation-contract-view-functions) for complete response
 
@@ -1631,4 +1741,5 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>

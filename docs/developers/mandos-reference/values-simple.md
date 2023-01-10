@@ -20,7 +20,7 @@ We chose to create a single universal format to be used everywhere in a Mandos f
 
 The advantage of this unique value format is that it is enough to understand it once to then use it everywhere.
 
-The Mandos value format is closely related to the [MultiversX serialization format](/developers/developer-reference/elrond-serialization-format). This is not by accident, Mandos is designed to make it easy to interact MultiversX contracts and their data.
+The Mandos value format is closely related to the [MultiversX serialization format](/developers/developer-reference/serialization-format). This is not by accident, Mandos is designed to make it easy to interact MultiversX contracts and their data.
 
 Exceptions: `txId`, `comment` and `asyncCallData` are simple strings. `asyncCallData` might be changed to the default value format in the future and/or reworked.
 
@@ -99,7 +99,7 @@ Sometimes positive numbers can start with a "1" bit and get accidentally interpr
 - `"-1"` is represented as `"0xff"`. Negative numbers are also represented in the minimum number of bytes possible.
   :::
 
-For more about signed number encoding, see [the big number serialization format](/developers/developer-reference/elrond-serialization-format#arbitrary-width-big-numbers).
+For more about signed number encoding, see [the big number serialization format](/developers/developer-reference/serialization-format/#arbitrary-width-big-numbers).
 
 ## **Nested numbers**
 

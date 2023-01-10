@@ -21,10 +21,14 @@ Recommendations from experienced validators:
 
 - Jose - https://medium.com/@josefcoap/elrond-vps-guide-ebfa6655cb9f
 
-:::warning
+:::caution
 Consider the price of cheap services that offer same specs as other providers at half of the price, when running a validator - the protocol dynamically phases out low performance nodes, which will lead to fewer returns for operators.
 :::
 
 **What if I have Windows?**
 
 Use a virtualization service to deploy a virtual Linux server on your Windows machine. This setup is recommended for testing purposes only. Try this tutorial, for example: https://itsfoss.com/install-linux-in-virtualbox/
+
+**General note**
+
+There are hundreds of people actively engaging with MultiversX infrastructure. Engage with them over our official [Telegram channel](https://t.me/ElrondValidators), and you will get your questions answered. Weigh in favor of people with “admin” in their name. Disregard any direct messages offering private support - those are most likely scam attempts.

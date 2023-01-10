@@ -23,7 +23,7 @@ For **regular transfer transactions**, the transaction `status` has the followin
 | **pending** or **received** or **partially-executed** | The transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).                                                  |
 | **fail** or **not-executed**                          | Regular transfer transactions cannot reach this status.                                                                                                       |
 
-:::warning
+:::caution
 The statuses are (broadly speaking) directly fetched from the Observer Nodes themselves. The Node [v1.1.6](https://github.com/multiversx/mx-chain-go/releases/tag/v1.1.6) returns different statuses than previous versions. For example, the status **executed** has been renamed to **success**, while the statuses **received** and **partially-executed** have been merged under the status **pending**.
 
 Currently, the HTTP API does not implement a versioning scheme (work is in progress on this matter) and thus does not yet provide a layer that abstracts away this renaming of statuses. Therefore, **the API consumers** - in order to appropriately handle the data coming from both versions of the Node (prior to `v1.1.6` and after `v1.1.6`) - **are recommended to**:

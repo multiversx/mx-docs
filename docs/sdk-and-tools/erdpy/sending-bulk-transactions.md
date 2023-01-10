@@ -3,7 +3,7 @@ id: sending-bulk-transactions
 title: Sending bulk transactions
 ---
 
-:::warning
+:::caution
 As of December 2022, the content on this page is deprecated - the page will be removed in the near future. In order to sign and broadcast multiple transactions, please follow the approach depicted in the [cookbook](/sdk-and-tools/erdpy/erdpy-cookbook#broadcasting-transactions), instead.
 :::
 
@@ -20,7 +20,7 @@ There will be 3 steps to fulfill:
 2. Prepare the transaction set, which involves you configuring a Bash script (provided below). This script will contain your desired transactions and will reference your PEM file.
 3. Execute the command that sends all the transactions in the prepared set.
 
-:::warning
+:::caution
 Make sure your terminal is running `bash`, and not `zsh` or any other shell. Run the following command:
 
 ```

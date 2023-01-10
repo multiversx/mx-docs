@@ -33,13 +33,13 @@ The recommended number of CPUs has been updated from `8` to `16` in April 2021, 
 These specs are only a recommendation. Depending on the load over the API or the observers, one should upgrade the machine as to keep the squad synced and with good performance.
 :::
 
-# **Setup via the Mainnet scripts**
+## **Setup via the Mainnet scripts**
 
-:::warning
+:::caution
 `elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `mx-chain-scripts`, explained below.
 :::
 
-# **Setup via mx-chain-scripts**
+## **Setup via mx-chain-scripts**
 
 ## **Installation and Configuration**
 
@@ -47,13 +47,13 @@ The Observing Squad can be set up using the [installation scripts](/validators/n
 
 Clone the installer repository:
 
-```
+```bash
 git clone https://github.com/multiversx/mx-chain-scripts
 ```
 
 Edit `config/variables.cfg` accordingly. For example:
 
-```
+```bash
 ENVIRONMENT="mainnet"
 ...
 CUSTOM_HOME="/home/ubuntu"
@@ -62,13 +62,13 @@ CUSTOM_USER="ubuntu"
 
 Additionally, you might want to set the following option, so that the logs are saved within the `logs` folder of the node:
 
-```
+```bash
 NODE_EXTRA_FLAGS="-log-save"
 ```
 
 Please check that the `CUSTOM_HOME` directory exists. Run the installation script as follows:
 
-```
+```bash
 ./script.sh observing_squad
 ```
 
@@ -76,7 +76,7 @@ After installation, 5 new `systemd` units will be available (and enabled).
 
 Start the nodes and the Proxy using the command:
 
-```
+```bash
 ./script.sh start
 ```
 
@@ -89,13 +89,13 @@ The Observing Squad can be updated using the installation scripts.
 ### **General upgrade procedure**
 
 :::important
-`elrond-go-scripts-mainnet` are deprecated as of November 2022. Users of these scripts have to migrate to [mx-chain-scripts](/validators/elrond-go-scripts/config-scripts/).
+`elrond-go-scripts-mainnet` are deprecated as of November 2022. Users of these scripts have to migrate to [mx-chain-scripts](/validators/nodes-scripts/config-scripts/).
 The migration guide can he found [here](/validators/nodes-scripts/install-update/#migration-from-old-scripts).
 :::
 
 In order to upgrade the Observing Squad - that is, both the Observers and the Proxy, one should issue the following commands:
 
-```
+```bash
 $ cd ~/mx-chain-scripts
 $ ./script.sh github_pull
 $ ./script.sh stop
@@ -111,7 +111,7 @@ After running the commands above, the upgraded Observing Squad will start again.
 One can monitor the running Observers using the **termui** utility (installed during the setup process itself in the `CUSTOM_HOME="/home/ubuntu"
 ` folder), as follows:
 
-```
+```bash
 ~/elrond-utils/termui --address localhost:8080    # Shard 0
 ~/elrond-utils/termui --address localhost:8081    # Shard 1
 ~/elrond-utils/termui --address localhost:8082    # Shard 2
@@ -120,7 +120,7 @@ One can monitor the running Observers using the **termui** utility (installed du
 
 Alternatively, one can query the status of the Observers by performing GET requests using **curl**:
 
-```
+```bash
 curl http://localhost:8080/node/status | jq    # Shard 0
 curl http://localhost:8081/node/status | jq    # Shard 1
 curl http://localhost:8082/node/status | jq    # Shard 2
@@ -129,50 +129,50 @@ curl http://localhost:8083/node/status | jq    # Metachain
 
 The Proxy does not offer a **termui** monitor, but its activity can be inspected using **journalctl**:
 
-```
+```bash
 journalctl -f -u elrond-proxy.service
 ```
 
 Optionally, one can perform the following smoke test in order to fetch the latest synchronized hyperblock:
 
-```
+```bash
 export NONCE=$(curl http://localhost:8079/network/status/4294967295 | jq '.data["status"]["erd_highest_final_nonce"]')
 curl http://localhost:8079/hyperblock/by-nonce/$NONCE | jq
 
 ```
 
-# **Setup via Docker**
+## **Setup via Docker**
 
 The Observing Squad can be also set up using Docker.
 
 Clone the Observing Squad repository:
 
-```
+```bash
 git clone https://github.com/multiversx/mx-chain-observing-squad.git
 ```
 
 Install docker-compose if not already installed:
 
-```
+```bash
 apt install docker-compose
 ```
 
 Install and run the whole Observing Squad using the `./start_stack.sh` script from the mainnet folder:
 
-```
+```bash
 cd mainnet
 ./start_stack.sh
 ```
 
 In order to check if the Observing Squad is running, you can list the running containers:
 
-```
+```bash
 docker ps
 ```
 
 In order to check the status inside a container, you can check the logs on the machine for the last synchronized block nonce:
 
-```
+```bash
 docker exec -it 'CONTAINER ID' /bin/bash
 cat logs/mx-chain-.......log
 ```

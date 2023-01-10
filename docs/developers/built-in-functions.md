@@ -43,7 +43,7 @@ This documentation is subject to change, but at the time of writing, the current
 This function is to be used by Smart Contract owners in order to claim the fees accumulated during smart contract calls.
 Currently, the developer reward is set to 30% of the fee of each smart contract call.
 
-```
+```rust
 ClaimDeveloperRewardsTransaction {
     Sender: <the owner of the SC>
     Receiver: <SC address>
@@ -63,7 +63,7 @@ The amount of available developer rewards can be viewed via [Get Address](/sdk-a
 
 `ChangeOwnerAddress` is the function to be called by a Smart Contract's owner when a new owner is desired.
 
-```
+```rust
 ChangeOwnerAddressTransaction {
     Sender: <the current owner of the SC>
     Receiver: <SC address>
@@ -81,7 +81,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 `SetUserName` is used to set an username for a given address. The receiver's address has to be the DNS smart contract
 address of the address.
 
-```
+```rust
 SetUserNameTransaction {
     Sender: <sender>
     Receiver: <DNS address that corresponds to the sender>

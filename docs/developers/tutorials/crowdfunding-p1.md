@@ -15,7 +15,7 @@ The MultiversX Network supports smart contracts written in any programming langu
 The current tutorial revolves around **elrond-wasm-rs** version **0.35.0**, and will get updated as new versions of elrond-wasm are released.
 :::
 
-# **Introduction**
+## **Introduction**
 
 Let's say you need to raise EGLD for a cause that you believe in. They will obviously be well spent, but you need to get the EGLD first. For this reason, you decided to run a crowdfunding campaign on the MultiversX Network, which naturally means that you'll use a smart contract for the campaign. This tutorial will teach you how to do just that: write a crowdfunding smart contract, how to deploy it and how to use it.
 
@@ -25,7 +25,7 @@ If the deadline is reached and the smart contract has gathered an amount of EGLD
 
 But if the total amount of EGLD is lower than the desired target, all the donated EGLD must be sent back to the people who donated.
 
-# **Design**
+## **Design**
 
 Here's how the smart contract is designed:
 
@@ -45,7 +45,7 @@ This tutorial will firstly focus on the `init` method, to get you acquainted wit
 Automated testing is exceptionally important for the development of smart contracts, due to the sensitive nature of the information they must handle.
 :::
 
-# **Prerequisites**
+## **Prerequisites**
 
 The best way to build on MultiversX is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
 
@@ -62,11 +62,11 @@ Follow the video guide for a detailed explanation about how to get started.
 
 The steps are covered in detail below.
 
-# **Step 1: the workspace**
+## **Step 1: the workspace**
 
 The source code of each smart contract requires its own folder. You'll need to create one for the crowdfunding smart contract presented here. Run these commands below in a terminal to create it:
 
-```
+```bash
 mkdir -p ~/MultiversX/SmartContracts
 cd ~/MultiversX/SmartContracts
 erdpy contract new crowdfunding --template adder
@@ -108,7 +108,7 @@ Let's see what this means:
 - The file `src/crowdfunding_main.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
 - The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
-# **Step 2: the code**
+## **Step 2: the code**
 
 With the structure in place, you can now write the code and build it. Open `src/lib.rs` , remove the existing `Adder` code and insert the following:
 
@@ -135,7 +135,7 @@ The 3rd line contains the command `elrond_wasm::imports!();`. This command impor
 
 The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
 
-```
+```rust
 #[elrond_wasm::contract]
 ```
 
@@ -155,13 +155,13 @@ Every smart contract must define a constructor method, which is run _once and on
 
 The `init` method of the Crowdfunding smart contract is currently empty. We'll add the actual code later. First, you want to build the whole project, to make sure everything has worked well so far, even if the smart contract does nothing right now.
 
-# **Step 3: the build**
+## **Step 3: the build**
 
 After creating the file `src/crowdfunding_main.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
 
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 
-```
+```bash
 erdpy contract build
 ```
 
@@ -211,7 +211,7 @@ The storage of a smart contract is, for all intents and purposes, a generic hash
 
 To help you with keeping the code clean, the framework enables you to write setter and getter methods for individual key-value pairs. There are several ways to interact with storage from a contract, but the simplest one is by using storage mappers. Here is a simple mapper, dedicated to storing / retrieving the value stored under the key `target`:
 
-```
+```rust
 #[storage_mapper("target")]
 fn target(&self) -> SingleValueMapper<BigUint>;
 ```
@@ -254,7 +254,7 @@ Well, not quite. All of the stored values only actually end up in the storage if
 
 Whenever you want to make sure your code is in order, run the build command:
 
-```
+```bash
 erdpy contract build
 ```
 
@@ -363,13 +363,13 @@ Let's define the first test scenario. Open the file `mandos/crowdfunding-init.sc
 
 Save the file. Do you want to try it out first? Go ahead and issue this command on your terminal:
 
-```
+```bash
 erdpy contract test
 ```
 
 If everything went well, you should see an all-capitals, loud `SUCCESS` being printed, like this:
 
-```
+```rust
 Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 1. Failed: 0. Skipped: 0.
 SUCCESS
@@ -506,6 +506,6 @@ The account `crowdfunding` is the Crowdfunding smart contract. We assert that it
 
 And finally, we assert that the smart contract storage contains `500,000,000,000` under the `target` key, which is what the `init` function was supposed to make sure. The smart contract has, therefore, remembered the target you set for it.
 
-# **Next up**
+## **Next up**
 
 The tutorial will continue with the definition of the `fund`, `claim` and `status` function, and will guide you through writing JSON test scenarios for them.

@@ -11,13 +11,13 @@ Although wallets are commonly created through the [MultiversX Web Wallet](https:
 
 Using [erdwalletjs-cli](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli), a mnemonic phrase (24 words) can be generated as follows:
 
-```
+```bash
 erdwalletjs new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
 ```
 
 Programmatically using [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js), the same can be achieved through:
 
-```
+```js
 const core = require("@elrondnetwork/elrond-core-js");
 
 let account = new core.account();
@@ -29,7 +29,7 @@ console.log(mnemonic);
 
 Using [erdwalletjs-cli](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli), a JSON key-file can be obtained as follows:
 
-```
+```bash
 erdwalletjs derive-key --mnemonic-file=mnemonicOfAlice.txt \
  --account-index=0 \
  --key-file=keyOfAlice.json --password-file=passwordOfAlice.txt
@@ -37,7 +37,7 @@ erdwalletjs derive-key --mnemonic-file=mnemonicOfAlice.txt \
 
 Programmatically using [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js), the same can be achieved through:
 
-```
+```js
 const fs = require("fs");
 const core = require("@elrondnetwork/elrond-core-js");
 
@@ -46,7 +46,12 @@ let password = "pass for JSON key-file";
 let accountIndex = 0;
 
 let account = new core.account();
-let privateKeyHex = account.privateKeyFromMnemonic(mnemonic, false, accountIndex.toString(), "");
+let privateKeyHex = account.privateKeyFromMnemonic(
+  mnemonic,
+  false,
+  accountIndex.toString(),
+  ""
+);
 let privateKey = Buffer.from(privateKeyHex, "hex");
 let keyFileObject = account.generateKeyFileFromPrivateKey(privateKey, password);
 let keyFileJson = JSON.stringify(keyFileObject, null, 4);

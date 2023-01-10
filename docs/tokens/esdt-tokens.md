@@ -1,7 +1,10 @@
 ---
 id: esdt-tokens
-title: ESDT tokens
+title: Simple tokens (fungible)
 ---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 ## **Introduction**
 
@@ -21,7 +24,7 @@ ESDT tokens can be issued, owned and held by any Account on the MultiversX netwo
 
 ESDT tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker, the initial supply, the number of decimals for display purpose and optionally additional properties. This transaction has the form:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -41,7 +44,7 @@ The issuance cost is set to 0.05 EGLD.
 
 Optionally, the properties can be set when issuing a token. Example:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -116,7 +119,7 @@ For example, a user named Alice wants to issue 4091 tokens called "AliceTokens" 
 
 As stated above, if the user wants 4091 tokens with 6 decimals, then the initial supply has to be $4091 * 10^6$ tokens so a total of `4091000000`.
 
-```
+```rust
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -142,7 +145,7 @@ here in order to use it for transfers. Alternatively, the token identifier can b
 
 Performing an ESDT transfer is done by sending a transaction directly to the desired receiver Account, but specifying some extra pieces of information in its `Data` field. An ESDT transfer transaction has the following form:
 
-```
+```rust
 TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <account address of the receiver>
@@ -168,7 +171,7 @@ While this transaction may superficially resemble a smart contract call, it is n
 
 Following the example from earlier, assuming that the token identifier is `414c432d363235386432`, a transfer from Alice to another user, Bob, would look like this:
 
-```
+```rust
 TransferTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
@@ -255,7 +258,7 @@ GAS_PRICE_MODIFIER = 0.01
 
 Let's take an example. If one wants to transfer `20,000 MEX`, the data field of the transaction would look like:
 
-```
+```rust
 TransferTransaction {
     ...
     gasPrice: 1000000000
@@ -283,7 +286,7 @@ Smart contracts may hold ESDT tokens and perform any kind of transaction with th
 
 **ESDT transfer with method invocation**: it is possible to send ESDT tokens to a contract _as part of a method call_, just like sending EGLD as part of a method call. A transaction that sends ESDT tokens to a contract while also calling one of its methods has the following form:
 
-```
+```rust
 TransferWithCallTransaction {
     Sender: <account address of the sender>
     Receiver: <account address of the smart contract>
@@ -310,7 +313,7 @@ fungible, semi-fungible or non-fungible tokens via a single transaction.
 
 A multi-token transfer transaction has the following form:
 
-```
+```rust
 MultiTokensTransferTransaction {
     Sender: <account address of the sender>
     Receiver: <same as sender>
@@ -339,7 +342,7 @@ For fungible tokens (regular ESDT) the nonce has to be 0 (`00` hex-encoded)
 
 Example:
 
-```
+```rust
 MultiTokensTransferTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
@@ -365,7 +368,7 @@ Using the transaction in the example above, the receiver should be credited `12 
 
 The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several ways in which you can transfer ESDT tokens. For example, in order to transfer _amount_ of _esdt_token_name_ to _address_, one would do the following:
 
-```
+```rust
 self.send().direct_esdt(&address, &esdt_token_name, token_nonce: u64, &amount);
 ```
 
@@ -399,7 +402,7 @@ On Mainnet, starting with epoch 432, global mint is disabled so one has to use l
 
 The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
 
-```
+```rust
 MintTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -419,7 +422,7 @@ This operation requires that the option `canMint` is set to `true` for the token
 
 Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:
 
-```
+```rust
 LocalMintTransaction {
     Sender: <address with ESDTRoleLocalMint role>
     Receiver: <same as sender>
@@ -441,7 +444,7 @@ On Mainnet, starting with epoch 432, global burn is disabled so one has to use l
 
 Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
 
-```
+```rust
 BurnTransaction {
     Sender: <account address of a token holder>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -461,7 +464,7 @@ This operation requires that the option `canBurn` is set to `true` for the token
 
 Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:
 
-```
+```rust
 LocalBurnTransaction {
     Sender: <address with ESDTRoleLocalBurn role>
     Receiver: <same as sender>
@@ -484,7 +487,7 @@ However, for older tokens, a transaction that will set the special role `ESDTRol
 
 The manager of an ESDT token may choose to suspend all transactions of the token, except minting, freezing/unfreezing and wiping. The transaction form is as follows:
 
-```
+```rust
 PauseTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -499,7 +502,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The reverse operation, unpausing, will allow transactions of the token again:
 
-```
+```rust
 UnpauseTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -518,7 +521,7 @@ These two operations require that the option `canPause` is set to `true`.
 
 The manager of an ESDT token may freeze the tokens held by a specific Account. As a consequence, no tokens may be transferred to or from the frozen Account. Freezing and unfreezing the tokens of an Account are operations designed to help token managers to comply with regulations. The transaction that freezes the tokens of an Account has the form:
 
-```
+```rust
 FreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -534,7 +537,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The reverse operation, unfreezing, will allow further transfers to and from the Account:
 
-```
+```rust
 UnfreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -554,7 +557,7 @@ These two operations require that the option `canFreeze` is set to `true`.
 
 The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
 
-```
+```rust
 WipeTransaction {
     Sender: <account address of the token managers>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -583,7 +586,7 @@ For NFTs, there are different roles that can be set. You can find them [here](/t
 
 One or more roles for an address can be set by the owner by performing a transaction like:
 
-```
+```rust
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -604,7 +607,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 One or more roles for an address can be unset by the owner by performing a transaction like:
 
-```
+```rust
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -625,7 +628,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The manager of an ESDT token may transfer the management rights to another Account. This can be done with a transaction of the form:
 
-```
+```rust
 TransferOwnershipTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -652,7 +655,7 @@ Therefore, properties canMint and canBurn aren't effective anymore after that ep
 
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once. Such an operation is performed by a transaction of the form:
 
-```
+```rust
 UpgradingTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -672,7 +675,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token manager, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
 
-```
+```rust
 UpgradingTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -732,15 +735,19 @@ The ledgerSignature will be generated by MultiversX. It will give your token “
 
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
 
-### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
+### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address** {#get-all-esdt-tokens-for-an-address}
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Returns an array of ESDT Tokens that the specified address has interacted with (issued, sent or received).
 
-```
+```bash
 https://gateway.multiversx.com/address/*bech32Address*/esdt
 ```
 
@@ -748,7 +755,8 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt
 | ------------- | ----------------------------------------- | -------- | -------------------------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -760,17 +768,22 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-primary">GET</span> **Get balance for an address and an ESDT token**
+### <span class="badge badge--primary">GET</span> **Get balance for an address and an ESDT token** {#get-balance-for-an-address-and-an-esdt-token}
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Returns the balance of an address for specific ESDT Tokens.
 
-```
+```bash
 https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
 ```
 
@@ -779,7 +792,8 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
 | bech32Address   | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 | tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier.                  |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -795,22 +809,28 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-primary">GET</span> **Get all roles for tokens of an address**
+### <span class="badge badge--primary">GET</span> **Get all roles for tokens of an address** {#get-all-roles-for-tokens-of-an-address}
 
 This involves a basic request that contains the address to fetch all tokens and roles for.
 For example:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://gateway.multiversx.com/address/*bech32Address*/esdts/roles
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -825,26 +845,32 @@ https://gateway.multiversx.com/address/*bech32Address*/esdts/roles
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-primary">GET</span> **Get token's supply, burnt and minted values**
+### <span class="badge badge--primary">GET</span> **Get token's supply, burnt and minted values** {#get-tokens-supply-burnt-and-minted-values}
 
 This involves a basic request that contains the token name. It will gather data from all shards and compute the
 initial minted value, burnt value, minted value and total supply value.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 | Param           | Required                                  | Type     | Description                                    |
 | --------------- | ----------------------------------------- | -------- | ---------------------------------------------- |
 | tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string` | The token identifier (example: `WEGLD-bd4d79)` |
 
-```
+```bash
 https://gateway.multiversx.com/network/esdt/supply/*token name*
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -859,25 +885,31 @@ https://gateway.multiversx.com/network/esdt/supply/*token name*
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
+### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens** {#get-all-issued-esdt-tokens}
 
 1. All ESDT tokens
 
 For example:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://gateway.multiversx.com/network/esdts
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
-```
+```json
 {
   "data": {
     "tokens": [
@@ -890,22 +922,29 @@ https://gateway.multiversx.com/network/esdts
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 ---
 
 2. Fungible tokens
-<!--DOCUSAURUS_CODE_TABS-->
 
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-```
+```bash
 https://gateway.multiversx.com/network/esdt/fungible-tokens
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
-```
+```json
 {
   "data": {
     "tokens": [
@@ -918,22 +957,29 @@ https://gateway.multiversx.com/network/esdt/fungible-tokens
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 ---
 
 3. Semi-fungible tokens
-<!--DOCUSAURUS_CODE_TABS-->
 
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-```
+```bash
 https://gateway.multiversx.com/network/esdt/semi-fungible-tokens
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
-```
+```json
 {
   "data": {
     "tokens": [
@@ -946,22 +992,29 @@ https://gateway.multiversx.com/network/esdt/semi-fungible-tokens
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 ---
 
 4. Non-fungible tokens
-<!--DOCUSAURUS_CODE_TABS-->
 
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-```
+```bash
 https://gateway.multiversx.com/network/esdt/non-fungible-tokens
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
-```
+```json
 {
   "data": {
     "tokens": [
@@ -974,29 +1027,35 @@ https://gateway.multiversx.com/network/esdt/non-fungible-tokens
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-primary">GET</span> **Parse fungible tokens transfer logs**
+### <span class="badge badge--primary">GET</span> **Parse fungible tokens transfer logs** {#parse-fungible-tokens-transfer-logs}
 
 Each **successful** ESDT transfer generates logs and events that can be used to parse all the details about a transfer
 (token identifier, sent amount and receiver).
 In order to get the logs and events generated by the transfer, one should know the transaction's hash.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 | Param  | Required                                  | Type     | Description                 |
 | ------ | ----------------------------------------- | -------- | --------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash of the transaction |
 
-```
+```bash
 https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
-```
+```json
 {
  "data": {
   "transaction": {
@@ -1031,18 +1090,23 @@ The event with the identifier `ESDTTransfer` will have the following topics:
 
 In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg` received `160 MEX-455c57` (MEX-455c57 has 18 decimals)
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> **Get ESDT token properties**
+### <span class="badge badge--success">POST</span> **Get ESDT token properties** {#get-esdt-token-properties}
 
 This involves a `vm query` request to the `ESDT` address.
 For example:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://gateway.multiversx.com/vm-values/query
 ```
 
@@ -1056,7 +1120,8 @@ https://gateway.multiversx.com/vm-values/query
 
 The argument must be the token identifier, hexadecimal encoded. In the example, `474c442d306430303630` = `GLD-0d0060`.
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -1111,7 +1176,7 @@ The argument must be the token identifier, hexadecimal encoded. In the example, 
 
 The `returnData` member will contain an array of the properties in a fixed order (base64 encoded). For the example response, the meaning is:
 
-```
+```json
 "returnData": [
   "QWxpY2VUb2tlbnM=",                             | token name                   | AliceTokens
   "RnVuZ2libGVFU0RU",                             | token type                   | FungibleESDT
@@ -1134,19 +1199,24 @@ The `returnData` member will contain an array of the properties in a fixed order
 ],
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge-success">POST</span> **Get special roles for a token**
+### <span class="badge badge--success">POST</span> **Get special roles for a token** {#get-special-roles-for-a-token}
 
 This involves a `vm query` request to the `ESDT` address. It will return all addresses that have roles assigned for the token
 with the provided identifier.
 For example:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
-<!--Request-->
-
-```
+```bash
 https://gateway.multiversx.com/vm-values/query
 ```
 
@@ -1160,9 +1230,10 @@ https://gateway.multiversx.com/vm-values/query
 
 The argument must be the token identifier, hexadecimal encoded. In the example, `474c442d306430303630` = `GLD-0d0060`.
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
-```
+```json
 {
   "data": {
     "data": {
@@ -1180,4 +1251,5 @@ In this example, converting the 2 messages from base64 to string would result in
 - `erd136rl878j09mev24gzpy70k2wfm3xmvj5ucwxffs9v5t5sk3kshtszz25z9:ESDTRoleLocalBurn`
 - `erd1kzzv2uw97q5k9mt458qk3q9u3cwhwqykvyk598q2f6wwx7gvrd9s8kszxk:ESDTRoleNFTAddQuantity,ESDTRoleNFTBurn`
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>

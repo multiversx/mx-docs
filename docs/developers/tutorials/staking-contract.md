@@ -150,7 +150,7 @@ We've also added #[view] annotation for the storage mappers, so we can later per
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
-- https://docs.multiversx.com/developers/developer-reference/elrond-wasm-api-functions/
+- https://docs.multiversx.com/developers/developer-reference/wasm-api-functions/
 - https://docs.multiversx.com/developers/developer-reference/storage-mappers/
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
@@ -904,7 +904,7 @@ We've also added `TypeAbi`, since this is required for ABI generation. ABIs are 
 
 Additionally, we've added `PartialEq` and `Debug` derives, for easier use within tests. This will not affect performance in any way, as the code for these is only used during testing/debugging. `PartialEq` allows us to use `==` for comparing instances, while `Debug` will pretty-print the struct, field by field, in case of errors.
 
-If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more here: https://docs.multiversx.com/developers/developer-reference/elrond-serialization-format/
+If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/developer-reference/serialization-format):
 
 ### Rewards formula
 

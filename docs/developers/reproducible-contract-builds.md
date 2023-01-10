@@ -23,7 +23,7 @@ Assume that we are interested into the following contract, deployed on _devnet_:
 
 We can fetch the _codehash_ of the contract from the API:
 
-```
+```bash
 curl -s https://devnet-api.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy \
 | jq -r -j .codeHash \
 | base64 -d \
@@ -39,7 +39,7 @@ The output is:
 
 If the `WASM` file is directly available, we can also use the utility `b2sum` to locally compute the _codehash_:
 
-```
+```bash
 b2sum -l 256 adder.wasm
 ```
 
@@ -80,7 +80,7 @@ The chosen, _frozen_ image tag should accompany the versioned source code (e.g. 
 It's perfectly normal to switch to a newer image tag on each (major) release of your contract. Just make sure you spread this information - i.e. using _release notes_.
 :::
 
-:::warning
+:::caution
 Never pick the tag called `latest` for production-ready builds.
 :::
 
@@ -92,7 +92,7 @@ In this section, you'll learn how to run a reproducible build, or, to put it dif
 
 Let's clone the [example source code](https://github.com/ElrondNetwork/reproducible-contract-build-example) locally, and switch to [a certain version](https://github.com/ElrondNetwork/reproducible-contract-build-example/releases/tag/v0.1.4) that we'd like to build:
 
-```
+```bash
 mkdir -p ~/contracts && cd ~/contracts
 git clone https://github.com/ElrondNetwork/reproducible-contract-build-example.git --branch=v0.1.4 --depth=1
 ```
@@ -103,7 +103,7 @@ By inspecting the release notes, we see that [`v0.1.4`](https://github.com/Elron
 
 The build process (via Docker) is wrapped in a easy-to-use, friendly Python script. Let's download it:
 
-```
+```bash
 wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 ```
 
@@ -111,7 +111,7 @@ wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/bui
 
 Export the following variables:
 
-```
+```rust
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
 export IMAGE=elrondnetwork/build-contract-rust:v2.0.0
@@ -123,7 +123,7 @@ The latter export statement explicitly selects the **chosen, _frozen_ Docker ima
 
 Now let's build the contract by invoking the previously-downloaded build wrapper:
 
-```
+```bash
 python3 ./build_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
     --output=${BUILD_OUTPUT}
@@ -142,7 +142,7 @@ In the `output` folder(s), you should see the following files (example):
 
 These being said, let's summarize the steps above into a single bash snippet:
 
-```
+```bash
 wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 
 export PROJECT=~/contracts/reproducible-contract-build-example
