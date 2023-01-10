@@ -5,7 +5,7 @@ const math = require("remark-math");
 const katex = require("rehype-katex");
 
 const lightCodeTheme = require("prism-react-renderer/themes/vsDark");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
