@@ -10,7 +10,9 @@ const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "MultiversX Docs",
-  tagline: "The Internet Scale Blockchain",
+  titleDelimiter: "•",
+  tagline:
+    "A highly scalable, fast and secure blockchain platform for distributed apps, enterprise use cases and the new internet economy.",
   url: "https://docs.multiversx.com",
   baseUrl: "/",
   onBrokenLinks: "log",
@@ -62,7 +64,7 @@ const config = {
       crossorigin: "anonymous",
     },
     {
-      href: "https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap",
+      href: "https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap",
       type: "text/css",
       crossorigin: "anonymous",
     },

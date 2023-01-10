@@ -44,6 +44,13 @@
 
 /* -------------------- Start Overrides ------------------- */
 
+.plugin-pages #docusaurus_skipToContent_fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 [data-theme="dark"] .badge--primary {
   --ifm-badge-color: var(--ifm-background-color);
 }
@@ -149,7 +156,10 @@
 
 /* -------------------- Start Navbar ------------------- */
 .navbar .navbar__items .navbar__brand + .navbar__item {
-  margin-left: calc(50% - 226px);
+  margin-left: calc(50% - 245px);
+}
+.navbar__brand {
+  margin-left: 1rem;
 }
 
 /* -------------------- End Navbar ------------------- */

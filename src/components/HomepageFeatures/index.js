@@ -66,16 +66,32 @@ function Feature({ docName, title, content, icon }) {
   );
 }
 
+function HomepageHeader() {
+  return (
+    <header className={clsx(styles.heroBanner)}>
+      <div className="container">
+        <h1 className={clsx("hero__title")}>
+          Welcome to the MultiversX (Elrond) docs!
+        </h1>
+        <p className={clsx("hero__subtitle")}>Choose your path you must.</p>
+      </div>
+    </header>
+  );
+}
+
 export default function HomepageFeatures() {
   return (
-    <section className={styles.features}>
-      <div className={clsx("container", styles.container)}>
-        <div className={clsx("row", styles.row)}>
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
+    <div>
+      <HomepageHeader />
+      <section className={styles.features}>
+        <div className={clsx("container", styles.container)}>
+          <div className={clsx("row", styles.row)}>
+            {FeatureList.map((props, idx) => (
+              <Feature key={idx} {...props} />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
