@@ -65,7 +65,7 @@ $ erdpy testnet config
 
 Upon running this command, a new folder called `testnet` will be added in the current directory. This folder contains the Node & Proxy binaries, their configurations, plus the **development wallets**.
 
-:::warning
+:::caution
 The development wallets (Alice, Bob, Carol, ..., Mike) **are publicly known** - they should only be used for development and testing purpose.
 :::
 

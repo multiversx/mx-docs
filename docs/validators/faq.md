@@ -21,7 +21,7 @@ Recommendations from experienced validators:
 
 - Jose - https://medium.com/@josefcoap/elrond-vps-guide-ebfa6655cb9f
 
-:::warning
+:::caution
 Consider the price of cheap services that offer same specs as other providers at half of the price, when running a validator - the protocol dynamically phases out low performance nodes, which will lead to fewer returns for operators.
 :::
 

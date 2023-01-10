@@ -286,7 +286,7 @@ Transactions successfully retrieved.
 </TabItem>
 </Tabs>
 
-:::warning
+:::caution
 This endpoint is not available on Observer Nodes. It is only available on MultiversX Proxy.
 
 **Currently, this endpoint is only available on the Official MultiversX Proxy instance.**

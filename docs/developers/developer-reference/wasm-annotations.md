@@ -11,7 +11,6 @@ One of the main purposes of the framework is to make the code as readable and co
 
 For an introduction, check out [the Crowdfunding tutorial](/developers/tutorials/crowdfunding-p1). This page is supposed to be a complete index of all annotations that can be encountered in smart contracts.
 
-
 ## Trait annotations
 
 ### `#[elrond_wasm::contract]`
@@ -20,9 +19,7 @@ The `contract` annotation must always be placed on a trait and will automaticall
 
 Note that the annotation takes no additional arguments.
 
-
-----------------------------------------------
-
+---
 
 ### `#[elrond_wasm::module]`
 
@@ -30,12 +27,11 @@ The `module` annotation must always be placed on a trait and will automatically 
 
 Note that the annotation takes no additional arguments.
 
-:::warning
+:::caution
 Only one contract, module or proxy annotation is allowed per Rust module. If they are in separate files there is no problem, but if several share a file, explicit `mod module_name { ... }` must enclose the module.
 :::
 
-----------------------------------------------
-
+---
 
 ### `#[elrond_wasm::proxy]`
 
@@ -45,10 +41,9 @@ In short, contracts always get an auto-generated proxy. However, if such an auto
 
 Note that the annotation takes no additional arguments.
 
-:::warning
+:::caution
 Only one contract, module or proxy annotation is allowed per Rust module. If they are in separate files there is no problem, but if several share a file, explicit `mod proxy_name { ... }` must enclose the module.
 :::
-
 
 ## Method annotations
 
@@ -110,7 +105,7 @@ All endpoint arguments and results must be either serializable or special endpoi
 
 ### Callbacks
 
-There are 2 annotations for callbacks: `#[callback]` and `#[callback_raw]`. The second is only used in extreme cases. 
+There are 2 annotations for callbacks: `#[callback]` and `#[callback_raw]`. The second is only used in extreme cases.
 
 Callbacks are special methods that get called automatically when the response comes after an asynchronous contract call. They give the contract the possibility to react to the result of a cross-shard call, but for consistency they get called the same way if the asynchronous call happens in the same shard.
 
@@ -118,16 +113,13 @@ They also act as closures, since they can retain some of the context of the tran
 
 A more detailed explanation on how they work in [the contract calls reference](/developers/developer-reference/elrond-wasm-contract-calls).
 
-
 ### Storage
-
 
 It is possible for a developer to access storage manually in a contract, but this is error-prone and involves a lot of boilerplate code. For this reason, `elrond-wasm` offers storage annotations that manage and serialize the keys and values behind the scenes.
 
 Each contract has a storage where arbitrary data can be stored on-chain. This storage is organized as a map of arbitrary length keys and values. The blockchain has no concept of storage key or value types, they are all stored as raw bytes. It is the job of the contract to interpret these values.
 
 All trait methods annotated for storage handling must have no implementation.
-
 
 #### `#[storage_get("key")]`
 
@@ -156,7 +148,6 @@ This is the easiest way to get the equivalent of a HashMap in a smart contract.
 
 Lastly, storage getters must always return a deserializable type. The framework will automatically deserialize the object from whatever bytes it finds in the storage value.
 
-
 #### `#[storage_set("key")]`
 
 This is the simplest way to write data to storage. Example:
@@ -175,7 +166,7 @@ It works very similarly to `storage_get`, with the notable difference that inste
 
 Again, just like for the getter, an arbitrary number of additional map keys can be specified, as for `set_value` in the example. This is how we can write values to a section of our storage that behaves like a map.
 
-:::warning
+:::caution
 There is no mechanism in place to ensure that there is no overlap between storage keys. Nothing prevents a developer from writing:
 
 ```rust
@@ -196,7 +187,6 @@ The second is harder to notice. Calling `self.set_value(0x756d, value)` or `self
 To avoid this vulnerability, **never have a key that is the prefix of another key!**
 
 :::
-
 
 #### `#[storage_mapper("key")]`
 
@@ -220,7 +210,6 @@ In the `LinkedListMapper` we are dealing with a list of items, each with its own
 
 Also note that additional sub-keys are also allowed for storage mappers, the same as for `storage_get` and `storage_set`.
 
-
 #### `#[storage_is_empty("key")]`
 
 This is very similar to `storage_get`, but instead of retrieving the value, it returns a boolean indicating whether the serialized value is empty or not. It does not attempt to deserialize the value, so it can be faster and more resilient than `storage_get`, depending on type.
@@ -231,7 +220,6 @@ This is very similar to `storage_get`, but instead of retrieving the value, it r
 ```
 
 Nowadays, it is more common to use storage mappers. The `SingleValueMapper` has an `is_empty()` method that does the same.
-
 
 #### `#[storage_clear("key")]`
 
@@ -244,7 +232,6 @@ It does not do any serializing, so it can be faster than `storage_set`, dependin
 ```
 
 Nowadays, it is more common to use storage mappers. The `SingleValueMapper` has an `clear()` method that does the same.
-
 
 ### Events
 
@@ -268,16 +255,15 @@ In smart contracts we define them as trait methods with no implementation, as fo
 The annotation always requires the name of the event to be specified explicitly in brackets.
 
 Events have 2 types of arguments:
+
 - "Topics" are annotated with `#[indexed]`. When saving event logs to a database, indexes will be created for all these fields, so they can be searched for efficiently.
 - The "data" argument has no annotation. There can be only one data field in an event, and it cannot be indexed later.
 
 Event arguments (fields) can be of any serializable type. There is no return value for events.
 
-
 ### Events (legacy)
 
 There is a legacy annotation, `#[legacy_event]` still used by some older contracts. It is deprecated and should no longer be used.
-
 
 ### `#[proxy]`
 
@@ -298,7 +284,6 @@ There is no need for arguments, the annotation will figure out the contract to c
 :::important
 Proxy types need to be specified with an explicit module. In the example `vault::` is compulsory.
 :::
-
 
 ### `#[output_names]`
 

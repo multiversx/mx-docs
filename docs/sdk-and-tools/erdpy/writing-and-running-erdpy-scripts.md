@@ -3,7 +3,7 @@ id: writing-and-running-erdpy-scripts
 title: Writing and running erdpy scripts
 ---
 
-:::warning
+:::caution
 As of December 2022, the content on this page is deprecated - the page will be removed in the near future. Instead, please follow the [cookbook](/sdk-and-tools/erdpy/erdpy-cookbook).
 :::
 

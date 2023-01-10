@@ -56,7 +56,7 @@ It is very important that the directory called `db` is a subdirectory (in our ca
 Also, please check that the `config` directory matches the one of the node that produced the `db` data
 structure, including the `prefs.toml` file.
 
-:::warning
+:::caution
 Please make sure the `/elrond-go/cmd/node/db` directory is empty so the import-db process will start
 from the genesis up until the last epoch provided.
 :::

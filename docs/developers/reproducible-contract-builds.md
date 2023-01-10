@@ -80,7 +80,7 @@ The chosen, _frozen_ image tag should accompany the versioned source code (e.g. 
 It's perfectly normal to switch to a newer image tag on each (major) release of your contract. Just make sure you spread this information - i.e. using _release notes_.
 :::
 
-:::warning
+:::caution
 Never pick the tag called `latest` for production-ready builds.
 :::
 

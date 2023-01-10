@@ -158,7 +158,7 @@ console.log("Hello, world!");
 Lorem ipsum dolor sit amet !
 :::
 
-:::warning
+:::caution
 Oh, no ! Lorem ipsum dolor sit amet
 :::
 

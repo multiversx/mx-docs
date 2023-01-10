@@ -72,7 +72,7 @@ Invalid Transaction signature.
 </TabItem>
 </Tabs>
 
-:::warning
+:::caution
 For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **only accepts transactions whose sender is in the Node's Shard**.
 :::
 
@@ -156,7 +156,7 @@ A bulk of Transactions were successfully sent.
 </TabItem>
 </Tabs>
 
-:::warning
+:::caution
 For Nodes (Observers or Validators with the HTTP API enabled), this endpoint **only accepts transactions whose sender is in the Node's Shard**.
 :::
 
@@ -575,7 +575,7 @@ The optional query parameter **`sender`** is only applicable to requests against
 
 `http://local-proxy-instance/transaction/pool`
 
-:::warning
+:::caution
 This endpoint isn't available on public gateway. However, it can be used on a local proxy instance, by setting `AllowEntireTxPoolFetch` to `true`
 :::
 

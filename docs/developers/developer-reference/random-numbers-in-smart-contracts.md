@@ -8,6 +8,7 @@ title: Random Numbers in Smart Contracts
 Randomness in the blockchain environment is a challenging task to accomplish. Due to the nature of the environemnt, nodes must all have the same "random" generator to be able to reach consensus. This is solved by using Golang's standard seeded random number generator, directly in the VM: https://cs.opensource.google/go/go/+/refs/tags/go1.17.5:src/math/rand/
 
 The VM function `mBufferSetRandom` uses this library, seeded with the concatenation of:
+
 - previous block random seed
 - current block random seed
 - tx hash
@@ -17,12 +18,14 @@ We're not going to go into details about how exactly the Golang library uses the
 ## Random numbers in smart contracts
 
 The `ManagedBuffer` type has two methods you can use for this:
+
 - `fn new_random(nr_bytes: usize) -> Self`, which creates a new `ManagedBuffer` of `nr_bytes` random bytes
 - `fn set_random(&mut self, nr_bytes: usize)`, which sets an already existing buffer to random bytes
 
 For convenience, a wrapper over these methods was created, namely the `RandomnessSource` struct, which contains methods for generating a random number for all base rust unsigned numerical types, and a method for generating random bytes.
 
 For example, let's say you wanted to generate `n` random `u16`:
+
 ```rust
 let mut rand_source = RandomnessSource::<Self::Api>::new();
 for _ in 0..n {
@@ -73,11 +76,12 @@ let rand_hash = rand_source.next_bytes(32);
 
 ## Considerations
 
-:::warning
+:::caution
 NEVER have logic in your smart contract that only depends on the current state.
 :::
 
 Example of BAD implementation:
+
 ```rust
 #[payable("EGLD")]
 #[endpoint(rollDie)]
@@ -98,6 +102,7 @@ This is very easy to abuse, as you can simply simulate your transactions, and on
 Keep in mind you are not running this on your own private server, you are running it on a public blockchain, so you need a complete shift in design.
 
 Example of GOOD implementation:
+
 ```rust
 #[payable("EGLD")]
 #[endpoint(signUp)]
@@ -133,7 +138,6 @@ fn user_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 #[storage_mapper("winnersList")]
 fn winners_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 ```
-
 
 ## Conclusion
 

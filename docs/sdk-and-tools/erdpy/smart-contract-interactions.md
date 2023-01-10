@@ -40,7 +40,7 @@ deploySC() {
 }
 ```
 
-Now let's look at the structure of the interaction. It receives the path of the wasm file, where we previously built the contract. It also receives the path of the PEM file, the proxy url and the chain id, where the contract will be deployed. Another important parameter is the gas limit, where we state the maximum amount of gas we are willing to spend with this transaction. Each transaction cost depends on its complexity and the amount of data storage it handles. 
+Now let's look at the structure of the interaction. It receives the path of the wasm file, where we previously built the contract. It also receives the path of the PEM file, the proxy url and the chain id, where the contract will be deployed. Another important parameter is the gas limit, where we state the maximum amount of gas we are willing to spend with this transaction. Each transaction cost depends on its complexity and the amount of data storage it handles.
 
 Another argument we must take a closer look at is **recall-nonce**. As we know, each account has its own nonce, that increases with each sent transaction. That being said, when calling an endpoint or a deploy function and so on, we must pass the next-in-line nonce, for the transaction to be correctly processed. And **recall-nonce** does just that. It gives us the correct nonce by querying the blockchain for the last one.
 
@@ -50,7 +50,7 @@ After the transaction is sent, erdpy will output information like the transactio
 
 Let's now suppose we need to make the contract payable, in case it needs to receive funds. We could redeploy the contract but that will mean two different contracts, and not to mention that we will lose any existing storage. For that, we can use the **upgrade** command, that replaces the existing SC bytecode with the newly built contract version.
 
-:::warning
+:::caution
 It is import to handle data storage with caution when upgrading a smart contract. Data structure, especially for complex data types, must be preserved, otherwise the data may become corrupt.
 :::
 
@@ -102,6 +102,7 @@ myNonPayableEndpoint() {
 ```
 
 So, what happens in this interaction and how do we call it? Besides the function and arguments parts, the snippet is more or less the same as when deploying or upgrading a contract. When calling a non payable function, we need to provide the endpoint's name as the function argument. As for the arguments, they have to be in the same order as in the SC, including when calling an endpoint that has a variable number of arguments. Now, for the sake of example, we provided the arguments in multiple ways. It is up to each developer to choose the layout he prefers, but a few points need to be underlined:
+
 - Most of the supplied arguments need to be in the hex format (0x...).
 - When converting a value to a hex format, we need to make sure it has an even number of characters. If not, we need to provide an extra 0 in order to make it even. (e.g. The number 911 -> In hex encoding, it is equal to: 38f -> So we need to provide the argument 0x038f).
 - Arguments can be provided both as a fixed arguments (usually for unchangeable arguments like the contract's address or a fixed number) or can be provided as an input in the terminal, when interacting with the snippet (mostly used for arguments that change often like numbers).
@@ -110,12 +111,13 @@ In our example we provide the address argument as a fixed argument. We then conv
 
 :::tip
 Erdpy facilitates us with some encoding conventions, including:
+
 - We can use **str:** for encoding strings. For example: str:MYTOKEN-123456
 - Blockchain addresses that start with **erd1** are automatically encoded, so there is no need to further hex encode them
 - The values **true** or **false** are automatically converted to **boolean** values
 - Values that are identified as **numbers** are hex encoded by default
 - Arguments like **0x...** are left unchanged, as they are interpreted as already encoded hex values
-:::
+  :::
 
 So, in case of our **myNonPayableEndpoint** interaction, we can write it like so:
 
@@ -125,7 +127,7 @@ So, in case of our **myNonPayableEndpoint** interaction, we can write it like so
 #2 - SecondBigUintArgument
 
 ADDRESS_ARGUMENT="erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3"
-THIRD_BIGUINT_ARGUMENT=1000000 
+THIRD_BIGUINT_ARGUMENT=1000000
 myNonPayableEndpoint() {
     erdpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
         --pem=${WALLET_PEM} \
@@ -138,15 +140,18 @@ myNonPayableEndpoint() {
 ```
 
 A call example for this endpoint would look like:
+
 ```
 myNonPayableEndpoint 10000 100000
 ```
-This would translate in (using unencoded values for easier reading): 
+
+This would translate in (using unencoded values for easier reading):
+
 ```
 myNonPayableEndpoint erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3 10000 100000 1000000
 ```
 
-:::warning
+:::caution
 It is import to make sure all arguments have the correct encoding. Otherwise, the transaction will fail.
 :::
 
@@ -197,19 +202,18 @@ myESDTNFTPayableEndpoint() {
         --gas-limit=100000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
         --function="ESDTNFTTransfer" \
-        --arguments $sft_token 
-                    $sft_token_nonce 
-                    $sft_token_amount 
+        --arguments $sft_token
+                    $sft_token_nonce
+                    $sft_token_amount
                     $destination_address
-                    $method_name 
-                    ${FIRST_BIGUINT_ARGUMENT} 
+                    $method_name
+                    ${FIRST_BIGUINT_ARGUMENT}
                     ${SECOND_BIGUINT_ARGUMENT} \
         --send || return
 }
 ```
 
 First of all, to call this type of transfer function we need to pass the receiver address the same as the sender address. So in this example we convert the caller's address based on the indicated PEM file. Now, like in the case of `ESDTTransfer`, the name of the called function is `ESDTNFTTransfer`. All the other required data is passed as arguments (including the destination contract's address and the endpoint). In case of this single NFT/SFT transfer, we first pass the token (identifier, nonce and amount) and then we pass the destination address and the name of the endpoint. In the end we pass whatever parameters the indicated method needs.
-
 
 ### Multi-ESDT transfer
 
@@ -248,26 +252,25 @@ myMultiESDTNFTPayableEndpoint() {
         --gas-limit=100000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
         --function="MultiESDTNFTTransfer" \
-        --arguments $destination_address 
-                    $number_of_tokens 
-                    $first_token 
-                    $first_token_nonce 
-                    $first_token_amount 
-                    $second_token 
-                    $second_token_nonce 
-                    $second_token_amount 
-                    $third_token 
-                    $third_token_nonce 
-                    $third_token_amount 
-                    $method_name 
-                    ${FIRST_BIGUINT_ARGUMENT} 
+        --arguments $destination_address
+                    $number_of_tokens
+                    $first_token
+                    $first_token_nonce
+                    $first_token_amount
+                    $second_token
+                    $second_token_nonce
+                    $second_token_amount
+                    $third_token
+                    $third_token_nonce
+                    $third_token_amount
+                    $method_name
+                    ${FIRST_BIGUINT_ARGUMENT}
                     ${SECOND_BIGUINT_ARGUMENT} \
         --send || return
 }
 ```
 
 In this example, we call `myMultiESDTPayableEndpoint` endpoint, by transferring 3 different tokens (the first two are fungible tokens and the last one is an NFT). The endpoint takes 2 BigUInt arguments. The layout of the snippet is almost the same as with **ESDTNFTTransfer** (including the fact that the sender is the same as the receiver) but has different arguments. We now pass the destination address first and the number of ESDT/NFT tokens that we want to sent. Then, for each sent token, we specify the identifier, the nonce (in our example 0 for the fungible tokens and a specific value for the NFT) and the amount. In the end, like with the **ESDTTransfer**, we pass the name of the method we want to call and the rest of the parameters of that specific method.
-
 
 :::tip
 More information about ESDT Transfers [here](/developers/esdt-tokens/#transfers).
@@ -289,4 +292,4 @@ myView() {
 }
 ```
 
-When calling a view function, erdpy will output the standard information in the terminal, along with the results, formatted based on the requested data type. The arguments are specified in the same way as with endpoints. 
+When calling a view function, erdpy will output the standard information in the terminal, along with the results, formatted based on the requested data type. The arguments are specified in the same way as with endpoints.

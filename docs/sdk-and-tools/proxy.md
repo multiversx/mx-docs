@@ -31,7 +31,7 @@ The official instance of the MultiversX Proxy is located at [https://gateway.mul
 
 ## **Set up a Proxy Instance**
 
-:::warning
+:::caution
 Documentation for setting up a Proxy is preliminary and subject to change
 :::
 

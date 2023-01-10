@@ -77,7 +77,7 @@ MultiversX uses `bech32` addresses with the HRP `erd`. Therefore, an address wou
 
 `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
 
-:::warning
+:::caution
 Converting a bech32 address into hexadecimal encoding _is not_ a simple `string to hex` operation, but requires specialized
 tools or helpers.
 :::

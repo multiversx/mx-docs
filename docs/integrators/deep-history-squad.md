@@ -150,6 +150,6 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
 
 ## Handling storage requirements
 
-:::warning
+:::caution
 Documentation in this section is preliminary and subject to change.
 :::

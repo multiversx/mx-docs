@@ -35,7 +35,7 @@ These specs are only a recommendation. Depending on the load over the API or the
 
 # **Setup via the Mainnet scripts**
 
-:::warning
+:::caution
 `elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `mx-chain-scripts`, explained below.
 :::
 

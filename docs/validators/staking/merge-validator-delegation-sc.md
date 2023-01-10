@@ -48,6 +48,6 @@ Whitelist Wallet For Merging
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-:::warning
+:::caution
 We advise against using this method to buy or sell validator slots - it requires the transfer of private keys (validatorKey.pem) which can't be changed. This puts the buyer at risk of slashing, should the seller deploy a node with the same key, either intentionally or by mistake.
 :::
