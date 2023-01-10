@@ -5,7 +5,7 @@ title: Addresses
 
 Get information about an MultiversX Address.
 
-## <span class="badge badge-primary">GET</span> **Get Address**
+## <span class="badge badge--primary">GET</span> **Get Address**
 
 `https://gateway.multiversx.com/address/:bech32Address`
 
@@ -49,7 +49,7 @@ Address information successfully retrieved.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get Address Nonce**
+## <span class="badge badge--primary">GET</span> **Get Address Nonce**
 
 `https://gateway.multiversx.com/address/:bech32Address/nonce`
 
@@ -83,7 +83,7 @@ Nonce successfully retrieved.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get Address Balance**
+## <span class="badge badge--primary">GET</span> **Get Address Balance**
 
 `https://gateway.multiversx.com/address/:bech32Address/balance`
 
@@ -117,7 +117,7 @@ Balance successfully retrieved.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get Address Username (herotag)**
+## <span class="badge badge--primary">GET</span> **Get Address Username (herotag)**
 
 `https://gateway.multiversx.com/address/:bech32Address/username`
 
@@ -151,7 +151,7 @@ Balance successfully retrieved.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get Address Transactions**
+## <span class="badge badge--primary">GET</span> **Get Address Transactions**
 
 `https://gateway.multiversx.com/address/:bech32Address/transactions`
 `https://gateway.multiversx.com/address/:bech32Address/transactions`
@@ -236,7 +236,7 @@ This endpoint is not available on Observer Nodes. It is only available on Multiv
 This endpoint requires the presence of an Elasticsearch instance (populated through Observers) as well.
 :::
 
-## <span class="badge badge-primary">GET</span> **Get Storage Value for Address**
+## <span class="badge badge--primary">GET</span> **Get Storage Value for Address**
 
 `https://gateway.multiversx.com/address/:bech32Address/key/:key`
 `https://gateway.multiversx.com/address/:bech32Address/key/:key`
@@ -274,7 +274,7 @@ Value (hex-encoded) successfully retrieved.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get all storage for Address**
+## <span class="badge badge--primary">GET</span> **Get all storage for Address**
 
 `https://gateway.multiversx.com/address/:bech32Address/keys`
 `https://gateway.multiversx.com/address/:bech32Address/keys`

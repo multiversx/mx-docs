@@ -5,7 +5,7 @@ title: Transactions
 
 Send Transactions to the Blockchain and query information about them.
 
-## <span class="badge badge-success">POST</span> Send Transaction
+## <span class="badge badge--success">POST</span> Send Transaction
 
 `https://gateway.multiversx.com/transaction/send`
 
@@ -87,7 +87,7 @@ Content-Type: application/json
 }
 ```
 
-## <span class="badge badge-success">POST</span> Send Multiple Transactions
+## <span class="badge badge--success">POST</span> Send Multiple Transactions
 
 `https://gateway.multiversx.com/transaction/send-multiple`
 
@@ -177,7 +177,7 @@ Content-Type: application/json
 ]
 ```
 
-## <span class="badge badge-success">POST</span> Simulate Transaction
+## <span class="badge badge--success">POST</span> Simulate Transaction
 
 **Nodes and observers**
 
@@ -299,7 +299,7 @@ Example response for cross-shard transactions:
 }
 ```
 
-## <span class="badge badge-success">POST</span> Estimate Cost of Transaction
+## <span class="badge badge--success">POST</span> Estimate Cost of Transaction
 
 `https://gateway.multiversx.com/transaction/cost`
 
@@ -360,7 +360,7 @@ Content-Type: application/json
 }
 ```
 
-## <span class="badge badge-primary">GET</span> **Get Transaction**
+## <span class="badge badge--primary">GET</span> **Get Transaction**
 
 `https://gateway.multiversx.com/transaction/:txHash`
 
@@ -482,7 +482,7 @@ The response can contain additional fields such as `smartContractResults`, or `r
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
 :::
 
-## <span class="badge badge-primary">GET</span> **Get Transaction Status**
+## <span class="badge badge--primary">GET</span> **Get Transaction Status**
 
 `https://gateway.multiversx.com/transaction/:txHash/status`
 
@@ -526,7 +526,7 @@ Transaction status retrieved successfully.
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
 :::
 
-## <span class="badge badge-primary">GET</span> **Get Transactions Pool**
+## <span class="badge badge--primary">GET</span> **Get Transactions Pool**
 
 `http://local-proxy-instance/transaction/pool`
 
@@ -663,7 +663,7 @@ Transaction status retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get Transactions Pool for a Sender**
+## <span class="badge badge--primary">GET</span> **Get Transactions Pool for a Sender**
 
 `https://gateway.multiversx.com/transaction/pool?by-sender=:sender:`
 
@@ -771,7 +771,7 @@ Transaction status retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get the latest nonce of a sender from Tx Pool**
+## <span class="badge badge--primary">GET</span> **Get the latest nonce of a sender from Tx Pool**
 
 `https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&last-nonce=true`
 
@@ -806,7 +806,7 @@ Transaction status retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get the nonce gaps of a sender from Tx Pool**
+## <span class="badge badge--primary">GET</span> **Get the nonce gaps of a sender from Tx Pool**
 
 `https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&nonce-gaps=true`
 

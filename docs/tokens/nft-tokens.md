@@ -800,7 +800,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 There are a number of API endpoints that one can use to interact with ESDT NFT data. These are:
 
-### <span class="badge badge-primary">GET</span> **Get NFT data for an address**
+### <span class="badge badge--primary">GET</span> **Get NFT data for an address**
 
 <!--DOCUSAURUS_CODE_TABS-->
 
@@ -844,7 +844,7 @@ https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/non
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-primary">GET</span> **Get NFTs/SFTs registered by an address**
+### <span class="badge badge--primary">GET</span> **Get NFTs/SFTs registered by an address**
 
 <!--DOCUSAURUS_CODE_TABS-->
 
@@ -875,7 +875,7 @@ https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-primary">GET</span> **Get tokens where an address has a given role**
+### <span class="badge badge--primary">GET</span> **Get tokens where an address has a given role**
 
 <!--DOCUSAURUS_CODE_TABS-->
 
@@ -909,7 +909,7 @@ The role can be one of the roles specified in the documentation (for example: ES
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-primary">GET</span> **Parse non/semi fungible tokens transfer logs**
+### <span class="badge badge--primary">GET</span> **Parse non/semi fungible tokens transfer logs**
 
 Each **successful** nft/sft transfer generates logs and events that can be used to parse all the details about a transfer
 (token identifier, sent amount and receiver).
@@ -968,18 +968,18 @@ In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-primary">GET</span> **Get all ESDT tokens for an address**
+### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address**
 
 One can use [get all esdt tokens for an address endpoint](/tokens/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
 
-### <span class="badge badge-primary">GET</span> **Get all issued ESDT tokens**
+### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens**
 
 One can use [get all issued esdt tokens endpoint](/tokens/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
 
-### <span class="badge badge-success">POST</span> **Get ESDT properties**
+### <span class="badge badge--success">POST</span> **Get ESDT properties**
 
 Properties can be queried via the [getTokenProperties function](/tokens/esdt-tokens#get-esdt-token-properties) provided by ESDT.
 
-### <span class="badge badge-success">POST</span> **Get special roles**
+### <span class="badge badge--success">POST</span> **Get special roles**
 
 Special roles can be queried via the [getSpecialRoles function](/tokens/esdt-tokens#get-special-roles-for-a-token) provided by ESDT.

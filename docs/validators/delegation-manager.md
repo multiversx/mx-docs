@@ -611,7 +611,7 @@ The following documentation sections only show the value of the relevant `return
 }
 ```
 
-### <span class="badge badge-success">POST</span> Contract config
+### <span class="badge badge--success">POST</span> Contract config
 
 The response contains an array of the properties in a fixed order (base64 encoded): owner address, service fee, maximum delegation cap, initial owner funds, automatic activation, with delegation cap, can change service fee, check cap on redelegate, nonce on creation and unbond period.
 
@@ -682,7 +682,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Contract metadata
+### <span class="badge badge--success">POST</span> Contract metadata
 
 The response contains an array of the properties in a fixed order (base64 encoded): staking provider name, website and identifier.
 
@@ -740,7 +740,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Number of delegators
+### <span class="badge badge--success">POST</span> Number of delegators
 
 The response contains a value representing the number of delegators in base64 encoding of the hex encoding.
 
@@ -792,7 +792,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Number of nodes
+### <span class="badge badge--success">POST</span> Number of nodes
 
 The response contains the number of nodes in base64 encoding of the hex encoding.
 
@@ -844,7 +844,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Nodes states
+### <span class="badge badge--success">POST</span> Nodes states
 
 The response contains an enumeration of alternating status codes and BLS keys. Each status code is followed by the BLS key of the node it describes. Both status codes and BLS keys are encoded in base64.
 
@@ -904,7 +904,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Total active stake
+### <span class="badge badge--success">POST</span> Total active stake
 
 The response contains a value representing the total active stake in base64 encoding of the hex encoding.
 
@@ -954,7 +954,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Total unstaked stake
+### <span class="badge badge--success">POST</span> Total unstaked stake
 
 The response contains a value representing the total unstaked stake in base64 encoding of the hex encoding.
 
@@ -1006,7 +1006,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Total cumulated rewards
+### <span class="badge badge--success">POST</span> Total cumulated rewards
 
 The response contains a value representing the sum of all accumulated rewards in base64 encoding of the hex encoding.
 
@@ -1060,7 +1060,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Delegator claimable rewards
+### <span class="badge badge--success">POST</span> Delegator claimable rewards
 
 The response contains a value representing the total claimable rewards for the delegator in base64 encoding of the hex encoding.
 
@@ -1116,7 +1116,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Delegator total accumulated rewards
+### <span class="badge badge--success">POST</span> Delegator total accumulated rewards
 
 The response contains a value representing the total accumulated rewards for the delegator in base64 encoding of the hex encoding.
 
@@ -1172,7 +1172,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Delegator active stake
+### <span class="badge badge--success">POST</span> Delegator active stake
 
 The response contains a value representing the active stake for the delegator in base64 encoding of the hex encoding.
 
@@ -1226,7 +1226,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Delegator unstaked stake
+### <span class="badge badge--success">POST</span> Delegator unstaked stake
 
 The response contains a value representing the unstaked stake for the delegator in base64 encoding of the hex encoding.
 
@@ -1282,7 +1282,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Delegator unbondable stake
+### <span class="badge badge--success">POST</span> Delegator unbondable stake
 
 The response contains a value representing the unbondable stake in base64 encoding of the hex encoding.
 
@@ -1338,7 +1338,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Delegator undelegated stake
+### <span class="badge badge--success">POST</span> Delegator undelegated stake
 
 The response contains an enumeration representing the different undelegated stake values in base64 encoding of the hex encoding.
 
@@ -1392,7 +1392,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Delegator funds data
+### <span class="badge badge--success">POST</span> Delegator funds data
 
 The response contains an enumeration for the delegator encoded base64 of the hexadecimal encoding of the following: active stake, unclaimed rewards, unstaked stake and unbondable stake.
 
@@ -1451,7 +1451,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Get reward data for epoch
+### <span class="badge badge--success">POST</span> Get reward data for epoch
 
 The response contains an enumeration for the specified epoch representing the base64 encoding of the hexadecimal encoding for the rewards to distribute, total active stake and service fee.
 
@@ -1507,7 +1507,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 ## Delegation mananger view functions
 
-### <span class="badge badge-success">POST</span> All contract addresses
+### <span class="badge badge--success">POST</span> All contract addresses
 
 The response contains an enumeration of bech32 keys bytes in base64 encoding.
 
@@ -1569,7 +1569,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-### <span class="badge badge-success">POST</span> Contract config
+### <span class="badge badge--success">POST</span> Contract config
 
 The response contains an enumeration of the properties in a fixed order (base64 encoded): current number of contracts, last created contract address, minimum and maximum service fee, minimum deposit and delegation.
 

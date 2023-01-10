@@ -51,6 +51,10 @@
   font-size: 14px;
 }
 
+.text-danger {
+  color: #dc3545;
+}
+
 /* -------------------- Start Navbar ------------------- */
 .navbar .navbar__items .navbar__item.first-link {
   margin-left: calc(50% - 226px);

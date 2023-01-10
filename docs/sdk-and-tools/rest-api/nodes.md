@@ -3,9 +3,12 @@ id: nodes
 title: Nodes
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Query Nodes (Peers) information.
 
-## <span class="badge badge-primary">GET</span> **Get Heartbeat Status**
+## <span class="badge badge--primary">GET</span> **Get Heartbeat Status**
 
 `https://gateway.multiversx.com/node/heartbeatstatus`
 
@@ -64,7 +67,7 @@ Heartbeat status is retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get Node Status**
+## <span class="badge badge--primary">GET</span> **Get Node Status**
 
 `http://localhost:8080/node/status`
 
@@ -103,7 +106,7 @@ Statistics retrieved successfully.
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.
 :::
 
-## <span class="badge badge-primary">GET</span> **Get P2P Status**
+## <span class="badge badge--primary">GET</span> **Get P2P Status**
 
 `http://localhost:8080/node/p2pstatus`
 
@@ -173,7 +176,7 @@ P2P status retrieved successfully.
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.
 :::
 
-## <span class="badge badge-primary">GET</span> **Get Peer Information**
+## <span class="badge badge--primary">GET</span> **Get Peer Information**
 
 `http://localhost:8080/node/peerinfo`
 

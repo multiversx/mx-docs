@@ -5,7 +5,7 @@ title: Network
 
 Query information about the Network.
 
-## <span class="badge badge-primary">GET</span> **Get Network Configuration**
+## <span class="badge badge--primary">GET</span> **Get Network Configuration**
 
 `https://gateway.multiversx.com/network/config`
 
@@ -48,7 +48,7 @@ Configuration details retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-primary">GET</span> **Get Shard Status**
+## <span class="badge badge--primary">GET</span> **Get Shard Status**
 
 `https://gateway.multiversx.com/network/status/:shardId`
 

@@ -5,7 +5,7 @@ title: Virtual Machine
 
 Query values stored within Smart Contracts.
 
-## <span class="badge badge-success">POST</span> Compute Output of Pure Function
+## <span class="badge badge--success">POST</span> Compute Output of Pure Function
 
 `https://gateway.multiversx.com/vm-values/query`
 
@@ -83,7 +83,7 @@ Content-Type: application/json
 }
 ```
 
-## <span class="badge badge-success">POST</span> Compute Hex Output of Pure Function
+## <span class="badge badge--success">POST</span> Compute Hex Output of Pure Function
 
 `https://gateway.multiversx.com/vm-values/hex`
 
@@ -117,7 +117,7 @@ The output value is retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-success">POST</span> Compute String Output of Pure Function
+## <span class="badge badge--success">POST</span> Compute String Output of Pure Function
 
 `https://gateway.multiversx.com/vm-values/string`
 
@@ -151,7 +151,7 @@ The output value is retrieved successfully.
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-## <span class="badge badge-success">POST</span> Get Integer Output of Pure Function
+## <span class="badge badge--success">POST</span> Get Integer Output of Pure Function
 
 `https://gateway.multiversx.com/vm-values/int`
 
