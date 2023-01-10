@@ -2,7 +2,7 @@ name: deploy-staging
 
 on:
   push:
-    branches: [docusaurus-v2]
+    branches: [development]
   repository_dispatch:
     types: deploy-staging
   workflow_dispatch:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: docusaurus-v2
+          ref: development
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:

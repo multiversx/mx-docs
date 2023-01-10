@@ -1,6 +1,6 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
-
+require("dotenv").config();
 const math = require("remark-math");
 const katex = require("rehype-katex");
 
@@ -75,8 +75,8 @@ const config = {
     ({
       colorMode: {
         defaultMode: "dark",
-        disableSwitch: false,
-        respectPrefersColorScheme: true,
+        disableSwitch: true,
+        respectPrefersColorScheme: false,
       },
       navbar: {
         logo: {
