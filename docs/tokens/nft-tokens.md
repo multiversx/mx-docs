@@ -3,6 +3,9 @@ id: nft-tokens
 title: NFT & SFT tokens
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 ## **Introduction**
 
 ### NFT and SFT
@@ -62,7 +65,7 @@ Here’s a prefilled template for the .json file to get you started:
 One has to perform an issuance transaction in order to register a non-fungible token.
 Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -78,7 +81,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Optionally, the properties can be set when issuing a token. Example:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -108,7 +111,7 @@ The contract will add a random string to the ticker thus creating the **token id
 One has to perform an issuance transaction in order to register a semi-fungible token.
 Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -124,7 +127,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Optionally, the properties can be set when issuing a token. Example:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -154,7 +157,7 @@ The contract will add a random string to the ticker thus creating the **token id
 One has to perform an issuance transaction in order to register a Meta-ESDT token.
 Meta-ESDT Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token, one must provide a token name, a ticker and optionally additional properties. This transaction has the form:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -171,7 +174,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Optionally, the properties can be set when issuing a token. Example:
 
-```
+```rust
 IssuanceTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -201,7 +204,7 @@ The contract will add a random string to the ticker thus creating the **token id
 
 An already existing _semi-fungible token_ can be converted into a Meta-ESDT token if the owner sends the following transaction:
 
-```
+```rust
 ConvertSftToMetaESDTTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -231,7 +234,7 @@ Token Ticker:
 
 For example, a user named Alice wants to issue an ESDT called "AliceTokens" with the ticker "ALC". The issuance transaction would be:
 
-```
+```rust
 IssuanceTransaction {
     Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -278,7 +281,7 @@ Roles can be assigned by sending a transaction to the Metachain from the ESDT ma
 
 Within a transaction of this kind, any number of roles can be assigned (minimum 1).
 
-```
+```rust
 RolesAssigningTransaction {
     Sender: <address of the ESDT manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -327,16 +330,16 @@ Below you can find the fields involved when creating an NFT.
 - The field should follow a `metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3` format
 - Below you can find a sample for the extra metadata format that should be stored on IPFS:
 
-```
+```json
 {
   "description": "This is a sample description",
   "attributes": [
     {
       "trait_type": "Background",
       "value": "Yellow",
-      "{key}":"{value}",
-      "{...}":"{...}",
-      "{key}":"{value}"
+      "{key}": "{value}",
+      "{...}": "{...}",
+      "{key}": "{value}"
     },
     {
       "trait_type": "Headwear",
@@ -405,7 +408,7 @@ A single address can own the role of creating an NFT for an ESDT token. This rol
 An NFT can be created on top of an existing ESDT by sending a transaction to self that contains the function call that triggers the creation.
 Any number of URIs can be assigned (minimum 1)
 
-```
+```rust
 NFTCreationTransaction {
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
@@ -453,7 +456,7 @@ This role can be transferred only if the `canTransferNFTCreateRole` property of 
 
 The role of creating an NFT can be transferred by a Transaction like this:
 
-```
+```rust
 TransferCreationRoleTransaction {
     Sender: <address of the current creation role owner>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -473,7 +476,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 The ESDT manager can stop the creation of an NFT for the given ESDT forever by removing the only `ESDTRoleNFTCreate` role available.
 This is done by performing a transaction like this:
 
-```
+```rust
 StopNFTCreationTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -495,7 +498,7 @@ An user that has the `ESDTRoleNFTUpdateAttributes` role set for a given ESDT, ca
 :::
 This is done by performing a transaction like this:
 
-```
+```rust
 ESDTNFTUpdateAttributesTransaction {
     Sender: <address of an address that has ESDTRoleNFTUpdateAttributes role>
     Receiver: <same as sender>
@@ -517,7 +520,7 @@ To see how you can assign this role in case it is not set, please refer to [this
 An user that has the `ESDTRoleNFTAddURI` role set for a given ESDT, can add uris to a given NFT/SFT.
 This is done by performing a transaction like this:
 
-```
+```rust
 ESDTNFTAddURITransaction {
     Sender: <address of an address that has ESDTRoleNFTAddURI role>
     Receiver: <same as sender>
@@ -540,7 +543,7 @@ To see how you can assign this role in case it is not set, please refer to [this
 
 A user that has the `ESDTRoleNFTAddQuantity` role set for a given Semi-Fungible Token, can increase its quantity. This function will not work for NFTs, because in that case the quantity cannot be higher than 1.
 
-```
+```rust
 AddQuantityTransaction {
     Sender: <address of an address that has ESDTRoleNFTAddQuantity role>
     Receiver: <same as sender>
@@ -561,7 +564,7 @@ If successful, the balance of the address for the given SFT will be increased wi
 
 A user that has the `ESDTRoleNFTBurn` role set for a given semi-fungible Token, can burn some (or all) of the quantity.
 
-```
+```rust
 BurnQuantityTransaction {
     Sender: <address of an address that has ESDTRoleNFTBurn role>
     Receiver: <same as sender>
@@ -582,7 +585,7 @@ If successful, the quantity from the argument will be decreased from the balance
 
 The manager of an ESDT token may freeze the NFT held by a specific Account. As a consequence, no NFT can be transferred to or from the frozen Account. Freezing and unfreezing a single NFT of an Account are operations designed to help token managers to comply with regulations. The transaction that freezes a single NFT of an Account has the form:
 
-```
+```rust
 FreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -599,7 +602,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The reverse operation, unfreezing, will allow further transfers to and from the Account:
 
-```
+```rust
 UnfreezeTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -618,7 +621,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The manager of an ESDT token may wipe out a single NFT held by a frozen Account. This operation is similar to burning the quantity, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
 
-```
+```rust
 WipeTransaction {
     Sender: <account address of the token managers>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -646,7 +649,7 @@ Check the [ESDT - Transferring token management rights](/tokens/esdt-tokens#tran
 
 Performing an ESDT NFT transfer is done by specifying the receiver's address inside the `Data` field, alongside other details. An ESDT NFT transfer transaction has the following form:
 
-```
+```rust
 TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <same as sender>
@@ -674,7 +677,7 @@ Also note that an MultiversX address is in bech32, so you will need to convert t
 
 To perform the transfer from your account to the smart contract, you have to use the following transaction format:
 
-```
+```rust
 TransferTransaction {
     Sender: <account address of the sender>
     Receiver: <same as sender>
@@ -706,7 +709,7 @@ Let's see a complete flow of creating and transferring a Semi-Fungible Token.
 
 **Step 1: Issue/Register a Semi-Fungible Token**
 
-```
+```rust
 {
     Sender: <your address>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -729,7 +732,7 @@ It will look similar to `@ok@414c432d317132773365`. The `414c432d317132773365` r
 
 Assign `ESDTRoleNFTCreate` and `ESDTRoleNFTAddQuantity` roles to an address. You can set these roles to your very own address.
 
-```
+```rust
 {
     Sender: <your address>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
@@ -750,7 +753,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Now, the NFT creation transaction for the example case defined [here](/tokens/nft-tokens#creation-of-an-nft) looks like this:
 
-```
+```rust
 {
     Sender: <address with ESDTRoleNFTCreate role>
     Receiver: <same as sender>
@@ -780,7 +783,7 @@ It can be fetched by viewing all the tokens for the address via API.
 
 **Step 5: Transfer**
 
-```
+```rust
 {
     Sender: <your address>
     Receiver: <same as sender>
@@ -800,15 +803,19 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 There are a number of API endpoints that one can use to interact with ESDT NFT data. These are:
 
-### <span class="badge badge--primary">GET</span> **Get NFT data for an address**
+### <span class="badge badge--primary">GET</span> **Get NFT data for an address** {#get-nft-data-for-an-address}
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Returns the balance of an address for specific ESDT Tokens.
 
-```
+```bash
 https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 ```
@@ -819,7 +826,8 @@ https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/non
 | tokenIdentifier | <span class="text-danger">REQUIRED</span> | `string`  | The token identifier.                  |
 | nonce           | <span class="text-danger">REQUIRED</span> | `numeric` | The nonce after the NFT creation.      |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -842,17 +850,22 @@ https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/non
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge--primary">GET</span> **Get NFTs/SFTs registered by an address**
+### <span class="badge badge--primary">GET</span> **Get NFTs/SFTs registered by an address** {#get-nftssfts-registered-by-an-address}
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Returns the identifiers of the tokens that have been registered by the provided address.
 
-```
+```bash
 https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 ```
@@ -861,7 +874,8 @@ https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 | ------------- | ----------------------------------------- | -------- | -------------------------------------- |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query in bech32 format. |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -873,17 +887,22 @@ https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge--primary">GET</span> **Get tokens where an address has a given role**
+### <span class="badge badge--primary">GET</span> **Get tokens where an address has a given role** {#get-tokens-where-an-address-has-a-given-role}
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Returns the identifiers of the tokens where the given address has the given role.
 
-```
+```bash
 https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 ```
@@ -895,7 +914,8 @@ https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 
 The role can be one of the roles specified in the documentation (for example: ESDTRoleNFTCreate)
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 ```json
 {
@@ -907,30 +927,36 @@ The role can be one of the roles specified in the documentation (for example: ES
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge--primary">GET</span> **Parse non/semi fungible tokens transfer logs**
+### <span class="badge badge--primary">GET</span> **Parse non/semi fungible tokens transfer logs** {#parse-nonsemi-fungible-tokens-transfer-logs}
 
 Each **successful** nft/sft transfer generates logs and events that can be used to parse all the details about a transfer
 (token identifier, sent amount and receiver).
 In order to get the logs and events generated by the transfer, one should know the transaction's hash.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 | Param  | Required                                  | Type     | Description                 |
 | ------ | ----------------------------------------- | -------- | --------------------------- |
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash of the transaction |
 
-```
+```bash
 https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
-```
+```json
 {
  "data": {
   "transaction": {
@@ -966,13 +992,14 @@ The event with the identifier `ESDTNFTTransfer` will have the following topics:
 In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg` received 2 tokens of the collection
 `TSFT-c867g3` with nonce `2114`.
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address**
+### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address** {#get-all-esdt-tokens-for-an-address}
 
 One can use [get all esdt tokens for an address endpoint](/tokens/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
 
-### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens**
+### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens** {#get-all-issued-esdt-tokens}
 
 One can use [get all issued esdt tokens endpoint](/tokens/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
 

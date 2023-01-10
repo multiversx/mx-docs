@@ -3,6 +3,9 @@ id: utils
 title: Markdown Examples
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## Base Syntax
 
 Example text with nothing specific
@@ -91,21 +94,28 @@ term
 
 ### Tabs
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--First Tab-->
+<Tabs
+defaultValue="First"
+values={[
+{label: 'First', value: 'First'},
+{label: 'Second', value: 'Second'},
+{label: 'Third', value: 'Third'},
+]}>
+<TabItem value="First">
 
 Example text with an emoji
 🟢 Good info
 🔴 Bad info
 
-<!--Second Tab-->
+</TabItem>
+<TabItem value="Second">
 
 ```js
 console.log("Hello, world!");
 ```
 
-<!--Third Tab-->
+</TabItem>
+<TabItem value="Third">
 
 ```json
 {
@@ -119,7 +129,8 @@ console.log("Hello, world!");
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 ### Info Admonitions
 
@@ -155,17 +166,22 @@ Oh, no ! Lorem ipsum dolor sit amet
 
 ### `GET` API Call
 
-## <span class="badge badge--primary">GET</span> API Call
+## <span class="badge badge--primary">GET</span> API Call {#get-api-call}
 
-## <span class="badge badge--success">POST</span> API Call
+## <span class="badge badge--success">POST</span> API Call {#post-api-call}
 
 :::important Custom Title
 The content and title _can_ include markdown.
 For example:
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--First Tab-->
+<Tabs
+defaultValue="First"
+values={[
+{label: 'First', value: 'First'},
+{label: 'Second', value: 'Second'},
+{label: 'Third', value: 'Third'},
+]}>
+<TabItem value="First">
 
 Path Parameters
 
@@ -178,13 +194,15 @@ Path Parameters
 | storageKey    | <span class="text-danger">REQUIRED</span> | `string` | The storage entry to fetch.           |
 | bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query.                 |
 
-<!--Second Tab-->
+</TabItem>
+<TabItem value="Second">
 
 ```js
 console.log("Hello, world!");
 ```
 
-<!--Third Tab-->
+</TabItem>
+<TabItem value="Third">
 
 🟢 200 OK
 
@@ -202,7 +220,8 @@ Value (hex-encoded) successfully retrieved.
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 :::
 

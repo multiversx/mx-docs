@@ -99,9 +99,13 @@ A **hyperblock** is composed using a **metablock** as a starting point - therefo
 
 This endpoint allows one to query a Hyperblock by its hash.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Path Parameters
 
@@ -109,7 +113,8 @@ Path Parameters
 | ----- | ----------------------------------------- | -------- | --------------- |
 | hash  | <span class="text-normal">OPTIONAL</span> | `string` | The Block hash. |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
@@ -158,21 +163,26 @@ Path Parameters
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 :::important
 This endpoint is only is only defined by the Proxy. The Observer does not expose this endpoint.
 :::
 
-## <span class="badge badge--primary">GET</span> **Get Block by Nonce**
+## <span class="badge badge--primary">GET</span> **Get Block by Nonce** {#get-block-by-nonce}
 
 `https://gateway.multiversx.com/block/:shard/by-nonce/:nonce`
 
 This endpoint allows one to query a Shard Block by its nonce (or height).
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Path Parameters
 
@@ -187,7 +197,8 @@ Query Parameters
 | ------- | ----------------------------------------- | --------- | ---------------------------------------------------- |
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
@@ -234,21 +245,26 @@ Block retrieved successfully, with transactions included.
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 :::important
 For Observers, the `shard` parameter should not be set.
 :::
 
-## <span class="badge badge--primary">GET</span> **Get Block by Hash**
+## <span class="badge badge--primary">GET</span> **Get Block by Hash** {#get-hyperblock-by-hash}
 
 `https://gateway.multiversx.com/block/:shard/by-hash/:hash`
 
 This endpoint allows one to query a Shard Block by its hash.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Path Parameters
 
@@ -263,7 +279,8 @@ Query Parameters
 | ------- | ----------------------------------------- | --------- | ---------------------------------------------------- |
 | withTxs | <span class="text-normal">OPTIONAL</span> | `boolean` | Whether to include the transactions in the response. |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
@@ -310,7 +327,8 @@ Block retrieved successfully, with transactions included.
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 :::important
 For Observers, the `shard` parameter should not be set.
