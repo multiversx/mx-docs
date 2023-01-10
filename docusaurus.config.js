@@ -173,8 +173,8 @@ const config = {
         appId: `${process.env.REACT_APP_ALGOLIA_APP_ID}`,
         // Public API key: it is safe to commit it
         apiKey: `${process.env.REACT_APP_ALGOLIA_SEARCH_KEY}`,
-        indexName: "multiversx",
-        contextualSearch: true,
+        indexName: "dev_multiversx",
+        contextualSearch: false,
       },
       slugPreprocessor: (slugBase) =>
         slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, ""),
