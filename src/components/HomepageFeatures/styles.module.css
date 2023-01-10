@@ -28,8 +28,9 @@
   padding: 1.5rem 1.8rem 1.7rem;
 }
 .card h3 {
-  font-size: 1.15rem;
+  font-size: 1.063rem;
   color: var(--ifm-color-primary);
+  font-family: Montserrat, sans-serif;
 }
 .card p {
   margin-bottom: 0;
