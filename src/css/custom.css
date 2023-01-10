@@ -6,13 +6,13 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #000; /* #1b46c2; */
-  --ifm-color-primary-dark: #000; /* #003fba; */
-  --ifm-color-primary-darker: #000; /* #001079; */
-  --ifm-color-primary-darkest: #000; /* #001079; */
-  --ifm-color-primary-light: #000; /* #5265e7; */
-  --ifm-color-primary-lighter: #000; /* #7c85ff; */
-  --ifm-color-primary-lightest: #000; /* #a3a7ff; */
+  --ifm-color-primary: #00947e;
+  --ifm-color-primary-dark: #006553;
+  --ifm-color-primary-darker: #004b3c;
+  --ifm-color-primary-darkest: #00392c;
+  --ifm-color-primary-light: #00ac91;
+  --ifm-color-primary-lighter: #00c4ac;
+  --ifm-color-primary-lightest: #23f7dd;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 
@@ -258,7 +258,4 @@
   margin-top: calc(var(--ifm-heading-vertical-rhythm-top) * var(--ifm-leading));
 }
 
-[data-theme="light"] .markdown a {
-  text-decoration: underline;
-}
 /* -------------------- End Markdown ------------------- */
