@@ -31,7 +31,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
       - name: Deploy to S3 bucket
-        run: aws s3 sync ./website/build/docs/ s3://${{ secrets.AWS_S3_BUCKET_STAGING }} --delete
+        run: aws s3 sync ./build/ s3://${{ secrets.AWS_S3_BUCKET_STAGING }} --delete
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@master
         env:
