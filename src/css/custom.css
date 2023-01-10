@@ -257,4 +257,8 @@
   );
   margin-top: calc(var(--ifm-heading-vertical-rhythm-top) * var(--ifm-leading));
 }
+
+[data-theme="light"] .markdown a {
+  text-decoration: underline;
+}
 /* -------------------- End Markdown ------------------- */
