@@ -87,7 +87,6 @@ const config = {
             href: "/developers/overview",
             label: "Develop",
             position: "left",
-            class: "navbar__item navbar__link first-link",
           },
           {
             href: "/validators/overview",
@@ -106,13 +105,53 @@ const config = {
           },
           {
             href: "https://github.com/multiversx",
-            label: "GitHub",
             position: "right",
+            className: "header-github-link",
+            "aria-label": "GitHub",
           },
           {
             href: "https://t.me/ElrondNetwork",
-            label: "Chat",
             position: "right",
+            className: "header-telegram-link",
+            "aria-label": "Chat",
+          },
+          {
+            type: "dropdown",
+            position: "right",
+            className: "header-app-change",
+            "aria-label": "Websites",
+            items: [
+              {
+                label: "Main Site",
+                href: "https://multiversx.com",
+                target: "_blank",
+              },
+              {
+                label: "Wallet",
+                href: "https://wallet.multiversx.com",
+                target: "_blank",
+              },
+              {
+                label: "Explorer",
+                href: "https://explorer.multiversx.com",
+                target: "_blank",
+              },
+              {
+                label: "Bridge",
+                href: "https://ad-astra.multiversx.com",
+                target: "_blank",
+              },
+              {
+                label: "xExchange",
+                href: "https://xexchange.com",
+                target: "_blank",
+              },
+              {
+                label: "xLaunchpad",
+                href: "https://xlaunchpad.com",
+                target: "_blank",
+              },
+            ],
           },
         ],
       },
