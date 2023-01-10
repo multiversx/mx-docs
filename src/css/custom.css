@@ -6,13 +6,13 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #1b46c2;
-  --ifm-color-primary-dark: #003fba;
-  --ifm-color-primary-darker: #001079;
-  --ifm-color-primary-darkest: #001079;
-  --ifm-color-primary-light: #5265e7;
-  --ifm-color-primary-lighter: #7c85ff;
-  --ifm-color-primary-lightest: #a3a7ff;
+  --ifm-color-primary: #000; /* #1b46c2; */
+  --ifm-color-primary-dark: #000; /* #003fba; */
+  --ifm-color-primary-darker: #000; /* #001079; */
+  --ifm-color-primary-darkest: #000; /* #001079; */
+  --ifm-color-primary-light: #000; /* #5265e7; */
+  --ifm-color-primary-lighter: #000; /* #7c85ff; */
+  --ifm-color-primary-lightest: #000; /* #a3a7ff; */
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 
@@ -42,6 +42,15 @@
   --ifm-footer-background-color: #242526;
 }
 
+/* -------------------- Start Overrides ------------------- */
+
+[data-theme="dark"] .badge--primary {
+  --ifm-badge-color: var(--ifm-background-color);
+}
+.text-danger {
+  color: #dc3545;
+}
+
 .theme-doc-sidebar-menu {
   padding: 1rem;
 }
@@ -51,16 +60,31 @@
   font-size: 14px;
 }
 
-.text-danger {
-  color: #dc3545;
+.table-of-contents__link strong {
+  font-weight: 400;
 }
+.table-of-contents__link.table-of-contents__link--active strong {
+  font-weight: 600;
+}
+.table-of-contents__link,
+.anchor {
+  display: flex;
+  align-items: center;
+}
+.table-of-contents__link .badge,
+.anchor .badge {
+  font-size: 60%;
+  margin-right: 0.5rem;
+}
+
+/* -------------------- End Overrides ------------------- */
 
 /* -------------------- Start Navbar ------------------- */
 .navbar .navbar__items .navbar__item.first-link {
   margin-left: calc(50% - 226px);
 }
 
-/* -------------------- Start Navbar ------------------- */
+/* -------------------- End Navbar ------------------- */
 
 /* -------------------- Start Footer ------------------- */
 
@@ -78,6 +102,43 @@
   text-decoration: none;
 }
 /* -------------------- End Footer ------------------- */
+
+.tabs-container .tabs {
+  font-weight: var(--ifm-font-weight-regular);
+  border-bottom: none;
+  margin-bottom: -1px;
+}
+.tabs-container .tabs .tabs__item {
+  color: var(--docsearch-muted-color);
+  background: var(--ifm-code-background);
+  border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
+  border-left-color: transparent;
+  border-radius: 0;
+}
+.tabs-container .tabs .tabs__item--active {
+  border-bottom: none;
+  color: var(--ifm-color-content);
+  background: #fff;
+  border-color: var(--ifm-table-border-color) var(--ifm-table-border-color)
+    var(--ifm-table-border-color) transparent;
+}
+[data-theme="dark"] .tabs-container .tabs .tabs__item--active {
+  background: var(--ifm-background-color);
+}
+.tabs-container .tabs .tabs__item:last-child {
+  border-top-right-radius: var(--ifm-alert-border-radius);
+}
+.tabs-container .tabs .tabs__item:first-child {
+  border-top-left-radius: var(--ifm-alert-border-radius);
+  border-left-color: var(--ifm-table-border-color);
+}
+.tabs-container .tabs + div {
+  border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
+  padding: 1.5rem;
+  border-radius: var(--ifm-alert-border-radius);
+  border-top-left-radius: 0;
+  margin: 0 !important;
+}
 
 /* -------------------- Start Markdown ------------------- */
 .markdown {

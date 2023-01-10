@@ -135,6 +135,8 @@ const config = {
         indexName: "multiversx",
         contextualSearch: true,
       },
+      slugPreprocessor: (slugBase) =>
+        slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, ""),
     }),
 };
 
