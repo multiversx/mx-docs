@@ -157,7 +157,7 @@ const config = {
           },
         ],
       },
-      image: "img/share.png",
+      image: "img/share.jpg",
       footer: {
         style: "light",
         links: [],
