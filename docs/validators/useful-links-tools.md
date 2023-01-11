@@ -9,7 +9,7 @@ Official resources:
 - Wallet: [https://wallet.multiversx.com](https://wallet.multiversx.com/)
 - GitHub: https://github.com/multiversx
 - Docker: https://hub.docker.com/repository/docker/elrondnetwork/elrond-go-node
-- Telegram Validators Chat: https://t.me/ElrondValidators
+- Telegram Validators Chat: https://t.me/MultiversXValidators
 - Telegram Bot for Staking & Validators: https://t.me/ElrondNetwork_Bot
 
 Community resources:

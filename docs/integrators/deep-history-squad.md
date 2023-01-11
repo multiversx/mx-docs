@@ -59,7 +59,7 @@ _Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a
 
 First, choose an empty folder to serve as the workspace (working directory) of the squad instance - for example, `~/deep-history-workspace`.
 
-Afterward, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the MultiversX public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
+Afterward, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the MultiversX public archive (which are available [on request](https://t.me/MultiversXDevelopers)). The URLs in the example below are mere placeholders.
 
 ```
 // ~/deep-history-workspace/reconstruction.json
