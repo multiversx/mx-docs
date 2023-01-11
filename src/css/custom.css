@@ -40,6 +40,7 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 
   --ifm-footer-background-color: #242526;
+  --docsearch-hit-active-color: #242526 !important;
 }
 
 /* -------------------- Start Overrides ------------------- */

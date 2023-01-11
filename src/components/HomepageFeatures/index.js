@@ -70,9 +70,7 @@ function HomepageHeader() {
   return (
     <header className={clsx(styles.heroBanner)}>
       <div className="container">
-        <h1 className={clsx("hero__title")}>
-          Welcome to the MultiversX (Elrond) docs!
-        </h1>
+        <h1 className={clsx("hero__title")}>Welcome to the MultiversX docs!</h1>
         <p className={clsx("hero__subtitle")}>Choose your path you must.</p>
       </div>
     </header>

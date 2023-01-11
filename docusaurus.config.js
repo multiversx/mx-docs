@@ -112,7 +112,7 @@ const config = {
             "aria-label": "GitHub",
           },
           {
-            href: "https://t.me/ElrondNetwork",
+            href: "https://t.me/MultiversX",
             position: "right",
             className: "header-telegram-link",
             "aria-label": "Chat",
@@ -157,7 +157,7 @@ const config = {
           },
         ],
       },
-      image: "img/share.png",
+      image: "img/share.jpg",
       footer: {
         style: "light",
         links: [],
@@ -173,8 +173,8 @@ const config = {
         appId: `${process.env.REACT_APP_ALGOLIA_APP_ID}`,
         // Public API key: it is safe to commit it
         apiKey: `${process.env.REACT_APP_ALGOLIA_SEARCH_KEY}`,
-        indexName: "multiversx",
-        contextualSearch: true,
+        indexName: "dev_multiversx",
+        contextualSearch: false,
       },
       slugPreprocessor: (slugBase) =>
         slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, ""),
