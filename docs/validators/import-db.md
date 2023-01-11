@@ -22,7 +22,7 @@ Possible use cases for the import-db process:
 Let's suppose we have the following data structure:
 
 ```
-  ~/elrond-go/cmd/node
+  ~/mx-chain-go/cmd/node
 ```
 
 the `node` binary is found in the above-mentioned path.
@@ -57,14 +57,14 @@ Also, please check that the `config` directory matches the one of the node that 
 structure, including the `prefs.toml` file.
 
 :::caution
-Please make sure the `/elrond-go/cmd/node/db` directory is empty so the import-db process will start
+Please make sure the `/mx-chain-go/cmd/node/db` directory is empty so the import-db process will start
 from the genesis up until the last epoch provided.
 :::
 
 Next, the node can be started by using:
 
 ```
- cd ~/elrond-go/cmd/node
+ cd ~/mx-chain-go/cmd/node
  ./node -use-log-view -log-level *:INFO -import-db ./import-db
 ```
 

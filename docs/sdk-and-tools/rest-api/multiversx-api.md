@@ -50,7 +50,7 @@ It uses on the following internal systems:
 It depends on the following optional external systems:
 
 - events notifier rabbitmq: queue that pushes logs & events which are handled internally e.g. to trigger NFT media fetch
-- data: provides eGLD price information for transactions
+- data: provides EGLD price information for transactions
 - maiar exchange: provides price information regarding various tokens listed on the maiar exchange
 - ipfs: ipfs gateway for fetching mainly NFT metadata & media files
 - media: ipfs gateway which will be used as prefix for NFT media & metadata returned in the NFT details
