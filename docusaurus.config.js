@@ -112,7 +112,7 @@ const config = {
             "aria-label": "GitHub",
           },
           {
-            href: "https://t.me/ElrondNetwork",
+            href: "https://t.me/MultiversX",
             position: "right",
             className: "header-telegram-link",
             "aria-label": "Chat",
