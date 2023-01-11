@@ -9,7 +9,7 @@ Because the MultiversX VM executes [WebAssembly](https://en.wikipedia.org/wiki/W
 
 Developers are encouraged to use Rust for their smart contracts, however. MultiversX provides a [Rust framework](https://github.com/multiversx/mx-sdk-rs) which allows for unusually clean and efficient code in smart contracts, a rarity in the blockchain field. A declarative testing framework is bundled as well. For the best coding experience, developers have the [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide) at their disposal.
 
-# **Features**
+## **Features**
 
 The MultiversX VM was built to be as fast and secure as possible, but without adding unneeded restrictions to what smart contracts can do: the API provided by the VM, called the MultiversX Environment Interface, is comprehensive and easy to use.
 

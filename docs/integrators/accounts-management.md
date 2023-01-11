@@ -13,7 +13,7 @@ Accounts creation can be achieved through different approaches:
 
 - using the [MultiversX Web Wallet](https://wallet.multiversx.com/)
 - programmatically, using the [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)
-- programmatically, using the [erdpy - Python SDK](/sdk-and-tools/erdpy/erdpy)
+- programmatically, using the [erdpy - Python SDK](/sdk-and-tools/erdpy/)
 - programmatically, using the [erdgo - Golang SDK](/sdk-and-tools/erdgo)
 - programmatically, using the [erdjava - Java SDK](/sdk-and-tools/erdjava)
 - using the [lightweight CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli)

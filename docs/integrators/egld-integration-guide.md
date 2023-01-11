@@ -68,7 +68,7 @@ For example, when the system is up, it should start processing from a nonce in t
 ...
 ```
 
-:::warning
+:::caution
 Keep in mind that a hyperblock shouldn't be processed twice as this might cause issues.
 Make sure the block processing and the saving of the last processed nonce should be atomic.
 :::

@@ -5,7 +5,7 @@ title: The dynamic allocation problem
 
 ### Avoiding memory allocation
 
-:::warning
+:::caution
 **Smart contracts must avoid dynamic allocation**. Due to the performance penalty incurred by dynamic allocation, the MultiversX Virtual Machine is configured with hard limits and will stop a contract that attempts too much allocation.
 :::
 
@@ -21,7 +21,7 @@ The alternative is to use **managed types** instead of the usual Rust types. All
 
 The managed types work by only storing a `handle` within the contract memory, which is a `u32` index, while the actual payload resides in reserved VM memory. So whenever you have to add two `BigUint`s for example, the `+` operation in your code will only pass the three handles: the result, the first operand, and the second operand. This way, there is very little data being passed around, which in turn makes everything cheaper. And since these types only store a handle, their memory allocation is fixed in size, so it can be allocated on the stack instead of having to be allocated on the heap.
 
-:::warning
+:::caution
 If you need to update older code to take advantage of managed types, please take the time to understand the changes you need to make. Such an update is important and cannot be done automatically.
 :::
 
@@ -54,7 +54,7 @@ We also recommend _allocating Rust arrays directly on the stack_ (as local varia
 
 Also, consider using `ArrayVec`, which provides the functionality of a `Vec`, but without allocation on the heap. Instead, it requires allocation of a block of memory directly on the stack, like a basic Rust local array, but retains the flexibility of `Vec`.
 
-:::warning
+:::caution
 Make sure you migrate to the managed types **incrementally** and **thoroughly test your code** before even considering deploying to the mainnet.
 :::
 

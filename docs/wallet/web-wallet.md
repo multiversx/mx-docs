@@ -9,11 +9,11 @@ Use the wallet to send, receive and store EGLD in a secure manner. Includes auto
 
 Go to [https://wallet.multiversx.com](https://wallet.multiversx.com/) & carefully acknowledge the instructions provided.
 
-Click on <Create Wallet>:
+Click on "Create Wallet":
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN56ZUWCpoBOb62Cw5S%2F-MN58QUJW4SDl4KHuWMs%2Fimage.png?alt=media&token=1c1a1d47-e5f1-4c11-8700-642f86506b83)
 
-Carefully read and acknowledge the information, then click <Continue>
+Carefully read and acknowledge the information, then click "Continue"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwZzp7ogHdlTGeMJfS%2Fimage.png?alt=media&token=1bfb4aaa-f100-42bc-8c67-c88a6696621b)
 
@@ -25,7 +25,7 @@ Click the “copy” (two rectangles) button and then paste them into a text fil
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMw_Q2KGyioeIQS_1n4%2Fimage.png?alt=media&token=d0b2d1c7-cc7d-4ea9-a4c7-e54e8896b3ad)
 
-The next page is a test to see if you actually have saved the Secret Phrase. Enter the random words as indicated there and press <Continue>
+The next page is a test to see if you actually have saved the Secret Phrase. Enter the random words as indicated there and press "Continue"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMw_mc-QpwIiDyCyivq%2Fimage.png?alt=media&token=abc1a361-a47a-4f84-9f8e-775911607c3f)
 
@@ -41,7 +41,7 @@ Congratulations, you have a new wallet! The associated Keystore File was downloa
 
 ## **Access a wallet**
 
-Go to https://wallet.multiversx.com/ and click on <Access Existing> Make sure the “Keystore file” access method is selected, click Browse and locate your Keystore File [erd1… .json], then put in your password and click <Access Wallet>
+Go to https://wallet.multiversx.com/ and click on "Access Existing" Make sure the “Keystore file” access method is selected, click Browse and locate your Keystore File [erd1… .json], then put in your password and click "Access Wallet"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwaq2NB7kvEggzp4X-%2Fimage.png?alt=media&token=8e5010c8-4690-4fd6-b82b-15e527f041e7)
 
@@ -66,7 +66,7 @@ Click "Send" on the left-hand section of the wallet:
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN58eBinRmW5e6LVAG-%2F-MN59AGOnxN4jI64a7uH%2Fimage.png?alt=media&token=3f8c82f3-17eb-4be6-946b-1078e3cee773)
 
-Input the destination address & amount, and the click <Send>
+Input the destination address & amount, and the click "Send"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN54l80sMnQ48eunmLY%2Fimage.png?alt=media&token=04d0986b-b102-4e86-bd17-510265cac43a)
 
@@ -94,7 +94,7 @@ You can also click "Receive" on the left-hand side to see a QR code for the addr
 
 ## **Testnet and Devnet faucet**
 
-You can request test tokens from [Testnet Wallet](https://testnet-wallet.multiversx.com) or [Devnet Wallet](https://devnet-wallet.multiversx.com) in the `Faucet` tab. 
+You can request test tokens from [Testnet Wallet](https://testnet-wallet.multiversx.com) or [Devnet Wallet](https://devnet-wallet.multiversx.com) in the `Faucet` tab.
 
 The faucet is only available once in a given time period. Another alternatives for getting test tokens are:
 

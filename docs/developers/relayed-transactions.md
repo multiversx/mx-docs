@@ -22,7 +22,7 @@ A relayed transaction version 1 relies on having the inner transaction JSON seri
 
 It would look like:
 
-```
+```rust
 RelayedV1Transaction {
     Sender: <Relayer address>
     Receiver: <Address that signed the inner transaction>
@@ -35,7 +35,7 @@ RelayedV1Transaction {
 
 The inner transaction can have a format like this:
 
-```
+```rust
 RelayedV1InnerTransaction {
     Sender: <Receiver of the relayed transaction>
     Receiver: <Smart Contract address>
@@ -50,7 +50,7 @@ RelayedV1InnerTransaction {
 However, unlike regular transactions' JSON serialization, the inner transaction that has to be signed has a different
 structure:
 
-```
+```js
 type Transaction struct {
 	Nonce           uint64
 	Value           *math_big.Int
@@ -66,7 +66,7 @@ type Transaction struct {
 }
 ```
 
-Notice that there are some differences as compared to the regular _frontend_ [transaction structure](/developers/signing-transactions/signing-transactions/#general-structure), such:
+Notice that there are some differences as compared to the regular _frontend_ [transaction structure](/developers/signing-transactions/#general-structure), such:
 
 - `SenderAddress` and `ReceiverAddress` have to be byte arrays instead of bech32 string addresses
 - `Value` has to be a big integer, instead of a string
@@ -114,18 +114,18 @@ relayedTx@7b226e6f6e6365223a3139382c2273656e646572223a2267456e574f65576d6d413063
 
 Furthermore, the inner transaction can be easily decoded (hex string to string), resulting in:
 
-```
+```json
 {
-   "nonce":198,
-   "sender":"gEnWOeWmmA0c0jkqvM5BApzadKFWNSOiAvCWQcwmGPg=",
-   "receiver":"AAAAAAAAAAAFAB4uYRqc4eDI4yg8zHwbD0ZhkXB5p1w=",
-   "value":0,
-   "gasPrice":1000000000,
-   "gasLimit":60000000,
-   "data":"YWRk",
-   "signature":"N0r1po7kvOTKIGG/ukgr8ZbWdXg1fQ0vmub5y4OsSAq4z/Y7lFRyWsg4N+oJiIIWwzkmljIArmi1iXHTy4KgAA==",
-   "chainID":"VA==",
-   "version":1
+  "nonce": 198,
+  "sender": "gEnWOeWmmA0c0jkqvM5BApzadKFWNSOiAvCWQcwmGPg=",
+  "receiver": "AAAAAAAAAAAFAB4uYRqc4eDI4yg8zHwbD0ZhkXB5p1w=",
+  "value": 0,
+  "gasPrice": 1000000000,
+  "gasLimit": 60000000,
+  "data": "YWRk",
+  "signature": "N0r1po7kvOTKIGG/ukgr8ZbWdXg1fQ0vmub5y4OsSAq4z/Y7lFRyWsg4N+oJiIIWwzkmljIArmi1iXHTy4KgAA==",
+  "chainID": "VA==",
+  "version": 1
 }
 ```
 
@@ -139,7 +139,7 @@ Decoding the base64 fields, we'll get:
 
 Regarding the relayed transaction's gas limit, let's check the math.
 
-```
+```js
 gasLimit = <move_balance_cost> + length(Data) * <gas_per_data_byte> + <inner transaction gas limit>
 gasLimit =          50_000     +      660     *        1500         +         60_000_000
 gasLimit = 61040000  // just like the gas limit set in the relayed transaction
@@ -153,7 +153,7 @@ the matching gas limit values between the relayed and inner transactions.
 
 It would look like:
 
-```
+```rust
 RelayedV1Transaction {
     Sender: <Relayer address>
     Receiver: <Address that signed the inner transaction>

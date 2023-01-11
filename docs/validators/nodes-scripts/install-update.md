@@ -147,7 +147,7 @@ Be careful as to not mix the previous installation network with the new one. Thi
 
 ## **Choosing a custom configuration tag or branch**
 
-:::warning
+:::caution
 This option should be only used when debugging or testing in advance of a pre-release tag.
 Use this on your own risk!
 :::
@@ -168,6 +168,6 @@ Call the `upgrade` command on the scripts to install the desired configuration v
 
 Resetting the value to `""` will make the scripts to use the released version.
 
-:::warning
+:::caution
 The `OVERRIDE_CONFIGVER` is not backed up when calling `github_pull` operation.
 :::

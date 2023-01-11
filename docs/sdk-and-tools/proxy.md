@@ -15,7 +15,7 @@ The Observer Nodes of the Proxy thus act as a **default dedicated entry point in
 
 It is worth repeating here, though, that submitting a Transaction through the Proxy is completely optional - any Node of the Network will accept Transactions to propagate, given it has not disabled its REST API.
 
-![img](<https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-M93nKd9VLSYHsguW1PH%2F-M93o5wmBtDFoPSwcwmw%2FElrond%20Proxy%20-%20Purpose%20(overview).png?alt=media&token=55699234-8846-407d-aa16-a0646f6c3748>)
+![img](/technology/proxy-overview.png)
 
 Overview of the MultiversX Proxy
 
@@ -31,13 +31,13 @@ The official instance of the MultiversX Proxy is located at [https://gateway.mul
 
 ## **Set up a Proxy Instance**
 
-:::warning
+:::caution
 Documentation for setting up a Proxy is preliminary and subject to change
 :::
 
 In order to host a Proxy instance on a web server, one has to first clone and build the repository:
 
-```
+```bash
 git clone https://github.com/multiversx/mx-chain-proxy-go.git
 cd elrond-proxy-go/cmd/proxy
 go build .

@@ -8,14 +8,14 @@ title: Validators - Overview
 ### Install and maintain a node
 
 | Name                                                                              | Description                                                              |
-|-----------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | [System requirements](/validators/system-requirements)                            | System requirements for running an MultiversX node.                      |
 | [Install a Mainnet/Testnet/Devnet Node](/validators/nodes-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
 ### Keys Management
 
 | Name                                                            | Description                         |
-|-----------------------------------------------------------------|-------------------------------------|
+| --------------------------------------------------------------- | ----------------------------------- |
 | [Validator keys](/validators/key-management/validator-keys)     | Learn about a validator key.        |
 | [Wallet keys](/validators/key-management/wallet-keys)           | Learn about a wallet key.           |
 | [Protecting your keys](/validators/key-management/protect-keys) | Learn how you can secure your keys. |
@@ -23,16 +23,16 @@ title: Validators - Overview
 ### Staking
 
 | Name                                                                                | Description                                                   |
-|-------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | [Staking, unstaking and unjailing](/validators/staking/staking-unstaking-unjailing) | Learn about how to stake, unstake or unjail a Node.           |
-| [How to Stake a Node](/validators/staking/staking)                                  | Learn how to stake a node via a step-by-step tutorial.        |
+| [How to Stake a Node](/validators/staking)                                          | Learn how to stake a node via a step-by-step tutorial.        |
 | [How to unJail a Node](/validators/staking/unjailing)                               | Learn how to unJail a node.                                   |
 | [The Staking Smart Contract](/validators/staking/staking-smart-contract)            | How to interact with the Smart Contract that manages Staking. |
 
 ### Delegation Manager
 
 | Name                                                                                                                         | Description                                                                                  |
-|------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | [Delegation Manager](/validators/delegation-manager)                                                                         | Learn how to create a new Staking Provider, how to configure it and how to interact with it. |
 | [How to convert an existing Validator into a Staking Pool](/validators/staking/convert-existing-validator-into-staking-pool) | Learn how to create a new Staking Provider, starting from an existing Validator.             |
 | [Merge an existing Validator into a Staking Pool](/validators/staking/merge-validator-delegation-sc)                         | Learn how to merge a validator into a Staking Provider.                                      |
@@ -40,7 +40,7 @@ title: Validators - Overview
 ### Useful
 
 | Name                                                     | Description                                                                                                       |
-|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | [Node operation modes](/validators/node-operation-modes) | Learn about the nodes' operation modes and how to use them for setting up node for various use-cases.             |
 | [Rating](/validators/rating)                             | Learn about the nodes' rating, how it increases and decreases and how does it impact the earnings.                |
 | [Node Upgrade](/validators/node-upgrades)                | Learn about the periodical or emergency upgrades that nodes' owner have to do.                                    |

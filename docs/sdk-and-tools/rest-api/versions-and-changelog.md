@@ -7,7 +7,7 @@ title: Versions and Changelog
 
 This page offers a high level overview of the important releases of the MultiversX Proxy API, along with recommendations (such as upgrade or transitioning recommendations) for API consumers.
 
-:::warning
+:::caution
 Documentation in this section is preliminary and subject to change.
 :::
 
@@ -27,7 +27,7 @@ There are **no breaking changes** between API **v1.1.0** and API **v1.1.1** - ne
 
 - `GET transaction` endpoint has been fixed to report the appropriate status **invalid** for actually _invalid transactions_ (e.g. not enough balance). In v1.1.0, the reported status was imprecise: **partially-executed**.
 
-:::warning
+:::caution
 As of November 2020, new API consumers are recommended to use a newer version of the API.
 
 **v1.1.0 and v1.1.1 will be deprecated** once all existing API consumers are known to have been upgraded to a more recent version.

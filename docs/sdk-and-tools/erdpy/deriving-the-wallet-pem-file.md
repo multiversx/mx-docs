@@ -7,7 +7,7 @@ title: Deriving the Wallet PEM file
 
 While **erdpy** has features that do not need a Wallet, submitting any sort of transaction with **erdpy** does require one. And to automate submitting transactions to the MultiversX network, **erdpy** needs a so-called PEM file, associated with a specific Wallet. This is needed because **erdpy** must be able to sign transactions on your behalf, without your help. Having a PEM file obviates the need for manually entering a password, like on [https://wallet.multiversx.com](https://wallet.multiversx.com/). However, one might choose to use a JSON keyfile Wallet instead. erdpy has support for these as well - the associated password has to be provided by means of a separate file.
 
-:::warning
+:::caution
 A PEM file generated from a Wallet should be kept very safe, because **it contains the private key** of that Wallet.
 :::
 
@@ -42,6 +42,6 @@ Now, whenever you want to submit a transaction from the command-line, you can te
 The MultiversX network makes no distinction between manually submitting a transaction, and submitting a transaction through **erdpy**. This means that every transaction you send with **erdpy** will appear on [https://wallet.multiversx.com](https://wallet.multiversx.com/) when you open the Wallet which you generated the PEM for.
 :::
 
-:::warning
+:::caution
 Always safeguard any PEM files you have. Anyone who has them can submit transactions and perform actions in the MultiversX network as if they were you, so make sure nobody can get to them.
 :::

@@ -12,24 +12,24 @@ It is possible to concatenate multiple expressions using the pipe operator (`|`)
 This is ideal for short lists or small structs.
 
 :::note Example
+
 - a `Vec<u32>` can be expressed as `"u32:1|u32:2|u32:3"`.
 - a `(BigUint, BigUint)` tuple can be expressed as `"biguint:1|biguint:2"`
 - a `SimpleStruct { a: u8, b: BoxedBytes }` can be expressed as `"u8:4|nested:str:value-b"`
-:::
+  :::
 
-Please note that the pipe operator only takes care of the concatenation itself. You are responsible for making sure that [nested encoding](/developers/developer-reference/elrond-serialization-format#the-concept-of-top-level-vs-nested-objects) is used where appropriate.
-
-
+Please note that the pipe operator only takes care of the concatenation itself. You are responsible for making sure that [nested encoding](/developers/developer-reference/serialization-format/#the-concept-of-top-level-vs-nested-objects) is used where appropriate.
 
 ## **Using JSON lists as values**
 
 Mandos allows using JSON lists to express longer values. This especially makes sense when the value being represented is itself a list in the smart contract.
 
 :::note Example
+
 - a `Vec<u32>` can also be expressed as `["u32:1", "u32:2", "u32:3"]`.
 - a `(BigUint, BigUint)` tuple can also be expressed as `["biguint:1", "biguint:2"]`
 - a `SimpleStruct { a: u8, b: BoxedBytes }` can also be expressed as `["u8:4", "nested:str:value-b"]`, although in this case a [JSON map](#using-json-maps-as-values) might be more appropriate.
-:::
+  :::
 
 Make sure not to confuse values expressed as JSON lists with other elements of Mandos syntax.
 
@@ -76,6 +76,7 @@ We mentioned above how the developer needs to take care of the serialization of 
 JSON lists make sense for representing series of items, but for structs JSON maps are more expressive.
 
 The rules are as follows:
+
 - Mandos will concatenate all JSON map values and leave the keys out.
 - The keys need to be in alphanumerical order, so we customarily prefix them with numbers. Map keys in JSON are fundamentally unordered and this is the easiest way to enforce a deterministic order for the values.
 - Map values can be either JSON strings, lists or other maps, all Mandos value rules apply the same way all the way down.
@@ -86,24 +87,29 @@ This is an abridged section of the actual lottery contract in the examples.
 
 ```json
 {
-    "step": "checkState",
-    "accounts": {
-        "sc:lottery": {
-            "storage": {
-                "str:lotteryInfo|nested:str:lottery_name": {
-                    "0-token_identifier": "nested:str:LOTTERY-123456",
-                    "1-ticket_price": "biguint:100",
-                    "2-tickets-left": "u32:0",
-                    "3-deadline": "u64:123,456",
-                    "4-max_entries_per_user": "u32:1",
-                    "5-prize_distribution": ["u32:2", "u8:75", "u8:25"],
-                    "6-whitelist": ["u32:3", "address:acc1", "address:acc2", "address:acc3"],
-                    "7-prize_pool": "biguint:500"
-                }
-            },
-            "code": "file:../output/lottery-esdt.wasm"
+  "step": "checkState",
+  "accounts": {
+    "sc:lottery": {
+      "storage": {
+        "str:lotteryInfo|nested:str:lottery_name": {
+          "0-token_identifier": "nested:str:LOTTERY-123456",
+          "1-ticket_price": "biguint:100",
+          "2-tickets-left": "u32:0",
+          "3-deadline": "u64:123,456",
+          "4-max_entries_per_user": "u32:1",
+          "5-prize_distribution": ["u32:2", "u8:75", "u8:25"],
+          "6-whitelist": [
+            "u32:3",
+            "address:acc1",
+            "address:acc2",
+            "address:acc3"
+          ],
+          "7-prize_pool": "biguint:500"
         }
+      },
+      "code": "file:../output/lottery-esdt.wasm"
     }
+  }
 }
 ```
 
@@ -128,7 +134,8 @@ pub struct LotteryInfo<M: ManagedTypeApi> {
 
 :::tip
 
-Once again, note that all contained values are in [nested encoding format](/developers/developer-reference/elrond-serialization-format#the-concept-of-top-level-vs-nested-objects):
+Once again, note that all contained values are in [nested encoding format](/developers/developer-reference/serialization-format/#the-concept-of-top-level-vs-nested-objects):
+
 - the token identifier has its length automatically prepended by the `nested:` prefix,
 - big ints are given with the `biguint:` syntax, which prepends their byte length,
 - small ints are given in full length,
@@ -136,10 +143,10 @@ Once again, note that all contained values are in [nested encoding format](/deve
 
 :::
 
-
 ## **A note about enums**
 
 There are 2 types of enums that we use in Rust:
+
 - simple enums are simply encoded as `u8`
 - complex enums are encoded just like structures, with an added `u8` discriminant at the beginning.
 
@@ -151,26 +158,23 @@ This is an abridged section of a Multisig contract test.
 
 ```json
 {
-    "step": "checkState",
-    "accounts": {
-        "sc:multisig": {
-            "storage": {
-                "str:action_data.item|u32:3": {
-                    "1-discriminant": "0x06",
-                    "2-amount": "u32:0",
-                    "3-code": "nested:file:../test-contracts/adder.wasm",
-                    "4-code_metadata": "0x0000",
-                    "5-arguments": [
-                        "u32:1",
-                        "u32:2|1234"
-                    ]
-                },
-                "+": ""
-            },
-            "code": "file:../output/multisig.wasm"
+  "step": "checkState",
+  "accounts": {
+    "sc:multisig": {
+      "storage": {
+        "str:action_data.item|u32:3": {
+          "1-discriminant": "0x06",
+          "2-amount": "u32:0",
+          "3-code": "nested:file:../test-contracts/adder.wasm",
+          "4-code_metadata": "0x0000",
+          "5-arguments": ["u32:1", "u32:2|1234"]
         },
         "+": ""
-    }
+      },
+      "code": "file:../output/multisig.wasm"
+    },
+    "+": ""
+  }
 }
 ```
 

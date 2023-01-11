@@ -19,7 +19,7 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pending third-party issues.
 :::
 
-:::warning
+:::caution
 If the system chosen to host the node is a VPS, the host should have dedicated CPUs. This is mandatory. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
 :::
 
@@ -27,7 +27,7 @@ If the system chosen to host the node is a VPS, the host should have dedicated C
 We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw`
 :::
 
-:::warning
+:::caution
 In case a decision to run multiple MultiversX Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
 :::
 
@@ -49,6 +49,6 @@ sudo ufw allow 37373:38383/tcp
 The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/p2p.toml#L7).
 :::
 
-:::warning
+:::caution
 In case a firewall for outgoing traffic is used please make sure traffic to ports 10000 (p2p seeder) as well as 123 (NTP) is explicitly allowed.
 :::

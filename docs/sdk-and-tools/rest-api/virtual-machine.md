@@ -3,17 +3,24 @@ id: virtual-machine
 title: Virtual Machine
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 Query values stored within Smart Contracts.
 
-## <span class="badge badge-success">POST</span> Compute Output of Pure Function
+## <span class="badge badge--success">POST</span> Compute Output of Pure Function {#compute-output-of-pure-function}
 
 `https://gateway.multiversx.com/vm-values/query`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the execution results (the Virtual Machine Output).
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Body Parameters
 
@@ -25,52 +32,52 @@ Body Parameters
 | caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
 | value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
 The VM Output is retrieved successfully.
 
-```
+```json
 {
+  "data": {
     "data": {
-        "data": {
-          "ReturnData": [
-            "eyJSZ... (base64)"
-          ],
-          "ReturnCode": 0,
-          "ReturnMessage": "",
-          "GasRemaining": 1500000000,
-          "GasRefund": 0,
-          "OutputAccounts": {
-            "...": {
-              "Address": "... (base64)",
-              "Nonce": 0,
-              "Balance": null,
-              "BalanceDelta": 0,
-              "StorageUpdates": null,
-              "Code": null,
-              "CodeMetadata": null,
-              "Data": null,
-              "GasLimit": 0,
-              "CallType": 0
-            }
-          },
-          "DeletedAccounts": null,
-          "TouchedAccounts": null,
-          "Logs": null
+      "ReturnData": ["eyJSZ... (base64)"],
+      "ReturnCode": 0,
+      "ReturnMessage": "",
+      "GasRemaining": 1500000000,
+      "GasRefund": 0,
+      "OutputAccounts": {
+        "...": {
+          "Address": "... (base64)",
+          "Nonce": 0,
+          "Balance": null,
+          "BalanceDelta": 0,
+          "StorageUpdates": null,
+          "Code": null,
+          "CodeMetadata": null,
+          "Data": null,
+          "GasLimit": 0,
+          "CallType": 0
         }
-    },
-    "error": "",
-    "code": "successful"
+      },
+      "DeletedAccounts": null,
+      "TouchedAccounts": null,
+      "Logs": null
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Here's an example of a request:
 
-```
+```json
 POST https://gateway.multiversx.com/vm-values/query HTTP/1.1
 Content-Type: application/json
 
@@ -83,15 +90,19 @@ Content-Type: application/json
 }
 ```
 
-## <span class="badge badge-success">POST</span> Compute Hex Output of Pure Function
+## <span class="badge badge--success">POST</span> Compute Hex Output of Pure Function {#compute-hex-output-of-pure-function}
 
 `https://gateway.multiversx.com/vm-values/hex`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as a hex-encoded string.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Body Parameters
 
@@ -103,29 +114,35 @@ Body Parameters
 | caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
 | value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
 The output value is retrieved successfully.
 
-```
+```json
 {
   "data": "7b22..."
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-## <span class="badge badge-success">POST</span> Compute String Output of Pure Function
+## <span class="badge badge--success">POST</span> Compute String Output of Pure Function {#compute-string-output-of-pure-function}
 
 `https://gateway.multiversx.com/vm-values/string`
 
 This endpoint allows one to execute - with no side effects - a pure function of a Smart Contract and retrieve the first output value as a string.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Body Parameters
 
@@ -137,29 +154,35 @@ Body Parameters
 | caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
 | value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
 The output value is retrieved successfully.
 
-```
+```json
 {
   "data": "foobar"
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
-## <span class="badge badge-success">POST</span> Get Integer Output of Pure Function
+## <span class="badge badge--success">POST</span> Get Integer Output of Pure Function {#get-integer-output-of-pure-function}
 
 `https://gateway.multiversx.com/vm-values/int`
 
 This endpoint allows one to execute - with no side-effects - a pure function of a Smart Contract and retrieve the first output value as an integer.
 
-<!--DOCUSAURUS_CODE_TABS-->
-
-<!--Request-->
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
 
 Body Parameters
 
@@ -171,16 +194,18 @@ Body Parameters
 | caller    | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the caller.                                                 |
 | value     | <span class="text-normal">OPTIONAL</span> | `string` | The Value to transfer (can be zero).                                                |
 
-<!--Response-->
+</TabItem>
+<TabItem value="Response">
 
 🟢 200: OK
 
 The output value is retrieved successfully.
 
-```
+```json
 {
-    "data": "2020"
+  "data": "2020"
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>

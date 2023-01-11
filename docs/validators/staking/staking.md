@@ -66,7 +66,7 @@ Submitting the staking transaction using `erdpy` avoids having to write the "Dat
 
 Make sure `erdpy` is installed by issuing this command on a terminal:
 
-```
+```bash
 erdpy --version
 ```
 
@@ -74,7 +74,7 @@ The version reported by this command must be at least `erdpy 0.8.0`, or higher. 
 
 Make sure `erdpy` is installed and has the latest version before continuing.
 
-# **Your Wallet PEM file**
+## **Your Wallet PEM file**
 
 To send transactions on your behalf _without_ using the online MultiversX Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
@@ -82,31 +82,31 @@ Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deri
 
 After the PEM file was generated, you can issue transactions from `erdpy`directly.
 
-# **The staking transaction**
+## **The staking transaction**
 
 The following commands assume that the PEM file for your Wallet was saved with the name `walletKey.pem` in the current folder, where you are issuing the commands from.
 
 The command to submit a staking transaction with `erdpy` is this:
 
-```
+```bash
 erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
 
-- Replace `<stake-value>` with the amount you are staking. You need to calculate this value with respect to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking/staking#staking-through-the-wallet) section for info on how to do it.
+- Replace `<stake-value>` with the amount you are staking. You need to calculate this value with respect to the number of nodes you are staking for. See the [beginning of the "Staking through the Wallet"](/validators/staking#staking-through-the-wallet) section for info on how to do it.
 - Replace `<validators-json-file>` with the JSON file that lists the nodes you are staking for. This JSON file should look like this:
 
-```
+```json
 {
-  "validators" : [
+  "validators": [
     {
       "pemFile": "valPem1.pem"
     },
     {
       "pemFile": "valPem2.pem"
     },
-      {
+    {
       "pemFile": "valPem3.pem"
     }
   ]
@@ -133,9 +133,9 @@ For two nodes, it becomes this:
 erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
-# **The --reward-address parameter**
+## **The --reward-address parameter**
 
-When you submit a staking transaction, the Staking SmartContract remembers the wallet you sent it from, and the rewards from your staked validators will go to that wallet. This is the _default_ behavior. In this case, it will be the wallet which you used to generate the `walletKey.pem` file in the earlier subsection ["Your Wallet PEM file"](/validators/staking/staking#your-wallet-pem-file).
+When you submit a staking transaction, the Staking SmartContract remembers the wallet you sent it from, and the rewards from your staked validators will go to that wallet. This is the _default_ behavior. In this case, it will be the wallet which you used to generate the `walletKey.pem` file in the earlier subsection ["Your Wallet PEM file"](/validators/staking#your-wallet-pem-file).
 
 Alternatively, you can tell `erdpy` to specify another wallet to which your rewards should be transferred. You will need the **address of your reward wallet** (it looks like `erd1xxxxx…`) for this, which you will pass to `erdpy` using the `--reward-address` parameter.
 

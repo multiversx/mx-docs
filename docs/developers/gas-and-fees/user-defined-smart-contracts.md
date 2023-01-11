@@ -13,7 +13,7 @@ In order to get the required `gasLimit` (the **actual gas cost**) for a deployme
 
 At first, pass the maximum possible amount for `gas-limit` (no guessing).
 
-```
+```bash
 $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=600000000 \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
@@ -22,7 +22,7 @@ $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
 
 In the output, look for `txGasUnits`. For example:
 
-```
+```json
 "txSimulation": {
     ...
     "cost": {
@@ -38,7 +38,7 @@ The simulated cost `txGasUnits` contains both components of the cost.
 
 After that, check the cost simulation by running the simulation once again, but this time with the precise`gas-limit`:
 
-```
+```bash
 $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=1849711 \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
@@ -47,7 +47,7 @@ $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
 
 In the output, look for the `status` - it should be `success`:
 
-```
+```json
 "txSimulation": {
     "execution": {
         "result": {
@@ -60,7 +60,7 @@ In the output, look for the `status` - it should be `success`:
 
 In the end, let's actually deploy the contract:
 
-```
+```bash
 $ erdpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=1849711 \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
@@ -83,7 +83,7 @@ If the contract makes further calls to other contracts, please read the next sec
 
 Assuming we've already deployed the contract (see above) let's get the cost for calling one of its endpoints:
 
-```
+```bash
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=increment\
@@ -93,7 +93,7 @@ $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9j
 
 In the output, look for `txGasUnits`. For example:
 
-```
+```json
 "txSimulation": {
     ...
     "cost": {
@@ -105,7 +105,7 @@ In the output, look for `txGasUnits`. For example:
 
 In the end, let's actually call the contract:
 
-```
+```bash
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=increment\
@@ -125,15 +125,15 @@ Documentation in this section is preliminary and subject to change. Furthermore,
 
 Before moving forward, make sure you first have a look over the following:
 
-- [Asynchronous calls between contracts](/technology/the-elrond-wasm-vm/#asynchronous-calls-between-contracts)
-- [Asynchronous calls (Rust framework)](/developers/developer-reference/elrond-wasm-contract-calls/#asynchronous-calls)
-- [Callbacks (Rust framework)](/developers/developer-reference/elrond-wasm-annotations/#callbacks)
+- [Asynchronous calls between contracts](/technology/the-wasm-vm/#asynchronous-calls-between-contracts)
+- [Asynchronous calls (Rust framework)](/developers/developer-reference/wasm-contract-calls/#asynchronous-calls)
+- [Callbacks (Rust framework)](/developers/developer-reference/wasm-annotations/#callbacks)
 
 Suppose we have two contracts: `A` and `B`, where `A::foo(addressOfB)` asynchronously calls `B::bar()` (e.g. using `asyncCall()`).
 
 Let's deploy the contracts `A` and `B`:
 
-```
+```bash
 $ erdpy --verbose contract deploy --bytecode=./a.wasm \
  --recall-nonce --gas-limit=5000000 \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
@@ -147,7 +147,7 @@ $ erdpy --verbose contract deploy --bytecode=./b.wasm \
 
 Assuming `A` is deployed at `erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts`, and `B` is deployed at `erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq`, let's **simulate** `A::foo(addressOfB)` (at first, pass a _large-enough_ or maximum `gas-limit`):
 
-```
+```bash
 $ export hexAddressOfB=0x$(erdpy wallet bech32 --decode erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq)
 
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
@@ -160,7 +160,7 @@ $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t
 
 In the output, look for the simulated cost (as above):
 
-```
+```json
 "txSimulation": {
     ...
     "cost": {
@@ -178,7 +178,7 @@ Upon reaching the call to `B::bar()` inside `A::foo()`, the MultiversX VM inspec
 
 With respect to the [VM Gas Schedule](https://github.com/multiversx/mx-chain-mainnet-config/tree/master/gasSchedules), the aforementioned **remaining gas _at runtime_** has to satisfy the following conditions in order for the **temporary gas lock reservation** to succeed:
 
-```
+```go
 onTheSpotRemainingGas > gasToLockForCallback
 
 gasToLockForCallback =
@@ -215,7 +215,7 @@ As of February 2022, for contracts that call other contracts, the lowest `gasLim
 
 For our example, let's simulate using the following values for `gasLimit`: `7619200, 7000000, 6000000`:
 
-```
+```bash
 $ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
  --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
  --function=foo\

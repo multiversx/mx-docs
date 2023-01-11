@@ -15,7 +15,7 @@ Keys that begin with `ELROND` will be rejected because they are reserved for pro
 
 ## Transaction format
 
-```
+```rust
 SaveKeyValueTransaction {
     Sender: <account address of the wallet owner>
     Receiver: <same as sender>
@@ -34,7 +34,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The gas used is computed as following:
 
-```
+```rust
 required_gas =  save_key_value_cost +
                 move_balance_cost +
                 cost_per_byte * length(txData) +
@@ -49,7 +49,7 @@ For a real case example, the cost would be:
 
 If we break down the gas usage operations, using the costs in the moment of writing, we would get:
 
-```
+```rust
 required_gas =  100000    + // save key value function cost
                 50000     + // move balance cost
                 1500 * 34 + // cost_per_byte * length(txData)
@@ -64,7 +64,7 @@ required_gas =  100000    + // save key value function cost
 
 Let's save a single key-value pair. Key would be `key0` and the value would be `value0`.
 
-```
+```rust
 SaveKeyValueTransaction {
     Sender: <account address of the wallet owner>
     Receiver: <same as sender>
