@@ -17,7 +17,7 @@ It is built for applications that use React.
 
 ### GitHub project
 
-The GitHub repository can be found here: [https://github.com/ElrondNetwork/dapp-core/](https://github.com/ElrondNetwork/dapp-core/)
+The GitHub repository can be found here: [https://github.com/multiversx/mx-sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)
 
 ### npmjs
 
@@ -25,7 +25,7 @@ dapp-core can be found on npmjs as well: https://www.npmjs.com/package/@elrondne
 
 ### Live demo: dapp-template
 
-The [dapp-template](https://github.com/ElrondNetwork/dapp-template/) that is used in [Build a dApp in 15 minutes](/developers/tutorials/your-first-dapp) is based on `dapp-core`.
+The [mx-template-dapp](https://github.com/multiversx/mx-template-dapp) that is used in [Build a dApp in 15 minutes](/developers/tutorials/your-first-dapp) is based on `dapp-core`.
 
 A live demo of the dapp-template is available at [https://dapp-template.elrond.com/](https://dapp-template.elrond.com/).
 
@@ -36,7 +36,7 @@ A live demo of the dapp-template is available at [https://dapp-template.elrond.c
 
 ## Migration from dapp-core 1.x
 
-If you're transitioning from dapp-core 1.x to dapp-core 2.0, please read the [Migration guide](https://github.com/ElrondNetwork/dapp-core/wiki/Migration-guide-2.0).
+If you're transitioning from dapp-core 1.x to dapp-core 2.0, please read the [Migration guide](https://github.com/multiversx/mx-sdk-dapp/wiki/Migration-guide-2.0).
 
 ## Installation
 
