@@ -1,12 +1,12 @@
 ---
-id: erdjs-migration-guides
+id: sdk-js-migration-guides
 title: Migration guides
 ---
 
-This tutorial will guide you through the process of migrating from one major version of **erdjs** (or one of its _satellites_) to another.
+This tutorial will guide you through the process of migrating from one major version of **sdk-js** (or one of its _satellites_) to another.
 
 :::important
-Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
+Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook), in advance.
 :::
 
 ## Migrate **erdjs** from v9.x to v10 (April of 2022)
@@ -134,13 +134,13 @@ The modules designed to parse the contract results have been rewritten in erdjs 
 
 The functions `getReceipt()`, `getSmartContractResults()` and `getLogs()` of `TransactionOnNetwork` have been removed. The underlying properties are now public. Furthermore, `TransactionOnNetwork` is now defined within `@elrondnetwork/erdjs-network-providers`.
 
-In order to parse contract results in erdjs 10, please follow [this guide](/sdk-and-tools/erdjs/erdjs-cookbook#parsing-contract-results).
+In order to parse contract results in erdjs 10, please follow [this guide](/sdk-and-tools/sdk-js/sdk-js-cookbook#parsing-contract-results).
 
 ### `EsdtHelpers` and `ScArgumentsParser` vs. `transaction-decoder`
 
 In erdjs 10, the classes `EsdtHelpers` and `ScArgumentsParser` have been removed.
 
-Instead, one should reference and use the package [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder).
+Instead, one should reference and use the package [@multiversx/sdk-transaction-decoder](https://www.npmjs.com/package/@multiversx/sdk-transaction-decoder).
 
 ### ChainID is now required
 
@@ -155,7 +155,3 @@ let tx = interaction
     .withChainID("D")
     .buildTransaction();
 ```
-
-## Migrate **erdjs-snippets** from v2.x to v3.x (May of 2022)
-
-In order to migrate from `erdjs-snippets v2.x` to `erdjs-snippets v3.x`, please follow the changes depicted [here](https://github.com/multiversx/mx-sdk-rs/pull/712).

@@ -1,16 +1,16 @@
 ---
-id: writing-and-testing-erdjs-interactions
+id: writing-and-testing-sdk-js-interactions
 title: Writing and testing interactions
 ---
 
 :::note
-This tutorial makes use of `erdjs 10` and `erdjs-snippets 3`. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
+This tutorial makes use of `sdk-js 10` and `sdk-js-snippets 3`. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
 :::
 
-This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **erdjs** and **erdjs snippets**.
+This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **sdk-js** and **sdk-js snippets**.
 
 :::important
-**Do not reference** `erdjs-snippets` library as a **regular** dependency (i.e. `dependencies` section) of your project (Node / dApp). Only reference it as a **development** dependency (i.e. `devDependencies` section).
+**Do not reference** `sdk-js-snippets` library as a **regular** dependency (i.e. `dependencies` section) of your project (Node / dApp). Only reference it as a **development** dependency (i.e. `devDependencies` section).
 :::
 
 ## IDE Prerequisites
@@ -34,32 +34,32 @@ Make sure the latest MultiversX SDK is available in your environment. In order t
 
 In the **Templates** view of the MultiversX IDE, choose the template `adder` and click on **New Contract**. Then, choose the template `lottery-esdt` and click on **New Contract**. By doing so, MultiversX IDE will create one folder for each of the chosen smart contracts
 
-An **additional folder** called `erdjs-snippets` gets created, as well. That's a **nodejs** package, holding the source code for the **contract interaction** and for the test **snippets**.
+An **additional folder** called `mx-skd-js-snippets` gets created, as well. That's a **nodejs** package, holding the source code for the **contract interaction** and for the test **snippets**.
 
 Before moving further, make sure you build the two contracts (from the **Smart Contracts** view of the MultiversX IDE or using the command line, as desired).
 
-### Setup the snippets
+### Set up the snippets
 
-Now that you've created two contracts using the provided templates (and built them), let's tell the IDE (and the Mocha Test Explorer) where the snippets are located, by invoking the command `Elrond: Setup erdjs-snippets`. When asked to specify the folder containing the snippets, choose the already existing folder `erdjs-snippets`.
+Now that you've created two contracts using the provided templates (and built them), let's tell the IDE (and the Mocha Test Explorer) where the snippets are located, by invoking the command `Elrond: Setup erdjs-snippets`. When asked to specify the folder containing the snippets, choose the already existing folder `mx-sdk-js-snippets`.
 
-As previously mentioned, the folder `erdjs-snippets` is a nodejs package. Let's install its dependencies by running the following commands within the integrated terminal:
+As previously mentioned, the folder `mx-sdj-js-snippets` is a nodejs package. Let's install its dependencies by running the following commands within the integrated terminal:
 
 ```bash
-cd ./erdjs-snippets
+cd ./mx-sdk-js-snippets
 npm install
 ```
 
 The Mocha Test Explorer (Visual Studio Code extension) should now pick up the interaction snippets as regular mocha tests and list them in the **Testing** view, as follows:
 
-![erdjs-snippets in Mocha Test Explorer](/developers/sdk-and-tools/erdjs/erdjs-snippets-in-mocha-test-explorer.png)
+![sdk-js-snippets in Mocha Test Explorer](/developers/sdk-and-tools/sdk-js/sdk-js-snippets-in-mocha-test-explorer.png)
 
 By leveraging the Mocha Test Explorer, you can **run** and **debug** one, more or all **steps** of a snippets.
 
 Now that your workspace and the snippets are set up, let's dive deeper. In the next section we'll learn **what is**, actually, an interaction snippet.
 
-## Anatomy of an erdjs snippet
+## Anatomy of an sdk-js snippet
 
-An erdjs **snippet** is, actually, a file that defines a suite of _mocha_ tests, having the extension `*.spec.ts` or `*.snippet.ts`. A **snippet step** is an individual test-like construct.
+A sdk-js **snippet** is, actually, a file that defines a suite of _mocha_ tests, having the extension `*.spec.ts` or `*.snippet.ts`. A **snippet step** is an individual test-like construct.
 
 When executing one or more steps, they execute within a **test session**, selected by the following instruction of the snippet:
 
@@ -173,7 +173,7 @@ const friends: ITestUser[] = session.users.getGroup("friends");
 
 ### Generate secret keys for test users
 
-`erdjs-snippets` allows you to generate test users (secrey keys), as well. On this matter, you first have to provide a configuration file, which specifies some parameters for the generation process.
+`sdk-js-snippets` allows you to generate test users (secrey keys), as well. On this matter, you first have to provide a configuration file, which specifies some parameters for the generation process.
 
 For example, let's create the file `myGenerator.json`:
 
@@ -226,7 +226,7 @@ describe("user operations snippet", async function () {
 });
 ```
 
-The resulted keys can be used as seen in the section [session configuration](/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions#session-configuration).
+The resulted keys can be used as seen in the section [session configuration](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions#session-configuration).
 
 ### Writing events in the audit log
 
@@ -271,15 +271,15 @@ await session.audit.onSnapshot({
 });
 ```
 
-Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated session report will include a difference between the two snapshots in question (**this feature isn't available as of `erdjs-snippets 3.0.0`**).
+Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated session report will include a difference between the two snapshots in question (**this feature isn't available as of `snk-js-snippets 3.0.0`**).
 
 ### Generate session reports
 
 :::important
-As of `erdjs-snippets 3.0.0`, report generation is experimental. It will improve over time.
+As of `sdk-js-snippets 3.0.0`, report generation is experimental. It will improve over time.
 :::
 
-`erdjs-snippets` can generate a HTML report based on the data and events accumulated within a test session.
+`sdk-js-snippets` can generate a HTML report based on the data and events accumulated within a test session.
 
 In order to configure the reporting feature, define an additional entry in the session configuration file:
 
@@ -303,13 +303,13 @@ Upon running the step, the `outputFolder` should contain the generated session r
 
 ### Dependence on interactors
 
-The most important dependency of a snippet is the **contract interactor**, which is responsible with creating and executing erdjs-based interactions and contract queries.
+The most important dependency of a snippet is the **contract interactor**, which is responsible with creating and executing sdk-js-based interactions and contract queries.
 
 ## Anatomy of an interactor
 
 In our workspace, the interactors are: `adderInteractor.ts` and `lotteryInteractor.ts`. They contain _almost_ production-ready code to call and query your contracts, code which is _generally_ copy-paste-able into your dApps.
 
-Generally speaking, an interactor component (class) depends on the following objects (defined by `erdjs` or by satellites of `erdjs`):
+Generally speaking, an interactor component (class) depends on the following objects (defined by `sdk-js` or by satellites of `sdk-js`):
 
 - a `SmartContract` (composed with its `SmartContractAbi`)
 - an `INetworkProvider`, to broadcast / retrieve transactions and perform contract queries
@@ -330,7 +330,7 @@ const abi = new SmartContractAbi(registry);
 ```
 
 :::important
-Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
+Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook), in advance.
 :::
 
 Then, create a `SmartContract` object as follows:
@@ -421,7 +421,7 @@ The interrupted nature of the flow for calling `executable` endpoints and the ev
 ### Writing an interactor method for a contract query
 
 :::important
-Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
+Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook), in advance.
 :::
 
 In order to implement a contract query as a method of your interactor, you first need to the prepare the `Interaction` object:
@@ -455,7 +455,7 @@ const interaction = <Interaction>this.contract.methodsExplicit.getLotteryInfo([
 ]);
 ```
 
-Above, you may notice there are two possible ways for providing the arguments to the interaction: the **explicitly** mode and the **implicit** mode, also called **the auto mode** - since it performs _automatic type inference_ (within erdjs' own typesystem) with respect to the endpoint definition (more precisely, with respect to the ABI types of the input arguments). You can choose any of the modes to provide the arguments for the interaction. Pick the one that best suits your programming style.
+Above, you may notice there are two possible ways for providing the arguments to the interaction: the **explicitly** mode and the **implicit** mode, also called **the auto mode** - since it performs _automatic type inference_ (within sdk-js' own typesystem) with respect to the endpoint definition (more precisely, with respect to the ABI types of the input arguments). You can choose any of the modes to provide the arguments for the interaction. Pick the one that best suits your programming style.
 
 Afterwards, you should verify the interaction object with respect to the ABI (skip this step if you are using the _auto mode_). It will throw an error if the ABI (more specifically, the input parameters of the endpoint) is not followed:
 
@@ -571,7 +571,7 @@ console.log(lotteryInfo.getFieldValue("prize_pool"));
 ### Writing an interactor method for a contract call
 
 :::important
-Make sure you have a look over the [cookbook](/sdk-and-tools/erdjs/erdjs-cookbook), in advance.
+Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook), in advance.
 :::
 
 In order to implement a contract call as a method of your interactor, you first need to the prepare the `Interaction` object:

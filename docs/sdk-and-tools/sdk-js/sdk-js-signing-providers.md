@@ -1,16 +1,16 @@
 ---
-id: erdjs-signing-providers
+id: sdk-js-signing-providers
 title: Signing Providers for dApps
 ---
 
-This page will guide you through the process of integrating the **erdjs signing providers** in a dApp which isn't based on `dapp-core`.
+This page will guide you through the process of integrating the **sdk-js signing providers** in a dApp which isn't based on `dapp-core`.
 
 :::important
 Note that for most purposes, **we recommend using [dapp-core](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 :::important
-The code samples depicted on this page can also be found on the [**erdjs examples repository**](https://github.com/multiversx/mx-sdk-erdjs-examples).
+The code samples depicted on this page can also be found on the [**sdk-js examples repository**](https://github.com/multiversx/mx-sdk-js-examples).
 :::
 
 The following signing providers are available:
@@ -26,17 +26,17 @@ The following signing providers are available:
 Make sure you have a look over the [webhooks](/wallet/webhooks), in advance.
 :::
 
-[`@elrondnetwork/erdjs-web-wallet-provider`](https://github.com/multiversx/mx-sdk-erdjs-web-wallet-provider) allows the users of a dApp to login and sign transactions using the [Web Wallet](/wallet/web-wallet).
+[`@multiversx/sdk-web-wallet-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-provider) allows the users of a dApp to login and sign transactions using the [Web Wallet](/wallet/web-wallet).
 
 In order to create an instance of the provider, do as follows:
 
 ```
-import { WalletProvider, WALLET_PROVIDER_DEVNET } from "@elrondnetwork/erdjs-web-wallet-provider";
+import { WalletProvider, WALLET_PROVIDER_DEVNET } from "@multiversx/sdk-web-wallet-provider";
 
 const provider = new WalletProvider(WALLET_PROVIDER_DEVNET);
 ```
 
-The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-erdjs-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
+The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-js-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
 
 ### Login and logout
 
@@ -82,7 +82,7 @@ await provider.login({ callbackUrl, token: authToken });
 Transactions can be signed as follows:
 
 ```
-import { Transaction } from "@elrondnetwork/erdjs";
+import { Transaction } from "@multiversx/sdk-core";
 
 const firstTransaction = new Transaction({ ... });
 const secondTransaction = new Transaction({ ... });
@@ -103,7 +103,7 @@ const plainSignedTransactions = provider.getTransactionsFromWalletUrl();
 The following workaround is subject to change.
 :::
 
-As of July 2022, the Web Wallet provider returns the data field as a plain string. However, erdjs' `Transaction.fromPlainObject()` expects it to be base64-encoded. Therefore, we need to apply a workaround (an additional conversion) on the results of `getTransactionsFromWalletUrl()`.
+As of July 2022, the Web Wallet provider returns the data field as a plain string. However, sdk-js' `Transaction.fromPlainObject()` expects it to be base64-encoded. Therefore, we need to apply a workaround (an additional conversion) on the results of `getTransactionsFromWalletUrl()`.
 
 ```
 for (const plainTransaction of plainSignedTransactions) {
@@ -129,12 +129,12 @@ As of July 2022, the web wallet provider does not allow one to sign arbitrary me
 Make sure you have a look over [this page](/wallet/wallet-extension), in advance.
 :::
 
-[`@elrondnetwork/erdjs-extension-provider`](https://github.com/multiversx/mx-sdk-erdjs-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
+[`@multiversx/sdk-js-extension-provider`](https://github.com/multiversx/mx-sdk-sdk-js-extension-provider) allows the users of a dApp to login and sign transactions using the [Maiar DeFi Wallet](/wallet/wallet-extension).
 
 In order to aquire the instance (singleton) of the provider, do as follows:
 
 ```
-import { ExtensionProvider } from "@elrondnetwork/erdjs-extension-provider";
+import { ExtensionProvider } from "@multiversx/sdk-extension-provider";
 
 const provider = ExtensionProvider.getInstance();
 ```
@@ -179,7 +179,7 @@ console.log("Token signature:", provider.account.signature);
 Transactions can be signed as follows:
 
 ```
-import { Transaction } from "@elrondnetwork/erdjs";
+import { Transaction } from "@multiversx/sdk-core";
 
 const firstTransaction = new Transaction({ ... });
 const secondTransaction = new Transaction({ ... });
@@ -194,7 +194,7 @@ await provider.signTransactions([firstTransaction, secondTransaction]);
 Arbitrary messages can be signed as follows:
 
 ```
-import { SignableMessage } from "@elrondnetwork/erdjs";
+import { SignableMessage } from "@multiversx/sdk-core";
 
 const message = new SignableMessage({
     message: Buffer.from("hello")
@@ -207,7 +207,7 @@ console.log(message.toJSON());
 
 ## The Wallet Connect provider
 
-[`@elrondnetwork/erdjs-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-erdjs-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
+[`@multiversx/sdk-js-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) allows the users of a dApp to login and sign transactions using Maiar (the mobile application).
 
 First, let's see a (simple) way to build a QR dialog using [`qrcode`](https://www.npmjs.com/package/qrcode) (and bootstrap):
 
@@ -230,7 +230,7 @@ function closeModal() {
 In order to create an instance of the provider, do as follows:
 
 ```
-import { WalletConnectProvider } from "@elrondnetwork/erdjs-wallet-connect-provider";
+import { WalletConnectProvider } from "@multiversx/sdk-wallet-connect-provider";
 
 var provider;
 
@@ -281,7 +281,7 @@ await provider.logout();
 Transactions can be signed as follows:
 
 ```
-import { Transaction } from "@elrondnetwork/erdjs";
+import { Transaction } from "@multiversx/sdk-core";
 
 const firstTransaction = new Transaction({ ... });
 const secondTransaction = new Transaction({ ... });
@@ -299,7 +299,7 @@ Alternatively, one can sign a single transaction using the method `signTransacti
 Documentation in this section is preliminary and subject to change.
 :::
 
-As of July 2022, erdjs' Wallet Connect provider does not allow one to sign arbitrary messages (only transaction signing is supported).
+As of July 2022, sdk-js' Wallet Connect provider does not allow one to sign arbitrary messages (only transaction signing is supported).
 
 ## The Hardware Wallet (Ledger) Provider
 
@@ -307,12 +307,12 @@ As of July 2022, erdjs' Wallet Connect provider does not allow one to sign arbit
 Make sure you have a look over [this page](/wallet/ledger), in advance.
 :::
 
-[`@elrondnetwork/erdjs-hw-provider`](https://github.com/multiversx/mx-sdk-erdjs-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
+[`@multiversx/sdk-hw-provider`](https://github.com/multiversx/mx-sdk-js-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
 
 In order to create an instance of the provider, do as follows:
 
 ```
-import { HWProvider } from "@elrondnetwork/erdjs-hw-provider";
+import { HWProvider } from "@multiversx/sdk-hw-provider";
 
 const provider = new HWProvider();
 ```
@@ -369,7 +369,7 @@ console.log("Signature:", signature.hex());
 Transactions can be signed as follows:
 
 ```
-import { Transaction } from "@elrondnetwork/erdjs";
+import { Transaction } from "@multiversx/sdk-core";
 
 const firstTransaction = new Transaction({ ... });
 const secondTransaction = new Transaction({ ... });
@@ -386,7 +386,7 @@ Alternatively, one can sign a single transaction using the method `signTransacti
 Arbitrary messages can be signed as follows:
 
 ```
-import { SignableMessage } from "@elrondnetwork/erdjs";
+import { SignableMessage } from "@multiversx/sdk-core";
 
 const message = new SignableMessage({
     message: Buffer.from("hello")
@@ -408,8 +408,8 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
     console.log("authToken:", authToken);
     console.log("signature:", signature);
 
-    // Note that the verification API will be improved in a future version of erdjs-walletcore.
-    // As of @elrondnetwork/erdjs-walletcore@v1.0.0, this API is a bit tedious:
+    // Note that the verification API will be improved in a future version of sdk-wallet.
+    // As of @multiversx/sdk-wallet@v1.0.0, this API is a bit tedious:
     const verifier = UserVerifier.fromAddress(new Address(address));
 
     const message = new SignableMessage({
