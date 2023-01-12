@@ -70,6 +70,7 @@ const sidebars = {
           "validators/nodes-scripts/use-docker",
           "validators/rating",
           "validators/redundancy",
+          "validators/node-configuration",
           "validators/node-operation-modes",
           "validators/import-db",
           "validators/node-cli",
