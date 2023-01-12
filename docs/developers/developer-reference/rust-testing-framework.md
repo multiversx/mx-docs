@@ -6,17 +6,18 @@ title: Rust Testing Framework
 ## Introduction
 
 The Rust testing framework was developed as an alternative to manually writing Mandos tests. This comes with many advantages:
+
 - being able to calculate values using variables
 - type checking
 - automatic serialization
 - far less verbose
 - semi-automatic generation of the Mandos tests
 
-The only disadvantage is that you need to learn something new! Jokes aside, keep in mind that this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work identically with the current VM version deployed on the mainnet.  
+The only disadvantage is that you need to learn something new! Jokes aside, keep in mind that this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work identically with the current VM version deployed on the mainnet.
 
-This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our Elrond VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section. 
+This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our MultiversX VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
 
-Please note that mandos generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.  
+Please note that mandos generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.
 
 ## Prerequisites
 
@@ -34,11 +35,11 @@ num-traits = "0.2"
 hex = "0.4"
 ```
 
-For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/examples/crowdfunding-esdt
+For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding-esdt
 
 You need a `tests` and a `mandos` folder in your contract. Create a `.rs` file in your `tests` folder.
 
-In your newly created test file, add the following code (adapt the `crowdfunding_esdt` namespace, the struct/variable names, and the contract wasm path according to your contract):  
+In your newly created test file, add the following code (adapt the `crowdfunding_esdt` namespace, the struct/variable names, and the contract wasm path according to your contract):
 
 ```rust
 use crowdfunding_esdt::*;
@@ -67,15 +68,15 @@ where
 }
 ```
 
-The `CrowdfundingSetup` struct isn't really needed, but it helps de-duplicating some code. You may add other fields in your struct if needed, but for now this is enough for our use-case. The only fields you'll need for any contract are `blockchain_wrapper` and `cf_wrapper`. The rest of the fields can be adapted according to your test scenario.  
+The `CrowdfundingSetup` struct isn't really needed, but it helps de-duplicating some code. You may add other fields in your struct if needed, but for now this is enough for our use-case. The only fields you'll need for any contract are `blockchain_wrapper` and `cf_wrapper`. The rest of the fields can be adapted according to your test scenario.
 
 And that's all you need to get started.
 
 ## Writing your first test
 
-The first test you need to write is the one simulating the deploy of your smart contract. For that, you need a user address and a contract address. Then you simply call the `init` function of the smart contract.  
+The first test you need to write is the one simulating the deploy of your smart contract. For that, you need a user address and a contract address. Then you simply call the `init` function of the smart contract.
 
-Since we're going to be using the same token ID everywhere, let's add it as a constant (and while we're at it, have the deadline as a constant as well): 
+Since we're going to be using the same token ID everywhere, let's add it as a constant (and while we're at it, have the deadline as a constant as well):
 
 ```rust
 const CF_TOKEN_ID: &[u8] = b"CROWD-123456";
@@ -127,11 +128,12 @@ where
 }
 ```
 
-The main object you're going to be interacting with is the `BlockchainStateWrapper`. It holds the entire (mocked) blockchain state at any given moment, and allows you to interact with the accounts.  
+The main object you're going to be interacting with is the `BlockchainStateWrapper`. It holds the entire (mocked) blockchain state at any given moment, and allows you to interact with the accounts.
 
-As you can see in the above test, we use the said wrapper to create an owner account, two other user accounts, and the Crowdfunding smart contract account.  
+As you can see in the above test, we use the said wrapper to create an owner account, two other user accounts, and the Crowdfunding smart contract account.
 
 Then, we set the ESDT balances for the two users, and deploy the smart contract, by using the `execute_tx` function of the `BlockchainStateWrapper` object. The arguments are:
+
 - caller address
 - contract wrapper (which contains the contract address and the contract object builder)
 - EGLD payment amount
@@ -146,7 +148,8 @@ let target = BigUint::<DebugApi>::from(2_000u32);
 Keep in mind you can't create managed types outside of the `execute_tx` functions.
 
 Some observations for the `execute_tx` function:
-- The return type for the lambda function is a `TxResult`, which has methods for checking for success or error: `assert_ok()` is used to check the tx worked. If you want to check error cases, you would use `assert_user_error("message")`.  
+
+- The return type for the lambda function is a `TxResult`, which has methods for checking for success or error: `assert_ok()` is used to check the tx worked. If you want to check error cases, you would use `assert_user_error("message")`.
 - After running the `init` function, we add a `setState` step in the generated Mandos, to simulate our deploy: `blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());`
 
 To test the scenario and generate the Mandos file, you have to create a test function:
@@ -161,7 +164,7 @@ fn init_test() {
 }
 ```
 
-And you're done for this step. You successfuly tested your contract's init function, and generated a Mandos scenario for it.  
+And you're done for this step. You successfuly tested your contract's init function, and generated a Mandos scenario for it.
 
 ## Testing transactions
 
@@ -193,9 +196,9 @@ fn fund_test() {
 }
 ```
 
-As you can see, we can directly call the storage mappers (like `deposit`) from within the contract and compare with a local value. No need to encode anything.  
+As you can see, we can directly call the storage mappers (like `deposit`) from within the contract and compare with a local value. No need to encode anything.
 
-If you also want to generate a Mandos scenario file for this transaction, this is where the bit of manual work comes in:  
+If you also want to generate a Mandos scenario file for this transaction, this is where the bit of manual work comes in:
 
 ```rust
     let mut sc_call = ScCallMandos::new(user_addr, cf_setup.cf_wrapper.address_ref(), "fund");
@@ -209,11 +212,11 @@ If you also want to generate a Mandos scenario file for this transaction, this i
         .write_mandos_output("_generated_fund.scen.json");
 ```
 
-You have to add this at the end of your `fund_test`. The more complex the call, the more arguments you'll have to add and such. The `SCCallMandos` struct has the `add_argument` method so you don't have to do any encoding by yourself.  
+You have to add this at the end of your `fund_test`. The more complex the call, the more arguments you'll have to add and such. The `SCCallMandos` struct has the `add_argument` method so you don't have to do any encoding by yourself.
 
 ## Testing queries
 
-Testing queries is similar to testing transactions, just with less arguments (since there is no caller, and no payment, and any modifications are automatically reverted): 
+Testing queries is similar to testing transactions, just with less arguments (since there is no caller, and no payment, and any modifications are automatically reverted):
 
 ```rust
 #[test]
@@ -290,7 +293,7 @@ Notice how we've changed the payment intentionally to an invalid token to check 
 
 ## Testing a successful funding campaign
 
-For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the Mandos generation out of this one:  
+For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the Mandos generation out of this one:
 
 ```rust
 #[test]
@@ -368,11 +371,11 @@ fn test_successful_cf() {
 }
 ```
 
-You've already seen most of the code in this test before already. The only new things are the `set_block_timestamp` and the `check_esdt_balance` methods of the wrapper. There are similar methods for setting block nonce, block random seed, etc., and the checking EGLD and SFT/NFT balances.  
+You've already seen most of the code in this test before already. The only new things are the `set_block_timestamp` and the `check_esdt_balance` methods of the wrapper. There are similar methods for setting block nonce, block random seed, etc., and the checking EGLD and SFT/NFT balances.
 
 ## Testing a failed funding campaign
 
-This is simimlar to the previous one, but instead we have the users claim instead of the owner after deadline.  
+This is simimlar to the previous one, but instead we have the users claim instead of the owner after deadline.
 
 ```rust
 #[test]
@@ -452,4 +455,4 @@ fn test_failed_cf() {
 
 ## Conclusion
 
-This tests cover pretty much every flow in the crowdfunding smart contract. Keep in mind that code can be deduplicated even more by having functions similar to the `setup_crowdfunding` function, but for the sake of the example, we've kept this as simple as possible. We hope this will make writing tests and debugging a lot easier moving forward!  
+These tests cover pretty much every flow in the crowdfunding smart contract. Keep in mind that code can be deduplicated even more by having functions similar to the `setup_crowdfunding` function, but for the sake of the example, we've kept this as simple as possible. We hope this will make writing tests and debugging a lot easier moving forward!

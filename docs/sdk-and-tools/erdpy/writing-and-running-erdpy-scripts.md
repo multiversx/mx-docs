@@ -3,11 +3,15 @@ id: writing-and-running-erdpy-scripts
 title: Writing and running erdpy scripts
 ---
 
+:::caution
+As of December 2022, the content on this page is deprecated - the page will be removed in the near future. Instead, please follow the [cookbook](/sdk-and-tools/erdpy/erdpy-cookbook).
+:::
+
 Since **erdpy** is not only a CLI tool, but also a **Python SDK**, one can write Python modules or scripts based on erdpy in order to interact with the Blockchain.
 
-Some examples can be found at the following location:
+Some examples can be found in the cookbook:
 
-- [elrond-sdk-erdpy examples](https://github.com/ElrondNetwork/elrond-sdk-erdpy/tree/master/examples)
+- [erdpy-cookbook](/sdk-and-tools/erdpy/erdpy-cookbook/)
 
 The examples include scenarios such as:
 

@@ -3,6 +3,10 @@ id: sending-bulk-transactions
 title: Sending bulk transactions
 ---
 
+:::caution
+As of December 2022, the content on this page is deprecated - the page will be removed in the near future. In order to sign and broadcast multiple transactions, please follow the approach depicted in the [cookbook](/sdk-and-tools/erdpy/erdpy-cookbook#broadcasting-transactions), instead.
+:::
+
 It is easy to prepare a set of transaction and then send them all at once using `erdpy`. Here's how.
 
 Requirements:
@@ -16,7 +20,7 @@ There will be 3 steps to fulfill:
 2. Prepare the transaction set, which involves you configuring a Bash script (provided below). This script will contain your desired transactions and will reference your PEM file.
 3. Execute the command that sends all the transactions in the prepared set.
 
-:::warning
+:::caution
 Make sure your terminal is running `bash`, and not `zsh` or any other shell. Run the following command:
 
 ```
@@ -75,7 +79,7 @@ declare -a TRANSACTIONS=(
 
 # DO NOT MODIFY ANYTHING FROM HERE ON
 
-PROXY="https://gateway.elrond.com"
+PROXY="https://gateway.multiversx.com"
 DENOMINATION="000000000000000000"
 
 # We recall the nonce of the wallet
@@ -84,8 +88,8 @@ NONCE=$(erdpy account get --nonce --address="$MYWALLET" --proxy="$PROXY")
 function send-bulk-tx {
   for transaction in "${TRANSACTIONS[@]}"; do
     set -- $transaction
-    erdpy --verbose tx new --send --outfile="bon-mission-tx-$NONCE.json" --pem=$PEM_FILE --nonce=$NONCE --receiver=$1 --value="$2$DENOMINATION" --gas-limit=50000 --proxy=$PROXY
-    echo "Transaction sent with nonce $NONCE and backed up to bon-mission-tx-$NONCE.json."
+    erdpy --verbose tx new --send --outfile="tx-$NONCE.json" --pem=$PEM_FILE --nonce=$NONCE --receiver=$1 --value="$2$DENOMINATION" --gas-limit=50000 --proxy=$PROXY
+    echo "Transaction sent with nonce $NONCE and backed up to tx-$NONCE.json."
     (( NONCE++ ))
   done
 }

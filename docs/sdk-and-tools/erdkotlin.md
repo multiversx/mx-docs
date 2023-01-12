@@ -3,11 +3,11 @@ id: erdkotlin
 title: erdkotlin
 ---
 
-Elrond SDK for Kotlin
+MultiversX SDK for Kotlin
 
-**erdkotlin** can be found here: [elrond-sdk-erdkotlin](https://github.com/ElrondNetwork/elrond-sdk-erdkotlin/).
+**erdkotlin** can be found here: [mx-sdk-erdkotlin](https://github.com/multiversx/mx-sdk-erdkotlin).
 It consists of Kotlin helpers and utilities for interacting with the Blockchain.
 
 :::tip
-The documentation can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdkotlin/).
+The documentation can be found [here](https://github.com/multiversx/mx-sdk-erdkotlin).
 :::

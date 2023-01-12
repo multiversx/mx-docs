@@ -10,9 +10,10 @@ Debugging smart contracts is possible with the integrated debugger in Visual Stu
 For this tutorial, you will need:
 - Visual Studio Code  
 - the [rust-analyser](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer) extension.  
+- the [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) extension.  
 - A [Rust test](rust-testing-framework.md)
 
-If you want to follow along, you can clone the [elrond-wasm-rs](https://github.com/ElrondNetwork/elrond-wasm-rs) repository and use the [crowdfunding-esdt](https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/contracts/examples/crowdfunding-esdt) example.  
+If you want to follow along, you can clone the [mx-sdk-rs](https://github.com/multiversx/mx-sdk-rs) repository and use the [crowdfunding-esdt](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding-esdt) example.  
 
 ## Step by step debugging
 

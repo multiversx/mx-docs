@@ -9,35 +9,34 @@ Follow the following table to guide you towards the action you are interested in
 
 ## Table of contents
 
-### erdjs - Javascript SDK
+### sdk-js - Javascript SDK
 
-| Name                                                                                                  | Description                                        |
-|-------------------------------------------------------------------------------------------------------|----------------------------------------------------|
-| [erdjs](/sdk-and-tools/erdjs/erdjs)                                                                   | High level overview about erdjs.                   |
-| [erdjs cookbook](/sdk-and-tools/erdjs/erdjs-cookbook)                                                 | Learn how to handle common tasks by using erdjs.   |
-| [Extending erdjs](/sdk-and-tools/erdjs/extending-erdjs)                                               | How to extend and tailor certain modules of erdjs. |
-| [Writing and testing erdjs interactions](/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions) | Write erdjs interactions for Visual Studio Code    |
-| [erdjs migration guides](/sdk-and-tools/erdjs/erdjs-migration-guides)                                 | Migrate from erdjs v9.x to v10+                    |
-| [erdjs signing providers](/sdk-and-tools/erdjs/erdjs-signing-providers)                               | Integrate erdjs signing providers.                 |
+| Name                                                                                                     | Description                                         |
+|----------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
+| [sdk-js](/sdk-and-tools/sdk-js)                                                                          | High level overview about sdk-js.                   |
+| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook)                                                 | Learn how to handle common tasks by using sdk-js.   |
+| [Extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js)                                               | How to extend and tailor certain modules of sdk-js. |
+| [Writing and testing sdk-js interactions](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions) | Write sdk-js interactions for Visual Studio Code    |
+| [sdk-js migration guides](/sdk-and-tools/sdk-js/sdk-js-migration-guides)                                 | Migrate from sdk-js v9.x to v10+                    |
+| [sdk-js signing providers](/sdk-and-tools/sdk-js/sdk-js-signing-providers)                               | Integrate sdk-js signing providers.                 |
 
+In addition to sdk-js, one could use the following Javascript library for performing wallet operations via CLI:
 
-In addition to erdjs, one could use the following Javascript library for performing wallet operations via CLI:
+| Name                                                  | Description                                                  |
+|-------------------------------------------------------|--------------------------------------------------------------|
+| [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli) | Lightweight CLI wrapper used to perform wallet interactions. |
 
-| Name                                                                                               | Description                                                  |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli)                                                  | Lightweight CLI wrapper used to perform wallet interactions. |
+### sdk-dapp - core functional logic of a dApp
 
-### dapp-core - core functional logic of a dApp
-
-| Name                                   | Description                                                                                                                                                                                                                                                                                |
-|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [dapp-core](/sdk-and-tools/dapp-core)  | React library aimed to help developers create dApps based on Elrond Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
+| Name                                | Description                                                                                                                                                                                                                                                                                    |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [sdk-dapp](/sdk-and-tools/sdk-dapp) | React library aimed to help developers create dApps based on MultiversX Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
 
 ### erdpy - Python SDK
 
 | Name                                                                                        | Description                                              |
 |---------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| [erdpy](/sdk-and-tools/erdpy/erdpy)                                                         | High level overview about erdpy.                         |
+| [erdpy](/sdk-and-tools/erdpy/)                                                              | High level overview about erdpy.                         |
 | [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy)                                   | How to install and get started with erdpy.               |
 | [Configuring erdpy](/sdk-and-tools/erdpy/configuring-erdpy)                                 | Change erdpy's basic configurations.                     |
 | [erdpy cli](/sdk-and-tools/erdpy/erdpy-cli)                                                 | How to use the Command Line Interface.                   |
@@ -46,42 +45,42 @@ In addition to erdjs, one could use the following Javascript library for perform
 | [Writing and running erdpy scripts](/sdk-and-tools/erdpy/writing-and-running-erdpy-scripts) | Write and run scripts made with erdpy.                   |
 | [Smart contract interactions](/sdk-and-tools/erdpy/smart-contract-interactions)             | Interact with Smart Contract.                            |
 
-### erdnest - NestJS SDK
+### sdk-nestjs - NestJS SDK
 
-| Name                          | Description                                            |
-|-------------------------------|--------------------------------------------------------|
-| [erdnest](/sdk-and-tools/erdnest) | NestJS SDK commonly used in the Elrond Microservice ecosystem. |
+| Name                                     | Description                                                        |
+|------------------------------------------|--------------------------------------------------------------------|
+| [nesdtjs sdk](/sdk-and-tools/sdk-nestjs) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
 
 ### erdgo - Golang SDK
 
-| Name                          | Description                                            |
-|-------------------------------|--------------------------------------------------------|
-| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with Elrond Blockchain. |
+| Name                          | Description                                                |
+|-------------------------------|------------------------------------------------------------|
+| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with MultiversX Blockchain. |
 
 ### erdjava - Java SDK
 
-| Name                              | Description                                       |
-|-----------------------------------|---------------------------------------------------|
-| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with Elrond Blockchain. |
+| Name                              | Description                                           |
+|-----------------------------------|-------------------------------------------------------|
+| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with MultiversX Blockchain. |
 
 ### erdcpp - C++ SDK
 
-| Name                            | Description                                      |
-|---------------------------------|--------------------------------------------------|
-| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with Elrond Blockchain. |
+| Name                            | Description                                          |
+|---------------------------------|------------------------------------------------------|
+| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with MultiversX Blockchain. |
 
 ### erdkotlin - Kotlin SDK
 
-| Name                                  | Description                                         |
-|---------------------------------------|-----------------------------------------------------|
-| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with Elrond Blockchain. |
+| Name                                  | Description                                             |
+|---------------------------------------|---------------------------------------------------------|
+| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with MultiversX Blockchain. |
 
 ### Node Rest API
 
 | Name                                                                     | Description                                                       |
 |--------------------------------------------------------------------------|-------------------------------------------------------------------|
-| [Rest API](/sdk-and-tools/rest-api/rest-api)                             | High level overview over the Elrond's Rest API.                   |
-| [api.elrond.com](/sdk-and-tools/rest-api/api-elrond-com)                 | Elrond's main API instance.                                       |
+| [Rest API](/sdk-and-tools/rest-api/)                                     | High level overview over the MultiversX's Rest API.               |
+| [api.multiversx.com](/sdk-and-tools/rest-api/multiversx-api)             | MultiversX's main API instance.                                   |
 | [Gateway overview](/sdk-and-tools/rest-api/gateway-overview)             | Gateway overview - public proxy instance.                         |
 | [Addresses](/sdk-and-tools/rest-api/addresses)                           | Rest API endpoints dedicated to addresses.                        |
 | [Transactions](/sdk-and-tools/rest-api/transactions)                     | Rest API endpoints dedicated to transactions.                     |
@@ -91,19 +90,19 @@ In addition to erdjs, one could use the following Javascript library for perform
 | [Virtual machine](/sdk-and-tools/rest-api/virtual-machine)               | Rest API endpoints dedicated to the SC execution VM.              |
 | [Versions and changelog](/sdk-and-tools/rest-api/versions-and-changelog) | What's new in different versions.                                 |
 
-### Proxy 
+### Proxy
 
-Proxy is an abstraction layer over the Elrond Network's sharding. It routes the API request to the desired shard and 
+Proxy is an abstraction layer over the MultiversX Network's sharding. It routes the API request to the desired shard and
 merges results when needed.
 
-| Name                                 | Description                                          |
-|--------------------------------------|------------------------------------------------------|
-| [Elrond Proxy](/sdk-and-tools/proxy) | A Rest API requests handler that abstracts sharding. |
+| Name                                     | Description                                          |
+|------------------------------------------|------------------------------------------------------|
+| [MultiversX Proxy](/sdk-and-tools/proxy) | A Rest API requests handler that abstracts sharding. |
 
 ### Elasticsearch
 
-Elrond Network uses Elasticsearch to index historical data. Find out more about how it can be configured.
+MultiversX Network uses Elasticsearch to index historical data. Find out more about how it can be configured.
 
-| Name                                           | Description                                                                  |
-|------------------------------------------------|------------------------------------------------------------------------------|
-| [Elasticsearch](/sdk-and-tools/elastic-search) | Make use of Elasticsearch near your nodes in order to keep historical data.  |
+| Name                                           | Description                                                                 |
+|------------------------------------------------|-----------------------------------------------------------------------------|
+| [Elasticsearch](/sdk-and-tools/elastic-search) | Make use of Elasticsearch near your nodes in order to keep historical data. |

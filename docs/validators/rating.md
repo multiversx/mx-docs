@@ -19,7 +19,7 @@ Validators gain or lose rating points in a round depending on their role in that
 Rating gains and losses on the metashard are different from the gains and losses on the normal shards.
 :::
 
-The past and current rating of an individual validator can be found in the Elrond Network Explorer at https://explorer.elrond.com/validators/nodes. Use the "Search" box to find a validator and click on its entry in the list. The "Node Details" page opens, which contains status information about the validator.
+The past and current rating of an individual validator can be found in the MultiversX Network Explorer at https://explorer.multiversx.com/nodes. Use the "Search" box to find a validator and click on its entry in the list. The "Node Details" page opens, which contains status information about the validator.
 
 The "Node Details" page displays a plot of the validator rating during the past epochs:
 
@@ -53,7 +53,7 @@ The only way to increase the rating of a validator is to keep it up-to-date, kee
 Running **multiple validators on a single machine** will impact your rating and consequently _your rewards,_ if the machine doesn't have the as many times the minimum requirements as there are validators running on it.
 :::
 
-# **Consensus probabilities**
+## **Consensus probabilities**
 
 Rating affects the probability of a validator to be selected in the consensus group of a round. This is done by applying **rating modifiers** on the probability of selection for each validator.
 

@@ -35,7 +35,7 @@ The deadline being a block timestamp can be expressed as a regular 64-bits unsig
 
 Try to avoid the signed version as much as possible (unless negative values are really possible and needed). There are some caveats with BigInt argument serialization that can lead to subtle bugs.
 
-Also note that BigUint logic does not reside in the contract, but is built into the Elrond VM API, to not bloat the contract code.
+Also note that BigUint logic does not reside in the contract, but is built into the MultiversX VM API, to not bloat the contract code.
 
 Let's test that initialization works.
 
@@ -106,20 +106,20 @@ Note the added `"arguments"` field in `scDeploy` and the added fields in storage
 
 Run the following commands:
 
-```
+```python
 erdpy contract build
 erdpy contract test
 ```
 
 You should once again see this:
 
-```
+```python
 Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 1. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-# **Funding the contract**
+## **Funding the contract**
 
 It is not enough to receive the funds, the contract also needs to keep track of who donated how much.
 
@@ -222,25 +222,25 @@ Explanation:
 
 Test it by running the commands again:
 
-```
+```python
 erdpy contract build
 erdpy contract test
 ```
 
 You should then see that both tests pass:
 
-```
+```python
 Scenario: crowdfunding-fund.scen.json ...   ok
 Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 2. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-# **Validation**
+## **Validation**
 
 It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block timestamp must be rejected. The idiomatic way to do this is:
 
-```
+```rust
     #[endpoint]
     #[payable("EGLD")]
     fn fund(&self) {
@@ -304,7 +304,7 @@ We branch this time from `crowdfunding-fund.scen.json`, where we already had a d
 
 By building and testing the contract again, you should see that all three tests pass:
 
-```
+```python
 Scenario: crowdfunding-fund-too-late.scen.json ...   ok
 Scenario: crowdfunding-fund.scen.json ...   ok
 Scenario: crowdfunding-init.scen.json ...   ok
@@ -312,7 +312,7 @@ Done. Passed: 3. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-# **Querying for the contract status**
+## **Querying for the contract status**
 
 The contract status can be known by anyone by looking into the storage and on the blockchain, but it is really inconvenient right now. Let's create an endpoint that gives this status directly. The status will be one of: `FundingPeriod`, `Successful` or `Failed`. We could use a number to represent it in code, but the nice way to do it is with an enum. We will take this opportunity to show how to create a serializable type that can be taken as argument, returned as result or saved in storage.
 
@@ -359,54 +359,52 @@ To test this method, we append one more step to the last test we worked on, `tes
 
 ```json
 {
-    "name": "trying to fund one block too late",
-    "steps": [
-        {
-            "step": "externalSteps",
-            "path": "crowdfunding-fund.scen.json"
-        },
-        {
-            "step": "setState",
-            "currentBlockInfo": {
-                "blockTimestamp": "123,001"
-            }
-        },
-        {
-            "step": "scCall",
-            "txId": "fund-too-late",
-            "tx": {
-                "from": "address:donor1",
-                "to": "sc:crowdfunding",
-                "egldValue": "10,000,000,000",
-                "function": "fund",
-                "arguments": [],
-                "gasLimit": "100,000,000",
-                "gasPrice": "0"
-            },
-            "expect": {
-                "out": [],
-                "status": "4",
-                "message": "str:cannot fund after deadline",
-                "gas": "*",
-                "refund": "*"
-            }
-        },
-        {
-            "step": "scQuery",
-            "txId": "check-status",
-            "tx": {
-                "to": "sc:crowdfunding",
-                "function": "status",
-                "arguments": []
-            },
-            "expect": {
-                "out": [
-                    "2"
-                ],
-                "status": "0"
-            }
-        }
-    ]
+  "name": "trying to fund one block too late",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "crowdfunding-fund.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "123,001"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "fund-too-late",
+      "tx": {
+        "from": "address:donor1",
+        "to": "sc:crowdfunding",
+        "egldValue": "10,000,000,000",
+        "function": "fund",
+        "arguments": [],
+        "gasLimit": "100,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "out": [],
+        "status": "4",
+        "message": "str:cannot fund after deadline",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "scQuery",
+      "txId": "check-status",
+      "tx": {
+        "to": "sc:crowdfunding",
+        "function": "status",
+        "arguments": []
+      },
+      "expect": {
+        "out": ["2"],
+        "status": "0"
+      }
+    }
+  ]
 }
 ```
 
@@ -416,7 +414,7 @@ Note the call to "status" at the end and the result `"out": [ "2" ]` , which is 
 
 Contract functions can return in principle any number of results, that is why `"out"` is a list.
 
-# **Claim functionality**
+## **Claim functionality**
 
 Finally, let's add the `claim` method. The `status` method we just implemented helps us keep the code tidy:
 
@@ -448,12 +446,11 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
     }
 ```
 
-The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.  
+The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.
 
-# **The final contract code**
+## **The final contract code**
 
 If you followed all the steps presented until now, you should have ended up with a contract that looks something like:
-
 
 ```rust,file=final.rs
 #![no_std]
@@ -562,13 +559,13 @@ pub trait Crowdfunding {
 
 As an exercise, try to add some more tests, especially ones involving the claim function.
 
-# **Next steps**
+## **Next steps**
 
 This concludes the first Rust elrond-wasm tutorial.
 
 For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html)
 
-If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/v0.35.0/contracts/examples
+If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/multiversx/mx-sdk-rs/tree/v0.35.0/contracts/examples
 
 :::tip
 When entering directly on the `elrond-wasm` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.

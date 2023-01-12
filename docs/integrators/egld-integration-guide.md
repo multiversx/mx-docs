@@ -3,19 +3,20 @@ id: egld-integration-guide
 title: EGLD integration guide
 ---
 
-This section provides high-level technical requirements of integrating the Elrond's native coin, EGLD in a platform that handles EGLD transactions for their users.
+This section provides high-level technical requirements of integrating the MultiversX's native coin, EGLD in a platform that handles EGLD transactions for their users.
 
 ## Overview
 
 In order to make possible for a platform to integrate EGLD transactions for its users, these are the minimum requirements:
+
 - [setting up an observing squad](/integrators/observing-squad)
 - [setting up a mechanism for accounts management](/integrators/accounts-management)
 - [setting up a mechanism for creating and signing transactions](/integrators/creating-transactions)
-- [setting up a mechanism that queries the blockchain for new transactions to process](/integrators/creating-transactions)
+- [setting up a mechanism that queries the blockchain for new transactions to process](/integrators/querying-the-blockchain/#querying-hyperblocks-and-fully-executed-transactions)
 
 ## Integration workflow
 
-An integration could mean an automatic system that parses all the transactions on the chain and performs different 
+An integration could mean an automatic system that parses all the transactions on the chain and performs different
 actions when an integrator's address is the sender or receiver of the transaction. Based on that, it should be able
 to sign transactions or update the user's balance internally. Also, different things such as hot wallets can be
 integrated as well for a better tokens management and less EGLD spent on gas.
@@ -23,10 +24,12 @@ integrated as well for a better tokens management and less EGLD spent on gas.
 In order to summarize the information and bring all the pieces together, this section will provide an example of how an integration can look:
 
 ### 1. Observing squad running
+
 The integrator has an observing squad (an observer on each shard + proxy) running and synced.
 
 ### 2. Getting hyperblock by nonce
-The system should always memorize the last processed nonce. After processing a hyperblock at a given nonce, it should 
+
+The system should always memorize the last processed nonce. After processing a hyperblock at a given nonce, it should
 move on to the hyperblock that corresponds to the next nonce (when available, if not already existing).
 
 In order to fetch the hyperblock for a given nonce, the system should perform an API call to `<proxy-url>/hyperblock/by-nonce/<nonce>`.
@@ -39,6 +42,7 @@ A good refresh interval for nonce-changing detection could be 2 seconds.
 :::
 
 #### 2.1. Fallback mechanism
+
 If, for example, a server issue occurs and the observing squad gets stuck, the latest processed nonce must be saved
 somewhere so when the observing squad is back online, the system should continue processing from the next nonce after the saved one.
 
@@ -46,6 +50,7 @@ somewhere so when the observing squad is back online, the system should continue
 
 For example, when the system is up, it should start processing from a nonce in the same epoch. Let's say the chain is in epoch
 5 and the first hyperblock nonce in that epoch is 900
+
 ```
 ...
 -> fetched hyperblock with nonce 900
@@ -63,8 +68,8 @@ For example, when the system is up, it should start processing from a nonce in t
 ...
 ```
 
-:::warning
-Keep in mind that a hyperblock shouldn't be processed twice as this might cause issues. 
+:::caution
+Keep in mind that a hyperblock shouldn't be processed twice as this might cause issues.
 Make sure the block processing and the saving of the last processed nonce should be atomic.
 :::
 
@@ -83,7 +88,7 @@ For example, if the receiver is an integrator's address, the integrator can upda
 ### Mentions
 
 - steps 2 and 3 should be executed in a continuous manner while always keeping record of the last processed nonce, in order to ensure
-that no transaction is skipped.
+  that no transaction is skipped.
 - other usual actions such as transferring (from time to time) all addresses funds to a hot wallet could also be implemented.
 
 ## Finality of the transactions / number of confirmations
@@ -92,16 +97,16 @@ The hyperblock includes only finalized transactions so only one confirmation is 
 
 ## Balances check
 
-From time to time, or for safety reasons before performing a transaction, an integrator would want to check the balance of some 
+From time to time, or for safety reasons before performing a transaction, an integrator would want to check the balance of some
 addresses. This can be performed via [Get address balance endpoint](/sdk-and-tools/rest-api/addresses#get-address-balance).
 
 ## Useful tools and examples
 
-Elrond SDKs or tools can be used for signing transactions and performing accounts management. 
+MultiversX SDKs or tools can be used for signing transactions and performing accounts management.
 
-A complete list and more detailed information can be found on the [accounts management](/integrators/accounts-management) and 
+A complete list and more detailed information can be found on the [accounts management](/integrators/accounts-management) and
 [signing transaction](/integrators/creating-transactions) sections.
 
-There is also an example that matches the above-presented workflow and can be found on the Go SDK for Elrond, [erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
+There is also an example that matches the above-presented workflow and can be found on the Go SDK for MultiversX, [erdgo](https://github.com/multiversx/mx-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
 
 However, other SDKs can be used as well for handling accounts management or transaction signing.

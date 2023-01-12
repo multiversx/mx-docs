@@ -9,7 +9,7 @@ In order to view the current configuration, one can issue the command `erdpy con
 
 ```
 {
-    "proxy": "https://gateway.elrond.com",
+    "proxy": "https://gateway.multiversx.com",
     "txVersion": "1",
     "dependencies.llvm.tag": "v...",
     "dependencies.vmtools.tag": "v...",
@@ -22,15 +22,15 @@ One can alter the current configuration using the command `erdpy config set`. Fo
 
 ```
 $ erdpy config set chainID 1...
-$ erdpy config set proxy https://gateway.elrond.com
+$ erdpy config set proxy https://gateway.multiversx.com
 ```
 
 :::note
-For `mainnet` use `proxy: https://gateway.elrond.com` and `chainID: 1`.
+For `mainnet` use `proxy: https://gateway.multiversx.com` and `chainID: 1`.
 
-For `devnet` use `proxy: https://devnet-gateway.elrond.com` and `chainID: D`.
+For `devnet` use `proxy: https://devnet-gateway.multiversx.com` and `chainID: D`.
 
-For `testnet` use `proxy: https://testnet-api.elrond.com` and `chainID: T`.
+For `testnet` use `proxy: https://testnet-api.multiversx.com` and `chainID: T`.
 :::
 
 :::tip
