@@ -7,7 +7,7 @@ title: Staking smart contract tutorial
 
 This tutorial aims to teach you how to write a simple staking contract, and to illustrate and correct the common pitfalls new smart contract developers might fall into.
 
-If you find anything not answered here, feel free to ask further questions on the MultiversX Developers Telegram channel: https://t.me/ElrondDevelopers
+If you find anything not answered here, feel free to ask further questions on the MultiversX Developers Telegram channel: https://t.me/MultiversXDevelopers
 
 ## Prerequisites
 

@@ -9,7 +9,7 @@ Relayed transactions (or meta-transactions) are transactions with the fee paid b
 In other words, if a relayer is willing to pay for an interaction, it is not mandatory that the address
 interacting with a Smart Contract has any EGLD for fees.
 
-More details and specifications can be found on [MultiversX Specs](https://github.com/ElrondNetwork/elrond-specs/blob/main/sc-meta-transactions.md).
+More details and specifications can be found on [MultiversX Specs](https://github.com/multiversx/mx-specs/blob/main/sc-meta-transactions.md).
 
 ## Types of relayed transactions
 
@@ -80,8 +80,8 @@ a transaction.
 
 Resources:
 
-- [relayedTransactionV1Builder](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV1Builder.ts)
-- [tests/example](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV1Builder.spec.ts)
+- [relayedTransactionV1Builder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV1Builder.ts)
+- [tests/example](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV1Builder.spec.ts)
 
 ### Example
 
@@ -184,8 +184,8 @@ a transaction.
 
 Resources:
 
-- [relayedTransactionV2Builder](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV2Builder.ts)
-- [tests/example](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/relayedTransactionV2Builder.spec.ts)
+- [relayedTransactionV2Builder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV2Builder.ts)
+- [tests/example](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV2Builder.spec.ts)
 
 ### Example
 

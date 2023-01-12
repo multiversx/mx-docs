@@ -19,7 +19,7 @@ Before diving into contract build reproducibility, let's grasp the concept of `c
 
 When a smart contract is deployed, the network stores the bytecode, and also computes its `blake2b` checksum (using a digest length of 256 bits). This is called the `codehash`.
 
-Assume that we are interested into the following contract, deployed on _devnet_: [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy). It's source code is published on [GitHub](https://github.com/ElrondNetwork/reproducible-contract-build-example).
+Assume that we are interested into the following contract, deployed on _devnet_: [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy). It's source code is published on [GitHub](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
 
 We can fetch the _codehash_ of the contract from the API:
 
@@ -58,7 +58,7 @@ As of October 2022, the recommended approach to support reproducible builds for 
 This approach is recommended in order to counteract eventual pieces of non-determinism related to `cargo`'s (essential component of the Rust toolchain) sensibility on the environment.
 
 :::important
-If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [this one](https://github.com/ElrondNetwork/reproducible-contract-build-example/blob/main/.github/workflows/release-create.yml), which performs the deployment (production-ready) build within the _release_ procedure.
+If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [this one](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/blob/main/.github/workflows/release-create.yml), which performs the deployment (production-ready) build within the _release_ procedure.
 :::
 
 ### Choose an image tag
@@ -90,14 +90,14 @@ In this section, you'll learn how to run a reproducible build, or, to put it dif
 
 ### Fetch the source code
 
-Let's clone the [example source code](https://github.com/ElrondNetwork/reproducible-contract-build-example) locally, and switch to [a certain version](https://github.com/ElrondNetwork/reproducible-contract-build-example/releases/tag/v0.1.4) that we'd like to build:
+Let's clone the [example source code](https://github.com/multiversx/mx-reproducible-contract-build-example-sc) locally, and switch to [a certain version](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) that we'd like to build:
 
 ```bash
 mkdir -p ~/contracts && cd ~/contracts
-git clone https://github.com/ElrondNetwork/reproducible-contract-build-example.git --branch=v0.1.4 --depth=1
+git clone https://github.com/multiversx/mx-reproducible-contract-build-example-sc.git --branch=v0.1.4 --depth=1
 ```
 
-By inspecting the release notes, we see that [`v0.1.4`](https://github.com/ElrondNetwork/reproducible-contract-build-example/releases/tag/v0.1.4) was built using the `image:tag = elrondnetwork/build-contract-rust:v2.0.0`.
+By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = elrondnetwork/build-contract-rust:v2.0.0`.
 
 ### Download the build wrapper
 

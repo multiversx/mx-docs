@@ -66,9 +66,9 @@ of the language the transaction is created in.
 There are multiple ways of formatting the data field:
 
 - manually convert each argument, and then join the function name, alongside the argument via the `@` character.
-- use a pre-defined arguments serializer, such as [the one found in erdjs](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/smartcontracts/argSerializer.ts).
+- use a pre-defined arguments serializer, such as [the one found in erdjs](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/smartcontracts/argSerializer.ts).
 - use erdjs's [contract calls](/sdk-and-tools/erdjs/erdjs-cookbook/#contract-interactions).
-- use erdcpp's [contract calls](https://github.com/ElrondNetwork/elrond-sdk-erdcpp/blob/main/src/smartcontracts/contract_call.cpp).
+- use erdcpp's [contract calls](https://github.com/multiversx/mx-sdk-cpp/blob/main/src/smartcontracts/contract_call.cpp).
 - and so on
 
 ## Converting bech32 addresses (erd1)
@@ -125,7 +125,7 @@ erdpy wallet bech32 --encode 0139472eff6886771a982f3083da5d421f24c29181e63888228
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
-The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdpy/blob/main/erdpy/wallet/bech32.py).
+The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/erdpy/wallet/bech32.py).
 
 ### Converting addresses using erdjs
 
@@ -153,7 +153,7 @@ console.log(address.bech32());
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
-The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/address.ts).
+The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/address.ts).
 
 ### Converting addresses using erdgo
 
@@ -162,7 +162,7 @@ Find more about `erdgo` [here](/sdk-and-tools/erdgo/).
 ```js
 import (
     ...
-    "github.com/ElrondNetwork/elrond-sdk-erdgo/data"
+    "github.com/multiversx/mx-sdk-go/data"
     ...
 )
 
@@ -182,7 +182,7 @@ Additionally, hex addresses can be converted to bech32 as follows:
 ```js
 import (
     ...
-    "github.com/ElrondNetwork/elrond-sdk-erdgo/data"
+    "ggithub.com/multiversx/mx-sdk-go/data"
     ...
 )
 
@@ -197,7 +197,7 @@ fmt.Println(addressObj.AddressAsBech32String())
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
-The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-go-core/blob/main/core/pubkeyConverter/bech32PubkeyConverter.go).
+The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-chain-core-go/blob/main/core/pubkeyConverter/bech32PubkeyConverter.go).
 
 ### Converting addresses using erdjava
 
@@ -217,7 +217,7 @@ System.out.println(Address.fromHex("0139472eff6886771a982f3083da5d421f24c29181e6
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
-The encoding algorithm that handles these conversions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjava/blob/main/src/main/java/elrond/Address.java).
+The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-java/blob/main/src/main/java/multiversx/Address.java).
 
 ## Converting string values
 
@@ -336,7 +336,7 @@ let bn = new BigNumber(hexValue, 16);
 console.log(bn.toString()); // 37
 ```
 
-Also, `erdjs` includes some [utility functions](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/utils.codec.ts) for padding the results.
+Also, `erdjs` includes some [utility functions](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/utils.codec.ts) for padding the results.
 
 ### Converting numeric values in go
 
