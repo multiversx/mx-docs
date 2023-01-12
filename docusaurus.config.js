@@ -200,7 +200,6 @@ const config = {
         ],
         createRedirects(existingPath) {
           if (existingPath.includes("/erdjs")) {
-            // Redirect from /docs/team/X to /community/X and /docs/support/X to /community/X
             return [
                 // erdjs -> sdk-js
               existingPath.replace("/sdk-and-tools/erdjs", "/sdk-and-tools/sdk-js"),
