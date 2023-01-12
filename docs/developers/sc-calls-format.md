@@ -60,14 +60,14 @@ There are multiple ways of converting arguments from their original format to th
 
 For manually created transactions, arguments can be encoded by using tools that can be found online. For example, `hex to string`, `hex to decimal` and so on.
 
-For programmatically created transactions, arguments can be encoded by using one of our SDKs (`erdjs`, `erdpy`, `erdgo`, `erdjava`, and so on) or by using built-in components or other libraries
+For programmatically created transactions, arguments can be encoded by using one of our SDKs (`sdk-js`, `erdpy`, `erdgo`, `erdjava`, and so on) or by using built-in components or other libraries
 of the language the transaction is created in.
 
 There are multiple ways of formatting the data field:
 
 - manually convert each argument, and then join the function name, alongside the argument via the `@` character.
-- use a pre-defined arguments serializer, such as [the one found in erdjs](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/smartcontracts/argSerializer.ts).
-- use erdjs's [contract calls](/sdk-and-tools/erdjs/erdjs-cookbook/#contract-interactions).
+- use a pre-defined arguments serializer, such as [the one found in sdk-js](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/smartcontracts/argSerializer.ts).
+- use sdk-js's [contract calls](/sdk-and-tools/sdk-js/sdk-js-cookbook/#contract-interactions).
 - use erdcpp's [contract calls](https://github.com/multiversx/mx-sdk-cpp/blob/main/src/smartcontracts/contract_call.cpp).
 - and so on
 
@@ -127,12 +127,12 @@ will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
 The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/erdpy/wallet/bech32.py).
 
-### Converting addresses using erdjs
+### Converting addresses using sdk-js
 
-Find more about `erdjs` [here](/sdk-and-tools/erdjs/).
+Find more about `sdk-js` [here](/sdk-and-tools/sdk-js/).
 
 ```js
-import { Address } from "@elrondnetwork/erdjs";
+import { Address } from "@multiversx/sdk-core";
 ...
 
 const address = Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th");
@@ -144,7 +144,7 @@ will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 Additionally, hex addresses can be converted to bech32 as follows:
 
 ```js
-import { Address } from "@elrondnetwork/erdjs";
+import { Address } from "@multiversx/sdk-core";
 ...
 
 const address = Address.fromHex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1");
@@ -336,7 +336,7 @@ let bn = new BigNumber(hexValue, 16);
 console.log(bn.toString()); // 37
 ```
 
-Also, `erdjs` includes some [utility functions](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/utils.codec.ts) for padding the results.
+Also, `sdk-js` includes some [utility functions](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/utils.codec.ts) for padding the results.
 
 ### Converting numeric values in go
 

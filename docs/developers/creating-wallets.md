@@ -9,52 +9,44 @@ Although wallets are commonly created through the [MultiversX Web Wallet](https:
 
 ## **Generate a new mnemonic**
 
-Using [erdwalletjs-cli](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli), a mnemonic phrase (24 words) can be generated as follows:
+Using [mxjs-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a mnemonic phrase (24 words) can be generated as follows:
 
 ```bash
-erdwalletjs new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
+mxjs-wallet new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
 ```
 
-Programmatically using [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js), the same can be achieved through:
+Programmatically using [sdk-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet), the same can be achieved through:
 
 ```js
-const core = require("@elrondnetwork/elrond-core-js");
+import { Mnemonic } from "@multiversx/sdk-wallet/mnemonic";
 
-let account = new core.account();
-let mnemonic = account.generateMnemonic();
-console.log(mnemonic);
+let mnemonic = Mnemonic.generate();
+let words = mnemonic.getWords();
+console.log(words);
 ```
 
 ## **Deriving a JSON key-file (from mnemonic)**
 
-Using [erdwalletjs-cli](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli), a JSON key-file can be obtained as follows:
+Using [mxjs-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a JSON key-file can be obtained as follows:
 
 ```bash
-erdwalletjs derive-key --mnemonic-file=mnemonicOfAlice.txt \
+mxjs-wallet derive-key --mnemonic-file=mnemonicOfAlice.txt \
  --account-index=0 \
  --key-file=keyOfAlice.json --password-file=passwordOfAlice.txt
 ```
 
-Programmatically using [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js), the same can be achieved through:
+Programmatically using [sdk-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet), the same can be achieved through:
 
 ```js
-const fs = require("fs");
-const core = require("@elrondnetwork/elrond-core-js");
+const mnemonic = Mnemonic.generate();
+const password = "insert a password here";
+const addressIndex = 0;
 
-let mnemonic = "foo bar ...";
-let password = "pass for JSON key-file";
-let accountIndex = 0;
+const privateKey = mnemonic.deriveKey(addressIndex);
 
-let account = new core.account();
-let privateKeyHex = account.privateKeyFromMnemonic(
-  mnemonic,
-  false,
-  accountIndex.toString(),
-  ""
-);
-let privateKey = Buffer.from(privateKeyHex, "hex");
-let keyFileObject = account.generateKeyFileFromPrivateKey(privateKey, password);
-let keyFileJson = JSON.stringify(keyFileObject, null, 4);
+const userWallet = new UserWallet(privateKey, password);
 
-fs.writeFileSync("myKeyFile.json", keyFileJson);
+const jsonFileContent = userWallet.toJSON();
+
+fs.writeFileSync("myKeyFile.json", JSON.stringify(jsonFileContent));
 ```

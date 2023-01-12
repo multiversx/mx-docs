@@ -1,12 +1,12 @@
 ---
-id: erdjs-cookbook
+id: sdk-js-cookbook
 title: Cookbook
 ---
 
-This page will guide you through the process of handling common tasks using **erdjs**.
+This page will guide you through the process of handling common tasks using **sdk-js**.
 
 :::important
-This cookbook makes use of `erdjs 10`. In order to migrate from `erdjs 9.x` to `erdjs 10`, please follow [the migration guide](/sdk-and-tools/erdjs/erdjs-migration-guides).
+This cookbook makes use of `sdk-js 10`. In order to migrate from `sdk-js 9.x` to `sdk-js 10`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
 :::
 
 ## Creating network providers
@@ -14,7 +14,7 @@ This cookbook makes use of `erdjs 10`. In order to migrate from `erdjs 9.x` to `
 Creating an API provider:
 
 ```
-import { ApiNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
+import { ApiNetworkProvider } from "@multiversx/sdk-network-providers";
 
 let networkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com");
 ```
@@ -22,15 +22,15 @@ let networkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com"
 Creating a Proxy provider:
 
 ```
-import { ProxyNetworkProvider } from "@elrondnetwork/erdjs-network-providers";
+import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers";
 
 let networkProvider = new ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
 :::important
-Use the classes from `@elrondnetwork/erdjs-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
+Use the classes from `@multiversx/sdk-network-providers` **only as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
-On this topic, please see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
+On this topic, please see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 :::
 
 ## Fetching network parameters
@@ -76,7 +76,7 @@ For further reference, please see [nonce management](/integrators/creating-trans
 ## Preparing payment objects
 
 :::important
-In **erdjs 9x**, the payments were prepared using the classes `Balance` and `BalanceBuilder`. In **erdjs 10**, we use `TokenPayment`.
+In **sdk-js 9x**, the payments were prepared using the classes `Balance` and `BalanceBuilder`. In **sdk-js 10**, we use `TokenPayment`.
 :::
 
 A `TokenPayment` object for **EGLD transfers** (value movements):
@@ -147,7 +147,7 @@ let txHash = await networkProvider.sendTransaction(tx);
 Note that the transaction needs to be signed before broadcasting it. Signing can be achieved using a signing provider.
 
 :::important
-Note that, for all purposes, **we recommend using [dapp-core](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
+Note that, for all purposes, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 ### Broadcast using `axios`
@@ -183,7 +183,7 @@ In order to wait for multiple transactions:
 await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), watcher.awaitCompleted(tx3)]);
 ```
 
-For a different awaiting strategy, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
+For a different awaiting strategy, also see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 
 ## Token transfers
 
@@ -208,7 +208,7 @@ transactions.push(new Transaction({
 ### Single NFT transfer
 
 ```
-let payment = TokenPayment.nonFungible("ERDJS-38f249", 1);
+let payment = TokenPayment.nonFungible("SDKJS-38f249", 1);
 let payload = new ESDTNFTTransferPayloadBuilder()
     .setPayment(payment)
     .setDestination(new Address("erd1..."))
@@ -248,7 +248,7 @@ transactions.push(new Transaction({
 ### Multi ESDT / NFT transfer
 
 ```
-let paymentOne = TokenPayment.nonFungible("ERDJS-38f249", 1);
+let paymentOne = TokenPayment.nonFungible("SDKJS-38f249", 1);
 let paymentTwo = TokenPayment.fungibleFromAmount("BAR-c80d29", "10.00", 18);
 let payments = [paymentOne, paymentTwo];
 let payload = new MultiESDTNFTTransferPayloadBuilder()
@@ -272,7 +272,7 @@ transactions.push(new Transaction({
 ### Load the bytecode from a file
 
 ```
-import { Code } from "@elrondnetwork/erdjs";
+import { Code } from "@multiversx/sdk-core";
 import { promises } from "fs";
 
 let buffer: Buffer = await promises.readFile(file);
@@ -348,7 +348,7 @@ let { returnCode } = new ResultsParser().parseUntypedOutcome(transactionOnNetwor
 ### Load the ABI from a file
 
 ```
-import { AbiRegistry } from "@elrondnetwork/erdjs";
+import { AbiRegistry } from "@multiversx/sdk-core";
 import { promises } from "fs";
 
 let jsonContent: string = await promises.readFile("myAbi.json", { encoding: "utf8" });
@@ -513,7 +513,7 @@ For single payments, do as follows:
 interaction.withSingleESDTTransfer(TokenPayment.fungibleFromAmount("FOO-6ce17b", "1.5", 18));
 
 // Non-fungible token
-interaction.withSingleESDTNFTTransfer(TokenPayment.nonFungible("ERDJS-38f249", 1));
+interaction.withSingleESDTNFTTransfer(TokenPayment.nonFungible("SDKJS-38f249", 1));
 ```
 
 For multiple payments:
@@ -521,14 +521,14 @@ For multiple payments:
 ```
 interaction.withMultiESDTNFTTransfer([
     TokenPayment.fungibleFromAmount("FOO-6ce17b", "1.5", 18)
-    TokenPayment.nonFungible("ERDJS-38f249", 1)
+    TokenPayment.nonFungible("SDKJS-38f249", 1)
 ]);
 ```
 
 ## Parsing contract results
 
 :::important
-When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/multiversx/mx-sdk-erdjs/issues), and also provide as much details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
+When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/multiversx/mx-sdk-js-core/issues), and also provide as many details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
 :::
 
 ### When the ABI is not available
@@ -559,18 +559,18 @@ Alternatively, the `endpointDefinition` can be obtained from the `SmartContract`
 let endpointDefinition = smartContract.getEndpoint("myFunction");
 ```
 
-For customizing the default parser, also see [extending erdjs](/sdk-and-tools/erdjs/extending-erdjs).
+For customizing the default parser, also see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 
 ## Signing objects
 
 :::note
-For **dApps**, use the available **[signing providers](/sdk-and-tools/erdjs/erdjs-signing-providers)** instead.
+For **dApps**, use the available **[signing providers](/sdk-and-tools/sdk-js/sdk-js-signing-providers)** instead.
 :::
 
 Creating a `UserSigner` from a JSON wallet:
 
 ```
-import { UserSigner } from "@elrondnetwork/erdjs-walletcore";
+import { UserSigner } from "@multiversx/sdk-wallet";
 
 const walletObject = JSON.parse(fs.readFileSync(filePath, { encoding: "utf8" }));
 const signer = UserSigner.fromWallet(walletObject, "password");
@@ -592,12 +592,12 @@ interface ISignable {
 }
 ```
 
-Both `Transaction` and `Message` - defined in `erdjs` - implement `ISignable`.
+Both `Transaction` and `Message` - defined in `sdk-js` - implement `ISignable`.
 
 Signing a transaction:
 
 ```
-import { Transaction } from "@elrondnetwork/erdjs";
+import { Transaction } from "@multiversx/sdk-core";
 
 const transaction = new Transaction({ ... });
 
@@ -609,7 +609,7 @@ console.log("Transaction hash", transaction.getHash().hex());
 Signing an arbitrary message:
 
 ```
-import { SignableMessage } from "@elrondnetwork/erdjs";
+import { SignableMessage } from "@multiversx/sdk-core";
 
 const dataExample = `${address}hello{}`;
 const message = new SignableMessage({
@@ -626,7 +626,7 @@ console.log("Message signature", signature);
 Creating a `UserVerifier`:
 
 ```
-import { UserVerifier } from "@elrondnetwork/erdjs-walletcore";
+import { UserVerifier } from "@multiversx/sdk-wallet";
 
 const alice = Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th");
 const bob = Address.fromBech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx");
@@ -643,7 +643,7 @@ interface IVerifiable {
 }
 ```
 
-Both `Transaction` and `Message` - defined in `erdjs` - implement `IVerifiable`.
+Both `Transaction` and `Message` - defined in `sdk-js` - implement `IVerifiable`.
 
 Suppose we have the following transaction:
 
@@ -700,13 +700,13 @@ let metadata = new TransactionDecoder().getTransactionMetadata({
 });
 ```
 
-### Using the `esdtHelpers` and `scArgumentsParser` of `erdjs 9x`
+### Using the `esdtHelpers` and `scArgumentsParser` of `sdk-js 9x`
 
-The classes `esdtHelpers` and `scArgumentsParser` have been removed in `erdjs 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above).
+The classes `esdtHelpers` and `scArgumentsParser` have been removed in `sdk-js 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above).
 
 However, you can still find the previous implementations at the following location:
 
-- [esdtHelpers](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts)
-- [esdtHelpers examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/esdtHelpers.spec.ts)
-- [scArgumentsParser](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.ts)
-- [scArgumentsParser examples](https://github.com/multiversx/mx-sdk-erdjs/blob/release/v9/src/scArgumentsParser.spec.ts)
+- [esdtHelpers](https://github.com/multiversx/mx-sdk-js-core/blob/release/v9/src/esdtHelpers.ts)
+- [esdtHelpers examples](https://github.com/multiversx/mx-sdk-js-core/blob/release/v9/src/esdtHelpers.spec.ts)
+- [scArgumentsParser](https://github.com/multiversx/mx-sdk-js-core/blob/release/v9/src/scArgumentsParser.ts)
+- [scArgumentsParser examples](https://github.com/multiversx/mx-sdk-js-core/blob/release/v9/src/scArgumentsParser.spec.ts)

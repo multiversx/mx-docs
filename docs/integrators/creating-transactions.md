@@ -27,12 +27,12 @@ As described in section [Signing Transactions](/developers/signing-transactions)
 There are SDKs or tools with support for interacting with the MultiversX blockchain, so one can use one of the following SDKs to perform
 transactions creation and signing:
 
-- [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)
+- [sdk-js - JavaScript SDK](/sdk-and-tools/sdk-js)
 - [erdpy - Python SDK](/sdk-and-tools/erdpy)
 - [erdgo - Golang SDK](/sdk-and-tools/erdgo)
 - [erdjava - Java SDK](/sdk-and-tools/erdjava)
-- [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli)
-- [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http)
+- [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
+- [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 
 ## **General network parameters**
 
