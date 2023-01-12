@@ -5,7 +5,7 @@ title: Deep History Squad
 
 ## Overview
 
-A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/ElrondNetwork/deep-history)**.
+A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/multiversx/mx-chain-deep-history)**.
 
 A deep-history setup is able to resolve historical account (state) queries, that is, to answer questions such as:
 
@@ -42,7 +42,7 @@ Since each observer of a deep-history squad must have a non-pruned history, thei
 ### Downloading non-pruned database
 
 :::tip
-As of October 2022, a public repository with non-pruned databases for both _mainnet_ and _devnet_ is under construction. This repository would take the shape of a _Digital Ocean (S3-compatible) Space_. Once the repository is ready, the data can be downloaded via **[db-archive-scripts](https://github.com/ElrondNetwork/db-archive-scripts)** - documentation will follow.
+As of October 2022, a public repository with non-pruned databases for both _mainnet_ and _devnet_ is under construction. This repository would take the shape of a _Digital Ocean (S3-compatible) Space_. Once the repository is ready, the data can be downloaded via **[db-archive-scripts](https://github.com/multiversx/mx-chain-db-archive-scripts)** - documentation will follow.
 :::
 
 ### Reconstructing non-pruned database
@@ -59,7 +59,7 @@ _Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a
 
 First, choose an empty folder to serve as the workspace (working directory) of the squad instance - for example, `~/deep-history-workspace`.
 
-Afterward, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/ElrondNetwork/deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the MultiversX public archive (which are available [on request](https://t.me/ElrondDevelopers)). The URLs in the example below are mere placeholders.
+Afterward, prepare a configuration file called `reconstruction.json`, following the example of [`default.reconstruction.json`](https://github.com/multiversx/mx-chain-deep-history/tree/main), and save it in the chosen workspace. For the fields `oldestArchive` and `newestArchive`, use URLs towards the MultiversX public archive (which are available [on request](https://t.me/MultiversXDevelopers)). The URLs in the example below are mere placeholders.
 
 ```
 // ~/deep-history-workspace/reconstruction.json
@@ -95,7 +95,7 @@ Now, bootstrap the reconstruction as follows:
 
 ```
 # Download the docker-compose configuration
-wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
+wget https://github.com/multiversx/mx-chain-deep-history/blob/main/docker-compose.yml
 
 # Run the "bootstrap" Docker service
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
@@ -116,7 +116,7 @@ Once the bootstrap step is ready, you can proceed with running the reconstructio
 
 ```
 # Download the docker-compose configuration (skip this step if performed before)
-wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
+wget https://github.com/multiversx/mx-chain-deep-history/blob/main/docker-compose.yml
 
 # Possible profiles: reconstruction-devnet, reconstruction-devnet-0, reconstruction-devnet-1, reconstruction-devnet-2, reconstruction-devnet-metachain
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
@@ -137,7 +137,7 @@ The squad can be started using docker-compose, as follows (the example is for _d
 
 ```
 # Download the docker-compose configuration (skip this step if performed before)
-wget https://github.com/ElrondNetwork/deep-history/blob/main/docker-compose.yml
+wget https://github.com/multiversx/mx-chain-deep-history/blob/main/docker-compose.yml
 
 # Possible profiles: squad-devnet, squad-devnet-0, squad-devnet-1, squad-devnet-2, squad-devnet-metachain, squad-devnet-proxy
 DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \

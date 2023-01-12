@@ -6,7 +6,7 @@ title: MultiversX Node upgrades
 ## **Introduction**
 
 Once a new node's binary is ready to be deployed on one of the networks (mainnet, testnet or devnet), nodes operators must
-perform the upgrade to the newest version. These releases are always announced on MultiversX [Validators chat](https://t.me/ElrondValidators)
+perform the upgrade to the newest version. These releases are always announced on MultiversX [Validators chat](https://t.me/MultiversXValidators)
 plus via other communication channels, depending on the case.
 
 ## **When to upgrade**
