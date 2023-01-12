@@ -179,6 +179,46 @@ const config = {
       slugPreprocessor: (slugBase) =>
         slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, ""),
     }),
+
+  plugins: [
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [
+          {
+            from: "/sdk-and-tools/rest-api/api-com/",
+            to: "/sdk-and-tools/rest-api/multiversx-api/",
+          },
+          {
+            from: "/validators/elrond-go-scripts/config-scripts",
+            to: "/validators/nodes-scripts/config-scripts",
+          },
+          {
+            from: "/validators/elrond-go-scripts/install-update",
+            to: "/validators/nodes-scripts/install-update",
+          },
+          {
+            from: "/sdk-and-tools/dapp-core",
+            to: "/sdk-and-tools/sdk-dapp",
+          }
+        ],
+        createRedirects(existingPath) {
+          if (existingPath.includes("/erdjs")) {
+            return [
+                // erdjs -> sdk-js
+              existingPath.replace("/sdk-and-tools/erdjs", "/sdk-and-tools/sdk-js"),
+              existingPath.replace("/sdk-and-tools/erdjs/erdjs-cookbook", "sdk-and-tools/sdk-js/sdk-js-cookbook"),
+              existingPath.replace("/sdk-and-tools/erdjs/extending-erdjs", "sdk-and-tools/sdk-js/extending-sdk-js"),
+              existingPath.replace("/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions", "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions"),
+              existingPath.replace("/sdk-and-tools/erdjs/erdjs-migration-guides", "sdk-and-tools/sdk-js/sdk-js-migration-guides"),
+              existingPath.replace("/sdk-and-tools/erdjs/erdjs-signing-providers", "sdk-and-tools/sdk-js/sdk-js-signing-providers"),
+            ];
+          }
+          return undefined; // Return a falsy value: no redirect created
+        },
+      },
+    ],
+  ],
 };
 
 module.exports = config;
