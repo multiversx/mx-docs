@@ -27,8 +27,6 @@ dapp-core can be found on npmjs as well: https://www.npmjs.com/package/@elrondne
 
 The [mx-template-dapp](https://github.com/multiversx/mx-template-dapp) that is used in [Build a dApp in 15 minutes](/developers/tutorials/your-first-dapp) is based on `dapp-core`.
 
-A live demo of the dapp-template is available at [https://dapp-template.elrond.com/](https://dapp-template.elrond.com/).
-
 ### Requirements
 
 - Node.js version 12.16.2+
