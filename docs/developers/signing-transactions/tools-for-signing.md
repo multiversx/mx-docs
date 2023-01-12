@@ -47,7 +47,7 @@ In either case, the output file looks like this:
 }
 ```
 
-## **Sign using [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli)**
+## **Sign using [mxjs-wallet](/sdk-and-tools/sdk-js-wallet-cli)**
 
 Given an unsigned transaction in a JSON file:
 
@@ -67,7 +67,7 @@ Given an unsigned transaction in a JSON file:
 You can sign it as follows:
 
 ```
-$ erdwalletjs sign -i ./aliceToBob.json -o ./aliceToBobSigned.json \
+$ mxjs-wallet sign -i ./aliceToBob.json -o ./aliceToBobSigned.json \
  -k walletKeyOfAlice.json -p passwordOfAlice.txt
 ```
 

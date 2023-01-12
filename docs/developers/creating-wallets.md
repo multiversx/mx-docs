@@ -9,10 +9,10 @@ Although wallets are commonly created through the [MultiversX Web Wallet](https:
 
 ## **Generate a new mnemonic**
 
-Using [sdk-wallet-cli](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a mnemonic phrase (24 words) can be generated as follows:
+Using [mxjs-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a mnemonic phrase (24 words) can be generated as follows:
 
 ```bash
-erdwalletjs new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
+mxjs-wallet new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
 ```
 
 Programmatically using [sdk-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet), the same can be achieved through:
@@ -27,10 +27,10 @@ console.log(words);
 
 ## **Deriving a JSON key-file (from mnemonic)**
 
-Using [sdk-wallet-cli](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a JSON key-file can be obtained as follows:
+Using [mxjs-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a JSON key-file can be obtained as follows:
 
 ```bash
-erdwalletjs derive-key --mnemonic-file=mnemonicOfAlice.txt \
+mxjs-wallet derive-key --mnemonic-file=mnemonicOfAlice.txt \
  --account-index=0 \
  --key-file=keyOfAlice.json --password-file=passwordOfAlice.txt
 ```
@@ -39,7 +39,7 @@ Programmatically using [sdk-wallet](https://www.npmjs.com/package/@multiversx/sd
 
 ```js
 const mnemonic = Mnemonic.generate();
-const password = "my non secure password";
+const password = "insert a password here";
 const addressIndex = 0;
 
 const privateKey = mnemonic.deriveKey(addressIndex);

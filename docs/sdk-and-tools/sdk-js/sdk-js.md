@@ -13,7 +13,7 @@ MultiversX SDK for TypeScript and JavaScript
 | [sdk-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet)                       | [Github](https://github.com/multiversx/mx-sdk-js-wallet)            | Core wallet components (generation, signing).                                  |
 | sdk-contract-wrappers                                                                    | [Github](https://github.com/multiversx/mx-sdk-js-contract-wrappers) | Smart Contract wrappers, based on sdk-js. NodeJS repl-friendly.                |
 | [sdk-network-providers](https://www.npmjs.com/package/@multiversx/sdk-network-providers) | [Github](https://github.com/multiversx/mx-sdk-js-network-providers) | Network Provider (API, Gateway) components (compatible with sdk-js).           |
-| sdk-dex                                                                                  | [Github](https://github.com/multiversx/mx-sdk-js-dex)               | Utilities modules for xExchange interactions.                                  |
+| [sdk-exchange](https://www.npmjs.com/package/@multiversx/sdk-exchange)                   | [Github](https://github.com/multiversx/mx-sdk-js-exchange)          | Utilities modules for xExchange interactions.                                  |
 
 Signing providers for dApps:
 
@@ -26,7 +26,7 @@ Signing providers for dApps:
 | [sdk-extension-provider](https://www.npmjs.com/package/@multiversx/sdk-extension-provider)       | [Github](https://github.com/multiversx/mx-sdk-js-extension-provider)      | Sign using the Maiar DeFi Wallet (browser extension).                                         |
 
 :::important
-For all purposes, **we recommend using [dapp-core](/sdk-and-tools/dapp-core)** instead of integrating the signing providers on your own.
+For all purposes, **we recommend using [sdk-dapp](/sdk-and-tools/sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 For more details about integrating a signing provider into your dApp, please follow [this guide](/sdk-and-tools/sdk-js/sdk-js-signing-providers) or the [mx-sdk-js-examples repository](https://github.com/multiversx/mx-sdk-js-examples).

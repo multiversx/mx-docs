@@ -32,7 +32,7 @@ transactions creation and signing:
 - [erdgo - Golang SDK](/sdk-and-tools/erdgo)
 - [erdjava - Java SDK](/sdk-and-tools/erdjava)
 - [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
-- [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http)
+- [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 
 ## **General network parameters**
 

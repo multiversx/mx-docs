@@ -197,6 +197,10 @@ const config = {
             from: "/validators/elrond-go-scripts/install-update",
             to: "/validators/nodes-scripts/install-update",
           },
+          {
+            from: "/sdk-and-tools/dapp-core",
+            to: "/sdk-and-tools/sdk-dapp",
+          }
         ],
         createRedirects(existingPath) {
           if (existingPath.includes("/erdjs")) {

@@ -3,10 +3,10 @@ id: sdk-js-signing-providers
 title: Signing Providers for dApps
 ---
 
-This page will guide you through the process of integrating the **sdk-js signing providers** in a dApp which isn't based on `dapp-core`.
+This page will guide you through the process of integrating the **sdk-js signing providers** in a dApp which isn't based on `sdk-dapp`.
 
 :::important
-Note that for most purposes, **we recommend using [dapp-core](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
+Note that for most purposes, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 :::important

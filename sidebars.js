@@ -213,7 +213,7 @@ const sidebars = {
           "sdk-and-tools/rest-api/versions-and-changelog",
         ],
       },
-      "sdk-and-tools/dapp-core",
+      "sdk-and-tools/sdk-dapp",
       "sdk-and-tools/proxy",
       "sdk-and-tools/elastic-search",
       {

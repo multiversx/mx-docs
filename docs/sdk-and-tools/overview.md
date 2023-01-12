@@ -26,11 +26,11 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 |-------------------------------------------------------|--------------------------------------------------------------|
 | [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli) | Lightweight CLI wrapper used to perform wallet interactions. |
 
-### dapp-core - core functional logic of a dApp
+### sdk-dapp - core functional logic of a dApp
 
-| Name                                  | Description                                                                                                                                                                                                                                                                                    |
-|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [dapp-core](/sdk-and-tools/dapp-core) | React library aimed to help developers create dApps based on MultiversX Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
+| Name                                | Description                                                                                                                                                                                                                                                                                    |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [sdk-dapp](/sdk-and-tools/sdk-dapp) | React library aimed to help developers create dApps based on MultiversX Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
 
 ### erdpy - Python SDK
 
