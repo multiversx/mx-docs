@@ -9,7 +9,7 @@ Although wallets are commonly created through the [MultiversX Web Wallet](https:
 
 ## **Generate a new mnemonic**
 
-Using [erdwalletjs-cli](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a mnemonic phrase (24 words) can be generated as follows:
+Using [sdk-wallet-cli](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a mnemonic phrase (24 words) can be generated as follows:
 
 ```bash
 erdwalletjs new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
