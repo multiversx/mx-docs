@@ -5,28 +5,20 @@ title: Cookbook
 
 ## Overview
 
-This page will guide you through the process of handling common tasks using **erdpy** _as a library_ (as opposed to _as a CLI tool_).
+This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries).
 
 :::note
-All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/ElrondNetwork/sdk-erdpy-examples)**.
+All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py-examples)**.
 :::
 
-We are going to make use of the packages [erdpy_core](https://github.com/ElrondNetwork/sdk-erdpy-core), [erdpy_wallet](https://github.com/ElrondNetwork/sdk-erdpy-wallet) and [erdpy_network](https://github.com/ElrondNetwork/sdk-erdpy-network-providers) (available as of December 2022), which were previously nicknamed _erdpy-eggs_. These packages should be installed **directly from GitHub** whenever possible (although they are published on [**PyPI**](https://pypi.org/user/elrond/), as well). For example:
+We are going to make use of the packages [multiversx-sdk-core](https://github.com/multiversx/mx-sdk-py-core), [multiversx-sdk-wallet](https://github.com/multiversx/mx-sdk-py-wallet) and [multiversx-sdk-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) (available as of January 2023), which were previously nicknamed _erdpy-eggs_. These packages can be installed directly from GitHub or from [**PyPI**](https://pypi.org/user/MultiversX). 
+
+Example for installing the packages directly from GitHub, using a `requirements.txt` file:
 
 ```
-pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-core.git@v1.2.3#egg=erdpy_core
-
-pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-wallet.git@v4.5.6#egg=erdpy_wallet
-
-pip3 install git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network_providers
-```
-
-If you are using a `requirements.txt` file, reference them as follows (example):
-
-```
-git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-core.git@v1.2.3#egg=erdpy_core
-git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-wallet.git@v4.5.6#egg=erdpy_wallet
-git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-network-providers.git@v7.8.9#egg=erdpy_network_providers
+git+https://git@github.com/multiversx/mx-sdk-py-core.git@v1.2.3#egg=multiversx_sdk_core
+git+https://git@github.com/multiversx/mx-sdk-py-wallet.git@v4.5.6#egg=multiversx_sdk_wallet
+git+https://git@github.com/multiversx/mx-sdk-py-network-providers.git@v7.8.9#egg=multiversx_sdk_network_providers
 ```
 
 These packages are distributed separately and have individual release schedules (make sure to check the **release tags on GitHub**), but they are designed to work together, with as little impedance mismatch as possible.
@@ -35,14 +27,14 @@ These packages are distributed separately and have individual release schedules 
 Documentation is preliminary and subject to change (the packages might suffer a series of breaking changes in January 2023).
 :::
 
-<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/ElrondNetwork/mx-sdk-erdpy-examples/main/Cookbook.ipynb" } -->
+<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py-examples/main/Cookbook.ipynb" } -->
 
 ## Addresses
 
 Create an `Address` object from a _bech32-encoded_ string:
 
 ```
-from erdpy_core import Address
+from multiversx_sdk_core import Address
 
 address = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
@@ -67,7 +59,7 @@ address = Address(pubkey, "erd")
 Alternatively, you can use an `AddressFactory` (initialized with a specific **HRP**) to create addresses:
 
 ```
-from erdpy_core import AddressFactory
+from multiversx_sdk_core import AddressFactory
 
 factory = AddressFactory("erd")
 
@@ -86,7 +78,7 @@ print(address.hex())
 ... or using a converter:
 
 ```
-from erdpy_core import AddressConverter
+from multiversx_sdk_core import AddressConverter
 
 converter = AddressConverter("erd")
 
@@ -113,7 +105,7 @@ print("Is contract:", address.is_smart_contract())
 Create an EGLD transfer:
 
 ```
-from erdpy_core import Address, TokenPayment, Transaction
+from multiversx_sdk_core import Address, TokenPayment, Transaction
 
 tx = Transaction(
     nonce=90,
@@ -134,7 +126,7 @@ We'll see later how to [sign](#signing-objects) and [broadcast](#broadcasting-tr
 Create an EGLD transfer, but this time with a payload (data):
 
 ```
-from erdpy_core import TransactionPayload
+from multiversx_sdk_core import TransactionPayload
 
 data = TransactionPayload.from_str("for the book")
 
@@ -156,7 +148,7 @@ print(tx.to_dictionary())
 Alternatively, we can create an EGLD transfer using a **transaction builder** (as we will see below, transaction builders are more commonly used). But before that, we have to create a configuration object (for any builder that we might use):
 
 ```
-from erdpy_core.transaction_builders import DefaultTransactionBuildersConfiguration
+from multiversx_sdk_core.transaction_builders import DefaultTransactionBuildersConfiguration
 
 config = DefaultTransactionBuildersConfiguration(chain_id="D")
 ```
@@ -164,7 +156,7 @@ config = DefaultTransactionBuildersConfiguration(chain_id="D")
 The **transaction builder** is parametrized at instantiation, and the transaction is obtained by invoking the `build()` method:
 
 ```
-from erdpy_core.transaction_builders import EGLDTransferBuilder
+from multiversx_sdk_core.transaction_builders import EGLDTransferBuilder
 
 alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
@@ -189,7 +181,7 @@ print("Transaction data:", tx.data)
 Create a single ESDT transfer:
 
 ```
-from erdpy_core.transaction_builders import ESDTTransferBuilder
+from multiversx_sdk_core.transaction_builders import ESDTTransferBuilder
 
 payment = TokenPayment.fungible_from_amount("COUNTER-8b028f", "100.00", 2)
 
@@ -208,9 +200,9 @@ print("Transaction data:", tx.data)
 Create a single NFT transfer:
 
 ```
-from erdpy_core.transaction_builders import ESDTNFTTransferBuilder
+from multiversx_sdk_core.transaction_builders import ESDTNFTTransferBuilder
 
-payment = TokenPayment.non_fungible("ERDPY-38f249", 1)
+payment = TokenPayment.non_fungible("TEST-38f249", 1)
 
 builder = ESDTNFTTransferBuilder(
     config=config,
@@ -244,9 +236,9 @@ print("Transaction data:", tx.data)
 Create a multiple ESDT / NFT transfer:
 
 ```
-from erdpy_core.transaction_builders import MultiESDTNFTTransferBuilder
+from multiversx_sdk_core.transaction_builders import MultiESDTNFTTransferBuilder
 
-payment_one = TokenPayment.non_fungible("ERDPY-38f249", 1)
+payment_one = TokenPayment.non_fungible("TEST-38f249", 1)
 payment_two = TokenPayment.fungible_from_amount("BAR-c80d29", "10.00", 18)
 
 builder = MultiESDTNFTTransferBuilder(
@@ -268,8 +260,8 @@ Create a transaction to deploy a smart contract:
 ```
 from pathlib import Path
 
-from erdpy_core import CodeMetadata
-from erdpy_core.transaction_builders import ContractDeploymentBuilder
+from multiversx_sdk_core import CodeMetadata
+from multiversx_sdk_core.transaction_builders import ContractDeploymentBuilder
 
 metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
 
@@ -290,7 +282,7 @@ print("Transaction data:", tx.data)
 Create a transaction to upgrade an existing smart contract:
 
 ```
-from erdpy_core.transaction_builders import ContractUpgradeBuilder
+from multiversx_sdk_core.transaction_builders import ContractUpgradeBuilder
 
 contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
 owner = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -314,7 +306,7 @@ print("Transaction data:", tx.data)
 Create a transaction that invokes a smart contract function:
 
 ```
-from erdpy_core.transaction_builders import ContractCallBuilder
+from multiversx_sdk_core.transaction_builders import ContractCallBuilder
 
 contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
 
@@ -336,7 +328,7 @@ Now, let's create a call that also transfers one or more tokens (**transfer & ex
 
 ```
 transfers = [
-    TokenPayment.non_fungible("ERDPY-38f249", 1),
+    TokenPayment.non_fungible("TEST-38f249", 1),
     TokenPayment.fungible_from_amount("BAR-c80d29", "10.00", 18)
 ]
 
@@ -360,9 +352,9 @@ print("Transaction data:", tx.data)
 In order to create a contract query and run it against a network provider (more details about **network providers** can be found below), do as follows:
 
 ```
-from erdpy_core import ContractQueryBuilder
-from erdpy_core.interfaces import IAddress
-from erdpy_network_providers import ApiNetworkProvider
+from multiversx_sdk_core import ContractQueryBuilder
+from multiversx_sdk_core.interfaces import IAddress
+from multiversx_sdk_network_providers import ApiNetworkProvider
 
 contract: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqpgqnzm7yhayarylux045qlm4lgzmtcsgrqg396qr9kupx")
 
@@ -387,7 +379,7 @@ print("Return data:", response.return_data)
 Mnemonic generation is based on [`trezor/python-mnemonic`](https://github.com/trezor/python-mnemonic) and can be achieved as follows:
 
 ```
-from erdpy_wallet import Mnemonic
+from multiversx_sdk_wallet import Mnemonic
 
 mnemonic = Mnemonic.generate()
 words = mnemonic.get_words()
@@ -408,7 +400,7 @@ print("Public key", public_key.hex())
 A keypair can be saved as a JSON wallet (recommended):
 
 ```
-from erdpy_wallet import UserWallet
+from multiversx_sdk_wallet import UserWallet
 
 wallet = UserWallet(secret_key, "password")
 wallet.save(Path("./output/wallet.json"), address_hrp="erd")
@@ -417,7 +409,7 @@ wallet.save(Path("./output/wallet.json"), address_hrp="erd")
 ... or as a PEM wallet (usually not recommended):
 
 ```
-from erdpy_wallet import UserPEM
+from multiversx_sdk_wallet import UserPEM
 
 label = Address(public_key.buffer, "erd").bech32()
 pem = UserPEM(label=label, secret_key=secret_key)
@@ -431,7 +423,7 @@ This is not a very common use-case - you might refer to [signing objects](#signi
 From a JSON wallet:
 
 ```
-from erdpy_wallet import UserWallet
+from multiversx_sdk_wallet import UserWallet
 
 secret_key = UserWallet.decrypt_secret_key_from_file(Path("./testwallets/alice.json"), "password")
 public_key = secret_key.generate_public_key()
@@ -443,7 +435,7 @@ print("Public key", public_key.hex())
 From a PEM file:
 
 ```
-from erdpy_wallet import UserPEM
+from multiversx_sdk_wallet import UserPEM
 
 pem = UserPEM.from_file(Path("./testwallets/alice.pem"))
 
@@ -456,7 +448,7 @@ print("Public key", pem.public_key.hex())
 Creating a `UserSigner` from a JSON wallet:
 
 ```
-from erdpy_wallet import UserSigner
+from multiversx_sdk_wallet import UserSigner
 
 signer = UserSigner.from_wallet(Path("./testwallets/alice.json"), "password")
 ```
@@ -474,12 +466,12 @@ class ISignable(Protocol):
     def serialize_for_signing(self) -> bytes: ...
 ```
 
-Both `Transaction` and `Message` - defined in `erdpy_core` - implement `ISignable`.
+Both `Transaction` and `Message` - defined in `multiversx_sdk_core` - implement `ISignable`.
 
 Signing a transaction:
 
 ```
-from erdpy_core import Transaction
+from multiversx_sdk_core import Transaction
 
 tx = Transaction(
     nonce=90,
@@ -499,7 +491,7 @@ print("Signature", tx.signature.hex())
 Signing an arbitrary message:
 
 ```
-from erdpy_core import Message
+from multiversx_sdk_core import Message
 
 message = Message.from_string("hello")
 message.signature = signer.sign(message)
@@ -512,8 +504,8 @@ print("Signature", message.signature.hex())
 Creating a `UserVerifier`:
 
 ```
-from erdpy_core import Address
-from erdpy_wallet import UserVerifier
+from multiversx_sdk_core import Address
+from multiversx_sdk_wallet import UserVerifier
 
 alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
@@ -529,7 +521,7 @@ class IVerifiable(Protocol):
     def serialize_for_signing(self) -> bytes: ...
 ```
 
-Both `Transaction` and `Message` - defined in `erdpy_core` - implement `IVerifiable`.
+Both `Transaction` and `Message` - defined in `multiversx_sdk_core` - implement `IVerifiable`.
 
 Verifying a signature:
 
@@ -542,12 +534,12 @@ print(f"Is signature of Bob?", bob_verifier.verify(message))
 
 ## Creating network providers
 
-It's recommended to use the `erdpy_network_providers` components **as a starting point**. As your application matures, switch to using your own network provider (e.g. deriving from the default ones), tailored to your requirements.
+It's recommended to use the `multiversx_sdk_network_providers` components **as a starting point**. As your application matures, switch to using your own network provider (e.g. deriving from the default ones), tailored to your requirements.
 
 Creating an API provider:
 
 ```
-from erdpy_network_providers import ApiNetworkProvider
+from multiversx_sdk_network_providers import ApiNetworkProvider
 
 provider = ApiNetworkProvider("https://devnet-api.multiversx.com");
 ```
@@ -555,7 +547,7 @@ provider = ApiNetworkProvider("https://devnet-api.multiversx.com");
 Creating a Proxy provider:
 
 ```
-from erdpy_network_providers import ProxyNetworkProvider
+from multiversx_sdk_network_providers import ProxyNetworkProvider
 
 provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
@@ -585,7 +577,7 @@ print("Balance", account_on_network.balance)
 When sending a number of transactions, you usually have to first fetch the account nonce from the network (see above), then manage it locally (e.g. increment upon signing & broadcasting a transaction):
 
 ```
-from erdpy_core import AccountNonceHolder
+from multiversx_sdk_core import AccountNonceHolder
 
 nonce_holder = AccountNonceHolder(account_on_network.nonce)
 
@@ -664,5 +656,4 @@ tx_on_network = provider.get_transaction("09e3b68d39f3759913239b927c7feb9ac871c8
 print("Status:", tx_on_network.status)
 print("Is completed:", tx_on_network.is_completed)
 ```
-
 <!-- END_NOTEBOOK -->
