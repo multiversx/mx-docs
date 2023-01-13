@@ -20,7 +20,6 @@ In order to ensure that the new added content is correctly aligned and every Mar
 ### Steps:
 
 - clone the repository
-- go to the `website` directory from a terminal
 - run `npm install` (only for the first usage)
 - run `npm start`
 - access `http://localhost:3000` to view your local version of the docs
