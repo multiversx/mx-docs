@@ -77,27 +77,27 @@ sudo apt-get update
 sudo apt install libncurses5 build-essential python3-pip nodejs npm python3.8-venv
 ```
 
-We'll also need `erdpy`, the MultiversX command line tool, which is helpful for signing transactions, deploying smart contracts, managing wallets, accounts and validators. We'll use it to deploy our smart contract.
-Erdpy can be installed using the MultiversX documentation page [https://docs.multiversx.com/sdk-and-tools/erdpy/installing-erdpy](https://docs.multiversx.com/sdk-and-tools/erdpy/installing-erdpy)
+We'll also need `mxpy`, the MultiversX command line tool, which is helpful for signing transactions, deploying smart contracts, managing wallets, accounts and validators. We'll use it to deploy our smart contract.
+mxpy can be installed using the MultiversX documentation page [https://docs.multiversx.com/sdk-and-tools/mxpy/installing-mxpy](https://docs.multiversx.com/sdk-and-tools/mxpy/installing-mxpy)
 
-We'll download the `erdpy` installer and we run it
+We'll download the `mxpy` installer and we run it
 
 ```sh
-wget -O erdpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-erdpy/main/erdpy-up.py
-python3 erdpy-up.py
+wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py
+python3 mxpy-up.py
 ```
 
-Restart the user session to activate `erdpy`
+Restart the user session to activate `mxpy`
 
 ```sh
 source ~/.profile
 ```
 
-In order to install `erdpy` on **MacOs**, you need to make sure you have installed `python 3.8` and `pip` on your system.
-Then, install the latest `erdpy` version,using `pip`.
+In order to install `mxpy` on **MacOs**, you need to make sure you have installed `python 3.8` and `pip` on your system.
+Then, install the latest `mxpy` version,using `pip`.
 
 ```sh
-pip3 install --user --upgrade --no-cache-dir erdpy
+pip3 install --user --upgrade --no-cache-dir mxpy
 ```
 
 If you encounter any error relating to `pynacl` package, make sure you have `libsodium` installed.
@@ -118,7 +118,7 @@ We can also generate a private key PEM file, like this we won't need to enter ou
 
 ```sh
 cd ~/ping-pong/wallet
-erdpy --verbose wallet derive ./wallet-owner.pem --mnemonic
+mxpy --verbose wallet derive ./wallet-owner.pem --mnemonic
 ```
 
 We will enter our **24 secret words** when prompted and a new PEM file will be created. This command requires that you enter all 24 words each separated by a space.
@@ -152,7 +152,7 @@ We now have the source code for the smart contract, but we need to compile it in
 Run the following command in order to build the rust smart contract into a _wasm file_.
 
 ```sh
-erdpy contract build
+mxpy contract build
 ```
 
 On the last line of the output we'll have:
@@ -170,7 +170,7 @@ Next step is to deploy the contract to the blockchain.
 
 **Customize the variables**
 
-Optionally we can customize the default params in `erdpy.json`:
+Optionally we can customize the default params in `mxpy.json`:
 
 ```javascript
 {
@@ -200,7 +200,7 @@ For now let's continue with the default values.
 We will run:
 
 ```sh
-erdpy contract deploy
+mxpy contract deploy
 ```
 
 We'll take a look at the log output. We have 2 elements that need our attention: the contract address and the transaction hash. Let's check them in the [Devnet Explorer](https://devnet-explorer.multiversx.com).
@@ -251,7 +251,7 @@ We'll take a look on the first instruction:
 export const contractAddress = "erd1qqqqqqqqqqqqq...";
 ```
 
-and we'll change it to our contract address that was shown after erdpy contract deploy:
+and we'll change it to our contract address that was shown after mxpy contract deploy:
 
 ```javascript
 export const contractAddress =

@@ -1,5 +1,5 @@
 ---
-id: erdpy-cookbook
+id: mxpy-cookbook
 title: Cookbook
 ---
 

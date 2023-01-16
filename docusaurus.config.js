@@ -214,6 +214,21 @@ const config = {
               existingPath.replace("/sdk-and-tools/erdjs/erdjs-signing-providers", "sdk-and-tools/sdk-js/sdk-js-signing-providers"),
             ];
           }
+          if (existingPath.includes("/erdpy")) {
+            return [
+              // erdpy -> mxpy
+              existingPath.replace("/sdk-and-tools/erdpy", "/sdk-and-tools/mxpy"),
+              existingPath.replace("/sdk-and-tools/erdpy/erdpy", "sdk-and-tools/mxpy/mxpy-cookbook"),
+              existingPath.replace("/sdk-and-tools/erdpy/erdpy-cookbook", "sdk-and-tools/mxpy/mxpy-cookbook"),
+              existingPath.replace("/sdk-and-tools/erdpy/installing-erdpy", "sdk-and-tools/mxpy/installing-mxpy"),
+              existingPath.replace("/sdk-and-tools/erdpy/configuring-erdpy", "sdk-and-tools/mxpy/configuring-mxpy"),
+              existingPath.replace("/sdk-and-tools/erdpy/erdpy-cli", "sdk-and-tools/mxpy/mxpy-cli"),
+              existingPath.replace("/sdk-and-tools/erdpy/deriving-the-wallet-pem-file", "sdk-and-tools/mxpy/deriving-the-wallet-pem-file"),
+              existingPath.replace("/sdk-and-tools/erdpy/sending-bulk-transactions", "sdk-and-tools/mxpy/sending-bulk-transactions"),
+              existingPath.replace("/sdk-and-tools/erdpy/writing-and-running-mxpy-scripts", "sdk-and-tools/mxpy/writing-and-running-mxpy-scripts"),
+              existingPath.replace("/sdk-and-tools/erdpy/smart-contract-interactions", "sdk-and-tools/mxpy/smart-contract-interactions"),
+            ];
+          }
           return undefined; // Return a falsy value: no redirect created
         },
       },

@@ -157,22 +157,22 @@ $ curl http://localhost:7950/network/config
 
 Given the request above, extract and save the fields `erd_chain_id` and `erd_min_transaction_version` from the response. You will need them in order to send transactions against your local Testnet.
 
-## **Configuring erdpy**
+## **Configuring mxpy**
 
-You can configure erdpy to point to your local Testnet by default:
+You can configure mxpy to point to your local Testnet by default:
 
 ```bash
-$ erdpy config set chainID 15...
-$ erdpy config set txVersion 123
-$ erdpy config set proxy http://localhost:7950
+$ mxpy config set chainID 15...
+$ mxpy config set txVersion 123
+$ mxpy config set proxy http://localhost:7950
 ```
 
 ## **Sending transactions**
 
-Let's send a simple transaction using **erdpy:**
+Let's send a simple transaction using **mxpy:**
 
 ```bash
-$ erdpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
+$ mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1... \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
  --send
@@ -186,11 +186,11 @@ $ curl http://localhost:7950/transaction/1363...
 
 ## **Deploying and interacting with Smart Contracts**
 
-Let's deploy a Smart Contract using **erdpy**. We'll use the Simple Counter as an example.
+Let's deploy a Smart Contract using **mxpy**. We'll use the Simple Counter as an example.
 
 ```bash
 Deploy
-erdpy --verbose contract deploy --bytecode=./mycounter/output/counter.wasm \
+mxpy --verbose contract deploy --bytecode=./mycounter/output/counter.wasm \
  --recall-nonce --gas-limit=5000000 \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
  --outfile=myCounter.json \
@@ -208,7 +208,7 @@ If everything is fine (transaction status is `executed` and the `code` property 
 
 ```bash
 Call
-erdpy --verbose contract call erd1qqqqqqqqqqqqqpgql... \
+mxpy --verbose contract call erd1qqqqqqqqqqqqqpgql... \
  --recall-nonce --gas-limit=1000000 --function=increment \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 --outfile=myCall.json \
  --send
@@ -217,5 +217,5 @@ erdpy --verbose contract call erd1qqqqqqqqqqqqqpgql... \
 
 ```bash
 Query
-erdpy --verbose contract query erd1qqqqqqqqqqqqqpgqlq... --function=get
+mxpy --verbose contract query erd1qqqqqqqqqqqqqpgqlq... --function=get
 ```

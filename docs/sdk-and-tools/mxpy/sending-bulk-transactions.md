@@ -4,15 +4,15 @@ title: Sending bulk transactions
 ---
 
 :::caution
-As of December 2022, the content on this page is deprecated - the page will be removed in the near future. In order to sign and broadcast multiple transactions, please follow the approach depicted in the [cookbook](/sdk-and-tools/erdpy/erdpy-cookbook#broadcasting-transactions), instead.
+As of December 2022, the content on this page is deprecated - the page will be removed in the near future. In order to sign and broadcast multiple transactions, please follow the approach depicted in the [cookbook](/sdk-and-tools/mxpy/mxpy-cookbook#broadcasting-transactions), instead.
 :::
 
-It is easy to prepare a set of transaction and then send them all at once using `erdpy`. Here's how.
+It is easy to prepare a set of transaction and then send them all at once using `mxpy`. Here's how.
 
 Requirements:
 
-- You must have `erdpy` installed on your computer. See [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy) for details.
-- You need a wallet that contains sufficient EGLD. We will use the mnemonics you have for this wallet to generate a PEM file that `erdpy` needs.
+- You must have `mxpy` installed on your computer. See [Installing mxpy](/sdk-and-tools/mxpy/installing-mxpy) for details.
+- You need a wallet that contains sufficient EGLD. We will use the mnemonics you have for this wallet to generate a PEM file that `mxpy` needs.
 
 There will be 3 steps to fulfill:
 
@@ -44,7 +44,7 @@ exec /bin/bash
 
 ## **Step 1: Prepare the PEM file**
 
-See the page [Deriving the Wallet PEM](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file) file for how to prepare a PEM file. Make sure you know exactly where `erdpy` saved it for you.
+See the page [Deriving the Wallet PEM](/sdk-and-tools/mxpy/deriving-the-wallet-pem-file) file for how to prepare a PEM file. Make sure you know exactly where `mxpy` saved it for you.
 
 ## **Step 2: Prepare the transaction set**
 
@@ -83,12 +83,12 @@ PROXY="https://gateway.multiversx.com"
 DENOMINATION="000000000000000000"
 
 # We recall the nonce of the wallet
-NONCE=$(erdpy account get --nonce --address="$MYWALLET" --proxy="$PROXY")
+NONCE=$(mxpy account get --nonce --address="$MYWALLET" --proxy="$PROXY")
 
 function send-bulk-tx {
   for transaction in "${TRANSACTIONS[@]}"; do
     set -- $transaction
-    erdpy --verbose tx new --send --outfile="tx-$NONCE.json" --pem=$PEM_FILE --nonce=$NONCE --receiver=$1 --value="$2$DENOMINATION" --gas-limit=50000 --proxy=$PROXY
+    mxpy --verbose tx new --send --outfile="tx-$NONCE.json" --pem=$PEM_FILE --nonce=$NONCE --receiver=$1 --value="$2$DENOMINATION" --gas-limit=50000 --proxy=$PROXY
     echo "Transaction sent with nonce $NONCE and backed up to tx-$NONCE.json."
     (( NONCE++ ))
   done
@@ -106,6 +106,6 @@ source ./transactions.sh
 send-bulk-tx
 ```
 
-The first command imports the `send-bulk-tx` command from the `transactions.sh` file (see the file in step 1 above). Then the second command executes `send-bulk-tx`, which will call `erdpy` for each of the transactions in the set.
+The first command imports the `send-bulk-tx` command from the `transactions.sh` file (see the file in step 1 above). Then the second command executes `send-bulk-tx`, which will call `mxpy` for each of the transactions in the set.
 
 Done!

@@ -21,13 +21,13 @@ Once a contract is marked as _**not** upgradeable_, its code and code metadata b
 
 ## Usability
 
-When deploying (or upgrading) a smart contract using **erdpy**, its default _code metadata flags_ are: `upgradeable`, `readable` and **non-**`payable`. The default values can be overwritten by decorating the command `erdpy contract deploy` (or `erdpy contract upgrade`) as follows:
+When deploying (or upgrading) a smart contract using **mxpy**, its default _code metadata flags_ are: `upgradeable`, `readable` and **non-**`payable`. The default values can be overwritten by decorating the command `mxpy contract deploy` (or `mxpy contract upgrade`) as follows:
 - `--metadata-not-upgradeable` - mark the contract as **non-** `upgradeable`
 - `--metadata-not-readable` - mark the contract as **non-** `readable`
 - `--metadata-payable` - mark the contract as `payable`
 - `--metadata-payable-by-sc` - mark the contract as `payable by smart contracts`
 
-For more information, please follow [erdpy CLI](/sdk-and-tools/erdpy/erdpy-cli).
+For more information, please follow [mxpy CLI](/sdk-and-tools/mxpy/mxpy-cli).
 
 ## Converting Metadata to bytes
 

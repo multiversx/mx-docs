@@ -3,14 +3,14 @@ id: tools-for-signing
 title: Tools for signing
 ---
 
-In order to sign a transaction without actually dispatching it, one can use [erdpy](/sdk-and-tools/erdpy) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
+In order to sign a transaction without actually dispatching it, one can use [mxpy](/sdk-and-tools/mxpy) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
 
-## **Sign using [erdpy](/sdk-and-tools/erdpy/) (Command Line Interface)**
+## **Sign using [mxpy](/sdk-and-tools/mxpy/) (Command Line Interface)**
 
 Using a **pem** file:
 
 ```
-$ erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
+$ mxpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz \
  --pem=aliceKey.pem --pem-index=0 --outfile=myTransaction.json
 
@@ -19,7 +19,7 @@ $ erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
 Using a JSON wallet key (and its password):
 
 ```
-erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
+mxpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz \
  --keyfile=walletKeyOfAlice.json --passfile=passwordOfAlice.txt \
  --outfile=myTransaction.json

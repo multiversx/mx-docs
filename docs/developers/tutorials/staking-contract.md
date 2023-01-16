@@ -11,25 +11,25 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-### erdpy
+### mxpy
 
-First and foremost, you need to have erdpy installed: https://docs.multiversx.com/sdk-and-tools/erdpy/installing-erdpy/
+First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/mxpy/installing-mxpy/
 
-If you already have erdpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
+If you already have mxpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
-We're going to use erdpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/erdpy/smart-contract-interactions/
+We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/mxpy/smart-contract-interactions/
 
 ### Rust
 
-Once you have erdpy installed, you also have to install Rust through it, and the VM tools for testing:
+Once you have mxpy installed, you also have to install Rust through it, and the VM tools for testing:
 
 ```
-erdpy deps install rust
+mxpy deps install rust
 
-erdpy deps install vmtools --overwrite
+mxpy deps install vmtools --overwrite
 ```
 
-If you installed Rust already without erdpy, you might run into some issues when building your smart contracts. It's recommended to uninstall Rust, and install it through erdpy instead.
+If you installed Rust already without mxpy, you might run into some issues when building your smart contracts. It's recommended to uninstall Rust, and install it through mxpy instead.
 
 Example of error:
 
@@ -58,7 +58,7 @@ Both can be easily installed from the "Extensions" menu in VSCode.
 Run the following command in the folder in which you want your smart contract to be created:
 
 ```
-erdpy contract new staking-contract --template empty
+mxpy contract new staking-contract --template empty
 ```
 
 Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
@@ -75,7 +75,7 @@ Now, to have all the extensions work properly, we have to set up our workspace. 
 Now let's open the MultiversX VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
 ![img](/developers/staking-contract-tutorial-img/elrond_ide_extension.png)
 
-Alternatively, you can run `erdpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
+Alternatively, you can run `mxpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
 
 After the building has completed, our folder should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_2.png)
@@ -212,12 +212,12 @@ You can skip this section if you already have a devnet wallet setup.
 
 Let's create a devnet wallet. Go to https://devnet-wallet.multiversx.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
-Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/erdpy/deriving-the-wallet-pem-file/
+Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/mxpy/deriving-the-wallet-pem-file/
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 
 ```
-erdpy --verbose wallet derive ./tutorialKey.pem --mnemonic
+mxpy --verbose wallet derive ./tutorialKey.pem --mnemonic
 ```
 
 :::note  
@@ -234,7 +234,7 @@ PROXY="https://devnet-gateway.multiversx.com"
 CHAIN_ID="D"
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} \
+    mxpy --verbose contract deploy --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
     --send --outfile="deploy-devnet.interaction.json" \
@@ -272,7 +272,7 @@ INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
 INFO:utils:View this contract address in the MultiversX Devnet Explorer: https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqq...
 ```
 
-This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So erdpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.
+This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So mxpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.
 
 ### Getting EGLD on devnet
 
@@ -297,7 +297,7 @@ Make sure you selected "devnet" and input your address! It might take a bit depe
 
 ### Deploying the contract, second try
 
-Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. erdpy will print it in the console for you:
+Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. mxpy will print it in the console for you:
 
 ```bash
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
@@ -325,7 +325,7 @@ SC_ADDRESS=erd1qqqqqqqqqqqqq...
 STAKE_AMOUNT=1
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} \
+    mxpy --verbose contract deploy --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
     --send --outfile="deploy-devnet.interaction.json" \
@@ -333,7 +333,7 @@ deploy() {
 }
 
 stake() {
-    erdpy --verbose contract call ${SC_ADDRESS} \
+    mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=${PROXY} --chain=${CHAIN_ID} \
     --send --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
@@ -365,13 +365,13 @@ Now let's try staking again:
 
 ## Querying the view functions
 
-To perform smart contract queries, we also use erdpy. Let's add the following to our snippet file:
+To perform smart contract queries, we also use mxpy. Let's add the following to our snippet file:
 
 ```bash
 USER_ADDRESS=erd1...
 
 getStakeForAddress() {
-    erdpy --verbose contract query ${SC_ADDRESS} \
+    mxpy --verbose contract query ${SC_ADDRESS} \
     --proxy=${PROXY} \
     --function="getStakingPosition" \
     --arguments ${USER_ADDRESS}
@@ -405,7 +405,7 @@ Now let's also query the stakers list:
 
 ```bash
 getAllStakers() {
-    erdpy --verbose contract query ${SC_ADDRESS} \
+    mxpy --verbose contract query ${SC_ADDRESS} \
     --proxy=${PROXY} \
     --function="getStakedAddresses"
 }
@@ -434,27 +434,27 @@ But then, why did the previous query work?
 
 ```bash
 getStakeForAddress() {
-    erdpy --verbose contract query ${SC_ADDRESS} \
+    mxpy --verbose contract query ${SC_ADDRESS} \
     --proxy=${PROXY} \
     --function="getStakingPosition" \
     --arguments ${USER_ADDRESS}
 }
 ```
 
-This is because erdpy automatically detected and converted the erd1 address to hex. To perform those conversions yourself, you can also use erdpy:
+This is because mxpy automatically detected and converted the erd1 address to hex. To perform those conversions yourself, you can also use mxpy:
 
 bech32 to hex
 
 ```bash
-erdpy wallet bech32 --decode erd1...
+mxpy wallet bech32 --decode erd1...
 ```
 
 In the previous example, we used the address: erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 
-Now let's try and decode this with erdpy:
+Now let's try and decode this with mxpy:
 
 ```bash
-erdpy wallet bech32 --decode erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
+mxpy wallet bech32 --decode erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
 ```
 
@@ -463,13 +463,13 @@ Which is precisely the value we received from the smart contract. Now let's try 
 hex to bech32
 
 ```bash
-erdpy wallet bech32 --encode hex_address
+mxpy wallet bech32 --encode hex_address
 ```
 
 Running the command with the previous example, we should get the same initial address:
 
 ```bash
-erdpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
+mxpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
 erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 ```
 
@@ -592,13 +592,13 @@ This makes it so if someone wants to perform a full unstake, they can simply not
 
 ### Unstaking our devnet tokens
 
-Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
+Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or mxpy directly, and add the unstake function to our snippets.rs file:
 
 ```bash
 UNSTAKE_AMOUNT=500000000000000000
 
 unstake() {
-    erdpy --verbose contract call ${SC_ADDRESS} \
+    mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=${PROXY} --chain=${CHAIN_ID} \
     --send --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
@@ -618,7 +618,7 @@ Since we've added some new functionality, we also want to update the currently d
 
 ```bash
 upgrade() {
-    erdpy --verbose contract upgrade ${SC_ADDRESS} \
+    mxpy --verbose contract upgrade ${SC_ADDRESS} \
     --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=20000000 \
@@ -658,7 +658,7 @@ Let's also test the optional argument functionality. Remove the `--arguments` li
 
 ```bash
 unstake() {
-    erdpy --verbose contract call ${SC_ADDRESS} \
+    mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=${PROXY} --chain=${CHAIN_ID} \
     --send --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \

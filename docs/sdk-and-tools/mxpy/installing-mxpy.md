@@ -1,15 +1,15 @@
 ---
-id: installing-erdpy
-title: Installing erdpy
+id: installing-mxpy
+title: Installing mxpy
 ---
 
-How to install erdpy
+How to install mxpy
 
-**erdpy** is currently supported on Linux and MacOS. Some of its features might work on Windows as well, although using **erdpy** on Windows is neither recommended, nor supported at this time.
+**mxpy** is currently supported on Linux and MacOS. Some of its features might work on Windows as well, although using **mxpy** on Windows is neither recommended, nor supported at this time.
 
 ## **Prerequisites**
 
-Before installing **erdpy**, please make sure you have a working **Python 3** environment:
+Before installing **mxpy**, please make sure you have a working **Python 3** environment:
 
 - **3.8** or later on Linux and MacOS
 
@@ -24,24 +24,25 @@ For MacOS:
 brew install ncurses
 ```
 
-## **Install using erdpy-up (recommended)**
+## **Install using mxpy-up (recommended)**
 
-In order to install **erdpy** using the `erdpy-up` installation script, run the following commands in a terminal:
+In order to install **mxpy** using the `mxpy-up` installation script, run the following commands in a terminal:
 
 ```
-wget -O erdpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-erdpy/main/erdpy-up.py
-python3.8 erdpy-up.py
+wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py
+python3.8 mxpy-up.py
 ```
 
+// TODO: update the paths for the new installer
 This will create a light Python virtual environment (based on `venv`) in `~/elrondsdk/erdpy-venv `and also include `~/elrondsdk`in your **`$PATH`** variable (by editing the appropriate `.profile` file).
 
 ### **Troubleshooting and other notes**
 
-On Ubuntu 20.04, if you receive the error: `invalid command 'bdist_wheel'` - run the following command, then retry erdpy-up:
+On Ubuntu 20.04, if you receive the error: `invalid command 'bdist_wheel'` - run the following command, then retry mxpy-up:
 
 ```
 pip3 install wheel
-python3 erdpy-up.py
+python3 mxpy-up.py
 ```
 
 On MacOS, you can switch to Python 3.8 as follows:
@@ -53,7 +54,7 @@ brew link --force python@3.8
 python3 --version
 ```
 
-## **Install without erdpy-up**
+## **Install without mxpy-up**
 
 If you'd like to install without relying on the easy installation script, please read this section. Otherwise, feel free to skip it.
 
@@ -61,7 +62,7 @@ Make sure you also have **pip3** installed.
 
 ### **Prepare PATH**
 
-In order to have the command **erdpy** available in your shell after install, make sure you adjust the `PATH` environment variable as described below:
+In order to have the command **mxpy** available in your shell after install, make sure you adjust the `PATH` environment variable as described below:
 
 On Linux in `~/.profile`:
 
@@ -88,10 +89,10 @@ You may need to restart your user session for these changes to take effect.
 
 ### **Install and smoke test**
 
-In order to install **erdpy**, issue the following command:
+In order to install **mxpy**, issue the following command:
 
 ```
-pip3 install --user --upgrade --no-cache-dir erdpy
+pip3 install --user --upgrade --no-cache-dir mxpy
 ```
 
 ### **Troubleshooting**
@@ -99,5 +100,5 @@ pip3 install --user --upgrade --no-cache-dir erdpy
 If you encounter encoding-related issues at installation time, such as: `UnicodeDecodeError: 'ascii' codec can't decode byte`, then please set `PYTHONIOENCODING` before running the installation command:
 
 ```
-PYTHONIOENCODING=utf8 pip3 install --user --upgrade --no-cache-dir erdpy
+PYTHONIOENCODING=utf8 pip3 install --user --upgrade --no-cache-dir mxpy
 ```
