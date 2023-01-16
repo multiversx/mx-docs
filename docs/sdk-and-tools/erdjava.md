@@ -1,6 +1,6 @@
 ---
 id: erdjava
-title: erdjava
+title: Java SDK
 ---
 
 MultiversX SDK for Java

@@ -200,6 +200,10 @@ const config = {
           {
             from: "/sdk-and-tools/dapp-core",
             to: "/sdk-and-tools/sdk-dapp",
+          },
+          {
+            from: "/validators/staking-providers-apr",
+            to: "/economics/staking-providers-apr",
           }
         ],
         createRedirects(existingPath) {

@@ -1,6 +1,6 @@
 ---
 id: erdgo
-title: erdgo
+title: Go SDK
 ---
 
 MultiversX SDK for Golang
