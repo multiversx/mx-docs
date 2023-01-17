@@ -21,8 +21,9 @@ MultiversX SDK for Python
 
 **sdk-py** libraries:
 
-| Package                                                                                  | Description                                                                    |
-|------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| [mx-sdk-py-core](https://github.com/multiversx/mx-sdk-py-core)                           | Basic components for interacting with the blockchain and with smart contracts. |
-| [mx-sdk-py-wallet](https://github.com/multiversx/mx-sdk-py-wallet)                       | Core wallet components (generation, signing).                                  |
-| [mx-sdk-py-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) | Network providers (API, Gateway).                                              |
+
+| Package                                                                                     | Source code                                                               | Description                                                                                   |
+|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| [multiversx-sdk-core](https://pypi.org/project/multiversx-sdk-core)                           | [mx-sdk-py-core](https://github.com/multiversx/mx-sdk-py-core)            | Basic components for interacting with the blockchain and with smart contracts. |
+| [multiversx-sdk-wallet](https://pypi.org/project/multiversx-sdk-wallet)                       | [mx-sdk-py-wallet](https://github.com/multiversx/mx-sdk-py-wallet)                       | Core wallet components (generation, signing). |
+| [multiversx-sdk-network-providers](https://pypi.org/project/multiversx-sdk-network-providers) | [mx-sdk-py-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) | Network providers (API, Gateway). |
