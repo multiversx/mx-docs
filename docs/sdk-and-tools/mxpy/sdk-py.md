@@ -1,9 +1,9 @@
 ---
-id: mxpy
-title: mxpy
+id: sdk-py
+title: sdk-py
 ---
 
-mxpy CLI and Python SDK
+MultiversX SDK for Python
 
 **mxpy** (the CLI tool) can be found here: [mx-sdk-py-cli](https://github.com/multiversx/mx-sdk-py-cli). It targets a broad audience of **users** and **developers**, as depicted below:
 
@@ -19,7 +19,7 @@ mxpy CLI and Python SDK
 | Generate PEM files, recover private key from mnemonic                                          | Tech enthusiasts                                                    |
 | Miscellaneous support features (e.g. bech32 conversion)                                        | Tech enthusiasts                                                    |
 
-**mxpy** libraries:
+**sdk-py** libraries:
 
 | Package                                                                                  | Description                                                                    |
 |------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|

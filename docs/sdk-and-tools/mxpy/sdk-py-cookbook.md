@@ -1,5 +1,5 @@
 ---
-id: mxpy-cookbook
+id: sdk-py-cookbook
 title: Cookbook
 ---
 
