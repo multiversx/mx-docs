@@ -142,7 +142,7 @@ Alternatively, you can tell `mxpy` to specify another wallet to which your rewar
 For example, a staking command for a single node, with a reward address specified, looks like this:
 
 ```
-mxpy --verbose validator stake --pem=walletKey.pem --reward-address="erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg" --value="2500000000000000000000" --number-of-nodes=1  --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --reward-address="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th" --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
-The above command will submit a staking command and will also inform the Staking SmartContract that the rewards should be transferred to the wallet `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg` .
+The above command will submit a staking command and will also inform the Staking SmartContract that the rewards should be transferred to the wallet `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th` .
