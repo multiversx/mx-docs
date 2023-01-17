@@ -41,77 +41,6 @@ const sidebars = {
       "technology/the-wasm-vm",
       "technology/cross-shard-transactions",
     ],
-    Wallet: [
-      "wallet/overview",
-      "wallet/web-wallet",
-      "wallet/wallet-extension",
-      "wallet/webhooks",
-      "wallet/ledger",
-      "wallet/create-a-fungible-token",
-    ],
-    Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
-    Economics: ["economics/economics-overview", "economics/staking-providers-apr"],
-    Validators: [
-      "validators/overview",
-      "validators/system-requirements",
-      {
-        type: "category",
-        label: "Setup",
-        items: [
-          "validators/nodes-scripts/config-scripts",
-          "validators/nodes-scripts/install-update",
-        ],
-      },
-      "validators/node-upgrades",
-      {
-        type: "category",
-        label: "Nodes Management",
-        items: [
-          "validators/nodes-scripts/manage-node",
-          "validators/nodes-scripts/use-docker",
-          "validators/rating",
-          "validators/redundancy",
-          "validators/node-operation-modes",
-          "validators/import-db",
-          "validators/node-cli",
-          "validators/node-databases",
-          "validators/useful-links",
-        ],
-      },
-      {
-        type: "category",
-        label: "Staking, Unstaking, Unjailing",
-        items: [
-          "validators/staking/staking",
-          "validators/staking/unjailing",
-          "validators/staking/staking-smart-contract",
-        ],
-      },
-      {
-        type: "category",
-        label: "The Delegation Manager",
-        items: [
-          "validators/delegation-manager",
-          "validators/delegation-dashboard",
-          "validators/staking/convert-existing-validator-into-staking-pool",
-          "validators/staking/merge-validator-delegation-sc",
-        ],
-      },
-      {
-        type: "category",
-        label: "Keys management",
-        items: [
-          "validators/key-management/validator-keys",
-          "validators/key-management/wallet-keys",
-          "validators/key-management/protect-keys",
-        ],
-      },
-      {
-        type: "category",
-        label: "FAQs and tools",
-        items: ["validators/faq", "validators/useful-links"],
-      },
-    ],
     Developers: [
       "developers/overview",
       {
@@ -131,7 +60,7 @@ const sidebars = {
         type: "category",
         label: "Smart Contracts",
         items: [
-            "developers/smart-contracts",
+          "developers/smart-contracts",
           {
             type: "category",
             label: "Rust Developer reference",
@@ -306,6 +235,77 @@ const sidebars = {
         ]
       },
     ],
+    Wallet: [
+      "wallet/overview",
+      "wallet/web-wallet",
+      "wallet/wallet-extension",
+      "wallet/webhooks",
+      "wallet/ledger",
+      "wallet/create-a-fungible-token",
+    ],
+    Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
+    Validators: [
+      "validators/overview",
+      "validators/system-requirements",
+      {
+        type: "category",
+        label: "Setup",
+        items: [
+          "validators/nodes-scripts/config-scripts",
+          "validators/nodes-scripts/install-update",
+        ],
+      },
+      "validators/node-upgrades",
+      {
+        type: "category",
+        label: "Nodes Management",
+        items: [
+          "validators/nodes-scripts/manage-node",
+          "validators/nodes-scripts/use-docker",
+          "validators/rating",
+          "validators/redundancy",
+          "validators/node-operation-modes",
+          "validators/import-db",
+          "validators/node-cli",
+          "validators/node-databases",
+          "validators/useful-links",
+        ],
+      },
+      {
+        type: "category",
+        label: "Staking, Unstaking, Unjailing",
+        items: [
+          "validators/staking/staking",
+          "validators/staking/unjailing",
+          "validators/staking/staking-smart-contract",
+        ],
+      },
+      {
+        type: "category",
+        label: "The Delegation Manager",
+        items: [
+          "validators/delegation-manager",
+          "validators/delegation-dashboard",
+          "validators/staking/convert-existing-validator-into-staking-pool",
+          "validators/staking/merge-validator-delegation-sc",
+        ],
+      },
+      {
+        type: "category",
+        label: "Keys management",
+        items: [
+          "validators/key-management/validator-keys",
+          "validators/key-management/wallet-keys",
+          "validators/key-management/protect-keys",
+        ],
+      },
+      {
+        type: "category",
+        label: "FAQs and tools",
+        items: ["validators/faq", "validators/useful-links"],
+      },
+    ],
+    Economics: ["economics/economics-overview", "economics/staking-providers-apr"],
     Integrators: [
       "integrators/overview",
       {
