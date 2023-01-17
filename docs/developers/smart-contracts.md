@@ -5,7 +5,7 @@ title: MultiversX Smart Contracts
 
 ## MultiversX Smart Contracts
 
-The MutiversX Blockchain's virtual machine (VM) executes [WebAssembly](https://en.wikipedia.org/wiki/WebAssembly). This means that it can execute smart contracts 
+The MultiversX Blockchain's virtual machine (VM) executes [WebAssembly](https://en.wikipedia.org/wiki/WebAssembly). This means that it can execute smart contracts 
 written in _any programming language_ that can be compiled to WASM bytecode, such as C, C++, C#, Rust, Go, TypeScript and many others.
 
 Developers are encouraged to use Rust for their smart contracts, however. MultiversX provides a [Rust framework](https://github.com/multiversx/mx-sdk-rs) 
