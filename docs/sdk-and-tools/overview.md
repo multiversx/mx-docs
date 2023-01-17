@@ -36,14 +36,14 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                                                                                     | Description                                              |
 |------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| [mxpy](/sdk-and-tools/mxpy/)                                                             | High level overview about mxpy.                          |
-| [Installing mxpy](/sdk-and-tools/mxpy/installing-mxpy)                                   | How to install and get started with mxpy.                |
-| [Configuring mxpy](/sdk-and-tools/mxpy/configuring-mxpy)                                 | Change mxpy's basic configurations.                      |
-| [mxpy cli](/sdk-and-tools/mxpy/mxpy-cli)                                                 | How to use the Command Line Interface.                   |
-| [Deriving the wallet pem file](/sdk-and-tools/mxpy/deriving-the-wallet-pem-file)         | How to use a wallet PEM file.                            |
-| [Sending bulk transactions](/sdk-and-tools/mxpy/sending-bulk-transactions)               | Practical example on how to send a bulk of transactions. |
-| [Writing and running mxpy scripts](/sdk-and-tools/mxpy/writing-and-running-mxpy-scripts) | Write and run scripts made with mxpy.                    |
-| [Smart contract interactions](/sdk-and-tools/mxpy/smart-contract-interactions)           | Interact with Smart Contract.                            |
+| [mxpy](/sdk-and-tools/sdk-py/)                                                             | High level overview about mxpy.                          |
+| [Installing mxpy](/sdk-and-tools/sdk-py/installing-mxpy)                                   | How to install and get started with mxpy.                |
+| [Configuring mxpy](/sdk-and-tools/sdk-py/configuring-mxpy)                                 | Change mxpy's basic configurations.                      |
+| [mxpy cli](/sdk-and-tools/sdk-py/mxpy-cli)                                                 | How to use the Command Line Interface.                   |
+| [Deriving the wallet pem file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file)         | How to use a wallet PEM file.                            |
+| [Sending bulk transactions](/sdk-and-tools/sdk-py/sending-bulk-transactions)               | Practical example on how to send a bulk of transactions. |
+| [Writing and running mxpy scripts](/sdk-and-tools/sdk-py/writing-and-running-mxpy-scripts) | Write and run scripts made with mxpy.                    |
+| [Smart contract interactions](/sdk-and-tools/sdk-py/smart-contract-interactions)           | Interact with Smart Contract.                            |
 
 ### sdk-nestjs - NestJS SDK
 

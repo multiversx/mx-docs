@@ -13,11 +13,11 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ### mxpy
 
-First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/mxpy/installing-mxpy/
+First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy/
 
 If you already have mxpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
-We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/mxpy/smart-contract-interactions/
+We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/
 
 ### Rust
 
@@ -212,7 +212,7 @@ You can skip this section if you already have a devnet wallet setup.
 
 Let's create a devnet wallet. Go to https://devnet-wallet.multiversx.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
-Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/mxpy/deriving-the-wallet-pem-file/
+Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 

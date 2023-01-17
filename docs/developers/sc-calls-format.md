@@ -109,7 +109,7 @@ There are multiple (_unofficial or community supported_) tools that one can use 
 
 ### Converting addresses using mxpy
 
-Make sure you have `mxpy` [installed](/sdk-and-tools/mxpy/installing-mxpy/).
+Make sure you have `mxpy` [installed](/sdk-and-tools/sdk-py/installing-mxpy/).
 
 ```bash
 mxpy wallet bech32 --decode erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
@@ -125,7 +125,7 @@ mxpy wallet bech32 --encode 0139472eff6886771a982f3083da5d421f24c29181e63888228d
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
-The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/mxpy/wallet/bech32.py).
+The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-py-core/blob/main/multiversx_sdk_core/bech32.py).
 
 ### Converting addresses using sdk-js
 

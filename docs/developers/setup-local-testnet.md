@@ -16,7 +16,7 @@ If not specified otherwise, the mini-testnet starts with one Shard plus the Meta
 
 ## **Prerequisites: mxpy**
 
-In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/mxpy/installing-mxpy#install-using-mxpy-up-recommended).
+In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
 
 ## **Prerequisites: Node and Proxy**
 

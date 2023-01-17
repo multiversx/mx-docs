@@ -27,7 +27,7 @@ When deploying (or upgrading) a smart contract using **mxpy**, its default _code
 - `--metadata-payable` - mark the contract as `payable`
 - `--metadata-payable-by-sc` - mark the contract as `payable by smart contracts`
 
-For more information, please follow [mxpy CLI](/sdk-and-tools/mxpy/mxpy-cli).
+For more information, please follow [mxpy CLI](/sdk-and-tools/sdk-py/mxpy-cli).
 
 ## Converting Metadata to bytes
 

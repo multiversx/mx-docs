@@ -17,7 +17,7 @@ To derive a PEM file for a Wallet, the mnemonic words of that account are needed
 mxpy --version
 ```
 
-If you see `command not found` it means you need to install **mxpy** first. See [Installing mxpy](/sdk-and-tools/mxpy/installing-mxpy) for how to do that.
+If you see `command not found` it means you need to install **mxpy** first. See [Installing mxpy](/sdk-and-tools/sdk-py/installing-mxpy) for how to do that.
 
 The command for generating the PEM file from mnemonic words is:
 

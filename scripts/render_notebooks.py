@@ -10,7 +10,7 @@ DOCS_URL_ROOT = "https://docs.elrond.com"
 
 
 cookbooks: List[Path] = [
-    DOCS_ROOT / "sdk-and-tools/mxpy/mxpy-cookbook.md",
+    DOCS_ROOT / "sdk-and-tools/sdk-py/sdk-py-cookbook.md",
 ]
 
 

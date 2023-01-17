@@ -3,9 +3,9 @@ id: tools-for-signing
 title: Tools for signing
 ---
 
-In order to sign a transaction without actually dispatching it, one can use [mxpy](/sdk-and-tools/mxpy) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
+In order to sign a transaction without actually dispatching it, one can use [mxpy](/sdk-and-tools/sdk-py) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
 
-## **Sign using [mxpy](/sdk-and-tools/mxpy/) (Command Line Interface)**
+## **Sign using [mxpy](/sdk-and-tools/sdk-py/) (Command Line Interface)**
 
 Using a **pem** file:
 

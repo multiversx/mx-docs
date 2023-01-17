@@ -7,7 +7,7 @@ Write, build and deploy a simple Smart Contract written in C
 
 ## **Prerequisites**
 
-You need to have [mxpy](/sdk-and-tools/mxpy/installing-mxpy) installed.
+You need to have [mxpy](/sdk-and-tools/sdk-py/installing-mxpy) installed.
 
 ## **Create the contract**
 
