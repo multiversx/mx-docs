@@ -1,6 +1,6 @@
 ---
 id: sdk-js-wallet-cli
-title: sdk-js-wallet-cli
+title: JS Wallet CLI
 ---
 
 CLI wrapper over sdk-js
