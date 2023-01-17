@@ -5,16 +5,20 @@ title: Installing a Validator Node
 
 ## **Install your node(s)**
 
-After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Devnet and Testnet Network.
-
-- _Note: This process installs a validator node for all MultiversX networks (mainnet, devnet, and testnet)._
+After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Mainnet, Devnet or Testnet.
 
 Following these few steps, we will work on installing the MultiversX Network validator node to get it up and running on your local machine.
 
-For installation use `1 - install`
+For installation, one must start the scripts by:
 
 ```bash
- ~/mx-chain-scripts/script.sh
+cd ~/mx-chain-scripts
+./script.sh
+```
+
+After that, a menu will appear with the following options. Select the option `1` to install the node.
+
+```bash
  1) install
  2) observing_squad
  3) upgrade
@@ -31,6 +35,14 @@ For installation use `1 - install`
  14) quit
  Please select an action:1
 ```
+
+:::note
+As an alternative, the installation can be triggered by executing the following command:
+
+```bash
+~/mx-chain-scripts/script.sh start
+```
+:::
 
 - When asked, indicate the number of nodes you want to run, i.e. `1`
 - When asked, indicate the name of your validator, i.e. `Valar`
