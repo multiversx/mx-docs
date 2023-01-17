@@ -5,7 +5,7 @@ title: Installing a Validator Node
 
 ## **Install your node(s)**
 
-After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Mainnet, Devnet or Testnet Network.
+After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Mainnet, Devnet or Testnet.
 
 Following these few steps, we will work on installing the MultiversX Network validator node to get it up and running on your local machine.
 

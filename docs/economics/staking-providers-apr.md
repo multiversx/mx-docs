@@ -39,7 +39,7 @@ contract will be eligible for 1 EGLD, while the difference (9 EGLD) will be allo
 ### Inflation Rate
 
 MultiversX's economics model is based on an inflation rate that decreases each year. More about this can be read on the
-[blog](https://elrond.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper/).
+[blog](https://multiversx.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper).
 
 This means that for each year the estimated rewards for a validator will change. This has to be taken into account
 when computing the APR.
