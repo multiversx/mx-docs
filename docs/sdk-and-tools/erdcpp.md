@@ -1,6 +1,6 @@
 ---
 id: erdcpp
-title: erdcpp
+title: C++ SDK
 ---
 
 MultiversX SDK for C++

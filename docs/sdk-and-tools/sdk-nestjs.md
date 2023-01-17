@@ -1,6 +1,6 @@
 ---
 id: sdk-nestjs
-title: sdk-nestjs
+title: NestJS SDK
 ---
 
 MultiversX NestJS Microservice Utilities

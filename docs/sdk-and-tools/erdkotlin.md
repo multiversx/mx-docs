@@ -1,6 +1,6 @@
 ---
 id: erdkotlin
-title: erdkotlin
+title: Kotlin SDK
 ---
 
 MultiversX SDK for Kotlin

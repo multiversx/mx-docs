@@ -1,9 +1,15 @@
 ---
 id: proxy
-title: Proxy
+title: Proxy architecture
 ---
 
 Overview of the MultiversX Proxy
+
+## **Introduction**
+
+Proxy is a project written in go that abstracts the sharding logic. It serves as foundation for *gateway.multiversx.com*
+
+The GitHub repository can be found here: https://github.com/multiversx/mx-chain-proxy-go
 
 ## **Architectural Overview**
 
