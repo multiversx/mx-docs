@@ -205,10 +205,10 @@ const sidebars = {
               "sdk-and-tools/sdk-py/sdk-py",
               "sdk-and-tools/sdk-py/sdk-py-cookbook",
               "sdk-and-tools/sdk-py/installing-mxpy",
-              "sdk-and-tools/sdk-py/configuring-erdpy",
+              "sdk-and-tools/sdk-py/configuring-mxpy",
               "sdk-and-tools/sdk-py/mxpy-cli",
               "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
-              "sdk-and-tools/erdpy/smart-contract-interactions",
+              "sdk-and-tools/sdk-py/smart-contract-interactions",
             ],
           },
           {
