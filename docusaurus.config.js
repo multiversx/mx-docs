@@ -204,6 +204,10 @@ const config = {
           {
             from: "/validators/staking-providers-apr",
             to: "/economics/staking-providers-apr",
+          },
+          {
+            from: "/sdk-and-tools/rest-api/rest-api",
+            to: "/sdk-and-tools/rest-api"
           }
         ],
         createRedirects(existingPath) {

@@ -46,21 +46,23 @@ when computing the APR.
 
 The configuration for the inflation rate can be found [here](https://github.com/multiversx/mx-chain-mainnet-config/blob/master/economics.toml) (`YearSettings`).
 
+The protocol doesn't take leap years into consideration, but rather approximate each year at 365 days.
+
 The approximated inflation rate is as follows:
 
-| Year | Inflation rate |
-| ---- | -------------- |
-| 1    | 10.84%         |
-| 2    | 9.7%           |
-| 3    | 8.56%          |
-| 4    | 7.42%          |
-| 5    | 6.27%          |
-| 6    | 5.13%          |
-| 7    | 3.99%          |
-| 8    | 2.85%          |
-| 9    | 1.71%          |
-| 10   | 0.57%          |
-| 11   | 0%             |
+| Year | Start Date  | Inflation rate |
+|------|-------------|----------------|
+| 1    | 2020.07.30  | 10.84%         |
+| 2    | 2021.07.30  | 9.7%           |
+| 3    | 2022.07.30  | 8.56%          |
+| 4    | 2023.07.30  | 7.42%          |
+| 5    | 2024.07.29  | 6.27%          |
+| 6    | 2025.07.29  | 5.13%          |
+| 7    | 2026.07.29  | 3.99%          |
+| 8    | 2027.07.29  | 2.85%          |
+| 9    | 2028.07.28  | 1.71%          |
+| 10   | 2029.07.28  | 0.57%          |
+| 11   | 2030.07.28  | 0%             |
 
 ### Protocol Sustainability
 
