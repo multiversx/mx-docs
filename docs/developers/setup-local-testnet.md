@@ -18,10 +18,6 @@ If not specified otherwise, the mini-testnet starts with one Shard plus the Meta
 
 In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/mxpy/installing-mxpy#install-using-mxpy-up-recommended).
 
-:::tip mxpy version
-Make sure your mxpy version is `1.3.2` or higher.
-:::
-
 ## **Prerequisites: Node and Proxy**
 
 Run the following command, which will fetch the prerequisites (`mx-chain-go`, `mx-chain-proxy-go`, `golang` and `testwallets`) into `~/elrondsdk`:

@@ -105,15 +105,7 @@ unJail@<BLS1>@<BLS2>@…@<BLS99>
 
 Submitting the unjailing transaction using `mxpy` avoids having to write the "Data" field manually. Instead, the transaction is constructed automatically by `mxpy` and submitted to the network directly, in a single command.
 
-Make sure `mxpy` is installed by issuing this command on a terminal:
-
-```python
-mxpy --version
-```
-
-The version reported by this command must be at least `mxpy 0.7.0`, or higher. If `mxpy` is not installed (`command not found`), or if the version is lower than `0.7.0`, please follow [these instructions](/sdk-and-tools/mxpy/installing-mxpy).
-
-Make sure `mxpy` is installed and has the latest version before continuing.
+Make sure `mxpy` is installed and has the latest version before continuing. If `mxpy` is not installed, please follow [these instructions](/sdk-and-tools/mxpy/installing-mxpy).
 
 ## **Your Wallet PEM file**
 
