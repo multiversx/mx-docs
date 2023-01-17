@@ -16,7 +16,7 @@ At first, pass the maximum possible amount for `gas-limit` (no guessing).
 ```bash
 $ mxpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=600000000 \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --simulate
 ```
 
@@ -41,7 +41,7 @@ After that, check the cost simulation by running the simulation once again, but 
 ```bash
 $ mxpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=1849711 \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --simulate
 ```
 
@@ -63,7 +63,7 @@ In the end, let's actually deploy the contract:
 ```bash
 $ mxpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=1849711 \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --send --wait-result
 ```
 
@@ -85,7 +85,7 @@ Assuming we've already deployed the contract (see above) let's get the cost for 
 
 ```bash
 $ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --function=increment\
  --recall-nonce --gas-limit=600000000\
  --simulate
@@ -107,7 +107,7 @@ In the end, let's actually call the contract:
 
 ```bash
 $ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --function=increment\
  --recall-nonce --gas-limit=1225515\
  --send --wait-result
@@ -136,12 +136,12 @@ Let's deploy the contracts `A` and `B`:
 ```bash
 $ mxpy --verbose contract deploy --bytecode=./a.wasm \
  --recall-nonce --gas-limit=5000000 \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --send --wait-result --outfile=a.json
 
 $ mxpy --verbose contract deploy --bytecode=./b.wasm \
  --recall-nonce --gas-limit=5000000 \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --send --wait-result --outfile=b.json
 ```
 
@@ -151,7 +151,7 @@ Assuming `A` is deployed at `erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9
 $ export hexAddressOfB=0x$(mxpy wallet bech32 --decode erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq)
 
 $ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=50000000\
  --arguments ${hexAddressOfB}\
@@ -217,7 +217,7 @@ For our example, let's simulate using the following values for `gasLimit`: `7619
 
 ```bash
 $ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=7619200\
  --arguments ${hexAddressOfB}\
@@ -226,7 +226,7 @@ $ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2
 ... inspect output (possibly testnet logs); execution is successful
 
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=7000000\
  --arguments ${hexAddressOfB}\
@@ -235,7 +235,7 @@ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9
 ... inspect output (possibly testnet logs); execution is successful
 
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --function=foo\
  --recall-nonce --gas-limit=6000000\
  --arguments ${hexAddressOfB}\

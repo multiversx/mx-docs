@@ -82,17 +82,17 @@ The test session is configured by means of a `nameOfMySession.session.json` file
     "individuals": [
       {
         "name": "alice",
-        "pem": "~/elrondsdk/testwallets/latest/users/alice.pem"
+        "pem": "~/multiversx-sdk/testwallets/latest/users/alice.pem"
       },
       {
         "name": "bob",
-        "pem": "~/elrondsdk/testwallets/latest/users/bob.pem"
+        "pem": "~/multiversx-sdk/testwallets/latest/users/bob.pem"
       }
     ],
     "groups": [
       {
         "name": "friends",
-        "folder": "~/elrondsdk/testwallets/latest/users"
+        "folder": "~/multiversx-sdk/testwallets/latest/users"
       }
     ]
   }

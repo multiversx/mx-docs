@@ -30,11 +30,10 @@ In order to install **mxpy** using the `mxpy-up` installation script, run the fo
 
 ```
 wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py
-python3.8 mxpy-up.py
+python3 mxpy-up.py
 ```
 
-// TODO: update the paths for the new installer
-This will create a light Python virtual environment (based on `venv`) in `~/elrondsdk/erdpy-venv `and also include `~/elrondsdk`in your **`$PATH`** variable (by editing the appropriate `.profile` file).
+This will create a light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv `and also include `~/multiversx-sdk`in your **`$PATH`** variable (by editing the appropriate `.profile` file).
 
 ### **Troubleshooting and other notes**
 
@@ -92,7 +91,7 @@ You may need to restart your user session for these changes to take effect.
 In order to install **mxpy**, issue the following command:
 
 ```
-pip3 install --user --upgrade --no-cache-dir mxpy
+pip3 install --user --upgrade --no-cache-dir multiversx-sdk-cli
 ```
 
 ### **Troubleshooting**

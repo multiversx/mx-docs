@@ -20,7 +20,7 @@ In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-too
 
 ## **Prerequisites: Node and Proxy**
 
-Run the following command, which will fetch the prerequisites (`mx-chain-go`, `mx-chain-proxy-go`, `golang` and `testwallets`) into `~/elrondsdk`:
+Run the following command, which will fetch the prerequisites (`mx-chain-go`, `mx-chain-proxy-go`, `golang` and `testwallets`) into `~/multiversx-sdk`:
 
 ```bash
 $ mxpy testnet prerequisites
@@ -87,7 +87,7 @@ Let's send a simple transaction using **mxpy**:
 Simple Transfer
 mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --send
 ```
 
@@ -108,7 +108,7 @@ If you need guidance on how to build the Counter sample contract, please follow 
 Deploy Contract
 mxpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=5000000 \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --outfile=myCounter.json \
  --send
 ```
@@ -126,7 +126,7 @@ If everything is fine (transaction status is `executed` and the `code` property 
 Call Contract
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq \
  --recall-nonce --gas-limit=1000000 --function=increment \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --send
 
 ```
@@ -143,7 +143,7 @@ At times, you can simulate transactions instead of broadcasting them, by replaci
 ```
 Simulate: Call Contract
 all-nonce --gas-limit=1000000 --function=increment \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --simulate
 ```
 
@@ -151,6 +151,6 @@ all-nonce --gas-limit=1000000 --function=increment \
 Simulate: Simple Transfer
 mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --simulate
 ```

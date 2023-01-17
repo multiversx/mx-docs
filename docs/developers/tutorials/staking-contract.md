@@ -35,7 +35,7 @@ Example of error:
 
 ```
 error[E0554]: #![feature] may not be used on the stable release channel
---> /home/user/elrondsdk/vendor-rust/registry/src/github.com-1ecc6299db9ec823/elrond-wasm-derive-0.33.0/src/lib.rs:4:12
+--> /home/user/multiversx-sdk/vendor-rust/registry/src/github.com-1ecc6299db9ec823/elrond-wasm-derive-0.33.0/src/lib.rs:4:12
 ```
 
 ### VSCode and rust-analyser extension

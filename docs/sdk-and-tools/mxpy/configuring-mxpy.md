@@ -34,5 +34,5 @@ For `testnet` use `proxy: https://testnet-api.multiversx.com` and `chainID: T`.
 :::
 
 :::tip
-mxpy's configuration is stored in the file `~/elrondsdk/mxpy.json`.
+mxpy's configuration is stored in the file `~/multiversx-sdk/mxpy.json`.
 :::
