@@ -102,7 +102,7 @@ $ mxpy tx get --hash=1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1
 
 Let's deploy a Smart Contract using **mxpy**. We'll use the simple Counter as an example.
 
-If you need guidance on how to build the Counter sample contract, please follow the [Counter SmartContract Tutorial](https://app.gitbook.com/@elrond-docs/s/elrond/developers/dev-tutorials/the-counter-smart-contract#build-the-contract).
+If you need guidance on how to build the Counter sample contract, please follow the [Counter SmartContract Tutorial](/developers/tutorials/counter).
 
 ```rust
 Deploy Contract
