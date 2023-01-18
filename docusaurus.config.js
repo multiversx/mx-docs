@@ -208,6 +208,34 @@ const config = {
           {
             from: "/sdk-and-tools/rest-api/rest-api",
             to: "/sdk-and-tools/rest-api"
+          },
+          {
+            from: "/developers/developer-reference/wasm-annotations",
+            to: "/developers/developer-reference/sc-annotations",
+          },
+          {
+            from: "/developers/developer-reference/wasm-modules",
+            to: "/developers/developer-reference/sc-modules",
+          },
+          {
+            from: "/developers/developer-reference/wasm-contract-calls",
+            to: "/developers/developer-reference/sc-contract-calls",
+          },
+          {
+            from: "/developers/developer-reference/wasm-api-functions",
+            to: "/developers/developer-reference/sc-api-functions",
+          },
+          {
+            from: "/developers/developer-reference/rust-smart-contract-debugging",
+            to: "/developers/developer-reference/sc-debugging",
+          },
+          {
+            from: "/developers/developer-reference/smart-contract-build-reference",
+            to: "/developers/developer-reference/sc-build-reference",
+          },
+          {
+            from: "/developers/developer-reference/random-numbers-in-smart-contracts",
+            to: "/developers/developer-reference/sc-random-numbers",
           }
         ],
         createRedirects(existingPath) {
@@ -220,6 +248,16 @@ const config = {
               existingPath.replace("/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions", "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions"),
               existingPath.replace("/sdk-and-tools/erdjs/erdjs-migration-guides", "sdk-and-tools/sdk-js/sdk-js-migration-guides"),
               existingPath.replace("/sdk-and-tools/erdjs/erdjs-signing-providers", "sdk-and-tools/sdk-js/sdk-js-signing-providers"),
+            ];
+          }
+          if (existingPath.includes("/developers/mandos-reference")) {
+            return [
+              // mandos -> scenario
+              existingPath.replace("/developers/mandos-reference/overview", "/developers/scenario-reference/overview"),
+              existingPath.replace("/developers/mandos-reference/structure", "/developers/scenario-reference/structure"),
+              existingPath.replace("/developers/mandos-reference/values-simple", "/developers/scenario-reference/values-simple"),
+              existingPath.replace("/developers/mandos-reference/values-complex", "/developers/scenario-reference/values-complex"),
+              existingPath.replace("/developers/mandos-reference/embed", "/developers/scenario-reference/embed"),
             ];
           }
           return undefined; // Return a falsy value: no redirect created
