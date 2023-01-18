@@ -70,6 +70,7 @@ const sidebars = {
               "developers/developer-reference/wasm-modules",
               "developers/developer-reference/wasm-contract-calls",
               "developers/developer-reference/code-metadata",
+              "developers/developer-reference/upgrading-smart-contracts",
               "developers/developer-reference/wasm-api-functions",
               "developers/developer-reference/storage-mappers",
               "developers/developer-reference/rust-testing-framework",

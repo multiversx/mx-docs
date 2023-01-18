@@ -59,6 +59,7 @@ Learn about transaction's gas and how a fee is calculated
 | [MultiversX wasm modules](/developers/developer-reference/wasm-modules)                                                  | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
 | [MultiversX wasm contract calls](/developers/developer-reference/wasm-contract-calls)                                    | Learn how to call a Smart Contract from another Smart Contract.                                 |
 | [Code metadata](/developers/developer-reference/code-metadata)                                                           | Choose the properties / eligible actions of your Smart Contract.                                |
+| [Upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts) | The implications of upgrading a Smart Contract.
 | [MultiversX wasm api functions](/developers/developer-reference/wasm-api-functions)                                      | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
 | [Storage mappers](/developers/developer-reference/storage-mappers)                                                       | Decide from multiple ways of storing data in your SC, by considering performance.               |
 | [Rust testing framework](/developers/developer-reference/rust-testing-framework)                                         | Test your Smart Contract directly in Rust.                                                      |
