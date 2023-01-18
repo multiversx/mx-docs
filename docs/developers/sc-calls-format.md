@@ -60,7 +60,7 @@ There are multiple ways of converting arguments from their original format to th
 
 For manually created transactions, arguments can be encoded by using tools that can be found online. For example, `hex to string`, `hex to decimal` and so on.
 
-For programmatically created transactions, arguments can be encoded by using one of our SDKs (`sdk-js`, `erdpy`, `erdgo`, `erdjava`, and so on) or by using built-in components or other libraries
+For programmatically created transactions, arguments can be encoded by using one of our SDKs (`sdk-js`, `mxpy`, `erdgo`, `erdjava`, and so on) or by using built-in components or other libraries
 of the language the transaction is created in.
 
 There are multiple ways of formatting the data field:
@@ -107,12 +107,12 @@ There are multiple (_unofficial or community supported_) tools that one can use 
 
 - http://207.244.241.38/elrond-converters/#bech32-to-hex
 
-### Converting addresses using erdpy
+### Converting addresses using mxpy
 
-Make sure you have `erdpy` [installed](/sdk-and-tools/erdpy/installing-erdpy/).
+Make sure you have `mxpy` [installed](/sdk-and-tools/sdk-py/installing-mxpy/).
 
 ```bash
-erdpy wallet bech32 --decode erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+mxpy wallet bech32 --decode erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
 ```
 
 will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
@@ -120,12 +120,12 @@ will output `0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1`.
 Additionally, hex addresses can be converted to bech32 as follows:
 
 ```bash
-erdpy wallet bech32 --encode 0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1
+mxpy wallet bech32 --encode 0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1
 ```
 
 will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
-The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/erdpy/wallet/bech32.py).
+The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-py-core/blob/main/multiversx_sdk_core/bech32.py).
 
 ### Converting addresses using sdk-js
 

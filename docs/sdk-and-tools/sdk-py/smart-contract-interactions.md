@@ -3,7 +3,7 @@ id: smart-contract-interactions
 title: Smart contract interactions
 ---
 
-Let's dive deeper into the Smart Contract interactions and what do you need to know when you need to interact with a SC. If you followed the previous erdpy related documentation, you should be able to set up your prerequisites like proxy URL, the chain ID and the PEM file.
+Let's dive deeper into the Smart Contract interactions and what do you need to know when you need to interact with a SC. If you followed the previous mxpy related documentation, you should be able to set up your prerequisites like proxy URL, the chain ID and the PEM file.
 For this, we need an interactions file. Usually, we find this file inside the contract's folder, in an **interaction** folder. The interactions file usually has a suggestive name, related to which chain the setup has been done. For example: **devnet.snippets.sh**.
 
 :::important
@@ -20,17 +20,17 @@ Let's take the following example:
 
 ## Deploy & Upgrade
 
-First things first. In order to deploy a new contract, we need to use erdpy to build it by using the `erdpy contract build` command. This will create the output wasm file and inside the interactions file we can save it as a fixed parameter:
+First things first. In order to deploy a new contract, we need to use mxpy to build it by using the `mxpy contract build` command. This will create the output wasm file and inside the interactions file we can save it as a fixed parameter:
 
 ```
 WASM_PATH="~/my-contract/output/my-contract.wasm"
 ```
 
-Now, in order to deploy the contract, we use the special **deploy** function of erdpy, that deploys the contract on the appointed chain, and runs the **init** function of the contract.
+Now, in order to deploy the contract, we use the special **deploy** function of mxpy, that deploys the contract on the appointed chain, and runs the **init** function of the contract.
 
 ```
 deploySC() {
-    erdpy --verbose contract deploy --recall-nonce \
+    mxpy --verbose contract deploy --recall-nonce \
         --bytecode=${WASM_PATH} \
         --pem=${WALLET_PEM} \
         --gas-limit=60000000 \
@@ -46,7 +46,7 @@ Another argument we must take a closer look at is **recall-nonce**. As we know, 
 
 Other than this, we also have the **arguments** keyword, that allows us to pass in the required parameters. As we previously said, deploying a smart contract means that we run the **init** function, which may or may not request some parameters. In our case, the **init** function has two different arguments, and we pass them when calling the **deploy** function. We'll come back later in this section at how we can pass parameters in function calls.
 
-After the transaction is sent, erdpy will output information like the transaction hash, data and any other important information, based on the type of transaction. In case of a contract deployment, it will also output the newly deployed contract address.
+After the transaction is sent, mxpy will output information like the transaction hash, data and any other important information, based on the type of transaction. In case of a contract deployment, it will also output the newly deployed contract address.
 
 Let's now suppose we need to make the contract payable, in case it needs to receive funds. We could redeploy the contract but that will mean two different contracts, and not to mention that we will lose any existing storage. For that, we can use the **upgrade** command, that replaces the existing SC bytecode with the newly built contract version.
 
@@ -58,7 +58,7 @@ The upgrade function would look like this:
 
 ```
 upgradeSC() {
-    erdpy --verbose contract upgrade ${CONTRACT_ADDRESS} --recall-nonce --payable \
+    mxpy --verbose contract upgrade ${CONTRACT_ADDRESS} --recall-nonce --payable \
         --bytecode=${WASM_PATH} \
         --pem=${WALLET_PEM} \
         --gas-limit=60000000 \
@@ -90,8 +90,8 @@ Let's suppose we want to call the following endpoint, that receives an address a
 ADDRESS_ARGUMENT="erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3"
 THIRD_BIGUINT_ARGUMENT=0x0f4240
 myNonPayableEndpoint() {
-    address_argument="0x$(erdpy wallet bech32 --decode ${ADDRESS_ARGUMENT})"
-    erdpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
+    address_argument="0x$(mxpy wallet bech32 --decode ${ADDRESS_ARGUMENT})"
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
         --pem=${WALLET_PEM} \
         --gas-limit=6000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -110,7 +110,7 @@ So, what happens in this interaction and how do we call it? Besides the function
 In our example we provide the address argument as a fixed argument. We then convert it to hex format (as it is in the bech32 format by default) and only after that we pass it as a parameter. As for the BigUint parameters, we provide the first two parameters directly in the terminal and the last one as a fixed argument, hex encoded.
 
 :::tip
-Erdpy facilitates us with some encoding conventions, including:
+mxpy facilitates us with some encoding conventions, including:
 
 - We can use **str:** for encoding strings. For example: str:MYTOKEN-123456
 - Blockchain addresses that start with **erd1** are automatically encoded, so there is no need to further hex encode them
@@ -129,7 +129,7 @@ So, in case of our **myNonPayableEndpoint** interaction, we can write it like so
 ADDRESS_ARGUMENT="erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3"
 THIRD_BIGUINT_ARGUMENT=1000000
 myNonPayableEndpoint() {
-    erdpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
         --pem=${WALLET_PEM} \
         --gas-limit=6000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -166,7 +166,7 @@ myPayableEndpoint() {
     method_name=str:myPayableEndpoint
     my_token=str:$1
     token_amount=$2
-    erdpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
         --pem=${WALLET_PEM} \
         --gas-limit=6000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -191,13 +191,13 @@ Now let's suppose we want to call an endpoint that accepts an NFT or an SFT as p
 FIRST_BIGUINT_ARGUMENT=1000
 SECOND_BIGUINT_ARGUMENT=10000
 myESDTNFTPayableEndpoint() {
-    user_address="$(erdpy wallet pem-address $WALLET_PEM)"
+    user_address="$(mxpy wallet pem-address $WALLET_PEM)"
     method_name=str:myESDTNFTPayableEndpoint
     sft_token=str:$1
     sft_token_nonce=$2
     sft_token_amount=$3
     destination_address=$4
-    erdpy --verbose contract call $user_address --recall-nonce \
+    mxpy --verbose contract call $user_address --recall-nonce \
         --pem=${WALLET_PEM} \
         --gas-limit=100000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -233,7 +233,7 @@ In case we need to call an endpoint that accepts multiple tokens (let's say for 
 FIRST_BIGUINT_ARGUMENT=1000
 SECOND_BIGUINT_ARGUMENT=10000
 myMultiESDTNFTPayableEndpoint() {
-    user_address="$(erdpy wallet pem-address $WALLET_PEM)"
+    user_address="$(mxpy wallet pem-address $WALLET_PEM)"
     method_name=str:myMultiESDTPayableEndpoint
     destination_address=$1
     number_of_tokens=3
@@ -247,7 +247,7 @@ myMultiESDTNFTPayableEndpoint() {
     third_token_nonce=$7
     third_token_amount=$8
 
-    erdpy --verbose contract call $user_address --recall-nonce \
+    mxpy --verbose contract call $user_address --recall-nonce \
         --pem=${WALLET_PEM} \
         --gas-limit=100000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -285,11 +285,11 @@ In case we want to call a view function, we can use the **query** keyword.
 #1 - First argument
 #2 - Second argument
 myView() {
-    erdpy --verbose contract query ${CONTRACT_ADDRESS} \
+    mxpy --verbose contract query ${CONTRACT_ADDRESS} \
         --proxy=${PROXY} \
         --function="myView"
         --arguments $1 $2
 }
 ```
 
-When calling a view function, erdpy will output the standard information in the terminal, along with the results, formatted based on the requested data type. The arguments are specified in the same way as with endpoints.
+When calling a view function, mxpy will output the standard information in the terminal, along with the results, formatted based on the requested data type. The arguments are specified in the same way as with endpoints.

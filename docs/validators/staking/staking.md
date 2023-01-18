@@ -16,7 +16,7 @@ Each staking or unstaking process requires a transaction to be sent to the Staki
 There are currently 2 supported methods of constructing and submitting these transactions to the Staking SmartContract:
 
 - Manually constructing the transaction, then submitting it to [wallet.multiversx.com](https://wallet.multiversx.com/);
-- Automatically constructing the transaction and submitting it using the `erdpy` command-line tool.
+- Automatically constructing the transaction and submitting it using the `mxpy` command-line tool.
 
 The following pages will describe both approaches in each specific case.
 
@@ -27,7 +27,7 @@ In order to submit a staking transaction, you must have the following:
 - 2500 EGLD for each node and 0.006 EGLD per node as transaction fee
 - A unique `validatorKey.pem` file of each node
 
-You have the option of staking through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/) or by using `erdpy`.
+You have the option of staking through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/) or by using `mxpy`.
 
 ## **Staking through the Wallet**
 
@@ -60,36 +60,36 @@ You have the option of staking through the online Wallet at [https://wallet.mult
 
 ![staking6](/validators/staking6.png)
 
-## **Staking through erdpy**
+## **Staking through mxpy**
 
-Submitting the staking transaction using `erdpy` avoids having to write the "Data" field manually. Instead, the staking transaction is constructed automatically by `erdpy` and submitted to the network directly, in a single command.
+Submitting the staking transaction using `mxpy` avoids having to write the "Data" field manually. Instead, the staking transaction is constructed automatically by `mxpy` and submitted to the network directly, in a single command.
 
-Make sure `erdpy` is installed by issuing this command on a terminal:
+Make sure `mxpy` is installed by issuing this command on a terminal:
 
 ```bash
-erdpy --version
+mxpy --version
 ```
 
-The version reported by this command must be at least `erdpy 0.8.0`, or higher. If `erdpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/sdk-and-tools/erdpy/installing-erdpy).
+The version reported by this command must be at least `mxpy 0.8.0`, or higher. If `mxpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
 
-Make sure `erdpy` is installed and has the latest version before continuing.
+Make sure `mxpy` is installed and has the latest version before continuing.
 
 ## **Your Wallet PEM file**
 
-To send transactions on your behalf _without_ using the online MultiversX Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
+To send transactions on your behalf _without_ using the online MultiversX Wallet, `mxpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
-Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `erdpy` commands.
+Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
 
-After the PEM file was generated, you can issue transactions from `erdpy`directly.
+After the PEM file was generated, you can issue transactions from `mxpy`directly.
 
 ## **The staking transaction**
 
 The following commands assume that the PEM file for your Wallet was saved with the name `walletKey.pem` in the current folder, where you are issuing the commands from.
 
-The command to submit a staking transaction with `erdpy` is this:
+The command to submit a staking transaction with `mxpy` is this:
 
 ```bash
-erdpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
@@ -115,34 +115,34 @@ Notice that we are using the `walletKey.pem` file. Moreover, before executing th
 
 The `pemFile` field should point to valid Validator PEM file. **Note that paths must be relative to the JSON file itself.**
 
-Notice also that there is no calculation for "Gas Limit". If you provide the `--estimate-gas` argument to `erdpy`, the gas limit will be estimated automatically.
+Notice also that there is no calculation for "Gas Limit". If you provide the `--estimate-gas` argument to `mxpy`, the gas limit will be estimated automatically.
 
 Here's an example for a staking command for one node:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 :::note important
-You must take **denomination** into account when specifying the `value` parameter in **erdpy**.
+You must take **denomination** into account when specifying the `value` parameter in **mxpy**.
 :::
 
 For two nodes, it becomes this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 ## **The --reward-address parameter**
 
 When you submit a staking transaction, the Staking SmartContract remembers the wallet you sent it from, and the rewards from your staked validators will go to that wallet. This is the _default_ behavior. In this case, it will be the wallet which you used to generate the `walletKey.pem` file in the earlier subsection ["Your Wallet PEM file"](/validators/staking#your-wallet-pem-file).
 
-Alternatively, you can tell `erdpy` to specify another wallet to which your rewards should be transferred. You will need the **address of your reward wallet** (it looks like `erd1xxxxx…`) for this, which you will pass to `erdpy` using the `--reward-address` parameter.
+Alternatively, you can tell `mxpy` to specify another wallet to which your rewards should be transferred. You will need the **address of your reward wallet** (it looks like `erd1xxxxx…`) for this, which you will pass to `mxpy` using the `--reward-address` parameter.
 
 For example, a staking command for a single node, with a reward address specified, looks like this:
 
 ```
-erdpy --verbose validator stake --pem=walletKey.pem --reward-address="erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg" --value="2500000000000000000000" --number-of-nodes=1  --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --reward-address="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th" --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
-The above command will submit a staking command and will also inform the Staking SmartContract that the rewards should be transferred to the wallet `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg` .
+The above command will submit a staking command and will also inform the Staking SmartContract that the rewards should be transferred to the wallet `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th` .
