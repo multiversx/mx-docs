@@ -143,7 +143,7 @@ A few things to unpack:
 2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with #[payable].
 3. fund needs to also be explicitly declared as an endpoint. All `#[payable]`methods need to be marked `#[endpoint]`, but not the other way around.
 
-To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `crowdfunding-fund.scen.json` .
+To test the function, we'll add a new test file, in the same `scenarios` folder. Let's call it `crowdfunding-fund.scen.json` .
 
 To avoid duplicating the deployment code, we import it from `crowdfunding-init.scen.json` .
 

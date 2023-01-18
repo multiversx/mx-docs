@@ -131,16 +131,16 @@ An _external view_ contract has a behavior different from that of a regular cont
 
 ### Testing with multi-contracts
 
-It is possible (and recommended) to use the contracts in Mandos as they would be used on-chain.
+It is possible (and recommended) to use the contracts in scenario tests as they would be used on-chain.
 
-The mandos-go tests will work with the produced contract binaries without further ado. Calling an endpoint that is not available in a certain output contract will fail, even if said endpoint exists in the original contract code.
+The Go scenario runner will work with the produced contract binaries without further ado. Calling an endpoint that is not available in a certain output contract will fail, even if said endpoint exists in the original contract code.
 
-To achieve the same effect in the mandos-rs tests, configure as in the following snippet. This is an actual excerpt from `multisig_mandos_rs_test.rs`, one of the multisig test files.
+To achieve the same effect on the Rust scenario runner, configure as in the following snippet. This is an actual excerpt from `multisig_scenario_rs_test.rs`, one of the multisig test files.
 
 ```rust
-fn world() -> BlockchainMock {
+fn world() -> ScenarioWorld {
     // Initialize the blockchain mock, the same as for a regular test.
-    let mut blockchain = BlockchainMock::new();
+    let mut blockchain = ScenarioWorld::new();
     blockchain.set_current_dir_from_workspace("contracts/examples/multisig");
 
     // Contracts that have no multi-contract config are provided the same as before.
@@ -148,7 +148,7 @@ fn world() -> BlockchainMock {
 
     // For multi-contract outputs we need to provide:
     // - the ABI, via the generated AbiProvider type
-    // - a mandos expression to bind to, same as for simple contracts
+    // - a scenario expression to bind to, same as for simple contracts
     // - a contract builder, same as for simple contracts
     // - the contract name, as specified in multicontract.toml
     blockchain.register_partial_contract::<multisig::AbiProvider, _>(

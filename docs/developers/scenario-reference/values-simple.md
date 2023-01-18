@@ -1,13 +1,13 @@
 ---
 id: values-simple
-title: Mandos Simple Values
+title: Scenario Simple Values
 ---
 
-We went through the structure of a Mandos test, and you might have noticed that in a lot of places values are expressed in diverse ways.
+We went through the structure of a scenario, and you might have noticed that in a lot of places values are expressed in diverse ways.
 
 The VM imposes very few restrictions on its inputs and outputs, most fields are processed as raw bytes. The most straightforward way to write a test that one could think of would be to have the actual raw bytes always expressed in a simple format (e.g. like hexadecimal encoding). Indeed, our first contract tests were like this, but we soon discovered that it took painfully long prepare them and even longer to refactor. So, we gradually came up with increasingly complex formats to represent values in an intuitive human-readable way.
 
-We chose to create a single universal format to be used everywhere in a Mandos file. The same format is used for expressing:
+We chose to create a single universal format to be used everywhere in a scenario file. The same format is used for expressing:
 
 - addresses,
 - balances,
@@ -20,29 +20,29 @@ We chose to create a single universal format to be used everywhere in a Mandos f
 
 The advantage of this unique value format is that it is enough to understand it once to then use it everywhere.
 
-The Mandos value format is closely related to the [MultiversX serialization format](/developers/developer-reference/serialization-format). This is not by accident, Mandos is designed to make it easy to interact MultiversX contracts and their data.
+The scenario value format is closely related to the [MultiversX serialization format](/developers/developer-reference/serialization-format). This is not by accident, Scenarios are designed to make it easy to interact MultiversX contracts and their data.
 
 Exceptions: `txId`, `comment` and `asyncCallData` are simple strings. `asyncCallData` might be changed to the default value format in the future and/or reworked.
 
 :::important
 
-It must be emphasized that no matter how values are expressed in Mandos, the communication with the VM is always done via raw bytes. Of course it is best when the Mandos value expression and the types in the smart contract match, but this is not enforced.
+It must be emphasized that no matter how values are expressed in scenarios, the communication with the VM is always done via raw bytes. Of course it is best when the value expression and the types in the smart contract match, but this is not enforced.
 
 :::
 
-A note on error messages: whenever we write a test that fails, Mandos tries its best to transform the actual value it found from raw bytes to a more human-readable form. It doesn't really know what format to use, to it tries its best to find something plausible. However, all it has are some heuristics, so it doesn't always get it right. It also displays the raw bytes so that the developer can investigate the proper value.
+A note on error messages: whenever we write a test that fails, the test runner tries its best to transform the actual value it found from raw bytes to a more human-readable form. It doesn't really know what format to use, to it tries its best to find something plausible. However, all it has are some heuristics, so it doesn't always get it right. It also displays the raw bytes so that the developer can investigate the proper value.
 
 ## **A note about the value parser and the use of prefixes**
 
-The Mandos value interpreter is not very complex and uses simple prefixes for most functions. Examples of prefixes are `"str:"` and `"u32:"`.
+The value interpreter is not very complex and uses simple prefixes for most functions. Examples of prefixes are `"str:"` and `"u32:"`.
 
-The `|` (pipe) operator, which we use for concatenation has the highest priority. More about it [here](/developers/mandos-reference/values-complex#concatenation).
+The `|` (pipe) operator, which we use for concatenation has the highest priority. More about it [here](/developers/scenario-reference/values-complex#concatenation).
 
 The arguments of functions start after the prefix (no whitespace) and end either at the first pipe (`|`) or at the end of the string.
 
 Multiple prefixes evaluated right to left, for instance `"keccak256:keccak256:str:abcd"` will first convert `"abcd"` to bytes, then apply the hashing function on it twice.
 
-With that being said, the following sections will describe how to express different value types with Mandos. A full list of the prefixes is [at the end of this page](#the-full-list-of-mandos-value-prefixes).
+With that being said, the following sections will describe how to express different value types in scenarios. A full list of the prefixes is [at the end of this page](#the-full-list-of-scenario-value-prefixes).
 
 ## **Empty value**
 
@@ -105,7 +105,7 @@ For more about signed number encoding, see [the big number serialization format]
 
 Whenever we nest numbers in larger structures, we need to somehow encode their length. Otherwise, it would become impossible for them to be deserialized.
 
-Mandos helps developers to also easily represent nested numbers. These are as follows:
+The format helps developers to also easily represent nested numbers. These are as follows:
 
 - `biguint:` is useful for representing a nested BigUint. It outputs the length of the byte representation, followed by the big endian byte representation itself.
 - `u64:` `u32:` `u16:` `u8:` interpret the argument as an unsigned int and convert to big endian bytes of respective length (8/4/2/1 bytes)
@@ -135,7 +135,7 @@ The `nested:` prefix prepends the length of the argument. It is similar to `bigu
 
 ## **Booleans**
 
-Mandos offers these 2 constants, for convenience:
+The format offers these 2 constants, for convenience:
 
 - `"true"` = `"1"` = `"0x01"`
 - `"false"` = `"0"` = `""`.
@@ -149,7 +149,7 @@ This is the standalone representation. If your boolean is embedded in a structur
 The preferred way of representing ASCII strings is with the `str:` prefix.
 
 :::important
-The `''` and ` `` ` prefixes are common in older examples. They are equivalent to `str:`, but considered legacy. We recommend avoiding them because they clash with the syntax of languages where we might want to embed Mandos code (Go and Markdown in particular).
+The `''` and ` `` ` prefixes are common in older examples. They are equivalent to `str:`, but considered legacy. We recommend avoiding them because they clash with the syntax of languages where we might want to embed scenario code (Go and Markdown in particular).
 :::
 
 ## **User Addresses**
@@ -175,9 +175,9 @@ Addresses need to be 32 bytes long, so
 On MultiversX, smart contract addresses have a different format than user address - they start with 8 bytes of zero.
 
 :::important
-Mandos requires that all accounts with addresses in SC format must have non-empty code.
+The format requires that all accounts with addresses in SC format must have non-empty code.
 
-Mandos forbids accounts with addresses that don't have the SC format to have code.
+It is forbidden to have accounts with code but an address that doesn't obey the SC format.
 :::
 
 ::: note Example
@@ -200,7 +200,7 @@ Sometimes the last byte of a a SC address is relevant, since it affects which sh
 
 `file:` loads an entire file and uses the contents of the entire file as value.
 
-The path of the file is given relative to the current mandos file.
+The path of the file is given relative to the current scenario file.
 
 Used in the first place for specifying smart contract code. It can, however, be used for specifying any value, anywhere.
 
@@ -220,7 +220,7 @@ Example usage:
 
 `keccak256:` computes the Keccak256 hash of the argument. The result is always 32 bytes in length.
 
-## **The full list of Mandos value prefixes**
+## **The full list of scenario value prefixes**
 
 The prefixes are:
 

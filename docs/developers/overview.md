@@ -76,15 +76,15 @@ Learn about transaction's gas and how a fee is calculated
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
 | [Multi values](/developers/best-practices/multi-values)                                     | Take advantage of the variadic input and output.   |
 
-### Mandos Tools Reference
+### Scenarios Reference
 
-| Name                                                                 | Description                                              |
-| -------------------------------------------------------------------- | -------------------------------------------------------- |
-| [Mandos Overview](/developers/mandos-reference/overview)             | Test your Smart Contracts by using JSON tests of Mandos. |
-| [Mandos Structure](/developers/mandos-reference/structure)           | How to structure a Mandos test.                          |
-| [Mandos Simple Values](/developers/mandos-reference/values-simple)   | Handle simple values in Mandos tests.                    |
-| [Mandos Complex Values](/developers/mandos-reference/values-complex) | Handle complex values in Mandos tests.                   |
-| [Embedding Mandos code in GO](/developers/mandos-reference/embed)    | How to embed Mandos code in Go.                          |
+| Name                                                                   | Description                                              |
+| ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| [Scenario Overview](/developers/scenario-reference/overview)             | Test your Smart Contracts by using Scenario JSON tests. |
+| [Scenario Structure](/developers/scenario-reference/structure)           | How to structure a scenario.                          |
+| [Scenario Simple Values](/developers/scenario-reference/values-simple)   | Handle simple values in scenario tests.                    |
+| [Scenario Complex Values](/developers/scenario-reference/values-complex) | Handle complex values in scenario tests.                   |
+| [Embedding Scenario code in GO](/developers/scenario-reference/embed)    | How to embed scenario code in Go.                          |
 
 ### Others
 

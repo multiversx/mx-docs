@@ -180,8 +180,6 @@ The structure of your folder should be like this (output printed by the command 
 ```text
 .
 ├── Cargo.toml
-├── mandos
-│   └── crowdfunding.scen.json
 ├── meta
 │   ├── Cargo.toml
 │   └── src
@@ -189,6 +187,8 @@ The structure of your folder should be like this (output printed by the command 
 ├── output
 │   ├── crowdfunding.abi.json
 │   └── crowdfunding.wasm
+├── scenarios
+│   └── crowdfunding.scen.json
 ├── src
 │   └── crowdfunding_main.rs
 └── wasm
@@ -272,18 +272,13 @@ You must always make sure that the code you write functions as intended. That's 
 
 Let's write a test against the `init` method, and make sure that it definitely stores the address of the owner under the `target` key, at deployment.
 
-To test `init`, you will write a JSON file which describes what to do with the smart contract and what is the expected output. In the folder of the Crowdfunding smart contract, there is a folder called `mandos`. Inside it, there is a file called `crowdfunding.scen.json`. Rename that file to`crowdfunding-init.scen.json` ( `scen` is short for "scenario").
+To test `init`, you will write a JSON file which describes what to do with the smart contract and what is the expected output. In the folder of the Crowdfunding smart contract, there is a folder called `scenarios`. Inside it, there is a file called `crowdfunding.scen.json`. Rename that file to`crowdfunding-init.scen.json` ( `scen` is short for "scenario").
 
 Your folder should look like this (output from the command `tree -L 3`):
 
 ```text
 .
 ├── Cargo.toml
-├── debug
-│   ├── Cargo.toml
-│   └── src
-├── mandos
-│   └── crowdfunding-init.scen.json
 ├── meta
 │   ├── Cargo.toml
 │   └── src
@@ -291,6 +286,8 @@ Your folder should look like this (output from the command `tree -L 3`):
 ├── output
 │   ├── crowdfunding.abi.json
 │   └── crowdfunding.wasm
+├── scenarios
+│   └── crowdfunding-init.scen.json
 ├── src
 │   └── lib.rs
 └── wasm
@@ -300,7 +297,7 @@ Your folder should look like this (output from the command `tree -L 3`):
     └── target
 ```
 
-Let's define the first test scenario. Open the file `mandos/crowdfunding-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
+Let's define the first test scenario. Open the file `scenarios/crowdfunding-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
 
 ```json
 {

@@ -1,6 +1,6 @@
 ---
 id: structure
-title: Mandos Structure
+title: Scenario Structure
 ---
 
 ## **Top level**
@@ -144,15 +144,15 @@ Not all of its sections are required each time. These sections are:
     - `balance` EGLD balance
     - `esdt` a list of ESDT tokens owned by this account
         - Owned ESDTs are represented as a map from token identifier to token data
-        - Mandos does not validate token identifiers (the keys).
+        - The parser does not validate token identifiers (the keys).
         - There are 2 formats for expressing the ESDT value:
             - Compact: for fungible tokens a single string containing the ESDT balance is enough.
             - Full: as a map containing several fields:
-                - `instances` is a list containing the main token data. Each instance has a unique token nonce (although Mandos does not enforce this uniqueness). Fungible tokens can only have 1 instance with the nonce 0. Semi-fungible tokens have non-zero nonces. Each instance has the following fields:
+                - `instances` is a list containing the main token data. Each instance has a unique token nonce (although the parser does not enforce this uniqueness). Fungible tokens can only have 1 instance with the nonce 0. Semi-fungible tokens have non-zero nonces. Each instance has the following fields:
                     - `nonce`
                     - `balance`
                     - `creator` address of the account that created the NFT
-                    - `royalties` a proportion out of 10000 that represents what percentage of an NFT sell price should be transferred to the creator. This is not enforced by the protocol or Mandos in any way.
+                    - `royalties` a proportion out of 10000 that represents what percentage of an NFT sell price should be transferred to the creator. This is not enforced by the protocol or the parser in any way.
                     - `hash` NFT hash
                     - `uri` a list of URIs associated to the NFT/SFT
                     - `attributes` raw bytes where any data can be stored
@@ -161,12 +161,12 @@ Not all of its sections are required each time. These sections are:
                 - `frozen` ESDT tokens can be frozen by their creator if they are configured to be freezable
     - `username` the "herotag", which is stored directly in the account trie
     - `storage` initializes storage with given key-value map. Both keys and values can be of any length.
-    - `code` typically provided in the format `"code": "file:path/to/binary"` More on this [here](/developers/mandos-reference/values-simple#file-contents). Having a `code` makes the account a smart contract.
+    - `code` typically provided in the format `"code": "file:path/to/binary"` More on this [here](/developers/scenario-reference/values-simple#file-contents). Having a `code` makes the account a smart contract.
 - `newAddresses` - mock contract address generation during deploy. We basically tell the blockchain mock what address name to generate when deploying new contracts. Not having this would give a generated address that is hard to predict when developing tests. It consists of a list of triples:
     - `creatorAddress`
     - `creatorNonce`
     - `newAddress` - whenever an account with the given address and nonce deploys a contract, this will receive this address. This should make the test more readable, by having the new addresses explicitly stated, rather than being a magic new number popping up at some point in the scenario.
-- `previousBlockInfo` and `currentBlockInfo` - set or change data that the blockchain mock is providing to smart contracts via hooks. Mandos does not model blocks, so this is how we simulate the passing of time in scenarios. Fields:
+- `previousBlockInfo` and `currentBlockInfo` - set or change data that the blockchain mock is providing to smart contracts via hooks. The scenario test system does not model blocks, so this is how we simulate the passing of time in scenarios. Fields:
     - `blockTimestamp`
     - `blockNonce`
     - `blockRound`
@@ -341,7 +341,7 @@ This step simulates a transaction to an existing smart contract. Fields:
   - `function` - function name to call in the contract
   - `arguments` - a list of the arguments to provide to the SC function
   - `gasLimit` - maximum amount of gas allowed in SC execution
-  - `gasPrice` - how much each unit of gas costs in ERD. gasLimit x gasPrice will be subtracted from caller balance before the call. Normally, the unused gas (x gasPrice) is returned to the caller after executing the call. This does not happen in the Mandos tests as it would make resulting balances a lot harder to manage. Hint: Mandos allows `gasPrice` to be zero, to avoid having to keep track of gas payments.
+  - `gasPrice` - how much each unit of gas costs in ERD. gasLimit x gasPrice will be subtracted from caller balance before the call. Normally, the unused gas (x gasPrice) is returned to the caller after executing the call. This does not happen in the scenario tests as it would make resulting balances a lot harder to manage. Hint: it is allowed for `gasPrice` to be zero, to avoid having to keep track of gas payments.
 - `expect` (optional) - each transaction produces a receipt whose hash ends up on the blockchain. The contents of the receipt can be checked here.
   - `out` - functions can return any number of results. This is an ordered list of these results.
   - `status` - indicates whether execution completed successfully or not. Status 0 means success. All errors occurring in the contract will yield status 4 ("user error").
