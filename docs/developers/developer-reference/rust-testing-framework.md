@@ -21,13 +21,13 @@ Please note that mandos generation is more of an experiment rather than a fully 
 
 ## Prerequisites
 
-You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.31.1). You can check the latest version here: https://crates.io/crates/elrond-wasm
+You need to have the latest multiversx-sc version (at the time of writing this, the latest version is 0.39.0). You can check the latest version here: https://crates.io/crates/multiversx-sc
 
-Add `elrond-wasm-debug` and required packages as dev-dependencies in your Cargo.toml:
+Add `multiversx-sc-scenario` and required packages as dev-dependencies in your Cargo.toml:
 
 ```toml
-[dev-dependencies.elrond-wasm-debug]
-version = "0.31.1"
+[dev-dependencies.multiversx-sc-scenario]
+version = "0.39.0"
 
 [dev-dependencies]
 num-bigint = "0.4.2"
@@ -43,12 +43,12 @@ In your newly created test file, add the following code (adapt the `crowdfunding
 
 ```rust
 use crowdfunding_esdt::*;
-use elrond_wasm::{
+use multiversx_sc::{
     sc_error,
     types::{Address, SCResult},
 };
-use elrond_wasm_debug::{
-    managed_address, managed_biguint, managed_token_id, rust_biguint, testing_framework::*,
+use multiversx_sc_scenario::{
+    managed_address, managed_biguint, managed_token_id, rust_biguint, whitebox::*,
     DebugApi,
 };
 
@@ -139,7 +139,7 @@ Then, we set the ESDT balances for the two users, and deploy the smart contract,
 - EGLD payment amount
 - a lambda function, which contains the actual execution
 
-Since this is a SC deploy, we call the `init` function. Since the contract works with managed objects, we can't use the built-in Rust BigUint, so we use the one provided by `elrond_wasm` instead. To create managed types, we use the `managed_` functions. Alternatively, you can create those objects by:
+Since this is a SC deploy, we call the `init` function. Since the contract works with managed objects, we can't use the built-in Rust BigUint, so we use the one provided by `multiversx_sc` instead. To create managed types, we use the `managed_` functions. Alternatively, you can create those objects by:
 
 ```rust
 let target = BigUint::<DebugApi>::from(2_000u32);

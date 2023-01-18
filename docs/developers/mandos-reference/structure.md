@@ -7,7 +7,7 @@ title: Mandos Structure
 
 A scenario test file is essentially a collection of steps to be performed on a mock blockchain. The simplest such file looks like this:
 
-```
+```json
 {
     "name": "example scenario file",
     "comment": "comments are nice",
@@ -24,7 +24,7 @@ The top-level fields are as follows:
 
 ## **Step type: `externalSteps`**
 
-```
+```json
 {
     "steps": [
         {
@@ -45,7 +45,7 @@ Also beware that there is currently no protection against cyclic imports.
 
 ## **Step type: `setState`**
 
-```
+```json
 {
     "steps": [
         {
@@ -87,7 +87,7 @@ Also beware that there is currently no protection against cyclic imports.
                             "frozen": "false"
                         }
                     },
-                    "username": "str:myusername.elrond",
+                    "username": "str:myusername.x",
                     "storage": {},
                     "code": ""
                 },
@@ -178,7 +178,7 @@ This step checks the state of the blockchain mock at a certain point. It can che
 
 Is allowed anywhere, not just as the end of tests, so progressive changes can be verified.
 
-```
+```json
 {
     "steps": [
         {
@@ -220,7 +220,7 @@ Is allowed anywhere, not just as the end of tests, so progressive changes can be
                             "frozen": "false"
                         }
                     },
-                    "username": "str:myusername.elrond",
+                    "username": "str:myusername.x",
                     "storage": {},
                     "code": ""
                 },

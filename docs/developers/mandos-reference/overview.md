@@ -1,6 +1,6 @@
 ---
 id: overview
-title: Mandos Overview
+title: Testing Sceanario Overview
 ---
 
 Rationale, description and functionality of Mandos JSON tests
@@ -19,15 +19,15 @@ The fact that it is expressed in a descriptive language like JSON makes it agnos
 
 At the moment of writing this document, Mandos tests can be launched directly from the MultiversX VSCode extension, from contextual menus.
 
-## **Mandos-go vs. Mandos-rs**
+## **Sceanario-go vs. Sceanario-rs**
 
-There are currently 2 implementations of the Mandos specifications.
+There are currently 2 implementations of the scenario specifications.
 
-1. Mandos-go is part of MultiversX VM, it is integrated with the VM fully and runs actual smart contract code. This is the most up-to-date version of the two.
+1. Sceanario-go is part of MultiversX VM, it is integrated with the VM fully and runs actual smart contract code. This is the most up-to-date version of the two.
 
-2. Mandos-rs is an implementation that is integrated into the `elrond-wasm` Rust smart contract framework. It mocks everything, including the VM and the WebAssembly engine. It is useful for debugging smart contracts and for generating high-level coverage for contracts. Mandos-rs is not yet fully featured, parts of the ESDT specification are not yet implemented, as well as some of the contract-to-contract calls.
+2. Sceanario-rs is an implementation that is integrated into the `multiversx-sc` Rust smart contract framework. It mocks everything, including the VM and the WebAssembly engine. It is useful for debugging smart contracts and for generating high-level coverage for contracts. Sceanario-rs is not yet fully featured, parts of the ESDT specification are not yet implemented, as well as some of the contract-to-contract calls.
 
-Developers are expected to only write the Mandos tests once, but they can run them on both systems, as needed. It is important to have the tests running with mandos-go. Running them with mandos-rs too is convenient, but not critical.
+Developers are expected to only write the Mandos tests once, but they can run them on both systems, as needed. It is important to have the tests running with Sceanario-go. Running them with mandos-rs too is convenient, but not critical.
 
 ## **Test file extension**
 

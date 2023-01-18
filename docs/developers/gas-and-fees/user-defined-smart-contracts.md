@@ -126,8 +126,8 @@ Documentation in this section is preliminary and subject to change. Furthermore,
 Before moving forward, make sure you first have a look over the following:
 
 - [Asynchronous calls between contracts](/technology/the-wasm-vm/#asynchronous-calls-between-contracts)
-- [Asynchronous calls (Rust framework)](/developers/developer-reference/wasm-contract-calls/#asynchronous-calls)
-- [Callbacks (Rust framework)](/developers/developer-reference/wasm-annotations/#callbacks)
+- [Asynchronous calls (Rust framework)](/developers/developer-reference/sc-contract-calls/#asynchronous-calls)
+- [Callbacks (Rust framework)](/developers/developer-reference/sc-annotations/#callbacks)
 
 Suppose we have two contracts: `A` and `B`, where `A::foo(addressOfB)` asynchronously calls `B::bar()` (e.g. using `asyncCall()`).
 

@@ -455,8 +455,8 @@ If you followed all the steps presented until now, you should have ended up with
 ```rust,file=final.rs
 #![no_std]
 
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 #[derive(TopEncode, TopDecode, TypeAbi, PartialEq, Eq, Clone, Copy, Debug)]
 pub enum Status {
@@ -465,7 +465,7 @@ pub enum Status {
     Failed,
 }
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Crowdfunding {
     #[init]
     fn init(&self, target: BigUint, deadline: u64) {
@@ -561,12 +561,12 @@ As an exercise, try to add some more tests, especially ones involving the claim 
 
 ## **Next steps**
 
-This concludes the first Rust elrond-wasm tutorial.
+This concludes the first Rust multiversx-sc tutorial.
 
-For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html)
+For more detailed documentation, visit [https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/](https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/)
 
-If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/multiversx/mx-sdk-rs/tree/v0.35.0/contracts/examples
+If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/multiversx/mx-sdk-rs/tree/v0.39.0/contracts/examples
 
 :::tip
-When entering directly on the `elrond-wasm` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.
+When entering directly on the `multiversx-sc` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.
 :::

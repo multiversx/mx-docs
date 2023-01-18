@@ -12,7 +12,7 @@ The MultiversX Network supports smart contracts written in any programming langu
 :::
 
 :::important
-The current tutorial revolves around **elrond-wasm-rs** version **0.35.0**, and will get updated as new versions of elrond-wasm are released.
+The current tutorial revolves around **multiversx-sc** version **0.39.0**, and will get updated as new versions of multiversx-sc are released.
 :::
 
 ## **Introduction**
@@ -53,7 +53,7 @@ MultiversX IDE is an extension for Visual Studio Code that offers development su
 
 MultiversX IDE supports the following programming languages:
 
-- Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via elrond-wasm-debug and CodeLLDB.
+- Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via multiversx-sc-scenario and CodeLLDB.
 - C / C++
 
 Follow the video guide for a detailed explanation about how to get started.
@@ -93,11 +93,11 @@ edition = "2018"
 [lib]
 path = "src/crowdfunding_main.rs"
 
-[dependencies.elrond-wasm]
-version = "0.35.0"
+[dependencies.multiversx-sc]
+version = "0.39.0"
 
-[dev-dependencies.elrond-wasm-debug]
-version = "0.35.0"
+[dev-dependencies.multiversx-sc-scenario]
+version = "0.39.0"
 
 ```
 
@@ -115,9 +115,9 @@ With the structure in place, you can now write the code and build it. Open `src/
 ```rust,file=hello-world.rs
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Crowdfunding {
     #[init]
     fn init(&self) {
@@ -131,12 +131,12 @@ Let's take a look at the code. The first three lines declare some characteristic
 
 ### **Bring in the framework**
 
-The 3rd line contains the command `elrond_wasm::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the MultiversX framework for Rust smart contracts, which is designed to simplify the code enormously.
+The 3rd line contains the command `multiversx_sc::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the MultiversX framework for Rust smart contracts, which is designed to simplify the code enormously.
 
 The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
 
 ```rust
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 ```
 
 This line simply tells the framework to treat the next `trait` declaration (we'll get to it in a moment) as a smart contract. Because of this line, the framework will _automatically generate_ much of the code required. You won't see the generated code now (but you can).
@@ -171,7 +171,7 @@ When the command completes, a new folder will appear: `output`. This folder now 
 
 The following can be safely deleted, as they are not important for this contract:
 
-- the `snippets.sh` and `elrond.json` files
+- the `snippets.sh` file
 - the `tests` folder
 - the `interaction` folder
 
@@ -231,9 +231,9 @@ Here's how the `init` method looks like, with the code that saves the target (gu
 ```Rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Crowdfunding {
 
     #[storage_mapper("target")]

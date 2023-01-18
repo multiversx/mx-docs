@@ -1,5 +1,5 @@
 ---
-id: smart-contract-build-reference
+id: sc-build-reference
 title: Smart Contract Build Reference
 ---
 
@@ -11,15 +11,15 @@ To build a contract, it is enough to navigate in your contract crate and run
 erdpy contract build
 ```
 
-Alternatively you can go to your installed `MultiversX (previously Elrond) Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`
+Alternatively you can go to your installed `MultiversX Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`
 
-![build contract screenshot](/developers/smart-contract-build-reference/ide-build-screenshot.png "Build Contract from the MultiversX (previously Elrond) Workspace Explorer extension")
+![build contract screenshot](/developers/sc-build-reference/ide-build-screenshot.png "Build Contract from the MultiversX Workspace Explorer extension")
 
 ## How to: Multi contract build
 
 ### Rationale
 
-Starting with `elrond-wasm 0.37`, it is possible to configure a so-called "multi contract build".
+Starting with version `0.37`, it is possible to configure a so-called "multi contract build".
 
 The idea is to produce several smart contract binaries from the same smart contract project. These "output" contracts may or may not share most of their endpoints and logic, but they always originate from the same code base. Think of them as flavors of the same contract.
 
@@ -40,7 +40,7 @@ We will use the multisig contract as an example. In this contracts we have sever
 In order to make configuration easier, we label them in code, as can be seen in the excerpt below:
 
 ```rust
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait MultisigStateModule {
     // ...
 
@@ -106,7 +106,7 @@ An _external view_ contract has a behavior different from that of a regular cont
 
 1. Storage access is different. All storage reads are done from the target contract given in the constructor.
 2. The constructor is different. Be mindful of this when deploying the external view contract.
-   - The original constructor is ignored, [a specific constructor](https://docs.rs/elrond-wasm/0.36.1/elrond_wasm/external_view_contract/fn.external_view_contract_constructor.html) is always provided instead.
+   - The original constructor is ignored, [a specific constructor](https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/external_view_contract/fn.external_view_contract_constructor.html) is always provided instead.
    - This constructor always takes one single argument, which is the address of the target contract to read from. From this on, the target address can no longer be changed.
    - The external view constructor ABI is always as follows:
 
@@ -116,7 +116,7 @@ An _external view_ contract has a behavior different from that of a regular cont
     "docs": [
       "The external view init prepares a contract that looks in another contract's storage.",
       "It takes a single argument, the other contract's address",
-      "You won't find this constructors' definition in the contract, it gets injected automatically by the framework. See `elrond_wasm::external_view_contract`."
+      "You won't find this constructors' definition in the contract, it gets injected automatically by the framework. See `multiversx_sc::external_view_contract`."
     ],
     "inputs": [
       {
@@ -252,7 +252,7 @@ Building a contract is a complex process, but luckily it gets handled invisibly 
 
 ### a. The smart contract itself
 
-The smart contract is defined as a trait without an implementation. This is good, because it means the contract can be executed on various platforms. Some of the implementation gets generated automatically by the `[elrond_wasm::contract]` macro.
+The smart contract is defined as a trait without an implementation. This is good, because it means the contract can be executed on various platforms. Some of the implementation gets generated automatically by the `[multiversx_sc::contract]` macro.
 
 Not everything, though, can be performed here. Notably, macros cannot access data from other modules or crates, all processing is local to the current contract or module. Therefore, we need another mechanism for working with the complete contract data.
 
@@ -260,7 +260,7 @@ Not everything, though, can be performed here. Notably, macros cannot access dat
 
 ABIs are a collection of metatada about the contract. To build an ABI, we also need the data from the modules. The module macros cannot be called from the contract macros (macros are run at compilation, we are not even sure that modules will need to be recompiled!). Modules, however can be called. That is why we are actually generating _ABI generator functions_ for each module, which can call one another to retrieve the composite picture.
 
-Note: The ABI generator comes as an implementation of trait [ContractAbiProvider](https://docs.rs/elrond-wasm/latest/elrond_wasm/contract_base/trait.ContractAbiProvider.html).
+Note: The ABI generator comes as an implementation of trait [ContractAbiProvider](https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/contract_base/trait.ContractAbiProvider.html).
 
 ### c. Meta crate: generating the ABI
 
@@ -270,7 +270,7 @@ Therefore, we have decided to include an extra crate in each smart contract proj
 
 ```rust
 fn main() {
-    elrond_wasm_debug::meta::perform::<my_contract_crate::AbiProvider>();
+    multiversx_sc_meta::cli_main::<my_contract_crate::AbiProvider>();
 }
 ```
 
@@ -298,17 +298,24 @@ If we are not careful, we risk adding unwanted endpoints to the contract. A clas
 This requires code generation. The `meta` crate will handle this code generation too. An example of such generated code lies below:
 
 ```rust
-// Code generated by the elrond-wasm multi-contract system. DO NOT EDIT.
+// Code generated by the multiversx-sc multi-contract system. DO NOT EDIT.
 
 ////////////////////////////////////////////////////
 ////////////////// AUTO-GENERATED //////////////////
 ////////////////////////////////////////////////////
 
-// Number of endpoints: 2
+// Init:                                 1
+// Endpoints:                            2
+// Async Callback (empty):               1
+// Total number of exported functions:   4
 
 #![no_std]
+#![feature(alloc_error_handler, lang_items)]
 
-elrond_wasm_node::wasm_endpoints! {
+multiversx_sc_wasm_adapter::allocator!();
+multiversx_sc_wasm_adapter::panic_handler!();
+
+multiversx_sc_wasm_adapter::endpoints! {
     adder
     (
         getSum
@@ -316,10 +323,10 @@ elrond_wasm_node::wasm_endpoints! {
     )
 }
 
-elrond_wasm_node::wasm_empty_callback! {}
+multiversx_sc_wasm_adapter::empty_callback! {}
 ```
 
-The `elrond_wasm_node` macros help keep even this generated code to a minimum.
+The `multiversx_sc_wasm_adapter` macros help keep even this generated code to a minimum.
 
 For multi-contract builds, one `wasm` crate needs to be generated for each of the output contracts:
 
