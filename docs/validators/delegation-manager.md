@@ -111,13 +111,13 @@ SetMetadataTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-An example for the `Data` field that sets the name to `"MultiversX Staking"`, the website to `"multiversx.staking"` and the keybase.io identifier to `"multiversxstaking"` is:
+An example for the `Data` field that sets the name to `"Test Mx Provider"`, the website to `"testmx.provider"` and the keybase.io identifier to `"testmxprovider"` is:
 
 ```rust
     "setMetaData" +
-    "@4d756c74697665727358205374616b696e67" // MultiversX Staking
-    "@6d756c746976657273782e7374616b696e67" // multiversx.staking
-    "@6d756c746976657273787374616b696e67"   // multiversxstaking
+    "@54657374204d782050726f7669646572" // Test Mx Provider
+    "@746573746d782e70726f7669646572" //  testmx.provider
+    "@746573746d7870726f7669646572"   // testmxprovider
 ```
 
 :::important
@@ -128,12 +128,16 @@ Setting the keybase.io identity of the staking pool in the metadata is the **fir
 
 To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in Maiar and the web wallet, some additional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and Maiar. If this information cannot be found a generic logo and the delegation contract's address is displayed.
 
-In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/elrond/` folder.
+In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/multiversx/` folder.
 
-An example for the path to the empty file for the `"multiversxstaking"` keybase.io identity would be:
+:::tip
+As of January 2023, the keybase.io's folder that contains the delegation contract's address can be either `elrond` or `multiversx` but in the near future only the `multiversx` folder will be accepted.
+:::
+
+An example for the path to the empty file for the `"testmxprovider"` keybase.io identity would be:
 
 ```rust
- public/multiversxstaking/elrond/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+ public/testmxprovider/multiversx/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
 ```
 
 :::important
@@ -141,10 +145,10 @@ The **second step** in connecting the delegation contract and the keybase.io ide
 :::
 
 :::tip
-To be able to connect a **testnet** or **devnet** contract to a keybase.io identity, a new folder - named `"testnet"` for the testnet, or `"devnet"` for the devnet, has to be created inside the `/elrond` folder. An example for the same delegation contract on the `testnet` would be:
+To be able to connect a **testnet** or **devnet** contract to a keybase.io identity, a new folder - named `"testnet"` for the testnet, or `"devnet"` for the devnet, has to be created inside the `/multiversx` folder. An example for the same delegation contract on the `testnet` would be:
 
 ```rust
-public/multiversxstaking/elrond/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+public/testmxprovider/multiversx/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
 ```
 
 :::
@@ -156,13 +160,13 @@ An example of how the delegation contract will be displayed based on the informa
 :::important
 To also connect the validators themselves to a specific keybase.io staking pool identity, two additional steps have to be completed:
 
-1. Create an empty file with the name set to the `"<BLS key>"` for every validator and add the empty file to the `/elrond` folder on your keybase.io identity: `public/<keybase.io identity>/elrond/<BLS key>`
+1. Create an empty file with the name set to the `"<BLS key>"` for every validator and add the empty file to the `/multiversx` folder on your keybase.io identity: `public/<keybase.io identity>/multiversx/<BLS key>`
 2. Set the `Identity` of each validator in the `config/prefs.toml` file to the keybase.io staking pool identity.
 
 ```rust
 [Preferences]
    # Identity represents the keybase's identity
-   Identity = "<keybase.io identity>"    // e.g.  Identity = "multiversxstaking"
+   Identity = "<keybase.io identity>"    // e.g.  Identity = "testmxprovider"
 ```
 
 :::
