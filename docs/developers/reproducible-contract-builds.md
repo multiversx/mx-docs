@@ -86,7 +86,7 @@ Never pick the tag called `latest` for production-ready builds.
 
 ## Building via Docker (reproducible build)
 
-In this section, you'll learn how to run a reproducible build, or, to put it differently, how to reproduce a previous build (made by you or by someone else in the past), on the local machine, using Docker - without the need to install other tools such as _erdpy_ (nor its dependencies).
+In this section, you'll learn how to run a reproducible build, or, to put it differently, how to reproduce a previous build (made by you or by someone else in the past), on the local machine, using Docker - without the need to install other tools such as _mxpy_ (nor its dependencies).
 
 ### Fetch the source code
 

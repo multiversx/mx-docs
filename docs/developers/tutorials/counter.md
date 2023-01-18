@@ -7,14 +7,14 @@ Write, build and deploy a simple Smart Contract written in C
 
 ## **Prerequisites**
 
-You need to have [erdpy](/sdk-and-tools/erdpy/installing-erdpy) installed.
+You need to have [mxpy](/sdk-and-tools/sdk-py/installing-mxpy) installed.
 
 ## **Create the contract**
 
 In a folder of your choice, run the following command:
 
 ```
-erdpy contract new --template="simple-counter" mycounter
+mxpy contract new --template="simple-counter" mycounter
 ```
 
 This creates a new folder named `mycounter` which contains the C source code for a simple Smart Contract - based on the template [simple-counter](https://github.com/multiversx/mx-sc-examples/tree/master/simple-counter). The file `counter.c` is the implementation of the Smart Contract, which defines the following functions:
@@ -28,7 +28,7 @@ This creates a new folder named `mycounter` which contains the C source code for
 In order to build the contract to WASM, run the following command:
 
 ```
-erdpy --verbose contract build mycounter
+mxpy --verbose contract build mycounter
 ```
 
 Above, `mycounter` refers to the previously created folder, the one that holds the source code. After executing the command, you can inspect the generated files in `mycounter/output`.
@@ -40,12 +40,12 @@ In order to deploy the contract on the Testnet you need to have an account with 
 The deployment command is as follows:
 
 ```
-erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
+mxpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
 ```
 
 Above, `mycounter` refers to the same folder that contains the source code and the build artifacts. The `deploy` command knows to search for the WASM bytecode within this folder.
 
-Note the last parameter of the command - this instructs erdpy to dump the output of the operation in the specified file. The output contains the address of the newly deployed contract and the hash of the deployment transaction.
+Note the last parameter of the command - this instructs mxpy to dump the output of the operation in the specified file. The output contains the address of the newly deployed contract and the hash of the deployment transaction.
 
 ```
 counter.json
@@ -83,7 +83,7 @@ export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counte
 Now that we have the contract address saved in a shell variable, we can call the `increment` function of the contract as follows:
 
 ```
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
+mxpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
 ```
 
 Execute the command above a few times, with some pause in between. Then feel free to experiment with calling the `decrement` function.
@@ -91,7 +91,7 @@ Execute the command above a few times, with some pause in between. Then feel fre
 Then, in order to query the value of the counter - that is, to execute the `get` pure function of the contract - run the following:
 
 ```
-erdpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-gateway.multiversx.com"
+mxpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-gateway.multiversx.com"
 ```
 
 The output should look like this:
@@ -108,17 +108,17 @@ The previous steps can be summed up in a simple script as follows:
 #!/bin/bash
 
 # Deployment
-erdpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
+mxpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
 export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('address.json')); print(data['emitted_tx']['contract'])")
 
 # Interaction
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
+mxpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
 sleep 10
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
+mxpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
 sleep 10
-erdpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="decrement" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
+mxpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="decrement" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
 sleep 10
 
 # Querying
-erdpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-gateway.multiversx.com"
+mxpy contract query $CONTRACT_ADDRESS --function="get" --proxy="https://testnet-gateway.multiversx.com"
 ```

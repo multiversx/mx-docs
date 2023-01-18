@@ -241,13 +241,28 @@ const config = {
         createRedirects(existingPath) {
           if (existingPath.includes("/erdjs")) {
             return [
-                // erdjs -> sdk-js
+              // erdjs -> sdk-js
               existingPath.replace("/sdk-and-tools/erdjs", "/sdk-and-tools/sdk-js"),
               existingPath.replace("/sdk-and-tools/erdjs/erdjs-cookbook", "sdk-and-tools/sdk-js/sdk-js-cookbook"),
               existingPath.replace("/sdk-and-tools/erdjs/extending-erdjs", "sdk-and-tools/sdk-js/extending-sdk-js"),
               existingPath.replace("/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions", "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions"),
               existingPath.replace("/sdk-and-tools/erdjs/erdjs-migration-guides", "sdk-and-tools/sdk-js/sdk-js-migration-guides"),
               existingPath.replace("/sdk-and-tools/erdjs/erdjs-signing-providers", "sdk-and-tools/sdk-js/sdk-js-signing-providers"),
+            ];
+          }
+          if (existingPath.includes("/erdpy")) {
+            return [
+              // erdpy -> mxpy
+              existingPath.replace("/sdk-and-tools/erdpy", "/sdk-and-tools/sdk-py"),
+              existingPath.replace("/sdk-and-tools/erdpy/erdpy", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
+              existingPath.replace("/sdk-and-tools/erdpy/erdpy-cookbook", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
+              existingPath.replace("/sdk-and-tools/erdpy/installing-erdpy", "sdk-and-tools/sdk-py/installing-mxpy"),
+              existingPath.replace("/sdk-and-tools/erdpy/configuring-erdpy", "sdk-and-tools/sdk-py/configuring-mxpy"),
+              existingPath.replace("/sdk-and-tools/erdpy/erdpy-cli", "sdk-and-tools/sdk-py/mxpy-cli"),
+              existingPath.replace("/sdk-and-tools/erdpy/deriving-the-wallet-pem-file", "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file"),
+              existingPath.replace("/sdk-and-tools/erdpy/smart-contract-interactions", "sdk-and-tools/sdk-py/smart-contract-interactions"),
+              existingPath.replace("/sdk-and-tools/erdpy/sending-bulk-transactions", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
+              existingPath.replace("/sdk-and-tools/erdpy/writing-and-running-mxpy-scripts", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
             ];
           }
           if (existingPath.includes("/developers/mandos-reference")) {

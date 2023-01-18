@@ -8,7 +8,7 @@ title: Smart Contract Build Reference
 To build a contract, it is enough to navigate in your contract crate and run
 
 ```sh
-erdpy contract build
+mxpy contract build
 ```
 
 Alternatively you can go to your installed `MultiversX Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`
@@ -186,7 +186,7 @@ fn world() -> ScenarioWorld {
 
 ### Calling `build`
 
-A build can be triggered by calling either `erdpy contract build <project>` or `cargo run build` in the meta crate. In fact, erdpy calls the meta crate itself.
+A build can be triggered by calling either `mxpy contract build <project>` or `cargo run build` in the meta crate. In fact, mxpy calls the meta crate itself.
 
 By default, this command will produce three files for each output contract: the ABI (`<contract>.abi.json`), the contract (`<contract>.wasm`) and a json file with all the used VM EI imported functions (`<contract>.imports.json`). For the multisig example above, the produced files are as follows:
 
@@ -203,7 +203,7 @@ output
 └── multisig.wasm
 ```
 
-Several arguments can be added to the `build` command, both in erdpy and directly:
+Several arguments can be added to the `build` command, both in mxpy and directly:
 
 - `--wasm-symbols`: Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
 - `--no-wasm-opt`: Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
@@ -211,7 +211,7 @@ Several arguments can be added to the `build` command, both in erdpy and directl
 - `--no-imports`: Does not generate an EI imports JSON file for each contract, as is the default.
 - `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts.
 - `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
-- `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. Erdpy always sets this explicitly.
+- `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. mxpy always sets this explicitly.
 
 ### Calling `build-dbg`
 
@@ -236,7 +236,7 @@ It accepts all the arguments from `build`, so `--target-dir` works here too.
 
 ### Calling `clean`
 
-Calling `erdpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
+Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
 
 ### Calling `snippets`
 
@@ -342,7 +342,7 @@ With the ABI information and the code generated, the meta crate can now build al
 
 The rust compiler places the result in the designated `target` folder, but for convenience, the meta crate moves the executables to the project `output` folder and renames them according to the configured names.
 
-You might have performed this step automatically from erdpy, but erdpy simply calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it easily.
+You might have performed this step automatically from mxpy, but mxpy simply calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it easily.
 
 ### f. Meta crate: build post-processing
 
@@ -356,7 +356,7 @@ After building the contracts, there are three more operations left to perform, b
 
 Calling `cargo run clean` in the meta crate will run `cargo clean` in all wasm crates and delete the `output` folder.
 
-`erdpy contract clean` also just forwards to this.
+`mxpy contract clean` also just forwards to this.
 
 Note that even the clean operation relies on the ABI, in order to reach all the wasm crates.
 

@@ -3,7 +3,7 @@ id: setup-local-testnet
 title: Setup a Local Testnet
 ---
 
-This guide describes how to set up a local mini-testnet using **erdpy**. The purpose of a local mini-testnet is to allow developers to experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
+This guide describes how to set up a local mini-testnet using **mxpy**. The purpose of a local mini-testnet is to allow developers to experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
 
 The mini-testnet contains:
 
@@ -14,29 +14,25 @@ The mini-testnet contains:
 
 If not specified otherwise, the mini-testnet starts with one Shard plus the Metachain (each with one Validator and one Observer).
 
-## **Prerequisites: erdpy**
+## **Prerequisites: mxpy**
 
-In order to install erdpy, follow the instructions at [install erdpy](/sdk-and-tools/erdpy/installing-erdpy#install-using-erdpy-up-recommended).
-
-:::tip erdpy version
-Make sure your erdpy version is `1.3.2` or higher.
-:::
+In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
 
 ## **Prerequisites: Node and Proxy**
 
-Run the following command, which will fetch the prerequisites (`mx-chain-go`, `mx-chain-proxy-go`, `golang` and `testwallets`) into `~/elrondsdk`:
+Run the following command, which will fetch the prerequisites (`mx-chain-go`, `mx-chain-proxy-go`, `golang` and `testwallets`) into `~/multiversx-sdk`:
 
 ```bash
-$ erdpy testnet prerequisites
+$ mxpy testnet prerequisites
 ```
 
 ## **Testnet Configuration**
 
-Let's configure the following network parameters in erdpy, so that subsequent command invocations (of erdpy) will not require you explicitly provide the `--proxy` and `--chainID` arguments:
+Let's configure the following network parameters in mxpy, so that subsequent command invocations (of mxpy) will not require you explicitly provide the `--proxy` and `--chainID` arguments:
 
 ```bash
-$ erdpy config set chainID local-testnet
-$ erdpy config set proxy http://localhost:7950
+$ mxpy config set chainID local-testnet
+$ mxpy config set proxy http://localhost:7950
 ```
 
 Then, in a folder of your choice add a file names `testnet.toml` with the content below.
@@ -53,14 +49,14 @@ port_proxy = 7950
 ```
 
 :::tip
-erdpy allows you to customize the configuration of the local mini-testnet in much greater detail, but for the sake of simplicity, in the example above we've only set the TCP port of the MultiversX Proxy.
+mxpy allows you to customize the configuration of the local mini-testnet in much greater detail, but for the sake of simplicity, in the example above we've only set the TCP port of the MultiversX Proxy.
 :::
 
 Then, configure and build the local testnet as follows:
 
 ```bash
 $ cd MySandbox
-$ erdpy testnet config
+$ mxpy testnet config
 ```
 
 Upon running this command, a new folder called `testnet` will be added in the current directory. This folder contains the Node & Proxy binaries, their configurations, plus the **development wallets**.
@@ -74,7 +70,7 @@ The development wallets are minted at genesis and their keys (both PEM files and
 ## **Starting the Testnet**
 
 ```bash
-erdpy testnet start
+mxpy testnet start
 ```
 
 This will start the Seednode, the Validators, the Observers and the Proxy.
@@ -85,34 +81,34 @@ Note that the Proxy starts with a delay of about 30 seconds.
 
 ## **Sending transactions**
 
-Let's send a simple transaction using **erdpy:**
+Let's send a simple transaction using **mxpy**:
 
 ```
 Simple Transfer
-erdpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
+mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --send
 ```
 
-You should see the prepared transaction and the **transaction hash** in the `stdout` (or in the `--outfile` of your choice). Using the transaction hash, you can query the status of the transaction against the Proxy or against erdpy itself:
+You should see the prepared transaction and the **transaction hash** in the `stdout` (or in the `--outfile` of your choice). Using the transaction hash, you can query the status of the transaction against the Proxy or against mxpy itself:
 
 ```bash
 $ curl http://localhost:7950/transaction/1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
-$ erdpy tx get --hash=1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
+$ mxpy tx get --hash=1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
 ```
 
 ## **Deploying and interacting with Smart Contracts**
 
-Let's deploy a Smart Contract using **erdpy**. We'll use the simple Counter as an example.
+Let's deploy a Smart Contract using **mxpy**. We'll use the simple Counter as an example.
 
-If you need guidance on how to build the Counter sample contract, please follow the [Counter SmartContract Tutorial](https://app.gitbook.com/@elrond-docs/s/elrond/developers/dev-tutorials/the-counter-smart-contract#build-the-contract).
+If you need guidance on how to build the Counter sample contract, please follow the [Counter SmartContract Tutorial](/developers/tutorials/counter).
 
 ```rust
 Deploy Contract
-erdpy --verbose contract deploy --bytecode=./counter.wasm \
+mxpy --verbose contract deploy --bytecode=./counter.wasm \
  --recall-nonce --gas-limit=5000000 \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --outfile=myCounter.json \
  --send
 ```
@@ -128,16 +124,16 @@ If everything is fine (transaction status is `executed` and the `code` property 
 
 ```
 Call Contract
-erdpy --verbose contract call erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq \
+mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq \
  --recall-nonce --gas-limit=1000000 --function=increment \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --send
 
 ```
 
 ```
 Query Contract
-erdpy --verbose contract query erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq --function=get
+mxpy --verbose contract query erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq --function=get
 ```
 
 ## **Simulating transactions**
@@ -147,14 +143,14 @@ At times, you can simulate transactions instead of broadcasting them, by replaci
 ```
 Simulate: Call Contract
 all-nonce --gas-limit=1000000 --function=increment \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --simulate
 ```
 
 ```
 Simulate: Simple Transfer
-erdpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
+mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
- --pem=~/elrondsdk/testwallets/latest/users/alice.pem \
+ --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --simulate
 ```

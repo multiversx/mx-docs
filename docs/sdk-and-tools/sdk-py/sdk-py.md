@@ -1,11 +1,11 @@
 ---
-id: erdpy
-title: erdpy
+id: sdk-py
+title: sdk-py
 ---
 
-erdpy CLI and Python SDK
+MultiversX SDK for Python
 
-**erdpy** (the CLI tool) can be found here: [mx-sdk-erdpy](https://github.com/multiversx/mx-sdk-erdpy). It targets a broad audience of **users** and **developers**, as depicted below:
+**mxpy** (the CLI tool) can be found here: [mx-sdk-py-cli](https://github.com/multiversx/mx-sdk-py-cli). It targets a broad audience of **users** and **developers**, as depicted below:
 
 | Feature                                                                                        | Audience                                                            |
 |------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|
@@ -19,10 +19,11 @@ erdpy CLI and Python SDK
 | Generate PEM files, recover private key from mnemonic                                          | Tech enthusiasts                                                    |
 | Miscellaneous support features (e.g. bech32 conversion)                                        | Tech enthusiasts                                                    |
 
-**erdpy** libraries:
+**sdk-py** libraries:
 
-| Package                                                                       | Description                                                                    |
-|-------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| [erdpy_core](https://github.com/multiversx/mx-sdk-erdpy-core)                 | Basic components for interacting with the blockchain and with smart contracts. |
-| [erdpy_wallet](https://github.com/multiversx/mx-sdk-erdpy-wallet)             | Core wallet components (generation, signing).                                  |
-| [erdpy_network](https://github.com/multiversx/mx-sdk-erdpy-network-providers) | Network providers (API, Gateway).                                              |
+
+| Package                                                                                     | Source code                                                               | Description                                                                                   |
+|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| [multiversx-sdk-core](https://pypi.org/project/multiversx-sdk-core)                           | [mx-sdk-py-core](https://github.com/multiversx/mx-sdk-py-core)            | Basic components for interacting with the blockchain and with smart contracts. |
+| [multiversx-sdk-wallet](https://pypi.org/project/multiversx-sdk-wallet)                       | [mx-sdk-py-wallet](https://github.com/multiversx/mx-sdk-py-wallet)                       | Core wallet components (generation, signing). |
+| [multiversx-sdk-network-providers](https://pypi.org/project/multiversx-sdk-network-providers) | [mx-sdk-py-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) | Network providers (API, Gateway). |

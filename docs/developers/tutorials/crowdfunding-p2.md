@@ -107,8 +107,8 @@ Note the added `"arguments"` field in `scDeploy` and the added fields in storage
 Run the following commands:
 
 ```python
-erdpy contract build
-erdpy contract test
+mxpy contract build
+mxpy contract test
 ```
 
 You should once again see this:
@@ -223,8 +223,8 @@ Explanation:
 Test it by running the commands again:
 
 ```python
-erdpy contract build
-erdpy contract test
+mxpy contract build
+mxpy contract test
 ```
 
 You should then see that both tests pass:
