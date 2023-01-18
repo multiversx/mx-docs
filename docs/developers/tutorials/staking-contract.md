@@ -11,31 +11,31 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-### erdpy
+### mxpy
 
-First and foremost, you need to have erdpy installed: https://docs.multiversx.com/sdk-and-tools/erdpy/installing-erdpy/
+First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy/
 
-If you already have erdpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
+If you already have mxpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
-We're going to use erdpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/erdpy/smart-contract-interactions/
+We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/
 
 ### Rust
 
-Once you have erdpy installed, you also have to install Rust through it, and the VM tools for testing:
+Once you have mxpy installed, you also have to install Rust through it, and the VM tools for testing:
 
 ```
-erdpy deps install rust
+mxpy deps install rust
 
-erdpy deps install vmtools --overwrite
+mxpy deps install vmtools --overwrite
 ```
 
-If you installed Rust already without erdpy, you might run into some issues when building your smart contracts. It's recommended to uninstall Rust, and install it through erdpy instead.
+If you installed Rust already without mxpy, you might run into some issues when building your smart contracts. It's recommended to uninstall Rust, and install it through mxpy instead.
 
 Example of error:
 
 ```
 error[E0554]: #![feature] may not be used on the stable release channel
---> /home/user/elrondsdk/vendor-rust/registry/src/github.com-1ecc6299db9ec823/elrond-wasm-derive-0.33.0/src/lib.rs:4:12
+--> /home/user/multiversx-sdk/vendor-rust/registry/src/github.com-1ecc6299db9ec823/elrond-wasm-derive-0.33.0/src/lib.rs:4:12
 ```
 
 ### VSCode and rust-analyser extension
@@ -58,7 +58,7 @@ Both can be easily installed from the "Extensions" menu in VSCode.
 Run the following command in the folder in which you want your smart contract to be created:
 
 ```
-erdpy contract new staking-contract --template empty
+mxpy contract new staking-contract --template empty
 ```
 
 Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
@@ -73,9 +73,9 @@ For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "
 Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "MultiversX: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
 
 Now let's open the MultiversX VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
-![img](/developers/staking-contract-tutorial-img/elrond_ide_extension.png)
+![img](/developers/staking-contract-tutorial-img/ide_extension.png)
 
-Alternatively, you can run `erdpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
+Alternatively, you can run `mxpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
 
 After the building has completed, our folder should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_2.png)
@@ -91,9 +91,9 @@ First, remove all the code in the `./src/empty.rs` file and replace it with this
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self) {}
@@ -116,9 +116,9 @@ Now, it's time to add an implementation for the function. We need to see how muc
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self) {}
@@ -146,11 +146,11 @@ pub trait StakingContract {
 
 `require!` is a macro that is a shortcut for `if !condition { signal_error(msg) }`. Signalling an error will terminate the execution and revert any changes made to the internal state, including token transfers from and to the SC. In this case, there is no reason to continue if the user did not pay anything.
 
-We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.multiversx.com/developers/developer-reference/elrond-wasm-annotations/
+We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.multiversx.com/developers/developer-reference/sc-annotations/
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
-- https://docs.multiversx.com/developers/developer-reference/wasm-api-functions/
+- https://docs.multiversx.com/developers/developer-reference/sc-api-functions/
 - https://docs.multiversx.com/developers/developer-reference/storage-mappers/
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
@@ -166,9 +166,9 @@ After fixing the above problems, we end up with the following code:
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self) {}
@@ -212,12 +212,12 @@ You can skip this section if you already have a devnet wallet setup.
 
 Let's create a devnet wallet. Go to https://devnet-wallet.multiversx.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
-Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/erdpy/deriving-the-wallet-pem-file/
+Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 
 ```
-erdpy --verbose wallet derive ./tutorialKey.pem --mnemonic
+mxpy --verbose wallet derive ./tutorialKey.pem --mnemonic
 ```
 
 :::note  
@@ -234,7 +234,7 @@ PROXY="https://devnet-gateway.multiversx.com"
 CHAIN_ID="D"
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} \
+    mxpy --verbose contract deploy --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
     --send --outfile="deploy-devnet.interaction.json" \
@@ -272,7 +272,7 @@ INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
 INFO:utils:View this contract address in the MultiversX Devnet Explorer: https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqq...
 ```
 
-This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So erdpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.
+This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So mxpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.
 
 ### Getting EGLD on devnet
 
@@ -297,7 +297,7 @@ Make sure you selected "devnet" and input your address! It might take a bit depe
 
 ### Deploying the contract, second try
 
-Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. erdpy will print it in the console for you:
+Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. mxpy will print it in the console for you:
 
 ```bash
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
@@ -325,7 +325,7 @@ SC_ADDRESS=erd1qqqqqqqqqqqqq...
 STAKE_AMOUNT=1
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} \
+    mxpy --verbose contract deploy --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
     --send --outfile="deploy-devnet.interaction.json" \
@@ -333,7 +333,7 @@ deploy() {
 }
 
 stake() {
-    erdpy --verbose contract call ${SC_ADDRESS} \
+    mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=${PROXY} --chain=${CHAIN_ID} \
     --send --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
@@ -365,13 +365,13 @@ Now let's try staking again:
 
 ## Querying the view functions
 
-To perform smart contract queries, we also use erdpy. Let's add the following to our snippet file:
+To perform smart contract queries, we also use mxpy. Let's add the following to our snippet file:
 
 ```bash
 USER_ADDRESS=erd1...
 
 getStakeForAddress() {
-    erdpy --verbose contract query ${SC_ADDRESS} \
+    mxpy --verbose contract query ${SC_ADDRESS} \
     --proxy=${PROXY} \
     --function="getStakingPosition" \
     --arguments ${USER_ADDRESS}
@@ -405,7 +405,7 @@ Now let's also query the stakers list:
 
 ```bash
 getAllStakers() {
-    erdpy --verbose contract query ${SC_ADDRESS} \
+    mxpy --verbose contract query ${SC_ADDRESS} \
     --proxy=${PROXY} \
     --function="getStakedAddresses"
 }
@@ -434,27 +434,27 @@ But then, why did the previous query work?
 
 ```bash
 getStakeForAddress() {
-    erdpy --verbose contract query ${SC_ADDRESS} \
+    mxpy --verbose contract query ${SC_ADDRESS} \
     --proxy=${PROXY} \
     --function="getStakingPosition" \
     --arguments ${USER_ADDRESS}
 }
 ```
 
-This is because erdpy automatically detected and converted the erd1 address to hex. To perform those conversions yourself, you can also use erdpy:
+This is because mxpy automatically detected and converted the erd1 address to hex. To perform those conversions yourself, you can also use mxpy:
 
 bech32 to hex
 
 ```bash
-erdpy wallet bech32 --decode erd1...
+mxpy wallet bech32 --decode erd1...
 ```
 
 In the previous example, we used the address: erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 
-Now let's try and decode this with erdpy:
+Now let's try and decode this with mxpy:
 
 ```bash
-erdpy wallet bech32 --decode erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
+mxpy wallet bech32 --decode erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
 ```
 
@@ -463,13 +463,13 @@ Which is precisely the value we received from the smart contract. Now let's try 
 hex to bech32
 
 ```bash
-erdpy wallet bech32 --encode hex_address
+mxpy wallet bech32 --encode hex_address
 ```
 
 Running the command with the previous example, we should get the same initial address:
 
 ```bash
-erdpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
+mxpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
 erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 ```
 
@@ -592,13 +592,13 @@ This makes it so if someone wants to perform a full unstake, they can simply not
 
 ### Unstaking our devnet tokens
 
-Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or erdpy directly, and add the unstake function to our snippets.rs file:
+Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or mxpy directly, and add the unstake function to our snippets.rs file:
 
 ```bash
 UNSTAKE_AMOUNT=500000000000000000
 
 unstake() {
-    erdpy --verbose contract call ${SC_ADDRESS} \
+    mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=${PROXY} --chain=${CHAIN_ID} \
     --send --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
@@ -618,7 +618,7 @@ Since we've added some new functionality, we also want to update the currently d
 
 ```bash
 upgrade() {
-    erdpy --verbose contract upgrade ${SC_ADDRESS} \
+    mxpy --verbose contract upgrade ${SC_ADDRESS} \
     --project=${PROJECT} \
     --recall-nonce --pem=${USER_PEM} \
     --gas-limit=20000000 \
@@ -658,7 +658,7 @@ Let's also test the optional argument functionality. Remove the `--arguments` li
 
 ```bash
 unstake() {
-    erdpy --verbose contract call ${SC_ADDRESS} \
+    mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=${PROXY} --chain=${CHAIN_ID} \
     --send --recall-nonce --pem=${USER_PEM} \
     --gas-limit=10000000 \
@@ -698,9 +698,9 @@ A more detailed explanation of Rust tests can be found here: https://docs.multiv
 To test the previously described scenario, we're going to need a user address, and a new test function. Replace the contents of the `./tests/empty_rust_test.rs` file with the following:
 
 ```rust
-use elrond_wasm::{elrond_codec::multi_types::OptionalValue, types::Address};
-use elrond_wasm_debug::{
-    managed_address, managed_biguint, rust_biguint, testing_framework::*, DebugApi,
+use multiversx_sc::{codec::multi_types::OptionalValue, types::Address};
+use multiversx_sc_scenario::{
+    managed_address, managed_biguint, rust_biguint, whitebox::*, DebugApi,
 };
 use staking_contract::*;
 
@@ -851,7 +851,7 @@ Then, we've staked the user's entire balance, unstaked half, then unstaked fully
 To run a test, you can use click on the `Run Test` button from under the test name.
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
 
-There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.multiversx.com/developers/developer-reference/rust-smart-contract-debugging/
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.multiversx.com/developers/developer-reference/sc-debugging/
 
 Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
 
@@ -891,7 +891,7 @@ Every managed type from the Rust framework needs a `ManagedTypeApi` implementati
 Additionally, since we need to store this in storage, we need to tell the Rust framework how to encode and decode this type. This can be done automatically by deriving (i.e. auto-implementing) these traits, via the `#[derive]` annotation:
 
 ```rust
-elrond_wasm::derive_imports!();
+multiversx_sc::derive_imports!();
 
 #[derive(TypeAbi, TopEncode, TopDecode, PartialEq, Debug)]
 pub struct StakingPosition<M: ManagedTypeApi> {
@@ -967,8 +967,8 @@ Now let's see how this would look in our Rust smart contract code. The smart con
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
 pub const MAX_PERCENTAGE: u64 = 10_000;
@@ -979,7 +979,7 @@ pub struct StakingPosition<M: ManagedTypeApi> {
     pub last_action_block: u64,
 }
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self, apy: u64) {
@@ -1091,9 +1091,9 @@ pub trait StakingContract {
 Now, let's update our test, to use our new `StakingPosition` struct, and also provide the `APY` as argument for the `init` function.
 
 ```rust
-use elrond_wasm::{elrond_codec::multi_types::OptionalValue, types::Address};
-use elrond_wasm_debug::{
-    managed_address, managed_biguint, rust_biguint, testing_framework::*, DebugApi,
+use multiversx_sc::{codec::multi_types::OptionalValue, types::Address};
+use multiversx_sc_scenario::{
+    managed_address, managed_biguint, rust_biguint, whitebox::*, DebugApi,
 };
 use staking_contract::*;
 

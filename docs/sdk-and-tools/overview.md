@@ -32,18 +32,16 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [sdk-dapp](/sdk-and-tools/sdk-dapp) | React library aimed to help developers create dApps based on MultiversX Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
 
-### erdpy - Python SDK
+### mxpy - Python SDK
 
-| Name                                                                                        | Description                                              |
-|---------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| [erdpy](/sdk-and-tools/erdpy/)                                                              | High level overview about erdpy.                         |
-| [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy)                                   | How to install and get started with erdpy.               |
-| [Configuring erdpy](/sdk-and-tools/erdpy/configuring-erdpy)                                 | Change erdpy's basic configurations.                     |
-| [erdpy cli](/sdk-and-tools/erdpy/erdpy-cli)                                                 | How to use the Command Line Interface.                   |
-| [Deriving the wallet pem file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file)           | How to use a wallet PEM file.                            |
-| [Sending bulk transactions](/sdk-and-tools/erdpy/sending-bulk-transactions)                 | Practical example on how to send a bulk of transactions. |
-| [Writing and running erdpy scripts](/sdk-and-tools/erdpy/writing-and-running-erdpy-scripts) | Write and run scripts made with erdpy.                   |
-| [Smart contract interactions](/sdk-and-tools/erdpy/smart-contract-interactions)             | Interact with Smart Contract.                            |
+| Name                                                                                       | Description                                              |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| [mxpy](/sdk-and-tools/sdk-py/)                                                             | High level overview about mxpy.                          |
+| [Installing mxpy](/sdk-and-tools/sdk-py/installing-mxpy)                                   | How to install and get started with mxpy.                |
+| [Configuring mxpy](/sdk-and-tools/sdk-py/configuring-mxpy)                                 | Change mxpy's basic configurations.                      |
+| [mxpy cli](/sdk-and-tools/sdk-py/mxpy-cli)                                                 | How to use the Command Line Interface.                   |
+| [Deriving the wallet pem file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file)         | How to use a wallet PEM file.                            |
+| [Smart contract interactions](/sdk-and-tools/sdk-py/smart-contract-interactions)           | Interact with Smart Contract.                            |
 
 ### sdk-nestjs - NestJS SDK
 

@@ -12,7 +12,7 @@ The MultiversX Network supports smart contracts written in any programming langu
 :::
 
 :::important
-The current tutorial revolves around **elrond-wasm-rs** version **0.35.0**, and will get updated as new versions of elrond-wasm are released.
+The current tutorial revolves around **multiversx-sc** version **0.39.0**, and will get updated as new versions of multiversx-sc are released.
 :::
 
 ## **Introduction**
@@ -53,7 +53,7 @@ MultiversX IDE is an extension for Visual Studio Code that offers development su
 
 MultiversX IDE supports the following programming languages:
 
-- Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via elrond-wasm-debug and CodeLLDB.
+- Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via multiversx-sc-scenario and CodeLLDB.
 - C / C++
 
 Follow the video guide for a detailed explanation about how to get started.
@@ -69,13 +69,13 @@ The source code of each smart contract requires its own folder. You'll need to c
 ```bash
 mkdir -p ~/MultiversX/SmartContracts
 cd ~/MultiversX/SmartContracts
-erdpy contract new crowdfunding --template adder
+mxpy contract new crowdfunding --template adder
 code crowdfunding
 ```
 
 You may choose any location you want for your smart contract. The above is just an example. Either way, now that you are in the folder dedicated to the smart contract, we can begin.
 
-Straight away you get a project that works - `erdpy` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points. The `adder` template is pretty much the simplest contract you can imagine.
+Straight away you get a project that works - `mxpy` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points. The `adder` template is pretty much the simplest contract you can imagine.
 
 The last line also opens the new project in a new VS Code instance.
 
@@ -93,11 +93,11 @@ edition = "2018"
 [lib]
 path = "src/crowdfunding_main.rs"
 
-[dependencies.elrond-wasm]
-version = "0.35.0"
+[dependencies.multiversx-sc]
+version = "0.39.0"
 
-[dev-dependencies.elrond-wasm-debug]
-version = "0.35.0"
+[dev-dependencies.multiversx-sc-scenario]
+version = "0.39.0"
 
 ```
 
@@ -115,9 +115,9 @@ With the structure in place, you can now write the code and build it. Open `src/
 ```rust,file=hello-world.rs
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Crowdfunding {
     #[init]
     fn init(&self) {
@@ -131,12 +131,12 @@ Let's take a look at the code. The first three lines declare some characteristic
 
 ### **Bring in the framework**
 
-The 3rd line contains the command `elrond_wasm::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the MultiversX framework for Rust smart contracts, which is designed to simplify the code enormously.
+The 3rd line contains the command `multiversx_sc::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the MultiversX framework for Rust smart contracts, which is designed to simplify the code enormously.
 
 The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
 
 ```rust
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 ```
 
 This line simply tells the framework to treat the next `trait` declaration (we'll get to it in a moment) as a smart contract. Because of this line, the framework will _automatically generate_ much of the code required. You won't see the generated code now (but you can).
@@ -162,16 +162,16 @@ After creating the file `src/crowdfunding_main.rs` with the content described in
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 
 ```bash
-erdpy contract build
+mxpy contract build
 ```
 
-If this is the first time you build a Rust smart contract with the `erdpy` command, it will take a little while before it's done. Subsequent builds will be much faster.
+If this is the first time you build a Rust smart contract with the `mxpy` command, it will take a little while before it's done. Subsequent builds will be much faster.
 
 When the command completes, a new folder will appear: `output`. This folder now contains two files: `crowdfunding.abi.json` and `crowdfunding.wasm`. We won't be doing anything with these files just yet - wait until we get to the deployment part. Along with `output`, there are a few other folders and files generated. You can safely ignore them for now, but do not delete the `wasm` folder - it's what makes the build command faster after the initial run.
 
 The following can be safely deleted, as they are not important for this contract:
 
-- the `snippets.sh` and `elrond.json` files
+- the `snippets.sh` file
 - the `tests` folder
 - the `interaction` folder
 
@@ -180,8 +180,6 @@ The structure of your folder should be like this (output printed by the command 
 ```text
 .
 ├── Cargo.toml
-├── mandos
-│   └── crowdfunding.scen.json
 ├── meta
 │   ├── Cargo.toml
 │   └── src
@@ -189,6 +187,8 @@ The structure of your folder should be like this (output printed by the command 
 ├── output
 │   ├── crowdfunding.abi.json
 │   └── crowdfunding.wasm
+├── scenarios
+│   └── crowdfunding.scen.json
 ├── src
 │   └── crowdfunding_main.rs
 └── wasm
@@ -231,9 +231,9 @@ Here's how the `init` method looks like, with the code that saves the target (gu
 ```Rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Crowdfunding {
 
     #[storage_mapper("target")]
@@ -255,7 +255,7 @@ Well, not quite. All of the stored values only actually end up in the storage if
 Whenever you want to make sure your code is in order, run the build command:
 
 ```bash
-erdpy contract build
+mxpy contract build
 ```
 
 There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
@@ -272,18 +272,13 @@ You must always make sure that the code you write functions as intended. That's 
 
 Let's write a test against the `init` method, and make sure that it definitely stores the address of the owner under the `target` key, at deployment.
 
-To test `init`, you will write a JSON file which describes what to do with the smart contract and what is the expected output. In the folder of the Crowdfunding smart contract, there is a folder called `mandos`. Inside it, there is a file called `crowdfunding.scen.json`. Rename that file to`crowdfunding-init.scen.json` ( `scen` is short for "scenario").
+To test `init`, you will write a JSON file which describes what to do with the smart contract and what is the expected output. In the folder of the Crowdfunding smart contract, there is a folder called `scenarios`. Inside it, there is a file called `crowdfunding.scen.json`. Rename that file to`crowdfunding-init.scen.json` ( `scen` is short for "scenario").
 
 Your folder should look like this (output from the command `tree -L 3`):
 
 ```text
 .
 ├── Cargo.toml
-├── debug
-│   ├── Cargo.toml
-│   └── src
-├── mandos
-│   └── crowdfunding-init.scen.json
 ├── meta
 │   ├── Cargo.toml
 │   └── src
@@ -291,6 +286,8 @@ Your folder should look like this (output from the command `tree -L 3`):
 ├── output
 │   ├── crowdfunding.abi.json
 │   └── crowdfunding.wasm
+├── scenarios
+│   └── crowdfunding-init.scen.json
 ├── src
 │   └── lib.rs
 └── wasm
@@ -300,7 +297,7 @@ Your folder should look like this (output from the command `tree -L 3`):
     └── target
 ```
 
-Let's define the first test scenario. Open the file `mandos/crowdfunding-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
+Let's define the first test scenario. Open the file `scenarios/crowdfunding-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
 
 ```json
 {
@@ -364,7 +361,7 @@ Let's define the first test scenario. Open the file `mandos/crowdfunding-init.sc
 Save the file. Do you want to try it out first? Go ahead and issue this command on your terminal:
 
 ```bash
-erdpy contract test
+mxpy contract test
 ```
 
 If everything went well, you should see an all-capitals, loud `SUCCESS` being printed, like this:
@@ -452,7 +449,7 @@ This describes a deployment transaction. It was fictionally submitted by "you", 
 
 This deployment transaction contains the WASM bytecode of the Crowdfunding smart contract, which is read at runtime from the file `output/crowdfunding.wasm`.
 
-Remember to run `erdpy contract build` before running the test, especially if you made recent changes to the smart contract source code! The WASM bytecode will be read directly from the file you specify here, without rebuilding it automatically.
+Remember to run `mxpy contract build` before running the test, especially if you made recent changes to the smart contract source code! The WASM bytecode will be read directly from the file you specify here, without rebuilding it automatically.
 
 "You" also sent exactly `value: 0` EGLD out of the `1,000,000` to the deployed smart contract. It wouldn't need them anyway, because your Crowdfunding smart contract won't be transferring any EGLD to anyone, unless they donate it first.
 

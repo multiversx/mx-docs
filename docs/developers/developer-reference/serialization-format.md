@@ -3,13 +3,9 @@ id: serialization-format
 title: The MultiversX Serialization Format
 ---
 
-_How MultiversX (previously Elrond) smart contracts serialize arguments, results, and storage_
-
-_How MultiversX smart contracts serialize arguments, results, and storage_
-
 In MultiversX, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 
-In Rust, the **elrond-codec** crate ([crate](https://crates.io/crates/elrond-codec), [doc](https://docs.rs/elrond-codec/0.8.5/elrond_codec/)) exclusively deals with this format. Both Go and Rust implementations of Mandos have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
+In Rust, the **multiversx-sc-codec** crate ([crate](https://crates.io/crates/multiversx-sc-codec), [doc](https://docs.rs/multiversx-sc-codec/0.17.0/multiversx_sc_codec/)) exclusively deals with this format. Both Go and Rust implementations of scenarios have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
 
 ## Rationale
 
@@ -323,7 +319,7 @@ Any enum defined in a contract of library can become serializable if it is annot
 
 **A simple enum example:**
 
-_Example taken from the elrond-codec tests._
+_Example taken from the multiversx-sc-codec tests._
 
 ```rust
 #[derive(TopEncode, TopDecode, NestedEncode, NestedDecode)]
@@ -365,7 +361,7 @@ if the discriminant is `0` (first variant) and there are no fields, nothing is e
 
 **Example values**
 
-_The examples below are taken from the elrond-codec tests._
+_The examples below are taken from the multiversx-sc-codec tests._
 
 <ExampleTable />
 

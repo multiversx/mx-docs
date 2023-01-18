@@ -28,7 +28,7 @@ There are SDKs or tools with support for interacting with the MultiversX blockch
 transactions creation and signing:
 
 - [sdk-js - JavaScript SDK](/sdk-and-tools/sdk-js)
-- [erdpy - Python SDK](/sdk-and-tools/erdpy)
+- [sdk-py - Python SDK](/sdk-and-tools/sdk-py)
 - [erdgo - Golang SDK](/sdk-and-tools/erdgo)
 - [erdjava - Java SDK](/sdk-and-tools/erdjava)
 - [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)

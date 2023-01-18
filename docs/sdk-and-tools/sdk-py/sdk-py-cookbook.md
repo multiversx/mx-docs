@@ -1,5 +1,5 @@
 ---
-id: erdpy-cookbook
+id: sdk-py-cookbook
 title: Cookbook
 ---
 

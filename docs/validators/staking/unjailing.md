@@ -9,7 +9,7 @@ In the unfortunate situation of losing too much **rating score**, a validator wi
 
 You can reinstate one of your jailed validators using an **unjailing transaction**. This transaction effectively represents the payment of a fine. After the transaction is successfully executed, your validator will return to the network in the next epoch, and treated as if the validator is brand new, with the rating reset to `50`.
 
-It is easy to submit an unjailing transaction. You have the option of unjailing your validators either through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/), or by using `erdpy` in the command-line.
+It is easy to submit an unjailing transaction. You have the option of unjailing your validators either through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/), or by using `mxpy` in the command-line.
 
 You'll see some BLS public keys in the examples on this page. Make sure you don't copy-paste them into your staking transaction. These BLS keys have been randomly generated and do not belong to any real node.
 
@@ -18,7 +18,7 @@ Each unjailing process requires a transaction to be sent to the Staking Smart Co
 There are currently 2 supported methods of constructing and submitting these transactions to the Staking SmartContract:
 
 - Manually constructing the transaction, then submitting it to [wallet.multiversx.com](https://wallet.multiversx.com/);
-- Automatically constructing the transaction and submitting it using the `erdpy` command-line tool.
+- Automatically constructing the transaction and submitting it using the `mxpy` command-line tool.
 
 The following pages will describe both approaches in each specific case.
 
@@ -101,36 +101,28 @@ You can write the text for the "Data" field for _any_ number of nodes. The gener
 unJail@<BLS1>@<BLS2>@…@<BLS99>
 ```
 
-## **Unjailing through erdpy**
+## **Unjailing through mxpy**
 
-Submitting the unjailing transaction using `erdpy` avoids having to write the "Data" field manually. Instead, the transaction is constructed automatically by `erdpy` and submitted to the network directly, in a single command.
+Submitting the unjailing transaction using `mxpy` avoids having to write the "Data" field manually. Instead, the transaction is constructed automatically by `mxpy` and submitted to the network directly, in a single command.
 
-Make sure `erdpy` is installed by issuing this command on a terminal:
-
-```python
-erdpy --version
-```
-
-The version reported by this command must be at least `erdpy 0.7.0`, or higher. If `erdpy` is not installed (`command not found`), or if the version is lower than `0.7.0`, please follow [these instructions](/sdk-and-tools/erdpy/installing-erdpy).
-
-Make sure `erdpy` is installed and has the latest version before continuing.
+Make sure `mxpy` is installed and has the latest version before continuing. If `mxpy` is not installed, please follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
 
 ## **Your Wallet PEM file**
 
-To send transactions on your behalf _without_ using the online MultiversX Wallet, `erdpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
+To send transactions on your behalf _without_ using the online MultiversX Wallet, `mxpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
-Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `erdpy` commands.
+Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
 
-After the PEM file was generated, you can issue transactions from `erdpy`directly.
+After the PEM file was generated, you can issue transactions from `mxpy`directly.
 
 ## **The unjailing transaction**
 
 The following commands assume that the PEM file for your Wallet was saved with the name `walletKey.pem` in the current folder, where you are issuing the commands from.
 
-The command to submit an unjailing transaction with `erdpy` is this:
+The command to submit an unjailing transaction with `mxpy` is this:
 
 ```python
-erdpy --verbose validator unjail --pem=walletKey.pem --value="<unjail-value>" --nodes-public-keys="<BLS1>,<BLS2>,...,<BLS99>" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator unjail --pem=walletKey.pem --value="<unjail-value>" --nodes-public-keys="<BLS1>,<BLS2>,...,<BLS99>" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
@@ -138,22 +130,22 @@ Notice that we are using the `walletKey.pem` file. Moreover, before executing th
 - Replace `<unjail-value>` with the amount of EGLD required for unjailing your validators. You need to calculate this value with respect to the number of nodes you are unjailing. See the [beginning of the Unjailing through the Wallet](/validators/staking/unjailing#unjailing-through-the-wallet) section for info on how to do it.
 - Replace all the `<BLS…>` with the actual **BLS public keys** of your nodes, which you can find inside their individual `validatorKey.pem` files. Make sure you **do not write the BLS secret keys**! Read the page [Validator Keys](/validators/key-management/validator-keys) to see how to interpret the `validatorKey.pem` files.
 
-Notice also that there is no calculation for "Gas Limit". If you provide the `--estimate-gas` argument to `erdpy`, the gas limit will be estimated automatically.
+Notice also that there is no calculation for "Gas Limit". If you provide the `--estimate-gas` argument to `mxpy`, the gas limit will be estimated automatically.
 
 Here's an example for an unjailing command for one validator:
 
 ```python
-erdpy --verbose validator unjail --pem=walletKey.pem --value="2500000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator unjail --pem=walletKey.pem --value="2500000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 :::note important
-You must take **denomination** into account when specifying the `value` parameter in **erdpy**.
+You must take **denomination** into account when specifying the `value` parameter in **mxpy**.
 :::
 
 For two validators, the command becomes this one:
 
 ```python
-erdpy --verbose validator unjail --pem=walletKey.pem --value="5000000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27,f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator unjail --pem=walletKey.pem --value="5000000000000000000000" --nodes-public-keys="b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27,f921a0f76ed70e8a806c6f9119f87b12700f96f732e6070b675e0aec10cb0723803202a4c40194847c38195db07b1001f6d50c81a82b949e438cd6dd945c2eb99b32c79465aefb9144c8668af67e2d01f71b81842d9b94e4543a12616cb5897d" --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
 Notice that the two BLS public keys are separated by a comma, with no extra space between them.

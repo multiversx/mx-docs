@@ -208,20 +208,122 @@ const config = {
           {
             from: "/sdk-and-tools/rest-api/rest-api",
             to: "/sdk-and-tools/rest-api"
-          }
+          },
+          {
+            from: "/developers/developer-reference/wasm-annotations",
+            to: "/developers/developer-reference/sc-annotations",
+          },
+          {
+            from: "/developers/developer-reference/wasm-modules",
+            to: "/developers/developer-reference/sc-modules",
+          },
+          {
+            from: "/developers/developer-reference/wasm-contract-calls",
+            to: "/developers/developer-reference/sc-contract-calls",
+          },
+          {
+            from: "/developers/developer-reference/wasm-api-functions",
+            to: "/developers/developer-reference/sc-api-functions",
+          },
+          {
+            from: "/developers/developer-reference/rust-smart-contract-debugging",
+            to: "/developers/developer-reference/sc-debugging",
+          },
+          {
+            from: "/developers/developer-reference/smart-contract-build-reference",
+            to: "/developers/developer-reference/sc-build-reference",
+          },
+          {
+            from: "/developers/developer-reference/random-numbers-in-smart-contracts",
+            to: "/developers/developer-reference/sc-random-numbers",
+          },
+          {
+            from: "/sdk-and-tools/erdjs",
+            to: "/sdk-and-tools/sdk-js",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-cookbook",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/extending-erdjs",
+            to: "/sdk-and-tools/sdk-js/extending-sdk-js",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
+            to: "/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-migration-guides",
+            to: "/sdk-and-tools/sdk-js/sdk-js-migration-guides",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-signing-providers",
+            to: "/sdk-and-tools/sdk-js/sdk-js-signing-providers",
+          },
+          {
+            from: "/sdk-and-tools/erdpy",
+            to: "/sdk-and-tools/sdk-py",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/erdpy",
+            to: "/sdk-and-tools/sdk-py",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/erdpy-cookbook",
+            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/installing-erdpy",
+            to: "/sdk-and-tools/sdk-py/installing-mxpy",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/configuring-erdpy",
+            to: "/sdk-and-tools/sdk-py/configuring-mxpy",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/erdpy-cli",
+            to: "/sdk-and-tools/sdk-py/mxpy-cli",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
+            to: "/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/smart-contract-interactions",
+            to: "/sdk-and-tools/sdk-py/smart-contract-interactions",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/sending-bulk-transactions",
+            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/writing-and-running-mxpy-scripts",
+            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+          },
+          {
+            from: "/developers/mandos-reference/overview",
+            to: "/developers/scenario-reference/overview",
+          },
+          {
+            from: "/developers/mandos-reference/structure",
+            to: "/developers/scenario-reference/structure",
+          },
+          {
+            from: "/developers/mandos-reference/values-simple",
+            to: "/developers/scenario-reference/values-simple",
+          },
+          {
+            from: "/developers/mandos-reference/values-complex",
+            to: "/developers/scenario-reference/values-complex",
+          },
+          {
+            from: "/developers/mandos-reference/embed",
+            to: "/developers/scenario-reference/embed",
+          },
+
         ],
         createRedirects(existingPath) {
-          if (existingPath.includes("/erdjs")) {
-            return [
-                // erdjs -> sdk-js
-              existingPath.replace("/sdk-and-tools/erdjs", "/sdk-and-tools/sdk-js"),
-              existingPath.replace("/sdk-and-tools/erdjs/erdjs-cookbook", "sdk-and-tools/sdk-js/sdk-js-cookbook"),
-              existingPath.replace("/sdk-and-tools/erdjs/extending-erdjs", "sdk-and-tools/sdk-js/extending-sdk-js"),
-              existingPath.replace("/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions", "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions"),
-              existingPath.replace("/sdk-and-tools/erdjs/erdjs-migration-guides", "sdk-and-tools/sdk-js/sdk-js-migration-guides"),
-              existingPath.replace("/sdk-and-tools/erdjs/erdjs-signing-providers", "sdk-and-tools/sdk-js/sdk-js-signing-providers"),
-            ];
-          }
           return undefined; // Return a falsy value: no redirect created
         },
       },

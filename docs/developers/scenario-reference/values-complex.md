@@ -1,9 +1,9 @@
 ---
 id: values-complex
-title: Mandos Complex Values
+title: Scenario Complex Values
 ---
 
-We already covered representations of simple types [here](/developers/mandos-reference/values-simple). This is enough for arguments of types like `usize`, `BigUint` or `&[u8]`, but we need to also somehow specify complex types like custom structs or lists of items.
+We already covered representations of simple types [here](/developers/scenario-reference/values-simple). This is enough for arguments of types like `usize`, `BigUint` or `&[u8]`, but we need to also somehow specify complex types like custom structs or lists of items.
 
 ## **Concatenation**
 
@@ -22,7 +22,7 @@ Please note that the pipe operator only takes care of the concatenation itself. 
 
 ## **Using JSON lists as values**
 
-Mandos allows using JSON lists to express longer values. This especially makes sense when the value being represented is itself a list in the smart contract.
+Scenarios allow using JSON lists to express longer values. This especially makes sense when the value being represented is itself a list in the smart contract.
 
 :::note Example
 
@@ -31,7 +31,7 @@ Mandos allows using JSON lists to express longer values. This especially makes s
 - a `SimpleStruct { a: u8, b: BoxedBytes }` can also be expressed as `["u8:4", "nested:str:value-b"]`, although in this case a [JSON map](#using-json-maps-as-values) might be more appropriate.
   :::
 
-Make sure not to confuse values expressed as JSON lists with other elements of Mandos syntax.
+Make sure not to confuse values expressed as JSON lists with other elements of scenario syntax.
 
 :::note Example
 
@@ -59,7 +59,7 @@ Make sure not to confuse values expressed as JSON lists with other elements of M
         },
 ```
 
-In the example above, there is in fact a single argument that we are passing to the endpoint. The outer brackets in `"arguments": [ ... ]` are Mandos syntax for the list of arguments. The brackets immediately nested signal a JSON list value. Notice how the list itself contains some more lists inside it. They all get concatenated in the end into a single value.
+In the example above, there is in fact a single argument that we are passing to the endpoint. The outer brackets in `"arguments": [ ... ]` are scenario syntax for the list of arguments. The brackets immediately nested signal a JSON list value. Notice how the list itself contains some more lists inside it. They all get concatenated in the end into a single value.
 
 In this example the only argument is `0x0000000300000001000000020000000300000000000000020000000500000006`.
 
@@ -77,9 +77,9 @@ JSON lists make sense for representing series of items, but for structs JSON map
 
 The rules are as follows:
 
-- Mandos will concatenate all JSON map values and leave the keys out.
+- The interpreter will concatenate all JSON map values and leave the keys out.
 - The keys need to be in alphanumerical order, so we customarily prefix them with numbers. Map keys in JSON are fundamentally unordered and this is the easiest way to enforce a deterministic order for the values.
-- Map values can be either JSON strings, lists or other maps, all Mandos value rules apply the same way all the way down.
+- Map values can be either JSON strings, lists or other maps, all scenario value rules apply the same way all the way down.
 
 :::note Example
 
