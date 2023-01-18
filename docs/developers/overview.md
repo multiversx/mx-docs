@@ -55,18 +55,18 @@ Learn about transaction's gas and how a fee is calculated
 |--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
 | [MultiversX serialization format](/developers/developer-reference/serialization-format)                                  | How MultiversX smart contracts serialize arguments, results, and storage.                       |
-| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                          | How to use annotations your contracts to make use of many built-in features from the framework. |
-| [MultiversX wasm modules](/developers/developer-reference/sc-modules)                                                  | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
-| [MultiversX wasm contract calls](/developers/developer-reference/sc-contract-calls)                                    | Learn how to call a Smart Contract from another Smart Contract.                                 |
+| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations your contracts to make use of many built-in features from the framework. |
+| [MultiversX wasm modules](/developers/developer-reference/sc-modules)                                                    | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
+| [MultiversX wasm contract calls](/developers/developer-reference/sc-contract-calls)                                      | Learn how to call a Smart Contract from another Smart Contract.                                 |
 | [Code metadata](/developers/developer-reference/code-metadata)                                                           | Choose the properties / eligible actions of your Smart Contract.                                |
 | [Upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts)                                   | The implications of upgrading a Smart Contract.                                                 |
-| [MultiversX wasm api functions](/developers/developer-reference/sc-api-functions)                                      | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
+| [MultiversX wasm api functions](/developers/developer-reference/sc-api-functions)                                        | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
 | [Storage mappers](/developers/developer-reference/storage-mappers)                                                       | Decide from multiple ways of storing data in your SC, by considering performance.               |
 | [Rust testing framework](/developers/developer-reference/rust-testing-framework)                                         | Test your Smart Contract directly in Rust.                                                      |
 | [Rust testing framework functions reference](/developers/developer-reference/rust-testing-framework-functions-reference) | A list of available functions to be used when testing your Smart Contract in Rust.              |
-| [Rust smart contract debugging](/developers/developer-reference/sc-debugging)                           | How to debug your Smart Contract.                                                               |
-| [Rust smart contract build reference](/developers/developer-reference/sc-build-reference)                    | How to build and organize your Smart Contract.                                                  |
-| [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                   | How to generate random number in Smart Contracts.                                               |
+| [Rust smart contract debugging](/developers/developer-reference/sc-debugging)                                            | How to debug your Smart Contract.                                                               |
+| [Rust smart contract build reference](/developers/developer-reference/sc-build-reference)                                | How to build and organize your Smart Contract.                                                  |
+| [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                                   | How to generate random number in Smart Contracts.                                               |
 
 ### Smart Contract Developers Best Practices
 
