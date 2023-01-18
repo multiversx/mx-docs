@@ -1,5 +1,5 @@
 ---
-id: random-numbers-in-smart-contracts
+id: sc-random-numbers
 title: Random Numbers in Smart Contracts
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: wasm-contract-calls
+id: sc-contract-calls
 title: Smart contract to smart contract calls
 ---
 
@@ -258,9 +258,9 @@ fn caller_endpoint(&self) {
 Sometimes you don't have access to the callee contract code, or it's simply inconvenient to import it (different framework versions, for instance). In this case, you're going to have to manually declare your proxy. Let's use the same example endpoint as in the first method:
 ```rust
 mod callee_proxy {
-    elrond_wasm::imports!();
+    multiversx_sc::imports!();
 
-    #[elrond_wasm::proxy]
+    #[multiversx_sc::proxy]
     pub trait CalleeContract {
         #[payable("*")]
 		#[endpoint(myEndpoint)]
@@ -278,7 +278,8 @@ fn contract_proxy(&self, sc_address: ManagedAddress) -> callee_proxy::Proxy<Self
 ### Method #3: Manual calls (NOT recommended)
 
 If for some reason you don't want to use the contract proxies, you can create a `ContractCall` object by hand:
-```
+
+```rust
 let mut contract_call = ContractCall::new(
     self.api,
     dest_sc_address,

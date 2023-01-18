@@ -73,7 +73,7 @@ For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "
 Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "MultiversX: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
 
 Now let's open the MultiversX VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
-![img](/developers/staking-contract-tutorial-img/elrond_ide_extension.png)
+![img](/developers/staking-contract-tutorial-img/ide_extension.png)
 
 Alternatively, you can run `mxpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
 
@@ -91,9 +91,9 @@ First, remove all the code in the `./src/empty.rs` file and replace it with this
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self) {}
@@ -116,9 +116,9 @@ Now, it's time to add an implementation for the function. We need to see how muc
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self) {}
@@ -146,11 +146,11 @@ pub trait StakingContract {
 
 `require!` is a macro that is a shortcut for `if !condition { signal_error(msg) }`. Signalling an error will terminate the execution and revert any changes made to the internal state, including token transfers from and to the SC. In this case, there is no reason to continue if the user did not pay anything.
 
-We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.multiversx.com/developers/developer-reference/elrond-wasm-annotations/
+We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.multiversx.com/developers/developer-reference/sc-annotations/
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
-- https://docs.multiversx.com/developers/developer-reference/wasm-api-functions/
+- https://docs.multiversx.com/developers/developer-reference/sc-api-functions/
 - https://docs.multiversx.com/developers/developer-reference/storage-mappers/
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
@@ -166,9 +166,9 @@ After fixing the above problems, we end up with the following code:
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self) {}
@@ -698,9 +698,9 @@ A more detailed explanation of Rust tests can be found here: https://docs.multiv
 To test the previously described scenario, we're going to need a user address, and a new test function. Replace the contents of the `./tests/empty_rust_test.rs` file with the following:
 
 ```rust
-use elrond_wasm::{elrond_codec::multi_types::OptionalValue, types::Address};
-use elrond_wasm_debug::{
-    managed_address, managed_biguint, rust_biguint, testing_framework::*, DebugApi,
+use multiversx_sc::{codec::multi_types::OptionalValue, types::Address};
+use multiversx_sc_scenario::{
+    managed_address, managed_biguint, rust_biguint, whitebox::*, DebugApi,
 };
 use staking_contract::*;
 
@@ -851,7 +851,7 @@ Then, we've staked the user's entire balance, unstaked half, then unstaked fully
 To run a test, you can use click on the `Run Test` button from under the test name.
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
 
-There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.multiversx.com/developers/developer-reference/rust-smart-contract-debugging/
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.multiversx.com/developers/developer-reference/sc-debugging/
 
 Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
 
@@ -891,7 +891,7 @@ Every managed type from the Rust framework needs a `ManagedTypeApi` implementati
 Additionally, since we need to store this in storage, we need to tell the Rust framework how to encode and decode this type. This can be done automatically by deriving (i.e. auto-implementing) these traits, via the `#[derive]` annotation:
 
 ```rust
-elrond_wasm::derive_imports!();
+multiversx_sc::derive_imports!();
 
 #[derive(TypeAbi, TopEncode, TopDecode, PartialEq, Debug)]
 pub struct StakingPosition<M: ManagedTypeApi> {
@@ -967,8 +967,8 @@ Now let's see how this would look in our Rust smart contract code. The smart con
 ```rust
 #![no_std]
 
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
 pub const MAX_PERCENTAGE: u64 = 10_000;
@@ -979,7 +979,7 @@ pub struct StakingPosition<M: ManagedTypeApi> {
     pub last_action_block: u64,
 }
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self, apy: u64) {
@@ -1091,9 +1091,9 @@ pub trait StakingContract {
 Now, let's update our test, to use our new `StakingPosition` struct, and also provide the `APY` as argument for the `init` function.
 
 ```rust
-use elrond_wasm::{elrond_codec::multi_types::OptionalValue, types::Address};
-use elrond_wasm_debug::{
-    managed_address, managed_biguint, rust_biguint, testing_framework::*, DebugApi,
+use multiversx_sc::{codec::multi_types::OptionalValue, types::Address};
+use multiversx_sc_scenario::{
+    managed_address, managed_biguint, rust_biguint, whitebox::*, DebugApi,
 };
 use staking_contract::*;
 

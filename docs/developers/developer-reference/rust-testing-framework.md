@@ -5,29 +5,29 @@ title: Rust Testing Framework
 
 ## Introduction
 
-The Rust testing framework was developed as an alternative to manually writing Mandos tests. This comes with many advantages:
+The Rust testing framework was developed as an alternative to manually writing scenario tests. This comes with many advantages:
 
 - being able to calculate values using variables
 - type checking
 - automatic serialization
 - far less verbose
-- semi-automatic generation of the Mandos tests
+- semi-automatic generation of the scenario tests
 
 The only disadvantage is that you need to learn something new! Jokes aside, keep in mind that this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work identically with the current VM version deployed on the mainnet.
 
-This is where the Mandos generation part comes into play. The Rust testing framework allows you to generate Mandos scenarios with minimal effort, and then run said scenarios with one click through our MultiversX VSCode extension (alteratively, simply run `mxpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
+This is where the scenario generation part comes into play. The Rust testing framework allows you to generate scenarios with minimal effort, and then run said scenarios with one click through our MultiversX VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
 
-Please note that mandos generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.
+Please note that scenario generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.
 
 ## Prerequisites
 
-You need to have the latest elrond-wasm version (at the time of writing this, the latest version is 0.31.1). You can check the latest version here: https://crates.io/crates/elrond-wasm
+You need to have the latest multiversx-sc version (at the time of writing this, the latest version is 0.39.0). You can check the latest version here: https://crates.io/crates/multiversx-sc
 
-Add `elrond-wasm-debug` and required packages as dev-dependencies in your Cargo.toml:
+Add `multiversx-sc-scenario` and required packages as dev-dependencies in your Cargo.toml:
 
 ```toml
-[dev-dependencies.elrond-wasm-debug]
-version = "0.31.1"
+[dev-dependencies.multiversx-sc-scenario]
+version = "0.39.0"
 
 [dev-dependencies]
 num-bigint = "0.4.2"
@@ -37,18 +37,18 @@ hex = "0.4"
 
 For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding-esdt
 
-You need a `tests` and a `mandos` folder in your contract. Create a `.rs` file in your `tests` folder.
+You need a `tests` and a `scenarios` folder in your contract. Create a `.rs` file in your `tests` folder.
 
 In your newly created test file, add the following code (adapt the `crowdfunding_esdt` namespace, the struct/variable names, and the contract wasm path according to your contract):
 
 ```rust
 use crowdfunding_esdt::*;
-use elrond_wasm::{
+use multiversx_sc::{
     sc_error,
     types::{Address, SCResult},
 };
-use elrond_wasm_debug::{
-    managed_address, managed_biguint, managed_token_id, rust_biguint, testing_framework::*,
+use multiversx_sc_scenario::{
+    managed_address, managed_biguint, managed_token_id, rust_biguint, whitebox::*,
     DebugApi,
 };
 
@@ -139,7 +139,7 @@ Then, we set the ESDT balances for the two users, and deploy the smart contract,
 - EGLD payment amount
 - a lambda function, which contains the actual execution
 
-Since this is a SC deploy, we call the `init` function. Since the contract works with managed objects, we can't use the built-in Rust BigUint, so we use the one provided by `elrond_wasm` instead. To create managed types, we use the `managed_` functions. Alternatively, you can create those objects by:
+Since this is a SC deploy, we call the `init` function. Since the contract works with managed objects, we can't use the built-in Rust BigUint, so we use the one provided by `multiversx_sc` instead. To create managed types, we use the `managed_` functions. Alternatively, you can create those objects by:
 
 ```rust
 let target = BigUint::<DebugApi>::from(2_000u32);
@@ -150,9 +150,9 @@ Keep in mind you can't create managed types outside of the `execute_tx` function
 Some observations for the `execute_tx` function:
 
 - The return type for the lambda function is a `TxResult`, which has methods for checking for success or error: `assert_ok()` is used to check the tx worked. If you want to check error cases, you would use `assert_user_error("message")`.
-- After running the `init` function, we add a `setState` step in the generated Mandos, to simulate our deploy: `blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());`
+- After running the `init` function, we add a `setState` step in the generated scenario, to simulate our deploy: `blockchain_wrapper.add_mandos_set_account(cf_wrapper.address_ref());`
 
-To test the scenario and generate the Mandos file, you have to create a test function:
+To test the scenario and generate the trace file, you have to create a test function:
 
 ```rust
 #[test]
@@ -164,7 +164,7 @@ fn init_test() {
 }
 ```
 
-And you're done for this step. You successfuly tested your contract's init function, and generated a Mandos scenario for it.
+And you're done for this step. You successfuly tested your contract's init function, and generated a scenario for it.
 
 ## Testing transactions
 
@@ -198,7 +198,7 @@ fn fund_test() {
 
 As you can see, we can directly call the storage mappers (like `deposit`) from within the contract and compare with a local value. No need to encode anything.
 
-If you also want to generate a Mandos scenario file for this transaction, this is where the bit of manual work comes in:
+If you also want to generate a scenario file for this transaction, this is where the bit of manual work comes in:
 
 ```rust
     let mut sc_call = ScCallMandos::new(user_addr, cf_setup.cf_wrapper.address_ref(), "fund");
@@ -293,7 +293,7 @@ Notice how we've changed the payment intentionally to an invalid token to check 
 
 ## Testing a successful funding campaign
 
-For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the Mandos generation out of this one:
+For this scenario, we need both users to fund the full amount, and then owner to claim the funds. For simplicity, we've left the scenario generation out of this one:
 
 ```rust
 #[test]
