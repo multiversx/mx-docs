@@ -236,45 +236,94 @@ const config = {
           {
             from: "/developers/developer-reference/random-numbers-in-smart-contracts",
             to: "/developers/developer-reference/sc-random-numbers",
-          }
+          },
+          {
+            from: "/sdk-and-tools/erdjs",
+            to: "/sdk-and-tools/sdk-js",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-cookbook",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/extending-erdjs",
+            to: "/sdk-and-tools/sdk-js/extending-sdk-js",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
+            to: "/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-migration-guides",
+            to: "/sdk-and-tools/sdk-js/sdk-js-migration-guides",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-signing-providers",
+            to: "/sdk-and-tools/sdk-js/sdk-js-signing-providers",
+          },
+          {
+            from: "/sdk-and-tools/erdpy",
+            to: "/sdk-and-tools/sdk-py",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/erdpy",
+            to: "/sdk-and-tools/sdk-py",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/erdpy-cookbook",
+            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/installing-erdpy",
+            to: "/sdk-and-tools/sdk-py/installing-mxpy",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/configuring-erdpy",
+            to: "/sdk-and-tools/sdk-py/configuring-mxpy",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/erdpy-cli",
+            to: "/sdk-and-tools/sdk-py/mxpy-cli",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
+            to: "/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/smart-contract-interactions",
+            to: "/sdk-and-tools/sdk-py/smart-contract-interactions",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/sending-bulk-transactions",
+            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+          },
+          {
+            from: "/sdk-and-tools/erdpy/writing-and-running-mxpy-scripts",
+            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+          },
+          {
+            from: "/developers/mandos-reference/overview",
+            to: "/developers/scenario-reference/overview",
+          },
+          {
+            from: "/developers/mandos-reference/structure",
+            to: "/developers/scenario-reference/structure",
+          },
+          {
+            from: "/developers/mandos-reference/values-simple",
+            to: "/developers/scenario-reference/values-simple",
+          },
+          {
+            from: "/developers/mandos-reference/values-complex",
+            to: "/developers/scenario-reference/values-complex",
+          },
+          {
+            from: "/developers/mandos-reference/embed",
+            to: "/developers/scenario-reference/embed",
+          },
+
         ],
         createRedirects(existingPath) {
-          if (existingPath.includes("/erdjs")) {
-            return [
-              // erdjs -> sdk-js
-              existingPath.replace("/sdk-and-tools/erdjs", "/sdk-and-tools/sdk-js"),
-              existingPath.replace("/sdk-and-tools/erdjs/erdjs-cookbook", "sdk-and-tools/sdk-js/sdk-js-cookbook"),
-              existingPath.replace("/sdk-and-tools/erdjs/extending-erdjs", "sdk-and-tools/sdk-js/extending-sdk-js"),
-              existingPath.replace("/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions", "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions"),
-              existingPath.replace("/sdk-and-tools/erdjs/erdjs-migration-guides", "sdk-and-tools/sdk-js/sdk-js-migration-guides"),
-              existingPath.replace("/sdk-and-tools/erdjs/erdjs-signing-providers", "sdk-and-tools/sdk-js/sdk-js-signing-providers"),
-            ];
-          }
-          if (existingPath.includes("/erdpy")) {
-            return [
-              // erdpy -> mxpy
-              existingPath.replace("/sdk-and-tools/erdpy", "/sdk-and-tools/sdk-py"),
-              existingPath.replace("/sdk-and-tools/erdpy/erdpy", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
-              existingPath.replace("/sdk-and-tools/erdpy/erdpy-cookbook", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
-              existingPath.replace("/sdk-and-tools/erdpy/installing-erdpy", "sdk-and-tools/sdk-py/installing-mxpy"),
-              existingPath.replace("/sdk-and-tools/erdpy/configuring-erdpy", "sdk-and-tools/sdk-py/configuring-mxpy"),
-              existingPath.replace("/sdk-and-tools/erdpy/erdpy-cli", "sdk-and-tools/sdk-py/mxpy-cli"),
-              existingPath.replace("/sdk-and-tools/erdpy/deriving-the-wallet-pem-file", "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file"),
-              existingPath.replace("/sdk-and-tools/erdpy/smart-contract-interactions", "sdk-and-tools/sdk-py/smart-contract-interactions"),
-              existingPath.replace("/sdk-and-tools/erdpy/sending-bulk-transactions", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
-              existingPath.replace("/sdk-and-tools/erdpy/writing-and-running-mxpy-scripts", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
-            ];
-          }
-          if (existingPath.includes("/developers/mandos-reference")) {
-            return [
-              // mandos -> scenario
-              existingPath.replace("/developers/mandos-reference/overview", "/developers/scenario-reference/overview"),
-              existingPath.replace("/developers/mandos-reference/structure", "/developers/scenario-reference/structure"),
-              existingPath.replace("/developers/mandos-reference/values-simple", "/developers/scenario-reference/values-simple"),
-              existingPath.replace("/developers/mandos-reference/values-complex", "/developers/scenario-reference/values-complex"),
-              existingPath.replace("/developers/mandos-reference/embed", "/developers/scenario-reference/embed"),
-            ];
-          }
           return undefined; // Return a falsy value: no redirect created
         },
       },
