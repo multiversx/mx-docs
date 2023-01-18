@@ -552,18 +552,18 @@ Issues a new fungible token. `issue_cost` is 0.05 EGLD (5000000000000000) at the
 
 This mapper allows only one issue, so trying to issue multiple types will signal an error.
 
-`opt_callback` is an optional custom callback you can use for your issue call. We recommed using the default callback. To do so, you need to import elrond-wasm-modules in your Cargo.toml:
+`opt_callback` is an optional custom callback you can use for your issue call. We recommed using the default callback. To do so, you need to import multiversx-sc-modules in your Cargo.toml:
 ```toml
-[dependencies.elrond-wasm-modules]
-version = "0.31.1"
+[dependencies.multiversx-sc-modules]
+version = "0.39.0"
 ```
 
-Note: current released elrond-wasm version at the time of writing this was 0.31.1, upgrade if necessary.
+Note: current released multiversx-sc version at the time of writing this was 0.39.0, upgrade if necessary.
 
 Then you should import the `DefaultCallbacksModule` in your contract:
 ```rust
-#[elrond_wasm::contract]
-pub trait MyContract: elrond_wasm_modules::default_issue_callbacks::DefaultIssueCallbacksModule {
+#[multiversx_sc::contract]
+pub trait MyContract: multiversx_sc_modules::default_issue_callbacks::DefaultIssueCallbacksModule {
     /* ... */
 }
 ```
@@ -819,7 +819,7 @@ There is no difference between `SingleValueMapper` and the old-school setters/ge
 
 Storing a `ManagedVec<T>` can be done in two ways:
 
-```
+```rust
 #[storage_mapper("my_vec_single)]
 fn my_vec_single(&self) -> SingleValueMapper<ManagedVec<T>>
 
@@ -841,7 +841,7 @@ Use `VecMapper` when:
 
 The primary use for `SetMapper` is storing a whitelist of addresses, token ids, etc. A token ID whitelist can be stored in these two ways:
 
-```
+```rust
 #[storage_mapper("my_vec_whitelist)]
 fn my_vec_whitelist(&self) -> VecMapper<TokenIdentifier>
 
@@ -851,9 +851,9 @@ fn my_set_mapper(&self) -> SetMapper<TokenIdentifier>;
 
 This might look very similar, but the implications of using `VecMapper` for this are very damaging to the potential gas costs. Checking for an item's existence in `VecMapper` is done in O(n), with each iteration requiring a new storage read! Worst case scenario is the Token ID is not in the whitelist and the whole Vec is read.
 
-`SetMapper` is vastly more efficient than this, as it provides checking for a value in O(1). However, this does not come without a cost. This is how the storage looks for a `SetMapper` with two elements (this snippet is taken from a mandos test):
+`SetMapper` is vastly more efficient than this, as it provides checking for a value in O(1). However, this does not come without a cost. This is how the storage looks for a `SetMapper` with two elements (this snippet is taken from a scenario test):
 
-```
+```json
 "str:tokenWhitelist.info": "u32:2|u32:1|u32:2|u32:2",
 "str:tokenWhitelist.node_idEGLD-123456": "2",
 "str:tokenWhitelist.node_idETH-123456": "1",
@@ -871,7 +871,7 @@ Even so, for this particular case, `SetMapper` is way better than `VecMapper`.
 
 `LinkedListMapper` can be seen as a specialization for the `VecMapper`. It allows insertion/removal only at either end of the list, known as pushing/popping. It's also storage-efficient, as it only requires 2 * N + 1 storage entries. The storage for such a mapper looks like this:
 
-```
+```json
 "str:list_mapper.node_links|u32:1": "u32:0|u32:2",
 "str:list_mapper.node_links|u32:2": "u32:1|u32:0",
 "str:list_mapper.value|u32:1": "123",
@@ -885,13 +885,13 @@ This is one of the lesser used mappers, as its purpose is very specific, but it'
 
 Believe it or not, most of the time, `MapMapper` is not even needed, and can simply be replaced by a `SingleValueMapper`. For example, let's say you want to store an ID for every Address. It might be tempting to use `MapMapper`, which would look like this:
 
-```
+```rust
 #[storage_mapper("address_id_mapper")]
 fn address_id_mapper(&self) -> MapMapper<ManagedAddress, u64>;
 ```
 
 This can be replaced with the following `SingleValueMapper`:
-```
+```rust
 #[storage_mapper("address_id_mapper")]
 fn address_id_mapper(&self, address: &ManagedAddress) -> SingleValueMapper<u64>;
 ```
@@ -900,7 +900,7 @@ Both of them provide (almost) the same functionality. The difference is that the
 
 Unless you need to iterate over all the entries, `MapMapper` should be avoided, as this is the most expensive mapper. It uses 4 * N + 1 storage entries. The storage for a `MapMapper` looks like this:
 
-```
+```json
 "str:map_mapper.node_links|u32:1": "u32:0|u32:2",
 "str:map_mapper.node_links|u32:2": "u32:1|u32:0",
 "str:map_mapper.value|u32:1": "123",
@@ -913,7 +913,7 @@ Unless you need to iterate over all the entries, `MapMapper` should be avoided, 
 ```
 
 Keep in mind that all the mappers can have as many additional arguments for the main key. For example, you can have a `VecMapper` for every user pair, like this:
-```
+```rust
 #[storage_mapper("list_per_user_pair")]
 fn list_per_user_pair(&self, first_addr: &ManagedAddress, second_addr: &ManagedAddress) -> VecMapper<T>;
 ```

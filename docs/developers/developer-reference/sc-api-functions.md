@@ -1,5 +1,5 @@
 ---
-id: wasm-api-functions
+id: sc-api-functions
 title: Smart Contract API Functions
 ---
 
@@ -17,7 +17,9 @@ The Rust framework provides a wrapper over the MultiversX VM API functions and o
 - CryptoApi: Provides support for cryptographic functions like hashing and signature checking
 - SendApi: Handles all types of transfers to accounts and smart contract calls/deploys/upgrades, as well as support for ESDT local built-in functions
 
-The source code for the APIs can be found here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/master/elrond-wasm/src/api
+The base trait for the APi is: https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/api/trait.VMApi.html
+
+The source code for the APIs can be found here: https://github.com/multiversx/mx-sdk-rs/tree/master/framework/base/src/api
 
 ## Blockchain API
 
@@ -438,7 +440,7 @@ This API is accessible through `self.send()`. It provides functionalities like s
 
 We will not describe every single function in the API, as that would create confusion. We will only describe those that are recommended to be used (as they're mostly wrappers around more complicated low-level functions).
 
-For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](wasm-contract-calls.md) section.
+For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](sc-contract-calls.md) section.
 
 Without further ado, let's take a look at the available functions:
 
@@ -517,7 +519,7 @@ Unlike the mint function, this can be used for NFTs.
 ### esdt_nft_create
 
 ```rust
-esdt_nft_create<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &BigUint, name: &ManagedBuffer, royalties: &BigUint, hash: &ManagedBuffer, attributes: &T, uris: &ManagedVec< ManagedBuffer>) -> u64
+esdt_nft_create<T: TopEncode>(token: &TokenIdentifier, amount: &BigUint, name: &ManagedBuffer, royalties: &BigUint, hash: &ManagedBuffer, attributes: &T, uris: &ManagedVec< ManagedBuffer>) -> u64
 ```
 
 Creates a new SFT/NFT, and returns its nonce.
@@ -541,7 +543,7 @@ Must have `ESDTNftCreate` role set, or this will fail with "action is not allowe
 ### esdt_nft_create_compact
 
 ```rust
-esdt_nft_create_compact<T: elrond_codec::TopEncode>(token: &TokenIdentifier, amount: &BigUint, attributes: &T) -> u64
+esdt_nft_create_compact<T: TopEncode>(token: &TokenIdentifier, amount: &BigUint, attributes: &T) -> u64
 ```
 
 Same as `esdt_nft_create`, but fills most arguments with default values. Mostly used in contracts that use NFTs as a means of information rather than for display purposes.
@@ -580,4 +582,4 @@ Updates the attributes of the selected NFT to the provided value. The SC must ow
 
 ## Conclusion
 
-While there are still other various APIs in elrond-wasm, they are mostly hidden from the user. These are the ones you're going to be using in your day-to-day smart contract development.
+While there are still other various APIs in multiversx-sc, they are mostly hidden from the user. These are the ones you're going to be using in your day-to-day smart contract development.

@@ -1,5 +1,5 @@
 ---
-id: wasm-modules
+id: sc-modules
 title: Smart contract modules
 ---
 
@@ -11,12 +11,12 @@ Smart contract modules are a handy way of dividing a contract into smaller compo
 
 Modules can be defined both in the same crate as the main contract, or even in their own standalone crate. The latter is used when you want to use the same module in multiple contracts.
 
-A module is trait declared with the `#[elrond_wasm::module]` macro. Inside the trait, you can write any code you would usually write in a smart contract, even endpoints, events, storage mappers, etc.
+A module is trait declared with the `#[multiversx_sc::module]` macro. Inside the trait, you can write any code you would usually write in a smart contract, even endpoints, events, storage mappers, etc.
 
 For example, let's say you want to have your storage mappers in a separate module. The implementation would look like this:
 
-```
-#[elrond_wasm::module]
+```rust
+#[multiversx_sc::module]
 pub trait StorageModule {
     #[view(getQuorum)]
     #[storage_mapper("firstStorage")]
@@ -38,7 +38,7 @@ pub mod storage;
 
 A module can be imported both by other modules and contracts:
 
-```
+```rust
 pub trait SetupModule:
     crate::storage::StorageModule
     + crate::util::UtilModule {
@@ -46,8 +46,8 @@ pub trait SetupModule:
 }
 ```
 
-```
-#[elrond_wasm::contract]
+```rust
+#[multiversx_sc::contract]
 pub trait MainContract:
     setup::SetupModule
     + storage::StorageModule

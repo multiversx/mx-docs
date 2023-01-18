@@ -261,4 +261,4 @@ Executes an arbitrary function and returns its result. The result can be any typ
 
 ## Undocumented functions
 
-There are some mandos-generation functions that have not been included, but we recommend not bothering with mandos generation. The process is very time-consuming and the results are some unreadable mandos files. If you need to write mandos, we recommend writing it yourself. If you still want to dabble into the mandos-generation, there are some examples in the [Crowdfunding test examples](/developers/developer-reference/rust-testing-framework).  
+There are some scenario generation functions that have not been included, but we recommend not bothering with scenario generation. The process is very time-consuming and the results are some unreadable scenario files. If you need to write scenarios, we recommend writing them yourself. If you still want to dabble into the scenario generation, there are some examples in the [Crowdfunding test examples](/developers/developer-reference/rust-testing-framework).  

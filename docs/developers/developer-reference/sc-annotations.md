@@ -1,11 +1,11 @@
 ---
-id: wasm-annotations
+id: sc-annotations
 title: Smart contract annotations
 ---
 
 ## Introduction
 
-Annotations (also known as Rust "attributes") are the bread and butter of the `elrond-wasm` smart contract development framework. While contracts can in principle be written without any annotations or code generation macros in place, it is infinitely more difficult to do so.
+Annotations (also known as Rust "attributes") are the bread and butter of the `multiversx-sc` smart contract development framework. While contracts can in principle be written without any annotations or code generation macros in place, it is infinitely more difficult to do so.
 
 One of the main purposes of the framework is to make the code as readable and concise as possible, and annotations are the path to get there.
 
@@ -13,7 +13,7 @@ For an introduction, check out [the Crowdfunding tutorial](/developers/tutorials
 
 ## Trait annotations
 
-### `#[elrond_wasm::contract]`
+### `#[multiversx_sc::contract]`
 
 The `contract` annotation must always be placed on a trait and will automatically make that trait the main container for the smart contract endpoints and logic. There should be only one such trait defined per crate.
 
@@ -21,7 +21,7 @@ Note that the annotation takes no additional arguments.
 
 ---
 
-### `#[elrond_wasm::module]`
+### `#[multiversx_sc::module]`
 
 The `module` annotation must always be placed on a trait and will automatically make that trait a smart contract module.
 
@@ -33,9 +33,9 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 
 ---
 
-### `#[elrond_wasm::proxy]`
+### `#[multiversx_sc::proxy]`
 
-The `proxy` annotation must always be placed on a trait and will automatically make that trait a smart contract call proxy. More about smart contract proxies in [the contract calls reference](/developers/developer-reference/wasm-contract-calls).
+The `proxy` annotation must always be placed on a trait and will automatically make that trait a smart contract call proxy. More about smart contract proxies in [the contract calls reference](/developers/developer-reference/sc-contract-calls).
 
 In short, contracts always get an auto-generated proxy. However, if such an auto-generated proxy of another contract is not available, it is possible to define such a "contract interface" by hand, using the `proxy` attribute.
 
@@ -52,7 +52,7 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 Every smart contract needs one constructor that only gets called once when the contract is deployed. The method annotated with init is the constructor.
 
 ```rust
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Example {
     #[init]
     fn this_is_the_constructor(
@@ -78,7 +78,7 @@ If no arguments are provided to the attribute, the name of the Rust method will 
 Example:
 
 ```rust
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Example {
 	#[endpoint]
 	fn example(&self) {
@@ -111,11 +111,11 @@ Callbacks are special methods that get called automatically when the response co
 
 They also act as closures, since they can retain some of the context of the transaction that performed the asynchronous call in the first place.
 
-A more detailed explanation on how they work in [the contract calls reference](/developers/developer-reference/wasm-contract-calls).
+A more detailed explanation on how they work in [the contract calls reference](/developers/developer-reference/sc-contract-calls).
 
 ### Storage
 
-It is possible for a developer to access storage manually in a contract, but this is error-prone and involves a lot of boilerplate code. For this reason, `elrond-wasm` offers storage annotations that manage and serialize the keys and values behind the scenes.
+It is possible for a developer to access storage manually in a contract, but this is error-prone and involves a lot of boilerplate code. For this reason, `multiversx-sc` offers storage annotations that manage and serialize the keys and values behind the scenes.
 
 Each contract has a storage where arbitrary data can be stored on-chain. This storage is organized as a map of arbitrary length keys and values. The blockchain has no concept of storage key or value types, they are all stored as raw bytes. It is the job of the contract to interpret these values.
 
@@ -126,7 +126,7 @@ All trait methods annotated for storage handling must have no implementation.
 This is the simplest way to retrieve data from the storage. Let's start with an example of usage:
 
 ```rust
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Adder {
 	#[view(getSum)]
 	#[storage_get("sum")]
@@ -153,7 +153,7 @@ Lastly, storage getters must always return a deserializable type. The framework 
 This is the simplest way to write data to storage. Example:
 
 ```rust
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Adder {
 	#[storage_set("sum")]
 	fn set_sum(&self, sum: &BigUint);
@@ -270,7 +270,7 @@ There is a legacy annotation, `#[legacy_event]` still used by some older contrac
 This is a simple getter, which provides a convenient instance of a contract proxy. It is used when wanting to call another contract.
 
 ```rust
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait ForwarderAsyncCallModule {
 	#[proxy]
 	fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::Api>;
