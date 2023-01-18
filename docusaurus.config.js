@@ -233,6 +233,8 @@ const config = {
               existingPath.replace("/sdk-and-tools/erdpy/erdpy-cli", "sdk-and-tools/sdk-py/mxpy-cli"),
               existingPath.replace("/sdk-and-tools/erdpy/deriving-the-wallet-pem-file", "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file"),
               existingPath.replace("/sdk-and-tools/erdpy/smart-contract-interactions", "sdk-and-tools/sdk-py/smart-contract-interactions"),
+              existingPath.replace("/sdk-and-tools/erdpy/sending-bulk-transactions", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
+              existingPath.replace("/sdk-and-tools/erdpy/writing-and-running-mxpy-scripts", "sdk-and-tools/sdk-py/sdk-py-cookbook"),
             ];
           }
           return undefined; // Return a falsy value: no redirect created
