@@ -69,6 +69,7 @@ const sidebars = {
               "developers/developer-reference/sc-annotations",
               "developers/developer-reference/sc-modules",
               "developers/developer-reference/sc-contract-calls",
+              "developers/developer-reference/upgrading-smart-contracts",
               "developers/developer-reference/code-metadata",
               "developers/developer-reference/sc-api-functions",
               "developers/developer-reference/storage-mappers",
