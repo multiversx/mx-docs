@@ -339,6 +339,12 @@ const sidebars = {
         ]
       },
     ],
+    "Ad-Astra Bridge": [
+      "bridge/architecture",
+      "bridge/transfer-flows",
+      "bridge/multiple-chains",
+      "bridge/whitelist-requirements",
+    ],
   },
 };
 
