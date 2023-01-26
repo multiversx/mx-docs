@@ -27,7 +27,7 @@ sdk-dapp can be found on npmjs as well: https://www.npmjs.com/package/@multivers
 
 The [mx-template-dapp](https://github.com/multiversx/mx-template-dapp) that is used in [Build a dApp in 15 minutes](/developers/tutorials/your-first-dapp) is based on `sdk-dapp`.
 
-A live demo of the dapp-template is available at [https://template-dapp.multiversx.com/](https://template-dapp.multiversx.com/).
+A live demo of the template-dapp is available at [https://template-dapp.multiversx.com/](https://template-dapp.multiversx.com/).
 
 ### Requirements
 
