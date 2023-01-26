@@ -40,3 +40,5 @@ tags
 /target
 /testing/extract-tutorial-code/target
 Cargo.lock
+
+.idea
