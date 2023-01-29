@@ -5,7 +5,13 @@ title: Deep History Squad
 
 ## Overview
 
+[comment]: # (How is a Deep History Observing Squad different from a regular Observing Squad?)
+
 A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/multiversx/mx-chain-deep-history)**.
+
+[comment]: # (How to get historical account state?)
+[comment]: # (How to get historical contract state?)
+[comment]: # (How to get historical balances?)
 
 A deep-history setup is able to resolve historical account (state) queries, that is, to answer questions such as:
 
@@ -30,7 +36,12 @@ In the example above, the key `726573657276650000000a55544b2d326638306539` is de
 ## Public instance
 
 :::tip
-As of October 2022, a public deep-history squad isn't yet available. The instance is being prepared and should be ready in November 2022.
+For experimentation, you can use one of the following deep-history gateways (backed by deep-history observing squads):
+
+ - https://deep-history.multiversx.com:4443/mainnet-gateway/
+ - https://deep-history.multiversx.com:4443/devnet-gateway/
+
+Note that these instances are protected with basic HTTP authentication; access is given on demand.
 :::
 
 ## On-premises instance

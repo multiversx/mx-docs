@@ -5,6 +5,10 @@ title: Creating Transactions
 
 ## **Transaction structure**
 
+[comment]: # (How does a transaction look like?)
+[comment]: # (How does a signed transaction look like?)
+[comment]: # (How does a ready-to-broadcast transaction look like?)
+
 As described in section [Signing Transactions](/developers/signing-transactions), a ready-to-broadcast transaction is structured as follows:
 
 ```json
@@ -24,6 +28,9 @@ As described in section [Signing Transactions](/developers/signing-transactions)
 
 ## **SDK and tools support for creating and signing transactions**
 
+[comment]: # (How to create and sign a transaction?)
+[comment]: # (Is there an SDK for creating and signing transactions?)
+
 There are SDKs or tools with support for interacting with the MultiversX blockchain, so one can use one of the following SDKs to perform
 transactions creation and signing:
 
@@ -35,6 +42,9 @@ transactions creation and signing:
 - [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 
 ## **General network parameters**
+
+[comment]: # (How to get the network parameters necessary for creating transactions?)
+[comment]: # (What are the network parameters necessary for creating transactions?)
 
 General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/sdk-and-tools/rest-api/network#get-network-configuration).
 
@@ -53,7 +63,15 @@ General network parameters, such as the **chain ID**, **the minimum gas price**,
 
 ## **Nonce management**
 
+[comment]: # (What is the transaction nonce?)
+[comment]: # (What is the account nonce?)
+[comment]: # (What is the account sequence number?)
+[comment]: # (How are transactions processed in order?)
+[comment]: # (How to send multiple transactions from the same account?)
+
 Each transaction broadcasted to the Network must have the **nonce** field set consistently with the **account nonce**. In the Network, transactions of a given sender address are processed in order, with respect to the transaction nonce.
+
+[comment]: # (How to get the account nonce?)
 
 The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-nonce).
 
@@ -61,23 +79,39 @@ The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tool
 
 ### **Issue: competing transactions**
 
+[comment]: # (What about transactions having the same nonce?)
+
 Broadcasted transactions that reach the _mempool_ having the same sender address and the same nonce are _competing transactions_, and only one of them will be processed (the one providing a higher gas price or, if they have the same gas price, the one that arrived the second - but keep in mind that arrival time is less manageable).
 
 :::tip
 Avoid competing transactions by maintaining a strictly increasing nonce sequence when broadcasting transactions of the same sender address.
 :::
 
+[comment]: # (How to cancel a transaction?)
+
 Although an explicit _transaction cancellation trigger_ is not yet available in the Network, cancellation of a transaction T1 with nonce 42 could be _possible_ if one broadcasts a second transaction T2 with same nonce 42, with higher gas price (and without a value to transfer) **immediately** (e.g. 1 second) after broadcasting T1.
 
 ### **Issue: nonce gaps**
 
+[comment]: # (Why isn't my transaction processed?)
+[comment]: # (Why do I have a bad nonce in transaction?)
+[comment]: # (Why is my transaction pending for a long time?)
+[comment]: # (Is a sent transaction guaranteed to be processed?)
+
 If broadcasted transactions have their nonces higher than the current account nonce of the sender, this is considered a _nonce gap_, and the transactions will remain in the mempool unprocessed, until new transactions from the same sender arrive _to resolve the nonce gap -_ or until the transactions are swept from the mempool (sweeping takes place regularly).
+
+[comment]: # (How to recall the account nonce, for a new transaction?)
+[comment]: # (When to recall the account nonce, for a new transaction?)
 
 :::tip
 Avoid nonce gaps by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
 :::
 
 ### **Issue: fetching a stale account nonce**
+
+[comment]: # (Why isn't my transaction processed?)
+[comment]: # (Why do I have a bad nonce in transaction?)
+[comment]: # (How to track the account nonce?)
 
 You should take care when fetching the current account nonce from the API immediately after broadcasting transactions.
 
@@ -96,14 +130,12 @@ Avoid recalling the nonce in between **rapidly sequenced transactions from the s
 
 ## **Gas limit computation**
 
+[comment]: # (How to compute the gas limit for a transaction?)
+
 Please follow [Gas and Fees](/developers/gas-and-fees/overview/).
 
 ## **Signing transactions**
 
+[comment]: # (How to sign a transaction?)
+
 Please follow [Signing Transactions](/developers/signing-transactions).
-
-## **Simulate transaction execution**
-
-:::important
-Documentation about transaction simulation is preliminary and subject to change.
-:::
