@@ -8,9 +8,9 @@ As an alternative to the recommended installation flow, one could choose to run 
 On the `dockerhub` there are Docker images for every chain (mainnet, devnet and testnet).
 
 Images name:
-- for mainnet: [chain-mainnet](https://hub.docker.com/repository/docker/multiversx/chain-mainnet)
-- for devnet: [chain-devnet](https://hub.docker.com/repository/docker/multiversx/chain-devnet)
-- for testnet: [chain-testnet](https://hub.docker.com/repository/docker/multiversx/chain-testnet)
+- for mainnet: [chain-mainnet](https://hub.docker.com/r/multiversx/chain-mainnet)
+- for devnet: [chain-devnet](https://hub.docker.com/r/multiversx/chain-devnet)
+- for testnet: [chain-testnet](https://hub.docker.com/r/multiversx/chain-testnet)
 
 
 :::note Attention required
