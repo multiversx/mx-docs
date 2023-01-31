@@ -25,6 +25,21 @@ IMAGE_TAG=[latest_release_tag]
 docker pull multiversx/${IMAGE_NAME}:${IMAGE_TAG}
 ```
 
+### How to generate a BLS key ? 
+In order to generate a new BLS key one has to pull from `dockerhub` an image for the `chain-keygenerator` tool:
+```
+# pull image from dockerhub
+docker pull multiversx/chain-keygenerator:latest
+
+# create a folder for the bls key
+BLS_KEY_FOLDER=~/bls-key
+mkdir ${BLS_KEY_FOLDER}
+
+# generate a new BLS key
+docker run --rm --mount type=bind,source=${BLS_KEY_FOLDER},destination=/keys --workdir /keys multiversx/chain-keygenerator:latest
+```
+
+
 ### How to run a node with Docker ? 
 
 The following commands run a Node using the Docker image and map a container folder to a local one that holds the necessary configuration:
