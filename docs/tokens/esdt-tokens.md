@@ -624,6 +624,30 @@ RolesAssigningTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+### **Managing Token Transferability**
+
+The manager of an ESDT token can restrict transferability by setting **ESDTTransferRole** to specific addresses. 
+
+When no address has the role, the token can be transferred freely. If at least one address has the role, only addresses with the role can send or receive the token. An address without the role can still transfer tokens to an address with the role.
+
+When the role is removed from all addresses, the token will be transferable again with no restrictions.
+
+:::tip
+Previously, on Mainnet, there was a limitation where the sender and recipient of ESDT tokens had to be in the same shard. 
+Starting from epoch 795, the implementation has been updated to remove this restriction by setting ESDTTransferRole. However, tokens that had transferability set before this epoch will require an additional transaction to follow the latest implementation.
+
+```rust
+SendAllTransferRoleAddressesTransaction {
+    Sender: <address of the ESDT manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 100000000
+    Data: "sendAllTransferRoleAddresses" +
+          "@" + <token identifier in hexadecimal encoding> +
+}
+```
+:::
+
 ### **Transferring token management rights**
 
 The manager of an ESDT token may transfer the management rights to another Account. This can be done with a transaction of the form:
