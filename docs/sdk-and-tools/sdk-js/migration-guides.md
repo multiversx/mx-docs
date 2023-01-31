@@ -152,7 +152,7 @@ let interaction = <Interaction>this.contract.methodsExplicit.getLotteryInfo([
 
 The modules designed to parse the contract results have been rewritten in erdjs 10. `ExecutionResultsBundle` and `QueryResponseBundle` have been removed, and replaced by `TypedOutcomeBundle` (and its untyped counterpart, `UntypedOutcomeBundle`).  `SmartContractResults` has been changed to not use the concepts `immediate result` and `resulting calls` anymore. Instead, interpreting `SmartContractResults.items` is now the responsibility of the `ResultsParser`. `interpretQueryResponse()` and `interpretExecutionResults()` do not exist on the `Interaction` object anymore. `DefaultInteractionRunner` has been removed, as well.
 
-The functions `getReceipt()`, `getSmartContractResults()` and `getLogs()` of `TransactionOnNetwork` have been removed. The underlying properties are now public. Furthermore, `TransactionOnNetwork` is now defined within `@elrondnetwork/erdjs-network-providers`.
+The functions `getReceipt()`, `getSmartContractResults()` and `getLogs()` of `TransactionOnNetwork` have been removed. The underlying properties are now public. Furthermore, `TransactionOnNetwork` is now defined within `@multiversx/sdk-network-providers`.
 
 In order to parse contract results in erdjs 10, please follow [this guide](/sdk-and-tools/sdk-js/sdk-js-cookbook#parsing-contract-results).
 

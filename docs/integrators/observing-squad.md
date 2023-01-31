@@ -195,4 +195,4 @@ docker exec -it 'CONTAINER ID' /bin/bash
 cat logs/mx-chain-.......log
 ```
 
-More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/multiversx/mx-chain-observing-squad.git). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/elrondnetwork).
+More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/multiversx/mx-chain-observing-squad.git). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/multiversx).

@@ -769,7 +769,7 @@ console.log("Is signature of Bob?", bobVerifier.verify(message));
 In order to decode the metadata (function, arguments, transfers) from a transaction payload, do as follows:
 
 ```
-import { TransactionDecoder, TransactionMetadata } from "@elrondnetwork/transaction-decoder";
+import { TransactionDecoder, TransactionMetadata } from "@multiversx/sdk-transaction-decoder";
 
 let transactionOnNetwork = await networkProvider.getTransaction(txHash);
 
@@ -786,7 +786,7 @@ let metadata = new TransactionDecoder().getTransactionMetadata({
 
 ### Using the `esdtHelpers` and `scArgumentsParser` of `sdk-js 9x`
 
-The classes `esdtHelpers` and `scArgumentsParser` have been removed in `sdk-js 10`, in favor of the [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder) (see above).
+The classes `esdtHelpers` and `scArgumentsParser` have been removed in `sdk-js 10`, in favor of the [@multiversx/sdk-transaction-decoder](https://www.npmjs.com/package/@multiversx/sdk-transaction-decoder) (see above).
 
 However, you can still find the previous implementations at the following location:
 
