@@ -3,6 +3,7 @@ from typing import List, Optional
 
 SEPARATOR = "[comment]: # (mx-context)"
 WEAK_CONTENT_THRESHOLD = 10
+DOCS_ROOT = Path(__file__).parent.parent / "docs"
 
 
 class Context:
@@ -22,7 +23,7 @@ class Context:
 
 
 def main():
-    md_files = Path("~/Desktop/workspace/mx-docs").expanduser().rglob("*.md")
+    md_files = DOCS_ROOT.rglob("*.md")
     md_files = [
         md_file for md_file in md_files if "node_modules" not in str(md_file) and "README.md" not in str(md_file) and "utils.md" not in str(md_file)]
 
