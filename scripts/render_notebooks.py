@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Tuple
 DIRECTIVE_BEGIN_NOTEBOOK = "BEGIN_NOTEBOOK"
 DIRECTIVE_END_NOTEBOOK = "END_NOTEBOOK"
 DOCS_ROOT = Path(__file__).parent.parent / "docs"
-DOCS_URL_ROOT = "https://docs.elrond.com"
+DOCS_URL_ROOT = "https://docs.multiversx.com"
 
 
 cookbooks: List[Path] = [
@@ -47,7 +47,7 @@ def parse_directive(line: str) -> Dict[str, Any]:
     """
     Parses "directives", such as:
 
-    <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/ElrondNetwork/.../Cookbook.ipynb" } -->
+    <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/.../Cookbook.ipynb" } -->
     """
     content = line.replace("<!--", "").replace("-->", "").strip()
     [_, payload_json] = content.split(maxsplit=1)

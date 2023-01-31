@@ -3,7 +3,7 @@ id: reproducible-contract-builds
 title: Reproducible Builds
 ---
 
-This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags).
+This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags).
 
 You will also learn how to reproduce a contract build, given its source code and the name (tag) of a _frozen_ Docker image that was used for its previous build (that we want to reproduce).
 
@@ -53,7 +53,7 @@ All in all, in order to verify the bytecode equality of two given builds of a co
 
 ## Supporting reproducible builds
 
-As of October 2022, the recommended approach to support reproducible builds for your smart contract is to use a build script relying on a specially-designed, [publicly-available, tagged Docker image](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags), that includes tagged, explicit versions of the build tools (_Rust_, _wasm-opt_ etc.).
+As of October 2022, the recommended approach to support reproducible builds for your smart contract is to use a build script relying on a specially-designed, [publicly-available, tagged Docker image](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags), that includes tagged, explicit versions of the build tools (_Rust_, _wasm-opt_ etc.).
 
 This approach is recommended in order to counteract eventual pieces of non-determinism related to `cargo`'s (essential component of the Rust toolchain) sensibility on the environment.
 
@@ -63,7 +63,7 @@ If the code source of your smart contract is hosted on GitHub, then it's a good 
 
 ### Choose an image tag
 
-The first step for supporting reproducible builds is to decide on a specific Docker image tag to use. Check the **frozen** tags listed at [elrondnetwork/build-contract-rust](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags), and inspect their labels - especially the labels `rust` and `wasm-opt-binaryen`:
+The first step for supporting reproducible builds is to decide on a specific Docker image tag to use. Check the **frozen** tags listed at [multiversx/sdk-rust-contract-builder](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags), and inspect their labels - especially the labels `rust` and `wasm-opt-binaryen`:
 
 ```
 LABEL rust=nightly-2022-08-23
@@ -97,7 +97,7 @@ mkdir -p ~/contracts && cd ~/contracts
 git clone https://github.com/multiversx/mx-reproducible-contract-build-example-sc.git --branch=v0.1.4 --depth=1
 ```
 
-By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = elrondnetwork/build-contract-rust:v2.0.0`.
+By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v4.1.0`.
 
 ### Download the build wrapper
 
@@ -114,7 +114,7 @@ Export the following variables:
 ```rust
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
-export IMAGE=elrondnetwork/build-contract-rust:v2.0.0
+export IMAGE=multiversx/sdk-rust-contract-builder:v4.1.0
 ```
 
 The latter export statement explicitly selects the **chosen, _frozen_ Docker image tag** to be used.
@@ -147,7 +147,7 @@ wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/bui
 
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
-export IMAGE=elrondnetwork/build-contract-rust:v2.0.0
+export IMAGE=multiversx/sdk-rust-contract-builder:v4.1.0
 
 python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
