@@ -971,5 +971,5 @@ However, certain architectural decisions that we made do not work out of the box
 Due to this, you cannot yet use the DappProvider wrapping logic in a React Native application.
 
 We have a couple of solutions in mind and are actively working on exploring ways to overcome these limitations.
-Until then, you can use @elrondnetwork/erdjs libraries and @walletconnect to connect to Maiar.
+Until then, you can use @multiversx/sdk-core libraries and @walletconnect to connect to Maiar.
 There are also guide for doing this from the [community](https://github.com/S4F-IT/maiar-integration/blob/master/README.md)
