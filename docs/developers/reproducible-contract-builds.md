@@ -97,7 +97,7 @@ mkdir -p ~/contracts && cd ~/contracts
 git clone https://github.com/multiversx/mx-reproducible-contract-build-example-sc.git --branch=v0.1.4 --depth=1
 ```
 
-By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v2.0.0`.
+By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v4.1.0`.
 
 ### Download the build wrapper
 
@@ -114,7 +114,7 @@ Export the following variables:
 ```rust
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
-export IMAGE=multiversx/sdk-rust-contract-builder:v2.0.0
+export IMAGE=multiversx/sdk-rust-contract-builder:v4.1.0
 ```
 
 The latter export statement explicitly selects the **chosen, _frozen_ Docker image tag** to be used.
@@ -147,7 +147,7 @@ wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/bui
 
 export PROJECT=~/contracts/reproducible-contract-build-example
 export BUILD_OUTPUT=~/contracts/output-from-docker
-export IMAGE=multiversx/sdk-rust-contract-builder:v2.0.0
+export IMAGE=multiversx/sdk-rust-contract-builder:v4.1.0
 
 python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
