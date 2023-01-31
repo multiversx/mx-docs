@@ -3,6 +3,10 @@ id: the-dynamic-allocation-problem
 title: The dynamic allocation problem
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ### Avoiding memory allocation
 
 :::caution
@@ -10,6 +14,8 @@ title: The dynamic allocation problem
 :::
 
 Here are a few simple guidelines you can use to ensure your contract performs efficiently. By following them, you might notice a considerable reduction of gas consumption when your contract is called. It is also likely that the WASM binary resulting from compilation may become smaller in size, thus faster and cheaper to call overall.
+
+[comment]: # (mx-context)
 
 ### It's all about the types
 
@@ -24,6 +30,8 @@ The managed types work by only storing a `handle` within the contract memory, wh
 :::caution
 If you need to update older code to take advantage of managed types, please take the time to understand the changes you need to make. Such an update is important and cannot be done automatically.
 :::
+
+[comment]: # (mx-context)
 
 ### Base Rust types vs managed types
 

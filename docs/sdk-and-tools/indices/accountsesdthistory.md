@@ -3,10 +3,15 @@ id: es-index-accountsesdthistory
 title: accountsesdthistory
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ## _id
 
 The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}_{timestamp}` (example: `erd.._abcd-0123-01`).
+
+[comment]: # (mx-context)
 
 ## Fields
 
@@ -19,8 +24,11 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | tokenNonce | The tokenNonce field holds the sequence number of the token. This field can be empty in the case of `FungibleESDT`. |
 | timestamp  | The timestamp field represents the timestamp when the address balance was changed.                                  |
 
+[comment]: # (mx-context)
 
 ## Query examples
+
+[comment]: # (mx-context)
 
 ### Fetch the latest 10 entries of an address' tokens sorted by timestamp
 
@@ -58,4 +66,3 @@ curl --request GET \
     "size":10
 }'
 ```
-

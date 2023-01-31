@@ -3,6 +3,8 @@ id: merge-validator-delegation-sc
 title: Merging A Validator Into An Existing Delegation Smart Contract
 ---
 
+[comment]: # (mx-context)
+
 Introduced in Staking Phase 3.5, the ability of merging one or more existing standalone validator node into a staking pool gives more flexibility for staking pool operators.
 
 There are two steps required for this action: The owner of the Delegation SC has to whitelist the wallet from which the Merging Validator was staked from. Then the Merging Validator has to send the merge transaction from the whitelisted wallet.

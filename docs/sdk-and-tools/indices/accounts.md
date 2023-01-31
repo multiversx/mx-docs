@@ -3,9 +3,15 @@ id: es-index-accounts
 title: accounts
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## _id
 
 The `_id` field of this index is represented by a bech32 encoded address.
+
+[comment]: # (mx-context)
 
 ## Fields
 
@@ -18,7 +24,11 @@ The `_id` field of this index is represented by a bech32 encoded address.
 | shardID    | The shardID field represents the shard where the address belongs to, based on its bytes.                                                                                             |
 | timestamp  | The timestamp field represents the last moment when the address balance was changed.                                                                                                 |
 
+[comment]: # (mx-context)
+
 ## Query examples
+
+[comment]: # (mx-context)
 
 ### Fetch addresses sorted by balance
 
@@ -37,6 +47,8 @@ curl --request GET \
     "size":10
 }'
 ```
+
+[comment]: # (mx-context)
 
 ### Fetch addresses in a shard, sorted by balance
 

@@ -3,15 +3,21 @@ id: serialization-format
 title: The MultiversX Serialization Format
 ---
 
+[comment]: # (mx-context)
+
 In MultiversX, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 
 In Rust, the **multiversx-sc-codec** crate ([crate](https://crates.io/crates/multiversx-sc-codec), [doc](https://docs.rs/multiversx-sc-codec/0.17.0/multiversx_sc_codec/)) exclusively deals with this format. Both Go and Rust implementations of scenarios have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
+
+[comment]: # (mx-context)
 
 ## Rationale
 
 We want the format to be somewhat readable and to interact with the rest of the blockchain ecosystem as easily as possible. This is why we have chosen **big endian representation for all numeric types.**
 
 More importantly, the format needs to be as compact as possible, since each additional byte costs additional fees.
+
+[comment]: # (mx-context)
 
 ## The concept of top-level vs. nested objects
 
@@ -23,13 +29,19 @@ But now imagine that an argument that deserializes as a vector of int32. The num
 
 But what about the vector itself? Its representation must always be a multiple of 4 bytes in length, so from the representation we can always deduce the length of the vector by dividing the number of bytes by 4. If the encoded byte length is not divisible by 4, this is a deserialization error. Because the vector is top-level we don't have to worry about encoding its length, but if the vector itself gets embedded into an even larger structure, this can be a problem. If, for instance, the argument is a vector of vectors of int32, each nested vector also needs to have its length encoded before its data.
 
+[comment]: # (mx-context)
+
 ## A note about the value zero
 
 We are used to writing the number zero as "0" or "0x00", but if we think about it, we don't need 1 byte for representing it, 0 bytes or an "empty byte array" represent the number 0 just as well. In fact, just like in `0x0005`, the leading 0 byte is superfluous, so is the byte `0x00` just like an unnecessary leading 0.
 
 With this being said, the format always encodes zeroes of any type as empty byte arrays.
 
+[comment]: # (mx-context)
+
 ## How each type gets serialized
+
+[comment]: # (mx-context)
 
 ### Fixed-width numbers
 
@@ -111,6 +123,10 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ### Arbitrary width (big) numbers
 
 For most smart contracts applications, number larger than the maximum uint64 value are needed.
@@ -153,6 +169,10 @@ Next we encode:
 
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ### Boolean values
 
 Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0`.
@@ -167,6 +187,10 @@ Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0
 | `bool` | `false` | `0x`               | `0x00`          |
 
 ---
+
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ### Lists of items
 
@@ -193,6 +217,10 @@ Then, all nested encodings of the items, concatenated.
 
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ### Arrays and tuples
 
 The only difference between these types and the lists in the previous section is that their length is known at compile time.
@@ -213,6 +241,10 @@ Therefore, there is never any need to encode their length.
 | `(u8, u16, u32)` | `[1u8, 2u16, 3u32]` | `0x01000200000003` | `0x01000200000003` |
 
 ---
+
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ### Byte slices and ASCII strings
 
@@ -242,6 +274,10 @@ We consider best practice to use Unicode on the frontend, but keep all messages 
 
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ### Options
 
 An `Option` represents an optional value: every Option is either `Some` and contains a value, or `None`, and does not.
@@ -262,6 +298,10 @@ An `Option` represents an optional value: every Option is either `Some` and cont
 | `Option< BigUint>` | `Some( BigUint::from( 0x1234u32))` | `0x01 00000002 1234` | `0x01 00000002 1234` | The `Some` value is nested-encoded. For a `BigUint` this adds the length, which here is `2`. |
 
 ---
+
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ### Custom structures
 
@@ -312,6 +352,10 @@ Explanation:
 ```
 
 ---
+
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ### Custom enums
 

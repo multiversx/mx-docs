@@ -3,6 +3,8 @@ id: values-simple
 title: Scenario Simple Values
 ---
 
+[comment]: # (mx-context)
+
 We went through the structure of a scenario, and you might have noticed that in a lot of places values are expressed in diverse ways.
 
 The VM imposes very few restrictions on its inputs and outputs, most fields are processed as raw bytes. The most straightforward way to write a test that one could think of would be to have the actual raw bytes always expressed in a simple format (e.g. like hexadecimal encoding). Indeed, our first contract tests were like this, but we soon discovered that it took painfully long prepare them and even longer to refactor. So, we gradually came up with increasingly complex formats to represent values in an intuitive human-readable way.
@@ -32,6 +34,8 @@ It must be emphasized that no matter how values are expressed in scenarios, the 
 
 A note on error messages: whenever we write a test that fails, the test runner tries its best to transform the actual value it found from raw bytes to a more human-readable form. It doesn't really know what format to use, to it tries its best to find something plausible. However, all it has are some heuristics, so it doesn't always get it right. It also displays the raw bytes so that the developer can investigate the proper value.
 
+[comment]: # (mx-context)
+
 ## **A note about the value parser and the use of prefixes**
 
 The value interpreter is not very complex and uses simple prefixes for most functions. Examples of prefixes are `"str:"` and `"u32:"`.
@@ -44,10 +48,14 @@ Multiple prefixes evaluated right to left, for instance `"keccak256:keccak256:st
 
 With that being said, the following sections will describe how to express different value types in scenarios. A full list of the prefixes is [at the end of this page](#the-full-list-of-scenario-value-prefixes).
 
+[comment]: # (mx-context)
+
 ## **Empty value**
 
 Empty strings (`""`) mean empty byte arrays. The number zero can also be represented as an empty byte array.
 Other values that translate to an empty byte array are `"0"` and `"0x"`.
+
+[comment]: # (mx-context)
 
 ## **Hexadecimal representation**
 
@@ -60,6 +68,8 @@ After the `0x` prefix an even number of digits is expected, since 2 digits = 1 b
 - `"0x1234567890abcdef"`
 - `"0x0000000000000000"`
   :::
+
+[comment]: # (mx-context)
 
 ## **Standalone number representations**
 
@@ -79,6 +89,8 @@ Unsigned numbers will be represented in the minimum amount of bytes in which the
 :::tip
 Digit separators are allowed anywhere, for readability, e.g. `"1,000,000"`.
 :::
+
+[comment]: # (mx-context)
 
 ## **Standalone signed numbers**
 
@@ -100,6 +112,8 @@ Sometimes positive numbers can start with a "1" bit and get accidentally interpr
   :::
 
 For more about signed number encoding, see [the big number serialization format](/developers/developer-reference/serialization-format/#arbitrary-width-big-numbers).
+
+[comment]: # (mx-context)
 
 ## **Nested numbers**
 
@@ -123,6 +137,8 @@ The format helps developers to also easily represent nested numbers. These are a
 - `u8:1` equals `0x01`
   :::
 
+[comment]: # (mx-context)
+
 ## **Nested items**
 
 The `nested:` prefix prepends the length of the argument. It is similar to `biguint:`, but does not expect a number.
@@ -132,6 +148,8 @@ The `nested:` prefix prepends the length of the argument. It is similar to `bigu
 - `"nested:str:abc"` equals `0x00000003|str:abc`
 - `"nested:0x01020304"` equals `0x0000000401020304`
   :::
+
+[comment]: # (mx-context)
 
 ## **Booleans**
 
@@ -144,6 +162,8 @@ The format offers these 2 constants, for convenience:
 This is the standalone representation. If your boolean is embedded in a structure or list, use `u8:0` instead of `false`.
 :::
 
+[comment]: # (mx-context)
+
 ## **ASCII strings**
 
 The preferred way of representing ASCII strings is with the `str:` prefix.
@@ -151,6 +171,8 @@ The preferred way of representing ASCII strings is with the `str:` prefix.
 :::important
 The `''` and ` `` ` prefixes are common in older examples. They are equivalent to `str:`, but considered legacy. We recommend avoiding them because they clash with the syntax of languages where we might want to embed scenario code (Go and Markdown in particular).
 :::
+
+[comment]: # (mx-context)
 
 ## **User Addresses**
 
@@ -167,6 +189,8 @@ Addresses need to be 32 bytes long, so
 - `"str:my_address______________________"` or
 - `"0x6d795f616464726573735f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f"`.
   :::
+
+[comment]: # (mx-context)
 
 ## **Smart Contract Addresses**
 
@@ -196,6 +220,8 @@ Sometimes the last byte of a a SC address is relevant, since it affects which sh
 - `"0x00000000000000006d795f616464726573735f5f5f5f5f5f5f5f5f5f5f5f5fa3"`.
   :::
 
+[comment]: # (mx-context)
+
 ## **File contents**
 
 `file:` loads an entire file and uses the contents of the entire file as value.
@@ -216,9 +242,13 @@ Example usage:
 - checking some contract code in storage,
 - any large argument
 
+[comment]: # (mx-context)
+
 ## **Hash function**
 
 `keccak256:` computes the Keccak256 hash of the argument. The result is always 32 bytes in length.
+
+[comment]: # (mx-context)
 
 ## **The full list of scenario value prefixes**
 

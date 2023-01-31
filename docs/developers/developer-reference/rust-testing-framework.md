@@ -3,6 +3,10 @@ id: rust-testing-framework
 title: Rust Testing Framework
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 The Rust testing framework was developed as an alternative to manually writing scenario tests. This comes with many advantages:
@@ -18,6 +22,8 @@ The only disadvantage is that you need to learn something new! Jokes aside, keep
 This is where the scenario generation part comes into play. The Rust testing framework allows you to generate scenarios with minimal effort, and then run said scenarios with one click through our MultiversX VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
 
 Please note that scenario generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.
+
+[comment]: # (mx-context)
 
 ## Prerequisites
 
@@ -71,6 +77,8 @@ where
 The `CrowdfundingSetup` struct isn't really needed, but it helps de-duplicating some code. You may add other fields in your struct if needed, but for now this is enough for our use-case. The only fields you'll need for any contract are `blockchain_wrapper` and `cf_wrapper`. The rest of the fields can be adapted according to your test scenario.
 
 And that's all you need to get started.
+
+[comment]: # (mx-context)
 
 ## Writing your first test
 
@@ -166,6 +174,8 @@ fn init_test() {
 
 And you're done for this step. You successfuly tested your contract's init function, and generated a scenario for it.
 
+[comment]: # (mx-context)
+
 ## Testing transactions
 
 Let's test the `fund` function. For this, we're going to use the previous setup, but now we use the `execute_esdt_transfer` method instead of `execute_tx`, because we're sending ESDT to the contract while calling `fund`:
@@ -214,6 +224,8 @@ If you also want to generate a scenario file for this transaction, this is where
 
 You have to add this at the end of your `fund_test`. The more complex the call, the more arguments you'll have to add and such. The `SCCallMandos` struct has the `add_argument` method so you don't have to do any encoding by yourself.
 
+[comment]: # (mx-context)
+
 ## Testing queries
 
 Testing queries is similar to testing transactions, just with less arguments (since there is no caller, and no payment, and any modifications are automatically reverted):
@@ -242,6 +254,8 @@ fn status_test() {
         .write_mandos_output("_generated_query_status.scen.json");
 }
 ```
+
+[comment]: # (mx-context)
 
 ## Testing smart contract errors
 
@@ -290,6 +304,8 @@ fn test_sc_error() {
 ```
 
 Notice how we've changed the payment intentionally to an invalid token to check the error case. Also, we've changed the expected deposit to "0" instead of the previous "1_000". And lastly: the `.assert_user_error("wrong token")` call on the result.
+
+[comment]: # (mx-context)
 
 ## Testing a successful funding campaign
 
@@ -373,6 +389,8 @@ fn test_successful_cf() {
 
 You've already seen most of the code in this test before already. The only new things are the `set_block_timestamp` and the `check_esdt_balance` methods of the wrapper. There are similar methods for setting block nonce, block random seed, etc., and the checking EGLD and SFT/NFT balances.
 
+[comment]: # (mx-context)
+
 ## Testing a failed funding campaign
 
 This is simimlar to the previous one, but instead we have the users claim instead of the owner after deadline.
@@ -452,6 +470,8 @@ fn test_failed_cf() {
     b_wrapper.check_esdt_balance(second_user, CF_TOKEN_ID, &rust_biguint!(1_000));
 }
 ```
+
+[comment]: # (mx-context)
 
 ## Conclusion
 

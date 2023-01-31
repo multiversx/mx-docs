@@ -3,6 +3,10 @@ id: delegation-dashboard
 title: Delegation Dashboard
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## **Introduction**
 
 Delegation Manager Dashboard is an open-source intuitive interface that anyone can deploy to engage their customers, partners, or friends and operate Elrond Validator nodes.
@@ -12,6 +16,8 @@ With minimal effort and no coding skills, you can create a custom dashboard for 
 The dashboard is also highly customizable, and you can add your own branding, and even add your own custom features.
 
 ![img](/validators/delegation-dashboard.png)
+
+[comment]: # (mx-context)
 
 ## **Usage**
 

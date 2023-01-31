@@ -3,6 +3,8 @@ id: use-docker
 title: How to use the Docker Image
 ---
 
+[comment]: # (mx-context)
+
 As an alternative to the recommended installation flow, one could choose to run an MultiversX Node using the official Docker images: [here](https://hub.docker.com/orgs/multiversx/repositories)
 
 On the `dockerhub` there are Docker images for every chain (mainnet, devnet and testnet).
@@ -12,11 +14,12 @@ Images name:
 - for devnet: [chain-devnet](https://hub.docker.com/r/multiversx/chain-devnet)
 - for testnet: [chain-testnet](https://hub.docker.com/r/multiversx/chain-testnet)
 
-
 :::note Attention required
 
 In order to get the latest tag for an image check the latest `RELEASE` from the config repository ([mainnet](https://github.com/multiversx/mx-chain-mainnet-config/releases), [devnet](https://github.com/multiversx/mx-chain-devnet-config/releases) or [testnet](https://github.com/multiversx/mx-chain-testnet-config/releases)).
 :::
+
+[comment]: # (mx-context)
 
 ### How to pull a Docker image from Dockerhub for node ? 
 ```docker
@@ -24,6 +27,8 @@ IMAGE_NAME=chain-mainnet
 IMAGE_TAG=[latest_release_tag]
 docker pull multiversx/${IMAGE_NAME}:${IMAGE_TAG}
 ```
+
+[comment]: # (mx-context)
 
 ### How to generate a BLS key ? 
 In order to generate a new BLS key one has to pull from `dockerhub` an image for the `chain-keygenerator` tool:
@@ -39,6 +44,7 @@ mkdir ${BLS_KEY_FOLDER}
 docker run --rm --mount type=bind,source=${BLS_KEY_FOLDER},destination=/keys --workdir /keys multiversx/chain-keygenerator:latest
 ```
 
+[comment]: # (mx-context)
 
 ### How to run a node with Docker ? 
 

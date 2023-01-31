@@ -3,10 +3,15 @@ id: es-index-rounds
 title: rounds
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ## _id
 
 The `_id` field of this index is composed in this way: `{shardID}_{round}` (example: `2_10905514`)
+
+[comment]: # (mx-context)
 
 ## Fields
 
@@ -19,8 +24,11 @@ The `_id` field of this index is composed in this way: `{shardID}_{round}` (exam
 | epoch            | The epoch field represents the epoch the round belongs to.                                                             |
 | timestamp        | The timestamp field represents the timestamp of the round.                                                             |
 
+[comment]: # (mx-context)
 
 ## Query examples
+
+[comment]: # (mx-context)
 
 ### Fetch the latest rounds for a shard when block was produced
 

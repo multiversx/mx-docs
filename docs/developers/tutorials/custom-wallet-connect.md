@@ -3,11 +3,17 @@ id: custom-wallet-connect
 title: Custom Wallet Connect
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Custom Wallet Connect
 
 Our custom Wallet Connect is a platform that allows you to connect decentralized applications (dApps) to your wallet. The dApp can send transaction requests to your wallet once you have authorized a connection request from it through our custom Wallet Connect.
 
 In this guide, we will walk you through the process of connecting a dApp to our WalletConnect. This will provide users with the bridge that securely connects their MultiversX wallets to dApps.
+
+[comment]: # (mx-context)
 
 ## **Prerequisites**
 
@@ -22,6 +28,8 @@ We have created a tutorial on how to **[build a dApp](https://docs.multiversx.co
 To connect to our custom WalletConnect server, we need an HTTPS connection. This domain name will be used when configuring the Nginx host.
 
 All set? Let’s get started! 🚀.
+
+[comment]: # (mx-context)
 
 ## Set up the custom Wallet Connect server
 
@@ -113,6 +121,8 @@ nohup npm run start > wallet_connect_log 2>&1 &
 **Great job!** Our server is running!
 
 The Wallet Connect essentially works as a "link", connecting users to dApps using their wallet. Therefore, in the next section of this guide, we configure our dApp to use the new custom wallet connect server.
+
+[comment]: # (mx-context)
 
 ## Configure the dApp to use the new custom Wallet Connect server.
 

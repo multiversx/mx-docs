@@ -3,6 +3,8 @@ id: your-first-microservice
 title: Build a Microservice for your dApp
 ---
 
+[comment]: # (mx-context)
+
 Let's build a microservice for your decentralized App
 
 :::important
@@ -14,25 +16,35 @@ This guide has been made available in video format as well:
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/pd-vSIiw6Us" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+[comment]: # (mx-context)
+
 ## Ping Pong Microservice
 
 This guide extends the decentralized app we have built in our previous guide [**Build a dApp in 15 minutes**](/developers/tutorials/your-first-dapp). If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=IdkgvlK3rb8).
 
 In this guide we're going to build a microservice (an API), which is an intermediary layer between the blockchain layer and the app layer. Our app will consume this microservice instead of making requests directly on the blockchain.
 
+[comment]: # (mx-context)
+
 ### Caching
 
 In our guide, the purpose of this microservice is to cache the values that come from the blockchain (e.g. `get_time_to_pong`), so every subsequent request will get fast results from our microservice.
 
+[comment]: # (mx-context)
+
 ### Transaction processor
 
 We will also invalidate the cache when a pong transaction will be done. This means that the microservice will listen to all the `pong` transactions on the blockchain that have our smart contract address as the receiver and as soon as one transaction is confirmed, we will invalidate the cache record corresponding to the sender wallet address.
+
+[comment]: # (mx-context)
 
 ### The Microservice
 
 We're going to use a microservice template based on nestjs, the caching will be done using redis, so the prerequisites for this guide are: nodejs, npm and redis.
 
 We will extend "Build a dApp in 15 minutes" guide, so let's build on the existing folder structure and create the microservice into a subfolder of the parent project folder:
+
+[comment]: # (mx-context)
 
 ## Prerequisites
 
@@ -58,6 +70,8 @@ then, we will have to see a log line like this one:
 
 `/usr/bin/redis-server 127.0.0.1:6379`
 
+[comment]: # (mx-context)
+
 ## The microservice
 
 Ok, let's get started with the microservice. First, we'll clone the template provided by the MultiversX team.
@@ -76,6 +90,8 @@ Let's take a look at the app structure:
 `src/crons` - transactions processors are defined here
 `src/endpoints` - here we will find the code for `/ping-pong/time-to-pong/<address>` endpoint
 
+[comment]: # (mx-context)
+
 ### Configure the microservice
 
 We'll find a configuration file specific for every network we want to deploy the microservice on. In our guide we will use the devnet configuration, which will be found here:
@@ -89,6 +105,8 @@ First we're going to configure the redis server url. If we run a redis-server on
 Now we'll move on to the smart contract address. We can find it in our `dapp` repository (if we followed the previous guide ["Build a dApp in 15 minutes"](https://www.youtube.com/watch?v=IdkgvlK3rb8)). If you don't have a smart contract deployed on devnet, then we suggest to follow the previous guide first and then get back to this step.
 
 Set the `contracts.pingPong` key with the value for the smart contract address and we're done with configuring the microservice.
+
+[comment]: # (mx-context)
 
 ### Start the microservice
 
@@ -106,6 +124,8 @@ npm run start:devnet
 
 Now we have our microservice started on port 3001. Let's identify its URL.
 The default url is `http://localhost:3001`, but if you run the decentralized application on a different machine, then we should use `http://<ip>:3001`.
+
+[comment]: # (mx-context)
 
 ### Revisit "Your First dApp"
 
@@ -200,9 +220,13 @@ You can also find the complete code on our public repository for the dApp in the
 https://github.com/multiversx/mx-template-dapp/blob/microservice/src/pages/Dashboard/Actions/index.tsx
 ```
 
+[comment]: # (mx-context)
+
 ### Let's deep dive into the microservice code and explain the 2 basic features we implemented.
 
 We want to minimize the number of requests done directly on the blockchain because of the overhead they incur, so we'll first read the time to `pong` from the blockchain, we'll cache that value and all the subsequent reads will be done from the cache. That value won't change over time. It will only reset AFTER we `pong`.
+
+[comment]: # (mx-context)
 
 ## The Cache
 
@@ -236,6 +260,8 @@ return await this.cachingService.getOrSetCache(
 
 The function `this.getPongDeadlineRaw` will invoke the only read action on the blockchain, then `this.cachingService.getOrSetCache` will set it in cache.
 
+[comment]: # (mx-context)
+
 ## The Transaction Processor
 
 After the user clicks the `Pong` button and performs the `pong` transaction, we have to invalidate the cache and we will use the transaction processor to identify all the `pong` transactions on the blockchain that have the receiver set to our smart contract address.
@@ -264,11 +290,15 @@ if (
 
 If we find one, we will invalidate the cache data for the key `pong:<wallet address>`, where we previously stored the time to pong value. We will use `this.cachingService.deleteInCache` function for this.
 
+[comment]: # (mx-context)
+
 ## Conclusion
 
 So that's all, we created a _microservice_ in order to make our dApp faster and scalable.
 This is a generic decentralized application architecture and most of the examples from this guide were the starting point for some of our highly available and massively used products.
 Now we provide you a starting point in order to build your ideas and projects.
+
+[comment]: # (mx-context)
 
 ## Where to go next?
 

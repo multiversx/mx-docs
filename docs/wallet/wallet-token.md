@@ -3,6 +3,10 @@ id: create-a-fungible-token
 title: Web Wallet Tokens
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## **Introduction**
 
 **ESDT** stands for _eStandard Digital Token_.
@@ -10,11 +14,15 @@ title: Web Wallet Tokens
 MultiversX network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases.
 You can create and issue an ESDT token from [MultiversX web wallet](https://wallet.multiversx.com/) in a few steps. Let's go over these steps.
 
+[comment]: # (mx-context)
+
 ## **Prerequisites**
 
 - A wallet on MultiversX Network.
 - 0.05 EGLD issuance fee
 - fees for transactions
+
+[comment]: # (mx-context)
 
 ## **Creating a fungible token from Web Wallet**
 
@@ -44,6 +52,8 @@ Enter the required details. Next, click on **_Continue_** button to proceed. You
 
 Once the transaction is processed, your token will be issued.
 
+[comment]: # (mx-context)
+
 ### **Finding the token identifier**
 
 The token identifier of a token is unique. It is composed by the token ticker, a `-` char, followed by 6 random hex characters. Example: `MTKN-c66c30`.
@@ -59,6 +69,8 @@ Because the token identifier isn't deterministic, it can be found only after iss
 
 ![Token view in Web Wallet](/wallet/wallet-tokens/web-wallet-token-display.png)
 
+[comment]: # (mx-context)
+
 ## **Transfer a token from your wallet**
 
 You can transfer an amount of a token to another account. To get started, open up the [MultiversX web wallet](https://wallet.multiversx.com/).
@@ -72,6 +84,8 @@ On the pop-up, introduce the recipient and the amount you want to send. Then pre
 ![Web Wallet Transfer Token](/wallet/wallet-tokens/web-wallet-transfer-token.png)
 
 Once the transaction is successfully executed, the recipient should receive the amount of tokens.
+
+[comment]: # (mx-context)
 
 ## **Managing a token from Web Wallet**
 

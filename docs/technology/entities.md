@@ -3,6 +3,8 @@ id: entities
 title: Entities
 ---
 
+[comment]: # (mx-context)
+
 There are two primary entities in MultiversX: users and nodes.
 
 A **user** is anyone holding one or more pairs of keys (one secret, one public). Using a pair of keys, the user can submit signed transactions to the network. The MultiversX network treats each pair of keys as an _account_, and each account implicitly has an associated amount of EGLD tokens, called the _balance_ of the account. Moreover, an account also has an associated mapping storage, which holds arbitrary values.

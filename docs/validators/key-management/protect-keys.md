@@ -3,6 +3,8 @@ id: protect-keys
 title: Protecting your keys
 ---
 
+[comment]: # (mx-context)
+
 Validator Keys are very sensitive:
 
 - if you lose them and your node crashes irreparably (i.e. you delete the virtual machine, your VPS provider deletes/loses it), you lose access to that node, you won't be able to bring it back up online and will thus stop earning money with it

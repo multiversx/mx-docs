@@ -3,6 +3,10 @@ id: relayed-transactions
 title: Relayed Transactions
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 Relayed transactions (or meta-transactions) are transactions with the fee paid by a so-called relayer.
@@ -11,10 +15,14 @@ interacting with a Smart Contract has any EGLD for fees.
 
 More details and specifications can be found on [MultiversX Specs](https://github.com/multiversx/mx-specs/blob/main/sc-meta-transactions.md).
 
+[comment]: # (mx-context)
+
 ## Types of relayed transactions
 
 Currently, there are 2 versions of relayed transactions: v1 and v2. In the end, they both have the same effect,
 but v2 comes with optimisations in terms of gas usage, making it our recommendation.
+
+[comment]: # (mx-context)
 
 ## Relayed transactions version 1
 
@@ -73,6 +81,8 @@ Notice that there are some differences as compared to the regular _frontend_ [tr
 - `ChainID` has to be a byte array instead of a string
 - `Signature` has to be a byte array instead of the hex version of it
 
+[comment]: # (mx-context)
+
 ### Preparing relayed v1 transaction using erdjs
 
 `erdjs` has built-in support for relayed transactions version 1, by using a builder which allows one to prepare such
@@ -82,6 +92,8 @@ Resources:
 
 - [relayedTransactionV1Builder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV1Builder.ts)
 - [tests/example](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV1Builder.spec.ts)
+
+[comment]: # (mx-context)
 
 ### Example
 
@@ -145,6 +157,8 @@ gasLimit =          50_000     +      660     *        1500         +         60
 gasLimit = 61040000  // just like the gas limit set in the relayed transaction
 ```
 
+[comment]: # (mx-context)
+
 ## Relayed transactions version 2
 
 In contrast with version 1, relayed transactions version 2 have only certain fields of the inner transaction included
@@ -177,6 +191,8 @@ Therefore, when one wants to build such a transaction, the steps would be:
 - sign it
 - fetch the receiver, nonce, data and signature fields and use them in the relayed transaction
 
+[comment]: # (mx-context)
+
 ### Preparing relayed v2 transaction using erdjs
 
 `erdjs` has built-in support for relayed transactions version 2, by using a builder which allows one to prepare such
@@ -186,6 +202,8 @@ Resources:
 
 - [relayedTransactionV2Builder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV2Builder.ts)
 - [tests/example](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV2Builder.spec.ts)
+
+[comment]: # (mx-context)
 
 ### Example
 

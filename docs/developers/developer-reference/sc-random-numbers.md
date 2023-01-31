@@ -3,6 +3,10 @@ id: sc-random-numbers
 title: Random Numbers in Smart Contracts
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 Randomness in the blockchain environment is a challenging task to accomplish. Due to the nature of the environemnt, nodes must all have the same "random" generator to be able to reach consensus. This is solved by using Golang's standard seeded random number generator, directly in the VM: https://cs.opensource.google/go/go/+/refs/tags/go1.17.5:src/math/rand/
@@ -14,6 +18,8 @@ The VM function `mBufferSetRandom` uses this library, seeded with the concatenat
 - tx hash
 
 We're not going to go into details about how exactly the Golang library uses the seed or how it generates said random numbers, as that's not the purpose of this tutorial.
+
+[comment]: # (mx-context)
 
 ## Random numbers in smart contracts
 
@@ -35,6 +41,8 @@ for _ in 0..n {
 ```
 
 Similar methods exist for all Rust unsigned numerical types.
+
+[comment]: # (mx-context)
 
 ## Random numbers in a specific range
 
@@ -64,6 +72,8 @@ for i in 0..vec_len {
 
 This algorithm will shuffle each element at position `i`, with an element from position `[i, vec_len)`.
 
+[comment]: # (mx-context)
+
 ## Random bytes
 
 Let's say you want to create some NFTs in your contract, and want to give each of them a random hash of 32 bytes. To do that, you would use the `next_bytes(len: usize)` method of the `RandomnessSource` struct:
@@ -73,6 +83,8 @@ let mut rand_source = RandomnessSource::<Self::Api>::new();
 let rand_hash = rand_source.next_bytes(32);
 // NFT create logic here
 ```
+
+[comment]: # (mx-context)
 
 ## Considerations
 
@@ -138,6 +150,8 @@ fn user_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 #[storage_mapper("winnersList")]
 fn winners_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 ```
+
+[comment]: # (mx-context)
 
 ## Conclusion
 

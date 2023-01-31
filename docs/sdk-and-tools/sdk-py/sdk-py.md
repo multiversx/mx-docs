@@ -3,6 +3,8 @@ id: sdk-py
 title: sdk-py
 ---
 
+[comment]: # (mx-context)
+
 MultiversX SDK for Python
 
 **mxpy** (the CLI tool) can be found here: [mx-sdk-py-cli](https://github.com/multiversx/mx-sdk-py-cli). It targets a broad audience of **users** and **developers**, as depicted below:
@@ -20,7 +22,6 @@ MultiversX SDK for Python
 | Miscellaneous support features (e.g. bech32 conversion)                                        | Tech enthusiasts                                                    |
 
 **sdk-py** libraries:
-
 
 | Package                                                                                     | Source code                                                               | Description                                                                                   |
 |---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|

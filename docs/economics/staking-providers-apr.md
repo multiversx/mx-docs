@@ -3,12 +3,18 @@ id: staking-providers-apr
 title: Staking Providers APR
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 By using the [Delegation Manager](/validators/delegation-manager/) system smart contract, a new staking provider can be
 set up. According to the initial deposits (half of the minimum node stake) + delegations from other users (or even the owner itself)
 the staking contract can spawn new nodes. Currently, the minimum node cost is 2500 EGLD, so, for example, if a staking contract
 gathered 7500 EGLD it can spawn 3 new nodes.
+
+[comment]: # (mx-context)
 
 ### Base stake and top-up
 
@@ -28,6 +34,8 @@ b). A Staking Contract has 5200 EGLD. This could mean:
 Network-wise, the base stake is currently limited to 8,000,000 EGLD (3200 nodes \* 2500 EGLD / node). However, current staking
 metrics indicate that the total EGLD staked is around 13,000,000 EGLD, resulting in a base stake of 8 millions EGLD + ~5 millions EGLD top-up.
 
+[comment]: # (mx-context)
+
 ### Service Fee
 
 At each epoch change, the delegation contract receives the rewards in accordance to its stake. Over those rewards,
@@ -35,6 +43,8 @@ a service fee applies so the owner can cover the hosting and nodes management co
 
 So for example, if the rewards are 10 EGLD in an epoch, and the service fee is set to 10%, the owner of the staking
 contract will be eligible for 1 EGLD, while the difference (9 EGLD) will be allocated to the delegators.
+
+[comment]: # (mx-context)
 
 ### Inflation Rate
 
@@ -64,6 +74,8 @@ The approximated inflation rate is as follows:
 | 10   | 2029.07.28  | 0.57%          |
 | 11   | 2030.07.28  | 0%             |
 
+[comment]: # (mx-context)
+
 ### Protocol Sustainability
 
 In accordance to the Mainnet's [configuration](https://github.com/multiversx/mx-chain-mainnet-config/blob/master/economics.toml#L35) (`ProtocolSustainabilityPercentage`).
@@ -71,11 +83,15 @@ at each epoch change, when new tokens are distributed among the validators, 10% 
 
 This also has to be taken into account when calculating the APR.
 
+[comment]: # (mx-context)
+
 ## Rewards calculation
 
 When wanting to calculate the APR (Annual Percentage Return) of a Staking Provider, there are multiple factors that have
 to be taken into account, such as total value locked at Network-level, the inflation based on the current year, the
 staking provider base stake and top-up stake, and so on.
+
+[comment]: # (mx-context)
 
 ### Network Top-Up rewards
 
@@ -96,6 +112,8 @@ Where:
 - `p` represents a chosen parameter to control the gradient of top-up rewards. It can be viewed as the cumulated top-up stake
   where the given top-up rewards reach ½ of the top-up rewards set limit. It is currently set to 2M EGLD.
 
+[comment]: # (mx-context)
+
 ### Network base rewards
 
 $$
@@ -108,11 +126,15 @@ Where:
   part of the canonical chain
 - `topUpReward(e)` is computed above
 
+[comment]: # (mx-context)
+
 ## APR calculation
 
 After determining the base and the top-up rewards for an epoch, the APR can be calculated for a Staking Provider.
 
 First, we have to determine the maximum rewards that can be reached in ideal situations (no missed block in an epoch).
+
+[comment]: # (mx-context)
 
 ### Staking Provider base stake rewards
 
@@ -127,6 +149,8 @@ $$
 stakingProviderBaseStakeRewards(e) = \frac{stakingProviderNumberOfNodes}{totalNumberOfNodesInNetwork} * baseRewards(e)
 $$
 
+[comment]: # (mx-context)
+
 ### Top-Up rewards
 
 Similar to base stake rewards, the rewards for top-up are estimated by computing the share of the provider's top-up in
@@ -135,6 +159,8 @@ accordance to the network's total top-up.
 $$
 stakingProviderTopUpRewards(e) = \frac{stakingProviderTopUpAmount}{networkTotalTopUp} * topUpRewards(e)
 $$
+
+[comment]: # (mx-context)
 
 ### APR calculation
 
@@ -150,6 +176,8 @@ The last step is to decrease the fee deducted by the staking provider owner:
 $$
 apr = \frac{100 - fee}{100} * aprWithoutFee
 $$
+
+[comment]: # (mx-context)
 
 ## Example
 

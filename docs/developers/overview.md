@@ -3,6 +3,10 @@ id: overview
 title: Developers - Overview
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Developer documentation
 
 Get started with MultiversX by learning to write your first Smart Contract, build your first dApp or learn how to use our
@@ -12,7 +16,11 @@ API.
 For interacting with MultiversX Blockchain via SDKs or Rest API, please refer to [SDKs & Tools](/sdk-and-tools/overview).
 :::
 
+[comment]: # (mx-context)
+
 ## Table of contents
+
+[comment]: # (mx-context)
 
 ### Tutorials
 
@@ -28,6 +36,8 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 | [Custom Wallet Connect](/developers/tutorials/custom-wallet-connect)                | Custom Wallet Connect tutorial.                                  |
 | [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract. |
 
+[comment]: # (mx-context)
+
 ### Signing transactions
 
 The following content explain the structure of a transaction, how to sign or send them
@@ -37,6 +47,8 @@ The following content explain the structure of a transaction, how to sign or sen
 | [Signing transactions](/developers/signing-transactions)                             | How to serialize and sign transactions.                 |
 | [Tools for signing](/developers/signing-transactions/tools-for-signing)              | What to use in order to generate and sign transactions. |
 | [Signing programatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
+
+[comment]: # (mx-context)
 
 ### Gas and fees
 
@@ -48,6 +60,8 @@ Learn about transaction's gas and how a fee is calculated
 | [For move-balance transfers](/developers/gas-and-fees/egld-transfers)                     | How fees are computed for move-balance transfers (EGLD transfers).        |
 | [For System Smart Contracts](/developers/gas-and-fees/system-smart-contracts)             | How fees are computed when interacting with system smart contracts.       |
 | [For User defined Smart Contracts](/developers/gas-and-fees/user-defined-smart-contracts) | How fees are computed when interacting with user defined smart contracts. |
+
+[comment]: # (mx-context)
 
 ### Smart Contract Developer reference
 
@@ -68,6 +82,8 @@ Learn about transaction's gas and how a fee is calculated
 | [Rust smart contract build reference](/developers/developer-reference/sc-build-reference)                                | How to build and organize your Smart Contract.                                                  |
 | [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                                   | How to generate random number in Smart Contracts.                                               |
 
+[comment]: # (mx-context)
+
 ### Smart Contract Developers Best Practices
 
 | Name                                                                                        | Description                                        |
@@ -76,6 +92,8 @@ Learn about transaction's gas and how a fee is calculated
 | [Biguint operations](/developers/best-practices/biguint-operations)                         | Handle Biguint operations in a more efficient way. |
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
 | [Multi values](/developers/best-practices/multi-values)                                     | Take advantage of the variadic input and output.   |
+
+[comment]: # (mx-context)
 
 ### Scenarios Reference
 
@@ -86,6 +104,8 @@ Learn about transaction's gas and how a fee is calculated
 | [Scenario Simple Values](/developers/scenario-reference/values-simple)   | Handle simple values in scenario tests.                    |
 | [Scenario Complex Values](/developers/scenario-reference/values-complex) | Handle complex values in scenario tests.                   |
 | [Embedding Scenario code in GO](/developers/scenario-reference/embed)    | How to embed scenario code in Go.                          |
+
+[comment]: # (mx-context)
 
 ### Others
 

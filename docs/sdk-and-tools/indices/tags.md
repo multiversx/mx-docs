@@ -3,10 +3,15 @@ id: es-index-tags
 title: tags
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ## _id
 
 The `_id` field of this index is represented by the tag name in a base64 encoding.
+
+[comment]: # (mx-context)
 
 ## Fields
 
@@ -15,7 +20,11 @@ The `_id` field of this index is represented by the tag name in a base64 encodin
 | count | The count field represents the number of NFTs with the current tag. |
 | tag   | This field represents the tag in an alphanumeric format.            |
 
+[comment]: # (mx-context)
+
 ## Query examples
+
+[comment]: # (mx-context)
 
 ### Fetch NFTs count with a given tag
 

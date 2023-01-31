@@ -3,6 +3,8 @@ id: glossary
 title: Glossary
 ---
 
+[comment]: # (mx-context)
+
 **Metachain**: the blockchain that runs in a special shard, where the main responsibilities are not processing transactions,
 but notarizing and finalizing the processed shard block headers.
 

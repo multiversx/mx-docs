@@ -3,6 +3,8 @@ id: setup-local-testnet-advanced
 title: Set up a Local Testnet (advanced)
 ---
 
+[comment]: # (mx-context)
+
 How to set up a local MultiversX Testnet on a workstation.
 
 # **Prerequisites**
@@ -30,6 +32,8 @@ Depending on your Linux distribution, you may need to run the following commands
 sudo apt install tmux
 sudo apt install gnome-terminal
 ```
+
+[comment]: # (mx-context)
 
 ## **Configure the Testnet**
 
@@ -105,6 +109,8 @@ $HOME/Desktop/mytestnet/sandbox
         └── p2p.toml
 ```
 
+[comment]: # (mx-context)
+
 ## **Starting and stopping the Testnet**
 
 In order to start the Testnet, run the `start` command.
@@ -128,6 +134,8 @@ $ ./pause.sh
 $ ./resume.sh
 ```
 
+[comment]: # (mx-context)
+
 ## **Recreating the Testnet**
 
 In order to destroy the Testnet, run the `clean` command:
@@ -147,6 +155,8 @@ If you need to recreate a Testnet from scratch, use the `reset` command (which a
 $ ./reset.sh
 ```
 
+[comment]: # (mx-context)
+
 ## **Inspecting the Proxy**
 
 By default, the local Testnet also includes a local MultiversX Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/).
@@ -157,6 +167,8 @@ $ curl http://localhost:7950/network/config
 
 Given the request above, extract and save the fields `erd_chain_id` and `erd_min_transaction_version` from the response. You will need them in order to send transactions against your local Testnet.
 
+[comment]: # (mx-context)
+
 ## **Configuring mxpy**
 
 You can configure mxpy to point to your local Testnet by default:
@@ -166,6 +178,8 @@ $ mxpy config set chainID 15...
 $ mxpy config set txVersion 123
 $ mxpy config set proxy http://localhost:7950
 ```
+
+[comment]: # (mx-context)
 
 ## **Sending transactions**
 
@@ -183,6 +197,8 @@ You should see the prepared transaction and the **transaction hash** in the `std
 ```bash
 $ curl http://localhost:7950/transaction/1363...
 ```
+
+[comment]: # (mx-context)
 
 ## **Deploying and interacting with Smart Contracts**
 

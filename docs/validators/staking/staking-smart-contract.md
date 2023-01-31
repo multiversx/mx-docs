@@ -3,6 +3,8 @@ id: staking-smart-contract
 title: The Staking Smart Contract
 ---
 
+[comment]: # (mx-context)
+
 # **Staking**
 
 Nodes are _promoted_ to the role of **validator** when their operator sends a _staking transaction_ to the Staking smart contract. Through this transaction, the operator locks ("stakes") an amount of their own EGLD for each node that becomes a validator. A single staking transaction contains the EGLD and the information needed to stake for one or more nodes. Such a transaction contains the following:
@@ -43,6 +45,8 @@ Because this transaction is a call to the Staking smart contract, it passes info
 - `67656e65736973` is the aforementioned reserved placeholder, repeated;
 - `optional_reward_address_HEX_ENCODED` is the address of the account which will receive the rewards for the staked nodes (decoded from its usual Bech32 representation into binary, then re-encoded to a hexadecimal string).
 
+[comment]: # (mx-context)
+
 ## **Changing the reward address**
 
 Validator nodes produce rewards, which are then transferred to an account. By default, this account is the same one from which the staking transaction was submitted (see the section above). In the staking transaction, the node operator has the option to select a different reward address.
@@ -66,6 +70,8 @@ ChangeRewardAddressTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context)
 
 ## **Unstaking**
 
@@ -101,6 +107,8 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
+[comment]: # (mx-context)
+
 ## **Unbonding**
 
 A node operator may reclaim the stake which was previously locked for their validator nodes using an _unbonding transaction_ to the Staking smart contract. Before unbonding, the node operator must have already sent an unstaking transaction for some of their validators, and a predetermined amount of rounds must have passed after the unstaking transaction was processed.
@@ -133,6 +141,8 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
+[comment]: # (mx-context)
+
 ## **Unjailing**
 
 If a node operator notices that some of their validator nodes have been jailed due to low rating, they can restore the nodes back to being active validators by paying a small fine. This is done using an _unjailing transaction_, sent to the Staking smart contract, which contains the following:
@@ -162,6 +172,8 @@ Note that:
 - `45e7131ba....294812f004` is the BLS key of the first node, represented as a 192-character-long hexadecimal string;
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
+
+[comment]: # (mx-context)
 
 ## **Claiming unused tokens from Staking**
 

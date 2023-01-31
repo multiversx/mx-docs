@@ -3,6 +3,10 @@ id: sdk-py-cookbook
 title: Cookbook
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Overview
 
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries).
@@ -28,6 +32,8 @@ Documentation is preliminary and subject to change (the packages might suffer a 
 :::
 
 <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py-examples/main/Cookbook.ipynb" } -->
+
+[comment]: # (mx-context)
 
 ## Addresses
 
@@ -99,6 +105,8 @@ address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07g
 
 print("Is contract:", address.is_smart_contract())
 ```
+
+[comment]: # (mx-context)
 
 ## EGLD / ESDT transfers
 
@@ -253,6 +261,8 @@ print("Transaction:", tx.to_dictionary())
 print("Transaction data:", tx.data)
 ```
 
+[comment]: # (mx-context)
+
 ## Contract deployments and interactions
 
 Create a transaction to deploy a smart contract:
@@ -347,6 +357,8 @@ print("Transaction:", tx.to_dictionary())
 print("Transaction data:", tx.data)
 ```
 
+[comment]: # (mx-context)
+
 ## Contract queries
 
 In order to create a contract query and run it against a network provider (more details about **network providers** can be found below), do as follows:
@@ -373,6 +385,8 @@ response = network_provider.query_contract(query)
 print("Return code:", response.return_code)
 print("Return data:", response.return_data)
 ```
+
+[comment]: # (mx-context)
 
 ## Creating wallets
 
@@ -416,6 +430,8 @@ pem = UserPEM(label=label, secret_key=secret_key)
 pem.save(Path("./output/wallet.pem"))
 ```
 
+[comment]: # (mx-context)
+
 ## Loading wallets
 
 This is not a very common use-case - you might refer to [signing objects](#signing-objects) instead.
@@ -442,6 +458,8 @@ pem = UserPEM.from_file(Path("./testwallets/alice.pem"))
 print("Secret key", pem.secret_key.hex())
 print("Public key", pem.public_key.hex())
 ```
+
+[comment]: # (mx-context)
 
 ## Signing objects
 
@@ -499,6 +517,8 @@ message.signature = signer.sign(message)
 print("Signature", message.signature.hex())
 ```
 
+[comment]: # (mx-context)
+
 ## Verifying signatures
 
 Creating a `UserVerifier`:
@@ -532,6 +552,8 @@ print(f"Is signature of Bob?", bob_verifier.verify(tx))
 print(f"Is signature of Bob?", bob_verifier.verify(message))
 ```
 
+[comment]: # (mx-context)
+
 ## Creating network providers
 
 It's recommended to use the `multiversx_sdk_network_providers` components **as a starting point**. As your application matures, switch to using your own network provider (e.g. deriving from the default ones), tailored to your requirements.
@@ -552,6 +574,8 @@ from multiversx_sdk_network_providers import ProxyNetworkProvider
 provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
+[comment]: # (mx-context)
+
 ## Fetching network parameters
 
 In order to fetch network parameters, do as follows:
@@ -562,6 +586,8 @@ config = provider.get_network_config();
 print("Chain ID", config.chain_id);
 print("Min gas price:", config.min_gas_price);
 ```
+
+[comment]: # (mx-context)
 
 ## Fetching account state
 
@@ -586,6 +612,8 @@ tx.nonce = nonce_holder.get_nonce_then_increment()
 ```
 
 For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
+
+[comment]: # (mx-context)
 
 ## Broadcasting transactions
 

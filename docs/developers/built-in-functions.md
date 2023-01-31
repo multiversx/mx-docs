@@ -3,6 +3,10 @@ id: built-in-functions
 title: Built-In Functions
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## **Introduction**
 
 MultiversX protocol has a set of built-in functions. A built-in function is a special protocol-side function that doesn't
@@ -38,6 +42,8 @@ This documentation is subject to change, but at the time of writing, the current
 - ESDTNFTUpdateAttributes
 - MultiESDTNFTTransfer
 
+[comment]: # (mx-context)
+
 ## **ClaimDeveloperRewards**
 
 This function is to be used by Smart Contract owners in order to claim the fees accumulated during smart contract calls.
@@ -59,6 +65,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 The amount of available developer rewards can be viewed via [Get Address](/sdk-and-tools/rest-api/addresses/#get-address) endpoint when using the smart contract as the `bech32Address`.
 :::
 
+[comment]: # (mx-context)
+
 ## **ChangeOwnerAddress**
 
 `ChangeOwnerAddress` is the function to be called by a Smart Contract's owner when a new owner is desired.
@@ -75,6 +83,8 @@ ChangeOwnerAddressTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context)
 
 ## **SetUserName**
 
@@ -94,10 +104,14 @@ SetUserNameTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ## **SaveKeyValue**
 
 `SaveKeyValue` is used to store a given key-value under an address's storage. More details and the transaction's format are
 already covered [here](/developers/account-storage).
+
+[comment]: # (mx-context)
 
 ## **ESDT and NFT built-in functions**
 

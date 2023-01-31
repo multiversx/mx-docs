@@ -3,6 +3,10 @@ id: deep-history-squad
 title: Deep History Squad
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Overview
 
 A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/multiversx/mx-chain-deep-history)**.
@@ -27,11 +31,15 @@ GET http://squad:8080/address/erd1qqqqqqqqqqqqqpgq0lzzvt2faev4upyf586tg38s84d7zs
 
 In the example above, the key `726573657276650000000a55544b2d326638306539` is decoded as `reserve\x00\x00\x00\nUTK-2f80e9`.
 
+[comment]: # (mx-context)
+
 ## Public instance
 
 :::tip
 As of October 2022, a public deep-history squad isn't yet available. The instance is being prepared and should be ready in November 2022.
 :::
+
+[comment]: # (mx-context)
 
 ## On-premises instance
 
@@ -39,11 +47,15 @@ Deep-history squads can be set up on-premises, just as regular observing squads.
 
 Since each observer of a deep-history squad must have a non-pruned history, their non-regular databases have to be either **downloaded** or **reconstructed**, in advance.
 
+[comment]: # (mx-context)
+
 ### Downloading non-pruned database
 
 :::tip
 As of October 2022, a public repository with non-pruned databases for both _mainnet_ and _devnet_ is under construction. This repository would take the shape of a _Digital Ocean (S3-compatible) Space_. Once the repository is ready, the data can be downloaded via **[db-archive-scripts](https://github.com/multiversx/mx-chain-db-archive-scripts)** - documentation will follow.
 :::
+
+[comment]: # (mx-context)
 
 ### Reconstructing non-pruned database
 
@@ -54,6 +66,8 @@ Under the hood, the reconstruction process relies on the **[import-db](https://d
 It follows that, in order to reconstruct the history for an observer, we need (to download) **two database archives**: an _old archive_ and a _new archive_. For reconstructing the history of a whole squad, `4 x 2` archives are required (to be downloaded).
 
 _Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a step called **reconstruction bootstrapping**.
+
+[comment]: # (mx-context)
 
 #### Bootstrapping
 
@@ -110,6 +124,8 @@ If you prefer to wait in the current shell until the bootstrap finishes, omit th
 Downloading the archives and extracting them might take a while.
 :::
 
+[comment]: # (mx-context)
+
 #### Start the reconstruction
 
 Once the bootstrap step is ready, you can proceed with running the reconstruction containers. The example below if for _devnet_:
@@ -131,6 +147,8 @@ The reconstruction (which uses _import-db_ under the hood, as previously stated)
 
 Once a container finishes reconstruction (for a shard), it will shut down. Once all containers of the compose _project_ `deep-history-reconstruction` have stopped, the reconstruction is ready, and you can proceed with starting the squad (next section).
 
+[comment]: # (mx-context)
+
 ### Starting the squad
 
 The squad can be started using docker-compose, as follows (the example is for _devnet_):
@@ -147,6 +165,8 @@ DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id 
 ```
 
 **Congratulations, you've set up a deep-history observing squad!** The gateway should be ready to resolve historical account (state) queries.
+
+[comment]: # (mx-context)
 
 ## Handling storage requirements
 

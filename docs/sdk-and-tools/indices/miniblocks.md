@@ -3,13 +3,17 @@ id: es-index-miniblocks
 title: miniblocks
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ## _id
 
 The _id field of this index is represented by the miniblock hash, in a hexadecimal encoding.
 
-## Fields
+[comment]: # (mx-context)
 
+## Fields
 
 | Field             | Description                                                                                                                                                                  |
 |-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -23,7 +27,11 @@ The _id field of this index is represented by the miniblock hash, in a hexadecim
 | timestamp         | The timestamp field represents the timestamp of the block in which the miniblock was executed.                                                                               |
 | reserved          | The reserved field ensures the possibility to extend the mini block.                                                                                                         |
 
+[comment]: # (mx-context)
+
 ## Query examples
+
+[comment]: # (mx-context)
 
 ### Fetch all the miniblocks of a block
 

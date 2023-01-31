@@ -3,6 +3,8 @@ id: system-smart-contracts
 title: System Smart Contracts
 ---
 
+[comment]: # (mx-context)
+
 For transactions which call System Smart Contracts, the **actual gas cost** of processing contains the two previously mentioned cost components - and they are easily computable.
 
 For more details, please follow:

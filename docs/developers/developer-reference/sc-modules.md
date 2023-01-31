@@ -3,9 +3,15 @@ id: sc-modules
 title: Smart contract modules
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 Smart contract modules are a handy way of dividing a contract into smaller components. Modules also reduce code duplication, since they can be reused across multiple contracts.
+
+[comment]: # (mx-context)
 
 ## Declaration
 
@@ -34,6 +40,8 @@ Then, in your main file (usually named `lib.rs`), you have to define the module.
 pub mod storage;
 ```
 
+[comment]: # (mx-context)
+
 ## Importing a module
 
 A module can be imported both by other modules and contracts:
@@ -57,6 +65,8 @@ pub trait MainContract:
 ```
 
 Keep in mind your main contract has to implement all modules that any sub-module might use. In this example, even if the `MainContract` does not use anything from the `UtilModule`, it still has to implement it if it wants to use `SetupModule`.
+
+[comment]: # (mx-context)
 
 ## Conclusion
 

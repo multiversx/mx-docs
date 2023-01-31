@@ -3,7 +3,11 @@ id: values-complex
 title: Scenario Complex Values
 ---
 
+[comment]: # (mx-context)
+
 We already covered representations of simple types [here](/developers/scenario-reference/values-simple). This is enough for arguments of types like `usize`, `BigUint` or `&[u8]`, but we need to also somehow specify complex types like custom structs or lists of items.
+
+[comment]: # (mx-context)
 
 ## **Concatenation**
 
@@ -19,6 +23,8 @@ This is ideal for short lists or small structs.
   :::
 
 Please note that the pipe operator only takes care of the concatenation itself. You are responsible for making sure that [nested encoding](/developers/developer-reference/serialization-format/#the-concept-of-top-level-vs-nested-objects) is used where appropriate.
+
+[comment]: # (mx-context)
 
 ## **Using JSON lists as values**
 
@@ -70,6 +76,8 @@ In this example the only argument is `0x0000000300000001000000020000000300000000
 We mentioned above how the developer needs to take care of the serialization of the nested items. This is actually a good example of that. The endpoint `echo_managed_vec_of_managed_vec` takes a list of lists, so we need to serialize the lengths of the lists on the second level. Notice how the lengths are given as JSON strings and the contents as JSON lists; the first `"u32:3"` is the serialized length of the first item, which is `["u32:1", "u32:2", "u32:3"]`, and so forth.
 
 :::
+
+[comment]: # (mx-context)
 
 ## **Using JSON maps as values**
 
@@ -142,6 +150,8 @@ Once again, note that all contained values are in [nested encoding format](/deve
 - lists have their length explicitly encoded at the start, always on 4 bytes (as `u32`).
 
 :::
+
+[comment]: # (mx-context)
 
 ## **A note about enums**
 

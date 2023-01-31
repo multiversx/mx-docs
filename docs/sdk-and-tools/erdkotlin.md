@@ -3,6 +3,8 @@ id: erdkotlin
 title: Kotlin SDK
 ---
 
+[comment]: # (mx-context)
+
 MultiversX SDK for Kotlin
 
 **erdkotlin** can be found here: [mx-sdk-erdkotlin](https://github.com/multiversx/mx-sdk-erdkotlin).

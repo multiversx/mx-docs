@@ -3,6 +3,10 @@ id: node-databases
 title: Node Databases
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## **Node databases**
 
 Nodes use Serial LevelDB databases to persist processed blocks, transactions, and so on.
@@ -36,9 +40,10 @@ The default databases directory is `<node-working-directory>/db` and it's conten
          .............
 ```
 
-
 Nodes will fetch the state from an existing database if one is detected during the startup process. If it does not match
 the current network height, it will sync the rest of the data from the network, until fully synced.
+
+[comment]: # (mx-context)
 
 ## **Starting a node with existent databases**
 
@@ -56,4 +61,3 @@ and network-only data fetch.
 If the configuration and the database's shard are the same, then the node should have the full state from the database and 
 start to sync with the network only remaining items. If, for instance, a node starts with a database of 255 epochs, and the current epoch is 
 256, then it will only sync from network the data from the missing epoch.
-

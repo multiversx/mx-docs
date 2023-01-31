@@ -3,10 +3,14 @@ id: network
 title: Network
 ---
 
+[comment]: # (mx-context)
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 Query information about the Network.
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get Network Configuration** {#get-network-configuration}
 
@@ -52,6 +56,8 @@ Configuration details retrieved successfully.
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get Shard Status** {#get-shard-status}
 

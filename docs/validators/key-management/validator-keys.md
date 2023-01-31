@@ -3,6 +3,10 @@ id: validator-keys
 title: Validator Keys
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Validator key format
 
 A file containing the keys for your node.
@@ -38,6 +42,8 @@ More clearly:
 Always save and protect **private keys**, they are like your username + password + 2FA at your bank, all combined.
 
 _Public keys_ are like your phone number - no harm in others knowing it, it actually is needed for some scenarios. Still, only share it on a need to basis, like you would do with your own phone number.
+
+[comment]: # (mx-context)
 
 ## How to generate a new key
 

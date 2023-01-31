@@ -3,10 +3,15 @@ id: es-index-scdeploys
 title: scdeploys
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ## _id
 
 The `_id` field of this index is represented by a bech32 encoded smart contract address.
+
+[comment]: # (mx-context)
 
 ## Fields
 
@@ -25,7 +30,11 @@ The `upgrades` field is populated with the fields below:
 | upgradeTxHash   | The upgradeTxHash field holds the hex encoded hash of the contract upgrade transaction.                |
 | timestamp       | The timestamp field represents the timestamp of the block in which the smart contract was upgraded.    |
 
+[comment]: # (mx-context)
+
 ## Query examples
+
+[comment]: # (mx-context)
 
 ### Fetch details about a smart contract
 

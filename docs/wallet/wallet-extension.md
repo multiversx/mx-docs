@@ -3,13 +3,19 @@ id: wallet-extension
 title: Maiar Web Wallet Extension
 ---
 
+[comment]: # (mx-context)
+
 Popularly referred to as the "future of money," Maiar currently has a robust web wallet extension known as the **Maiar DeFi Wallet Extension**. It is a powerful browser extension for the MultiversX Wallet that effectively automates and reduces the steps and time required for users to interact with MultiversX Decentralized apps.
 
 The Maiar DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the MultiversX mainnet, and store MultiversX tokens such as EGLD, ESDT, or NFTs on the MultiversX Network with easy accessibility.
 
 Let's walk through the steps how to install and set up the Maiar DeFi Wallet extension:
 
+[comment]: # (mx-context)
+
 ## Prerequisites
+
+[comment]: # (mx-context)
 
 ### Add Maiar DeFi Wallet to your browser
 
@@ -25,6 +31,8 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 
   ![wallet_extension_step3](/wallet/wallet-extension/wallet_extension_step3.png)
 
+[comment]: # (mx-context)
+
 ### Set up Maiar DeFi wallet
 
 - Once it has been successfully installed, click on the extension to get started.
@@ -32,6 +40,8 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 - You will be presented with two options: you can either _Create new wallet_ or _Import existing wallet._
 
   ![maiar-defi-example-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
+
+[comment]: # (mx-context)
 
 ### Create a new wallet
 
@@ -56,6 +66,8 @@ Let's walk through the steps how to install and set up the Maiar DeFi Wallet ext
 **Step 7:** Completed! Your Maiar DeFi Wallet has been successfully created and set to be used.
 
 ![maiar-defi-example-successful](/wallet/wallet-extension/wallet_extension_step8.png)
+
+[comment]: # (mx-context)
 
 ### Import existing wallet
 
@@ -83,9 +95,13 @@ The Maiar wallet has a set of 24-words, which serve as your wallet’s secret ph
 
 ![maiar-defi-example-successful](/wallet/wallet-extension/wallet_extension_step8.png)
 
+[comment]: # (mx-context)
+
 ## Key features
 
 Now you have a wallet registered in the Maiar DeFi Wallet Extension and it's ready to use. Great! Here's what you can do with this wallet:
+
+[comment]: # (mx-context)
 
 ### Send to a wallet
 
@@ -105,9 +121,13 @@ _(Optional)_ **Step 3**: Enter the data. This is a description of the transactio
 
 **Step 4:** Click on the _“Continue”_ button to complete the transaction.
 
+[comment]: # (mx-context)
+
 ### Lock/unlock
 
 After 60minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header.
+
+[comment]: # (mx-context)
 
 ### Deposit to a wallet
 
@@ -119,17 +139,23 @@ A deposit can be made to your wallet using the wallet extension. This feature al
 
   ![maiar-defi-example-deposit](/wallet/wallet-extension/wallet_extension_step11.png)
 
+[comment]: # (mx-context)
+
 ### Transactions history
 
 On the wallet extension dashboard, the wallet records all transactions sent and received in your wallet. If you are a new user, it says "_No transactions found for this wallet_" until you make your first transaction.
 
 ![maiar-defi-example-step9](/wallet/wallet-extension/wallet_extension_step9.png)
 
+[comment]: # (mx-context)
+
 ### Networks
 
 In the settings section on your extension dashboard, you can connect to the different networks provided by MultiversX, such as the mainnet, testnet, and devnet.
 
 Choose either of these networks.
+
+[comment]: # (mx-context)
 
 ## Connecting the Maiar DeFi Wallet to Maiar Exchange App
 

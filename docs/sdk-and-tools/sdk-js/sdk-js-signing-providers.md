@@ -3,6 +3,8 @@ id: sdk-js-signing-providers
 title: Signing Providers for dApps
 ---
 
+[comment]: # (mx-context)
+
 This page will guide you through the process of integrating the **sdk-js signing providers** in a dApp which isn't based on `sdk-dapp`.
 
 :::important
@@ -19,6 +21,8 @@ The following signing providers are available:
 - Extension Provider (Maiar DeFi Wallet)
 - Wallet Connect provider
 - Hardware Wallet (Ledger) Provider
+
+[comment]: # (mx-context)
 
 ## The Web Wallet Provider
 
@@ -37,6 +41,8 @@ const provider = new WalletProvider(WALLET_PROVIDER_DEVNET);
 ```
 
 The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-js-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
+
+[comment]: # (mx-context)
 
 ### Login and logout
 
@@ -77,6 +83,8 @@ const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
 await provider.login({ callbackUrl, token: authToken });
 ```
 
+[comment]: # (mx-context)
+
 ### Signing transactions
 
 Transactions can be signed as follows:
@@ -115,6 +123,8 @@ for (const plainTransaction of plainSignedTransactions) {
 }
 ```
 
+[comment]: # (mx-context)
+
 ### Signing messages
 
 :::important
@@ -122,6 +132,8 @@ Documentation in this section is preliminary and subject to change.
 :::
 
 As of July 2022, the web wallet provider does not allow one to sign arbitrary messages (only transaction signing is supported).
+
+[comment]: # (mx-context)
 
 ## The Extension Provider (Maiar DeFi Wallet)
 
@@ -144,6 +156,8 @@ Before performing any operation, make sure to initialize the provider:
 ```
 await provider.init();
 ```
+
+[comment]: # (mx-context)
 
 ### Login and logout
 
@@ -174,6 +188,8 @@ console.log("Address:", provider.account.address);
 console.log("Token signature:", provider.account.signature);
 ```
 
+[comment]: # (mx-context)
+
 ### Signing transactions
 
 Transactions can be signed as follows:
@@ -188,6 +204,8 @@ await provider.signTransactions([firstTransaction, secondTransaction]);
 
 // "firstTransaction" and "secondTransaction" can now be broadcasted.
 ```
+
+[comment]: # (mx-context)
 
 ### Signing messages
 
@@ -204,6 +222,8 @@ await provider.signMessage(message);
 
 console.log(message.toJSON());
 ```
+
+[comment]: # (mx-context)
 
 ## The Wallet Connect provider
 
@@ -257,6 +277,8 @@ Before performing any operation, make sure to initialize the provider:
 await provider.init();
 ```
 
+[comment]: # (mx-context)
+
 ### Login and logout
 
 Then, ask the user to login using Maiar on her phone:
@@ -276,6 +298,8 @@ In order to log out, do as follows:
 await provider.logout();
 ```
 
+[comment]: # (mx-context)
+
 ### Signing transactions
 
 Transactions can be signed as follows:
@@ -293,6 +317,8 @@ await provider.signTransactions([firstTransaction, secondTransaction]);
 
 Alternatively, one can sign a single transaction using the method `signTransaction()`.
 
+[comment]: # (mx-context)
+
 ### Signing messages
 
 :::important
@@ -300,6 +326,8 @@ Documentation in this section is preliminary and subject to change.
 :::
 
 As of July 2022, sdk-js' Wallet Connect provider does not allow one to sign arbitrary messages (only transaction signing is supported).
+
+[comment]: # (mx-context)
 
 ## The Hardware Wallet (Ledger) Provider
 
@@ -322,6 +350,8 @@ Before performing any operation, make sure to initialize the provider (also, the
 ```
 await provider.init();
 ```
+
+[comment]: # (mx-context)
 
 ### Login
 
@@ -364,6 +394,8 @@ console.log("Address:", address);
 console.log("Signature:", signature.hex());
 ```
 
+[comment]: # (mx-context)
+
 ### Signing transactions
 
 Transactions can be signed as follows:
@@ -381,6 +413,8 @@ await provider.signTransactions([firstTransaction, secondTransaction]);
 
 Alternatively, one can sign a single transaction using the method `signTransaction()`.
 
+[comment]: # (mx-context)
+
 ### Signing messages
 
 Arbitrary messages can be signed as follows:
@@ -396,6 +430,8 @@ await provider.signMessage(message);
 
 console.log(message.toJSON());
 ```
+
+[comment]: # (mx-context)
 
 ## Verifying the signature of a login token
 

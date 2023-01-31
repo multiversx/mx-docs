@@ -3,6 +3,10 @@ id: sc-contract-calls
 title: Smart contract to smart contract calls
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 This guide provides some examples on how to call a contract from another contract. More examples can be found in [the contract composability feature tests](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/feature-tests/composability).
@@ -11,6 +15,8 @@ There are three ways of doing these calls:
 - importing the callee contract's source code and using the auto-generated proxy (recommended)
 - writing the proxy manually
 - manually serializing the function name and arguments (not recommended)
+
+[comment]: # (mx-context)
 
 ## Method #1: Importing the contract
 
@@ -60,11 +66,15 @@ After performing this call, you can execute some more code in the caller contrac
 
 NOTE: Keep in mind that this only works for same-shard contracts. If the contracts are in different shards, you have to use async-calls or transfer-and-execute.
 
+[comment]: # (mx-context)
+
 ## Types of Contract to Contract calls
 
 There are two main types of contract-to-contract calls available at the moment:
 - synchronous, same-shard calls, through execute_on_dest_context (as demonstrated above)
 - asynchronous calls
+
+[comment]: # (mx-context)
 
 ### Asynchronous calls
 
@@ -86,6 +96,8 @@ fn caller_endpoint(&self) {
 		.call_and_exit();
 }
 ```
+
+[comment]: # (mx-context)
 
 ### Callbacks
 
@@ -127,6 +139,8 @@ fn caller_endpoint(&self) {
 ```
 
 Even though, in theory, smart contract can only have ONE callback function, the Rust framework handles this for you by saving an ID for the callback function in storage when you fire the async call, and it knows how to retrieve the ID and call the correct function once the call returns.
+
+[comment]: # (mx-context)
 
 ### Callback Arguments
 
@@ -177,6 +191,8 @@ self.callbacks().my_endpoint_callback(caller)
 
 You can then use `original_caller` in the callback like any other function argument.
 
+[comment]: # (mx-context)
+
 ### Payments in proxy arguments
 
 Let's say you want to call a `#[payable]` endpoint, with this definition:
@@ -210,6 +226,8 @@ There are similar functions for other types of payments:
 - `add_esdt_token_transfer` - for single ESDT transfers
 - `with_egld_transfer` - for EGLD transfers
 - `with_multi_token_transfer` - for ESDT multi-transfers
+
+[comment]: # (mx-context)
 
 ### Payments in callbacks
 
@@ -249,9 +267,14 @@ fn caller_endpoint(&self) {
 		.call_and_exit();
 }
 ```
+
+[comment]: # (mx-context)
+
 ### Gas limit for execution
 
 `with_gas_limit` allows you to specify a gas limit for your call. By default, all gas left is passed, and any remaining is returned either for further execution (in case of sync calls) or for callback execution (for async calls).
+
+[comment]: # (mx-context)
 
 ### Method #2: Manually writing the proxy
 
@@ -275,6 +298,8 @@ This is the only thing you'll have to do differently. The rest is the same, you 
 fn contract_proxy(&self, sc_address: ManagedAddress) -> callee_proxy::Proxy<Self::Api>;
 ```
 
+[comment]: # (mx-context)
+
 ### Method #3: Manual calls (NOT recommended)
 
 If for some reason you don't want to use the contract proxies, you can create a `ContractCall` object by hand:
@@ -294,6 +319,8 @@ From here, you would use `contract_call.push_endpoint_arg(&your_arg)` and the ma
 You would then use the same `execute_on_dest_context`, `transfer_execute` and `async_call` methods as in the automatically built `ContractCall` objects from before.
 
 Only use this method if you REALLY have to, as it's very easy to make mistakes if you work with low-level code like this.
+
+[comment]: # (mx-context)
 
 ## Conclusion
 

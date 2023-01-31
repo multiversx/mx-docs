@@ -3,6 +3,8 @@ id: erdjava
 title: Java SDK
 ---
 
+[comment]: # (mx-context)
+
 MultiversX SDK for Java
 
 **erdjava** can be found here: [mx-sdk-erdjava](https://github.com/multiversx/mx-sdk-erdjava/).

@@ -3,6 +3,8 @@ id: useful-links
 title: Useful Links & Tools
 ---
 
+[comment]: # (mx-context)
+
 Official resources:
 
 - Blockchain Explorer: [https://explorer.multiversx.com/](https://explorer.multiversx.com/)

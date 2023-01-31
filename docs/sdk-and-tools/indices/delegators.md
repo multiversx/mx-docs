@@ -3,14 +3,17 @@ id: es-index-delegators
 title: delegators
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
 
 ## _id
 
-
 The `_id` field of this index is composed in this way: `blake2bHash(delegatorAddress+stakingProviderAddress)`, in a base64 encoding (example: `YZNG+r3ZwFtOj0c057MnpVnXAfmSqLai15lusLWg+KM=`).
 
-## Fields
+[comment]: # (mx-context)
 
+## Fields
 
 | Field          | Description                                                                                                                          |
 |----------------|--------------------------------------------------------------------------------------------------------------------------------------|
@@ -19,7 +22,11 @@ The `_id` field of this index is composed in this way: `blake2bHash(delegatorAdd
 | activeStake    | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable).                                    |
 | activeStakeNum | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable), in a numeric format. Example: 1.5. |
 
+[comment]: # (mx-context)
+
 ## Query examples
+
+[comment]: # (mx-context)
 
 ### Fetch all delegations of an address
 
@@ -35,6 +42,8 @@ curl --request GET \
 	}
 }'
 ```
+
+[comment]: # (mx-context)
 
 ### Fetch all delegators to a staking provider
 

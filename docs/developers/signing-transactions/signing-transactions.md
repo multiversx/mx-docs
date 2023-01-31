@@ -3,9 +3,13 @@ id: signing-transactions
 title: Signing Transactions
 ---
 
+[comment]: # (mx-context)
+
 How to serialize and sign the Transaction payload
 
 Transactions must be **signed** with the Sender's Private Key before submitting them to the MultiversX Network. Signing is performed with the [Ed25519](https://ed25519.cr.yp.to/) algorithm.
+
+[comment]: # (mx-context)
 
 ## **General structure**
 
@@ -28,6 +32,8 @@ A signed transaction has the additional **`signature`** field:
 | Field     | Type   | Description                                                                                    |
 | --------- | ------ | ---------------------------------------------------------------------------------------------- |
 | signature | string | The digital signature consisting of 128 hex-characters (thus 64 bytes in a raw representation) |
+
+[comment]: # (mx-context)
 
 ## **Serialization for signing**
 
@@ -79,11 +85,15 @@ Then it's serialized form (step 5 is omitted in this example) is as follows:
 {"nonce":8,"value":"10000000000000000000","receiver":"erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r","sender":"erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz","gasPrice":1000000000,"gasLimit":50000,"chainID":"1","version":1}
 ```
 
+[comment]: # (mx-context)
+
 ## **Ed25519 signature**
 
 MultiversX uses the [Ed25519](https://ed25519.cr.yp.to/) algorithm to sign transactions. In order to obtain the signature, one can use generic software libraries such as [PyNaCl](https://pynacl.readthedocs.io/en/stable/signing/), [tweetnacl-js](https://github.com/dchest/tweetnacl-js#signatures) or components of MultiversX SDK such as [mx-sdk-js-wallet](https://github.com/multiversx/mx-sdk-js-wallet), [mx-sdk-py-wallet](https://github.com/multiversx/mx-sdk-py-wallet), [erdgo](https://github.com/multiversx/mx-sdk-erdgo), [erdjava](https://github.com/multiversx/mx-sdk-erdjava), [mx-sdk-js-wallet-cli](https://github.com/multiversx/mx-sdk-js-wallet-cli) etc.
 
 The raw signature consisting of 64 bytes has to be **hex-encoded** afterwards and placed in the transaction object.
+
+[comment]: # (mx-context)
 
 ## **Ready to broadcast**
 

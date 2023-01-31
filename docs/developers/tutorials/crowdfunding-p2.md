@@ -3,6 +3,8 @@ id: crowdfunding-p2
 title: The Crowdfunding Smart Contract (part 2)
 ---
 
+[comment]: # (mx-context)
+
 Define contract arguments, handle storage, process payments, define new types, write better tests
 
 # **Configuring the contract**
@@ -118,6 +120,8 @@ Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 1. Failed: 0. Skipped: 0.
 SUCCESS
 ```
+
+[comment]: # (mx-context)
 
 ## **Funding the contract**
 
@@ -236,6 +240,8 @@ Done. Passed: 2. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
+[comment]: # (mx-context)
+
 ## **Validation**
 
 It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block timestamp must be rejected. The idiomatic way to do this is:
@@ -311,6 +317,8 @@ Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 3. Failed: 0. Skipped: 0.
 SUCCESS
 ```
+
+[comment]: # (mx-context)
 
 ## **Querying for the contract status**
 
@@ -414,6 +422,8 @@ Note the call to "status" at the end and the result `"out": [ "2" ]` , which is 
 
 Contract functions can return in principle any number of results, that is why `"out"` is a list.
 
+[comment]: # (mx-context)
+
 ## **Claim functionality**
 
 Finally, let's add the `claim` method. The `status` method we just implemented helps us keep the code tidy:
@@ -447,6 +457,8 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
 ```
 
 The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.
+
+[comment]: # (mx-context)
 
 ## **The final contract code**
 
@@ -558,6 +570,8 @@ pub trait Crowdfunding {
 ```
 
 As an exercise, try to add some more tests, especially ones involving the claim function.
+
+[comment]: # (mx-context)
 
 ## **Next steps**
 

@@ -3,6 +3,8 @@ id: accounts-management
 title: Accounts Management
 ---
 
+[comment]: # (mx-context)
+
 Managing Wallets and Addresses
 
 :::tip

@@ -3,6 +3,10 @@ id: import-db
 title: Import DB
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 The node is able to reprocess a previously produced database by providing the database and starting
@@ -16,6 +20,8 @@ Possible use cases for the import-db process:
 - check the blockchain state at a specified time (this includes additional code changes, but for example if you are
   interested in the result of an API endpoint at the block 255255, you could use import db and force the node to stop
   at the block corresponding to that date).
+
+[comment]: # (mx-context)
 
 ## How to start the process
 
@@ -82,6 +88,8 @@ import ended because data from epochs [x] or [y] does not exist
 The import-db process can be sped up by skipping the block header's signature check if the import-db data comes from a trustworthy source.
 In this case the node should be started with all previously mentioned flags, adding the `-import-db-no-sig-check` flag.
 :::
+
+[comment]: # (mx-context)
 
 ## Import-DB with populating an Elasticsearch cluster
 

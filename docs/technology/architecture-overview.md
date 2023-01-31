@@ -3,6 +3,8 @@ id: architecture-overview
 title: Architecture Overview
 ---
 
+[comment]: # (mx-context)
+
 MultiversX is a high-throughput public blockchain aimed at providing security, efficiency, scalability and interoperability, beyond the current state-of-the-art. The two most important features that set MultiversX apart are Adaptive State Sharding and the Secure Proof of Stake consensus mechanism.
 
 MultiversX is a complete redesign of blockchain architecture with the aim to achieve global scalability and near instant transaction speed. MultiversX's architecture rests on the following key innovations:

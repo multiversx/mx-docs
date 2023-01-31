@@ -2,9 +2,17 @@
 id: sc-debugging
 title: Smart Contract Debugging
 ---
+
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Introduction
 
 Debugging smart contracts is possible with the integrated debugger in Visual Studio Code. You will be able to debug your contract just like you would debug a regular program.
+
+[comment]: # (mx-context)
+
 ## Prerequisites
 
 For this tutorial, you will need:
@@ -14,6 +22,8 @@ For this tutorial, you will need:
 - A [Rust test](rust-testing-framework.md)
 
 If you want to follow along, you can clone the [mx-sdk-rs](https://github.com/multiversx/mx-sdk-rs) repository and use the [crowdfunding-esdt](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding-esdt) example.  
+
+[comment]: # (mx-context)
 
 ## Step by step debugging
 
@@ -32,6 +42,8 @@ Once you've started the test, it should stop at the breakpoint and highlight the
 ![img](/developers/sc-debugging/first_step_debugging.png)
 
 Then, you can use VSCode's step by step debugging (usually F10 to step over, F11 to step into, or shift + F11 to step out).
+
+[comment]: # (mx-context)
 
 ## Inspecting variables
 
@@ -53,6 +65,8 @@ sc_print!("{}", target);
 ```
 
 Adding this line to the beginning of the `#[init]` function will print `2000` in the console.
+
+[comment]: # (mx-context)
 
 ## Printing formatted messages
 

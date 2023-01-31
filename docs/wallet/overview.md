@@ -3,12 +3,18 @@ id: overview
 title: Wallets - Overview
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## MultiversX Wallets
 
 The private key associated to an address (erd1...) needs to be stored in a specific format. In order to use that private
 key to sign transactions and perform various actions, one needs a wallet.
 
 There are multiple ways you can store your funds. This page will present some of them.
+
+[comment]: # (mx-context)
 
 ## Table of contents
 

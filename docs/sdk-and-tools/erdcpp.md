@@ -3,6 +3,8 @@ id: erdcpp
 title: C++ SDK
 ---
 
+[comment]: # (mx-context)
+
 MultiversX SDK for C++
 
 **erdcpp** can be found here: [mx-sdk-erdcpp](https://github.com/multiversx/mx-sdk-erdcpp).

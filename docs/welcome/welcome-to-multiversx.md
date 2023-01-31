@@ -3,6 +3,8 @@ id: welcome-to-multiversx
 title: Welcome to MultiversX
 ---
 
+[comment]: # (mx-context)
+
 # **At a glance:**
 
 - **What**: Sharded Smart Contracts execution platform with a PoS consensus mechanism

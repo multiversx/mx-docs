@@ -3,6 +3,10 @@ id: querying-the-blockchain
 title: Querying the Blockchain
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## **Querying broadcasted transactions**
 
 In order to query a transaction and inspect its status, please follow:
@@ -11,6 +15,8 @@ In order to query a transaction and inspect its status, please follow:
 - [get transaction status by hash](/sdk-and-tools/rest-api/transactions#get-transaction-status)
 
 Querying a _recently_ broadcasted transaction may not return the _hyperblock coordinates_ (hyperblock nonce and hyperblock hash) in the response. However, once the transaction is fully executed - according to the `status` field (whether with success or with failure), the hyperblock coordinates will be set and present in the response.
+
+[comment]: # (mx-context)
 
 ## **Transaction Status**
 
@@ -48,12 +54,16 @@ For **smart contract transactions**, the transaction status has the following me
 Documentation in this sub-section (about smart contract transactions) is preliminary and subject to change.
 :::
 
+[comment]: # (mx-context)
+
 ## **Querying hyperblocks and fully executed transactions**
 
 In order to query executed transactions, please follow:
 
 - [get hyperblock by nonce](/sdk-and-tools/rest-api/blocks#get-hyperblock-by-nonce)
 - [get hyperblock by hash](/sdk-and-tools/rest-api/blocks#get-hyperblock-by-hash)
+
+[comment]: # (mx-context)
 
 ## **Querying finality information**
 

@@ -3,6 +3,10 @@ id: economics-overview
 title: Overview
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## **Economics Overview**
 
 The MultiversX blockchain economy is designed around eGold - a powerful digital currency positioned for global adoption.
@@ -27,4 +31,3 @@ As a result, the powerful economic attribute of scarcity is designed to scale wi
 You can learn more about the EGLD token and MultiversX economy from the resources below:
 - https://multiversx.com/blog/egold-a-powerful-digital-currency-positioned-for-global-adoption/
 - https://multiversx.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper
-

@@ -3,6 +3,8 @@ id: rating
 title: Rating
 ---
 
+[comment]: # (mx-context)
+
 Each individual validator has a **rating score**, which expresses its overall reliability, performance and responsiveness. It is an important value, and node operators should be always mindful of the rating of their validators.
 
 Rating influences the probability of a validator to be selected for consensus in each round. A performant validator will be preferred in consensus, as opposed to a validator which sometimes fails to contribute or which is not always online.
@@ -26,6 +28,8 @@ The "Node Details" page displays a plot of the validator rating during the past 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MA1wJCHfE7ffob9gOjE%2F-MA1we9u12mvMRF1PU9y%2Fplot-rating.png?alt=media&token=6a1f0071-66d0-4aec-8192-2a8f716e67bb)
 
 The X-axis represent the epochs, and the Y-axis represents the rating.
+
+[comment]: # (mx-context)
 
 ## **The jail**
 
@@ -52,6 +56,8 @@ The only way to increase the rating of a validator is to keep it up-to-date, kee
 :::note multiple validators on the same machine
 Running **multiple validators on a single machine** will impact your rating and consequently _your rewards,_ if the machine doesn't have the as many times the minimum requirements as there are validators running on it.
 :::
+
+[comment]: # (mx-context)
 
 ## **Consensus probabilities**
 
@@ -87,6 +93,8 @@ Assuming a **24-hour-long epoch**, the rating mechanism has been calibrated with
 
 # **Rating shard validators**
 
+[comment]: # (mx-context)
+
 ## **Rating the shard block proposer**
 
 The node chosen to propose the block for a specific round will:
@@ -106,6 +114,8 @@ where `cfp` is the number of consecutive failed proposals.
 
 This compounding penalty has the effect of quickly jailing repeatedly unsuccessful proposers.
 
+[comment]: # (mx-context)
+
 ## **Rating the shard block validator**
 
 The nodes that take part in the consensus of a round (other than the proposer) will:
@@ -121,6 +131,8 @@ Moreover, the validator must have been a "signer" in at least 1% of the previous
 
 The rating mechanism for the metashard is identical with the rating mechanism of the normal shards, but the gain / loss values themselves are configured differently.
 
+[comment]: # (mx-context)
+
 ## **Rating the metashard block proposer**
 
 The metachain proposer will:
@@ -129,6 +141,8 @@ The metachain proposer will:
 - Lose `0.92592` points for an unsuccessful proposal.
 
 The compounding penalty rule also applies to block proposers of the metachain. See [Rating the shard block proposer](#rating-the-shard-block-proposer) for details.
+
+[comment]: # (mx-context)
 
 ## **Rating the metashard block validator**
 

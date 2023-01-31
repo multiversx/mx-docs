@@ -3,6 +3,8 @@ id: embed
 title: Embedding scenario code in Go
 ---
 
+[comment]: # (mx-context)
+
 # **Embedding in Go**
 
 Scenario steps can be embedded in Go, in order to program for more flexible behavior. One can even save dynamically generated scenarios. For a comprehensive example on how to do that, check out the [delegation contract fuzzer in MultiversX VM](https://github.com/multiversx/mx-chain-vm-go/tree/master/fuzz/delegation) or the [DNS contract deployment scenario test generator](https://github.com/multiversx/mx-chain-vm-go/tree/master/cmd/testgen/dns). Just a snippet from the fuzzer:

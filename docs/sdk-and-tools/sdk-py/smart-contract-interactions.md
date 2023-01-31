@@ -3,6 +3,8 @@ id: smart-contract-interactions
 title: Smart contract interactions
 ---
 
+[comment]: # (mx-context)
+
 Let's dive deeper into the Smart Contract interactions and what do you need to know when you need to interact with a SC. If you followed the previous mxpy related documentation, you should be able to set up your prerequisites like proxy URL, the chain ID and the PEM file.
 For this, we need an interactions file. Usually, we find this file inside the contract's folder, in an **interaction** folder. The interactions file usually has a suggestive name, related to which chain the setup has been done. For example: **devnet.snippets.sh**.
 
@@ -17,6 +19,8 @@ Let's take the following example:
 - We call an endpoint without transferring any assets
 - We make an ESDTTransfer, in order to call a payable endpoint
 - We call a view function
+
+[comment]: # (mx-context)
 
 ## Deploy & Upgrade
 
@@ -78,11 +82,16 @@ Here we have 2 new different elements that we need to observe. First, we changed
 More information about Code Metadata can be found [here](/developers/developer-reference/code-metadata).
 :::
 
+[comment]: # (mx-context)
+
 ## Non payable endpoint interaction
 
 Let's suppose we want to call the following endpoint, that receives an address and three different BigUint arguments, in this specific order.
 
 ```
+
+[comment]: # (mx-context)
+
 ###PARAMS
 #1 - FirstBigUintArgument
 #2 - SecondBigUintArgument
@@ -122,6 +131,9 @@ mxpy facilitates us with some encoding conventions, including:
 So, in case of our **myNonPayableEndpoint** interaction, we can write it like so:
 
 ```
+
+[comment]: # (mx-context)
+
 ###PARAMS
 #1 - FirstBigUintArgument
 #2 - SecondBigUintArgument
@@ -155,7 +167,11 @@ myNonPayableEndpoint erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49s
 It is import to make sure all arguments have the correct encoding. Otherwise, the transaction will fail.
 :::
 
+[comment]: # (mx-context)
+
 ## Payable endpoint interaction
+
+[comment]: # (mx-context)
 
 ### Fungible ESDT transfer
 
@@ -177,6 +193,8 @@ myPayableEndpoint() {
 ```
 
 As we can see, the way we call a payable endpoint is by calling an ESDTTransfer function (or any other function that transfer assets and supports contract calls) and providing the name of the method as an argument. The order of the arguments differs for each transfer function. In our case, we specify in the terminal the token type and the amount of tokens we want to transfer and then we provide as a fixed input what SC function we want to call.
+
+[comment]: # (mx-context)
 
 ### Non-fungible ESDT transfer (NFT, SFT and META ESDT)
 
@@ -215,11 +233,16 @@ myESDTNFTPayableEndpoint() {
 
 First of all, to call this type of transfer function we need to pass the receiver address the same as the sender address. So in this example we convert the caller's address based on the indicated PEM file. Now, like in the case of `ESDTTransfer`, the name of the called function is `ESDTNFTTransfer`. All the other required data is passed as arguments (including the destination contract's address and the endpoint). In case of this single NFT/SFT transfer, we first pass the token (identifier, nonce and amount) and then we pass the destination address and the name of the endpoint. In the end we pass whatever parameters the indicated method needs.
 
+[comment]: # (mx-context)
+
 ### Multi-ESDT transfer
 
 In case we need to call an endpoint that accepts multiple tokens (let's say for example 2 fungible tokens and an NFT). Let's take a look at the following example:
 
 ```
+
+[comment]: # (mx-context)
+
 ###PARAMS
 #   $1 = Destination Address,
 #   $2 = First Token Identifier,
@@ -276,11 +299,16 @@ In this example, we call `myMultiESDTPayableEndpoint` endpoint, by transferring 
 More information about ESDT Transfers [here](/developers/esdt-tokens/#transfers).
 :::
 
+[comment]: # (mx-context)
+
 ## View interaction
 
 In case we want to call a view function, we can use the **query** keyword.
 
 ```
+
+[comment]: # (mx-context)
+
 ###PARAMS
 #1 - First argument
 #2 - Second argument

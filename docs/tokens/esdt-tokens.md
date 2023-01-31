@@ -3,8 +3,12 @@ id: esdt-tokens
 title: Simple tokens (fungible)
 ---
 
+[comment]: # (mx-context)
+
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+
+[comment]: # (mx-context)
 
 ## **Introduction**
 
@@ -19,6 +23,8 @@ Users also do not need to worry about sharding when transacting custom tokens, b
 Technically, the balances of ESDT tokens held by an Account are stored directly under the data trie of that Account. It also implies that an Account can hold balances of _any number of custom tokens_, in addition to the native EGLD balance. The protocol guarantees that no Account can modify the storage of ESDT tokens, neither its own nor of other Accounts.
 
 ESDT tokens can be issued, owned and held by any Account on the MultiversX network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
+
+[comment]: # (mx-context)
 
 ## **Issuance of fungible ESDT tokens**
 
@@ -75,6 +81,8 @@ The contract will add a random string to the ticker thus creating the **token id
 Because of the 6 random characters sequence (3 bytes - 6 characters hex encoded), the token identifier cannot be precalculated, thus one has to check the Smart Contract Result of the issue transaction that indicates it. Alternatively, one can check its tokens via Explorer or API and search for the token that starts with the ticker that was chosen when issuing the token.
 :::
 
+[comment]: # (mx-context)
+
 ### **Parameters format**
 
 Token Name:
@@ -98,6 +106,8 @@ Numerical values, such as initial supply or number of decimals, should be the he
 - **48** _decimal_ => **30** _hex encoded_
 - **1000000** _decimal_ => **0f4240** _hex encoded_
 
+[comment]: # (mx-context)
+
 ### **Number of decimals usage**
 
 Front-end applications will use the number of decimals in order to display balances.
@@ -112,6 +122,8 @@ Therefore, if you own some above-mentioned ALC tokens, and you want to transfer 
 :::tip
 This is only relevant when performing operations via manual transactions over ESDT tokens. The Web Wallet for example already has this feature in place, so you don't have to take care of the number of decimals.
 :::
+
+[comment]: # (mx-context)
 
 ### **Issuance examples**
 
@@ -140,6 +152,8 @@ Once this transaction is processed by the Metachain, Alice becomes the designate
 If the issue transaction is successful, a smart contract result will mint the requested token and supply in the account used for issuance, which is also the token manager.
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also below).
+
+[comment]: # (mx-context)
 
 ## **Transfers**
 
@@ -187,6 +201,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Using the transaction in the example above, Alice will transfer 12 AliceTokens to Bob.
 
+[comment]: # (mx-context)
+
 ### Transfers gas limit
 
 When computing the gas limit required for an ESDT transfer, our recommendation is to use 500_000 since it includes a buffer,
@@ -229,6 +245,8 @@ ESDT_TRANSFER_GAS_LIMIT = MIN_GAS_LIMIT + data_length * GAS_PER_DATA_BYTE + ESDT
                         =     50,000    +     54      *      1,500        +          200,000
                         = 331,000
 ```
+
+[comment]: # (mx-context)
 
 ### Transfers fee
 
@@ -278,6 +296,8 @@ ESDT_TRANSFER_FEE = gas_price * gas_cost
                   = 0.000133 EGLD
 ```
 
+[comment]: # (mx-context)
+
 ## **Transfers to a smart contract**
 
 Smart contracts may hold ESDT tokens and perform any kind of transaction with them, just like any Account. However, there are a few extra ESDT features dedicated to smart contracts:
@@ -305,6 +325,8 @@ TransferWithCallTransaction {
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
+
+[comment]: # (mx-context)
 
 ## **Multiple tokens transfer**
 
@@ -364,6 +386,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
 
+[comment]: # (mx-context)
+
 ## **Transfers done programmatically**
 
 The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several ways in which you can transfer ESDT tokens. For example, in order to transfer _amount_ of _esdt_token_name_ to _address_, one would do the following:
@@ -372,9 +396,13 @@ The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several wa
 self.send().direct_esdt(&address, &esdt_token_name, token_nonce: u64, &amount);
 ```
 
+[comment]: # (mx-context)
+
 ## **Token management**
 
 The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/tokens/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
+
+[comment]: # (mx-context)
 
 ## **Configuration properties of an ESDT token**
 
@@ -390,9 +418,13 @@ Every ESDT token has a set of properties which control what operations are possi
 - `canAddSpecialRoles` - the token manager can assign a specific role(s)
 - `canCreateMultiShard` - if true, then local mint/burn can be used so the token will be distributed among shards.
 
+[comment]: # (mx-context)
+
 ## **Management operations**
 
 The manager of an ESDT token has a number of operations at their disposal, which control how the token is used by other users. These operations can only be performed by the token manager - no other account may perform them. One special exception is the `ESDTBurn` operation, which is available to any Account which holds units of the token in cause.
+
+[comment]: # (mx-context)
 
 ### **Minting**
 
@@ -435,6 +467,8 @@ LocalMintTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context)
 
 ### **Burning**
 
@@ -483,6 +517,8 @@ Tokens issued after [release v1.3.42](https://multiversx.com/releases/release-el
 However, for older tokens, a transaction that will set the special role `ESDTRoleLocalBurn` is still necessary. Docs [here](#setting-and-unsetting-special-roles).
 :::
 
+[comment]: # (mx-context)
+
 ### **Pausing and Unpausing**
 
 The manager of an ESDT token may choose to suspend all transactions of the token, except minting, freezing/unfreezing and wiping. The transaction form is as follows:
@@ -516,6 +552,8 @@ UnpauseTransaction {
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 These two operations require that the option `canPause` is set to `true`.
+
+[comment]: # (mx-context)
 
 ### **Freezing and Unfreezing**
 
@@ -553,6 +591,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 These two operations require that the option `canFreeze` is set to `true`.
 
+[comment]: # (mx-context)
+
 ### **Wiping**
 
 The manager of an ESDT token may wipe out all the tokens held by a frozen Account. This operation is similar to burning the tokens, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
@@ -571,6 +611,8 @@ WipeTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ### **Setting and unsetting special roles**
 
 The manager of an ESDT token can set and unset special roles for a given address. Only applicable if `canAddSpecialRoles` property is `true`.
@@ -583,6 +625,8 @@ The special roles available for basic ESDT tokens are:
 - **ESDTTransferRole**: this role restricts transferability of the token only to the addresses that have the role set, while these addresses can send to any address
 
 For NFTs, there are different roles that can be set. You can find them [here](/tokens/nft-tokens#assigning-roles).
+
+[comment]: # (mx-context)
 
 #### **Set special role**
 
@@ -605,6 +649,8 @@ RolesAssigningTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 #### **Unset special role**
 
 One or more roles for an address can be unset by the owner by performing a transaction like:
@@ -625,6 +671,8 @@ RolesAssigningTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context)
 
 ### **Managing Token Transferability**
 
@@ -653,6 +701,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 :::
 
+[comment]: # (mx-context)
+
 ### **Transferring token management rights**
 
 The manager of an ESDT token may transfer the management rights to another Account. This can be done with a transaction of the form:
@@ -674,6 +724,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 After this transaction is processed by the Metachain, any subsequent management operations will only be permitted to the new Account, as specified by the Data field of the transaction.
 
 This operation requires that the option `canChangeOwner` is set to `true`.
+
+[comment]: # (mx-context)
 
 ### **Upgrading (changing properties)**
 
@@ -721,6 +773,8 @@ UpgradingTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ## **Branding**
 
 Anyone can create an ESDT token on MultiversX Network. There are also no limits in tokens names or tickers. For example,
@@ -735,6 +789,8 @@ An example of a branded token is MEX, the xExchange's token. MultiversX products
 will display tokens in accordance to their branding, if any.
 
 A token owner can submit a branding request by opening a Pull Request on [https://github.com/multiversx/mx-assets/](https://github.com/multiversx/mx-assets/).
+
+[comment]: # (mx-context)
 
 ### **Submitting a branding request**
 
@@ -760,9 +816,13 @@ Here’s a prefilled template for the .json file to get you started:
 
 The ledgerSignature will be generated by MultiversX. It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
 
+[comment]: # (mx-context)
+
 ## **REST API**
 
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address** {#get-all-esdt-tokens-for-an-address}
 
@@ -799,6 +859,8 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Get balance for an address and an ESDT token** {#get-balance-for-an-address-and-an-esdt-token}
 
@@ -841,6 +903,8 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
 </TabItem>
 </Tabs>
 
+[comment]: # (mx-context)
+
 ### <span class="badge badge--primary">GET</span> **Get all roles for tokens of an address** {#get-all-roles-for-tokens-of-an-address}
 
 This involves a basic request that contains the address to fetch all tokens and roles for.
@@ -876,6 +940,8 @@ https://gateway.multiversx.com/address/*bech32Address*/esdts/roles
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Get token's supply, burnt and minted values** {#get-tokens-supply-burnt-and-minted-values}
 
@@ -917,6 +983,8 @@ https://gateway.multiversx.com/network/esdt/supply/*token name*
 </TabItem>
 </Tabs>
 
+[comment]: # (mx-context)
+
 ### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens** {#get-all-issued-esdt-tokens}
 
 1. All ESDT tokens
@@ -956,6 +1024,8 @@ https://gateway.multiversx.com/network/esdts
 
 ---
 
+[comment]: # (mx-context)
+
 2. Fungible tokens
 
 <Tabs
@@ -990,6 +1060,8 @@ https://gateway.multiversx.com/network/esdt/fungible-tokens
 </Tabs>
 
 ---
+
+[comment]: # (mx-context)
 
 3. Semi-fungible tokens
 
@@ -1026,6 +1098,8 @@ https://gateway.multiversx.com/network/esdt/semi-fungible-tokens
 
 ---
 
+[comment]: # (mx-context)
+
 4. Non-fungible tokens
 
 <Tabs
@@ -1058,6 +1132,8 @@ https://gateway.multiversx.com/network/esdt/non-fungible-tokens
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Parse fungible tokens transfer logs** {#parse-fungible-tokens-transfer-logs}
 
@@ -1121,6 +1197,8 @@ In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--success">POST</span> **Get ESDT token properties** {#get-esdt-token-properties}
 
@@ -1230,6 +1308,8 @@ The `returnData` member will contain an array of the properties in a fixed order
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--success">POST</span> **Get special roles for a token** {#get-special-roles-for-a-token}
 

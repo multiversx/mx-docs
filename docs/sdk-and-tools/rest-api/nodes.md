@@ -3,10 +3,14 @@ id: nodes
 title: Nodes
 ---
 
+[comment]: # (mx-context)
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 Query Nodes (Peers) information.
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get Heartbeat Status** {#get-heartbeat-status}
 
@@ -69,6 +73,8 @@ Heartbeat status is retrieved successfully.
 </TabItem>
 </Tabs>
 
+[comment]: # (mx-context)
+
 ## <span class="badge badge--primary">GET</span> **Get Node Status** {#get-node-status}
 
 `http://localhost:8080/node/status`
@@ -109,6 +115,8 @@ Statistics retrieved successfully.
 :::important
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.
 :::
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get P2P Status** {#get-p2p-status}
 
@@ -181,6 +189,8 @@ P2P status retrieved successfully.
 :::important
 This endpoint is not available on the Proxy. Only Nodes (Observers) expose this endpoint.
 :::
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get Peer Information** {#get-peer-information}
 

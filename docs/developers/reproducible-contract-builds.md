@@ -3,6 +3,8 @@ id: reproducible-contract-builds
 title: Reproducible Builds
 ---
 
+[comment]: # (mx-context)
+
 This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags).
 
 You will also learn how to reproduce a contract build, given its source code and the name (tag) of a _frozen_ Docker image that was used for its previous build (that we want to reproduce).
@@ -12,6 +14,8 @@ You will also learn how to reproduce a contract build, given its source code and
 :::important
 As of September 2022, the Rust toolchain does not support reproducible builds out-of-the-box, thus we recommend smart contract developers to follow this tutorial in order to achieve deterministic compilation.
 :::
+
+[comment]: # (mx-context)
 
 ## Smart Contract `codehash`
 
@@ -51,6 +55,8 @@ The output would be the same:
 
 All in all, in order to verify the bytecode equality of two given builds of a contract we can simply compare the _codehash_ property.
 
+[comment]: # (mx-context)
+
 ## Supporting reproducible builds
 
 As of October 2022, the recommended approach to support reproducible builds for your smart contract is to use a build script relying on a specially-designed, [publicly-available, tagged Docker image](https://hub.docker.com/r/elrondnetwork/build-contract-rust/tags), that includes tagged, explicit versions of the build tools (_Rust_, _wasm-opt_ etc.).
@@ -60,6 +66,8 @@ This approach is recommended in order to counteract eventual pieces of non-deter
 :::important
 If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [this one](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/blob/main/.github/workflows/release-create.yml), which performs the deployment (production-ready) build within the _release_ procedure.
 :::
+
+[comment]: # (mx-context)
 
 ### Choose an image tag
 
@@ -84,9 +92,13 @@ It's perfectly normal to switch to a newer image tag on each (major) release of 
 Never pick the tag called `latest` for production-ready builds.
 :::
 
+[comment]: # (mx-context)
+
 ## Building via Docker (reproducible build)
 
 In this section, you'll learn how to run a reproducible build, or, to put it differently, how to reproduce a previous build (made by you or by someone else in the past), on the local machine, using Docker - without the need to install other tools such as _mxpy_ (nor its dependencies).
+
+[comment]: # (mx-context)
 
 ### Fetch the source code
 
@@ -99,6 +111,8 @@ git clone https://github.com/multiversx/mx-reproducible-contract-build-example-s
 
 By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = elrondnetwork/build-contract-rust:v2.0.0`.
 
+[comment]: # (mx-context)
+
 ### Download the build wrapper
 
 The build process (via Docker) is wrapped in a easy-to-use, friendly Python script. Let's download it:
@@ -106,6 +120,8 @@ The build process (via Docker) is wrapped in a easy-to-use, friendly Python scri
 ```bash
 wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 ```
+
+[comment]: # (mx-context)
 
 ### Prepare environment variables
 
@@ -118,6 +134,8 @@ export IMAGE=elrondnetwork/build-contract-rust:v2.0.0
 ```
 
 The latter export statement explicitly selects the **chosen, _frozen_ Docker image tag** to be used.
+
+[comment]: # (mx-context)
 
 ### Perform the build
 
@@ -138,6 +156,8 @@ In the `output` folder(s), you should see the following files (example):
 - `adder.imports.json`: a listing of VM API functions imported and used by the contract.
 - `adder-v1.2.3.zip`: a versioned archive containing the source code used as input for the build.
 
+[comment]: # (mx-context)
+
 ### TL;DR build snippet
 
 These being said, let's summarize the steps above into a single bash snippet:
@@ -153,6 +173,8 @@ python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
     --output=${BUILD_OUTPUT}
 ```
+
+[comment]: # (mx-context)
 
 ### Comparing the codehashes
 

@@ -3,10 +3,14 @@ id: blocks
 title: Blocks
 ---
 
+[comment]: # (mx-context)
+
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
 Query blocks information.
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get Hyperblock by Nonce** {#get-hyperblock-by-nonce}
 
@@ -93,6 +97,8 @@ A **Hyperblock** is a block-like abstraction that reunites the data from all sha
 A **hyperblock** is composed using a **metablock** as a starting point - therefore, the `nonce` or `hash` of a hyperblock is the same as the `nonce` or `hash` of the base metablock.
 :::
 
+[comment]: # (mx-context)
+
 ## <span class="badge badge--primary">GET</span> **Get Hyperblock by Hash** {#get-hyperblock-by-hash}
 
 `https://gateway.multiversx.com/hyperblock/by-hash/:hash`
@@ -169,6 +175,8 @@ Path Parameters
 :::important
 This endpoint is only is only defined by the Proxy. The Observer does not expose this endpoint.
 :::
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get Block by Nonce** {#get-block-by-nonce}
 
@@ -251,6 +259,8 @@ Block retrieved successfully, with transactions included.
 :::important
 For Observers, the `shard` parameter should not be set.
 :::
+
+[comment]: # (mx-context)
 
 ## <span class="badge badge--primary">GET</span> **Get Block by Hash** {#get-hyperblock-by-hash}
 

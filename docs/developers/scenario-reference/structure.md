@@ -3,6 +3,10 @@ id: structure
 title: Scenario Structure
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## **Top level**
 
 A scenario test file is essentially a collection of steps to be performed on a mock blockchain. The simplest such file looks like this:
@@ -21,6 +25,8 @@ The top-level fields are as follows:
 - `name` (optional) - it is possible to name scenarios; this doesn’t have any effect on test execution
 - `comment` (optional) - it is possible to have some comment; this doesn’t have any effect on test execution
 - `steps` - the core of the scenario. Running a scenario means going through a number of different steps. There are several step types, we will go through each, one by one. Note that each item in this list will be a JSON map with a `step` field that discriminates the step type.
+
+[comment]: # (mx-context)
 
 ## **Step type: `externalSteps`**
 
@@ -42,6 +48,8 @@ The only specific field here is `path`, which indicates the relative path to a J
 The imported steps will be run or re-run every time they are imported. There is no caching.
 
 Also beware that there is currently no protection against cyclic imports.
+
+[comment]: # (mx-context)
 
 ## **Step type: `setState`**
 
@@ -172,6 +180,8 @@ Not all of its sections are required each time. These sections are:
     - `blockRound`
     - `blockEpoch`
 
+[comment]: # (mx-context)
+
 ## **Step type: `checkState`**
 
 This step checks the state of the blockchain mock at a certain point. It can check the entire state or just part of it.
@@ -256,6 +266,8 @@ Fields:
   - `code` - expected smart contract code, or `"*"` to skip check
   - `asyncCallData` - this field is set by asynchronous calls and when contracts send funds to an account
 
+[comment]: # (mx-context)
+
 ## **Step type: `dumpState`**
 
 Simply prints the entire state of the blockchain mock to the console.
@@ -266,6 +278,8 @@ Simply prints the entire state of the blockchain mock to the console.
     "comment": "print everything to console"
 }
 ```
+
+[comment]: # (mx-context)
 
 ## **Step type: `scCall`**
 
@@ -354,6 +368,8 @@ This step simulates a transaction to an existing smart contract. Fields:
   - `gas` - indicates the gas remaining for the transaction (`gasLimit` - gas consumed). To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
   
+[comment]: # (mx-context)
+
 ## **Step type: `scQuery`**
 
 ```
@@ -407,7 +423,7 @@ Fields:
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
 
-
+[comment]: # (mx-context)
 
 ## **Step type: `scDeploy`**
 
@@ -456,6 +472,7 @@ The fields are:
 
 Please note: cannot transfer ESDT during contract deploy. If you need to feed ESDTs to a contract when deploying, send them with a `scCall` immediately after deploy.
 
+[comment]: # (mx-context)
 
 ## **Step type: `transfer`**
 
@@ -499,7 +516,7 @@ The fields are:
   - `egldValue` - EGLD value
   - `esdtValue` - same as `scCall`
 
-
+[comment]: # (mx-context)
 
 ## **Step type: `validatorReward`**
 

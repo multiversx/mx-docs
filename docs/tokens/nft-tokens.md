@@ -3,10 +3,16 @@ id: nft-tokens
 title: NFT & SFT tokens
 ---
 
+[comment]: # (mx-context)
+
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
+[comment]: # (mx-context)
+
 ## **Introduction**
+
+[comment]: # (mx-context)
 
 ### NFT and SFT
 
@@ -21,11 +27,15 @@ Once owning a quantity of a NFT/SFT, users will have their data store directly u
 - create the NFT/SFT
 - transfer quantity(es)
 
+[comment]: # (mx-context)
+
 ### Meta ESDT
 
 In addition to NFTs and SFTs, MultiversX introduced Meta ESDTs.
 Meta ESDTs are a special case of semi-fungible-tokens. They can be seen as regular ESDT fungible tokens that also have properties.
 In a particular example, LKMEX or XMEX are MetaESDTs and their properties help implement the release schedule.
+
+[comment]: # (mx-context)
 
 ## **Branding**
 
@@ -40,6 +50,8 @@ branding mechanism that allows tokens owners to provide a logo, a description, a
 will display tokens in accordance to their branding, if any.
 
 A token owner can submit a branding request by opening a Pull Request on https://github.com/multiversx/mx-assets.
+
+[comment]: # (mx-context)
 
 ### **Submitting a branding request**
 
@@ -59,6 +71,8 @@ Here’s a prefilled template for the .json file to get you started:
   "status": "active"
 }
 ```
+
+[comment]: # (mx-context)
 
 ## **Issuance of Non-Fungible Tokens**
 
@@ -106,6 +120,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
 
+[comment]: # (mx-context)
+
 ## **Issuance of Semi-Fungible Tokens**
 
 One has to perform an issuance transaction in order to register a semi-fungible token.
@@ -151,6 +167,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
+
+[comment]: # (mx-context)
 
 ## **Issuance of Meta-ESDT Tokens**
 
@@ -200,6 +218,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 The receiver address `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` is a built-in system smart contract (not a VM-executable contract), which only handles token issuance and other token management operations, and does not handle any transfers.
 The contract will add a random string to the ticker thus creating the **token identifier**. The random string starts with “-” and has 6 more random characters. For example, a token identifier could look like _ALC-6258d2_.
 
+[comment]: # (mx-context)
+
 ### **Converting an SFT into Meta-ESDT**
 
 An already existing _semi-fungible token_ can be converted into a Meta-ESDT token if the owner sends the following transaction:
@@ -218,6 +238,8 @@ ConvertSftToMetaESDTTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ## **Parameters format**
 
 Token Name:
@@ -229,6 +251,8 @@ Token Ticker:
 
 - length between 3 and 10 characters
 - alphanumeric UPPERCASE only
+
+[comment]: # (mx-context)
 
 ## **Issuance examples**
 
@@ -253,6 +277,8 @@ Once this transaction is processed by the Metachain, Alice becomes the designate
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [REST API - Get NFT data](/tokens/nft-tokens#get-nft-data-for-an-address) ).
 
+[comment]: # (mx-context)
+
 ## **Roles**
 
 In order to be able to perform actions over a token, one needs to have roles assigned.
@@ -274,6 +300,8 @@ For SFT:
 - ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
 
 To see how roles can be assigned, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
+
+[comment]: # (mx-context)
 
 ## **Assigning roles**
 
@@ -301,6 +329,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 For example, `ESDTRoleNFTCreate` = `45534454526f6c654e4654437265617465`
 
 Unset transactions are very similar. You can find an example [here](/tokens/esdt-tokens#unset-special-role).
+
+[comment]: # (mx-context)
 
 ## **NFT/SFT fields**
 
@@ -365,6 +395,8 @@ Below you can find the fields involved when creating an NFT.
 Please note that each argument must be encoded in hexadecimal format with an even number of characters.
 :::
 
+[comment]: # (mx-context)
+
 ### **Supported Media Types**
 
 Below you can find a table with the supported media types for NFTs available on MultiversX network.
@@ -387,6 +419,8 @@ Below you can find a table with the supported media types for NFTs available on 
 |.mp4|video/mp4|
 |.webm|video/webm|
 
+[comment]: # (mx-context)
+
 ### **Example**
 
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
@@ -400,6 +434,8 @@ Below you can find a table representing an example of the fields for a non-fungi
 |**URI**| _URL_to_decentralized_storage/song.mp3_ | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
 
 In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
+
+[comment]: # (mx-context)
 
 ## **Creation of an NFT**
 
@@ -446,7 +482,11 @@ This assumes that the metadata file as well as the NFT media is already uploaded
 There are times, however, when uploading the metadata file before issuing the NFT is not possible (eg. when issued from a smart contract)
 In these cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction. You can find more information [here](/tokens/nft-tokens#change-nft-attributes) about how to update the attributes
 
+[comment]: # (mx-context)
+
 ## **Other management operations**
+
+[comment]: # (mx-context)
 
 ### **Transfer NFT Creation Role**
 
@@ -471,6 +511,8 @@ TransferCreationRoleTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ### **Stop NFT creation**
 
 The ESDT manager can stop the creation of an NFT for the given ESDT forever by removing the only `ESDTRoleNFTCreate` role available.
@@ -488,6 +530,8 @@ StopNFTCreationTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context)
 
 ### **Change NFT Attributes**
 
@@ -515,6 +559,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
+[comment]: # (mx-context)
+
 ### **Add URIs to NFT**
 
 An user that has the `ESDTRoleNFTAddURI` role set for a given ESDT, can add uris to a given NFT/SFT.
@@ -539,6 +585,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 To see how you can assign this role in case it is not set, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
+[comment]: # (mx-context)
+
 ### **Add quantity (SFT only)**
 
 A user that has the `ESDTRoleNFTAddQuantity` role set for a given Semi-Fungible Token, can increase its quantity. This function will not work for NFTs, because in that case the quantity cannot be higher than 1.
@@ -560,6 +608,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 If successful, the balance of the address for the given SFT will be increased with the number specified in the argument.
 
+[comment]: # (mx-context)
+
 ### **Burn quantity**
 
 A user that has the `ESDTRoleNFTBurn` role set for a given semi-fungible Token, can burn some (or all) of the quantity.
@@ -580,6 +630,8 @@ BurnQuantityTransaction {
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 If successful, the quantity from the argument will be decreased from the balance of the address for that given token.
+
+[comment]: # (mx-context)
 
 ### **Freezing and Unfreezing a single NFT**
 
@@ -617,6 +669,8 @@ UnfreezeTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ### **Wiping a single NFT**
 
 The manager of an ESDT token may wipe out a single NFT held by a frozen Account. This operation is similar to burning the quantity, but the Account must have been frozen beforehand, and it must be done by the token manager. Wiping the tokens of an Account is an operation designed to help token managers to comply with regulations. Such a transaction has the form:
@@ -636,14 +690,20 @@ WipeTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ### **Transferring token management rights**
 
 The manager of an ESDT token can transfer the ownership if the ESDT was created as upgradable. Check the [ESDT - Upgrading (changing properties)](/tokens/esdt-tokens#upgrading-changing-properties) section for more details.
+
+[comment]: # (mx-context)
 
 ### **Upgrading (changing properties)**
 
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable.
 Check the [ESDT - Transferring token management rights](/tokens/esdt-tokens#transferring-token-management-rightss) section for more details.
+
+[comment]: # (mx-context)
 
 ## **Transfers**
 
@@ -673,6 +733,8 @@ The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`. Note that
 Also note that an MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/multiversx/mx-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 :::
 
+[comment]: # (mx-context)
+
 ## **Transfers to a Smart Contract**
 
 To perform the transfer from your account to the smart contract, you have to use the following transaction format:
@@ -697,11 +759,15 @@ TransferTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ## **Multiple tokens transfer**
 
 Multiple semi-fungible and/or non-fungible tokens can be transferred in a single transaction to a single receiver.
 
 More details can be found [here](/tokens/esdt-tokens#multiple-tokens-transfer).
+
+[comment]: # (mx-context)
 
 ## **Example flow**
 
@@ -799,9 +865,13 @@ It can be fetched by viewing all the tokens for the address via API.
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
+[comment]: # (mx-context)
+
 ## **REST API**
 
 There are a number of API endpoints that one can use to interact with ESDT NFT data. These are:
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Get NFT data for an address** {#get-nft-data-for-an-address}
 
@@ -853,6 +923,8 @@ https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/non
 </TabItem>
 </Tabs>
 
+[comment]: # (mx-context)
+
 ### <span class="badge badge--primary">GET</span> **Get NFTs/SFTs registered by an address** {#get-nftssfts-registered-by-an-address}
 
 <Tabs
@@ -889,6 +961,8 @@ https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Get tokens where an address has a given role** {#get-tokens-where-an-address-has-a-given-role}
 
@@ -929,6 +1003,8 @@ The role can be one of the roles specified in the documentation (for example: ES
 
 </TabItem>
 </Tabs>
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Parse non/semi fungible tokens transfer logs** {#parse-nonsemi-fungible-tokens-transfer-logs}
 
@@ -995,17 +1071,25 @@ In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 </TabItem>
 </Tabs>
 
+[comment]: # (mx-context)
+
 ### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address** {#get-all-esdt-tokens-for-an-address}
 
 One can use [get all esdt tokens for an address endpoint](/tokens/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens** {#get-all-issued-esdt-tokens}
 
 One can use [get all issued esdt tokens endpoint](/tokens/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
 
+[comment]: # (mx-context)
+
 ### <span class="badge badge--success">POST</span> **Get ESDT properties** {#get-esdt-properties}
 
 Properties can be queried via the [getTokenProperties function](/tokens/esdt-tokens#get-esdt-token-properties) provided by ESDT.
+
+[comment]: # (mx-context)
 
 ### <span class="badge badge--success">POST</span> **Get special roles** {#get-special-roles}
 

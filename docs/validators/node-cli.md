@@ -3,6 +3,8 @@ id: node-cli
 title: Node CLI
 ---
 
+[comment]: # (mx-context)
+
 Command Line Interface for the Node and the associated Tools
 
 The **Command Line Interface** of the **Node** and its associated **Tools** is described at the following locations:
@@ -12,6 +14,8 @@ The **Command Line Interface** of the **Node** and its associated **Tools** is d
 - [Keygenerator](https://github.com/multiversx/mx-chain-go/blob/master/cmd/keygenerator/CLI.md)
 - [TermUI](https://github.com/multiversx/mx-chain-go/blob/master/cmd/termui/CLI.md)
 - [Logviewer](https://github.com/multiversx/mx-chain-go/blob/master/cmd/logviewer/CLI.md)
+
+[comment]: # (mx-context)
 
 ## **Examples**
 

@@ -3,6 +3,10 @@ id: elastic-search
 title: Elasticsearch
 ---
 
+[comment]: # (mx-context)
+
+[comment]: # (mx-context)
+
 ## Overview
 
 An MultiversX node can enable the indexing within an Elasticsearch instance. Indexed data will serve as historical data source
@@ -12,6 +16,8 @@ that can be used as it is for searching purposes or to serve a front-end applica
 Due to the possible high data volume, it's not recommended to use validators as nodes to index in Elasticsearch from.
 Our implementation uses a concept of a queue and makes sure that everything is being processed. Consensus and synchronization mechanisms can have delays because of the indexing.
 :::
+
+[comment]: # (mx-context)
 
 ## Setup
 
@@ -44,15 +50,21 @@ An example of a configuration is:
 
 `EnabledIndexes` array specifies the indices that will be populated.
 
+[comment]: # (mx-context)
+
 ### Proxy support
 
 There are some endpoints in elrond-proxy that rely on an Elasticsearch instance. They can be found [here](/sdk-and-tools/proxy#dependency-on-elastic-search).
+
+[comment]: # (mx-context)
 
 ## Multi-shards
 
 In order to have the history of the entire network, one has to enable elastic indexing for a node in each shard (0, 1, 2 and metachain).
 Some features that ensure data validity rely on the fact that a node of each shard indexes in the database. For example, the status
 of a cross-shard transaction is decided on the destination shard.
+
+[comment]: # (mx-context)
 
 ## Elasticsearch cluster system requirements
 
@@ -65,10 +77,14 @@ In case of a single machine, our recommendation is as follows:
 - Disk space that can grow up to 3 TB
 - 100 Mbit/s always-on Internet connection
 
+[comment]: # (mx-context)
+
 ## Clone an Elasticsearch cluster
 
 In order to have all the information about the MultiversX chain in an Elasticsearch cluster (from genesis to current time) one has to copy all the data with a specific tool from an Elasticsearch cluster to another.
 To get more information how to do this use the documentation from this [repository](https://github.com/multiversx/mx-chain-tools-go/tree/main/elasticreindexer).
+
+[comment]: # (mx-context)
 
 ## Elasticsearch indices
 
