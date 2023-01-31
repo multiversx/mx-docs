@@ -580,6 +580,8 @@ The special roles available for basic ESDT tokens are:
 
 - **ESDTRoleLocalMint**: an address with this role can mint new tokens
 
+- **ESDTTransferRole**: this role restricts transferability of the token only to the addresses that have the role set, while these addresses can send to any address
+
 For NFTs, there are different roles that can be set. You can find them [here](/tokens/nft-tokens#assigning-roles).
 
 #### **Set special role**
@@ -623,6 +625,33 @@ RolesAssigningTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+### **Managing Token Transferability**
+
+The manager of an ESDT token can restrict transferability by setting **ESDTTransferRole** to specific addresses. 
+
+If at least one address has the role, the free transfer is restricted between arbitrary addresses. However, any address without the role can still send tokens to an address with the role.
+
+When the role is removed from all addresses, the token can be transferable again with no restrictions.
+
+:::tip
+Previously, on Mainnet, there was a limitation where the sender and recipient of ESDT tokens had to be in the same shard. 
+Starting from epoch 795, the implementation has been updated to remove this restriction by setting ESDTTransferRole. However, tokens that had transferability set before this epoch will require an additional transaction to follow the latest implementation:
+
+```rust
+SendAllTransferRoleAddressesTransaction {
+    Sender: <address of the ESDT manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "sendAllTransferRoleAddresses" +
+          "@" + <token identifier in hexadecimal encoding> +
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+:::
 
 ### **Transferring token management rights**
 

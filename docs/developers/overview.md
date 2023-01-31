@@ -19,7 +19,7 @@ For interacting with MultiversX Blockchain via SDKs or Rest API, please refer to
 Below is a list of tutorials that one can you to get a full experience of building on MultiversX
 
 | Name                                                                                | Description                                                      |
-| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+|-------------------------------------------------------------------------------------|------------------------------------------------------------------|
 | [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.       |
 | [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.     |
 | [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                  |
@@ -33,7 +33,7 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 The following content explain the structure of a transaction, how to sign or send them
 
 | Name                                                                                 | Description                                             |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------- |
+|--------------------------------------------------------------------------------------|---------------------------------------------------------|
 | [Signing transactions](/developers/signing-transactions)                             | How to serialize and sign transactions.                 |
 | [Tools for signing](/developers/signing-transactions/tools-for-signing)              | What to use in order to generate and sign transactions. |
 | [Signing programatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
@@ -43,7 +43,7 @@ The following content explain the structure of a transaction, how to sign or sen
 Learn about transaction's gas and how a fee is calculated
 
 | Name                                                                                      | Description                                                               |
-| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+|-------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | [Overview](/developers/gas-and-fees/overview)                                             | General concepts and overview about gas cost, limit, price and fee.       |
 | [For move-balance transfers](/developers/gas-and-fees/egld-transfers)                     | How fees are computed for move-balance transfers (EGLD transfers).        |
 | [For System Smart Contracts](/developers/gas-and-fees/system-smart-contracts)             | How fees are computed when interacting with system smart contracts.       |
@@ -52,25 +52,26 @@ Learn about transaction's gas and how a fee is calculated
 ### Smart Contract Developer reference
 
 | Name                                                                                                                     | Description                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+|--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
 | [MultiversX serialization format](/developers/developer-reference/serialization-format)                                  | How MultiversX smart contracts serialize arguments, results, and storage.                       |
-| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                          | How to use annotations your contracts to make use of many built-in features from the framework. |
-| [MultiversX wasm modules](/developers/developer-reference/sc-modules)                                                  | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
-| [MultiversX wasm contract calls](/developers/developer-reference/sc-contract-calls)                                    | Learn how to call a Smart Contract from another Smart Contract.                                 |
+| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations your contracts to make use of many built-in features from the framework. |
+| [MultiversX wasm modules](/developers/developer-reference/sc-modules)                                                    | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
+| [MultiversX wasm contract calls](/developers/developer-reference/sc-contract-calls)                                      | Learn how to call a Smart Contract from another Smart Contract.                                 |
 | [Code metadata](/developers/developer-reference/code-metadata)                                                           | Choose the properties / eligible actions of your Smart Contract.                                |
-| [MultiversX wasm api functions](/developers/developer-reference/sc-api-functions)                                      | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
+| [Upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts)                                   | The implications of upgrading a Smart Contract.                                                 |
+| [MultiversX wasm api functions](/developers/developer-reference/sc-api-functions)                                        | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
 | [Storage mappers](/developers/developer-reference/storage-mappers)                                                       | Decide from multiple ways of storing data in your SC, by considering performance.               |
 | [Rust testing framework](/developers/developer-reference/rust-testing-framework)                                         | Test your Smart Contract directly in Rust.                                                      |
 | [Rust testing framework functions reference](/developers/developer-reference/rust-testing-framework-functions-reference) | A list of available functions to be used when testing your Smart Contract in Rust.              |
-| [Rust smart contract debugging](/developers/developer-reference/sc-debugging)                           | How to debug your Smart Contract.                                                               |
-| [Rust smart contract build reference](/developers/developer-reference/sc-build-reference)                    | How to build and organize your Smart Contract.                                                  |
-| [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                   | How to generate random number in Smart Contracts.                                               |
+| [Rust smart contract debugging](/developers/developer-reference/sc-debugging)                                            | How to debug your Smart Contract.                                                               |
+| [Rust smart contract build reference](/developers/developer-reference/sc-build-reference)                                | How to build and organize your Smart Contract.                                                  |
+| [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                                   | How to generate random number in Smart Contracts.                                               |
 
 ### Smart Contract Developers Best Practices
 
 | Name                                                                                        | Description                                        |
-| ------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+|---------------------------------------------------------------------------------------------|----------------------------------------------------|
 | [Best practices basics](/developers/best-practices/best-practices-basics)                   | How to better structure your Smart Contract code.  |
 | [Biguint operations](/developers/best-practices/biguint-operations)                         | Handle Biguint operations in a more efficient way. |
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
@@ -78,8 +79,8 @@ Learn about transaction's gas and how a fee is calculated
 
 ### Scenarios Reference
 
-| Name                                                                   | Description                                              |
-| ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| Name                                                                 | Description                                              |
+|----------------------------------------------------------------------|----------------------------------------------------------|
 | [Scenario Overview](/developers/scenario-reference/overview)             | Test your Smart Contracts by using Scenario JSON tests. |
 | [Scenario Structure](/developers/scenario-reference/structure)           | How to structure a scenario.                          |
 | [Scenario Simple Values](/developers/scenario-reference/values-simple)   | Handle simple values in scenario tests.                    |
@@ -89,7 +90,7 @@ Learn about transaction's gas and how a fee is calculated
 ### Others
 
 | Name                                                                     | Description                                                                      |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+|--------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | [Constants](/developers/constants)                                       | A list of useful constants that governs the MultiversX Mainnet.                  |
 | [Built in functions](/developers/built-in-functions)                     | Built-in functions - protocol-side functions.                                    |
 | [Account storage](/developers/account-storage)                           | How the data is stored under an account + how to query and change it.            |
