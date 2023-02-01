@@ -369,24 +369,24 @@ Please note that each argument must be encoded in hexadecimal format with an eve
 
 Below you can find a table with the supported media types for NFTs available on MultiversX network.
 
-| Media Extension | Media Type |
-|---------------------|-----------------|
-| .png                | image/png       |
-| .jpeg               | image/jpeg      |
-| .jpg                | image/jpg       |
-| .gif                | image/gif       |
-| .webp               | image/webp      |
-| .svg                | image/svg       |
-| .svg                | image/svg+xml   |
-| .acc                | audio/acc       |
-| .flac               | audio/flac      |
-| .m4a                | audio/m4a       |
-| .mp3                | audio/mp3       |
-| .wav                | audio/wav       |
-| .mov                | video/mov       |
-| .quicktime          | video/quicktime |
-| .mp4                | video/mp4       |
-| .webm               | video/webm      |
+| Media Extension | Media Type      |
+|-----------------|-----------------|
+| .png            | image/png       |
+| .jpeg           | image/jpeg      |
+| .jpg            | image/jpg       |
+| .gif            | image/gif       |
+| .webp           | image/webp      |
+| .svg            | image/svg       |
+| .svg            | image/svg+xml   |
+| .acc            | audio/acc       |
+| .flac           | audio/flac      |
+| .m4a            | audio/m4a       |
+| .mp3            | audio/mp3       |
+| .wav            | audio/wav       |
+| .mov            | video/mov       |
+| .quicktime      | video/quicktime |
+| .mp4            | video/mp4       |
+| .webm           | video/webm      |
 
 ### **Example**
 
