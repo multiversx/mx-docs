@@ -9,7 +9,7 @@ title: Validators - Overview
 
 | Name                                                                              | Description                                                              |
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [System requirements](/validators/system-requirements)                            | System requirements for running an MultiversX node.                      |
+| [System requirements](/validators/system-requirements)                            | System requirements for running a MultiversX node.                      |
 | [Install a Mainnet/Testnet/Devnet Node](/validators/nodes-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
 ### Keys Management

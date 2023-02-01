@@ -9,7 +9,7 @@ Follow these steps to manage your validator node.
 
 Let’s begin!
 
-First, you need to create an MultiversX wallet. You can create this wallet on either the [mainnet](https://wallet.multiversx.com), [devnet](https://devnet-wallet.multiversx.com) or [testnet](https://testnet-wallet.multiversx.com).
+First, you need to create a MultiversX wallet. You can create this wallet on either the [mainnet](https://wallet.multiversx.com), [devnet](https://devnet-wallet.multiversx.com) or [testnet](https://testnet-wallet.multiversx.com).
 
 :::tip
 For devnet and testnet only:
