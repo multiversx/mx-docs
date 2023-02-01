@@ -6,12 +6,11 @@ title: Events notifier
 ## Overview
 
 A MultiversX observer node can push block events to a notifier service, which will process
-and forward the events to subscribers (via RabbitMQ). This way, one can subscribe to a rabbitMQ
+and forward the events to subscribers (via RabbitMQ). This way, one can subscribe to a RabbitMQ
 queue and receive block events, whenever a block is committed to the chain, instead of 
 polling an API frequently.
 
-The GitHub repository for the notifier service can be found here:
-https://github.com/multiversx/mx-chain-notifier-go.
+The GitHub repository for the notifier service can be found [here](https://github.com/multiversx/mx-chain-notifier-go).
 
 ## Architectural Overview
 
