@@ -3,7 +3,6 @@ id: esdt-tokens
 title: Simple tokens (fungible)
 ---
 
-[comment]: # (mx-context-auto)
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
