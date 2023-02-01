@@ -90,14 +90,14 @@ In this section, you'll learn how to run a reproducible build, or, to put it dif
 
 ### Fetch the source code
 
-Let's clone the [example source code](https://github.com/multiversx/mx-reproducible-contract-build-example-sc) locally, and switch to [a certain version](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) that we'd like to build:
+Let's clone the [example source code](https://github.com/multiversx/mx-reproducible-contract-build-example-sc) locally, and switch to [a certain version](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.2.0) that we'd like to build:
 
 ```bash
 mkdir -p ~/contracts && cd ~/contracts
-git clone https://github.com/multiversx/mx-reproducible-contract-build-example-sc.git --branch=v0.1.4 --depth=1
+git clone https://github.com/multiversx/mx-reproducible-contract-build-example-sc.git --branch=v0.2.0 --depth=1
 ```
 
-By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v4.1.1`.
+By inspecting the release notes, we see that [`v0.2.0`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.2.0) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v4.1.0`.
 
 ### Download the build wrapper
 
