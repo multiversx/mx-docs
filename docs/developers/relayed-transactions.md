@@ -2,6 +2,9 @@
 id: relayed-transactions
 title: Relayed Transactions
 ---
+[comment]: # (mx-abstract)
+
+On this page, you will find comprehensive information on all aspects of relayed transactions.
 
 [comment]: # (mx-context-auto)
 
@@ -83,7 +86,7 @@ Notice that there are some differences as compared to the regular _frontend_ [tr
 
 ### Preparing relayed v1 transaction using erdjs
 
-`erdjs` has built-in support for relayed transactions version 1, by using a builder which allows one to prepare such
+`mx-sdk-js-core` has built-in support for relayed transactions version 1, by using a builder which allows one to prepare such
 a transaction.
 
 Resources:
@@ -191,9 +194,9 @@ Therefore, when one wants to build such a transaction, the steps would be:
 
 [comment]: # (mx-context-auto)
 
-### Preparing relayed v2 transaction using erdjs
+### Preparing relayed v2 transaction using mx-sdk-js-core
 
-`erdjs` has built-in support for relayed transactions version 2, by using a builder which allows one to prepare such
+`mx-sdk-js-core` has built-in support for relayed transactions version 2, by using a builder which allows one to prepare such
 a transaction.
 
 Resources:

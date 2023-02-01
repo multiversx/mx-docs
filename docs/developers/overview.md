@@ -3,6 +3,9 @@ id: overview
 title: Developers - Overview
 ---
 
+[comment]: # (mx-abstract)
+This page serves as the landing destination for builders seeking to construct on the Multiversx platform.
+
 [comment]: # (mx-context-auto)
 
 ## Developer documentation
@@ -17,6 +20,7 @@ For interacting with MultiversX Blockchain via SDKs or Rest API, please refer to
 [comment]: # (mx-context-auto)
 
 ## Table of contents
+A list with everything that you can explore as a developer on MultiversX.
 
 [comment]: # (mx-context-auto)
 

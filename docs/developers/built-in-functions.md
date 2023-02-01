@@ -3,7 +3,7 @@ id: built-in-functions
 title: Built-In Functions
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## **Introduction**
 

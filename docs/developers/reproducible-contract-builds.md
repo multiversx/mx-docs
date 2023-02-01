@@ -2,6 +2,7 @@
 id: reproducible-contract-builds
 title: Reproducible Builds
 ---
+[comment]: # (mx-abstract)
 
 This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags).
 

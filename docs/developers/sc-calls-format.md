@@ -2,6 +2,8 @@
 id: sc-calls-format
 title: Smart Contract Calls Data Format
 ---
+[comment]: # (mx-abstract)
+This page provides an in-depth examination of the Smart Contract Calls Data Format.
 
 [comment]: # (mx-context-auto)
 
@@ -66,7 +68,7 @@ There are multiple ways of converting arguments from their original format to th
 
 For manually created transactions, arguments can be encoded by using tools that can be found online. For example, `hex to string`, `hex to decimal` and so on.
 
-For programmatically created transactions, arguments can be encoded by using one of our SDKs (`sdk-js`, `mxpy`, `erdgo`, `erdjava`, and so on) or by using built-in components or other libraries
+For programmatically created transactions, arguments can be encoded by using one of our SDKs (`sdk-js`, `mxpy`, `sdk-go`, `sdk-java`, and so on) or by using built-in components or other libraries
 of the language the transaction is created in.
 
 There are multiple ways of formatting the data field:
@@ -74,7 +76,7 @@ There are multiple ways of formatting the data field:
 - manually convert each argument, and then join the function name, alongside the argument via the `@` character.
 - use a pre-defined arguments serializer, such as [the one found in sdk-js](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/smartcontracts/argSerializer.ts).
 - use sdk-js's [contract calls](/sdk-and-tools/sdk-js/sdk-js-cookbook/#contract-interactions).
-- use erdcpp's [contract calls](https://github.com/multiversx/mx-sdk-cpp/blob/main/src/smartcontracts/contract_call.cpp).
+- use sdk-cpp's [contract calls](https://github.com/multiversx/mx-sdk-cpp/blob/main/src/smartcontracts/contract_call.cpp).
 - and so on
 
 [comment]: # (mx-context-auto)
@@ -173,9 +175,9 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 [comment]: # (mx-context-auto)
 
-### Converting addresses using erdgo
+### Converting addresses using sdk-go
 
-Find more about `erdgo` [here](/sdk-and-tools/erdgo/).
+Find more about `sdk-go` [here](/sdk-and-tools/erdgo/).
 
 ```js
 import (
@@ -218,9 +220,9 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 [comment]: # (mx-context-auto)
 
-### Converting addresses using erdjava
+### Converting addresses using sdk-java
 
-Find more about `erdjava` [here](/sdk-and-tools/erdjava/).
+Find more about `sdk-java` [here](/sdk-and-tools/erdjava/).
 
 ```java
 System.out.println(Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").hex());

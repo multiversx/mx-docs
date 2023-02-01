@@ -2,7 +2,7 @@
 id: setup-local-testnet-advanced
 title: Set up a Local Testnet (advanced)
 ---
-
+[comment]: # (mx-abstract)
 How to set up a local MultiversX Testnet on a workstation.
 
 [comment]: # (mx-context-auto)
@@ -40,7 +40,7 @@ sudo apt install gnome-terminal
 The variables that dictate the structure of the Testnet are located in the file `scripts/testnet/variables.sh`. For example:
 
 ```bash
-export TESTNETDIR="$HOME/Elrond/testnet"
+export TESTNETDIR="$HOME/MultiversX/testnet"
 export SHARDCOUNT=2
 ...
 ```
@@ -219,7 +219,7 @@ Upon deployment, you can check the status of the transaction and the existence o
 $ curl http://localhost:7950/transaction/daf2...
 $ curl http://localhost:7950/address/erd1qqqqqqqqqqqqqpgql...
 ```
-
+[comment]: # (mx-context)
 If everything is fine (transaction status is `executed` and the `code` property of the address is set), you can interact with or perform queries against the deployed contract:
 
 ```bash

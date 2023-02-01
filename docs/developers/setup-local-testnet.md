@@ -2,7 +2,7 @@
 id: setup-local-testnet
 title: Setup a Local Testnet
 ---
-
+[comment]: # (mx-abstract)
 This guide describes how to set up a local mini-testnet using **mxpy**. The purpose of a local mini-testnet is to allow developers to experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
 
 The mini-testnet contains:
@@ -10,7 +10,7 @@ The mini-testnet contains:
 - **Validator Nodes** (two, by default)
 - **Observer Nodes** (two, by default)
 - A **Seednode**
-- An **MultiversX Proxy**
+- A **MultiversX Proxy**
 
 If not specified otherwise, the mini-testnet starts with one Shard plus the Metachain (each with one Validator and one Observer).
 
