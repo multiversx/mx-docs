@@ -6,16 +6,16 @@ title: dApp SDK
 Library used to build React dApps on MultiversX Network.
 
 :::important
-The following documentation is based on sdk-dapp 2.0.0+
+The following documentation is for `sdk-dapp v2.0.0` and above.
 :::
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 
-sdk-dapp is a library that holds core functional logic that can be used to create a dApp on MultiversX Network.
+**sdk-dapp** is a library that holds core functional logic that can be used to create a **dApp** on MultiversX Network.
 
-It is built for applications that use React.
+It is built for applications that use **React**.
 
 [comment]: # (mx-context-auto)
 

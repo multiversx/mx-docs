@@ -6,7 +6,9 @@ title: Nodes
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Query Nodes (Peers) information.
+[comment]: # (mx-abstract)
+
+This component of the REST API allows one to query information about Nodes within the Network (peers).
 
 [comment]: # (mx-context-auto)
 

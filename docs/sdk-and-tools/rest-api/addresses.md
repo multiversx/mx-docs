@@ -6,7 +6,9 @@ title: Addresses
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Get information about an MultiversX Address.
+[comment]: # (mx-abstract)
+
+This component of the REST API allows one to query information about Addresses (Accounts).
 
 [comment]: # (mx-context-auto)
 

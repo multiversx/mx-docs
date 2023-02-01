@@ -6,7 +6,9 @@ title: Network
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Query information about the Network.
+[comment]: # (mx-abstract)
+
+This component of the REST API allows one to query information about the Network, such as network configuration and parameters.
 
 [comment]: # (mx-context-auto)
 

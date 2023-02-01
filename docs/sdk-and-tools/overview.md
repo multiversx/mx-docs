@@ -3,15 +3,11 @@ id: overview
 title: SDKs and Tools - Overview
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 
-Follow the following table to guide you towards the action you are interested in
-
-[comment]: # (mx-context-auto)
-
-## Table of contents
+One can interact (programatically) interact with the MultiversX Network by leveraging the following SDKs, tools and APIs:
 
 [comment]: # (mx-context-auto)
 

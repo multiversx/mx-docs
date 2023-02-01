@@ -6,7 +6,9 @@ title: Blocks
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Query blocks information.
+[comment]: # (mx-abstract)
+
+This component of the REST API allows one to query information about Blocks and Hyperblocks.
 
 [comment]: # (mx-context-auto)
 

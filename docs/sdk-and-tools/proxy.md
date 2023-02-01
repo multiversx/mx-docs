@@ -5,13 +5,15 @@ title: Proxy architecture
 
 Overview of the MultiversX Proxy
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## **Introduction**
 
-Proxy is a project written in go that abstracts the sharding logic. It serves as foundation for *gateway.multiversx.com*
+The MultiversX Proxy acts as an entry point into the MultiversX Network, through a set of Observer Nodes, and (partly) abstracts away the particularities and complexity of sharding.
 
-The GitHub repository can be found here: https://github.com/multiversx/mx-chain-proxy-go
+The Proxy is a project written in **go**, and it serves as foundation for *gateway.multiversx.com*.
+
+The source code of the Proxy can be found here: [mx-chain-proxy-go](https://github.com/multiversx/mx-chain-proxy-go).
 
 [comment]: # (mx-context-auto)
 

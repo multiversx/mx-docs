@@ -6,7 +6,9 @@ title: Virtual Machine
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Query values stored within Smart Contracts.
+[comment]: # (mx-abstract)
+
+This component of the REST API allows one to call view functions (pure functions) of Smart Contracts, or, to put it in other words, to query values stored within contracts.
 
 [comment]: # (mx-context-auto)
 

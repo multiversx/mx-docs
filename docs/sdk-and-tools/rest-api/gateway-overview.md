@@ -3,7 +3,7 @@ id: gateway-overview
 title: Gateway overview
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Overview of MultiversX Gateway REST API
 

@@ -3,7 +3,7 @@ id: multiversx-api
 title: MultiversX API
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## About MultiversX API
 

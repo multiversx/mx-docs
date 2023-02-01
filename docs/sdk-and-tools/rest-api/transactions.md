@@ -6,7 +6,9 @@ title: Transactions
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Send Transactions to the Blockchain and query information about them.
+[comment]: # (mx-abstract)
+
+This component of the REST API allows one to send (broadcast) Transactions to the Blockchain and query information about them.
 
 [comment]: # (mx-context-auto)
 
