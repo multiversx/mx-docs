@@ -3,6 +3,8 @@ id: webhooks
 title: Webhooks
 ---
 
+[comment]: # (mx-abstract)
+
 The web wallet webhooks allow you to build or setup integrations for dapps or payment flows.
 
 The web wallet webhooks are links that point the user of the wallet to either login or populate a "send transaction" form with the provided arguments. Once the action is performed, the user is redirected to the provided callback URL along with a success or error status.

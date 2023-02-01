@@ -3,6 +3,8 @@ id: ledger
 title: Ledger
 ---
 
+[comment]: # (mx-abstract)
+
 You can safely store your EGLD by installing the MultiversX EGLD app on your Ledger Nano S or Ledger Nano X device. We recommend using a hardware wallet for managing large amounts of EGLD.
 
 [comment]: # (mx-context-auto)

@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import List, Optional
 
+ABSTRACT_MARKER = "[comment]: # (mx-abstract)"
 SEPARATOR = "[comment]: # (mx-context-auto)"
 WEAK_CONTENT_THRESHOLD = 10
 DOCS_ROOT = Path(__file__).parent.parent / "docs"
@@ -71,6 +72,11 @@ def main():
         if score < WEAK_CONTENT_THRESHOLD:
             print(
                 f"Warning! context with weak content: {score} on {context.file}:{context.line_index}")
+
+    for md_file in md_files:
+        content = md_file.read_text()
+        if ABSTRACT_MARKER not in content:
+            print("Warning! no abstract marker in", md_file)
 
     print("Num contexts: ", len(all_contexts))
 

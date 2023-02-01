@@ -3,6 +3,8 @@ id: web-wallet
 title: Web Wallet
 ---
 
+[comment]: # (mx-abstract)
+
 Use the wallet to send, receive and store EGLD in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
 
 [comment]: # (mx-context-auto)
