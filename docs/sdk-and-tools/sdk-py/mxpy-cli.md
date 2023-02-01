@@ -3,7 +3,7 @@ id: mxpy-cli
 title: mxpy CLI
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 mxpy's Command Line Interface
 

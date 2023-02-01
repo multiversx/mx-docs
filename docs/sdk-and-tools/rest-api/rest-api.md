@@ -3,9 +3,9 @@ id: rest-api
 title: REST API overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 

@@ -3,7 +3,7 @@ id: whitelist-requirements
 title: Whitelist requirements
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 1. The MultiversX team must whitelist the token on both the Safe(1) and Safe(3) contracts. Only whitelisted tokens can be bridged.
 2. The token issuer must issue the token on the MultiversX network and submit a branding request manually or using https://assets.multiversx.com/.

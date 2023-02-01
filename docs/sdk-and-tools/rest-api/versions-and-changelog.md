@@ -3,9 +3,9 @@ id: versions-and-changelog
 title: Versions and Changelog
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Overview**
 
@@ -15,13 +15,13 @@ This page offers a high level overview of the important releases of the Multiver
 Documentation in this section is preliminary and subject to change.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **MultiversX Proxy HTTP API [v1.1.0](https://github.com/multiversx/mx-chain-proxy-go/releases/tag/v1.1.0)**
 
 This is the API launched at the Genesis.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **MultiversX Proxy HTTP API [v1.1.1](https://github.com/multiversx/mx-chain-proxy-go/releases/tag/v1.1.1)**
 
@@ -41,7 +41,7 @@ As of November 2020, new API consumers are recommended to use a newer version of
 **v1.1.0 and v1.1.1 will be deprecated** once all existing API consumers are known to have been upgraded to a more recent version.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **MultiversX Proxy HTTP API [v1.1.3](https://github.com/multiversx/mx-chain-proxy-go/releases/tag/v1.1.3)**
 

@@ -3,7 +3,7 @@ id: extending-sdk-js
 title: Extending sdk-js
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 :::important
 Documentation in this section is preliminary and subject to change.
@@ -11,13 +11,13 @@ Documentation in this section is preliminary and subject to change.
 
 This tutorial will guide you through the process of extending and tailoring certain modules from sdk-js.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Extending the Network Providers
 
 The default classes from `@multiversx/sdk-network-providers` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Performing HTTP requests from scratch
 
@@ -82,7 +82,7 @@ let endpointDefinition = contract.getEndpoint("foobar");
 let { firstValue, secondValue, returnCode } = resultsParser.parseQueryResponse(queryResponse, endpointDefinition);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Extending a default Network Provider
 
@@ -99,7 +99,7 @@ export class MyTailoredNetworkProvider extends ApiNetworkProvider {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Customizing the transaction awaiting
 
@@ -110,7 +110,7 @@ await transactionWatcher.awaitAllEvents(transaction, ["mySpecialEventFoo", "mySp
 await transactionWatcher.awaitAnyEvents(transaction, ["mySpecialEventFoo", "mySpecialEventBar"]);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Extending the contract results parser
 

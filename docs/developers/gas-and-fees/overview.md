@@ -3,15 +3,15 @@ id: overview
 title: Overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Cost of processing (gas units)
 
 Each MultiversX transaction has a **processing cost**, expressed as **an amount of _gas units_**. At broadcast time, each transaction must be provided a **gas limit** (`gasLimit`), which acts as an _upper limit_ of the processing cost.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Constraints
 
@@ -21,7 +21,7 @@ For any transaction, the `gasLimit` must be greater or equal to `erd_min_gas_lim
 networkConfig.erd_min_gas_limit <= tx.gasLimit <= networkConfig.erd_max_gas_per_transaction
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Cost components
 
@@ -46,7 +46,7 @@ tx.gasLimit =
 
 The **contract execution** cost component is easily computable for System Smart Contract calls (based on formulas specific to each contract), but harder to determine _a priori_ for user-defined Smart Contracts. This is where _simulations_ and _estimations_ are employed.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Processing fee (EGLD)
 

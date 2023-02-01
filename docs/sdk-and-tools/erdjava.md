@@ -3,7 +3,7 @@ id: erdjava
 title: Java SDK
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX SDK for Java
 

@@ -3,9 +3,9 @@ id: smart-contracts
 title: MultiversX Smart Contracts
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## MultiversX Smart Contracts
 

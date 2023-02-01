@@ -3,9 +3,9 @@ id: node-databases
 title: Node Databases
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Node databases**
 
@@ -43,7 +43,7 @@ The default databases directory is `<node-working-directory>/db` and it's conten
 Nodes will fetch the state from an existing database if one is detected during the startup process. If it does not match
 the current network height, it will sync the rest of the data from the network, until fully synced.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Starting a node with existent databases**
 

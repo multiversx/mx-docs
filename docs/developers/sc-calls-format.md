@@ -3,9 +3,9 @@ id: sc-calls-format
 title: Smart Contract Calls Data Format
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -48,7 +48,7 @@ ExampleScCallTransaction {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Constraints
 
@@ -60,7 +60,7 @@ Focusing only on the data field of a Smart Contract call / Built-In Function Cal
 
 The next section of this page will focus on how different data types have to be encoded in order to be compliant with the desired format.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## How to convert arguments for Smart Contract calls
 
@@ -79,7 +79,7 @@ There are multiple ways of formatting the data field:
 - use erdcpp's [contract calls](https://github.com/multiversx/mx-sdk-cpp/blob/main/src/smartcontracts/contract_call.cpp).
 - and so on
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Converting bech32 addresses (erd1)
 
@@ -95,7 +95,7 @@ tools or helpers.
 There are many smart contract calls (or built-in function calls) that receive an address as one of their arguments. Obviously,
 they have to be hexadecimal encoded.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Examples
 
@@ -111,7 +111,7 @@ erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r
 c70cf50b238372fffaf7b7c5723b06b57859d424a2da621bcc1b2f317543aa36
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting addresses using online tools
 
@@ -121,7 +121,7 @@ There are multiple (_unofficial or community supported_) tools that one can use 
 
 - http://207.244.241.38/elrond-converters/#bech32-to-hex
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting addresses using mxpy
 
@@ -143,7 +143,7 @@ will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
 The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-py-core/blob/main/multiversx_sdk_core/bech32.py).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting addresses using sdk-js
 
@@ -173,7 +173,7 @@ will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
 The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/address.ts).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting addresses using erdgo
 
@@ -218,7 +218,7 @@ will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
 The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-chain-core-go/blob/main/core/pubkeyConverter/bech32PubkeyConverter.go).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting addresses using erdjava
 
@@ -240,7 +240,7 @@ will output `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`.
 
 The encoding algorithm that handles these conversions can be found [here](https://github.com/multiversx/mx-sdk-java/blob/main/src/main/java/multiversx/Address.java).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Converting string values
 
@@ -257,7 +257,7 @@ Below you can find some examples:
 By no means, these code snippets provide a coding guideline; they are more of simple examples on how to perform the necessary actions.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Examples
 
@@ -268,7 +268,7 @@ ok          --> 6f6b
 MEX-455c57  --> 4d45582d343535633537
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting string values in javascript
 
@@ -282,7 +282,7 @@ for converting hex-encoded string to regular string:
 console.log(Buffer.from("6f6b", "hex").toString()); // ok
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting string values in java
 
@@ -303,7 +303,7 @@ byte[] bytes = Hex.decodeHex("6f6b".toCharArray());
 String result = new String(bytes, StandardCharsets.UTF_8); // ok
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting string values in go
 
@@ -322,7 +322,7 @@ if err != nil {
 fmt.Println(string(decodedInput)) // ok
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Converting numeric values
 
@@ -339,7 +339,7 @@ Below you can find some examples. They use big integer / number libraries to ens
 By no means, these code snippets provide a coding guideline; they are more of simple examples on how to perform the necessary actions.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Examples
 
@@ -351,7 +351,7 @@ numeric --> hex
 35 --> 25
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting numeric values in javascript
 
@@ -375,7 +375,7 @@ console.log(bn.toString()); // 37
 
 Also, `sdk-js` includes some [utility functions](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/utils.codec.ts) for padding the results.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting numeric values in go
 

@@ -3,14 +3,14 @@ id: virtual-machine
 title: Virtual Machine
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
 Query values stored within Smart Contracts.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Compute Output of Pure Function {#compute-output-of-pure-function}
 
@@ -94,7 +94,7 @@ Content-Type: application/json
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Compute Hex Output of Pure Function {#compute-hex-output-of-pure-function}
 
@@ -136,7 +136,7 @@ The output value is retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Compute String Output of Pure Function {#compute-string-output-of-pure-function}
 
@@ -178,7 +178,7 @@ The output value is retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Get Integer Output of Pure Function {#get-integer-output-of-pure-function}
 

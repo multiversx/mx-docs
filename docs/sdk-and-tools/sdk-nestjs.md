@@ -3,7 +3,7 @@ id: sdk-nestjs
 title: NestJS SDK
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX NestJS Microservice Utilities
 

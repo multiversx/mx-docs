@@ -3,13 +3,13 @@ id: creating-wallets
 title: Creating Wallets
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 How to create wallets using the CLI or programmatically
 
 Although wallets are commonly created through the [MultiversX Web Wallet](https://wallet.multiversx.com/) or the [MultiversX Ledger App](/wallet/ledger), one can also use the CLI or the SDK.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Generate a new mnemonic**
 
@@ -29,7 +29,7 @@ let words = mnemonic.getWords();
 console.log(words);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Deriving a JSON key-file (from mnemonic)**
 

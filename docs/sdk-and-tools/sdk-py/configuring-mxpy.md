@@ -3,7 +3,7 @@ id: configuring-mxpy
 title: Configuring mxpy
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 **mxpy** can be configured using the `mxpy config` command.
 

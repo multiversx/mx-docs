@@ -3,7 +3,7 @@ id: rating
 title: Rating
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Each individual validator has a **rating score**, which expresses its overall reliability, performance and responsiveness. It is an important value, and node operators should be always mindful of the rating of their validators.
 
@@ -29,7 +29,7 @@ The "Node Details" page displays a plot of the validator rating during the past 
 
 The X-axis represent the epochs, and the Y-axis represents the rating.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **The jail**
 
@@ -57,7 +57,7 @@ The only way to increase the rating of a validator is to keep it up-to-date, kee
 Running **multiple validators on a single machine** will impact your rating and consequently _your rewards,_ if the machine doesn't have the as many times the minimum requirements as there are validators running on it.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Consensus probabilities**
 
@@ -93,7 +93,7 @@ Assuming a **24-hour-long epoch**, the rating mechanism has been calibrated with
 
 # **Rating shard validators**
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Rating the shard block proposer**
 
@@ -114,7 +114,7 @@ where `cfp` is the number of consecutive failed proposals.
 
 This compounding penalty has the effect of quickly jailing repeatedly unsuccessful proposers.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Rating the shard block validator**
 
@@ -131,7 +131,7 @@ Moreover, the validator must have been a "signer" in at least 1% of the previous
 
 The rating mechanism for the metashard is identical with the rating mechanism of the normal shards, but the gain / loss values themselves are configured differently.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Rating the metashard block proposer**
 
@@ -142,7 +142,7 @@ The metachain proposer will:
 
 The compounding penalty rule also applies to block proposers of the metachain. See [Rating the shard block proposer](#rating-the-shard-block-proposer) for details.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Rating the metashard block validator**
 

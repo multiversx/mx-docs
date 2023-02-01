@@ -3,9 +3,9 @@ id: code-metadata
 title: Code Metadata
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -23,7 +23,7 @@ The code metadata **must be specified** at deploy-time and, if the contract is _
 Once a contract is marked as _**not** upgradeable_, its code and code metadata become **immutable, forever**.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Usability
 
@@ -35,7 +35,7 @@ When deploying (or upgrading) a smart contract using **mxpy**, its default _code
 
 For more information, please follow [mxpy CLI](/sdk-and-tools/sdk-py/mxpy-cli).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Converting Metadata to bytes
 
@@ -61,7 +61,7 @@ const PAYABLE_BY_SC = 0x00_04;
 
 For example, if we wish to deploy a contract that is payable and upgradeable our metadata would be `0x0102`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Conclusion
 

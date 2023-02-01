@@ -3,11 +3,11 @@ id: values-complex
 title: Scenario Complex Values
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 We already covered representations of simple types [here](/developers/scenario-reference/values-simple). This is enough for arguments of types like `usize`, `BigUint` or `&[u8]`, but we need to also somehow specify complex types like custom structs or lists of items.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Concatenation**
 
@@ -24,7 +24,7 @@ This is ideal for short lists or small structs.
 
 Please note that the pipe operator only takes care of the concatenation itself. You are responsible for making sure that [nested encoding](/developers/developer-reference/serialization-format/#the-concept-of-top-level-vs-nested-objects) is used where appropriate.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Using JSON lists as values**
 
@@ -77,7 +77,7 @@ We mentioned above how the developer needs to take care of the serialization of 
 
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Using JSON maps as values**
 
@@ -151,7 +151,7 @@ Once again, note that all contained values are in [nested encoding format](/deve
 
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **A note about enums**
 

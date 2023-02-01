@@ -3,9 +3,9 @@ id: transfer-flows
 title: Transfer Flows
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Ethereum to MultiversX
 1. A user deposits the ERC20 tokens that they want to transfer to the MultiversX network on the **Safe(1)** contract.
@@ -15,7 +15,7 @@ title: Transfer Flows
 5. On the MultiversX network, the same amount of ESDT tokens are minted as were deposited on the Ethereum network.
 6. The user receives the equivalent amount of ESDT tokens on their recipient address on the MultiversX network.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## MultiversX to Ethereum
 1. A user deposits the ESDT tokens that they want to transfer to the Ethereum network on the **Safe(3)** contract.

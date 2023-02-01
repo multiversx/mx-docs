@@ -3,7 +3,7 @@ id: erdkotlin
 title: Kotlin SDK
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX SDK for Kotlin
 

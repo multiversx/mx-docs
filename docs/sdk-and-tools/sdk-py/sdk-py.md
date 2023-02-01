@@ -3,7 +3,7 @@ id: sdk-py
 title: sdk-py
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX SDK for Python
 

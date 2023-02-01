@@ -3,7 +3,7 @@ id: constants
 title: Constants
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX uses some constants, which are specific to each chain (Mainnet, Testnet or Devnet). The updated values can be found at these sources:
 

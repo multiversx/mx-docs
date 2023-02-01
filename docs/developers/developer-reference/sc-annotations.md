@@ -3,9 +3,9 @@ id: sc-annotations
 title: Smart contract annotations
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -15,11 +15,11 @@ One of the main purposes of the framework is to make the code as readable and co
 
 For an introduction, check out [the Crowdfunding tutorial](/developers/tutorials/crowdfunding-p1). This page is supposed to be a complete index of all annotations that can be encountered in smart contracts.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Trait annotations
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `#[multiversx_sc::contract]`
 
@@ -29,9 +29,9 @@ Note that the annotation takes no additional arguments.
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `#[multiversx_sc::module]`
 
@@ -45,9 +45,9 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `#[multiversx_sc::proxy]`
 
@@ -61,11 +61,11 @@ Note that the annotation takes no additional arguments.
 Only one contract, module or proxy annotation is allowed per Rust module. If they are in separate files there is no problem, but if several share a file, explicit `mod proxy_name { ... }` must enclose the module.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Method annotations
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `#[init]`
 
@@ -87,7 +87,7 @@ pub trait Example {
 When upgrading a smart contract, the constructor in the new code is called. It is also called only once, and it can also never be called again.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `#[endpoint]` and `#[view]`
 
@@ -125,7 +125,7 @@ In this example, 3 methods are public endpoints. They are named `example`, `came
 All endpoint arguments and results must be either serializable or special endpoint argument types such as `MultiValueEncoded`. They must also all implement the `TypeAbi` trait. There is no such restriction for private methods.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Callbacks
 
@@ -137,7 +137,7 @@ They also act as closures, since they can retain some of the context of the tran
 
 A more detailed explanation on how they work in [the contract calls reference](/developers/developer-reference/sc-contract-calls).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Storage
 
@@ -147,7 +147,7 @@ Each contract has a storage where arbitrary data can be stored on-chain. This st
 
 All trait methods annotated for storage handling must have no implementation.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### `#[storage_get("key")]`
 
@@ -176,7 +176,7 @@ This is the easiest way to get the equivalent of a HashMap in a smart contract.
 
 Lastly, storage getters must always return a deserializable type. The framework will automatically deserialize the object from whatever bytes it finds in the storage value.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### `#[storage_set("key")]`
 
@@ -218,7 +218,7 @@ To avoid this vulnerability, **never have a key that is the prefix of another ke
 
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### `#[storage_mapper("key")]`
 
@@ -242,7 +242,7 @@ In the `LinkedListMapper` we are dealing with a list of items, each with its own
 
 Also note that additional sub-keys are also allowed for storage mappers, the same as for `storage_get` and `storage_set`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### `#[storage_is_empty("key")]`
 
@@ -255,7 +255,7 @@ This is very similar to `storage_get`, but instead of retrieving the value, it r
 
 Nowadays, it is more common to use storage mappers. The `SingleValueMapper` has an `is_empty()` method that does the same.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### `#[storage_clear("key")]`
 
@@ -269,7 +269,7 @@ It does not do any serializing, so it can be faster than `storage_set`, dependin
 
 Nowadays, it is more common to use storage mappers. The `SingleValueMapper` has an `clear()` method that does the same.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Events
 
@@ -299,13 +299,13 @@ Events have 2 types of arguments:
 
 Event arguments (fields) can be of any serializable type. There is no return value for events.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Events (legacy)
 
 There is a legacy annotation, `#[legacy_event]` still used by some older contracts. It is deprecated and should no longer be used.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `#[proxy]`
 
@@ -327,7 +327,7 @@ There is no need for arguments, the annotation will figure out the contract to c
 Proxy types need to be specified with an explicit module. In the example `vault::` is compulsory.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `#[output_names]`
 

@@ -3,9 +3,9 @@ id: built-in-functions
 title: Built-In Functions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Introduction**
 
@@ -42,7 +42,7 @@ This documentation is subject to change, but at the time of writing, the current
 - ESDTNFTUpdateAttributes
 - MultiESDTNFTTransfer
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **ClaimDeveloperRewards**
 
@@ -65,7 +65,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 The amount of available developer rewards can be viewed via [Get Address](/sdk-and-tools/rest-api/addresses/#get-address) endpoint when using the smart contract as the `bech32Address`.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **ChangeOwnerAddress**
 
@@ -84,7 +84,7 @@ ChangeOwnerAddressTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **SetUserName**
 
@@ -104,14 +104,14 @@ SetUserNameTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **SaveKeyValue**
 
 `SaveKeyValue` is used to store a given key-value under an address's storage. More details and the transaction's format are
 already covered [here](/developers/account-storage).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **ESDT and NFT built-in functions**
 

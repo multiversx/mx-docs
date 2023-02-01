@@ -3,9 +3,9 @@ id: relayed-transactions
 title: Relayed Transactions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -15,14 +15,14 @@ interacting with a Smart Contract has any EGLD for fees.
 
 More details and specifications can be found on [MultiversX Specs](https://github.com/multiversx/mx-specs/blob/main/sc-meta-transactions.md).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Types of relayed transactions
 
 Currently, there are 2 versions of relayed transactions: v1 and v2. In the end, they both have the same effect,
 but v2 comes with optimisations in terms of gas usage, making it our recommendation.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Relayed transactions version 1
 
@@ -81,7 +81,7 @@ Notice that there are some differences as compared to the regular _frontend_ [tr
 - `ChainID` has to be a byte array instead of a string
 - `Signature` has to be a byte array instead of the hex version of it
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Preparing relayed v1 transaction using erdjs
 
@@ -93,7 +93,7 @@ Resources:
 - [relayedTransactionV1Builder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV1Builder.ts)
 - [tests/example](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV1Builder.spec.ts)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Example
 
@@ -157,7 +157,7 @@ gasLimit =          50_000     +      660     *        1500         +         60
 gasLimit = 61040000  // just like the gas limit set in the relayed transaction
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Relayed transactions version 2
 
@@ -191,7 +191,7 @@ Therefore, when one wants to build such a transaction, the steps would be:
 - sign it
 - fetch the receiver, nonce, data and signature fields and use them in the relayed transaction
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Preparing relayed v2 transaction using erdjs
 
@@ -203,7 +203,7 @@ Resources:
 - [relayedTransactionV2Builder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV2Builder.ts)
 - [tests/example](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/relayedTransactionV2Builder.spec.ts)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Example
 

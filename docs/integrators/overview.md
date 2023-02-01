@@ -3,16 +3,16 @@ id: overview
 title: Integrators - Overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
 If you want to integrate the MultiversX Network in your app, even if we are talking about an exchange, wallet, or a dApp that
 uses its own infrastructure, please choose a direction from the following table
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Table of contents
 

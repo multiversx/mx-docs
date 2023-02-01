@@ -3,7 +3,7 @@ id: config-scripts
 title: Scripts & User config
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX provides scripts designed to streamline the process of installing an MultiversX node. This validator script is a general script for accessing the Mainnet, Devnet and Testnet networks.
 
@@ -13,7 +13,7 @@ To get started, you will begin by getting a copy of the latest version of the sc
 Nodes scripts should not be run as a root user. Such usage is not supported and may result in unexpected behavior.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Download the MultiversX Scripts**
 
@@ -22,7 +22,7 @@ cd ~
 git clone https://github.com/multiversx/mx-chain-scripts
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Configure the scripts correctly**
 
@@ -58,7 +58,7 @@ Save the file and exit:
 - If you’re editing with **nano**, press `Ctrl+X`, then `y`, and `Enter`
 - If you’re editing with **vi** or **vim**, hold down `Shift` and press `z` twice.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Ensure user privileges**
 

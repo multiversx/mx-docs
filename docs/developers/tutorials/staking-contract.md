@@ -3,9 +3,9 @@ id: staking-contract
 title: Staking smart contract tutorial
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -13,11 +13,11 @@ This tutorial aims to teach you how to write a simple staking contract, and to i
 
 If you find anything not answered here, feel free to ask further questions on the MultiversX Developers Telegram channel: https://t.me/MultiversXDevelopers
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Prerequisites
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### mxpy
 
@@ -27,7 +27,7 @@ If you already have mxpy installed, make sure to update it to the latest version
 
 We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Rust
 
@@ -48,7 +48,7 @@ error[E0554]: #![feature] may not be used on the stable release channel
 --> /home/user/multiversx-sdk/vendor-rust/registry/src/github.com-1ecc6299db9ec823/elrond-wasm-derive-0.33.0/src/lib.rs:4:12
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### VSCode and rust-analyser extension
 
@@ -65,7 +65,7 @@ MultiversX VSCode extension: https://marketplace.visualstudio.com/items?itemName
 
 Both can be easily installed from the "Extensions" menu in VSCode.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Creating the contract
 
@@ -82,7 +82,7 @@ You should then have the following structure:
 
 For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "A", then ctrl + "/"). Otherwise, it will keep popping up errors as we modify the contract's code.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Setting up the workspace
 
@@ -98,7 +98,7 @@ After the building has completed, our folder should look like this:
 
 A new folder, called `output` was created, which contains the compiled contract code. More on this is used later. For now, let's continue.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Your first lines of Rust
 
@@ -213,20 +213,20 @@ pub trait StakingContract {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### What's with the empty init function?
 
 Every smart contract needs to have a function annotated with `#[init]`. This function is called on deploy and upgrade. For now, we need no logic inside it, but we still need to have this function.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Trying it out on devnet
 
 To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the MultiversX IDE extension. More on this in a bit. Your new folder structure should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_3.png)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Creating a devnet wallet
 
@@ -248,7 +248,7 @@ mxpy --verbose wallet derive ./tutorialKey.pem --mnemonic
 You have to press "space" between the words, not "enter"!
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Deploying the contract
 
@@ -281,7 +281,7 @@ To run this snippet, we're going to use the MultiversX IDE extension again. Open
 
 For now, we only have one option, as we only have a single function in our file, but any bash function we write in the snippets.sh file will appear there. Now, select the deploy option and let's deploy the contract.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Account was not found? But I just created the wallet!
 
@@ -302,7 +302,7 @@ INFO:utils:View this contract address in the MultiversX Devnet Explorer: https:/
 
 This is because contract addresses are calculated from the deployer's address and their current account nonce. They are not random. So mxpy calculates the address beforehand and displays it in the terminal. Additionally, the deployed contract is always in the same shard as the deployer.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Getting EGLD on devnet
 
@@ -311,7 +311,7 @@ There are two ways of getting EGLD on devnet:
 - through the devnet wallet
 - through an external faucet
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Getting EGLD through devnet wallet
 
@@ -320,7 +320,7 @@ Go to https://devnet-wallet.multiversx.com and login to your devnet account with
 
 Request the tokens. After a couple seconds, refresh the page, and you should have 30 xEGLD in your wallet.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Getting EGLD through external faucet
 
@@ -329,7 +329,7 @@ Go to https://r3d4.fr/faucet and submit a request:
 
 Make sure you selected "devnet" and input your address! It might take a bit depending on how "busy" the faucet is.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Deploying the contract, second try
 
@@ -341,7 +341,7 @@ INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
 
 Alternatively, you can check the address in the logs tab in explorer, namely the `SCDeploy` event.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Too much gas error?
 
@@ -350,7 +350,7 @@ Everything should work just fine, but you'll see this message:
 
 This is NOT an error. This simply means you provided way more gas than needed, so all the gas was consumed instead of the leftover being returned to you. This is done to protect the network against certain attacks. For instance, one could always provide the max gas limit and only use very little, decreasing the network's throughput significantly.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## The first stake
 
@@ -387,19 +387,19 @@ To pay EGLD, the `--value` argument is used, and, as you can guess, the `--funct
 We've now successfully staked 1 EGLD... or have we? If we look at the transaction, that's not quite the case:  
 ![img](/developers/staking-contract-tutorial-img/first_stake.png)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### I sent 1 EGLD to the SC, but instead 0.000000000000000001 EGLD got sent?
 
 This is because EGLD has 18 decimals. So to send 1 EGLD, you actually have to send a value equal to 1000000000000000000 (i.e. 1 \* 10^18). The blockchain only works with unsigned numbers. Floating point numbers are not allowed. The only reason the explorer displays the balances with a floating point is because it's much more user-friendly to tell someone they have 1 EGLD instead of 1000000000000000000 EGLD, but internally, only the integer value is used.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### But how do I send 0.5 EGLD to the SC?
 
 Since we know EGLD has 18 decimals, we have to simply multiply 0.5 by 10^18, which yields 500000000000000000.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Actually staking 1 EGLD
 
@@ -409,7 +409,7 @@ To do this, we simply have to update our `STAKE_AMOUNT` variable in the snippet.
 Now let's try staking again:  
 ![img](/developers/staking-contract-tutorial-img/second_stake.png)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Querying the view functions
 
@@ -474,7 +474,7 @@ getAllStakers
 
 ...but what's this value? If we try to convert `9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d` to ASCII, we get gibberish. So what happened to our pretty erd1 address?
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Converting erd1 addresses to hex
 
@@ -523,7 +523,7 @@ mxpy wallet bech32 --encode 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7b
 erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Adding unstake functionality
 
@@ -558,7 +558,7 @@ In pure Rust terms, this is a method of our contract trait, with one argument, t
 
 So then, why save the mapper in a variable?
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Better usage of storage mapper types
 
@@ -573,7 +573,7 @@ key.append(addr.as_managed_buffer());
 
 Instead, we just reuse the key we built previously. This can be a great performance enhancement, especially for mappers with multiple arguments. For mappers with no arguments, the improvement is minimal, but might still be worth thinking about.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Partial unstake
 
@@ -613,7 +613,7 @@ pub fn update<R, F: FnOnce(&mut T) -> R>(&self, f: F) -> R {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Optional arguments
 
@@ -648,7 +648,7 @@ fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
 
 This makes it so if someone wants to perform a full unstake, they can simply not give the argument at all.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Unstaking our devnet tokens
 
@@ -672,7 +672,7 @@ Now run this function, and you'll get this result:
 
 ...but why? We just added the function! Well, we might've added it to our code, but the contract on the devnet still has our old code. So, how do we upload our new code?
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Upgrading smart contracts
 
@@ -697,7 +697,7 @@ Keep in mind the `#[init]` function of the newly uploaded code is also called on
 All the storage is kept on upgrade, so make sure any storage changes you make to storage mapping are backwards compatible!
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Try unstaking again
 
@@ -716,7 +716,7 @@ getStakeForAddress
 
 We had 1 EGLD, and we've unstaked 0.5 EGLD. Now we have 0.5 EGLD staked. (with the extra 1 fraction of EGLD we've staked initially).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Unstake with no arguments
 
@@ -748,7 +748,7 @@ getAllStakers
 
 As you can see, we get an empty result (which means the value 0), and an empty array respectively.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Writing Rust tests
 
@@ -914,7 +914,7 @@ For the test we're going to use small numbers for balances, since there is no re
 
 Then, we've staked the user's entire balance, unstaked half, then unstaked fully. After each transaction, we've checked the SC's internal staking storage, and also the balance of the user and the SC respectively.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Running the test
 
@@ -931,7 +931,7 @@ cargo test --test empty_rust_test
 
 Where `empty_rust_test` is the name of the file containing the tests.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Staking Rewards
 
@@ -943,7 +943,7 @@ For this, we're also going to need to save the time at which each user staked. A
 You can also use rounds, timestamp, epochs etc. for time keeping in smart contracts, but number of blocks is the recommended approach.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### User-defined struct types
 
@@ -980,7 +980,7 @@ Additionally, we've added `PartialEq` and `Debug` derives, for easier use within
 
 If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/developer-reference/serialization-format):
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Rewards formula
 
@@ -1006,7 +1006,7 @@ Using 10% as APY, and assuming exactly one year has passed since last claim, the
 
 But there is something wrong with the current formula. We will always get `reward_amt` = 0.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### BigUint division
 
@@ -1018,7 +1018,7 @@ To fix this, we need to take care of our operation order:
 let reward_amt = user_stake * apy / 100 * blocks_since_last_claim / BLOCKS_IN_YEAR;
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### How to express percentages like 50.45%?
 
@@ -1040,7 +1040,7 @@ reward_amt = 100 * 5_045 / 10_000 = 504_500 / 10_000 = 50
 Since we're still using BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the MAX_PERCENTAGE and the respective APY, but this is also "inheritly fixed" on the blockchain, because we work with very big numbers for `user_stake`
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Rewards implementation
 
@@ -1320,7 +1320,7 @@ fn stake_unstake_test() {
 
 Now let's run the test... it didn't work. You should see the following error:
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Storage decode error: input too short
 
@@ -1430,7 +1430,7 @@ running 1 test
 test stake_unstake_test ... ok
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Rewards testing
 
@@ -1531,7 +1531,7 @@ In the test, we perform the following steps:
 
 This test should work without any errors.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Depositing rewards / Conclusion
 

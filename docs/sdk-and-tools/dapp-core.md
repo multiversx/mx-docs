@@ -3,7 +3,7 @@ id: sdk-dapp
 title: dApp SDK
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Library used to build React dApps on MultiversX Network.
 
@@ -11,7 +11,7 @@ Library used to build React dApps on MultiversX Network.
 The following documentation is based on sdk-dapp 2.0.0+
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -19,38 +19,38 @@ sdk-dapp is a library that holds core functional logic that can be used to creat
 
 It is built for applications that use React.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### GitHub project
 
 The GitHub repository can be found here: [https://github.com/multiversx/mx-sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### npmjs
 
 sdk-dapp can be found on npmjs as well: https://www.npmjs.com/package/@multiversx/sdk-dapp
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Live demo: dapp-template
 
 The [mx-template-dapp](https://github.com/multiversx/mx-template-dapp) that is used in [Build a dApp in 15 minutes](/developers/tutorials/your-first-dapp) is based on `sdk-dapp`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Requirements
 
 - Node.js version 12.16.2+
 - Npm version 6.14.4+
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Migration from sdk-dapp 1.x
 
 If you're transitioning from sdk-dapp 1.x to sdk-dapp 2.0, please read the [Migration guide](https://github.com/multiversx/mx-sdk-dapp/wiki/Migration-guide-2.0).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Installation
 
@@ -79,7 +79,7 @@ or
 yarn add @multiversx/sdk-dapp --no-optional
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Usage
 
@@ -102,7 +102,7 @@ import { UnlockPage } from "@multiversx/sdk-dapp/UI/pages/UnlockPage";
 
 More on this below.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Prerequisites
 
@@ -225,7 +225,7 @@ If you want to show custom notifications, you can use the `useGetNotification` h
 
 </details>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## User Identity
 
@@ -270,7 +270,7 @@ The important parts that makes this component work are the flag **authenticatedR
       Login UI
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Login UI
 
@@ -384,7 +384,7 @@ The important parts that makes this component work are the flag **authenticatedR
 Login hooks
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Login hooks
 
@@ -464,7 +464,7 @@ for useLedgerLogin;
 Reading User State
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Reading User State
 
@@ -488,7 +488,7 @@ There are 2 ways of reading the user current state: hooks (to be used inside com
 
 </details>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Transactions
 
@@ -498,7 +498,7 @@ The sdk-dapp library exposes a straight-forward way of sending transactions and 
 Sending Transactions
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Sending Transactions
 
@@ -540,7 +540,7 @@ or the `useSignTransactions` hook defined below. If you don't use one of these, 
 Transaction Signing Flow
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Transaction Signing Flow
 
@@ -623,7 +623,7 @@ and returns an object with the following keys:
 Tracking a transaction
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Tracking a transaction
 
@@ -662,7 +662,7 @@ It's safe to pass in `null` as a sessionId, so if the transaction wasn't yet sen
 Tracking transactions' statuses
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Tracking transactions' statuses
 
@@ -695,7 +695,7 @@ it's return signature is
 Transaction Toasts UI
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Transaction Toasts UI
 
@@ -738,7 +738,7 @@ const customToast = addNewCustomToast(
 Removing transactions manually
   </summary>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Removing transactions manually
 
@@ -755,7 +755,7 @@ but if you need to do this manually, you can use the exposed functions for this:
 
 </details>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Unit testing with Jest
 
@@ -768,7 +768,7 @@ moduleNameMapper: {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## sdk-dapp exports
 
@@ -794,7 +794,7 @@ import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### constants exports
 
@@ -812,11 +812,11 @@ import {
  } from '@multiversx/sdk-dapp/constants';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### hooks exports
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Login
 
@@ -829,7 +829,7 @@ import {
 } from '@multiversx/sdk-dapp/hooks/login';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Account
 
@@ -841,7 +841,7 @@ import {
  } from '@multiversx/sdk-dapp/hooks/accounts';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Transactions
 
@@ -868,7 +868,7 @@ import {
 } from '@multiversx/sdk-dapp/hooks/transactions';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Misc
 
@@ -881,7 +881,7 @@ import {
 } from '@multiversx/sdk-dapp/hooks';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### services exports
 
@@ -898,11 +898,11 @@ import {
 } from '@multiversx/sdk-dapp/services';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### utils exports
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Account
 
@@ -921,7 +921,7 @@ import {
 } from '@multiversx/sdk-dapp/utils/account';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Operations
 
@@ -934,7 +934,7 @@ import {
 } from '@multiversx/sdk-dapp/utils/operations';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Transactions
 
@@ -947,7 +947,7 @@ import {
 } from '@multiversx/sdk-dapp/utils/transactions';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Validation
 
@@ -961,7 +961,7 @@ import {
 } from '@multiversx/sdk-dapp/utils';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### Misc
 
@@ -977,7 +977,7 @@ import {
 } from '@multiversx/sdk-dapp/utils';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Wrappers
 
@@ -989,7 +989,7 @@ import {
 } from '@multiversx/sdk-dapp/wrappers';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Web-specific imports
 
@@ -999,7 +999,7 @@ import {
 } from '@multiversx/sdk-dapp/web';
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### UI
 
@@ -1039,7 +1039,7 @@ etc
 
 **Important**: `shouldRenderDefaultCss` was removed from all components.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## React Native support
 

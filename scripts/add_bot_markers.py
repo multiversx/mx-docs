@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Optional
 
-SEPARATOR = "[comment]: # (mx-context)"
+SEPARATOR = "[comment]: # (mx-context-auto)"
 WEAK_CONTENT_THRESHOLD = 10
 DOCS_ROOT = Path(__file__).parent.parent / "docs"
 

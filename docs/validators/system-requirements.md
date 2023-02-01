@@ -3,7 +3,7 @@ id: system-requirements
 title: System Requirements
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 # **MultiversX Nodes explained**
 
@@ -33,7 +33,7 @@ We are promoting using processors that support the `fma` or `fma3` instruction s
 In case a decision to run multiple MultiversX Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Networking**
 

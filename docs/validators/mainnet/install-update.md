@@ -3,7 +3,7 @@ id: install-update
 title: Installing a Validator Node
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 :::caution
 This section is deprecated. We are now using the elrond-go-scripts unified script repo.

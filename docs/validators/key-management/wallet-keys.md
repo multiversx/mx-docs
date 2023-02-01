@@ -3,7 +3,7 @@ id: wallet-keys
 title: Wallet Keys
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 As a Validator you use the Wallet Keys to access the address from which you send the staking transaction. Your EGLD holdings leave this address and are deposited into a staking smart contract. Rewards are sent to this address. You can change it later on by using a `changeRewards` transaction.
 

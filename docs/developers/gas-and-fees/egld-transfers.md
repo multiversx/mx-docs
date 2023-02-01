@@ -3,9 +3,9 @@ id: egld-transfers
 title: EGLD transfers (move balance transactions)
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Formula
 
@@ -17,7 +17,7 @@ tx.gasLimit =
     networkConfig.erd_gas_per_data_byte * lengthOf(tx.data)
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Examples
 

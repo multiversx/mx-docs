@@ -3,12 +3,12 @@ id: delegation-manager
 title: The Delegation Manager
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introducing staking pools
 
@@ -30,7 +30,7 @@ Node operators may also choose to set up a delegation dashboard, although they m
 
 A detailed description of the delegation process can be consulted at https://github.com/multiversx/mx-specs/blob/main/sc-delegation-specs.md.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Creating a new delegation contract
 
@@ -94,13 +94,13 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The above transaction creates a new delegation contract owned by the sender, with total delegation cap of 7231.941 EGLD and service fee of 37.45% from the rewards. Moreover, the newly created delegation contract will start with a staking pool of 1250 EGLD.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Configuring the delegation contract
 
 The owner of the delegation contract has a number of operations at their disposal.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Metadata
 
@@ -134,7 +134,7 @@ An example for the `Data` field that sets the name to `"Test Mx Provider"`, the 
 Setting the keybase.io identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a keybase.io identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the keybase.io identity to the delegation contract address.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Display information
 
@@ -183,7 +183,7 @@ To also connect the validators themselves to a specific keybase.io staking pool 
 
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Service fee
 
@@ -214,7 +214,7 @@ For example, a service fee of 37.45% is expressed by the integer 3745. This inte
 Finally, a `Data` field containing `changeServiceFee@0ea1` will change the service fee to 37.45%.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Automatic activation
 
@@ -241,7 +241,7 @@ The only argument passed to `setAutomaticActivation` is either `true` or `false`
 For example, a `Data` field containing `"setAutomaticActivation@74727565"` enables automatic activation.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Delegation cap
 
@@ -276,11 +276,11 @@ Setting the total delegation cap to 0 (`"00"` in hexadecimal) specifies an unlim
 The total delegation cap cannot be set to a value lower than the amount staked for currently active nodes. It must be either higher than that amount or set to 0 (infinite cap).
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Managing nodes
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Adding nodes
 
@@ -311,7 +311,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 As shown above, the `Data` field contains an enumeration of `N` pairs. Such a pair consists of the public BLS key of a node along with the message produced by signing the address of the delegation contract with the secret BLS key of the respective node. There are as many pairs as there are nodes to add.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Staking nodes
 
@@ -339,7 +339,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be staked.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Unstaking nodes
 
@@ -373,7 +373,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unstaked.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Restaking nodes
 
@@ -397,7 +397,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be restaked.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Unbonding nodes
 
@@ -427,7 +427,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unbonded.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Removing nodes
 
@@ -455,7 +455,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be removed.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Unjailing nodes
 
@@ -489,13 +489,13 @@ Note that the `Value` field depends on `N`, the number of validators to unjail.
 
 The `Data` field contains an enumeration of `N` public BLS keys corresponding to the nodes to be unjailed.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Delegating and managing delegated funds
 
 Accounts that delegate their own funds to the staking pool are called **delegators**. The delegation contract offers them a set of actions as well. This means that these actions are available to the owner of the delegation contract as well.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Delegating funds
 
@@ -525,7 +525,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 If the transaction is successful, the funds' holder has become a delegator and the funds either become a top-up amount for the stake of active validators, or may trigger the staking of inactive nodes, as described above.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Claiming rewards
 
@@ -545,7 +545,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 If the transaction is successful, the delegator receives the proportion of rewards they are entitled to.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Redelegating rewards
 
@@ -571,7 +571,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 If the transaction is successful, the delegator does not receive any EGLD at the moment, but the rewards they were entitled to will be added to their delegated amount.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Undelegating funds
 
@@ -610,7 +610,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 In the `Data` field, the only argument passed to `unDelegate` is the desired amount of EGLD to undelegate and later withdraw. It is expressed as a fully denominated amount of EGLD, meaning that it is the number of $10^{-18}$ subdivisions of the EGLD, and not the actual number of EGLD tokens. The fully denominated amount must then be encoded hexadecimally. Make sure not to encode the ASCII string representing the amount.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Withdrawing
 
@@ -638,7 +638,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 If the transaction is successful, the delegator receives all the EGLD they have previously requested to undelegate. The amount is removed from the staking pool.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Delegation contract view functions
 
@@ -666,7 +666,7 @@ The following documentation sections only show the value of the relevant `return
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Contract config {#contract-config}
 
@@ -745,7 +745,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Contract metadata {#contract-metadata}
 
@@ -811,7 +811,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Number of delegators {#number-of-delegators}
 
@@ -871,7 +871,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Number of nodes {#number-of-nodes}
 
@@ -931,7 +931,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Nodes states {#nodes-states}
 
@@ -999,7 +999,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Total active stake {#total-active-stake}
 
@@ -1057,7 +1057,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Total unstaked stake {#total-unstaked-stake}
 
@@ -1117,7 +1117,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Total cumulated rewards {#total-cumulated-rewards}
 
@@ -1179,7 +1179,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Delegator claimable rewards {#delegator-claimable-rewards}
 
@@ -1243,7 +1243,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Delegator total accumulated rewards {#delegator-total-accumulated-rewards}
 
@@ -1307,7 +1307,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Delegator active stake {#delegator-active-stake}
 
@@ -1369,7 +1369,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Delegator unstaked stake {#delegator-unstaked-stake}
 
@@ -1433,7 +1433,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Delegator unbondable stake {#delegator-unbondable-stake}
 
@@ -1497,7 +1497,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Delegator undelegated stake {#delegator-undelegated-stake}
 
@@ -1559,7 +1559,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Delegator funds data {#delegator-funds-data}
 
@@ -1626,7 +1626,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Get reward data for epoch {#get-reward-data-for-epoch}
 
@@ -1688,11 +1688,11 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Delegation mananger view functions
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> All contract addresses {#all-contract-addresses}
 
@@ -1762,7 +1762,7 @@ Response (only `returnData` shown below; see [view functions](/validators/delega
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> Contract config {#contract-config-1}
 

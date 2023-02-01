@@ -3,7 +3,7 @@ id: writing-and-testing-sdk-js-interactions
 title: Writing and testing interactions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 :::note
 This tutorial makes use of `sdk-js 10` and `sdk-js-snippets 3`. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
@@ -15,7 +15,7 @@ This tutorial will guide you through the process of (system) testing smart contr
 **Do not reference** `sdk-js-snippets` library as a **regular** dependency (i.e. `dependencies` section) of your project (Node / dApp). Only reference it as a **development** dependency (i.e. `devDependencies` section).
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## IDE Prerequisites
 
@@ -24,11 +24,11 @@ In order to follow the steps in this tutorial, you need **Visual Studio Code** w
 - [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
 - [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Setup steps
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Setup the workspace
 
@@ -38,7 +38,7 @@ First, you need to open in Visual Studio Code a folder that will hold both the s
 Make sure the latest MultiversX SDK is available in your environment. In order to do so, invoke the command `MultiversX: Install SDK`.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Add one or more smart contracts
 
@@ -48,7 +48,7 @@ An **additional folder** called `mx-skd-js-snippets` gets created, as well. That
 
 Before moving further, make sure you build the two contracts (from the **Smart Contracts** view of the MultiversX IDE or using the command line, as desired).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Set up the snippets
 
@@ -69,7 +69,7 @@ By leveraging the Mocha Test Explorer, you can **run** and **debug** one, more o
 
 Now that your workspace and the snippets are set up, let's dive deeper. In the next section we'll learn **what is**, actually, an interaction snippet.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Anatomy of an sdk-js snippet
 
@@ -81,7 +81,7 @@ When executing one or more steps, they execute within a **test session**, select
 session = await TestSession.load("nameOfMySession", __dirname);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Session configuration
 
@@ -130,7 +130,7 @@ Another example, using the `ApiNetworkProvider` instead of `ProxyNetworkProvider
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Session state
 
@@ -168,7 +168,7 @@ const addressOfMyContract = await session.loadAddress("myContractAddress");
 const someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Assertions
 
@@ -181,7 +181,7 @@ assert.equal(lotteryInfo.getFieldValue("token_identifier"), "myToken");
 assert.equal(lotteryStatus, "someStatus");
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Test users
 
@@ -193,7 +193,7 @@ const bob: ITestUser = session.users.getUser("bob");
 const friends: ITestUser[] = session.users.getGroup("friends");
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Generate secret keys for test users
 
@@ -252,7 +252,7 @@ describe("user operations snippet", async function () {
 
 The resulted keys can be used as seen in the section [session configuration](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions#session-configuration).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Writing events in the audit log
 
@@ -299,7 +299,7 @@ await session.audit.onSnapshot({
 
 Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated session report will include a difference between the two snapshots in question (**this feature isn't available as of `snk-js-snippets 3.0.0`**).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Generate session reports
 
@@ -329,13 +329,13 @@ it("generate report", async function () {
 
 Upon running the step, the `outputFolder` should contain the generated session report(s).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Dependence on interactors
 
 The most important dependency of a snippet is the **contract interactor**, which is responsible with creating and executing sdk-js-based interactions and contract queries.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Anatomy of an interactor
 
@@ -350,7 +350,7 @@ Generally speaking, an interactor component (class) depends on the following obj
 - a `ResultsParser`, to parse the outcome of contract queries or contract interactions
 - optionally, an `IAudit` object to record certain events within the test session
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Creation of an interactor
 
@@ -446,7 +446,7 @@ export class LotteryInteractor {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Methods of the interactor
 
@@ -454,7 +454,7 @@ Generally speaking, when writing an interactor, you'd like to have a function (m
 
 The interrupted nature of the flow for calling `executable` endpoints and the eventual context switching required by some of the signing / wallet providers (e.g. navigating through web pages) makes it (the flow) a bit harder to be captured in a single function (method) of the interactor in an _universally applicable manner_. However, the example interactors follow the _one method for each endpoint_ guideline, since they use a _test user_ object to sign the transactions (that is, no external signing provider).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Writing an interactor method for a contract query
 
@@ -606,7 +606,7 @@ console.log(lotteryInfo.getFieldValue("token_identifier"));
 console.log(lotteryInfo.getFieldValue("prize_pool"));
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Writing an interactor method for a contract call
 

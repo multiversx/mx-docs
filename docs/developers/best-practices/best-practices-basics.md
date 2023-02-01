@@ -3,9 +3,9 @@ id: best-practices-basics
 title: Basics
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Code Arrangement
 

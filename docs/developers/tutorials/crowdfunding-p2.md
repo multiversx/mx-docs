@@ -3,7 +3,7 @@ id: crowdfunding-p2
 title: The Crowdfunding Smart Contract (part 2)
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Define contract arguments, handle storage, process payments, define new types, write better tests
 
@@ -121,7 +121,7 @@ Done. Passed: 1. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Funding the contract**
 
@@ -240,7 +240,7 @@ Done. Passed: 2. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Validation**
 
@@ -318,7 +318,7 @@ Done. Passed: 3. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Querying for the contract status**
 
@@ -422,7 +422,7 @@ Note the call to "status" at the end and the result `"out": [ "2" ]` , which is 
 
 Contract functions can return in principle any number of results, that is why `"out"` is a list.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Claim functionality**
 
@@ -458,7 +458,7 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
 
 The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **The final contract code**
 
@@ -571,7 +571,7 @@ pub trait Crowdfunding {
 
 As an exercise, try to add some more tests, especially ones involving the claim function.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Next steps**
 

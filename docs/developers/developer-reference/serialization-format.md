@@ -3,13 +3,13 @@ id: serialization-format
 title: The MultiversX Serialization Format
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 In MultiversX, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 
 In Rust, the **multiversx-sc-codec** crate ([crate](https://crates.io/crates/multiversx-sc-codec), [doc](https://docs.rs/multiversx-sc-codec/0.17.0/multiversx_sc_codec/)) exclusively deals with this format. Both Go and Rust implementations of scenarios have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Rationale
 
@@ -17,7 +17,7 @@ We want the format to be somewhat readable and to interact with the rest of the 
 
 More importantly, the format needs to be as compact as possible, since each additional byte costs additional fees.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## The concept of top-level vs. nested objects
 
@@ -29,7 +29,7 @@ But now imagine that an argument that deserializes as a vector of int32. The num
 
 But what about the vector itself? Its representation must always be a multiple of 4 bytes in length, so from the representation we can always deduce the length of the vector by dividing the number of bytes by 4. If the encoded byte length is not divisible by 4, this is a deserialization error. Because the vector is top-level we don't have to worry about encoding its length, but if the vector itself gets embedded into an even larger structure, this can be a problem. If, for instance, the argument is a vector of vectors of int32, each nested vector also needs to have its length encoded before its data.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## A note about the value zero
 
@@ -37,11 +37,11 @@ We are used to writing the number zero as "0" or "0x00", but if we think about i
 
 With this being said, the format always encodes zeroes of any type as empty byte arrays.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## How each type gets serialized
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fixed-width numbers
 
@@ -123,9 +123,9 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Arbitrary width (big) numbers
 
@@ -169,9 +169,9 @@ Next we encode:
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Boolean values
 
@@ -188,9 +188,9 @@ Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Lists of items
 
@@ -217,9 +217,9 @@ Then, all nested encodings of the items, concatenated.
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Arrays and tuples
 
@@ -242,9 +242,9 @@ Therefore, there is never any need to encode their length.
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Byte slices and ASCII strings
 
@@ -274,9 +274,9 @@ We consider best practice to use Unicode on the frontend, but keep all messages 
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Options
 
@@ -299,9 +299,9 @@ An `Option` represents an optional value: every Option is either `Some` and cont
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Custom structures
 
@@ -353,9 +353,9 @@ Explanation:
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Custom enums
 

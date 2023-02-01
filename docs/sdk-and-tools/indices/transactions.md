@@ -3,16 +3,16 @@ id: es-index-transactions
 title: transactions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field for this index is composed of hex encoded transaction hash.
 (example: `cad4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -50,11 +50,11 @@ The `_id` field for this index is composed of hex encoded transaction hash.
 | isRelayed         | The isRelayed field is true if the transaction is a relayed transaction.                                                                                                              |
 | version           | The version field represents the version of the transaction.                                                                                                                          |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Query examples
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch the latest transactions of an address
 

@@ -3,9 +3,9 @@ id: upgrading-smart-contracts
 title: Upgrading smart contracts
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -32,13 +32,13 @@ mxpy --verbose contract upgrade SC_ADDRESS --recall-nonce \
 
 You might've seen in many of the MultiversX contracts, we use the `set_if_empty` method in init, instead of plain `set`. This is so we don't accidentally overwrite an important config value during the upgrade process.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## What about the old contract's storage?
 
 Storage is kept intact, except for the changes the `init` function might do during upgrade.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Migrating storage or token attributes
 
@@ -119,7 +119,7 @@ With the above code, we manually decode each field, and then, if there are any b
 
 Remember to also check if there are any remaining bytes after that and throw an error, otherwise, your struct could potentially be decoded from almost any input bytes.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### "But what if I want to remove a field?"
 
@@ -163,7 +163,7 @@ impl<M: ManagedTypeApi> NestedDecode for UserData<M> {
 
 In this case, if there are any bytes left after we decode the `stake_amount`, we decode the old fields and ignore their values. Same as last time, remember to throw an error if there are bytes remaining still after that.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Conclusion
 

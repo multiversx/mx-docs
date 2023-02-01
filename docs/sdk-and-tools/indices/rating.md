@@ -3,15 +3,15 @@ id: es-index-rating
 title: rating
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is composed in this way: `{validator_bls_key}_{epoch}` (example: `blskey_37`).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -19,11 +19,11 @@ The `_id` field of this index is composed in this way: `{validator_bls_key}_{epo
 |-----------|------------------------------------------------------------------|
 | rating    | The rating of the validator, which can be in the [0, 100] range. |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Query examples
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch rating of a validator for a specific epoch
 

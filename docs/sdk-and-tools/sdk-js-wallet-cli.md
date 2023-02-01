@@ -3,7 +3,7 @@ id: sdk-js-wallet-cli
 title: JS Wallet CLI
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 CLI wrapper over sdk-js
 

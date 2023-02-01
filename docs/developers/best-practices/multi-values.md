@@ -3,9 +3,9 @@ id: multi-values
 title: Multi-values
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Variadic inputs and outputs (multi-values)
 
@@ -30,7 +30,7 @@ fn my_var_args_endpoint(&self, obligatory_arg: T1, args: MultiValueEncoded<T2>) 
 
 This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalValue<T>` and `ManagedVec<T>` instead of `MultiValueEncoded<T>`? The reason is the type of encoding used for each of them.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Option\<T\> vs OptionalValue\<T\>
 
@@ -60,7 +60,7 @@ For the same token ID and skipped nonce, the encodings look like this:
 
 As you can see, the argument can be skipped altogether instead of passing a `00` (`None`).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### ManagedVec\<T\> vs MultiValueEncoded\<T\>
 

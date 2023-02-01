@@ -3,9 +3,9 @@ id: import-db
 title: Import DB
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -21,7 +21,7 @@ Possible use cases for the import-db process:
   interested in the result of an API endpoint at the block 255255, you could use import db and force the node to stop
   at the block corresponding to that date).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## How to start the process
 
@@ -89,7 +89,7 @@ The import-db process can be sped up by skipping the block header's signature ch
 In this case the node should be started with all previously mentioned flags, adding the `-import-db-no-sig-check` flag.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Import-DB with populating an Elasticsearch cluster
 

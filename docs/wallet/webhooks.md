@@ -3,13 +3,13 @@ id: webhooks
 title: Webhooks
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 The web wallet webhooks allow you to build or setup integrations for dapps or payment flows.
 
 The web wallet webhooks are links that point the user of the wallet to either login or populate a "send transaction" form with the provided arguments. Once the action is performed, the user is redirected to the provided callback URL along with a success or error status.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Login hook**
 
@@ -33,7 +33,7 @@ __Callback URL Parameters__
 | -------------   | ------------------------------- |
 | address         | The users's Address (bech32).   |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Send transaction hook**
 

@@ -3,9 +3,9 @@ id: validator-keys
 title: Validator Keys
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Validator key format
 
@@ -43,7 +43,7 @@ Always save and protect **private keys**, they are like your username + password
 
 _Public keys_ are like your phone number - no harm in others knowing it, it actually is needed for some scenarios. Still, only share it on a need to basis, like you would do with your own phone number.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## How to generate a new key
 

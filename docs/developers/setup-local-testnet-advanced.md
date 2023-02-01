@@ -3,7 +3,7 @@ id: setup-local-testnet-advanced
 title: Set up a Local Testnet (advanced)
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 How to set up a local MultiversX Testnet on a workstation.
 
@@ -33,7 +33,7 @@ sudo apt install tmux
 sudo apt install gnome-terminal
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Configure the Testnet**
 
@@ -109,7 +109,7 @@ $HOME/Desktop/mytestnet/sandbox
         └── p2p.toml
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Starting and stopping the Testnet**
 
@@ -134,7 +134,7 @@ $ ./pause.sh
 $ ./resume.sh
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Recreating the Testnet**
 
@@ -155,7 +155,7 @@ If you need to recreate a Testnet from scratch, use the `reset` command (which a
 $ ./reset.sh
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Inspecting the Proxy**
 
@@ -167,7 +167,7 @@ $ curl http://localhost:7950/network/config
 
 Given the request above, extract and save the fields `erd_chain_id` and `erd_min_transaction_version` from the response. You will need them in order to send transactions against your local Testnet.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Configuring mxpy**
 
@@ -179,7 +179,7 @@ $ mxpy config set txVersion 123
 $ mxpy config set proxy http://localhost:7950
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Sending transactions**
 
@@ -198,7 +198,7 @@ You should see the prepared transaction and the **transaction hash** in the `std
 $ curl http://localhost:7950/transaction/1363...
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Deploying and interacting with Smart Contracts**
 

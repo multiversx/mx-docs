@@ -3,7 +3,7 @@ id: crowdfunding-p1
 title: The Crowdfunding Smart Contract (part 1)
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Write, build and deploy a simple smart contract written in Rust
 
@@ -17,7 +17,7 @@ The MultiversX Network supports smart contracts written in any programming langu
 The current tutorial revolves around **multiversx-sc** version **0.39.0**, and will get updated as new versions of multiversx-sc are released.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Introduction**
 
@@ -29,7 +29,7 @@ If the deadline is reached and the smart contract has gathered an amount of EGLD
 
 But if the total amount of EGLD is lower than the desired target, all the donated EGLD must be sent back to the people who donated.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Design**
 
@@ -51,7 +51,7 @@ This tutorial will firstly focus on the `init` method, to get you acquainted wit
 Automated testing is exceptionally important for the development of smart contracts, due to the sensitive nature of the information they must handle.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Prerequisites**
 
@@ -70,7 +70,7 @@ Follow the video guide for a detailed explanation about how to get started.
 
 The steps are covered in detail below.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step 1: the workspace**
 
@@ -118,7 +118,7 @@ Let's see what this means:
 - The file `src/crowdfunding_main.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
 - The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step 2: the code**
 
@@ -141,7 +141,7 @@ Let's take a look at the code. The first three lines declare some characteristic
 
 - `no_std` means that the smart contract **has no access to standard libraries**. That might sound restrictive, but the trade-off is that the code will be lean and very light. It is entirely possible to create a smart contract with the standard libraries, but that would add a lot of overhead, and is not recommended. Definitely not needed for the Crowdfunding smart contract.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Bring in the framework**
 
@@ -155,7 +155,7 @@ The framework itself is a topic for another day, but you should be aware that sm
 
 This line simply tells the framework to treat the next `trait` declaration (we'll get to it in a moment) as a smart contract. Because of this line, the framework will _automatically generate_ much of the code required. You won't see the generated code now (but you can).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Make it a trait**
 
@@ -165,7 +165,7 @@ It helps to know what a trait is in Rust, before continuing (the [Rust book expl
 
 For now, you only need to remember that you write your smart contract as the `trait Crowdfunding`, in order to allow the MultiversX framework to generate the support code for you, resulting in a hidden `struct CrowdfundingImpl`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Init**
 
@@ -173,7 +173,7 @@ Every smart contract must define a constructor method, which is run _once and on
 
 The `init` method of the Crowdfunding smart contract is currently empty. We'll add the actual code later. First, you want to build the whole project, to make sure everything has worked well so far, even if the smart contract does nothing right now.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step 3: the build**
 
@@ -223,7 +223,7 @@ It's time to add some functionality to the `init` function now, because the next
 
 In this step you will use the `init` method to persist some values in the storage of the Crowdfunding smart contract. Afterwards, we will write a test to make sure that these values were properly stored.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Storage mappers**
 
@@ -242,7 +242,7 @@ The methods above treat the stored value as having a specific **type**, namely t
 
 Normally, smart contract developers are used to dealing with raw bytes when storing or loading values from storage. The MultiversX framework for Rust smart contracts makes it far easier to manage the storage, because it can handle typed values automatically.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Setting some targets**
 
@@ -290,7 +290,7 @@ There's one more thing: by default, none of the `fn` statements declare smart co
   fn target(&self) -> SingleValueMapper<BigUint>;
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **But will you remember?**
 
@@ -400,7 +400,7 @@ SUCCESS
 
 You need to understand the contents of this JSON file - again, the importance of testing your smart contracts cannot be overstated.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **So what just happened?**
 
@@ -414,11 +414,11 @@ The same goes for `"step": "scDeploy"`, which is a scenario step that performs t
 
 The following subsections will discuss each of the steps individually.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Scenario step "setState"**
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **You're you, but in a different universe**
 
@@ -440,7 +440,7 @@ This defines the account with the address `my_address`, which the testing enviro
 
 Note that there are is the text `address:`at the beginning of `my_address`, which instructs the testing environment to treat the immediately following string as a 32-byte address (by also adding the necessary padding to reach the required length), i.e. it shouldn't try to decode it as a hexadecimal number or anything else. All addresses in the JSON file above are defined with leading `address:`, and all smart contracts with `sc:`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Imaginary address generator**
 
@@ -464,7 +464,7 @@ But with the configured `newAddresses` generator, we know that every run of the 
 
 While it's not important to know right now, the `newAddresses` generator can be configured to produce fixed addresses for multiple smart contract deployments and even for multiple addresses that perform the deployment!
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Scenario step "scDeploy"**
 
@@ -491,7 +491,7 @@ Remember to run `mxpy contract build` before running the test, especially if you
 
 The fields `gasLimit` and `gasPrice` shouldn't concern you too much. It's important that `gasLimit` needs to be high, and `gasPrice` may be 0. Just so you know, the real MultiversX Network would calculate the transaction fee from these values. On the real MultiversX Network, you cannot set a `gasPrice` of 0, for obvious reasons.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **The result of the deployment**
 
@@ -512,7 +512,7 @@ The `out` array would contain values returned by your smart contract call (in th
 
 The remaining two fields `gas` and `refund` allow you to specify how much gas you expect the deployment transaction to consume, and how much EGLD you'd receive back as a result of overestimating the `gasLimit`. These are both set to `"*"` here, meaning that we don't care right now about their actual values.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Scenario step "checkState"**
 
@@ -543,7 +543,7 @@ The account `crowdfunding` is the Crowdfunding smart contract. We assert that it
 
 And finally, we assert that the smart contract storage contains `500,000,000,000` under the `target` key, which is what the `init` function was supposed to make sure. The smart contract has, therefore, remembered the target you set for it.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Next up**
 

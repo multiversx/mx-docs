@@ -3,7 +3,7 @@ id: entities
 title: Entities
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 There are two primary entities in MultiversX: users and nodes.
 

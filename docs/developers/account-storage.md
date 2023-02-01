@@ -3,9 +3,9 @@ id: account-storage
 title: Account storage
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Description
 
@@ -17,7 +17,7 @@ A wallet owner can store key-value pairs by using the built-in function `SaveKey
 Keys that begin with `ELROND` will be rejected because they are reserved for protocol usage.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Transaction format
 
@@ -66,7 +66,7 @@ required_gas =  100000    + // save key value function cost
              =  271000
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Example
 
@@ -86,7 +86,7 @@ SaveKeyValueTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## REST API
 

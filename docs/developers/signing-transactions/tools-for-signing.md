@@ -3,11 +3,11 @@ id: tools-for-signing
 title: Tools for signing
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 In order to sign a transaction without actually dispatching it, one can use [mxpy](/sdk-and-tools/sdk-py) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Sign using [mxpy](/sdk-and-tools/sdk-py/) (Command Line Interface)**
 
@@ -51,7 +51,7 @@ In either case, the output file looks like this:
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Sign using [mxjs-wallet](/sdk-and-tools/sdk-js-wallet-cli)**
 
@@ -95,7 +95,7 @@ The signed transaction looks like this:
 
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Other signing tools**
 

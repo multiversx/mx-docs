@@ -3,7 +3,7 @@ id: deriving-the-wallet-pem-file
 title: Deriving the Wallet PEM file
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 **mxpy** can be used to simplify and automate the interaction with the MultiversX network and can be easily used in scripts.
 

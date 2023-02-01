@@ -3,7 +3,7 @@ id: reproducible-contract-builds
 title: Reproducible Builds
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 This page will guide you through the process of supporting [reproducible contract builds](https://en.wikipedia.org/wiki/Reproducible_builds), by leveraging Docker and a set of [_frozen_ Docker images available on DockerHub](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags).
 
@@ -15,7 +15,7 @@ You will also learn how to reproduce a contract build, given its source code and
 As of September 2022, the Rust toolchain does not support reproducible builds out-of-the-box, thus we recommend smart contract developers to follow this tutorial in order to achieve deterministic compilation.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Smart Contract `codehash`
 
@@ -55,7 +55,7 @@ The output would be the same:
 
 All in all, in order to verify the bytecode equality of two given builds of a contract we can simply compare the _codehash_ property.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Supporting reproducible builds
 
@@ -67,7 +67,7 @@ This approach is recommended in order to counteract eventual pieces of non-deter
 If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [this one](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/blob/main/.github/workflows/release-create.yml), which performs the deployment (production-ready) build within the _release_ procedure.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Choose an image tag
 
@@ -92,13 +92,13 @@ It's perfectly normal to switch to a newer image tag on each (major) release of 
 Never pick the tag called `latest` for production-ready builds.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Building via Docker (reproducible build)
 
 In this section, you'll learn how to run a reproducible build, or, to put it differently, how to reproduce a previous build (made by you or by someone else in the past), on the local machine, using Docker - without the need to install other tools such as _mxpy_ (nor its dependencies).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch the source code
 
@@ -111,7 +111,7 @@ git clone https://github.com/multiversx/mx-reproducible-contract-build-example-s
 
 By inspecting the release notes, we see that [`v0.1.4`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.1.4) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v4.1.0`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Download the build wrapper
 
@@ -121,7 +121,7 @@ The build process (via Docker) is wrapped in a easy-to-use, friendly Python scri
 wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Prepare environment variables
 
@@ -135,7 +135,7 @@ export IMAGE=multiversx/sdk-rust-contract-builder:v4.1.0
 
 The latter export statement explicitly selects the **chosen, _frozen_ Docker image tag** to be used.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Perform the build
 
@@ -156,7 +156,7 @@ In the `output` folder(s), you should see the following files (example):
 - `adder.imports.json`: a listing of VM API functions imported and used by the contract.
 - `adder-v1.2.3.zip`: a versioned archive containing the source code used as input for the build.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### TL;DR build snippet
 
@@ -174,7 +174,7 @@ python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
     --output=${BUILD_OUTPUT}
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Comparing the codehashes
 

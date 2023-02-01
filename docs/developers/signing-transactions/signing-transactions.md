@@ -3,13 +3,13 @@ id: signing-transactions
 title: Signing Transactions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 How to serialize and sign the Transaction payload
 
 Transactions must be **signed** with the Sender's Private Key before submitting them to the MultiversX Network. Signing is performed with the [Ed25519](https://ed25519.cr.yp.to/) algorithm.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **General structure**
 
@@ -33,7 +33,7 @@ A signed transaction has the additional **`signature`** field:
 | --------- | ------ | ---------------------------------------------------------------------------------------------- |
 | signature | string | The digital signature consisting of 128 hex-characters (thus 64 bytes in a raw representation) |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Serialization for signing**
 
@@ -85,7 +85,7 @@ Then it's serialized form (step 5 is omitted in this example) is as follows:
 {"nonce":8,"value":"10000000000000000000","receiver":"erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r","sender":"erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz","gasPrice":1000000000,"gasLimit":50000,"chainID":"1","version":1}
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Ed25519 signature**
 
@@ -93,7 +93,7 @@ MultiversX uses the [Ed25519](https://ed25519.cr.yp.to/) algorithm to sign trans
 
 The raw signature consisting of 64 bytes has to be **hex-encoded** afterwards and placed in the transaction object.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Ready to broadcast**
 

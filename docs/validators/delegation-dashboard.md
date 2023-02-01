@@ -3,9 +3,9 @@ id: delegation-dashboard
 title: Delegation Dashboard
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Introduction**
 
@@ -17,7 +17,7 @@ The dashboard is also highly customizable, and you can add your own branding, an
 
 ![img](/validators/delegation-dashboard.png)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Usage**
 

@@ -3,7 +3,7 @@ id: your-first-dapp
 title: Build a dApp in 15 minutes
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Let's build your first decentralized App on the MultiversX Blockchain
 
@@ -16,7 +16,7 @@ This guide has been made available in video format as well:
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IdkgvlK3rb8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **dApp Description**
 
@@ -33,13 +33,13 @@ Other rules:
 
 Maybe you noticed the default amount for a deposit is **1 xEGLD** and not 1 EGLD which is MultiversX official token, this is because, for testing purposes we use MultiversX Devnet, which is a testing environment identical to the Mainnet, the official MultiversX Blockchain. Here, the currency is **xEGLD**, it's just a test token, it's worth nothing.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **MultiversX dApp architecture**
 
 ![img](/developers/tutorial/dapp-architecture.png)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Application Layer (The Frontend)**
 
@@ -48,7 +48,7 @@ For the web app we'll have two pages:
 - The _Sign in_ page - here we can authenticate with ledger, web wallet or with Maiar Wallet
 - The _Dashboard_ page - here we can either ping or pong, if we already deposited, then we will see a countdown timer until the time interval clears out.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Blockchain Layer (The Backend)**
 
@@ -57,11 +57,11 @@ Let's say that, for now, this smart contract plays the role of an API in a dApp.
 
 The MultiversX _devnet_ is a public test network maintained by our community where any developer can test their smart contracts and dApps in a real world environment.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Set up the environment**
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Project Structure**
 
@@ -78,7 +78,7 @@ In the end, we'll have three subfolders: wallet, contract and dapp. For convenie
 
 ![img](/developers/tutorial/folder-structure.png)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Software Prerequisites**
 
@@ -122,7 +122,7 @@ If you encounter any error relating to `pynacl` package, make sure you have `lib
 brew install libsodium
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Create an owner wallet**
 
@@ -145,13 +145,13 @@ In order to initiate transactions on the blockchain, we need some funds, every t
 On the devnet wallet we have a **faucet** that allows you to get free test funds for our applications. We can request 10 xEGLD every 24 hours, so let's request 10 xEGLD now.
 We now check if the transaction was successful, and yes, we see that we now have 10 xEGLD in our devnet wallet.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **The Blockchain Layer - The Smart Contract**
 
 Our owner wallet is completely set now, we can move on to our backend, the blockchain layer.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Clone the template**
 
@@ -165,7 +165,7 @@ git clone https://github.com/multiversx/mx-ping-pong-sc contract
 cd contract/ping-pong
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Build the Smart Contract**
 
@@ -187,7 +187,7 @@ INFO:projects.core:WASM file generated: output/ping-pong.wasm
 
 After running this command line, we see that a wasm file was generated. This file contains the runtime code for our smart contract.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Customize and Deploy**
 
@@ -250,13 +250,13 @@ There are two main functions: `ping` and `pong`, these are invoked using blockch
 
 We also have two other functions defined in the smart contract: `get_time_to_pong` and `did_user_ping`, these view functions are invoked using **MultiversX API** (*https://devnet-api.multiversx.com/vm-values/query*).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **The Application Layer - The Web App**
 
 All right, let's move on to the application layer.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Clone the Sample App**
 
@@ -267,7 +267,7 @@ git clone https://github.com/multiversx/mx-template-dapp dapp
 cd dapp
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Configure the app**
 
@@ -292,7 +292,7 @@ export const contractAddress =
 
 Save and close `config.tsx` and we're ready for the first build.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Build the dApp**
 
@@ -314,14 +314,14 @@ If you start it on your own server, then you can access [http://ip:3000](http://
 
 After you start the development server, when you see the Sign in screen, this means the application is up and running.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Test Your Application**
 
 We will sign in with a test wallet.
 You can reuse the same owner's wallet if you want to, or create a new one, following the same steps you followed when creating the owner's wallet.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Ping Feature**
 
@@ -334,7 +334,7 @@ After you confirm the transaction, a success message will appear and the funds a
 **Wait the time interval**
 You can see the amount of time you'll have to wait until you can pong.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Pong Feature**
 
@@ -342,7 +342,7 @@ After the time interval has passed, you can claim the funds by clicking the Pong
 Another blockchain transaction will wait to be processed, this time the amount will be zero, as we only have to invoke the `pong` function (specified in the _data_ field).
 The transaction will trigger a success message and the funds will be returned to the wallet.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Where to go next?**
 

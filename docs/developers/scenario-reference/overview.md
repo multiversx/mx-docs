@@ -3,9 +3,9 @@ id: overview
 title: Scenario Testing Overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Rationale**
 
@@ -17,13 +17,13 @@ Scenario testing is suitable for both short tests that check how a transaction c
 
 The fact that it is expressed in a descriptive language like JSON makes it agnostic to the language in which the smart contract is developed.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Running the tests**
 
 At the moment of writing this document, scenario tests can be launched directly from the MultiversX VSCode extension, from contextual menus.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Go backend vs. Rust backend**
 
@@ -35,7 +35,7 @@ There are currently 2 implementations of the scenario specifications.
 
 Developers are expected to only write the scenario tests once, but they can run them on both systems, as needed. It is important to have the tests running with the Go backend in the first place. Running them in Rust too is convenient, but not critical.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Test file extension**
 

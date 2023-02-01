@@ -3,15 +3,15 @@ id: es-index-blocks
 title: blocks
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is represented by the block hash, in a hexadecimal encoding.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -58,11 +58,11 @@ A `metachain` block (`shardId:4294967295`) with field `epochStartBlock:true` wil
 | prevEpochStartRound              | The prevEpochStartRound field represents the round of the previous epoch start block.                                |
 | prevEpochStartHash               | The prevEpochStartHash field represents the hash of the previous epoch start block.                                  |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Query examples
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch blocks for a shard 
 In order to fetch the latest blocks from a shard, one has to do a query that matches the field `shardId`.
@@ -86,7 +86,7 @@ curl --request GET \
 }'
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch the latest 10 blocks for all shards
 

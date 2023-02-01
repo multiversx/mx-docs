@@ -3,11 +3,11 @@ id: egld-integration-guide
 title: EGLD integration guide
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 This section provides high-level technical requirements of integrating the MultiversX's native coin, EGLD in a platform that handles EGLD transactions for their users.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Overview
 
@@ -18,7 +18,7 @@ In order to make possible for a platform to integrate EGLD transactions for its 
 - [setting up a mechanism for creating and signing transactions](/integrators/creating-transactions)
 - [setting up a mechanism that queries the blockchain for new transactions to process](/integrators/querying-the-blockchain/#querying-hyperblocks-and-fully-executed-transactions)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Integration workflow
 
@@ -29,13 +29,13 @@ integrated as well for a better tokens management and less EGLD spent on gas.
 
 In order to summarize the information and bring all the pieces together, this section will provide an example of how an integration can look:
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### 1. Observing squad running
 
 The integrator has an observing squad (an observer on each shard + proxy) running and synced.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### 2. Getting hyperblock by nonce
 
@@ -51,14 +51,14 @@ A round in the blockchain is set to 6 seconds, so the nonce should change after 
 A good refresh interval for nonce-changing detection could be 2 seconds.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### 2.1. Fallback mechanism
 
 If, for example, a server issue occurs and the observing squad gets stuck, the latest processed nonce must be saved
 somewhere so when the observing squad is back online, the system should continue processing from the next nonce after the saved one.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### 2.2. Example
 
@@ -87,13 +87,13 @@ Keep in mind that a hyperblock shouldn't be processed twice as this might cause 
 Make sure the block processing and the saving of the last processed nonce should be atomic.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### 2.3. Querying the transactions
 
 The system fetches the response and iterates over each successful transaction and determine if any address from the integrator is involved.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### 3. Transaction handling
 
@@ -103,7 +103,7 @@ It is recommended that the integrator performs some balances checks before trigg
 
 For example, if the receiver is an integrator's address, the integrator can update its balance on internal storage systems.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Mentions
 
@@ -111,20 +111,20 @@ For example, if the receiver is an integrator's address, the integrator can upda
   that no transaction is skipped.
 - other usual actions such as transferring (from time to time) all addresses funds to a hot wallet could also be implemented.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Finality of the transactions / number of confirmations
 
 The hyperblock includes only finalized transactions so only one confirmation is needed. The integrator however has the flexibility to wait for any number of additional confirmations.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Balances check
 
 From time to time, or for safety reasons before performing a transaction, an integrator would want to check the balance of some
 addresses. This can be performed via [Get address balance endpoint](/sdk-and-tools/rest-api/addresses#get-address-balance).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Useful tools and examples
 

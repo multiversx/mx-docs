@@ -3,9 +3,9 @@ id: sc-random-numbers
 title: Random Numbers in Smart Contracts
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -19,7 +19,7 @@ The VM function `mBufferSetRandom` uses this library, seeded with the concatenat
 
 We're not going to go into details about how exactly the Golang library uses the seed or how it generates said random numbers, as that's not the purpose of this tutorial.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Random numbers in smart contracts
 
@@ -42,7 +42,7 @@ for _ in 0..n {
 
 Similar methods exist for all Rust unsigned numerical types.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Random numbers in a specific range
 
@@ -72,7 +72,7 @@ for i in 0..vec_len {
 
 This algorithm will shuffle each element at position `i`, with an element from position `[i, vec_len)`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Random bytes
 
@@ -84,7 +84,7 @@ let rand_hash = rand_source.next_bytes(32);
 // NFT create logic here
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Considerations
 
@@ -151,7 +151,7 @@ fn user_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 fn winners_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Conclusion
 

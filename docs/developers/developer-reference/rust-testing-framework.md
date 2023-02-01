@@ -3,9 +3,9 @@ id: rust-testing-framework
 title: Rust Testing Framework
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
@@ -23,7 +23,7 @@ This is where the scenario generation part comes into play. The Rust testing fra
 
 Please note that scenario generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Prerequisites
 
@@ -78,7 +78,7 @@ The `CrowdfundingSetup` struct isn't really needed, but it helps de-duplicating 
 
 And that's all you need to get started.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Writing your first test
 
@@ -174,7 +174,7 @@ fn init_test() {
 
 And you're done for this step. You successfuly tested your contract's init function, and generated a scenario for it.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Testing transactions
 
@@ -224,7 +224,7 @@ If you also want to generate a scenario file for this transaction, this is where
 
 You have to add this at the end of your `fund_test`. The more complex the call, the more arguments you'll have to add and such. The `SCCallMandos` struct has the `add_argument` method so you don't have to do any encoding by yourself.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Testing queries
 
@@ -255,7 +255,7 @@ fn status_test() {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Testing smart contract errors
 
@@ -305,7 +305,7 @@ fn test_sc_error() {
 
 Notice how we've changed the payment intentionally to an invalid token to check the error case. Also, we've changed the expected deposit to "0" instead of the previous "1_000". And lastly: the `.assert_user_error("wrong token")` call on the result.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Testing a successful funding campaign
 
@@ -389,7 +389,7 @@ fn test_successful_cf() {
 
 You've already seen most of the code in this test before already. The only new things are the `set_block_timestamp` and the `check_esdt_balance` methods of the wrapper. There are similar methods for setting block nonce, block random seed, etc., and the checking EGLD and SFT/NFT balances.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Testing a failed funding campaign
 
@@ -471,7 +471,7 @@ fn test_failed_cf() {
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Conclusion
 

@@ -3,7 +3,7 @@ id: manage-node
 title: Manage a validator node
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Your node will start as an observer. In order to make it into a validator, you will need to have 2500 xEGLD tokens. You can reach out to an admin in our [Telegram community](https://t.me/MultiversXValidators) who will gladly help.
 

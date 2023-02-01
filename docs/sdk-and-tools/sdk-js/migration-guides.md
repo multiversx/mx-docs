@@ -3,7 +3,7 @@ id: sdk-js-migration-guides
 title: Migration guides
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 This tutorial will guide you through the process of migrating from one major version of **sdk-js** (or one of its _satellites_) to another.
 
@@ -11,7 +11,7 @@ This tutorial will guide you through the process of migrating from one major ver
 Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook), in advance.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Migrate **erdjs** from v9.x to v10 (April of 2022)
 
@@ -21,7 +21,7 @@ The classes responsible with parsing contract results or query responses, and th
 
 Furthermore, we have removed a couple of _previously-thought as utility_ functions, in order to simplify and improve the codebase of **erdjs**.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `Balance` vs. `TokenPayment`
 
@@ -43,7 +43,7 @@ let paymentFungible = TokenPayment.fungibleFromBigInteger(identifier, "1000000",
 let paymentNonFungible = TokenPayment.nonFungible(identifier, nonce);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Transaction broadcasting and fetching
 
@@ -56,7 +56,7 @@ await networkProvider.sendTransaction(tx);
 await networkProvider.getTransaction(txHash)
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Transaction awaiting
 
@@ -69,7 +69,7 @@ let transactionWatcher = new TransactionWatcher(networkProvider);
 await watcher.awaitCompleted(tx);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetching network configuration
 
@@ -83,7 +83,7 @@ let networkConfig = await provider.getNetworkConfig();
 
 Then cache the response, if needed.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Nonce, gas limit, gas price, chain ID
 
@@ -103,7 +103,7 @@ let tx = new Transaction({
 });
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Creating contract queries
 
@@ -118,7 +118,7 @@ let queryResponse = await networkProvider.queryContract(query);
 
  `smartContract.createQuery()` + `provider.queryContract()` have to be used, instead.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Creating interactions using `contract.methods`
 
@@ -146,7 +146,7 @@ let interaction = <Interaction>this.contract.methodsExplicit.getLotteryInfo([
 ]);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Parsing contract results
 
@@ -156,7 +156,7 @@ The functions `getReceipt()`, `getSmartContractResults()` and `getLogs()` of `Tr
 
 In order to parse contract results in erdjs 10, please follow [this guide](/sdk-and-tools/sdk-js/sdk-js-cookbook#parsing-contract-results).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### `EsdtHelpers` and `ScArgumentsParser` vs. `transaction-decoder`
 
@@ -164,7 +164,7 @@ In erdjs 10, the classes `EsdtHelpers` and `ScArgumentsParser` have been removed
 
 Instead, one should reference and use the package [@multiversx/sdk-transaction-decoder](https://www.npmjs.com/package/@multiversx/sdk-transaction-decoder).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### ChainID is now required
 

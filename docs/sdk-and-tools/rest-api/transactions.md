@@ -3,14 +3,14 @@ id: transactions
 title: Transactions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
 Send Transactions to the Blockchain and query information about them.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Send Transaction {#send-transaction}
 
@@ -102,7 +102,7 @@ Content-Type: application/json
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Send Multiple Transactions {#send-multiple-transactions}
 
@@ -204,7 +204,7 @@ Content-Type: application/json
 ]
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Simulate Transaction {#simulate-transaction}
 
@@ -261,7 +261,7 @@ _SimulationResults_
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 🟢 200: OK
 
@@ -280,7 +280,7 @@ Transaction would be successful.
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 🟢 200: Simulation was successful, but the transaction wouldn't be executed.
 
@@ -300,7 +300,7 @@ Invalid Transaction signature.
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 🔴 400: Bad request
 
@@ -317,7 +317,7 @@ Invalid Transaction signature.
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 **Proxy**
 
@@ -342,7 +342,7 @@ Example response for cross-shard transactions:
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--success">POST</span> Estimate Cost of Transaction {#estimate-cost-of-transaction}
 
@@ -411,7 +411,7 @@ Content-Type: application/json
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Transaction** {#get-transaction}
 
@@ -541,7 +541,7 @@ The response can contain additional fields such as `smartContractResults`, or `r
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Transaction Status** {#get-transaction-status}
 
@@ -593,7 +593,7 @@ Transaction status retrieved successfully.
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Transactions Pool** {#get-transactions-pool}
 
@@ -605,7 +605,7 @@ This endpoint isn't available on public gateway. However, it can be used on a lo
 
 This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Default
 
@@ -655,7 +655,7 @@ Transaction status retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Using custom fields
 
@@ -748,7 +748,7 @@ Transaction status retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Transactions Pool for a Sender** {#get-transactions-pool-for-a-sender}
 
@@ -756,7 +756,7 @@ Transaction status retrieved successfully.
 
 This endpoint allows one to fetch all the transactions of a sender from the transactions pool.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Default
 
@@ -806,7 +806,7 @@ Transaction status retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Using custom fields
 
@@ -874,7 +874,7 @@ Transaction status retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get the latest nonce of a sender from Tx Pool** {#get-the-latest-nonce-of-a-sender-from-tx-pool}
 
@@ -917,7 +917,7 @@ Transaction status retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get the nonce gaps of a sender from Tx Pool** {#get-the-nonce-gaps-of-a-sender-from-tx-pool}
 

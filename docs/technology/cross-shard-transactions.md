@@ -3,7 +3,7 @@ id: cross-shard-transactions
 title: Cross Shard Transactions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 For an in depth example of how the cross-shard transactions are being executed and how the communication between shards and the metachain occurs, we are simplifying the entire process to just two shards and the metachain. Assuming that a user generates a transaction from his wallet, which has an address in shard 0 and wants to send EGLD to another user that has a wallet with an address in shard 1, the steps depicted in the figure below are required for processing the cross-shard transaction.
 
@@ -15,7 +15,7 @@ The block’s structure is represented by a block Header that contains informati
 
 There is no limitation on the number of miniblocks with the same sender and receiver in one block. Meaning multiple miniblocks with the same sender and receiver can appear in the same block.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Processing**
 

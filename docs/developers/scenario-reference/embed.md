@@ -3,7 +3,7 @@ id: embed
 title: Embedding scenario code in Go
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 # **Embedding in Go**
 

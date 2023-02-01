@@ -3,7 +3,7 @@ id: protect-keys
 title: Protecting your keys
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Validator Keys are very sensitive:
 

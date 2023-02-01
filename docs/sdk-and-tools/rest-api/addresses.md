@@ -3,14 +3,14 @@ id: addresses
 title: Addresses
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
 Get information about an MultiversX Address.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Address** {#get-address}
 
@@ -87,7 +87,7 @@ Block details retrieved successfully.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Address Nonce** {#get-address-nonce}
 
@@ -129,7 +129,7 @@ Nonce successfully retrieved.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Address Balance** {#get-address-balance}
 
@@ -171,7 +171,7 @@ Balance successfully retrieved.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Address Username (herotag)** {#get-address-username-herotag}
 
@@ -213,7 +213,7 @@ Balance successfully retrieved.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Address Transactions** {#get-address-transactions}
 
@@ -306,7 +306,7 @@ This endpoint is not available on Observer Nodes. It is only available on Multiv
 This endpoint requires the presence of an Elasticsearch instance (populated through Observers) as well.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get Storage Value for Address** {#get-storage-value-for-address}
 
@@ -352,7 +352,7 @@ Value (hex-encoded) successfully retrieved.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## <span class="badge badge--primary">GET</span> **Get all storage for Address** {#get-all-storage-for-address}
 
@@ -398,7 +398,7 @@ Key-value pairs (both hex-encoded) successfully retrieved.
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **ESDT tokens endpoints**
 

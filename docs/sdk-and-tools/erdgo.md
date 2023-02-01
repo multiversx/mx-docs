@@ -3,7 +3,7 @@ id: erdgo
 title: Go SDK
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX SDK for Golang
 

@@ -3,9 +3,9 @@ id: overview
 title: Native Tokens
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## ESDT
 
@@ -23,7 +23,7 @@ Technically, the balances of ESDT tokens held by an account are stored directly 
 
 ESDT tokens can be issued, owned and held by any account on the MultiversX network, which means that both users and smart contracts have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Table of contents
 

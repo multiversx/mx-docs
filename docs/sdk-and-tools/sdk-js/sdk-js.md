@@ -3,7 +3,7 @@ id: sdk-js
 title: sdk-js
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX SDK for TypeScript and JavaScript
 

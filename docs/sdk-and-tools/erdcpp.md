@@ -3,7 +3,7 @@ id: erdcpp
 title: C++ SDK
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX SDK for C++
 

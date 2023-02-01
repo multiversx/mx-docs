@@ -3,9 +3,9 @@ id: gateway-overview
 title: Gateway overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Overview of MultiversX Gateway REST API
 
@@ -13,7 +13,7 @@ The MultiversX's Gateway REST API can be used by any application - dApp, desktop
 The Gateway is backed by the [proxy](/sdk-and-tools/proxy) and the names Gateway or Proxy are often referred as the same thing.
 The difference is that `gateway` is MultiversX's infrastructure backed by the [mx-chain-proxy-go](https://github.com/multiversx/mx-chain-proxy-go) repository.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Proxy API vs. Observer API**
 
@@ -23,13 +23,13 @@ Both the **MultiversX Proxy** and the **Node (Observer)** are designed to expose
 Proxy/Gateway endpoints are referred as `https://gateway.multiversx.com/....`, while node endpoints are referred as `http://localhost:8080/....`.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Authentication**
 
 Currently, authentication is not needed to access the API.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **HTTP Response format**
 

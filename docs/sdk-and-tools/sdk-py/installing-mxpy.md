@@ -3,13 +3,13 @@ id: installing-mxpy
 title: Installing mxpy
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 How to install mxpy
 
 **mxpy** is currently supported on Linux and MacOS. Some of its features might work on Windows as well, although using **mxpy** on Windows is neither recommended, nor supported at this time.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Prerequisites**
 
@@ -28,7 +28,7 @@ For MacOS:
 brew install ncurses
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Install using mxpy-up (recommended)**
 
@@ -41,7 +41,7 @@ python3 mxpy-up.py
 
 This will create a light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv `and also include `~/multiversx-sdk`in your **`$PATH`** variable (by editing the appropriate `.profile` file).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Troubleshooting and other notes**
 
@@ -61,7 +61,7 @@ brew link --force python@3.8
 python3 --version
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Install without mxpy-up**
 
@@ -69,7 +69,7 @@ If you'd like to install without relying on the easy installation script, please
 
 Make sure you also have **pip3** installed.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Prepare PATH**
 
@@ -98,7 +98,7 @@ python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor
 
 You may need to restart your user session for these changes to take effect.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Install and smoke test**
 
@@ -108,7 +108,7 @@ In order to install **mxpy**, issue the following command:
 pip3 install --user --upgrade --no-cache-dir multiversx-sdk-cli
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Troubleshooting**
 

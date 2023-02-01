@@ -3,9 +3,9 @@ id: elastic-search
 title: Elasticsearch
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Overview
 
@@ -17,7 +17,7 @@ Due to the possible high data volume, it's not recommended to use validators as 
 Our implementation uses a concept of a queue and makes sure that everything is being processed. Consensus and synchronization mechanisms can have delays because of the indexing.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Setup
 
@@ -50,13 +50,13 @@ An example of a configuration is:
 
 `EnabledIndexes` array specifies the indices that will be populated.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Proxy support
 
 There are some endpoints in elrond-proxy that rely on an Elasticsearch instance. They can be found [here](/sdk-and-tools/proxy#dependency-on-elastic-search).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Multi-shards
 
@@ -64,7 +64,7 @@ In order to have the history of the entire network, one has to enable elastic in
 Some features that ensure data validity rely on the fact that a node of each shard indexes in the database. For example, the status
 of a cross-shard transaction is decided on the destination shard.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Elasticsearch cluster system requirements
 
@@ -77,14 +77,14 @@ In case of a single machine, our recommendation is as follows:
 - Disk space that can grow up to 3 TB
 - 100 Mbit/s always-on Internet connection
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Clone an Elasticsearch cluster
 
 In order to have all the information about the MultiversX chain in an Elasticsearch cluster (from genesis to current time) one has to copy all the data with a specific tool from an Elasticsearch cluster to another.
 To get more information how to do this use the documentation from this [repository](https://github.com/multiversx/mx-chain-tools-go/tree/main/elasticreindexer).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Elasticsearch indices
 

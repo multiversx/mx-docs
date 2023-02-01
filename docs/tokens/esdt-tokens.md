@@ -3,12 +3,12 @@ id: esdt-tokens
 title: Simple tokens (fungible)
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Introduction**
 
@@ -24,7 +24,7 @@ Technically, the balances of ESDT tokens held by an Account are stored directly 
 
 ESDT tokens can be issued, owned and held by any Account on the MultiversX network, which means that both users _and smart contracts_ have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Issuance of fungible ESDT tokens**
 
@@ -81,7 +81,7 @@ The contract will add a random string to the ticker thus creating the **token id
 Because of the 6 random characters sequence (3 bytes - 6 characters hex encoded), the token identifier cannot be precalculated, thus one has to check the Smart Contract Result of the issue transaction that indicates it. Alternatively, one can check its tokens via Explorer or API and search for the token that starts with the ticker that was chosen when issuing the token.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Parameters format**
 
@@ -106,7 +106,7 @@ Numerical values, such as initial supply or number of decimals, should be the he
 - **48** _decimal_ => **30** _hex encoded_
 - **1000000** _decimal_ => **0f4240** _hex encoded_
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Number of decimals usage**
 
@@ -123,7 +123,7 @@ Therefore, if you own some above-mentioned ALC tokens, and you want to transfer 
 This is only relevant when performing operations via manual transactions over ESDT tokens. The Web Wallet for example already has this feature in place, so you don't have to take care of the number of decimals.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Issuance examples**
 
@@ -153,7 +153,7 @@ If the issue transaction is successful, a smart contract result will mint the re
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also below).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Transfers**
 
@@ -201,7 +201,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Using the transaction in the example above, Alice will transfer 12 AliceTokens to Bob.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Transfers gas limit
 
@@ -246,7 +246,7 @@ ESDT_TRANSFER_GAS_LIMIT = MIN_GAS_LIMIT + data_length * GAS_PER_DATA_BYTE + ESDT
                         = 331,000
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Transfers fee
 
@@ -296,7 +296,7 @@ ESDT_TRANSFER_FEE = gas_price * gas_cost
                   = 0.000133 EGLD
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Transfers to a smart contract**
 
@@ -326,7 +326,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Multiple tokens transfer**
 
@@ -386,7 +386,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Using the transaction in the example above, the receiver should be credited `12 ALC-6258d2` tokens and `3 SFT-1q4r8i` tokens.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Transfers done programmatically**
 
@@ -396,13 +396,13 @@ The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several wa
 self.send().direct_esdt(&address, &esdt_token_name, token_nonce: u64, &amount);
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Token management**
 
 The Account which submitted the issuance request for a custom token automatically becomes the manager of the token (see [Issuance of ESDT tokens](/tokens/esdt-tokens#issuance-of-esdt-tokens)). The manager of a token has the ability to manage the properties, the total supply and the availability of a token. Because smart contracts are Accounts as well, a smart contract can also issue and own ESDT tokens and perform management operations by sending the appropriate transactions, as shown below.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Configuration properties of an ESDT token**
 
@@ -418,13 +418,13 @@ Every ESDT token has a set of properties which control what operations are possi
 - `canAddSpecialRoles` - the token manager can assign a specific role(s)
 - `canCreateMultiShard` - if true, then local mint/burn can be used so the token will be distributed among shards.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Management operations**
 
 The manager of an ESDT token has a number of operations at their disposal, which control how the token is used by other users. These operations can only be performed by the token manager - no other account may perform them. One special exception is the `ESDTBurn` operation, which is available to any Account which holds units of the token in cause.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Minting**
 
@@ -468,7 +468,7 @@ LocalMintTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Burning**
 
@@ -517,7 +517,7 @@ Tokens issued after [release v1.3.42](https://multiversx.com/releases/release-el
 However, for older tokens, a transaction that will set the special role `ESDTRoleLocalBurn` is still necessary. Docs [here](#setting-and-unsetting-special-roles).
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Pausing and Unpausing**
 
@@ -553,7 +553,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 These two operations require that the option `canPause` is set to `true`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Freezing and Unfreezing**
 
@@ -591,7 +591,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 These two operations require that the option `canFreeze` is set to `true`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Wiping**
 
@@ -611,7 +611,7 @@ WipeTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Setting and unsetting special roles**
 
@@ -626,7 +626,7 @@ The special roles available for basic ESDT tokens are:
 
 For NFTs, there are different roles that can be set. You can find them [here](/tokens/nft-tokens#assigning-roles).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### **Set special role**
 
@@ -649,7 +649,7 @@ RolesAssigningTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 #### **Unset special role**
 
@@ -672,7 +672,7 @@ RolesAssigningTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Managing Token Transferability**
 
@@ -701,7 +701,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Transferring token management rights**
 
@@ -725,7 +725,7 @@ After this transaction is processed by the Metachain, any subsequent management 
 
 This operation requires that the option `canChangeOwner` is set to `true`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Upgrading (changing properties)**
 
@@ -773,7 +773,7 @@ UpgradingTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Branding**
 
@@ -790,7 +790,7 @@ will display tokens in accordance to their branding, if any.
 
 A token owner can submit a branding request by opening a Pull Request on [https://github.com/multiversx/mx-assets/](https://github.com/multiversx/mx-assets/).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Submitting a branding request**
 
@@ -816,13 +816,13 @@ Here’s a prefilled template for the .json file to get you started:
 
 The ledgerSignature will be generated by MultiversX. It will give your token “whitelist” status on the Ledger app and enable a more data rich flow for users storing your token on their Ledger hardware wallets. If one wants to set a Ledger signature, request it when opening a PR.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **REST API**
 
 There are a number of API endpoints that one can use to interact with ESDT data. These are:
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address** {#get-all-esdt-tokens-for-an-address}
 
@@ -860,7 +860,7 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--primary">GET</span> **Get balance for an address and an ESDT token** {#get-balance-for-an-address-and-an-esdt-token}
 
@@ -903,7 +903,7 @@ https://gateway.multiversx.com/address/*bech32Address*/esdt/*tokenIdentifier*
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--primary">GET</span> **Get all roles for tokens of an address** {#get-all-roles-for-tokens-of-an-address}
 
@@ -941,7 +941,7 @@ https://gateway.multiversx.com/address/*bech32Address*/esdts/roles
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--primary">GET</span> **Get token's supply, burnt and minted values** {#get-tokens-supply-burnt-and-minted-values}
 
@@ -983,7 +983,7 @@ https://gateway.multiversx.com/network/esdt/supply/*token name*
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens** {#get-all-issued-esdt-tokens}
 
@@ -1024,7 +1024,7 @@ https://gateway.multiversx.com/network/esdts
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 2. Fungible tokens
 
@@ -1061,7 +1061,7 @@ https://gateway.multiversx.com/network/esdt/fungible-tokens
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 3. Semi-fungible tokens
 
@@ -1098,7 +1098,7 @@ https://gateway.multiversx.com/network/esdt/semi-fungible-tokens
 
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 4. Non-fungible tokens
 
@@ -1133,7 +1133,7 @@ https://gateway.multiversx.com/network/esdt/non-fungible-tokens
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--primary">GET</span> **Parse fungible tokens transfer logs** {#parse-fungible-tokens-transfer-logs}
 
@@ -1198,7 +1198,7 @@ In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> **Get ESDT token properties** {#get-esdt-token-properties}
 
@@ -1309,7 +1309,7 @@ The `returnData` member will contain an array of the properties in a fixed order
 </TabItem>
 </Tabs>
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> **Get special roles for a token** {#get-special-roles-for-a-token}
 

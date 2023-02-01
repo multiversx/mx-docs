@@ -3,7 +3,7 @@ id: staking-smart-contract
 title: The Staking Smart Contract
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 # **Staking**
 
@@ -45,7 +45,7 @@ Because this transaction is a call to the Staking smart contract, it passes info
 - `67656e65736973` is the aforementioned reserved placeholder, repeated;
 - `optional_reward_address_HEX_ENCODED` is the address of the account which will receive the rewards for the staked nodes (decoded from its usual Bech32 representation into binary, then re-encoded to a hexadecimal string).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Changing the reward address**
 
@@ -71,7 +71,7 @@ ChangeRewardAddressTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Unstaking**
 
@@ -107,7 +107,7 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Unbonding**
 
@@ -141,7 +141,7 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Unjailing**
 
@@ -173,7 +173,7 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Claiming unused tokens from Staking**
 

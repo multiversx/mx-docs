@@ -3,9 +3,9 @@ id: multiple-chains
 title: Multiple chains
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Support for Multiple Chains for the same token
 The **BridgedTokensWrapper (6)** contract facilitates the use case of having the same token on multiple chains. It accepts the chain-specific ESDT token and mints a universal ESDT token that can be used on any application within the MultiversX network. The universal ESDT token can be converted back to the chain-specific ESDT token using the **BridgedTokensWrapper (6)** contract. This process burns the given universal tokens and sends the chain-specific ESDT tokens to the user.

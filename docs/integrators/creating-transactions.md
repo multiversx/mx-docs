@@ -3,9 +3,9 @@ id: creating-transactions
 title: Creating Transactions
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Transaction structure**
 
@@ -26,7 +26,7 @@ As described in section [Signing Transactions](/developers/signing-transactions)
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **SDK and tools support for creating and signing transactions**
 
@@ -40,7 +40,7 @@ transactions creation and signing:
 - [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
 - [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **General network parameters**
 
@@ -59,7 +59,7 @@ General network parameters, such as the **chain ID**, **the minimum gas price**,
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Nonce management**
 
@@ -69,7 +69,7 @@ The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tool
 
 **The nonce must be a strictly increasing number, scoped to a given sender.** The sections below describe common issues and possible solutions when managing the nonce for transaction construction.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Issue: competing transactions**
 
@@ -81,7 +81,7 @@ Avoid competing transactions by maintaining a strictly increasing nonce sequence
 
 Although an explicit _transaction cancellation trigger_ is not yet available in the Network, cancellation of a transaction T1 with nonce 42 could be _possible_ if one broadcasts a second transaction T2 with same nonce 42, with higher gas price (and without a value to transfer) **immediately** (e.g. 1 second) after broadcasting T1.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Issue: nonce gaps**
 
@@ -91,7 +91,7 @@ If broadcasted transactions have their nonces higher than the current account no
 Avoid nonce gaps by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### **Issue: fetching a stale account nonce**
 
@@ -110,19 +110,19 @@ Avoid fetching stale account nonces by **periodically recalling the nonce.**
 Avoid recalling the nonce in between **rapidly sequenced transactions from the same sender** . For rapidly sequenced transactions, you have to programmatically manage, keep track of the account nonce using a **local mirror (copy) of the account nonce** and increment it appropriately.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Gas limit computation**
 
 Please follow [Gas and Fees](/developers/gas-and-fees/overview/).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Signing transactions**
 
 Please follow [Signing Transactions](/developers/signing-transactions).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Simulate transaction execution**
 

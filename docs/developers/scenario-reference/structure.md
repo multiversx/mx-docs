@@ -3,9 +3,9 @@ id: structure
 title: Scenario Structure
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Top level**
 
@@ -26,7 +26,7 @@ The top-level fields are as follows:
 - `comment` (optional) - it is possible to have some comment; this doesn’t have any effect on test execution
 - `steps` - the core of the scenario. Running a scenario means going through a number of different steps. There are several step types, we will go through each, one by one. Note that each item in this list will be a JSON map with a `step` field that discriminates the step type.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `externalSteps`**
 
@@ -49,7 +49,7 @@ The imported steps will be run or re-run every time they are imported. There is 
 
 Also beware that there is currently no protection against cyclic imports.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `setState`**
 
@@ -180,7 +180,7 @@ Not all of its sections are required each time. These sections are:
     - `blockRound`
     - `blockEpoch`
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `checkState`**
 
@@ -266,7 +266,7 @@ Fields:
   - `code` - expected smart contract code, or `"*"` to skip check
   - `asyncCallData` - this field is set by asynchronous calls and when contracts send funds to an account
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `dumpState`**
 
@@ -279,7 +279,7 @@ Simply prints the entire state of the blockchain mock to the console.
 }
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `scCall`**
 
@@ -368,7 +368,7 @@ This step simulates a transaction to an existing smart contract. Fields:
   - `gas` - indicates the gas remaining for the transaction (`gasLimit` - gas consumed). To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
   
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `scQuery`**
 
@@ -423,7 +423,7 @@ Fields:
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `scDeploy`**
 
@@ -472,7 +472,7 @@ The fields are:
 
 Please note: cannot transfer ESDT during contract deploy. If you need to feed ESDTs to a contract when deploying, send them with a `scCall` immediately after deploy.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `transfer`**
 
@@ -516,7 +516,7 @@ The fields are:
   - `egldValue` - EGLD value
   - `esdtValue` - same as `scCall`
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Step type: `validatorReward`**
 

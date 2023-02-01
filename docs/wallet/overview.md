@@ -3,9 +3,9 @@ id: overview
 title: Wallets - Overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## MultiversX Wallets
 
@@ -14,7 +14,7 @@ key to sign transactions and perform various actions, one needs a wallet.
 
 There are multiple ways you can store your funds. This page will present some of them.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Table of contents
 

@@ -3,9 +3,9 @@ id: overview
 title: Developers - Overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Developer documentation
 
@@ -16,11 +16,11 @@ API.
 For interacting with MultiversX Blockchain via SDKs or Rest API, please refer to [SDKs & Tools](/sdk-and-tools/overview).
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Table of contents
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Tutorials
 
@@ -36,7 +36,7 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 | [Custom Wallet Connect](/developers/tutorials/custom-wallet-connect)                | Custom Wallet Connect tutorial.                                  |
 | [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract. |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Signing transactions
 
@@ -48,7 +48,7 @@ The following content explain the structure of a transaction, how to sign or sen
 | [Tools for signing](/developers/signing-transactions/tools-for-signing)              | What to use in order to generate and sign transactions. |
 | [Signing programatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Gas and fees
 
@@ -61,7 +61,7 @@ Learn about transaction's gas and how a fee is calculated
 | [For System Smart Contracts](/developers/gas-and-fees/system-smart-contracts)             | How fees are computed when interacting with system smart contracts.       |
 | [For User defined Smart Contracts](/developers/gas-and-fees/user-defined-smart-contracts) | How fees are computed when interacting with user defined smart contracts. |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Smart Contract Developer reference
 
@@ -82,7 +82,7 @@ Learn about transaction's gas and how a fee is calculated
 | [Rust smart contract build reference](/developers/developer-reference/sc-build-reference)                                | How to build and organize your Smart Contract.                                                  |
 | [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                                   | How to generate random number in Smart Contracts.                                               |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Smart Contract Developers Best Practices
 
@@ -93,7 +93,7 @@ Learn about transaction's gas and how a fee is calculated
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
 | [Multi values](/developers/best-practices/multi-values)                                     | Take advantage of the variadic input and output.   |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Scenarios Reference
 
@@ -105,7 +105,7 @@ Learn about transaction's gas and how a fee is calculated
 | [Scenario Complex Values](/developers/scenario-reference/values-complex) | Handle complex values in scenario tests.                   |
 | [Embedding Scenario code in GO](/developers/scenario-reference/embed)    | How to embed scenario code in Go.                          |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Others
 

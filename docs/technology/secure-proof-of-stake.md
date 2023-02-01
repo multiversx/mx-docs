@@ -3,7 +3,7 @@ id: secure-proof-of-stake
 title: Secure Proof of Stake
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 MultiversX's approach for consensus is called Secure Proof of Stake (SPoS). It innovates in the manner in which validator nodes are selected for consensus out of a shard and also in the steps taken by the validators to complete the consensus process as efficiently as possible. Let's take a look.
 

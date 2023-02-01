@@ -3,17 +3,17 @@ id: chronology
 title: Chronology
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 Following the common Proof-of-Stake principles, the MultiversX network organizes time into rounds and epochs, where a fixed number of consecutive rounds form an epoch. The first round of the first epoch ever is called the _genesis round_, which contains the bootstrapping phase of the network.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Rounds**
 
 Each round has a fixed time duration, consistent across the network, currently decided to be 6 seconds. In [Architecture overview](/technology/architecture-overview) we mentioned that the MultiversX network is sharded. Because all shards process transactions in parallel and _in lock-step_, it means that in each round, inside a shard, at most one block may be added to the shard's blockchain. There may be rounds where no block is added to the blockchain, for example when consensus is not reached or when the designated consensus group leader is offline and cannot propose a block.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Epochs**
 

@@ -3,15 +3,15 @@ id: es-index-operations
 title: operations
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The _id field of this index is represented by the transactions OR smart contract result hash, in a hexadecimal encoding.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -23,11 +23,11 @@ The unified structure will contain an extra field in order to be able to differe
 |-------|------------------------------------------------------------------------------------------------|
 | type  | It can be `normal` in case of a transaction and `unsigned` in case of a smart contract result. |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Query examples
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch the latest operations of an address
 

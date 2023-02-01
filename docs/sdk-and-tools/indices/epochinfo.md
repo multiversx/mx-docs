@@ -3,15 +3,15 @@ id: es-index-epochinfo
 title: epochinfo
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is represented by epoch.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -20,11 +20,11 @@ The `_id` field of this index is represented by epoch.
 | accumulatedFees  | The accumulatedFees field represents the accumulated fees that were payed in the epoch.    |
 | developerFees    | The developerFees field represents the developer fees that were accumulated in the epoch.  |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Query examples
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch accumulatedFees and developerFees for a specific epoch
 

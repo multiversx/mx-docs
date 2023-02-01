@@ -3,7 +3,7 @@ id: faq
 title: FAQs
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 **How to choose a VPS?**
 

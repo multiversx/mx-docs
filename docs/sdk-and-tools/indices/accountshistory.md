@@ -3,15 +3,15 @@ id: es-index-accountshistory
 title: accountshistory
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is composed in this way: `{bech32address}_{timestamp}` (example: `erd.._1234`).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -22,11 +22,11 @@ The `_id` field of this index is composed in this way: `{bech32address}_{timesta
 | isSender  | The isSender field is true if the address was the sender when the balance has changed.                                                                                                |
 | timestamp | The timestamp field represents the timestamp when the address balance was changed.                                                                                                    |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Query examples
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch the latest 10 entries for an address sorted by timestamp
 

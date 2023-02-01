@@ -3,13 +3,13 @@ id: overview
 title: Validators - Overview
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Table of contents
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Install and maintain a node
 
@@ -18,7 +18,7 @@ title: Validators - Overview
 | [System requirements](/validators/system-requirements)                            | System requirements for running an MultiversX node.                      |
 | [Install a Mainnet/Testnet/Devnet Node](/validators/nodes-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Keys Management
 
@@ -28,7 +28,7 @@ title: Validators - Overview
 | [Wallet keys](/validators/key-management/wallet-keys)           | Learn about a wallet key.           |
 | [Protecting your keys](/validators/key-management/protect-keys) | Learn how you can secure your keys. |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Staking
 
@@ -39,7 +39,7 @@ title: Validators - Overview
 | [How to unJail a Node](/validators/staking/unjailing)                               | Learn how to unJail a node.                                   |
 | [The Staking Smart Contract](/validators/staking/staking-smart-contract)            | How to interact with the Smart Contract that manages Staking. |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Delegation Manager
 
@@ -49,7 +49,7 @@ title: Validators - Overview
 | [How to convert an existing Validator into a Staking Pool](/validators/staking/convert-existing-validator-into-staking-pool) | Learn how to create a new Staking Provider, starting from an existing Validator.             |
 | [Merge an existing Validator into a Staking Pool](/validators/staking/merge-validator-delegation-sc)                         | Learn how to merge a validator into a Staking Provider.                                      |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Useful
 
@@ -65,7 +65,7 @@ title: Validators - Overview
 | [Useful link & tools](/validators/useful-links)          | Useful links about the explorer, wallet and some guides.                                                          |
 | [FAQ](/validators/faq)                                   | Frequently Asked Questions about nodes.                                                                           |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Overview
 
@@ -75,7 +75,7 @@ We will call a _node_ any running instance of the software application developed
 
 We will call a _node operator_ any person or entity who manages one or more nodes. These pages are for them.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Background
 

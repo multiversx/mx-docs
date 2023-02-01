@@ -3,15 +3,15 @@ id: es-index-accountsesdt
 title: accountsesdt
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}` (example: `erd.._abcd-0123-01`).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -37,11 +37,11 @@ Docs with a non-empty `tokenNonce` field will have the `data` field populated wi
 | attributes         | The attributes field contains the attributes of the token.                                                                                                                                                        |
 | nonEmptyURIs       | The nonEmptyURIs field is true if the token has non empty uris.                                                                                                                                                   |
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## Query examples
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch addresses that hold a specific token, sorted by balance (top holders of a token)
 
@@ -69,7 +69,7 @@ curl --request GET \
 }'
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ### Fetch all the ESDT tokens in an address wallet
 

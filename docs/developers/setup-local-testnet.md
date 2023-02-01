@@ -3,7 +3,7 @@ id: setup-local-testnet
 title: Setup a Local Testnet
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 This guide describes how to set up a local mini-testnet using **mxpy**. The purpose of a local mini-testnet is to allow developers to experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
 
@@ -16,13 +16,13 @@ The mini-testnet contains:
 
 If not specified otherwise, the mini-testnet starts with one Shard plus the Metachain (each with one Validator and one Observer).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Prerequisites: mxpy**
 
 In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Prerequisites: Node and Proxy**
 
@@ -32,7 +32,7 @@ Run the following command, which will fetch the prerequisites (`mx-chain-go`, `m
 $ mxpy testnet prerequisites
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Testnet Configuration**
 
@@ -75,7 +75,7 @@ The development wallets (Alice, Bob, Carol, ..., Mike) **are publicly known** - 
 
 The development wallets are minted at genesis and their keys (both PEM files and Wallet JSON files) can be found in the folder `testnet/wallets/users`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Starting the Testnet**
 
@@ -89,7 +89,7 @@ This will start the Seednode, the Validators, the Observers and the Proxy.
 Note that the Proxy starts with a delay of about 30 seconds.
 :::
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Sending transactions**
 
@@ -110,7 +110,7 @@ $ curl http://localhost:7950/transaction/1dcfb2227e32483f0a5148b98341af319e9bd28
 $ mxpy tx get --hash=1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1418f7
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Deploying and interacting with Smart Contracts**
 
@@ -150,7 +150,7 @@ Query Contract
 mxpy --verbose contract query erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq --function=get
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Simulating transactions**
 

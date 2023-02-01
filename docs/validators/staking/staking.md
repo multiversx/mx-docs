@@ -3,9 +3,9 @@ id: staking
 title: Staking & Unstaking
 ---
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Introduction**
 
@@ -24,7 +24,7 @@ There are currently 2 supported methods of constructing and submitting these tra
 
 The following pages will describe both approaches in each specific case.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Prerequisites**
 
@@ -35,7 +35,7 @@ In order to submit a staking transaction, you must have the following:
 
 You have the option of staking through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/) or by using `mxpy`.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Staking through the Wallet**
 
@@ -68,7 +68,7 @@ You have the option of staking through the online Wallet at [https://wallet.mult
 
 ![staking6](/validators/staking6.png)
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Staking through mxpy**
 
@@ -84,7 +84,7 @@ The version reported by this command must be at least `mxpy 0.8.0`, or higher. I
 
 Make sure `mxpy` is installed and has the latest version before continuing.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **Your Wallet PEM file**
 
@@ -94,7 +94,7 @@ Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/der
 
 After the PEM file was generated, you can issue transactions from `mxpy`directly.
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **The staking transaction**
 
@@ -147,7 +147,7 @@ For two nodes, it becomes this:
 mxpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
 
-[comment]: # (mx-context)
+[comment]: # (mx-context-auto)
 
 ## **The --reward-address parameter**
 
