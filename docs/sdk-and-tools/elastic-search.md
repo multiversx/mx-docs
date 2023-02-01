@@ -5,7 +5,7 @@ title: Elasticsearch
 
 ## Overview
 
-An MultiversX node can enable the indexing within an Elasticsearch instance. Indexed data will serve as historical data source
+A MultiversX node can enable the indexing within an Elasticsearch instance. Indexed data will serve as historical data source
 that can be used as it is for searching purposes or to serve a front-end application.
 
 :::tip

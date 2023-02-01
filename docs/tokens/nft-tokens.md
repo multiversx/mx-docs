@@ -368,36 +368,38 @@ Please note that each argument must be encoded in hexadecimal format with an eve
 ### **Supported Media Types**
 
 Below you can find a table with the supported media types for NFTs available on MultiversX network.
-|**Media Extension**|**Media Type**|
-|-------------------|--------------|
-|.png|image/png|
-|.jpeg|image/jpeg|
-|.jpg|image/jpg|
-|.gif|image/gif|
-|.webp|image/webp|
-|.svg|image/svg|
-|.svg|image/svg+xml|
-|.acc|audio/acc|
-|.flac|audio/flac|
-|.m4a|audio/m4a|
-|.mp3|audio/mp3|
-|.wav|audio/wav|
-|.mov|video/mov|
-|.quicktime|video/quicktime|
-|.mp4|video/mp4|
-|.webm|video/webm|
+
+| Media Extension | Media Type      |
+|-----------------|-----------------|
+| .png            | image/png       |
+| .jpeg           | image/jpeg      |
+| .jpg            | image/jpg       |
+| .gif            | image/gif       |
+| .webp           | image/webp      |
+| .svg            | image/svg       |
+| .svg            | image/svg+xml   |
+| .acc            | audio/acc       |
+| .flac           | audio/flac      |
+| .m4a            | audio/m4a       |
+| .mp3            | audio/mp3       |
+| .wav            | audio/wav       |
+| .mov            | video/mov       |
+| .quicktime      | video/quicktime |
+| .mp4            | video/mp4       |
+| .webm           | video/webm      |
 
 ### **Example**
 
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
-| Property | Plain value | Encoded value |
-|----------|-------------|---------------|
-|**NFT Name**| Beautiful song | 42656175746966756c20736f6e67 |
-|**Quantity**| 1 | 01|
-|**Royalties**| 7500 _=75%_ | 1d4c |
-|**Hash** | 00 | 00 |
-|**Attributes**| metadata:_ipfsCID/song.json_;tags:song,beautiful,music | 6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963 |
-|**URI**| _URL_to_decentralized_storage/song.mp3_ | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033 |
+
+| Property       | Plain value                                            | Encoded value                                                                                            |
+|----------------|--------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| **NFT Name**   | Beautiful song                                         | 42656175746966756c20736f6e67                                                                             |
+| **Quantity**   | 1                                                      | 01                                                                                                       |
+| **Royalties**  | 7500 _=75%_                                            | 1d4c                                                                                                     |
+| **Hash**       | 00                                                     | 00                                                                                                       |
+| **Attributes** | metadata:_ipfsCID/song.json_;tags:song,beautiful,music | 6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963 |
+| **URI**        | _URL_to_decentralized_storage/song.mp3_                | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033                               |
 
 In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
 
@@ -670,7 +672,7 @@ Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
 
 The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`. Note that the `05dc` is hexadecimal encoded, it represents decimal 1500.
 
-Also note that an MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/multiversx/mx-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
+Also note that a MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/multiversx/mx-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 :::
 
 ## **Transfers to a Smart Contract**
@@ -956,7 +958,7 @@ https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 </TabItem>
 <TabItem value="Response">
 
-```json
+```rust
 {
  "data": {
   "transaction": {

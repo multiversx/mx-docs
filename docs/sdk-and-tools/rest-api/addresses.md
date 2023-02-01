@@ -6,7 +6,7 @@ title: Addresses
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Get information about an MultiversX Address.
+Get information about a MultiversX Address.
 
 ## <span class="badge badge--primary">GET</span> **Get Address** {#get-address}
 

@@ -195,6 +195,7 @@ const sidebars = {
           }
         ]
       },
+      "sdk-and-tools/notifier",
       {
         type: "category",
         label: "SDKs",
