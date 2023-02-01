@@ -14,6 +14,8 @@ Official resources:
 - Telegram Validators Chat: https://t.me/MultiversXValidators
 - Telegram Bot for Staking & Validators: https://t.me/ElrondNetwork_Bot
 
+[comment]: # (mx-context)
+
 Community resources:
 
 - Zabbix monitoring guide: https://thepalmtree.network/zabbix-elrond-guide

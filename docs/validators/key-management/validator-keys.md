@@ -5,6 +5,9 @@ title: Validator Keys
 
 [comment]: # (mx-context-auto)
 
+Each validator required a private key to be used for signing blocks. This key is called the **Validator Key**.
+The Validator Key is also used to sign the consensus messages that the validator sends to the other validators.
+
 [comment]: # (mx-context-auto)
 
 ## Validator key format

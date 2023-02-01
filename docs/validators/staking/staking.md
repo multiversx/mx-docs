@@ -5,6 +5,8 @@ title: Staking & Unstaking
 
 [comment]: # (mx-context-auto)
 
+This page will guide you through the process of staking and unstaking nodes.
+
 [comment]: # (mx-context-auto)
 
 ## **Introduction**

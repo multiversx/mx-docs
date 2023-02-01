@@ -5,6 +5,8 @@ title: Validators - Overview
 
 [comment]: # (mx-context-auto)
 
+This page provides an overview of the Validator Nodes and the associated Tools.
+
 [comment]: # (mx-context-auto)
 
 ## Table of contents

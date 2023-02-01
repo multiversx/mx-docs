@@ -3,6 +3,11 @@ id: whitelist-requirements
 title: Whitelist requirements
 ---
 
+[comment]: # (mx-context)
+
+Before enabling a token to be sent via the Ad-Astra bridge, the token must be whitelisted. 
+The whitelisting process is performed with the help of the MultiversX team.
+
 [comment]: # (mx-context-auto)
 
 1. The MultiversX team must whitelist the token on both the Safe(1) and Safe(3) contracts. Only whitelisted tokens can be bridged.
