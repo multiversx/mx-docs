@@ -5,9 +5,14 @@ title: Accounts Management
 
 Managing Wallets and Addresses
 
+[comment]: # (How to integrate a centralised exchange with the Network?)
+[comment]: # (How to integrate an exchange with the Network?)
+
 :::tip
 If integrating a **system** with the **Network** involves transfers between different users (accounts) - a good example for this case is the integration between an **exchange system** and the **Network** - the recommended approach is to have **a MultiversX Account (Address) for each user of the system**.
 :::
+
+[comment]: # (How to create accounts or wallets?)
 
 Accounts creation can be achieved through different approaches:
 

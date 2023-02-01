@@ -7,6 +7,8 @@ This section provides high-level technical requirements of integrating the Multi
 
 ## Overview
 
+[comment]: # (How to integrate MultiversX into my business?)
+
 In order to make possible for a platform to integrate EGLD transactions for its users, these are the minimum requirements:
 
 - [setting up an observing squad](/integrators/observing-squad)
@@ -28,6 +30,9 @@ In order to summarize the information and bring all the pieces together, this se
 The integrator has an observing squad (an observer on each shard + proxy) running and synced.
 
 ### 2. Getting hyperblock by nonce
+
+[comment]: # (How to get the latest processed block?)
+[comment]: # (How to get the tip of the chain?)
 
 The system should always memorize the last processed nonce. After processing a hyperblock at a given nonce, it should
 move on to the hyperblock that corresponds to the next nonce (when available, if not already existing).
@@ -68,6 +73,9 @@ For example, when the system is up, it should start processing from a nonce in t
 ...
 ```
 
+[comment]: # (What are best practices for integrators?)
+[comment]: # (What to care about when fetching and handling hyperblocks?)
+
 :::caution
 Keep in mind that a hyperblock shouldn't be processed twice as this might cause issues.
 Make sure the block processing and the saving of the last processed nonce should be atomic.
@@ -81,6 +89,8 @@ The system fetches the response and iterates over each successful transaction an
 
 After identifying a relevant transaction in step 2.3 (the sender or the receiver is an integrator's address) actions could be taken on integrator's side.
 
+[comment]: # (What are best practices for integrators?)
+
 It is recommended that the integrator performs some balances checks before triggering internal transfers.
 
 For example, if the receiver is an integrator's address, the integrator can update its balance on internal storage systems.
@@ -93,9 +103,17 @@ For example, if the receiver is an integrator's address, the integrator can upda
 
 ## Finality of the transactions / number of confirmations
 
+[comment]: # (How to check for final transactions?)
+[comment]: # (How about transaction finality?)
+[comment]: # (Does a hyperblock only include final transactions?)
+[comment]: # (What transactions are there in a hyperblocks?)
+
 The hyperblock includes only finalized transactions so only one confirmation is needed. The integrator however has the flexibility to wait for any number of additional confirmations.
 
 ## Balances check
+
+[comment]: # (What are best practices for integrators?)
+[comment]: # (How to get the balance of an account?)
 
 From time to time, or for safety reasons before performing a transaction, an integrator would want to check the balance of some
 addresses. This can be performed via [Get address balance endpoint](/sdk-and-tools/rest-api/addresses#get-address-balance).
@@ -106,6 +124,8 @@ MultiversX SDKs or tools can be used for signing transactions and performing acc
 
 A complete list and more detailed information can be found on the [accounts management](/integrators/accounts-management) and
 [signing transaction](/integrators/creating-transactions) sections.
+
+[comment]: # (What are best practices for integrators?)
 
 There is also an example that matches the above-presented workflow and can be found on the Go SDK for MultiversX, [erdgo](https://github.com/multiversx/mx-sdk-erdgo/tree/main/examples/examplesFlowWalletTracker).
 

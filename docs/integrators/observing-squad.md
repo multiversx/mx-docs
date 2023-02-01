@@ -5,7 +5,11 @@ title: Observing Squad
 
 The N+1 setup for connecting to the MultiversX Network
 
+[comment]: # (Do I need to set up an observing squad?)
+
 In order to integrate with the MultiversX Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
+
+[comment]: # (What is an observing squad?)
 
 An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each Shard, including the Metachain) plus an [**MultiversX Proxy**](/sdk-and-tools/proxy) instance which will connect to these Observers and provide an HTTP API (by delegating requests to the Observers).
 
@@ -13,9 +17,14 @@ An Observing Squad is defined as a set of `N` **Observer Nodes** (one for each S
 Currently the MultiversX Mainnet has 3 Shards, plus the Metachain. Therefore, the Observing Squad is composed of 4 Observers and one Proxy instance.
 :::
 
+[comment]: # (Can I watch the network in an unified manner, as opposed to watching individual shards?)
+
 By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of MultiversX's sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
 
 ## **System requirements**
+
+[comment]: # (Is it costly to set up an observing squad?)
+[comment]: # (Can I install an observing squad on a single computer?)
 
 The Observing Squad can be installed on multiple machines or on a single, but more powerful machine.
 
@@ -43,6 +52,10 @@ These specs are only a recommendation. Depending on the load over the API or the
 
 ## **Installation and Configuration**
 
+[comment]: # (What are DB lookup extensionss?)
+[comment]: # (Do I need to enable DB lookup extensions?)
+[comment]: # (How to enable support for the Hyperblock API?)
+
 The Observing Squad can be set up using the [installation scripts](/validators/nodes-scripts/config-scripts/). Within the installation process, the `DBLookupExtension` feature (required by the Hyperblock API) will be enabled by default.
 
 Clone the installer repository:
@@ -59,6 +72,8 @@ ENVIRONMENT="mainnet"
 CUSTOM_HOME="/home/ubuntu"
 CUSTOM_USER="ubuntu"
 ```
+
+[comment]: # (How to save logs locally?)
 
 Additionally, you might want to set the following option, so that the logs are saved within the `logs` folder of the node:
 
@@ -108,6 +123,9 @@ After running the commands above, the upgraded Observing Squad will start again.
 
 ## **Monitoring and trivial checks**
 
+[comment]: # (Is my observer running?)
+[comment]: # (Is there an issue with my observing squad?)
+
 One can monitor the running Observers using the **termui** utility (installed during the setup process itself in the `CUSTOM_HOME="/home/ubuntu"
 ` folder), as follows:
 
@@ -127,11 +145,15 @@ curl http://localhost:8082/node/status | jq    # Shard 2
 curl http://localhost:8083/node/status | jq    # Metachain
 ```
 
+[comment]: # (How to check Proxy logs?)
+
 The Proxy does not offer a **termui** monitor, but its activity can be inspected using **journalctl**:
 
 ```bash
 journalctl -f -u elrond-proxy.service
 ```
+
+[comment]: # (How to check the latest hyperblock?)
 
 Optionally, one can perform the following smoke test in order to fetch the latest synchronized hyperblock:
 
@@ -142,6 +164,9 @@ curl http://localhost:8079/hyperblock/by-nonce/$NONCE | jq
 ```
 
 ## **Setup via Docker**
+
+[comment]: # (Can I use Docker to set up an observer?)
+[comment]: # (Can I use Docker to set up an observing squad?)
 
 The Observing Squad can be also set up using Docker.
 
