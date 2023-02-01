@@ -13,14 +13,29 @@ https://github.com/multiversx/mx-chain-notifier-go.
 
 ## Architectural Overview
 
-Any observer node in the network can be connected to notifier service. The observer will send
-HTTP POST requests to notifier containing the block events data. The notifier service will
+Any observer node in the network can be connected to notifier service.
+The observer will send block events to notifier. The notifier service will
 receive and filter events, it will apply deduplication if enabled, and it will push the events
 to RabbitMQ instance, or push them to websockets subscribers.
 
+:::important
+At least one observer for each shard in order to handle all the events in the chain.
+:::
+
 ![img](/technology/notifier-overview.png)
 
-## Setup
+In the figure above:
+- The observer nodes will push block events to Notifier instance, via HTTP POST requests. There are several endpoints for these:
+    - `/events/push` (POST) -> it will handle all events for each round
+    - `/events/revert` (POST) -> if there is a reverted block, the event will be
+      pushed on this route
+    - `/events/finalized` (POST) -> when the block has been finalized, the events
+      will be pushed on this route
+- Notifier check locker service (via Redis) and apply deduplication
+- Notifier will push events to RabbitMQ if enabled, or via Websockets. If Websockets will be enabled an additional endpoint will be available:
+    - `/hub/ws` (GET) - this route can be used to manage the websocket connection subscription
+
+## Set up observer and notifier
 
 ### Observer Client
 
@@ -130,26 +145,61 @@ The `Redis` section includes the following parameters as described below:
 ```
 
 For more details on notifier service setup, please follow the **Install** and **Launching**
-sections from README in the repository https://github.com/multiversx/mx-chain-notifier-go.
+sections from [README](https://github.com/multiversx/mx-chain-notifier-go) in the repository.
 
-## Subscribers
+### Subscribers
 
 Currently there are 2 supported subscribing solutions:
 * RabbitMQ
 * Websocket
 
+The subscribing solution is selected based on a CLI parameter, please check
+[README](https://github.com/multiversx/mx-chain-notifier-go) from public
+github repository for more info on the CLI parameters.
+
+In the notifier configuration directory (`cmd/notifier/config`), in `config.toml` there is
+a separate section `RabbitMQ`, which can be used to set up rabbitMQ connection url and
+exchanges. The exchanges will be created automatically (if they are not already created) on
+notifier service start.
+
+```toml
+[RabbitMQ]
+    # The url used to connect to a rabbitMQ server
+    # Note: not required for running in the notifier mode
+    Url = "amqp://guest:guest@localhost:5672"
+
+    # The exchange which holds all logs and events
+    [RabbitMQ.EventsExchange]
+        Name = "all_events"
+        Type = "fanout"
+
+    # The exchange which holds revert events
+    [RabbitMQ.RevertEventsExchange]
+        Name = "revert_events"
+        Type = "fanout"
+
+    ...
+```
+
 :::tip
-It is recommended to use the setup with RabbitMQ.
+It is recommended to use the setup with RabbitMQ, if it is very important to avoid losing any event.
 :::
 
-There are multiple event types. In RabbitMQ there is a separate exchange for each event type,
-in WS setup, there is a event type field in each message.
+## Events
+
+There are multiple event types:
+- Push Block event: when the block is commited, it contains logs and events
+- Revert Block event: when the block is reverted
+- Finalized Block event: when the block is finalized
+
+In RabbitMQ there is a separate exchange for each event type.
+In Websockets setup, there is a event type field in each message.
 
 The WS event is defined as following:
 
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
-| Type       | The type field defines the event type, it can be one of the followins: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events after the filtering. |
+| Type       | The type field defines the event type, it can be one of the followins: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events. |
 | Data       | Serialized data corresponding to the event type. |
 
 ### Push Event
