@@ -5,8 +5,6 @@ title: Scenario Structure
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Top level**
 
 A scenario test file is essentially a collection of steps to be performed on a mock blockchain. The simplest such file looks like this:
@@ -367,7 +365,7 @@ This step simulates a transaction to an existing smart contract. Fields:
     - `data` - same as the topics, but this is not indexed, cannot perform searches on data. Can be of any length (or sometimes empty).
   - `gas` - indicates the gas remaining for the transaction (`gasLimit` - gas consumed). To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
-  
+
 [comment]: # (mx-context-auto)
 
 ## **Step type: `scQuery`**

@@ -5,8 +5,6 @@ title: operations
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The _id field of this index is represented by the transactions OR smart contract result hash, in a hexadecimal encoding.

@@ -5,8 +5,6 @@ title: rounds
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field of this index is composed in this way: `{shardID}_{round}` (example: `2_10905514`)

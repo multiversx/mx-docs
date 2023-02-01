@@ -5,8 +5,6 @@ title: miniblocks
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The _id field of this index is represented by the miniblock hash, in a hexadecimal encoding.

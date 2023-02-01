@@ -5,8 +5,6 @@ title: delegators
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field of this index is composed in this way: `blake2bHash(delegatorAddress+stakingProviderAddress)`, in a base64 encoding (example: `YZNG+r3ZwFtOj0c057MnpVnXAfmSqLai15lusLWg+KM=`).

@@ -3,8 +3,6 @@ id: node-upgrades
 title: MultiversX Node upgrades
 ---
 
-[comment]: # (mx-context-auto)
-
 As opposed to a hard fork, which is a change in the protocol that is not backward compatible, MultiversX performs regular node upgrades, which are changes in the protocol 
 that are backward compatible and bring new features, improvements and bugs fixes. Nodes operators must be aware of the upgrade process and the steps they need to take in order
 to avoid any downtime.

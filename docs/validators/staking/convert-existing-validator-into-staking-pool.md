@@ -3,8 +3,6 @@ id: convert-existing-validator-into-staking-pool
 title: Convert An Existing Validator Into A Staking Pool
 ---
 
-[comment]: # (mx-context-auto)
-
 Staking Phase 3.5 introduced the ability for an existing Validator to create a new delegation smart contract and have their validator node(s) added in the delegation smart contract directly. This is different from before, when in order to do this, a Validator node was to be unstaked, and then placed at the back of the queue. With Staking Phase 3.5, Validators can retain the place inside the 3,200 Validator nodes, and start accepting non-custodial delegations.
 
 1. Create a new Delegation Smart Contract for an Existing Validator

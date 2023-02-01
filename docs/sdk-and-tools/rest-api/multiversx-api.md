@@ -5,8 +5,6 @@ title: MultiversX API
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## About MultiversX API
 
 `api.multiversx.com` is the public instance of MultiversX API and is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch

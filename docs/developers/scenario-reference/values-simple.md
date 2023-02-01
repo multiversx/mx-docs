@@ -3,8 +3,6 @@ id: values-simple
 title: Scenario Simple Values
 ---
 
-[comment]: # (mx-context-auto)
-
 We went through the structure of a scenario, and you might have noticed that in a lot of places values are expressed in diverse ways.
 
 The VM imposes very few restrictions on its inputs and outputs, most fields are processed as raw bytes. The most straightforward way to write a test that one could think of would be to have the actual raw bytes always expressed in a simple format (e.g. like hexadecimal encoding). Indeed, our first contract tests were like this, but we soon discovered that it took painfully long prepare them and even longer to refactor. So, we gradually came up with increasingly complex formats to represent values in an intuitive human-readable way.

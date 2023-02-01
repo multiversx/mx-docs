@@ -5,8 +5,6 @@ title: Smart Contract Debugging
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 Debugging smart contracts is possible with the integrated debugger in Visual Studio Code. You will be able to debug your contract just like you would debug a regular program.

@@ -5,8 +5,6 @@ title: The dynamic allocation problem
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ### Avoiding memory allocation
 
 :::caution

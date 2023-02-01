@@ -5,8 +5,6 @@ title: Smart contract annotations
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 Annotations (also known as Rust "attributes") are the bread and butter of the `multiversx-sc` smart contract development framework. While contracts can in principle be written without any annotations or code generation macros in place, it is infinitely more difficult to do so.
@@ -31,8 +29,6 @@ Note that the annotation takes no additional arguments.
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ### `#[multiversx_sc::module]`
 
 The `module` annotation must always be placed on a trait and will automatically make that trait a smart contract module.
@@ -44,8 +40,6 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 :::
 
 ---
-
-[comment]: # (mx-context-auto)
 
 [comment]: # (mx-context-auto)
 

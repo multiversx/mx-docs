@@ -3,11 +3,11 @@ id: storage-mappers
 title: Storage Mappers
 ---
 
-[comment]: # (mx-context-auto)
-
 The Rust framework provides various storage mappers you can use. Deciding which one to use for every situation is critical for performance. There will be a comparison section after each mapper is described.
 
 Note: All the storage mappers support additional key arguments.
+
+[comment]: # (mx-context-auto)
 
 # General purpose mappers
 
@@ -646,6 +646,8 @@ fn iter() -> Iter<KeyType, ValueType>
 ```
 
 Provides an iterator over all keys, values, and (key, value) pairs respectively.
+
+[comment]: # (mx-context-auto)
 
 # Specialized mappers
 

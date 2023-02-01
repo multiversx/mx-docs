@@ -5,8 +5,6 @@ title: Querying the Blockchain
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Querying broadcasted transactions**
 
 In order to query a transaction and inspect its status, please follow:

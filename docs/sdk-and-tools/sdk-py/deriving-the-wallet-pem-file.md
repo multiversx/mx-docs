@@ -3,8 +3,6 @@ id: deriving-the-wallet-pem-file
 title: Deriving the Wallet PEM file
 ---
 
-[comment]: # (mx-context-auto)
-
 **mxpy** can be used to simplify and automate the interaction with the MultiversX network and can be easily used in scripts.
 
 While **mxpy** has features that do not need a Wallet, submitting any sort of transaction with **mxpy** does require one. And to automate submitting transactions to the MultiversX network, **mxpy** needs a so-called PEM file, associated with a specific Wallet. This is needed because **mxpy** must be able to sign transactions on your behalf, without your help. Having a PEM file obviates the need for manually entering a password, like on [https://wallet.multiversx.com](https://wallet.multiversx.com/). However, one might choose to use a JSON keyfile Wallet instead. mxpy has support for these as well - the associated password has to be provided by means of a separate file.

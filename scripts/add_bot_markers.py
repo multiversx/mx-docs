@@ -34,16 +34,20 @@ def main():
 
         input_lines = md_file.read_text().splitlines()
         output_lines: List[str] = []
+        state_in_code_block = False
 
         current_context: Optional[Context] = None
 
-        for index, line in enumerate(input_lines):
+        for _, line in enumerate(input_lines):
             if line.strip() == SEPARATOR:
                 continue
 
-            is_new_context_before_line = line.startswith("##")
-            is_new_context_after_line = line == "---" and index > 0
-            is_new_context = is_new_context_before_line or is_new_context_after_line
+            if looks_like_code_block(line):
+                state_in_code_block = not state_in_code_block
+
+            is_new_context_before_line = not state_in_code_block and looks_like_header(
+                line)
+            is_new_context = is_new_context_before_line
 
             if is_new_context:
                 current_context = Context(md_file, len(output_lines))
@@ -53,19 +57,13 @@ def main():
                 output_lines.append(SEPARATOR)
                 output_lines.append("")
                 output_lines.append(line)
-            elif is_new_context_after_line:
-                output_lines.append(line)
-                output_lines.append("")
-                output_lines.append(SEPARATOR)
             else:
-                if line.strip() == "" and output_lines[-1].strip() == "":
-                    continue
-                else:
-                    output_lines.append(line)
+                output_lines.append(line)
 
             if current_context:
                 current_context.lines.append(line)
 
+        output_lines = strip_duplicate_newlines(output_lines)
         md_file.write_text("\n".join(output_lines + ['']))
 
     for context in all_contexts:
@@ -75,6 +73,32 @@ def main():
                 f"Warning! context with weak content: {score} on {context.file}:{context.line_index}")
 
     print("Num contexts: ", len(all_contexts))
+
+
+def looks_like_code_block(line: str):
+    return line.startswith("```")
+
+
+def looks_like_header(line: str):
+    return line.startswith("# ") or line.startswith("## ") or line.startswith("### ") or line.startswith("#### ")
+
+
+def strip_duplicate_newlines(lines: List[str]) -> List[str]:
+    output_lines: List[str] = []
+
+    for index, line in enumerate(lines):
+        if index == len(lines) - 1:
+            output_lines.append(line)
+            break
+
+        next_line = lines[index + 1]
+
+        if line.strip() == "" and next_line.strip() == "":
+            pass
+        else:
+            output_lines.append(line)
+
+    return output_lines
 
 
 if __name__ == "__main__":

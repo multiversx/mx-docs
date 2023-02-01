@@ -5,8 +5,6 @@ title: Gateway overview
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Overview of MultiversX Gateway REST API
 
 The MultiversX's Gateway REST API can be used by any application - dApp, desktop or server application - to interact with the Blockchain.

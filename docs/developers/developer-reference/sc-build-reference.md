@@ -5,8 +5,6 @@ title: Smart Contract Build Reference
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## How to: Basic build
 
 To build a contract, it is enough to navigate in your contract crate and run

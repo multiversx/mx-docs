@@ -3,8 +3,6 @@ id: addresses
 title: Addresses
 ---
 
-[comment]: # (mx-context-auto)
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 

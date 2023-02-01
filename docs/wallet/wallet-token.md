@@ -5,8 +5,6 @@ title: Web Wallet Tokens
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Introduction**
 
 **ESDT** stands for _eStandard Digital Token_.

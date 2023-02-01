@@ -5,8 +5,6 @@ title: Smart contract to smart contract calls
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 This guide provides some examples on how to call a contract from another contract. More examples can be found in [the contract composability feature tests](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/feature-tests/composability).

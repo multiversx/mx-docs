@@ -3,8 +3,6 @@ id: architecture
 title: Architecture
 ---
 
-[comment]: # (mx-context-auto)
-
 Ad-Astra Bridge is a system that allows for the transfer of ERC20 tokens between the Ethereum and MultiversX networks. The system is composed of several contracts and relayers that work together to facilitate the transfer of tokens.
 
 [comment]: # (mx-context-auto)

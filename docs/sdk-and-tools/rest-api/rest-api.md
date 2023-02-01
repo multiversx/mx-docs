@@ -5,8 +5,6 @@ title: REST API overview
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 MultiversX has 2 layers of REST APIs that can be publicly accessed. Both of them can be recreated by anyone that

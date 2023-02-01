@@ -5,8 +5,6 @@ title: receipts
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field of this index is composed of hex encoded receipt hash.

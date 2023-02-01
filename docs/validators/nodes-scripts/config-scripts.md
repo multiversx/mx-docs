@@ -3,8 +3,6 @@ id: config-scripts
 title: Scripts & User config
 ---
 
-[comment]: # (mx-context-auto)
-
 MultiversX provides scripts designed to streamline the process of installing an MultiversX node. This validator script is a general script for accessing the Mainnet, Devnet and Testnet networks.
 
 To get started, you will begin by getting a copy of the latest version of the scripts from Github and configure it to match your local setup.

@@ -3,8 +3,6 @@ id: user-defined-smart-contracts
 title: User-defined Smart Contracts
 ---
 
-[comment]: # (mx-context-auto)
-
 For user-defined Smart Contract deployments and function calls, the **actual gas consumption** of processing contains both of the previously mentioned cost components - though, while the **value movement and data handling** component is easily computable (using the previously depicted formula), the **contract execution** component is hard to determine precisely _a priori_. Therefore, for this component we have to rely on _simulations_ and _estimations_.
 
 For **simulations**, we will start a local testnet using `mxpy` (detailed setup instructions can be found [here](/developers/setup-local-testnet)). Thus, before going further, make sure your local testnet is up and running.

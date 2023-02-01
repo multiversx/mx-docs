@@ -3,8 +3,6 @@ id: node-databases
 title: Node Databases
 ---
 
-[comment]: # (mx-context-auto)
-
 This page will describe the databases used by the Node. These are simple key-value storage units that will hold different types of data, as described below.
 
 [comment]: # (mx-context-auto)

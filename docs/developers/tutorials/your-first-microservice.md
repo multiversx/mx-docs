@@ -3,8 +3,6 @@ id: your-first-microservice
 title: Build a Microservice for your dApp
 ---
 
-[comment]: # (mx-context-auto)
-
 Let's build a microservice for your decentralized App
 
 :::important

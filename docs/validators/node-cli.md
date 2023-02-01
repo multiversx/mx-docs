@@ -3,8 +3,6 @@ id: node-cli
 title: Node CLI
 ---
 
-[comment]: # (mx-context-auto)
-
 Command Line Interface for the Node and the associated Tools
 
 The **Command Line Interface** of the **Node** and its associated **Tools** is described at the following locations:

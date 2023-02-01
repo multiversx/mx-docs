@@ -5,8 +5,6 @@ title: Relayed Transactions
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 Relayed transactions (or meta-transactions) are transactions with the fee paid by a so-called relayer.

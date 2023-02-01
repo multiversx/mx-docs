@@ -3,8 +3,6 @@ id: transactions
 title: Transactions
 ---
 
-[comment]: # (mx-context-auto)
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
@@ -261,8 +259,6 @@ _SimulationResults_
 
 ---
 
-[comment]: # (mx-context-auto)
-
 🟢 200: OK
 
 Transaction would be successful.
@@ -279,8 +275,6 @@ Transaction would be successful.
 ```
 
 ---
-
-[comment]: # (mx-context-auto)
 
 🟢 200: Simulation was successful, but the transaction wouldn't be executed.
 
@@ -300,8 +294,6 @@ Invalid Transaction signature.
 
 ---
 
-[comment]: # (mx-context-auto)
-
 🔴 400: Bad request
 
 ```json
@@ -316,8 +308,6 @@ Invalid Transaction signature.
 </Tabs>
 
 ---
-
-[comment]: # (mx-context-auto)
 
 **Proxy**
 

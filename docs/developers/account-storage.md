@@ -5,8 +5,6 @@ title: Account storage
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Description
 
 The MultiversX protocol offers the possibility of storing additional data under an account as key-value pairs. This can be useful for many use cases.

@@ -5,8 +5,6 @@ title: Basics
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Code Arrangement
 
 We'll start with something simple: code arrangement. It's best to separate your code into 4 main parts:

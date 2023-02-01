@@ -5,8 +5,6 @@ title: Built-In Functions
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Introduction**
 
 MultiversX protocol has a set of built-in functions. A built-in function is a special protocol-side function that doesn't

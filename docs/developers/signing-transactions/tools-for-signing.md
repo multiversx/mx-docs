@@ -3,8 +3,6 @@ id: tools-for-signing
 title: Tools for signing
 ---
 
-[comment]: # (mx-context-auto)
-
 In order to sign a transaction without actually dispatching it, one can use [mxpy](/sdk-and-tools/sdk-py) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
 
 [comment]: # (mx-context-auto)

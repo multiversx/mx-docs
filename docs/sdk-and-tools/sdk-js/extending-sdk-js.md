@@ -3,8 +3,6 @@ id: extending-sdk-js
 title: Extending sdk-js
 ---
 
-[comment]: # (mx-context-auto)
-
 :::important
 Documentation in this section is preliminary and subject to change.
 :::

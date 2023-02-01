@@ -5,8 +5,6 @@ title: Code Metadata
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 Code metadata are flags representing the smart contract's allowed actions after deploy, specifically:

@@ -3,8 +3,6 @@ id: import-db
 title: Import DB
 ---
 
-[comment]: # (mx-context-auto)
-
 This page will guide you through the process of starting a node in `import-db` mode, allowing the reprocessing of older transactions.
 
 [comment]: # (mx-context-auto)

@@ -5,8 +5,6 @@ title: Rust Testing Framework
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 The Rust testing framework was developed as an alternative to manually writing scenario tests. This comes with many advantages:

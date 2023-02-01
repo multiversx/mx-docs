@@ -5,8 +5,6 @@ title: Multi-values
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Variadic inputs and outputs (multi-values)
 
 The Rust language does not natively support variadic arguments. Smart contracts, on the other hand, have no limitations on accepting a variable number of inputs or producing a variable number of results. To accommodate this, and to make I/O processing succint, the Rust framework provides a number of so-called multi-value types, that deserialize from multiple inputs and serialize to multiple outputs.

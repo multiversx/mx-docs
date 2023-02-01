@@ -5,8 +5,6 @@ title: Native Tokens
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## ESDT
 
 ESDT stands for eStandard Digital Token.

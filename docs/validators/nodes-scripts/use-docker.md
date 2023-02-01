@@ -3,8 +3,6 @@ id: use-docker
 title: How to use the Docker Image
 ---
 
-[comment]: # (mx-context-auto)
-
 As an alternative to the recommended installation flow, one could choose to run an MultiversX Node using the official Docker images: [here](https://hub.docker.com/u/multiversx)
 
 On the `dockerhub` there are Docker images for every chain (mainnet, devnet and testnet).

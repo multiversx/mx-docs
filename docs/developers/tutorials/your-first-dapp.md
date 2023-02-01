@@ -3,8 +3,6 @@ id: your-first-dapp
 title: Build a dApp in 15 minutes
 ---
 
-[comment]: # (mx-context-auto)
-
 Let's build your first decentralized App on the MultiversX Blockchain
 
 :::important

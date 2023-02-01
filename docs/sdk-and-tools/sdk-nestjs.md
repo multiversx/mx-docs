@@ -3,8 +3,6 @@ id: sdk-nestjs
 title: NestJS SDK
 ---
 
-[comment]: # (mx-context-auto)
-
 MultiversX NestJS Microservice Utilities
 
 **erdnest** contains a set of utilities commonly used in the MultiversX Microservice ecosystem.

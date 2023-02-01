@@ -5,8 +5,6 @@ title: Upgrading smart contracts
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 Upgrading a smart contract is a relatively easy process, but its implications are not exactly obvious. To upgrade a smart contract, simply run the following command:

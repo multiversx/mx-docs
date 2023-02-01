@@ -3,8 +3,6 @@ id: the-wasm-vm
 title: The MultiversX WASM VM
 ---
 
-[comment]: # (mx-context-auto)
-
 The execution of SmartContracts plays a central role in modern blockchain networks. MultiversX built a fast and secure virtual machine for this purpose.
 
 Because the MultiversX VM executes [WebAssembly](https://en.wikipedia.org/wiki/WebAssembly), it also means that it can execute smart contracts written in _any programming language_ that can be compiled to WASM bytecode, such as C, C++, C#, Rust, Go, TypeScript and many others.

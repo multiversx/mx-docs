@@ -5,8 +5,6 @@ title: Smart Contract API Functions
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 The Rust framework provides a wrapper over the MultiversX VM API functions and over account-level built-in functions. They are split into multiple modules, grouped by category:

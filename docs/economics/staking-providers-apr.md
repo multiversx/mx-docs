@@ -3,13 +3,10 @@ id: staking-providers-apr
 title: Staking Providers APR
 ---
 
-[comment]: # (mx-context-auto)
-
 Staking Providers are entities that allow their delegators, plus the owner's funds to deploy validators on the Network. The Staking Provider owner
 is responsible for the nodes' up-time, as well as for configuring the contract's parameters. According to the contract's configuration and operations, the delegation cap, 
 the contract fee, the number of tokens kept as top-up or the number of nodes to be deployed are all variables in computing the final APR (Annual Percentage Return) 
 of the provider.
-
 
 [comment]: # (mx-context-auto)
 

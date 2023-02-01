@@ -5,8 +5,6 @@ title: ESDT tokens integration guide
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Introduction**
 Integrating ESDT tokens support can be done alongside native EGLD integration, so one should refer to the [egld-integration-guide](/integrators/egld-integration-guide).
 

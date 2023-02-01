@@ -3,8 +3,6 @@ id: egld-integration-guide
 title: EGLD integration guide
 ---
 
-[comment]: # (mx-context-auto)
-
 This section provides high-level technical requirements of integrating the MultiversX's native coin, EGLD in a platform that handles EGLD transactions for their users.
 
 [comment]: # (mx-context-auto)

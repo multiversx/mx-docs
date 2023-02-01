@@ -3,8 +3,6 @@ id: installing-mxpy
 title: Installing mxpy
 ---
 
-[comment]: # (mx-context-auto)
-
 How to install mxpy
 
 **mxpy** is currently supported on Linux and MacOS. Some of its features might work on Windows as well, although using **mxpy** on Windows is neither recommended, nor supported at this time.

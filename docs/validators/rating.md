@@ -3,8 +3,6 @@ id: rating
 title: Rating
 ---
 
-[comment]: # (mx-context-auto)
-
 Each individual validator has a **rating score**, which expresses its overall reliability, performance and responsiveness. It is an important value, and node operators should be always mindful of the rating of their validators.
 
 Rating influences the probability of a validator to be selected for consensus in each round. A performant validator will be preferred in consensus, as opposed to a validator which sometimes fails to contribute or which is not always online.
@@ -84,12 +82,16 @@ The following table shows how the rating of a validator influences its probabili
 The algorithm that selects validators for consensus treats these modified selection probabilities as being relative to each other.
 :::
 
+[comment]: # (mx-context-auto)
+
 # **Calibration**
 
 Assuming a **24-hour-long epoch**, the rating mechanism has been calibrated with the following intentions:
 
 - A new validator requires **approx. 72 hours** to reach maximum rating, assuming it remains in the same shard and won't be shuffled out (therefore it will be productive all the time, without any waiting time).
 - The amount of rating gains earned as a block validator should be in balance with the amount of rating gains earned as a block proposer. This balance must take into account the fact that being selected as proposer is considerably less likely than being selected in consensus as block validator.
+
+[comment]: # (mx-context-auto)
 
 # **Rating shard validators**
 
@@ -126,6 +128,8 @@ The nodes that take part in the consensus of a round (other than the proposer) w
 Observe that the first bulled mentions "the proposer has built and proposed a block". This sentence implies that _all validators will lose rating_ if the proposer fails to propose in the respective round.
 
 Moreover, the validator must have been a "signer" in at least 1% of the previous blocks, otherwise it will not gain rating. In other words: if the validator has been performing poorly in the past, it will have to perform well for a while until it can start receiving any gains.
+
+[comment]: # (mx-context-auto)
 
 # **Rating metashard validators**
 

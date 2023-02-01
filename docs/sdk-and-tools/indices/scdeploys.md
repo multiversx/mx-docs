@@ -5,8 +5,6 @@ title: scdeploys
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field of this index is represented by a bech32 encoded smart contract address.

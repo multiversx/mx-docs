@@ -3,8 +3,6 @@ id: multiple-chains
 title: Multiple chains
 ---
 
-[comment]: # (mx-context-auto)
-
 An ESDT token can be bridged between multiple chains by using the `BridgedTokensWrapper` contract.
 
 [comment]: # (mx-context-auto)

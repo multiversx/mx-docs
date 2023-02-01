@@ -5,8 +5,6 @@ title: scresults
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field for this index is composed of hex encoded smart contract result hash.

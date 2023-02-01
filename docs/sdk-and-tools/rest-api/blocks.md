@@ -3,8 +3,6 @@ id: blocks
 title: Blocks
 ---
 
-[comment]: # (mx-context-auto)
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 

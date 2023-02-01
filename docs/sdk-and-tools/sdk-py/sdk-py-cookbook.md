@@ -5,8 +5,6 @@ title: Cookbook
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Overview
 
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries).

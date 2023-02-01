@@ -3,8 +3,6 @@ id: configuring-mxpy
 title: Configuring mxpy
 ---
 
-[comment]: # (mx-context-auto)
-
 **mxpy** can be configured using the `mxpy config` command.
 
 In order to view the current configuration, one can issue the command `mxpy config dump`. Output example:

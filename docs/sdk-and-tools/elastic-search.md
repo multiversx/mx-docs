@@ -5,8 +5,6 @@ title: Elasticsearch
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Overview
 
 An MultiversX node can enable the indexing within an Elasticsearch instance. Indexed data will serve as historical data source

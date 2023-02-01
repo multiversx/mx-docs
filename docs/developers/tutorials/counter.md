@@ -3,8 +3,6 @@ id: counter
 title: The Counter Smart Contract
 ---
 
-[comment]: # (mx-context-auto)
-
 Write, build and deploy a simple Smart Contract written in C
 
 [comment]: # (mx-context-auto)

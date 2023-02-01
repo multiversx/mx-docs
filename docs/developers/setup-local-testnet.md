@@ -3,8 +3,6 @@ id: setup-local-testnet
 title: Setup a Local Testnet
 ---
 
-[comment]: # (mx-context-auto)
-
 This guide describes how to set up a local mini-testnet using **mxpy**. The purpose of a local mini-testnet is to allow developers to experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
 
 The mini-testnet contains:

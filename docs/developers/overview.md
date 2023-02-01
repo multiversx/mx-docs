@@ -5,8 +5,6 @@ title: Developers - Overview
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Developer documentation
 
 Get started with MultiversX by learning to write your first Smart Contract, build your first dApp or learn how to use our

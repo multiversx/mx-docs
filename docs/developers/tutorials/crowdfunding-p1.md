@@ -3,8 +3,6 @@ id: crowdfunding-p1
 title: The Crowdfunding Smart Contract (part 1)
 ---
 
-[comment]: # (mx-context-auto)
-
 Write, build and deploy a simple smart contract written in Rust
 
 This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the MultiversX Network, written in Rust.
@@ -218,6 +216,8 @@ The structure of your folder should be like this (output printed by the command 
 ```
 
 It's time to add some functionality to the `init` function now, because the next step will take you through a very important process: testing your smart contract.
+
+[comment]: # (mx-context-auto)
 
 # **Step 4: the test**
 

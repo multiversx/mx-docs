@@ -3,8 +3,6 @@ id: sdk-js-cookbook
 title: Cookbook
 ---
 
-[comment]: # (mx-context-auto)
-
 This page will guide you through the process of handling common tasks using **sdk-js**.
 
 :::important

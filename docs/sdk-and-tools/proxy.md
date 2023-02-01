@@ -3,8 +3,6 @@ id: proxy
 title: Proxy architecture
 ---
 
-[comment]: # (mx-context-auto)
-
 Overview of the MultiversX Proxy
 
 [comment]: # (mx-context-auto)

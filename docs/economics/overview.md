@@ -3,8 +3,6 @@ id: economics-overview
 title: Overview
 ---
 
-[comment]: # (mx-context-auto)
-
 In this page you can find more about the MultiversX economics, the EGLD token supply, how fees are collected, how rewards and distributed and so on. 
 
 [comment]: # (mx-context-auto)

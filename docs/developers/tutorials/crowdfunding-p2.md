@@ -3,9 +3,9 @@ id: crowdfunding-p2
 title: The Crowdfunding Smart Contract (part 2)
 ---
 
-[comment]: # (mx-context-auto)
-
 Define contract arguments, handle storage, process payments, define new types, write better tests
+
+[comment]: # (mx-context-auto)
 
 # **Configuring the contract**
 

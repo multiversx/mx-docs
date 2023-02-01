@@ -5,8 +5,6 @@ title: tokens
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field of this index is represented by token identifier of an ESDT token.

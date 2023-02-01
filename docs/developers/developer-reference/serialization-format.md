@@ -3,8 +3,6 @@ id: serialization-format
 title: The MultiversX Serialization Format
 ---
 
-[comment]: # (mx-context-auto)
-
 In MultiversX, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 
 In Rust, the **multiversx-sc-codec** crate ([crate](https://crates.io/crates/multiversx-sc-codec), [doc](https://docs.rs/multiversx-sc-codec/0.17.0/multiversx_sc_codec/)) exclusively deals with this format. Both Go and Rust implementations of scenarios have a component that serializes to this format. DApp developers need to be aware of this format when interacting with the smart contract on the backend.
@@ -125,8 +123,6 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ### Arbitrary width (big) numbers
 
 For most smart contracts applications, number larger than the maximum uint64 value are needed.
@@ -171,8 +167,6 @@ Next we encode:
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ### Boolean values
 
 Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0`.
@@ -187,8 +181,6 @@ Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0
 | `bool` | `false` | `0x`               | `0x00`          |
 
 ---
-
-[comment]: # (mx-context-auto)
 
 [comment]: # (mx-context-auto)
 
@@ -219,8 +211,6 @@ Then, all nested encodings of the items, concatenated.
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ### Arrays and tuples
 
 The only difference between these types and the lists in the previous section is that their length is known at compile time.
@@ -241,8 +231,6 @@ Therefore, there is never any need to encode their length.
 | `(u8, u16, u32)` | `[1u8, 2u16, 3u32]` | `0x01000200000003` | `0x01000200000003` |
 
 ---
-
-[comment]: # (mx-context-auto)
 
 [comment]: # (mx-context-auto)
 
@@ -276,8 +264,6 @@ We consider best practice to use Unicode on the frontend, but keep all messages 
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ### Options
 
 An `Option` represents an optional value: every Option is either `Some` and contains a value, or `None`, and does not.
@@ -298,8 +284,6 @@ An `Option` represents an optional value: every Option is either `Some` and cont
 | `Option< BigUint>` | `Some( BigUint::from( 0x1234u32))` | `0x01 00000002 1234` | `0x01 00000002 1234` | The `Some` value is nested-encoded. For a `BigUint` this adds the length, which here is `2`. |
 
 ---
-
-[comment]: # (mx-context-auto)
 
 [comment]: # (mx-context-auto)
 
@@ -352,8 +336,6 @@ Explanation:
 ```
 
 ---
-
-[comment]: # (mx-context-auto)
 
 [comment]: # (mx-context-auto)
 

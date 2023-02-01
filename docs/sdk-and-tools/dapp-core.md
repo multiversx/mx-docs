@@ -3,8 +3,6 @@ id: sdk-dapp
 title: dApp SDK
 ---
 
-[comment]: # (mx-context-auto)
-
 Library used to build React dApps on MultiversX Network.
 
 :::important

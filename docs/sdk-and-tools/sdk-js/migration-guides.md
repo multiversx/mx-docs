@@ -3,8 +3,6 @@ id: sdk-js-migration-guides
 title: Migration guides
 ---
 
-[comment]: # (mx-context-auto)
-
 This tutorial will guide you through the process of migrating from one major version of **sdk-js** (or one of its _satellites_) to another.
 
 :::important

@@ -3,8 +3,6 @@ id: install-update
 title: Installing a Validator Node
 ---
 
-[comment]: # (mx-context-auto)
-
 This page will guide you through the process of installing and updating a validator node.
 
 [comment]: # (mx-context-auto)

@@ -5,8 +5,6 @@ title: Scenario Testing Overview
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Rationale**
 
 During smart contract development, it is important for the developer to have the capacity to write unit and integration tests easily.

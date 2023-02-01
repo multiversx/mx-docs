@@ -3,8 +3,6 @@ id: nft-tokens
 title: NFT & SFT tokens
 ---
 
-[comment]: # (mx-context-auto)
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 

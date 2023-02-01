@@ -3,8 +3,6 @@ id: smart-contract-interactions
 title: Smart contract interactions
 ---
 
-[comment]: # (mx-context-auto)
-
 Let's dive deeper into the Smart Contract interactions and what do you need to know when you need to interact with a SC. If you followed the previous mxpy related documentation, you should be able to set up your prerequisites like proxy URL, the chain ID and the PEM file.
 For this, we need an interactions file. Usually, we find this file inside the contract's folder, in an **interaction** folder. The interactions file usually has a suggestive name, related to which chain the setup has been done. For example: **devnet.snippets.sh**.
 
@@ -90,8 +88,6 @@ Let's suppose we want to call the following endpoint, that receives an address a
 
 ```
 
-[comment]: # (mx-context-auto)
-
 ###PARAMS
 #1 - FirstBigUintArgument
 #2 - SecondBigUintArgument
@@ -131,8 +127,6 @@ mxpy facilitates us with some encoding conventions, including:
 So, in case of our **myNonPayableEndpoint** interaction, we can write it like so:
 
 ```
-
-[comment]: # (mx-context-auto)
 
 ###PARAMS
 #1 - FirstBigUintArgument
@@ -241,8 +235,6 @@ In case we need to call an endpoint that accepts multiple tokens (let's say for 
 
 ```
 
-[comment]: # (mx-context-auto)
-
 ###PARAMS
 #   $1 = Destination Address,
 #   $2 = First Token Identifier,
@@ -306,8 +298,6 @@ More information about ESDT Transfers [here](/developers/esdt-tokens/#transfers)
 In case we want to call a view function, we can use the **query** keyword.
 
 ```
-
-[comment]: # (mx-context-auto)
 
 ###PARAMS
 #1 - First argument

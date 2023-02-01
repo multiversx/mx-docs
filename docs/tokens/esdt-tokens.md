@@ -3,8 +3,6 @@ id: esdt-tokens
 title: Simple tokens (fungible)
 ---
 
-[comment]: # (mx-context-auto)
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
@@ -1024,8 +1022,6 @@ https://gateway.multiversx.com/network/esdts
 
 ---
 
-[comment]: # (mx-context-auto)
-
 2. Fungible tokens
 
 <Tabs
@@ -1061,8 +1057,6 @@ https://gateway.multiversx.com/network/esdt/fungible-tokens
 
 ---
 
-[comment]: # (mx-context-auto)
-
 3. Semi-fungible tokens
 
 <Tabs
@@ -1097,8 +1091,6 @@ https://gateway.multiversx.com/network/esdt/semi-fungible-tokens
 </Tabs>
 
 ---
-
-[comment]: # (mx-context-auto)
 
 4. Non-fungible tokens
 

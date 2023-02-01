@@ -5,8 +5,6 @@ title: Smart Contract Calls Data Format
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 Besides regular move-balance transactions (address A sends the amount X to address B, while optionally including a note in the `data` field),

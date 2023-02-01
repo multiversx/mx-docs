@@ -3,8 +3,6 @@ id: delegation-manager
 title: The Delegation Manager
 ---
 
-[comment]: # (mx-context-auto)
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 

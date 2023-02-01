@@ -5,8 +5,6 @@ title: transactions
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field for this index is composed of hex encoded transaction hash.

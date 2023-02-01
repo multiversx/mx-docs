@@ -3,8 +3,6 @@ id: writing-and-testing-sdk-js-interactions
 title: Writing and testing interactions
 ---
 
-[comment]: # (mx-context-auto)
-
 :::note
 This tutorial makes use of `sdk-js 10` and `sdk-js-snippets 3`. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
 :::

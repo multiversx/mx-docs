@@ -5,8 +5,6 @@ title: rating
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## _id
 
 The `_id` field of this index is composed in this way: `{validator_bls_key}_{epoch}` (example: `blskey_37`).

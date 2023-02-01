@@ -3,8 +3,6 @@ id: nodes
 title: Nodes
 ---
 
-[comment]: # (mx-context-auto)
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 

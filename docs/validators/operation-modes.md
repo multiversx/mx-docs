@@ -3,8 +3,6 @@ id: node-operation-modes
 title: Node operation modes
 ---
 
-[comment]: # (mx-context-auto)
-
 Without configuration changes, nodes will start by using the default settings. However, there are several ways to configure the node, depending on the desired operation mode.
 Instead of manually (or programmatically via `sed`s for example) editing the `toml` files, you can use the `--operation-mode` CLI flag described below to specify a custom
 operation mode that will result in config changes.

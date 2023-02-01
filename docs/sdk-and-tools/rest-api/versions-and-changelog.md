@@ -5,8 +5,6 @@ title: Versions and Changelog
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Overview**
 
 This page offers a high level overview of the important releases of the MultiversX Proxy API, along with recommendations (such as upgrade or transitioning recommendations) for API consumers.

@@ -5,8 +5,6 @@ title: Custom Wallet Connect
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Custom Wallet Connect
 
 Our custom Wallet Connect is a platform that allows you to connect decentralized applications (dApps) to your wallet. The dApp can send transaction requests to your wallet once you have authorized a connection request from it through our custom Wallet Connect.

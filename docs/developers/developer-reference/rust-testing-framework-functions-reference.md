@@ -5,8 +5,6 @@ title: Rust Testing Framework Functions Reference
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## Introduction
 
 This page contains a list of all the currently available functions for the Rust Testing Framework, specifically the ones that the `BlockchainStateWrapper` type provides.  

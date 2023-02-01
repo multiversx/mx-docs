@@ -5,8 +5,6 @@ title: Wallets - Overview
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## MultiversX Wallets
 
 The private key associated to an address (erd1...) needs to be stored in a specific format. In order to use that private

@@ -5,8 +5,6 @@ title: MultiversX Smart Contracts
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## MultiversX Smart Contracts
 
 The MultiversX Blockchain's virtual machine (VM) executes [WebAssembly](https://en.wikipedia.org/wiki/WebAssembly). This means that it can execute smart contracts 

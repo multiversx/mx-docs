@@ -5,8 +5,6 @@ title: Creating Transactions
 
 [comment]: # (mx-context-auto)
 
-[comment]: # (mx-context-auto)
-
 ## **Transaction structure**
 
 As described in section [Signing Transactions](/developers/signing-transactions), a ready-to-broadcast transaction is structured as follows:
