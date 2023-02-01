@@ -1,7 +1,8 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 ABSTRACT_MARKER = "[comment]: # (mx-abstract)"
+EXCLUDE_FILE_MARKER = "[comment]: # (mx-exclude-file)"
 SEPARATOR = "[comment]: # (mx-context-auto)"
 WEAK_CONTENT_THRESHOLD = 10
 DOCS_ROOT = Path(__file__).parent.parent / "docs"
@@ -33,36 +34,39 @@ def main():
     for md_file in md_files:
         print("Processing file", md_file)
 
-        input_lines = md_file.read_text().splitlines()
+        input_content = md_file.read_text()
+        input_lines = input_content.splitlines()
         output_lines: List[str] = []
         state_in_code_block = False
 
-        current_context: Optional[Context] = None
+        if should_skip_file(input_content):
+            continue
 
-        for _, line in enumerate(input_lines):
+        for index, line in enumerate(input_lines):
+            one_line_before = input_lines[index -
+                                          1].strip() if index > 0 else None
+            two_lines_before = input_lines[index -
+                                           2].strip() if index > 1 else None
+
             if line.strip() == SEPARATOR:
+                continue
+
+            if line.strip() == ABSTRACT_MARKER:
+                output_lines.append(line)
                 continue
 
             if looks_like_code_block(line):
                 state_in_code_block = not state_in_code_block
 
-            is_new_context_before_line = not state_in_code_block and looks_like_header(
-                line)
-            is_new_context = is_new_context_before_line
+            is_new_context = not state_in_code_block and looks_like_header(
+                line) and ABSTRACT_MARKER not in [one_line_before, two_lines_before]
 
             if is_new_context:
-                current_context = Context(md_file, len(output_lines))
-                all_contexts.append(current_context)
-
-            if is_new_context_before_line:
                 output_lines.append(SEPARATOR)
                 output_lines.append("")
                 output_lines.append(line)
             else:
                 output_lines.append(line)
-
-            if current_context:
-                current_context.lines.append(line)
 
         output_lines = strip_duplicate_newlines(output_lines)
         md_file.write_text("\n".join(output_lines + ['']))
@@ -75,10 +79,16 @@ def main():
 
     for md_file in md_files:
         content = md_file.read_text()
-        if ABSTRACT_MARKER not in content:
+
+        if should_skip_file(content):
+            continue
+
+        if ABSTRACT_MARKER not in content and "sdk-and-tools" in str(md_file):
             print("Warning! no abstract marker in", md_file)
 
-    print("Num contexts: ", len(all_contexts))
+
+def should_skip_file(file_content: str) -> bool:
+    return EXCLUDE_FILE_MARKER in file_content
 
 
 def looks_like_code_block(line: str):
