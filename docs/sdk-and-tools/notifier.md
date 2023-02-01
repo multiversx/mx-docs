@@ -1,6 +1,6 @@
 ---
 id: notifier
-title: Notifier
+title: Events notifier
 ---
 
 ## Overview
@@ -8,7 +8,7 @@ title: Notifier
 A MultiversX observer node can push block events to a notifier service, which will process
 and forward the events to subscribers (via RabbitMQ). This way, one can subscribe to a rabbitMQ
 queue and receive block events, whenever a block is committed to the chain, instead of 
-fetching an API frequently using a cron job.
+polling an API frequently.
 
 The GitHub repository for the notifier service can be found here:
 https://github.com/multiversx/mx-chain-notifier-go.
@@ -18,7 +18,7 @@ https://github.com/multiversx/mx-chain-notifier-go.
 The observer node in the network will be connected to notifier service.
 The observer will send block events to notifier. The notifier service will
 receive and filter events, it will apply deduplication if enabled, and it will push the events
-to RabbitMQ instance, or push them to websockets subscribers.
+to RabbitMQ instance, or push them to websocket subscribers.
 
 :::important
 Set up at least one observer for each shard in order to handle all the events in the chain.
@@ -33,7 +33,7 @@ In the figure above:
       pushed on this route
     - `/events/finalized` (POST) -> when the block has been finalized, the events
       will be pushed on this route
-- Notifier checks locker service (via Redis) and apply deduplication
+- Notifier checks locker service (via Redis) and applies deduplication
 - Notifier will push events to RabbitMQ if enabled, or via Websockets. If Websockets will be enabled an additional endpoint will be available:
     - `/hub/ws` (GET) - this route can be used to manage the websocket connection subscription
 
@@ -116,7 +116,7 @@ The `ConnectorApi` section has to be aligned with the one from observer node:
 
 If `CheckDuplicates` will be set to true, notifier service will try to connect to a redis 
 instance. In this context, redis will be used as a locker service mechanism for deduplication.
-This is usefull in scenarios when multiple observer nodes from same shard are being to send
+This is useful in scenarios when multiple observer nodes from same shard are used to send
 events to the same notifier instance.
 
 The `Redis` section includes the following parameters as described below:
@@ -190,30 +190,30 @@ It is recommended to use the setup with RabbitMQ, if it is very important to avo
 ## Events
 
 There are multiple event types:
-- Push Block event: when the block is commited, it contains logs and events
+- Push Block event: when the block is committed, it contains logs and events
 - Revert Block event: when the block is reverted
 - Finalized Block event: when the block is finalized
 
 In RabbitMQ there is a separate exchange for each event type.
 In Websockets setup, there is a event type field in each message.
 
-The WS event is defined as following:
+The WS event is defined as follows:
 
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
-| Type       | The type field defines the event type, it can be one of the followins: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events. |
+| Type       | The type field defines the event type, it can be one of the following: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events. |
 | Data       | Serialized data corresponding to the event type. |
 
 ### Push Block Event
 
-Each time a block is commited on the chain, an event will be triggered with basic information
+Each time a block is committed on the chain, an event will be triggered with basic information
 on the block together with logs and events. The structure data fields are as following:
 
 Push Block Event
 
 | Field          | Description                                               |
 |----------------|-----------------------------------------------------------|
-| hash           | The hash field represents the hash of the commited block. |
+| hash           | The hash field represents the hash of the committed block. |
 | events         | The events field holds a list of events.                  |
 
 Event structure 
@@ -233,7 +233,7 @@ containing basic info on the block.
 
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
-| hash       | The hash field represents the hash of the commited block.                      |
+| hash       | The hash field represents the hash of the committed block.                      |
 | nonce      | The nonce field represents the sequence number of the block.                   |
 | round      | The round field represents the round when the block was proposed and executed. |
 | epoch      | The epoch field represents the epoch when the block was proposed and executed. |
@@ -245,4 +245,4 @@ be triggered containing the hash of the block.
 
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
-| hash       | The hash field represents the hash of the commited block.                      |
+| hash       | The hash field represents the hash of the committed block.                      |
