@@ -10,6 +10,8 @@ import TabItem from "@theme/TabItem";
 
 ## **Introduction**
 
+MultiversX NFTs(non-fungible tokens) are a breed of digital assets that are revolutionizing the world of art, collectibles, and more. These NFTs are unique, one-of-a-kind tokens that are built on blockchain technology, allowing for secure ownership and transfer of these assets. With MultiversX NFTs, every token is assigned a unique identification code(ticker) and metadata that distinguishes it from every other token, making each NFT truly one-of-a-kind. Read the full page for a comprehensive guide on how to brand, issue, transfer, assign roles and many other features, for both NFTs and SFTs.
+
 [comment]: # (mx-context-auto)
 
 ### NFT and SFT
@@ -483,6 +485,8 @@ In these cases it is possible to update an NFT with the metadata file after it w
 [comment]: # (mx-context-auto)
 
 ## **Other management operations**
+
+Managing non-fungible tokens (NFTs) and semi-fungible tokens (SFTs) presents a greater degree of complexity compared to the management of simple fungible tokens. These unique tokens require specialized transactions for proper identification, ownership, and transfer, making the process of managing them more intricate than that of fungible tokens.
 
 [comment]: # (mx-context-auto)
 
