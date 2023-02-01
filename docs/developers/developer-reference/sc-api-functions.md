@@ -12,11 +12,6 @@ The Rust framework provides a wrapper over the MultiversX VM API functions and o
 - CryptoApi: Provides support for cryptographic functions like hashing and signature checking
 - SendApi: Handles all types of transfers to accounts and smart contract calls/deploys/upgrades, as well as support for ESDT local built-in functions
 
-- BlockchainApi: Provides general blockchain information, which ranges from account balances, NFT metadata/roles to information about the current and previous block (nonce, epoch, etc.)
-- CallValueApi: Used in payable endpoints, providing information about the tokens received as payment (token type, nonce, amount)
-- CryptoApi: Provides support for cryptographic functions like hashing and signature checking
-- SendApi: Handles all types of transfers to accounts and smart contract calls/deploys/upgrades, as well as support for ESDT local built-in functions
-
 The base trait for the APi is: https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/api/trait.VMApi.html
 
 The source code for the APIs can be found here: https://github.com/multiversx/mx-sdk-rs/tree/master/framework/base/src/api
