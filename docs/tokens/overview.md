@@ -3,8 +3,6 @@ id: overview
 title: Native Tokens
 ---
 
-[comment]: # (mx-context-auto)
-
 Fungible tokens, such as cryptocurrencies, are interchangeable and have the same value as other tokens of the same type. Non-fungible tokens (NFTs) are unique digital assets that are assigned unique identification codes and metadata, making them one-of-a-kind. Semi-fungible tokens are a combination of the two, offering both interchangeable and unique properties. For us they are ESDTs.
 
 With ESDTs, you can take advantage of the security, transparency, and versatility of MultiversX blockchain technology to manage and transfer your assets.

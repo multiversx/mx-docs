@@ -3,8 +3,9 @@ id: overview
 title: Wallets - Overview
 ---
 
-[comment]: # (mx-context-auto)
 Wallets give access to your funds and MultiversX applications. Only you should have access to your wallet.
+
+[comment]: # (mx-context-auto)
 
 ## MultiversX Wallets
 
