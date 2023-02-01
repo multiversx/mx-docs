@@ -40,6 +40,7 @@ The `_id` field for this index is composed of hex encoded smart contract result 
 | operation         | The operation field represents the operation of the smart contract result based on the data field.                                                                                 |
 | function          | The function field holds the name of the function that is called in case of a smart contract call.                                                                                 |
 | originalSender    | The originalSender field holds the sender's address of the original transaction.                                                                                                   |
+| hasLogs           | The hasLogs field is true if the transaction has logs.                                                                                                                             |
 
 
 ## Query examples

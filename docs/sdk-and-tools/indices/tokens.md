@@ -20,7 +20,7 @@ The `_id` field of this index is represented by token identifier of an ESDT toke
 | type          | The type field holds the type of the token. It can be `FungibleESDT`, `NonFungibleESDT`, `SemiFungibleESDT`, or `MetaESDT`.       |
 | timestamp     | The timestamp field represents the timestamp of the block in which the token was created.                                         |
 | ownersHistory | The ownersHistory field holds a list of all the owners of a token.                                                                |
-
+| paused        | The paused field is true if the token is paused.                                                                                  |
 
 ## Query examples
 
