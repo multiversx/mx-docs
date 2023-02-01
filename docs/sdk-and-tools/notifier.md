@@ -21,13 +21,13 @@ receive and filter events, it will apply deduplication if enabled, and it will p
 to RabbitMQ instance, or push them to websockets subscribers.
 
 :::important
-At least one observer for each shard in order to handle all the events in the chain.
+Set up at least one observer for each shard in order to handle all the events in the chain.
 :::
 
 ![img](/technology/notifier-overview.png)
 
 In the figure above:
-- The observer nodes will push block events to Notifier instance, via HTTP POST requests. There are several endpoints for these:
+- The observer nodes will push block events to Notifier instance, via HTTP POST requests. There are several endpoints for this:
     - `/events/push` (POST) -> it will handle all events for each round
     - `/events/revert` (POST) -> if there is a reverted block, the event will be
       pushed on this route
@@ -50,10 +50,10 @@ to enable notifier connector. The config file can be found
 The supported config variables are as follows:
 
 - `Enabled`: signals whether a driver should be attached when launching the node.
-- `UseAuthorization`: signal whether to use authorization. For testing purposes it can be set to `false`.
+- `UseAuthorization`: signals whether to use authorization. For testing purposes it can be set to `false`.
 - `ProxyUrl`: host and port on which the `eventNotifier` will push the parsed event data.
-- `Username`: the username used for authorization.
-- `Password`: the password used for authorization.
+- `Username`: the username used for authorization, if enabled.
+- `Password`: the password used for authorization, if enabled.
 
 The corresponding config section for enabling the driver:
 
@@ -82,7 +82,7 @@ Due to the possible high data volume, it's not recommended to use validators as 
 to push events to Notifier Service.
 Similar to Elasticsearch indexing, our implementation uses a concept of a queue and makes
 sure that everything is being processed. Consensus and synchronization mechanisms can have
-delays because of the indexing.
+delays due to outport driver.
 :::
 
 ### Notifier Service
@@ -156,7 +156,7 @@ Currently there are 2 supported subscribing solutions:
 * Websocket
 
 The subscribing solution is selected based on a CLI parameter, please check
-[README](https://github.com/multiversx/mx-chain-notifier-go) from public
+[README](https://github.com/multiversx/mx-chain-notifier-go) from
 github repository for more info on the CLI parameters.
 
 In the notifier configuration directory (`cmd/notifier/config`), in `config.toml` there is
@@ -204,7 +204,7 @@ The WS event is defined as following:
 | Type       | The type field defines the event type, it can be one of the followins: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events. |
 | Data       | Serialized data corresponding to the event type. |
 
-### Push Event
+### Push Block Event
 
 Each time a block is commited on the chain, an event will be triggered with basic information
 on the block together with logs and events. The structure data fields are as following:
@@ -226,7 +226,7 @@ Event structure
 | data        | The data field can contain information added by the smart contract that generated the event.                                                                                              |
 | order       | The order field represents the index of the event indicating the execution order.                                                                                                         |
 
-### Revert Event
+### Revert Block Event
 
 When there is a revert for a particular block on the chain, a revert event will be triggered,
 containing basic info on the block.
