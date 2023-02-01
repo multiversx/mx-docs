@@ -5,15 +5,17 @@ title: Notifier
 
 ## Overview
 
-A MultiversX observer node can be connected to a notifier service, which will publish blockchain
-events to subscribers.
+A MultiversX observer node can push block events to a notifier service, which will process
+and forward the events to subscribers (via RabbitMQ). This way, one can subscribe to a rabbitMQ
+queue and receive block events, whenever a block is committed to the chain, instead of 
+fetching an API frequently using a cron job.
 
 The GitHub repository for the notifier service can be found here:
 https://github.com/multiversx/mx-chain-notifier-go.
 
 ## Architectural Overview
 
-Any observer node in the network can be connected to notifier service.
+The observer node in the network will be connected to notifier service.
 The observer will send block events to notifier. The notifier service will
 receive and filter events, it will apply deduplication if enabled, and it will push the events
 to RabbitMQ instance, or push them to websockets subscribers.
@@ -31,7 +33,7 @@ In the figure above:
       pushed on this route
     - `/events/finalized` (POST) -> when the block has been finalized, the events
       will be pushed on this route
-- Notifier check locker service (via Redis) and apply deduplication
+- Notifier checks locker service (via Redis) and apply deduplication
 - Notifier will push events to RabbitMQ if enabled, or via Websockets. If Websockets will be enabled an additional endpoint will be available:
     - `/hub/ws` (GET) - this route can be used to manage the websocket connection subscription
 
