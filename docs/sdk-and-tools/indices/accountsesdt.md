@@ -3,6 +3,10 @@ id: es-index-accountsesdt
 title: accountsesdt
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `accounts-esdt` index (Elastic Search), and also depicts a few examples of how to query it.
+
 [comment]: # (mx-context-auto)
 
 ## _id

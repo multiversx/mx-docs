@@ -3,6 +3,8 @@ id: smart-contract-interactions
 title: Smart contract interactions
 ---
 
+[comment]: # (mx-abstract)
+
 Let's dive deeper into the Smart Contract interactions and what do you need to know when you need to interact with a SC. If you followed the previous mxpy related documentation, you should be able to set up your prerequisites like proxy URL, the chain ID and the PEM file.
 For this, we need an interactions file. Usually, we find this file inside the contract's folder, in an **interaction** folder. The interactions file usually has a suggestive name, related to which chain the setup has been done. For example: **devnet.snippets.sh**.
 

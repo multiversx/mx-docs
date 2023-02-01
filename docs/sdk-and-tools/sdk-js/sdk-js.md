@@ -3,9 +3,17 @@ id: sdk-js
 title: sdk-js
 ---
 
+[comment]: # (mx-abstract)
+
 MultiversX SDK for TypeScript and JavaScript
 
-**JS SDKs** consists of TypeScript / JavaScript helpers and utilities for interacting with the Blockchain (in general) and with Smart Contracts (in particular).
+This SDK consists of TypeScript / JavaScript helpers and utilities for interacting with the Blockchain (in general) and with Smart Contracts (in particular).
+
+[comment]: # (mx-context-auto)
+
+## Packages
+
+Base libraries:
 
 | Package                                                                                  | Source code                                                         | Description                                                                    |
 |------------------------------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------------------|

@@ -3,6 +3,10 @@ id: es-index-accountshistory
 title: accountshistory
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `accounts-history` index (Elastic Search), and also depicts a few examples of how to query it.
+
 [comment]: # (mx-context-auto)
 
 ## _id

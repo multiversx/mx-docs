@@ -3,7 +3,15 @@ id: sdk-py
 title: sdk-py
 ---
 
+[comment]: # (mx-abstract)
+
 MultiversX SDK for Python
+
+This SDK consists of a CLI tool, namely `mxpy`, and Python helpers and utilities for interacting with the Blockchain (in general) and with Smart Contracts (in particular).
+
+[comment]: # (mx-context-auto)
+
+## `mxpy`: the CLI tool
 
 **mxpy** (the CLI tool) can be found here: [mx-sdk-py-cli](https://github.com/multiversx/mx-sdk-py-cli). It targets a broad audience of **users** and **developers**, as depicted below:
 
@@ -19,7 +27,9 @@ MultiversX SDK for Python
 | Generate PEM files, recover private key from mnemonic                                          | Tech enthusiasts                                                    |
 | Miscellaneous support features (e.g. bech32 conversion)                                        | Tech enthusiasts                                                    |
 
-**sdk-py** libraries:
+[comment]: # (mx-context-auto)
+
+## `sdk-py`: the Python libraries
 
 | Package                                                                                     | Source code                                                               | Description                                                                                   |
 |---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|

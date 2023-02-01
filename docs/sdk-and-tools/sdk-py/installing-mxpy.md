@@ -3,7 +3,11 @@ id: installing-mxpy
 title: Installing mxpy
 ---
 
+[comment]: # (mx-abstract)
+
 How to install mxpy
+
+This page describes how to install **mxpy** (the CLI tool). The recommended way to install **mxpy** is by using the `mxpy-up` facility.
 
 **mxpy** is currently supported on Linux and MacOS. Some of its features might work on Windows as well, although using **mxpy** on Windows is neither recommended, nor supported at this time.
 

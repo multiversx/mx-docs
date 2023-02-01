@@ -3,6 +3,8 @@ id: sdk-js-signing-providers
 title: Signing Providers for dApps
 ---
 
+[comment]: # (mx-abstract)
+
 This page will guide you through the process of integrating the **sdk-js signing providers** in a dApp which isn't based on `sdk-dapp`.
 
 :::important

@@ -3,11 +3,9 @@ id: writing-and-testing-sdk-js-interactions
 title: Writing and testing interactions
 ---
 
-:::note
-This tutorial makes use of `sdk-js 10` and `sdk-js-snippets 3`. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
-:::
+[comment]: # (mx-abstract)
 
-This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **sdk-js** and **sdk-js snippets**.
+This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **sdk-js** and **sdk-js snippets**. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
 
 :::important
 **Do not reference** `sdk-js-snippets` library as a **regular** dependency (i.e. `dependencies` section) of your project (Node / dApp). Only reference it as a **development** dependency (i.e. `devDependencies` section).

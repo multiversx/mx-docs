@@ -3,6 +3,10 @@ id: es-index-transactions
 title: transactions
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `transactions` index (Elastic Search), and also depicts a few examples of how to query it.
+
 [comment]: # (mx-context-auto)
 
 ## _id

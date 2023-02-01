@@ -3,6 +3,10 @@ id: es-index-validators
 title: validators
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `validators` index (Elastic Search), and also depicts a few examples of how to query it.
+
 [comment]: # (mx-context-auto)
 
 ## _id

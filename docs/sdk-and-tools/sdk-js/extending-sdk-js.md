@@ -3,9 +3,7 @@ id: extending-sdk-js
 title: Extending sdk-js
 ---
 
-:::important
-Documentation in this section is preliminary and subject to change.
-:::
+[comment]: # (mx-abstract)
 
 This tutorial will guide you through the process of extending and tailoring certain modules from sdk-js.
 
