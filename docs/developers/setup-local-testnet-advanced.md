@@ -3,6 +3,7 @@ id: setup-local-testnet-advanced
 title: Set up a Local Testnet (advanced)
 ---
 [comment]: # (mx-abstract)
+
 How to set up a local MultiversX Testnet on a workstation.
 
 [comment]: # (mx-context-auto)

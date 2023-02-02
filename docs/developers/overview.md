@@ -4,6 +4,7 @@ title: Developers - Overview
 ---
 
 [comment]: # (mx-abstract)
+
 This page serves as the landing destination for builders seeking to construct on the Multiversx platform.
 
 [comment]: # (mx-context-auto)

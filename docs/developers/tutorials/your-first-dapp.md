@@ -3,6 +3,8 @@ id: your-first-dapp
 title: Build a dApp in 15 minutes
 ---
 
+[comment]: # (mx-abstract)
+
 Let's build your first decentralized App on the MultiversX Blockchain
 
 :::important
@@ -31,7 +33,7 @@ Other rules:
 
 Maybe you noticed the default amount for a deposit is **1 xEGLD** and not 1 EGLD which is MultiversX official token, this is because, for testing purposes we use MultiversX Devnet, which is a testing environment identical to the Mainnet, the official MultiversX Blockchain. Here, the currency is **xEGLD**, it's just a test token, it's worth nothing.
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## **MultiversX dApp architecture**
 
@@ -59,11 +61,11 @@ The MultiversX _devnet_ is a public test network maintained by our community whe
 
 ## **Set up the environment**
 
+Let's set up the evironment for getting your first dapp up and running.
+
 [comment]: # (mx-context-auto)
 
 ### **Project Structure**
-
-Setup the environment
 
 First let's create a new folder for our project, I'll name it `ping-pong`.
 
@@ -143,7 +145,7 @@ In order to initiate transactions on the blockchain, we need some funds, every t
 On the devnet wallet we have a **faucet** that allows you to get free test funds for our applications. We can request 10 xEGLD every 24 hours, so let's request 10 xEGLD now.
 We now check if the transaction was successful, and yes, we see that we now have 10 xEGLD in our devnet wallet.
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## **The Blockchain Layer - The Smart Contract**
 
@@ -248,7 +250,7 @@ There are two main functions: `ping` and `pong`, these are invoked using blockch
 
 We also have two other functions defined in the smart contract: `get_time_to_pong` and `did_user_ping`, these view functions are invoked using **MultiversX API** (*https://devnet-api.multiversx.com/vm-values/query*).
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## **The Application Layer - The Web App**
 

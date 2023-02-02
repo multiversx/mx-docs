@@ -35,7 +35,7 @@ SaveKeyValueTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
-[comment]: # (mx-context-auto)
+[comment]: # (mx-context)
 The gas used is computed as following:
 
 ```rust

@@ -2,8 +2,8 @@
 id: counter
 title: The Counter Smart Contract
 ---
-
-Write, build and deploy a simple Smart Contract written in C
+[comment]: # (mx-abstract)
+By following the tutorial on this page, you will learn how to write, build, and deploy a basic Smart Contract in C
 
 [comment]: # (mx-context-auto)
 

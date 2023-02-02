@@ -3,7 +3,7 @@ id: staking-contract
 title: Staking smart contract tutorial
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 
@@ -15,13 +15,11 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
+First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy/. If you already have mxpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
+
 [comment]: # (mx-context-auto)
 
 ### mxpy
-
-First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy/
-
-If you already have mxpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
 We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/
 
@@ -36,6 +34,7 @@ mxpy deps install rust
 
 mxpy deps install vmtools --overwrite
 ```
+[comment]: # (mx-context)
 
 If you installed Rust already without mxpy, you might run into some issues when building your smart contracts. It's recommended to uninstall Rust, and install it through mxpy instead.
 
@@ -304,10 +303,12 @@ This is because contract addresses are calculated from the deployer's address an
 
 ### Getting EGLD on devnet
 
-There are two ways of getting EGLD on devnet:
+There are many ways of getting EGLD on devnet:
 
 - through the devnet wallet
 - through an external faucet
+- through the [MultiversX Builders Discord Server faucet](https://discord.gg/multiversxbuilders)
+- asking a team member on [Telegram](https://t.me/MultiversXDevelopers)
 
 [comment]: # (mx-context-auto)
 
@@ -505,6 +506,8 @@ Now let's try and decode this with mxpy:
 mxpy wallet bech32 --decode erd1njsch0krazs2s6harh68rk9w65j9kset9xk0yyc2003d8z05wywsmmnn76
 9ca18bbec3e8a0a86afd1df471d8aed5245b432b29acf2130a7be2d389f4711d
 ```
+
+[comment]: # (mx-context)
 
 Which is precisely the value we received from the smart contract. Now let's try it the other way around.
 
@@ -960,6 +963,8 @@ pub struct StakingPosition<M: ManagedTypeApi> {
 Every managed type from the Rust framework needs a `ManagedTypeApi` implementation, which allows it to access the VM functions for performing operations. For example, adding two `BigUint` numbers, concatenating two `ManagedBuffer`s, etc. Inside smart contract code, the `ManagedTypeApi` associated type is automatically added, but outside of it, we have to manually specify it.
 :::
 
+[comment]: # (mx-context)
+
 Additionally, since we need to store this in storage, we need to tell the Rust framework how to encode and decode this type. This can be done automatically by deriving (i.e. auto-implementing) these traits, via the `#[derive]` annotation:
 
 ```rust
@@ -993,6 +998,8 @@ More specifically: 60 seconds per minute _ 60 minutes per hour _ 24 hours per da
 :::note
 This is calculated and replaced with the exact value at compile time, so there is no performance penalty of having a constant with mathematical operations in its value definition.
 :::
+
+[comment]: # (mx-context)
 
 Having defined this constant, rewards formula should look like this:
 
@@ -1038,7 +1045,7 @@ reward_amt = 100 * 5_045 / 10_000 = 504_500 / 10_000 = 50
 Since we're still using BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the MAX_PERCENTAGE and the respective APY, but this is also "inheritly fixed" on the blockchain, because we work with very big numbers for `user_stake`
 :::
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## Rewards implementation
 
