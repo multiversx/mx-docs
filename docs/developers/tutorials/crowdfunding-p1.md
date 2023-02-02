@@ -2,7 +2,7 @@
 id: crowdfunding-p1
 title: The Crowdfunding Smart Contract (part 1)
 ---
-
+[comment]: # (mx-abstract)
 Write, build and deploy a simple smart contract written in Rust
 
 This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the MultiversX Network, written in Rust.
@@ -70,7 +70,7 @@ The steps are covered in detail below.
 
 [comment]: # (mx-context-auto)
 
-## **Step 1: the workspace**
+## **Step 1: prepare the workspace**
 
 The source code of each smart contract requires its own folder. You'll need to create one for the crowdfunding smart contract presented here. Run these commands below in a terminal to create it:
 
@@ -118,7 +118,7 @@ Let's see what this means:
 
 [comment]: # (mx-context-auto)
 
-## **Step 2: the code**
+## **Step 2: write the code**
 
 With the structure in place, you can now write the code and build it. Open `src/lib.rs` , remove the existing `Adder` code and insert the following:
 
@@ -281,7 +281,6 @@ Whenever you want to make sure your code is in order, run the build command:
 ```bash
 mxpy contract build
 ```
-
 There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
 
 ```rust
@@ -322,7 +321,6 @@ Your folder should look like this (output from the command `tree -L 3`):
     ├── src
     └── target
 ```
-
 Let's define the first test scenario. Open the file `scenarios/crowdfunding-init.scen.json` in your favorite text editor and replace its contents with the following code. It might look like a lot, but we'll go over every bit of it, and it's not really that complicated.
 
 ```json

@@ -3,7 +3,7 @@ id: custom-wallet-connect
 title: Custom Wallet Connect
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Custom Wallet Connect
 
@@ -122,7 +122,7 @@ The Wallet Connect essentially works as a "link", connecting users to dApps usin
 
 [comment]: # (mx-context-auto)
 
-## Configure the dApp to use the new custom Wallet Connect server.
+## Configure the dApp to use the new custom Wallet Connect server
 
 In this section, we will use the sample dApp that we created earlier to configure an array of Wallet Connect addresses (we can have more than one Wallet Connect server).
 

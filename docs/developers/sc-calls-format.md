@@ -3,6 +3,7 @@ id: sc-calls-format
 title: Smart Contract Calls Data Format
 ---
 [comment]: # (mx-abstract)
+
 This page provides an in-depth examination of the Smart Contract Calls Data Format.
 
 [comment]: # (mx-context-auto)
