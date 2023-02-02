@@ -5,6 +5,10 @@ title: Deep History Squad
 
 [comment]: # (mx-abstract)
 
+This page describes the Deep History Squad, which holds the entire trie data, so it can be used to reconstruct the state of the network at any point in time.
+
+[comment]: # (mx-context-auto)
+
 ## Overview
 
 A variant of the standard [observing squad](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a **[deep-history observing squad](https://github.com/multiversx/mx-chain-deep-history)**.

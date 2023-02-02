@@ -3,6 +3,8 @@ id: transfer-flows
 title: Transfer Flows
 ---
 
+[comment]: # (mx-abstract)
+
 The main functionality of the bridge is to transfer tokens from a network to another. For example, a user can transfer tokens from Ethereum to MultiversX or from MultiversX to Ethereum. 
 The following sections describe the transfer flows for both directions.
 

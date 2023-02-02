@@ -3,6 +3,8 @@ id: unjailing
 title: Unjailing
 ---
 
+[comment]: # (mx-abstract)
+
 This page will guide you through the process of unjailing a validator node.
 
 [comment]: # (mx-context-auto)

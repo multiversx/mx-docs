@@ -3,6 +3,13 @@ id: faq
 title: FAQs
 ---
 
+[comment]: # (mx-abstract)
+This page contains frequently asked questions about validators and nodes.
+
+[comment]: # (mx-context-auto)
+
+## FAQs
+
 **How to choose a VPS?**
 
 Get started with a few popular VPS choices:

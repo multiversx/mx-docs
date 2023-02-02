@@ -3,6 +3,14 @@ id: node-cli
 title: Node CLI
 ---
 
+[comment]: # (mx-abstract)
+
+This page will guide you through the CLI fields available for the node and other tools from the `mx-chain-go` repository.
+
+[comment]: # (mx-context-auto)
+
+## **Introduction**
+
 Command Line Interface for the Node and the associated Tools
 
 The **Command Line Interface** of the **Node** and its associated **Tools** is described at the following locations:

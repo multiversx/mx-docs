@@ -3,6 +3,8 @@ id: staking
 title: Staking & Unstaking
 ---
 
+[comment]: # (mx-abstract)
+
 This page will guide you through the process of staking and unstaking nodes.
 
 [comment]: # (mx-context-auto)

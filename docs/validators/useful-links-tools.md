@@ -3,6 +3,14 @@ id: useful-links
 title: Useful Links & Tools
 ---
 
+[comment]: # (mx-abstract)
+
+This page offer useful links and resources that can be used by validators and nodes operators.
+
+[comment]: # (mx-context-auto)
+
+## Resources
+
 Official resources:
 
 - Blockchain Explorer: [https://explorer.multiversx.com/](https://explorer.multiversx.com/)

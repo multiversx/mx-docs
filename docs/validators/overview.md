@@ -3,6 +3,8 @@ id: overview
 title: Validators - Overview
 ---
 
+[comment]: # (mx-abstract)
+
 This page provides an overview of the Validator Nodes and the associated Tools.
 
 [comment]: # (mx-context-auto)

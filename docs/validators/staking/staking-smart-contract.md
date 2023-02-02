@@ -3,9 +3,13 @@ id: staking-smart-contract
 title: The Staking Smart Contract
 ---
 
+[comment]: # (mx-abstract)
+
+This page will guide you through the the operations of the Staking System Smart Contract.
+
 [comment]: # (mx-context-auto)
 
-# **Staking**
+## **Staking**
 
 Nodes are _promoted_ to the role of **validator** when their operator sends a _staking transaction_ to the Staking smart contract. Through this transaction, the operator locks ("stakes") an amount of their own EGLD for each node that becomes a validator. A single staking transaction contains the EGLD and the information needed to stake for one or more nodes. Such a transaction contains the following:
 

@@ -3,6 +3,8 @@ id: delegation-dashboard
 title: Delegation Dashboard
 ---
 
+[comment]: # (mx-abstract)
+
 This page describes the delegation dashboard, which is a tool that allows you to manage your delegation smart contract in a visual and user-friendly way.
 
 [comment]: # (mx-context-auto)

@@ -3,6 +3,10 @@ id: system-requirements
 title: System Requirements
 ---
 
+[comment]: # (mx-abstract)
+
+This page provides the system requirements for running a MultiversX node.
+
 [comment]: # (mx-context-auto)
 
 # **MultiversX Nodes explained**

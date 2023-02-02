@@ -3,6 +3,14 @@ id: rating
 title: Rating
 ---
 
+[comment]: # (mx-abstract)
+
+This page exposes the rating system used for MultiversX validators.
+
+[comment]: # (mx-context-auto)
+
+## **Introduction**
+
 Each individual validator has a **rating score**, which expresses its overall reliability, performance and responsiveness. It is an important value, and node operators should be always mindful of the rating of their validators.
 
 Rating influences the probability of a validator to be selected for consensus in each round. A performant validator will be preferred in consensus, as opposed to a validator which sometimes fails to contribute or which is not always online.
