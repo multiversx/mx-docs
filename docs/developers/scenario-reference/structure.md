@@ -2,6 +2,8 @@
 id: structure
 title: Scenario Structure
 ---
+[comment]: # (mx-abstract)
+Good test scenarios ensure software reliability and functionality, that's why is important to follow the proposed structure for having them as robust as possible.
 
 [comment]: # (mx-context-auto)
 

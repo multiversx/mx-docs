@@ -2,6 +2,8 @@
 id: overview
 title: Overview
 ---
+[comment]: # (mx-abstract)
+The processing cost of a MultiversX transaction is determined by its gas limit, the actual gas consumption, and the gas price per gas unit, leading to a processing fee in EGLD that may be subject to a gas refund in certain cases.
 
 [comment]: # (mx-context-auto)
 

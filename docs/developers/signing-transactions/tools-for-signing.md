@@ -2,8 +2,9 @@
 id: tools-for-signing
 title: Tools for signing
 ---
+[comment]: # (mx-abstract)
 
-In order to sign a transaction without actually dispatching it, one can use [mxpy](/sdk-and-tools/sdk-py) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
+In order to sign a transaction without actually dispatching it, several tools can be used. Two of the most popular ones are: [mxpy](/sdk-and-tools/sdk-py) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
 
 [comment]: # (mx-context-auto)
 
@@ -51,7 +52,7 @@ In either case, the output file looks like this:
 
 [comment]: # (mx-context-auto)
 
-## **Sign using [mxjs-wallet](/sdk-and-tools/sdk-js-wallet-cli)**
+## **Sign using [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli)**
 
 Given an unsigned transaction in a JSON file:
 

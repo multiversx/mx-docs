@@ -2,8 +2,9 @@
 id: signing-transactions
 title: Signing Transactions
 ---
+[comment]: # (mx-abstract)
 
-How to serialize and sign the Transaction payload
+By reading this page you will find out how to serialize and sign the Transaction payload.
 
 Transactions must be **signed** with the Sender's Private Key before submitting them to the MultiversX Network. Signing is performed with the [Ed25519](https://ed25519.cr.yp.to/) algorithm.
 

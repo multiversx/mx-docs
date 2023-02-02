@@ -2,6 +2,7 @@
 id: values-simple
 title: Scenario Simple Values
 ---
+[comment]: # (mx-abstract)
 
 We went through the structure of a scenario, and you might have noticed that in a lot of places values are expressed in diverse ways.
 
@@ -30,7 +31,7 @@ It must be emphasized that no matter how values are expressed in scenarios, the 
 
 :::
 
-A note on error messages: whenever we write a test that fails, the test runner tries its best to transform the actual value it found from raw bytes to a more human-readable form. It doesn't really know what format to use, to it tries its best to find something plausible. However, all it has are some heuristics, so it doesn't always get it right. It also displays the raw bytes so that the developer can investigate the proper value.
+A note on error messages: whenever we write a test that fails, the test runner tries its best to transform the actual value it found from raw bytes to a more human-readable form. It doesn't really know what format to use, so it tries its best to find something plausible. However, all it has are some heuristics, so it doesn't always get it right. It also displays the raw bytes so that the developer can investigate the proper value.
 
 [comment]: # (mx-context-auto)
 

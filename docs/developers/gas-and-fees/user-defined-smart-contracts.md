@@ -2,6 +2,7 @@
 id: user-defined-smart-contracts
 title: User-defined Smart Contracts
 ---
+[comment]: # (mx-abstract)
 
 For user-defined Smart Contract deployments and function calls, the **actual gas consumption** of processing contains both of the previously mentioned cost components - though, while the **value movement and data handling** component is easily computable (using the previously depicted formula), the **contract execution** component is hard to determine precisely _a priori_. Therefore, for this component we have to rely on _simulations_ and _estimations_.
 
@@ -59,7 +60,7 @@ In the output, look for the `status` - it should be `success`:
         ...
     }
 ```
-
+[comment]: # (mx-context)
 In the end, let's actually deploy the contract:
 
 ```bash
@@ -106,7 +107,7 @@ In the output, look for `txGasUnits`. For example:
     }
 }
 ```
-
+[comment]: # (mx-context)
 In the end, let's actually call the contract:
 
 ```bash

@@ -2,6 +2,7 @@
 id: values-complex
 title: Scenario Complex Values
 ---
+[comment]: # (mx-abstract)
 
 We already covered representations of simple types [here](/developers/scenario-reference/values-simple). This is enough for arguments of types like `usize`, `BigUint` or `&[u8]`, but we need to also somehow specify complex types like custom structs or lists of items.
 
