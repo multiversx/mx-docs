@@ -3,6 +3,8 @@ id: observing-squad
 title: Observing Squad
 ---
 
+[comment]: # (mx-abstract)
+
 The N+1 setup for connecting to the MultiversX Network
 
 In order to integrate with the MultiversX Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.

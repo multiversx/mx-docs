@@ -3,6 +3,10 @@ id: querying-the-blockchain
 title: Querying the Blockchain
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes how to query the Network in order to fetch data such as transactions and blocks (hyperblocks).
+
 [comment]: # (mx-context-auto)
 
 ## **Querying broadcasted transactions**

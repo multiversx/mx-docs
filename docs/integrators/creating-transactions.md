@@ -3,6 +3,10 @@ id: creating-transactions
 title: Creating Transactions
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes how to create, sign and broadcast transactions to the MultiversX Network.
+
 [comment]: # (mx-context-auto)
 
 ## **Transaction structure**

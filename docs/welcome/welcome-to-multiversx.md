@@ -3,7 +3,7 @@ id: welcome-to-multiversx
 title: Welcome to MultiversX
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 # **At a glance:**
 
