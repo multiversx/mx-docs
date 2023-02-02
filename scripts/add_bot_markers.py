@@ -91,15 +91,17 @@ def main():
         if should_skip_file(content):
             continue
 
-        if ABSTRACT_MARKER not in content and "sdk-and-tools" in str(md_file):
+        if ABSTRACT_MARKER not in content:
             print("Warning! no abstract marker in", md_file)
 
 
 def should_skip_file(file_content: str) -> bool:
     return EXCLUDE_FILE_MARKER in file_content
 
-def should_skip_context(one_line_before: str,two_lines_before: str) -> bool:
+
+def should_skip_context(one_line_before: str, two_lines_before: str) -> bool:
     return EXCLUDE_CONTEXT_MARKER in [one_line_before, two_lines_before]
+
 
 def looks_like_code_block(line: str):
     return line.startswith("```")
