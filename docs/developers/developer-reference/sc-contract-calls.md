@@ -3,7 +3,7 @@ id: sc-contract-calls
 title: Smart contract to smart contract calls
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 

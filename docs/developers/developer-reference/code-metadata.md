@@ -3,7 +3,7 @@ id: code-metadata
 title: Code Metadata
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 

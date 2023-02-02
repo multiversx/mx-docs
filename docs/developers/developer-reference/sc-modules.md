@@ -3,7 +3,7 @@ id: sc-modules
 title: Smart contract modules
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 

@@ -3,7 +3,7 @@ id: sc-api-functions
 title: Smart Contract API Functions
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 

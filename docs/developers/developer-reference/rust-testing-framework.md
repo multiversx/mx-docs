@@ -3,7 +3,7 @@ id: rust-testing-framework
 title: Rust Testing Framework
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 
@@ -469,7 +469,7 @@ fn test_failed_cf() {
 }
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## Conclusion
 

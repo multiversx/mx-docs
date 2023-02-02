@@ -3,7 +3,7 @@ id: sc-build-reference
 title: Smart Contract Build Reference
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## How to: Basic build
 
@@ -17,7 +17,7 @@ Alternatively you can go to your installed `MultiversX Workspace Explorer` VS Co
 
 ![build contract screenshot](/developers/sc-build-reference/ide-build-screenshot.png "Build Contract from the MultiversX Workspace Explorer extension")
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## How to: Multi contract build
 
@@ -196,7 +196,7 @@ fn world() -> ScenarioWorld {
   - `add-endpoints` - A list of endpoint names to be added directly to this contract. It bypasses the label system.
 - `labels-for-contracts` - It is also possible to map in reverse, labels to contracts. It contains a mapping from labels to lists of contract ids. It can be a little harder to read than the contract to label map, but it can be used. It
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## CLI specification
 

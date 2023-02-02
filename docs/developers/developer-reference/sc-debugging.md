@@ -3,7 +3,7 @@ id: sc-debugging
 title: Smart Contract Debugging
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 

@@ -3,7 +3,7 @@ id: sc-random-numbers
 title: Random Numbers in Smart Contracts
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 

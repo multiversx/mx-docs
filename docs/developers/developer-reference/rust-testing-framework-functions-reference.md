@@ -3,7 +3,7 @@ id: rust-testing-framework-functions-reference
 title: Rust Testing Framework Functions Reference
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 

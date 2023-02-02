@@ -2,6 +2,7 @@
 id: serialization-format
 title: The MultiversX Serialization Format
 ---
+[comment]: # (mx-abstract)
 
 In MultiversX, there is a specific serialization format for all data that interacts with a smart contract. The serialization format is central to any project because all values entering and exiting a contract are represented as byte arrays that need to be interpreted according to a consistent specification.
 

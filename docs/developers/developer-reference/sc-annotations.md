@@ -3,7 +3,7 @@ id: sc-annotations
 title: Smart contract annotations
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 
@@ -13,7 +13,7 @@ One of the main purposes of the framework is to make the code as readable and co
 
 For an introduction, check out [the Crowdfunding tutorial](/developers/tutorials/crowdfunding-p1). This page is supposed to be a complete index of all annotations that can be encountered in smart contracts.
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## Trait annotations
 
@@ -55,7 +55,7 @@ Note that the annotation takes no additional arguments.
 Only one contract, module or proxy annotation is allowed per Rust module. If they are in separate files there is no problem, but if several share a file, explicit `mod proxy_name { ... }` must enclose the module.
 :::
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-exclude-context)
 
 ## Method annotations
 

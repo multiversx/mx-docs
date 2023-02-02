@@ -3,7 +3,7 @@ id: upgrading-smart-contracts
 title: Upgrading smart contracts
 ---
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-abstract)
 
 ## Introduction
 
