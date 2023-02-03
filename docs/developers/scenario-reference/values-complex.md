@@ -42,26 +42,33 @@ Make sure not to confuse values expressed as JSON lists with other elements of s
 
 ```json
 {
-            "step": "scCall",
-            "txId": "echo_managed_vec_of_managed_vec",
-            "tx": {
-                "from": "address:an_account",
-                "to": "sc:basic-features",
-                "value": "0",
-                "function": "echo_managed_vec_of_managed_vec",
-                "arguments": [
-                    [
-                        "u32:3",
-                        ["u32:1", "u32:2", "u32:3"],
-                        "u32:0",
-                        "u32:2",
-                        ["u32:5", "u32:6"]
-                    ]
-                ],
-                "gasLimit": "50,000,000",
-                "gasPrice": "0"
-            }
-        },
+  "step": "scCall",
+  "txId": "echo_managed_vec_of_managed_vec",
+  "tx": {
+    "from": "address:an_account",
+    "to": "sc:basic-features",
+    "value": "0",
+    "function": "echo_managed_vec_of_managed_vec",
+    "arguments": [
+      [
+        "u32:3",
+        [
+          "u32:1",
+          "u32:2",
+          "u32:3"
+        ],
+        "u32:0",
+        "u32:2",
+        [
+          "u32:5",
+          "u32:6"
+        ]
+      ]
+    ],
+    "gasLimit": "50,000,000",
+    "gasPrice": "0"
+  }
+}
 ```
 
 In the example above, there is in fact a single argument that we are passing to the endpoint. The outer brackets in `"arguments": [ ... ]` are scenario syntax for the list of arguments. The brackets immediately nested signal a JSON list value. Notice how the list itself contains some more lists inside it. They all get concatenated in the end into a single value.

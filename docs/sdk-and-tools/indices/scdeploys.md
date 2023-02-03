@@ -5,7 +5,7 @@ title: scdeploys
 
 [comment]: # (mx-abstract)
 
-This page describes the structure of the `sc-deploys` index (Elastic Search), and also depicts a few examples of how to query it.
+This page describes the structure of the `sc-deploys` index (Elasticsearch), and also depicts a few examples of how to query it.
 
 [comment]: # (mx-context-auto)
 

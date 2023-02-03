@@ -103,7 +103,7 @@ Also beware that there is currently no protection against cyclic imports.
                     "nonce": "0",
                     "balance": "23,000",
                     "esdt": {
-                        "str:MYFUNGIBLE-0001": "100,000,000,000",
+                        "str:MYFUNGIBLE-0001": "100,000,000,000"
                     },
                     "storage": {
                         "str:storage-key-1": "-5",
@@ -190,66 +190,67 @@ Is allowed anywhere, not just as the end of tests, so progressive changes can be
 
 ```json
 {
-    "steps": [
-        {
-            "step": "checkState",
-            "comment": "check that previous tx did the right thing",
-            "accounts": {
-                "address:user_account": {
-                    "comment": "we can comment on individual account initializations",
-                    "nonce": "0",
-                    "balance": "*",
-                    "esdt": {
-                        "str:MYFUNGIBLE-0001": "*",
-                        "str:MYSFT-123456": {
-                            "instances": [
-                                {
-                                    "nonce": "24",
-                                    "balance": "*"
-                                },
-                                {
-                                    "nonce": "25",
-                                    "balance": "1",
-                                    "creator": "address:other_creator_address",
-                                    "royalties": "5000",
-                                    "hash": "keccak256:str:other_nft_hash",
-                                    "uri": [
-                                        "str:www.something.com/funny.jpeg"
-                                    ],
-                                    "attributes": "str:other_attributes"
-                                }
-                            ],
-                            "lastNonce": "7",
-                            "roles": [
-                                "ESDTRoleLocalMint",
-                                "ESDTRoleLocalBurn",
-                                "ESDTRoleNFTCreate",
-                                "ESDTRoleNFTAddQuantity",
-                                "ESDTRoleNFTBurn"
-                            ],
-                            "frozen": "false"
-                        }
-                    },
-                    "username": "str:myusername.x",
-                    "storage": {},
-                    "code": ""
+  "steps": [
+    {
+      "step": "checkState",
+      "comment": "check that previous tx did the right thing",
+      "accounts": {
+        "address:user_account": {
+          "comment": "we can comment on individual account initializations",
+          "nonce": "0",
+          "balance": "*",
+          "esdt": {
+            "str:MYFUNGIBLE-0001": "*",
+            "str:MYSFT-123456": {
+              "instances": [
+                {
+                  "nonce": "24",
+                  "balance": "*"
                 },
-                "sc:smart_contract_address": {
-                    "nonce": "0",
-                    "balance": "23,000",
-                    "esdt": {
-                        "str:MYFUNGIBLE-0001": "100,000,000,000",
-                    },
-                    "storage": {
-                        "str:storage-key-1": "-5",
-                        "str:storage-key-2|u32:4": "*",
-                        "+": ""
-                    },
-                    "code": "file:smart-contract.wasm"
+                {
+                  "nonce": "25",
+                  "balance": "1",
+                  "creator": "address:other_creator_address",
+                  "royalties": "5000",
+                  "hash": "keccak256:str:other_nft_hash",
+                  "uri": [
+                    "str:www.something.com/funny.jpeg"
+                  ],
+                  "attributes": "str:other_attributes"
                 }
+              ],
+              "lastNonce": "7",
+              "roles": [
+                "ESDTRoleLocalMint",
+                "ESDTRoleLocalBurn",
+                "ESDTRoleNFTCreate",
+                "ESDTRoleNFTAddQuantity",
+                "ESDTRoleNFTBurn"
+              ],
+              "frozen": "false"
             }
+          },
+          "username": "str:myusername.x",
+          "storage": {},
+          "code": ""
+        },
+        "sc:smart_contract_address": {
+          "nonce": "0",
+          "balance": "23,000",
+          "esdt": {
+            "str:MYFUNGIBLE-0001": "100,000,000,000"
+          },
+          "storage": {
+            "str:storage-key-1": "-5",
+            "str:storage-key-2|u32:4": "*",
+            "+": ""
+          },
+          "code": "file:smart-contract.wasm"
         }
-    ]
+      }
+    }
+  ]
+}
 ```
 
 Fields:
