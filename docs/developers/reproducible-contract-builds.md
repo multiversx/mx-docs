@@ -255,7 +255,7 @@ For the above code snippet:
 - `erd1qqqqqqqqqqqqqpgq6u07hhkfsvuk5aae92g549s6pc2s9ycq0dps368jr5` - should be your contract address (in this case is a dummy address);
 - `--packaged-src=./output-docker/contract/contract-0.0.0.source.json` - should be found in the output folder after deterministically building your contract;
 - `--verifier-url="https://play-api.multiversx.com"` - this is the verifier api address. Be advised that it may be subject to change;
-- `--docker-image="multiversx/sdk-rust-contract-builder:v4.1.1"` - the same version utilized in constructing the contract must be utilized here too.;
+- `--docker-image="multiversx/sdk-rust-contract-builder:v4.1.1"` - the same version utilized in constructing the contract must be utilized here too;
 - `--pem=contract-owner.pem` - represents the owner of the contract.
 :::
 
