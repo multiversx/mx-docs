@@ -153,6 +153,7 @@ In the `output` folder(s), you should see the following files (example):
 - `adder.codehash.txt`: a file containing the computed `codehash` of the contract.
 - `adder.wat`: a textual representation of the bytecode, to be displayed in text editors, if necessary;
 - `adder.imports.json`: a listing of VM API functions imported and used by the contract.
+- `adder.source.json` : packaged source code.
 - `adder-v1.2.3.zip`: a versioned archive containing the source code used as input for the build.
 
 [comment]: # (mx-context-auto)
@@ -181,7 +182,8 @@ As an alternative to the previous bash script, **mxpy** can be used to build a c
 
 1. Make sure you have latest [mxpy]((/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended)) installed.
 2. Make sure you have latest [docker engine](https://docs.docker.com/engine/install/ubuntu/) installed.
-3. Build your contract using:
+3. Build your contract using the `reproducible-build` endpoint:
+
 ```
 mxpy contract reproducible-build ~/contracts/reproducible-contract-build-example --docker-image="multiversx/sdk-rust-contract-builder:v4.1.1"
 ```
@@ -190,13 +192,17 @@ mxpy contract reproducible-build ~/contracts/reproducible-contract-build-example
 Be aware that the version of the --docker-image may change over time. Always use the latest.
 :::
 
+:::tip
+You can run a local test using this [example-sc](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
+:::
+
 4. Upon a successful build, an output folder will be generated containing:
 - `contract.wasm`: the actual bytecode of the smart contract, to be deployed on the network;
 - `contract.abi.json`: the ABI of the smart contract (a listing of endpoints and types definitions), to be used when developing dApps or simply interacting with the contract (e.g. using _erdjs_);
 - `contract.codehash.txt`: a file containing the computed `codehash` of the contract.
 - `contract.wat`: a textual representation of the bytecode, to be displayed in text editors, if necessary;
 - `contract.imports.json`: a listing of VM API functions imported and used by the contract.
-- `contract.source.json` : 
+- `contract.source.json` : packaged source code.
 - `contract-v1.2.3.zip`: a versioned archive containing the source code used as input for the build.
 
 [comment]: # (mx-context-auto)
@@ -233,9 +239,11 @@ Make sure that you have the latest `mxpy` installed. In order to install mxpy, f
 2. Upon deploying, the output will not only provide information such as the transaction hash and data, but also the address of the newly deployed contract.
 3. Before deployment, it must be built deterministically as described [above](/developers/reproducible-contract-builds#how-to-run-a-reproducible-build-using-mxpy).
 4. The command you have to use is:
+
 ```
 mxpy --verbose contract verify "erd1qqqqqqqqqqqqqpgq6u07hhkfsvuk5aae92g549s6pc2s9ycq0dps368jr5" --packaged-src=./output-docker/contract/contract-0.0.0.source.json --verifier-url="https://play-api.multiversx.com" --docker-image="multiversx/sdk-rust-contract-builder:v4.1.1"  --pem=contract-owner.pem
 ```
+
 :::tip
 For the above code snippet:
 - `erd1qqqqqqqqqqqqqpgq6u07hhkfsvuk5aae92g549s6pc2s9ycq0dps368jr5` - should be your contract address (in this case is a dummy address);
@@ -244,4 +252,5 @@ For the above code snippet:
 - `--docker-image="multiversx/sdk-rust-contract-builder:v4.1.1"` - as stated before, be advised as this is also subject to change, always use the latest and greatest;
 - `--pem=contract-owner.pem` - represents the owner of the contract.
 :::
+
 5. Given the current limited bandwidth, it is expected that the time to verify your contract may take longer.
