@@ -198,10 +198,6 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 mxpy contract reproducible-build ~/contracts/reproducible-contract-build-example --docker-image="multiversx/sdk-rust-contract-builder:v4.1.1"
 ```
 
-:::caution
-Be aware that the version of the --docker-image may change over time.
-:::
-
 :::tip
 You can run a local test using this [example-sc](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
 :::
