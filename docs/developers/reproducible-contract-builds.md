@@ -241,9 +241,9 @@ Please note that as a **Beta** feature still in development, certain steps descr
 Make sure that you have the latest `mxpy` installed. In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
 :::
 
-1. To start with the verification process, we need to first deploy the smart contract. For deploying contracts have a look here: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/#deploy--upgrade.
-2. Upon deploying, the output will not only provide information such as the transaction hash and data, but also the address of the newly deployed contract.
-3. Before deployment, it must be built deterministically as described [above](/developers/reproducible-contract-builds#how-to-run-a-reproducible-build-using-mxpy).
+1. The contract must be deterministically built as described [above](/developers/reproducible-contract-builds#how-to-run-a-reproducible-build-using-mxpy).
+2. To start with the verification process, we need to first deploy the smart contract. For deploying contracts have a look here: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/#deploy--upgrade.
+3. Upon deploying, the output will not only provide information such as the transaction hash and data, but also the address of the newly deployed contract.
 4. In order to verify your contract the command you have to use is:
 
 ```
