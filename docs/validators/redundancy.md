@@ -3,9 +3,13 @@ id: redundancy
 title: Node redundancy
 ---
 
+[comment]: # (mx-abstract)
+
 MultiversX Validator Nodes can be configured to have one or more hot-standby nodes.
 This means additional nodes will run on different servers, in sync with the Main Validator node.
 Their role is to stand in for the Main Validator node in case it fails, to ensure high availability.
+
+[comment]: # (mx-context)
 
 This is a redundancy mechanism which allows the Main Validator operator to start additional 'n' hot-standby nodes,
 each of them running the same 'validatorKey.pem' file. The difference between
@@ -39,6 +43,8 @@ The hot-standby nodes will advertise on the network a different public key (auto
 :::tip
 If the Main Validator (RedundancyLevel 0) gets back online, the hot-standby node(s) revert to standby mode.
 :::
+
+[comment]: # (mx-context)
 
 :::caution
 Do not use the same redundancy level on more than one node. Otherwise, the nodes with the same `RedundancyLevel` value will start signing blocks in parallel in the same time. Although the protocol is not negatively affected by double signing, in the near future the BLS key that will perform double signing will have its stake slashed.

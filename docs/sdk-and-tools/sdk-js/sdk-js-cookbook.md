@@ -3,11 +3,15 @@ id: sdk-js-cookbook
 title: Cookbook
 ---
 
+[comment]: # (mx-abstract)
+
 This page will guide you through the process of handling common tasks using **sdk-js**.
 
 :::important
 This cookbook makes use of `sdk-js 10`. In order to migrate from `sdk-js 9.x` to `sdk-js 10`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
 :::
+
+[comment]: # (mx-context-auto)
 
 ## Creating network providers
 
@@ -33,6 +37,8 @@ Use the classes from `@multiversx/sdk-network-providers` **only as a starting po
 On this topic, please see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Fetching network parameters
 
 ```
@@ -41,7 +47,11 @@ console.log(networkConfig.MinGasPrice);
 console.log(networkConfig.ChainID);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Working with accounts
+
+[comment]: # (mx-context-auto)
 
 ### Synchronizing an account object
 
@@ -56,6 +66,8 @@ alice.update(aliceOnNetwork);
 console.log(alice.nonce);
 console.log(alice.balance);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Managing the sender nonce locally
 
@@ -72,6 +84,8 @@ transaction.setNonce(alice.getNonceThenIncrement());
 ```
 
 For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
+
+[comment]: # (mx-context-auto)
 
 ## Preparing payment objects
 
@@ -124,7 +138,11 @@ A `TokenPayment` object for transferring **meta-esdt** tokens:
 let payment = TokenPayment.metaEsdtFromAmount(identifier, nonce, "0.1", numDecimals);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Broadcasting transactions
+
+[comment]: # (mx-context-auto)
 
 ### Preparing a simple transaction
 
@@ -138,6 +156,8 @@ let tx = new Transaction({
 });
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Broadcast using a network provider
 
 ```
@@ -149,6 +169,8 @@ Note that the transaction needs to be signed before broadcasting it. Signing can
 :::important
 Note that, for all purposes, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### Broadcast using `axios`
 
@@ -162,6 +184,8 @@ let response = await axios.post(url, data, {
 });
 let txHash = response.data.txHash;
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Wait for transaction completion
 
@@ -185,7 +209,11 @@ await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), wat
 
 For a different awaiting strategy, also see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 
+[comment]: # (mx-context-auto)
+
 ## Token transfers
+
+[comment]: # (mx-context-auto)
 
 ### Single ESDT transfer
 
@@ -204,6 +232,8 @@ transactions.push(new Transaction({
     chainID: "D"
 }));
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Single NFT transfer
 
@@ -225,6 +255,8 @@ transactions.push(new Transaction({
 }));
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Single SFT transfer
 
 ```
@@ -244,6 +276,8 @@ transactions.push(new Transaction({
     chainID: "D"
 }));
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Multi ESDT / NFT transfer
 
@@ -267,7 +301,11 @@ transactions.push(new Transaction({
 }));
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Contract deployments
+
+[comment]: # (mx-context-auto)
 
 ### Load the bytecode from a file
 
@@ -278,6 +316,8 @@ import { promises } from "fs";
 let buffer: Buffer = await promises.readFile(file);
 let code = Code.fromBuffer(buffer);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Load the bytecode from an URL
 
@@ -295,6 +335,8 @@ let response: AxiosResponse<ArrayBuffer> = await axios.get("https://.../myContra
 let buffer = Buffer.from(response.data);
 let code = Code.fromBuffer(buffer);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Perform a contract deployment
 
@@ -343,7 +385,11 @@ In the end, parse the results:
 let { returnCode } = new ResultsParser().parseUntypedOutcome(transactionOnNetwork);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## ABI
+
+[comment]: # (mx-context-auto)
 
 ### Load the ABI from a file
 
@@ -359,6 +405,8 @@ let abi = new SmartContractAbi(abiRegistry, ["MyContract"]);
 let contract = new SmartContract({ address: new Address("erd1..."), abi: abi });
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Load the ABI from an URL
 
 ```
@@ -371,7 +419,11 @@ let abi = new SmartContractAbi(abiRegistry, ["MyContract"]);
 let contract = new SmartContract({ address: new Address("erd1..."), abi: abi });
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Contract queries
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is not available
 
@@ -393,6 +445,8 @@ console.log(bundle.returnMessage);
 console.log(bundle.values);
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Using `Interaction`, when the ABI is not available
 
 ```
@@ -407,6 +461,8 @@ let queryResponse = await networkProvider.queryContract(query);
 
 Then, parse the response as above.
 
+[comment]: # (mx-context-auto)
+
 ### When the ABI is available
 
 ```
@@ -420,6 +476,8 @@ let queryResponse = await networkProvider.queryContract(query);
 let endpointDefinition = contract.getEndpoint("getClaimableRewards");
 let { firstValue, secondValue, returnCode } = resultsParser.parseQueryResponse(queryResponse, endpointDefinition);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Using `Interaction`, when the ABI is available
 
@@ -445,7 +503,11 @@ let firstValueAsStruct = <Struct>firstValue;
 return firstValueAsStruct;
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Contract interactions
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is not available
 
@@ -466,6 +528,8 @@ tx.setNonce(alice.nonce);
 
 Then, sign, broadcast `tx` and wait for its completion.
 
+[comment]: # (mx-context-auto)
+
 ### Using `Interaction`, when the ABI is not available
 
 ```
@@ -484,6 +548,8 @@ let tx = interaction
 
 Then, sign, broadcast `tx` and wait for its completion.
 
+[comment]: # (mx-context-auto)
+
 ### Using `Interaction`, when the ABI is available
 
 ```
@@ -495,6 +561,8 @@ let tx = contract.methods.dummy([new U32Value(100)])
     .withChainID("D")
     .buildTransaction();
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Transfer & execute
 
@@ -525,11 +593,15 @@ interaction.withMultiESDTNFTTransfer([
 ]);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Parsing contract results
 
 :::important
 When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/multiversx/mx-sdk-js-core/issues), and also provide as many details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
 :::
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is not available
 
@@ -538,6 +610,8 @@ let resultsParser = new ResultsParser();
 let transactionOnNetwork = await networkProvider.getTransaction(txHash);
 let { returnCode, returnMessage, values } = resultsParser.parseUntypedOutcome(transactionOnNetwork, endpointDefinition);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is available
 
@@ -560,6 +634,8 @@ let endpointDefinition = smartContract.getEndpoint("myFunction");
 ```
 
 For customizing the default parser, also see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
+
+[comment]: # (mx-context-auto)
 
 ## Signing objects
 
@@ -621,6 +697,8 @@ const signature = message.getSignature().hex();
 console.log("Message signature", signature);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Verifying signatures
 
 Creating a `UserVerifier`:
@@ -680,7 +758,11 @@ console.log("Is signature of Bob?", bobVerifier.verify(tx));
 console.log("Is signature of Bob?", bobVerifier.verify(message));
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Decoding transaction metadata
+
+[comment]: # (mx-context-auto)
 
 ### Using the `transaction-decoder`
 
@@ -699,6 +781,8 @@ let metadata = new TransactionDecoder().getTransactionMetadata({
     type: transactionOnNetwork.type
 });
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Using the `esdtHelpers` and `scArgumentsParser` of `sdk-js 9x`
 

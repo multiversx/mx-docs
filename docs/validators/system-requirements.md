@@ -3,9 +3,17 @@ id: system-requirements
 title: System Requirements
 ---
 
+[comment]: # (mx-abstract)
+
+This page provides the system requirements for running a MultiversX node.
+
+[comment]: # (mx-context-auto)
+
 # **MultiversX Nodes explained**
 
 Nodes are computers running the MultiversX software, so they contribute to the MultiversX network by relaying information and validating it. Each node needs to stake 2500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
+
+[comment]: # (mx-context-auto)
 
 # **Minimum System Requirements for running 1 MultiversX Node**
 
@@ -30,6 +38,8 @@ We are promoting using processors that support the `fma` or `fma3` instruction s
 :::caution
 In case a decision to run multiple MultiversX Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### **Networking**
 

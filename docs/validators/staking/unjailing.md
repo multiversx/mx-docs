@@ -3,6 +3,12 @@ id: unjailing
 title: Unjailing
 ---
 
+[comment]: # (mx-abstract)
+
+This page will guide you through the process of unjailing a validator node.
+
+[comment]: # (mx-context-auto)
+
 ## **Introduction**
 
 In the unfortunate situation of losing too much **rating score**, a validator will be **jailed**, which means that they will be taken out of the shards, they will not participate in consensus, and thus they will not earn any more rewards. Currently, the rating limit at which a node will be jailed is `10`. Read more on the [Ratings](/validators/rating) page.
@@ -22,12 +28,16 @@ There are currently 2 supported methods of constructing and submitting these tra
 
 The following pages will describe both approaches in each specific case.
 
+[comment]: # (mx-context-auto)
+
 ## **Prerequisites**
 
 In order to submit an unjailing transaction, you require the following:
 
 - A wallet with at least 2.5 EGLD (the cost of unjailing a _single validator_). If you want to unjail multiple validators at once, you need to multiply that minimum amount with the number of validators. For example, unjailing 3 validators at once will require 7.5 EGLD. Make sure you have enough in your wallet.
 - The **BLS public keys** of the validators you want to unjail. You absolutely **do not require the secret key** of the validators. The BLS public keys of the validators are found in the `validatorKey.pem` files. Please read [Validator Keys](/validators/key-management/validator-keys) to find out how to extract the public key only. Remember that the BLS public key consists of exactly 192 hexadecimal characters (that is, `0` to `9` and `a` to `f` only).
+
+[comment]: # (mx-context-auto)
 
 ## **Unjailing through the Wallet**
 
@@ -39,11 +49,15 @@ For the "Amount" field, you first need to calculate the amount of EGLD required 
 
 Next, expand the "Fee limit" section of the form. You'll see the "Gas limit" field appear. The value that needs to be entered here also depends on the _number of nodes_ you want to unjail. To calculate the "Gas limit" value, mulitply `6000000` (six million gas units) by the number of nodes. For example, if you want to unjail a single node, enter `6000000`. For two nodes, enter `12000000`, for three nodes enter `18000000` and so on. Observe how the "Fee limit" field automatically calculates the cost of this transaction.
 
+[comment]: # (mx-context-auto)
+
 ## **The "Data" field**
 
 Next, you must fill the "Data" field. The text you will write here will be read by the Staking SmartContract to find out what nodes you want to unjail. Remember, you can unjail any number of nodes at once.
 
 When writing in the "Data" field, you must adhere to a strict format, described in the following subsections.
+
+[comment]: # (mx-context-auto)
 
 ### **Unjailing a single node**
 
@@ -62,6 +76,8 @@ As an example, the "Data" field of an unjailing transaction for a single node lo
 unJail@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa0cef2273f5a67b4f442c725efc06a5d366b9f15a66da9eb8208a09c9ab4066b6b3d38c3cf1ea7fab6489a90713b3b56d87de68c6558c80d7533bf27
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MA1YB7F53LJCTlFj8qn%2F-MA1_N1up06vncGVTyfp%2Funjailing-single-node.png?alt=media&token=fe0ca638-6433-4c07-b7ac-ef3fcf199835)
+
+[comment]: # (mx-context-auto)
 
 ### **Unjailing multiple nodes at once**
 
@@ -93,6 +109,8 @@ unJail@b617d8bc442bda59510f77e04a1680e8b2d3293c8c4083d94260db96a4d732deaaf9855fa
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MA1mbsWLwDtxs1LX3w-%2F-MA1nGcSQTZqmnGoxtRA%2Funjailing-two-nodes.png?alt=media&token=991f11c8-fe7c-46f5-93fb-566ab0590279)
 
+[comment]: # (mx-context-auto)
+
 ### **The general format**
 
 You can write the text for the "Data" field for _any_ number of nodes. The general format looks like this:
@@ -101,11 +119,15 @@ You can write the text for the "Data" field for _any_ number of nodes. The gener
 unJail@<BLS1>@<BLS2>@…@<BLS99>
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Unjailing through mxpy**
 
 Submitting the unjailing transaction using `mxpy` avoids having to write the "Data" field manually. Instead, the transaction is constructed automatically by `mxpy` and submitted to the network directly, in a single command.
 
 Make sure `mxpy` is installed and has the latest version before continuing. If `mxpy` is not installed, please follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
+
+[comment]: # (mx-context-auto)
 
 ## **Your Wallet PEM file**
 
@@ -114,6 +136,8 @@ To send transactions on your behalf _without_ using the online MultiversX Wallet
 Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
 
 After the PEM file was generated, you can issue transactions from `mxpy`directly.
+
+[comment]: # (mx-context-auto)
 
 ## **The unjailing transaction**
 

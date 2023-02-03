@@ -3,6 +3,8 @@ id: observing-squad
 title: Observing Squad
 ---
 
+[comment]: # (mx-abstract)
+
 The N+1 setup for connecting to the MultiversX Network
 
 In order to integrate with the MultiversX Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
@@ -14,6 +16,8 @@ Currently the MultiversX Mainnet has 3 Shards, plus the Metachain. Therefore, th
 :::
 
 By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of MultiversX's sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
+
+[comment]: # (mx-context-auto)
 
 ## **System requirements**
 
@@ -33,13 +37,19 @@ The recommended number of CPUs has been updated from `8` to `16` in April 2021, 
 These specs are only a recommendation. Depending on the load over the API or the observers, one should upgrade the machine as to keep the squad synced and with good performance.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## **Setup via the Mainnet scripts**
 
 :::caution
 `elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `mx-chain-scripts`, explained below.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## **Setup via mx-chain-scripts**
+
+[comment]: # (mx-context-auto)
 
 ## **Installation and Configuration**
 
@@ -82,9 +92,13 @@ Start the nodes and the Proxy using the command:
 
 In order to check the status of the Observing Squad, please see the section **Monitoring and trivial checks** below.
 
+[comment]: # (mx-context-auto)
+
 ## **Upgrading the Observing Squad**
 
 The Observing Squad can be updated using the installation scripts.
+
+[comment]: # (mx-context-auto)
 
 ### **General upgrade procedure**
 
@@ -105,6 +119,8 @@ $ ./script.sh start
 ```
 
 After running the commands above, the upgraded Observing Squad will start again. The expected downtime is about 2-3 minutes.
+
+[comment]: # (mx-context-auto)
 
 ## **Monitoring and trivial checks**
 
@@ -140,6 +156,8 @@ export NONCE=$(curl http://localhost:8079/network/status/4294967295 | jq '.data[
 curl http://localhost:8079/hyperblock/by-nonce/$NONCE | jq
 
 ```
+
+[comment]: # (mx-context-auto)
 
 ## **Setup via Docker**
 

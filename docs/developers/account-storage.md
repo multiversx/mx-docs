@@ -3,6 +3,8 @@ id: account-storage
 title: Account storage
 ---
 
+[comment]: # (mx-abstract)
+
 ## Description
 
 The MultiversX protocol offers the possibility of storing additional data under an account as key-value pairs. This can be useful for many use cases.
@@ -12,6 +14,8 @@ A wallet owner can store key-value pairs by using the built-in function `SaveKey
 :::tip
 Keys that begin with `ELROND` will be rejected because they are reserved for protocol usage.
 :::
+
+[comment]: # (mx-context-auto)
 
 ## Transaction format
 
@@ -31,7 +35,7 @@ SaveKeyValueTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
-
+[comment]: # (mx-context)
 The gas used is computed as following:
 
 ```rust
@@ -60,6 +64,8 @@ required_gas =  100000    + // save key value function cost
              =  271000
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Example
 
 Let's save a single key-value pair. Key would be `key0` and the value would be `value0`.
@@ -77,6 +83,8 @@ SaveKeyValueTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
 
 ## REST API
 

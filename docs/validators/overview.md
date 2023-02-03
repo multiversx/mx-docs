@@ -3,7 +3,15 @@ id: overview
 title: Validators - Overview
 ---
 
+[comment]: # (mx-abstract)
+
+This page provides an overview of the Validator Nodes and the associated Tools.
+
+[comment]: # (mx-context-auto)
+
 ## Table of contents
+
+[comment]: # (mx-context-auto)
 
 ### Install and maintain a node
 
@@ -12,6 +20,8 @@ title: Validators - Overview
 | [System requirements](/validators/system-requirements)                            | System requirements for running a MultiversX node.                      |
 | [Install a Mainnet/Testnet/Devnet Node](/validators/nodes-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
+[comment]: # (mx-context-auto)
+
 ### Keys Management
 
 | Name                                                            | Description                         |
@@ -19,6 +29,8 @@ title: Validators - Overview
 | [Validator keys](/validators/key-management/validator-keys)     | Learn about a validator key.        |
 | [Wallet keys](/validators/key-management/wallet-keys)           | Learn about a wallet key.           |
 | [Protecting your keys](/validators/key-management/protect-keys) | Learn how you can secure your keys. |
+
+[comment]: # (mx-context-auto)
 
 ### Staking
 
@@ -29,6 +41,8 @@ title: Validators - Overview
 | [How to unJail a Node](/validators/staking/unjailing)                               | Learn how to unJail a node.                                   |
 | [The Staking Smart Contract](/validators/staking/staking-smart-contract)            | How to interact with the Smart Contract that manages Staking. |
 
+[comment]: # (mx-context-auto)
+
 ### Delegation Manager
 
 | Name                                                                                                                         | Description                                                                                  |
@@ -36,6 +50,8 @@ title: Validators - Overview
 | [Delegation Manager](/validators/delegation-manager)                                                                         | Learn how to create a new Staking Provider, how to configure it and how to interact with it. |
 | [How to convert an existing Validator into a Staking Pool](/validators/staking/convert-existing-validator-into-staking-pool) | Learn how to create a new Staking Provider, starting from an existing Validator.             |
 | [Merge an existing Validator into a Staking Pool](/validators/staking/merge-validator-delegation-sc)                         | Learn how to merge a validator into a Staking Provider.                                      |
+
+[comment]: # (mx-context-auto)
 
 ### Useful
 
@@ -51,6 +67,8 @@ title: Validators - Overview
 | [Useful link & tools](/validators/useful-links)          | Useful links about the explorer, wallet and some guides.                                                          |
 | [FAQ](/validators/faq)                                   | Frequently Asked Questions about nodes.                                                                           |
 
+[comment]: # (mx-context-auto)
+
 ## Overview
 
 The MultiversX network is made up of nodes and their interconnectivity - balanced by virtue of its design, secured through its size and fast, _very_ fast, because efficiency is what motivated its development. Every time a node joins the network, it adds more security and efficiency. The network, in turn, rewards the nodes for their contribution, generating a virtuous cycle.
@@ -58,6 +76,8 @@ The MultiversX network is made up of nodes and their interconnectivity - balance
 We will call a _node_ any running instance of the software application developed by the MultiversX team, [publicly available as open source](https://github.com/multiversx/mx-chain-go). Anyone can run a node on their machine - great care was taken to make the node consume as little computing resources as possible. Mid-level recent hardware can effortlessly run multiple individual nodes at the same time, earning more rewards for the same physical machine.
 
 We will call a _node operator_ any person or entity who manages one or more nodes. These pages are for them.
+
+[comment]: # (mx-context-auto)
 
 ## Background
 

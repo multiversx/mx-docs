@@ -3,10 +3,17 @@ id: es-index-blocks
 title: blocks
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `blocks` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is represented by the block hash, in a hexadecimal encoding.
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -40,7 +47,6 @@ The `_id` field of this index is represented by the block hash, in a hexadecimal
 | scheduledData         | The scheduledData contains data about the scheduled execution.                                                                                                     |
 | epochStartShardsData  | The epochStartShardsData is an array of structures that contains epoch-start data for each shard, such as pending miniblocks.                                      |
 
-
 A `metachain` block (`shardId:4294967295`) with field `epochStartBlock:true` will have the field `epochStartInfo` field populated with the next data:
 
 | epochStartInfo fields            | Description                                                                                                          |
@@ -54,7 +60,11 @@ A `metachain` block (`shardId:4294967295`) with field `epochStartBlock:true` wil
 | prevEpochStartRound              | The prevEpochStartRound field represents the round of the previous epoch start block.                                |
 | prevEpochStartHash               | The prevEpochStartHash field represents the hash of the previous epoch start block.                                  |
 
+[comment]: # (mx-context-auto)
+
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch blocks for a shard 
 In order to fetch the latest blocks from a shard, one has to do a query that matches the field `shardId`.
@@ -78,6 +88,7 @@ curl --request GET \
 }'
 ```
 
+[comment]: # (mx-context-auto)
 
 ### Fetch the latest 10 blocks for all shards
 

@@ -3,10 +3,17 @@ id: es-index-scdeploys
 title: scdeploys
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `sc-deploys` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is represented by a bech32 encoded smart contract address.
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -25,7 +32,11 @@ The `upgrades` field is populated with the fields below:
 | upgradeTxHash   | The upgradeTxHash field holds the hex encoded hash of the contract upgrade transaction.                |
 | timestamp       | The timestamp field represents the timestamp of the block in which the smart contract was upgraded.    |
 
+[comment]: # (mx-context-auto)
+
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch details about a smart contract
 

@@ -3,6 +3,8 @@ id: sc-build-reference
 title: Smart Contract Build Reference
 ---
 
+[comment]: # (mx-abstract)
+
 ## How to: Basic build
 
 To build a contract, it is enough to navigate in your contract crate and run
@@ -15,7 +17,11 @@ Alternatively you can go to your installed `MultiversX Workspace Explorer` VS Co
 
 ![build contract screenshot](/developers/sc-build-reference/ide-build-screenshot.png "Build Contract from the MultiversX Workspace Explorer extension")
 
+[comment]: # (mx-exclude-context)
+
 ## How to: Multi contract build
+
+[comment]: # (mx-context-auto)
 
 ### Rationale
 
@@ -28,6 +34,8 @@ The main rationale of this system (for now at least) are the "external view" con
 The framework does the storage access rerouting automatically behind the scenes. The contract code cannot even tell the difference between a regular view from the same contract and one that has been relegated to an external view. Even more so, the same view endpoint can function both as external view and as regular view in different configurations/output contracts.
 
 It is possible that this component becomes a building block of a more advanced versioning system, but we have not experimented with that yet.
+
+[comment]: # (mx-context-auto)
 
 ### Configuration example
 
@@ -100,6 +108,8 @@ add-unlabelled = true
 add-labels = ["multisig-external-view"]
 ```
 
+[comment]: # (mx-context-auto)
+
 ### The external view contract
 
 An _external view_ contract has a behavior different from that of a regular contract. The framework adds some logic to such a contract, which is invisible to the developer. There are two main points:
@@ -128,6 +138,8 @@ An _external view_ contract has a behavior different from that of a regular cont
   }
 }
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Testing with multi-contracts
 
@@ -170,6 +182,8 @@ fn world() -> ScenarioWorld {
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ### The `multicontract.toml` specification
 
 - `settings`
@@ -182,7 +196,11 @@ fn world() -> ScenarioWorld {
   - `add-endpoints` - A list of endpoint names to be added directly to this contract. It bypasses the label system.
 - `labels-for-contracts` - It is also possible to map in reverse, labels to contracts. It contains a mapping from labels to lists of contract ids. It can be a little harder to read than the contract to label map, but it can be used. It
 
+[comment]: # (mx-exclude-context)
+
 ## CLI specification
+
+[comment]: # (mx-context-auto)
 
 ### Calling `build`
 
@@ -213,6 +231,8 @@ Several arguments can be added to the `build` command, both in mxpy and directly
 - `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
 - `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. mxpy always sets this explicitly.
 
+[comment]: # (mx-context-auto)
+
 ### Calling `build-dbg`
 
 There is another command, provided for convenience: `cargo run build-dbg`. Calling this is equivalent to `cargo run build --wasm-symbols --no-wasm-opt --wasm-suffix "dbg" --wat --no-imports`. It is ideal for developers who want to investigate the WebAssembly output produced by the compiler.
@@ -234,9 +254,13 @@ output
 
 It accepts all the arguments from `build`, so `--target-dir` works here too.
 
+[comment]: # (mx-context-auto)
+
 ### Calling `clean`
 
 Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
+
+[comment]: # (mx-context-auto)
 
 ### Calling `snippets`
 
@@ -244,11 +268,15 @@ Calling `cargo run snippets` in the meta crate will create a project called `int
 
 An interactor is a small tool, meant for developers to interact with the contract on-chain. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. There will be more documentation in the works on this topic.
 
+[comment]: # (mx-context-auto)
+
 ## Contract build process deep dive
 
 This section provides an overview for those who want to understand the system on a deeper level. If you are simply looking to build some contracts, feel free to skip this.
 
 Building a contract is a complex process, but luckily it gets handled invisibly by the framework. We will follow the components step by step and give some justification for this architecture.
+
+[comment]: # (mx-context-auto)
 
 ### a. The smart contract itself
 
@@ -256,11 +284,15 @@ The smart contract is defined as a trait without an implementation. This is good
 
 Not everything, though, can be performed here. Notably, macros cannot access data from other modules or crates, all processing is local to the current contract or module. Therefore, we need another mechanism for working with the complete contract data.
 
+[comment]: # (mx-context-auto)
+
 ### b. The (generated) ABI generator
 
 ABIs are a collection of metatada about the contract. To build an ABI, we also need the data from the modules. The module macros cannot be called from the contract macros (macros are run at compilation, we are not even sure that modules will need to be recompiled!). Modules, however can be called. That is why we are actually generating _ABI generator functions_ for each module, which can call one another to retrieve the composite picture.
 
 Note: The ABI generator comes as an implementation of trait [ContractAbiProvider](https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/contract_base/trait.ContractAbiProvider.html).
+
+[comment]: # (mx-context-auto)
 
 ### c. Meta crate: generating the ABI
 
@@ -284,6 +316,8 @@ cargo run
 The meta crate has access to the ABI generator, because it always has a dependency to the contract crate. This is the `my_contract_crate::AbiProvider` in the example above.
 
 This is also the step where the meta crate parses and processes the `multicontract.toml` file. If there are multiple outputs, one ABI will be produced for each.
+
+[comment]: # (mx-context-auto)
 
 ### d. Meta crate: generating `wasm` crate code
 
@@ -334,6 +368,8 @@ For multi-contract builds, one `wasm` crate needs to be generated for each of th
 - The other wasm contracts (called "secondary") receive a crate folder starting with `wasm-`, e.g. `wasm-multisig-view`. These crates are fully generated based on data from `multicontract.toml`. The respective `Cargo.toml` files are based on the `Cargo.toml` of the main wasm crate. All configs are taken from there, except for the crate name.
 - Warning: Any folders starting with `wasm-` that are unaccounted for will be removed without prompt. This is to keep the folder structure clean in case of renames.
 
+[comment]: # (mx-context-auto)
+
 ### e. Meta crate: the actual WASM build
 
 The previous two steps happen by just calling `cargo run` in the meta crate, but to perform a build, one must call `cargo run build`.
@@ -344,6 +380,8 @@ The rust compiler places the result in the designated `target` folder, but for c
 
 You might have performed this step automatically from mxpy, but mxpy simply calls the meta crate to do this job. This is because at this point only the meta crate has access to the ABIs and can do it easily.
 
+[comment]: # (mx-context-auto)
+
 ### f. Meta crate: build post-processing
 
 After building the contracts, there are three more operations left to perform, based on the compiled WebAssembly outputs:
@@ -352,6 +390,8 @@ After building the contracts, there are three more operations left to perform, b
 2. A WAT file id generated for each contract. Not enabled by default, can be enabled (via `--wat`). The framework simply calls the `wasm2wat` tool to do this.
 3. An `.imports.json` file is generated for each contract. Can be disabled (via `--no-imports`). The framework uses the `wasm-objdump` tool to retrieve the imports. It parses the output and saves it as JSON.
 
+[comment]: # (mx-context-auto)
+
 ### g. Cleaning a project
 
 Calling `cargo run clean` in the meta crate will run `cargo clean` in all wasm crates and delete the `output` folder.
@@ -359,6 +399,8 @@ Calling `cargo run clean` in the meta crate will run `cargo clean` in all wasm c
 `mxpy contract clean` also just forwards to this.
 
 Note that even the clean operation relies on the ABI, in order to reach all the wasm crates.
+
+[comment]: # (mx-context-auto)
 
 ### Build process summary
 
