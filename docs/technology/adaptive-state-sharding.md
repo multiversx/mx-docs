@@ -27,7 +27,7 @@ Sharding introduces some new challenges, such as the single-shard takeover attac
 
 [comment]: # (mx-context-auto)
 
-# **The MultiversX sharding approach**
+## **The MultiversX sharding approach**
 
 [comment]: # (mx-context-auto)
 

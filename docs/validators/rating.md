@@ -74,7 +74,7 @@ Without rating, all validators of a shard would have the same probability of bei
 The following table shows how the rating of a validator influences its probability of being chosen for consensus:
 
 | Rating interval | Modifier |
-| --------------- | -------- |
+|-----------------|----------|
 | 0-10            | -100%    |
 | 10-20           | -20%     |
 | 20-30           | -15%     |
@@ -92,7 +92,7 @@ The algorithm that selects validators for consensus treats these modified select
 
 [comment]: # (mx-context-auto)
 
-# **Calibration**
+## **Calibration**
 
 Assuming a **24-hour-long epoch**, the rating mechanism has been calibrated with the following intentions:
 
@@ -101,11 +101,11 @@ Assuming a **24-hour-long epoch**, the rating mechanism has been calibrated with
 
 [comment]: # (mx-context-auto)
 
-# **Rating shard validators**
+## **Rating shard validators**
 
 [comment]: # (mx-context-auto)
 
-## **Rating the shard block proposer**
+### **Rating the shard block proposer**
 
 The node chosen to propose the block for a specific round will:
 
@@ -126,7 +126,7 @@ This compounding penalty has the effect of quickly jailing repeatedly unsuccessf
 
 [comment]: # (mx-context-auto)
 
-## **Rating the shard block validator**
+### **Rating the shard block validator**
 
 The nodes that take part in the consensus of a round (other than the proposer) will:
 
@@ -139,13 +139,13 @@ Moreover, the validator must have been a "signer" in at least 1% of the previous
 
 [comment]: # (mx-context-auto)
 
-# **Rating metashard validators**
+## **Rating metashard validators**
 
 The rating mechanism for the metashard is identical with the rating mechanism of the normal shards, but the gain / loss values themselves are configured differently.
 
 [comment]: # (mx-context-auto)
 
-## **Rating the metashard block proposer**
+### **Rating the metashard block proposer**
 
 The metachain proposer will:
 
@@ -156,7 +156,7 @@ The compounding penalty rule also applies to block proposers of the metachain. S
 
 [comment]: # (mx-context-auto)
 
-## **Rating the metashard block validator**
+### **Rating the metashard block validator**
 
 A validator taking part in consensus on the metachain will:
 

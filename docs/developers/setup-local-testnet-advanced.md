@@ -8,7 +8,7 @@ How to set up a local MultiversX Testnet on a workstation.
 
 [comment]: # (mx-context-auto)
 
-# **Prerequisites**
+## **Prerequisites**
 
 First, clone [mx-chain-go](https://github.com/multiversx/mx-chain-go) and [mx-chain-proxy-go](https://github.com/multiversx/mx-chain-proxy-go) in a directory of your choice.
 

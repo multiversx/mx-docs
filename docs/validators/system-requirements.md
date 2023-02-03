@@ -9,13 +9,13 @@ This page provides the system requirements for running a MultiversX node.
 
 [comment]: # (mx-context-auto)
 
-# **MultiversX Nodes explained**
+## **MultiversX Nodes explained**
 
 Nodes are computers running the MultiversX software, so they contribute to the MultiversX network by relaying information and validating it. Each node needs to stake 2500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
 
 [comment]: # (mx-context-auto)
 
-# **Minimum System Requirements for running 1 MultiversX Node**
+## **Minimum System Requirements for running 1 MultiversX Node**
 
 - 4 x dedicated/physical CPUs, either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 8 GB RAM
