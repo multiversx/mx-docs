@@ -1043,7 +1043,7 @@ This might look very similar, but the implications of using `VecMapper` for this
 
 `SetMapper` is vastly more efficient than this, as it provides checking for a value in O(1). However, this does not come without a cost. This is how the storage looks for a `SetMapper` with two elements (this snippet is taken from a scenario test):
 
-```json
+```rust
 "str:tokenWhitelist.info": "u32:2|u32:1|u32:2|u32:2",
 "str:tokenWhitelist.node_idEGLD-123456": "2",
 "str:tokenWhitelist.node_idETH-123456": "1",
@@ -1063,7 +1063,7 @@ Even so, for this particular case, `SetMapper` is way better than `VecMapper`.
 
 `LinkedListMapper` can be seen as a specialization for the `VecMapper`. It allows insertion/removal only at either end of the list, known as pushing/popping. It's also storage-efficient, as it only requires 2 * N + 1 storage entries. The storage for such a mapper looks like this:
 
-```json
+```rust
 "str:list_mapper.node_links|u32:1": "u32:0|u32:2",
 "str:list_mapper.node_links|u32:2": "u32:1|u32:0",
 "str:list_mapper.value|u32:1": "123",
@@ -1094,7 +1094,7 @@ Both of them provide (almost) the same functionality. The difference is that the
 
 Unless you need to iterate over all the entries, `MapMapper` should be avoided, as this is the most expensive mapper. It uses 4 * N + 1 storage entries. The storage for a `MapMapper` looks like this:
 
-```json
+```rust
 "str:map_mapper.node_links|u32:1": "u32:0|u32:2",
 "str:map_mapper.node_links|u32:2": "u32:1|u32:0",
 "str:map_mapper.value|u32:1": "123",
