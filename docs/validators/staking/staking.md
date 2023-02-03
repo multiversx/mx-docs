@@ -3,6 +3,12 @@ id: staking
 title: Staking & Unstaking
 ---
 
+[comment]: # (mx-abstract)
+
+This page will guide you through the process of staking and unstaking nodes.
+
+[comment]: # (mx-context-auto)
+
 ## **Introduction**
 
 Before staking, a node is a mere observer. After staking, the node becomes a validator, which means that it will be eligible for consensus and will earn rewards. Validators play a central role in the operation of the network.
@@ -20,6 +26,8 @@ There are currently 2 supported methods of constructing and submitting these tra
 
 The following pages will describe both approaches in each specific case.
 
+[comment]: # (mx-context-auto)
+
 ## **Prerequisites**
 
 In order to submit a staking transaction, you must have the following:
@@ -28,6 +36,8 @@ In order to submit a staking transaction, you must have the following:
 - A unique `validatorKey.pem` file of each node
 
 You have the option of staking through the online Wallet at [https://wallet.multiversx.com](https://wallet.multiversx.com/) or by using `mxpy`.
+
+[comment]: # (mx-context-auto)
 
 ## **Staking through the Wallet**
 
@@ -60,6 +70,8 @@ You have the option of staking through the online Wallet at [https://wallet.mult
 
 ![staking6](/validators/staking6.png)
 
+[comment]: # (mx-context-auto)
+
 ## **Staking through mxpy**
 
 Submitting the staking transaction using `mxpy` avoids having to write the "Data" field manually. Instead, the staking transaction is constructed automatically by `mxpy` and submitted to the network directly, in a single command.
@@ -74,6 +86,8 @@ The version reported by this command must be at least `mxpy 0.8.0`, or higher. I
 
 Make sure `mxpy` is installed and has the latest version before continuing.
 
+[comment]: # (mx-context-auto)
+
 ## **Your Wallet PEM file**
 
 To send transactions on your behalf _without_ using the online MultiversX Wallet, `mxpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
@@ -81,6 +95,8 @@ To send transactions on your behalf _without_ using the online MultiversX Wallet
 Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
 
 After the PEM file was generated, you can issue transactions from `mxpy`directly.
+
+[comment]: # (mx-context-auto)
 
 ## **The staking transaction**
 
@@ -132,6 +148,8 @@ For two nodes, it becomes this:
 ```
 mxpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
 ```
+
+[comment]: # (mx-context-auto)
 
 ## **The --reward-address parameter**
 

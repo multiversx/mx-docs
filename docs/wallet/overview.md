@@ -3,12 +3,20 @@ id: overview
 title: Wallets - Overview
 ---
 
+[comment]: # (mx-abstract)
+
+Wallets give access to your funds and MultiversX applications. Only you should have access to your wallet.
+
+[comment]: # (mx-context-auto)
+
 ## MultiversX Wallets
 
 The private key associated to an address (erd1...) needs to be stored in a specific format. In order to use that private
 key to sign transactions and perform various actions, one needs a wallet.
 
 There are multiple ways you can store your funds. This page will present some of them.
+
+[comment]: # (mx-context-auto)
 
 ## Table of contents
 

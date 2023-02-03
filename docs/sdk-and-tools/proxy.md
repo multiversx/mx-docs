@@ -5,11 +5,17 @@ title: Proxy architecture
 
 Overview of the MultiversX Proxy
 
+[comment]: # (mx-abstract)
+
 ## **Introduction**
 
-Proxy is a project written in go that abstracts the sharding logic. It serves as foundation for *gateway.multiversx.com*
+The MultiversX Proxy acts as an entry point into the MultiversX Network, through a set of Observer Nodes, and (partly) abstracts away the particularities and complexity of sharding.
 
-The GitHub repository can be found here: https://github.com/multiversx/mx-chain-proxy-go
+The Proxy is a project written in **go**, and it serves as foundation for *gateway.multiversx.com*.
+
+The source code of the Proxy can be found here: [mx-chain-proxy-go](https://github.com/multiversx/mx-chain-proxy-go).
+
+[comment]: # (mx-context-auto)
 
 ## **Architectural Overview**
 
@@ -31,9 +37,13 @@ In the figure above:
 2. One or more instances of the **MultiversX Proxy** - including the official one - connect to Observer Nodes in order to forward incoming user Transactions to the Network and to query state within the Blockchain.
 3. The **client applications** connect to the Network through the MultiversX Proxy. It is also possible for a blockchain-powered application to talk directly to an Observer or even to a Validator.
 
+[comment]: # (mx-context-auto)
+
 ## **Official MultiversX Proxy**
 
 The official instance of the MultiversX Proxy is located at [https://gateway.multiversx.com](https://gateway.multiversx.com/).
+
+[comment]: # (mx-context-auto)
 
 ## **Set up a Proxy Instance**
 
@@ -49,6 +59,8 @@ cd elrond-proxy-go/cmd/proxy
 go build .
 ```
 
+[comment]: # (mx-context-auto)
+
 ### **Configuration**
 
 The Proxy holds its configuration within the `config` folder:
@@ -57,6 +69,8 @@ The Proxy holds its configuration within the `config` folder:
 - `external.toml` - this file holds configuration necessary to Proxy components that interact with external systems. An example of such an external system is **Elasticsearch** - currently, MultiversX Proxy requires an Elasticsearch instance to implement some of its functionality.
 - `apiConfig/credentials.toml` - this file holds the configuration needed for enabling secured endpoints - only accessible by using BasicAuth.
 - `apiConfig/v1_0.toml` - this file contains all the endpoints with their settings (open, secured and rate limit).
+
+[comment]: # (mx-context-auto)
 
 ## **Dependency on Elasticsearch**
 

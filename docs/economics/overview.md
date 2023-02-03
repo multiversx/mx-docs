@@ -3,9 +3,15 @@ id: economics-overview
 title: Overview
 ---
 
+[comment]: # (mx-abstract)
+
+In this page you can find more about the MultiversX economics, the EGLD token supply, how fees are collected, how rewards and distributed and so on. 
+
+[comment]: # (mx-context-auto)
+
 ## **Economics Overview**
 
-The MultiversX blockchain economy is designed around eGold - a powerful digital currency positioned for global adoption.
+The MultiversX blockchain economy is designed around eGold (EGLD) - a powerful digital currency positioned for global adoption.
 
 eGold, or EGLD, is the native coin of the network.
 
@@ -27,4 +33,3 @@ As a result, the powerful economic attribute of scarcity is designed to scale wi
 You can learn more about the EGLD token and MultiversX economy from the resources below:
 - https://multiversx.com/blog/egold-a-powerful-digital-currency-positioned-for-global-adoption/
 - https://multiversx.com/blog/the-wealth-of-crypto-networks-elrond-economics-paper
-

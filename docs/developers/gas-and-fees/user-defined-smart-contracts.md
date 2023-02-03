@@ -2,10 +2,13 @@
 id: user-defined-smart-contracts
 title: User-defined Smart Contracts
 ---
+[comment]: # (mx-abstract)
 
 For user-defined Smart Contract deployments and function calls, the **actual gas consumption** of processing contains both of the previously mentioned cost components - though, while the **value movement and data handling** component is easily computable (using the previously depicted formula), the **contract execution** component is hard to determine precisely _a priori_. Therefore, for this component we have to rely on _simulations_ and _estimations_.
 
 For **simulations**, we will start a local testnet using `mxpy` (detailed setup instructions can be found [here](/developers/setup-local-testnet)). Thus, before going further, make sure your local testnet is up and running.
+
+[comment]: # (mx-context-auto)
 
 ## Contract deployments
 
@@ -57,7 +60,7 @@ In the output, look for the `status` - it should be `success`:
         ...
     }
 ```
-
+[comment]: # (mx-context)
 In the end, let's actually deploy the contract:
 
 ```bash
@@ -72,6 +75,8 @@ For deployments, the **execution** component of the cost is associated with inst
 
 If the flow of `init()` is dependent on input arguments or it references blockchain data, then the cost will vary as well, depending on these variables. Make sure you simulate sufficient deployment scenarios and increase (decrease) the `gas-limit`.
 :::
+
+[comment]: # (mx-context-auto)
 
 ## Contract calls
 
@@ -102,7 +107,7 @@ In the output, look for `txGasUnits`. For example:
     }
 }
 ```
-
+[comment]: # (mx-context)
 In the end, let's actually call the contract:
 
 ```bash
@@ -116,6 +121,8 @@ $ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jj
 :::important
 If the flow of the called function is dependent on input arguments or it references blockchain data, then the cost will vary as well, depending on these variables. Make sure you simulate sufficient scenarios for the contract call and increase (decrease) the `gas-limit`.
 :::
+
+[comment]: # (mx-context-auto)
 
 ## Contracts calling (asynchronously) other contracts
 

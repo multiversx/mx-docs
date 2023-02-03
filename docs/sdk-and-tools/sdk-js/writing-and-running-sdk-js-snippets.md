@@ -3,15 +3,15 @@ id: writing-and-testing-sdk-js-interactions
 title: Writing and testing interactions
 ---
 
-:::note
-This tutorial makes use of `sdk-js 10` and `sdk-js-snippets 3`. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
-:::
+[comment]: # (mx-abstract)
 
-This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **sdk-js** and **sdk-js snippets**.
+This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **sdk-js** and **sdk-js snippets**. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
 
 :::important
 **Do not reference** `sdk-js-snippets` library as a **regular** dependency (i.e. `dependencies` section) of your project (Node / dApp). Only reference it as a **development** dependency (i.e. `devDependencies` section).
 :::
+
+[comment]: # (mx-context-auto)
 
 ## IDE Prerequisites
 
@@ -20,7 +20,11 @@ In order to follow the steps in this tutorial, you need **Visual Studio Code** w
 - [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
 - [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter)
 
+[comment]: # (mx-context-auto)
+
 ## Setup steps
+
+[comment]: # (mx-context-auto)
 
 ### Setup the workspace
 
@@ -30,6 +34,8 @@ First, you need to open in Visual Studio Code a folder that will hold both the s
 Make sure the latest MultiversX SDK is available in your environment. In order to do so, invoke the command `MultiversX: Install SDK`.
 :::
 
+[comment]: # (mx-context-auto)
+
 ### Add one or more smart contracts
 
 In the **Templates** view of the MultiversX IDE, choose the template `adder` and click on **New Contract**. Then, choose the template `lottery-esdt` and click on **New Contract**. By doing so, MultiversX IDE will create one folder for each of the chosen smart contracts
@@ -37,6 +43,8 @@ In the **Templates** view of the MultiversX IDE, choose the template `adder` and
 An **additional folder** called `mx-skd-js-snippets` gets created, as well. That's a **nodejs** package, holding the source code for the **contract interaction** and for the test **snippets**.
 
 Before moving further, make sure you build the two contracts (from the **Smart Contracts** view of the MultiversX IDE or using the command line, as desired).
+
+[comment]: # (mx-context-auto)
 
 ### Set up the snippets
 
@@ -57,6 +65,8 @@ By leveraging the Mocha Test Explorer, you can **run** and **debug** one, more o
 
 Now that your workspace and the snippets are set up, let's dive deeper. In the next section we'll learn **what is**, actually, an interaction snippet.
 
+[comment]: # (mx-context-auto)
+
 ## Anatomy of an sdk-js snippet
 
 A sdk-js **snippet** is, actually, a file that defines a suite of _mocha_ tests, having the extension `*.spec.ts` or `*.snippet.ts`. A **snippet step** is an individual test-like construct.
@@ -66,6 +76,8 @@ When executing one or more steps, they execute within a **test session**, select
 ```js
 session = await TestSession.load("nameOfMySession", __dirname);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Session configuration
 
@@ -114,6 +126,8 @@ Another example, using the `ApiNetworkProvider` instead of `ProxyNetworkProvider
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Session state
 
 One of the main responsibilities of the test session object is to hold state among the steps (until it is explicitly destroyed). Under the hood, the state is saved in a lightweight **sqlite database** located near the `nameOfMySession.session.json` file.
@@ -150,6 +164,8 @@ const addressOfMyContract = await session.loadAddress("myContractAddress");
 const someArbitraryData = await session.loadBreadcrumb("someArbitraryData");
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Assertions
 
 It's recommended to make use of _assert_ statements, which makes the snippets more valuable and meaningful. For example:
@@ -161,6 +177,8 @@ assert.equal(lotteryInfo.getFieldValue("token_identifier"), "myToken");
 assert.equal(lotteryStatus, "someStatus");
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Test users
 
 A test session provides a set of test users to engage in smart contract interactions. Given the session configuration provided as an example above, one can access the test users as follows:
@@ -170,6 +188,8 @@ const alice: ITestUser = session.users.getUser("alice");
 const bob: ITestUser = session.users.getUser("bob");
 const friends: ITestUser[] = session.users.getGroup("friends");
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Generate secret keys for test users
 
@@ -228,6 +248,8 @@ describe("user operations snippet", async function () {
 
 The resulted keys can be used as seen in the section [session configuration](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions#session-configuration).
 
+[comment]: # (mx-context-auto)
+
 ### Writing events in the audit log
 
 At some point within the snippets or _interactor_ objects (more on that later), it's useful (for debugging and auditing Smart Contracts) to record events such as _sending a transaction_, _receiving a contract result_, or take account _state snapshots_ prior and / or after an interaction takes place. In order to do so, call the utility functions of the `Audit` object.
@@ -273,6 +295,8 @@ await session.audit.onSnapshot({
 
 Above, note the `comparableTo` parameter of the snapshotting function. If provided, then a generated session report will include a difference between the two snapshots in question (**this feature isn't available as of `snk-js-snippets 3.0.0`**).
 
+[comment]: # (mx-context-auto)
+
 ### Generate session reports
 
 :::important
@@ -301,9 +325,13 @@ it("generate report", async function () {
 
 Upon running the step, the `outputFolder` should contain the generated session report(s).
 
+[comment]: # (mx-context-auto)
+
 ### Dependence on interactors
 
 The most important dependency of a snippet is the **contract interactor**, which is responsible with creating and executing sdk-js-based interactions and contract queries.
+
+[comment]: # (mx-context-auto)
 
 ## Anatomy of an interactor
 
@@ -317,6 +345,8 @@ Generally speaking, an interactor component (class) depends on the following obj
 - a `TransactionWatcher`, to properly detect the completion of a transaction
 - a `ResultsParser`, to parse the outcome of contract queries or contract interactions
 - optionally, an `IAudit` object to record certain events within the test session
+
+[comment]: # (mx-context-auto)
 
 ### Creation of an interactor
 
@@ -412,11 +442,15 @@ export class LotteryInteractor {
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Methods of the interactor
 
 Generally speaking, when writing an interactor, you'd like to have a function (method) for each endpoint of the smart contract. While this is straightforward when writing query functions against `readonly` / `get` endpoints, for `executable` / `do` endpoints you need to build, **sign** (using a signing / wallet provider) and broadcast a transaction, then optionally await for its execution and parse the results (if any).
 
 The interrupted nature of the flow for calling `executable` endpoints and the eventual context switching required by some of the signing / wallet providers (e.g. navigating through web pages) makes it (the flow) a bit harder to be captured in a single function (method) of the interactor in an _universally applicable manner_. However, the example interactors follow the _one method for each endpoint_ guideline, since they use a _test user_ object to sign the transactions (that is, no external signing provider).
+
+[comment]: # (mx-context-auto)
 
 ### Writing an interactor method for a contract query
 
@@ -567,6 +601,8 @@ console.log(lotteryInfo.valueOf());
 console.log(lotteryInfo.getFieldValue("token_identifier"));
 console.log(lotteryInfo.getFieldValue("prize_pool"));
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Writing an interactor method for a contract call
 

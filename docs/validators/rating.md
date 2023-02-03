@@ -3,6 +3,14 @@ id: rating
 title: Rating
 ---
 
+[comment]: # (mx-abstract)
+
+This page exposes the rating system used for MultiversX validators.
+
+[comment]: # (mx-context-auto)
+
+## **Introduction**
+
 Each individual validator has a **rating score**, which expresses its overall reliability, performance and responsiveness. It is an important value, and node operators should be always mindful of the rating of their validators.
 
 Rating influences the probability of a validator to be selected for consensus in each round. A performant validator will be preferred in consensus, as opposed to a validator which sometimes fails to contribute or which is not always online.
@@ -26,6 +34,8 @@ The "Node Details" page displays a plot of the validator rating during the past 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MA1wJCHfE7ffob9gOjE%2F-MA1we9u12mvMRF1PU9y%2Fplot-rating.png?alt=media&token=6a1f0071-66d0-4aec-8192-2a8f716e67bb)
 
 The X-axis represent the epochs, and the Y-axis represents the rating.
+
+[comment]: # (mx-context-auto)
 
 ## **The jail**
 
@@ -53,6 +63,8 @@ The only way to increase the rating of a validator is to keep it up-to-date, kee
 Running **multiple validators on a single machine** will impact your rating and consequently _your rewards,_ if the machine doesn't have the as many times the minimum requirements as there are validators running on it.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## **Consensus probabilities**
 
 Rating affects the probability of a validator to be selected in the consensus group of a round. This is done by applying **rating modifiers** on the probability of selection for each validator.
@@ -62,32 +74,38 @@ Without rating, all validators of a shard would have the same probability of bei
 The following table shows how the rating of a validator influences its probability of being chosen for consensus:
 
 | Rating interval | Modifier |
-| --------------- | -------- |
-| 0-10            | -100%    |
-| 10-20           | -20%     |
-| 20-30           | -15%     |
-| 30-40           | -10%     |
-| 40-50           | -5%      |
-| 50-60           | 0%       |
-| 60-70           | +5%      |
-| 70-80           | +10%     |
-| 80-90           | +15%     |
-| 90-100          | +20%     |
+|-----------------|----------|
+| [0-10]          | -100%    |
+| (10-20]         | -20%     |
+| (20-30]         | -15%     |
+| (30-40]         | -10%     |
+| (40-50]         | -5%      |
+| (50-60]         | 0%       |
+| (60-70]         | +5%      |
+| (70-80]         | +10%     |
+| (80-90]         | +15%     |
+| (90-100]        | +20%     |
 
 :::important
 The algorithm that selects validators for consensus treats these modified selection probabilities as being relative to each other.
 :::
 
-# **Calibration**
+[comment]: # (mx-context-auto)
+
+## **Calibration**
 
 Assuming a **24-hour-long epoch**, the rating mechanism has been calibrated with the following intentions:
 
 - A new validator requires **approx. 72 hours** to reach maximum rating, assuming it remains in the same shard and won't be shuffled out (therefore it will be productive all the time, without any waiting time).
 - The amount of rating gains earned as a block validator should be in balance with the amount of rating gains earned as a block proposer. This balance must take into account the fact that being selected as proposer is considerably less likely than being selected in consensus as block validator.
 
-# **Rating shard validators**
+[comment]: # (mx-context-auto)
 
-## **Rating the shard block proposer**
+## **Rating shard validators**
+
+[comment]: # (mx-context-auto)
+
+### **Rating the shard block proposer**
 
 The node chosen to propose the block for a specific round will:
 
@@ -106,7 +124,9 @@ where `cfp` is the number of consecutive failed proposals.
 
 This compounding penalty has the effect of quickly jailing repeatedly unsuccessful proposers.
 
-## **Rating the shard block validator**
+[comment]: # (mx-context-auto)
+
+### **Rating the shard block validator**
 
 The nodes that take part in the consensus of a round (other than the proposer) will:
 
@@ -117,11 +137,15 @@ Observe that the first bulled mentions "the proposer has built and proposed a bl
 
 Moreover, the validator must have been a "signer" in at least 1% of the previous blocks, otherwise it will not gain rating. In other words: if the validator has been performing poorly in the past, it will have to perform well for a while until it can start receiving any gains.
 
-# **Rating metashard validators**
+[comment]: # (mx-context-auto)
+
+## **Rating metashard validators**
 
 The rating mechanism for the metashard is identical with the rating mechanism of the normal shards, but the gain / loss values themselves are configured differently.
 
-## **Rating the metashard block proposer**
+[comment]: # (mx-context-auto)
+
+### **Rating the metashard block proposer**
 
 The metachain proposer will:
 
@@ -130,7 +154,9 @@ The metachain proposer will:
 
 The compounding penalty rule also applies to block proposers of the metachain. See [Rating the shard block proposer](#rating-the-shard-block-proposer) for details.
 
-## **Rating the metashard block validator**
+[comment]: # (mx-context-auto)
+
+### **Rating the metashard block validator**
 
 A validator taking part in consensus on the metachain will:
 

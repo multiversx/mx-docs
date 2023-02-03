@@ -3,6 +3,12 @@ id: install-update
 title: Installing a Validator Node
 ---
 
+[comment]: # (mx-abstract)
+
+This page will guide you through the process of installing and updating a validator node.
+
+[comment]: # (mx-context-auto)
+
 ## **Install your node(s)**
 
 After preparing the user permissions, the script configurations, and the keys, the actual node installation can begin. The Validator script is a multi-purpose tool for managing your node, it is accessible to Mainnet, Devnet or Testnet.
@@ -48,6 +54,8 @@ As an alternative, the installation can be triggered by executing the following 
 - When asked, indicate the name of your validator, i.e. `Valar`
 - Quit the menu without starting (we need keys first) by using `14 - quit`
 
+[comment]: # (mx-context-auto)
+
 ### **Prepare your keys**
 
 Create a new folder "VALIDATOR_KEYS" to serve as a local backup when updating:
@@ -86,11 +94,15 @@ mv node-0.zip $HOME/VALIDATOR_KEYS/
 
 Repeat the above process for all your “n” nodes. When complete, please refer to our Key management section for instructions about how to properly backup and protect your keys.
 
+[comment]: # (mx-context-auto)
+
 ### **Start the node(s)**
 
 ```bash
 ~/mx-chain-scripts/script.sh start
 ```
+
+[comment]: # (mx-context-auto)
 
 ### **Start the node visual interface**
 
@@ -105,6 +117,8 @@ cd $HOME/elrond-utils
 
 Your first node is called `node-0` and it is a REST API that will run on port `8080` by default. The next node is `node-1`on port `8081`, and so on.
 :::
+
+[comment]: # (mx-context-auto)
 
 ## **Update your node(s)**
 
@@ -121,6 +135,8 @@ Upgrade your node by running the script and selecting either of these options:
 
 These are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/multiversx/mx-chain-scripts/blob/master/README.md). You can also ask any questions in the MultiversX [Validators chat](https://t.me/MultiversXValidators)
 
+[comment]: # (mx-context-auto)
+
 ## **Mandatory: Backup your keys**
 
 Your private keys are needed to run your node. Losing them means losing control of your node. A 3rd party gaining access to them could result in loss of funds.
@@ -130,6 +146,8 @@ Find them in `$HOME/elrond-nodes/node-0/config` [be mindful of your “`n`” no
 :::important
 Create a safe backup for them on storage outside of the server running your node(s).
 :::
+
+[comment]: # (mx-context-auto)
 
 ## **Migration from old scripts**
 
@@ -156,6 +174,8 @@ cd ~/mx-chain-scripts
 ```
 
 Be careful as to not mix the previous installation network with the new one. This might lead to unpredictable results.
+
+[comment]: # (mx-context-auto)
 
 ## **Choosing a custom configuration tag or branch**
 

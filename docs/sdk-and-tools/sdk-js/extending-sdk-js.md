@@ -3,15 +3,17 @@ id: extending-sdk-js
 title: Extending sdk-js
 ---
 
-:::important
-Documentation in this section is preliminary and subject to change.
-:::
+[comment]: # (mx-abstract)
 
 This tutorial will guide you through the process of extending and tailoring certain modules from sdk-js.
+
+[comment]: # (mx-context-auto)
 
 ## Extending the Network Providers
 
 The default classes from `@multiversx/sdk-network-providers` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
+
+[comment]: # (mx-context-auto)
 
 ### Performing HTTP requests from scratch
 
@@ -76,6 +78,8 @@ let endpointDefinition = contract.getEndpoint("foobar");
 let { firstValue, secondValue, returnCode } = resultsParser.parseQueryResponse(queryResponse, endpointDefinition);
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Extending a default Network Provider
 
 You can also derive from the default network providers (`ApiNetworkProvider` and `ProxyNetworkProvider`) and overwrite / add additional methods, making use of `doGetGeneric()` and `doPostGeneric()`.
@@ -91,6 +95,8 @@ export class MyTailoredNetworkProvider extends ApiNetworkProvider {
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Customizing the transaction awaiting
 
 If, for some reason, the default transaction completion detection algorithm provided by **sdk-js** does not satisfy your requirements, you may want to use a different strategy for transaction awaiting, such as:
@@ -99,6 +105,8 @@ If, for some reason, the default transaction completion detection algorithm prov
 await transactionWatcher.awaitAllEvents(transaction, ["mySpecialEventFoo", "mySpecialEventBar"]);
 await transactionWatcher.awaitAnyEvents(transaction, ["mySpecialEventFoo", "mySpecialEventBar"]);
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Extending the contract results parser
 

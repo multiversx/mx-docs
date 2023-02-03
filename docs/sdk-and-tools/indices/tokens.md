@@ -3,10 +3,17 @@ id: es-index-tokens
 title: tokens
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `tokens` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is represented by token identifier of an ESDT token.
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -21,8 +28,11 @@ The `_id` field of this index is represented by token identifier of an ESDT toke
 | timestamp     | The timestamp field represents the timestamp of the block in which the token was created.                                         |
 | ownersHistory | The ownersHistory field holds a list of all the owners of a token.                                                                |
 
+[comment]: # (mx-context-auto)
 
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch details of a token
 

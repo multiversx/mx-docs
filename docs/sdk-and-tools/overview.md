@@ -3,11 +3,13 @@ id: overview
 title: SDKs and Tools - Overview
 ---
 
+[comment]: # (mx-abstract)
+
 ## Introduction
 
-Follow the following table to guide you towards the action you are interested in
+One can interact (programatically) interact with the MultiversX Network by leveraging the following SDKs, tools and APIs:
 
-## Table of contents
+[comment]: # (mx-context-auto)
 
 ### sdk-js - Javascript SDK
 
@@ -26,11 +28,15 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 |-------------------------------------------------------|--------------------------------------------------------------|
 | [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli) | Lightweight CLI wrapper used to perform wallet interactions. |
 
+[comment]: # (mx-context-auto)
+
 ### sdk-dapp - core functional logic of a dApp
 
 | Name                                | Description                                                                                                                                                                                                                                                                                    |
 |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [sdk-dapp](/sdk-and-tools/sdk-dapp) | React library aimed to help developers create dApps based on MultiversX Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
+
+[comment]: # (mx-context-auto)
 
 ### mxpy - Python SDK
 
@@ -43,11 +49,15 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 | [Deriving the wallet pem file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file)         | How to use a wallet PEM file.                            |
 | [Smart contract interactions](/sdk-and-tools/sdk-py/smart-contract-interactions)           | Interact with Smart Contract.                            |
 
+[comment]: # (mx-context-auto)
+
 ### sdk-nestjs - NestJS SDK
 
 | Name                                     | Description                                                        |
 |------------------------------------------|--------------------------------------------------------------------|
 | [nesdtjs sdk](/sdk-and-tools/sdk-nestjs) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
+
+[comment]: # (mx-context-auto)
 
 ### erdgo - Golang SDK
 
@@ -55,11 +65,15 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 |-------------------------------|------------------------------------------------------------|
 | [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with MultiversX Blockchain. |
 
+[comment]: # (mx-context-auto)
+
 ### erdjava - Java SDK
 
 | Name                              | Description                                           |
 |-----------------------------------|-------------------------------------------------------|
 | [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
 
 ### erdcpp - C++ SDK
 
@@ -67,11 +81,15 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 |---------------------------------|------------------------------------------------------|
 | [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with MultiversX Blockchain. |
 
+[comment]: # (mx-context-auto)
+
 ### erdkotlin - Kotlin SDK
 
 | Name                                  | Description                                             |
 |---------------------------------------|---------------------------------------------------------|
 | [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
 
 ### Node Rest API
 
@@ -88,6 +106,8 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 | [Virtual machine](/sdk-and-tools/rest-api/virtual-machine)               | Rest API endpoints dedicated to the SC execution VM.              |
 | [Versions and changelog](/sdk-and-tools/rest-api/versions-and-changelog) | What's new in different versions.                                 |
 
+[comment]: # (mx-context-auto)
+
 ### Proxy
 
 Proxy is an abstraction layer over the MultiversX Network's sharding. It routes the API request to the desired shard and
@@ -96,6 +116,8 @@ merges results when needed.
 | Name                                     | Description                                          |
 |------------------------------------------|------------------------------------------------------|
 | [MultiversX Proxy](/sdk-and-tools/proxy) | A Rest API requests handler that abstracts sharding. |
+
+[comment]: # (mx-context-auto)
 
 ### Elasticsearch
 

@@ -2,7 +2,7 @@
 id: overview
 title: Scenario Testing Overview
 ---
-
+[comment]: # (mx-abstract)
 
 ## **Rationale**
 
@@ -14,9 +14,13 @@ Scenario testing is suitable for both short tests that check how a transaction c
 
 The fact that it is expressed in a descriptive language like JSON makes it agnostic to the language in which the smart contract is developed.
 
+[comment]: # (mx-context-auto)
+
 ## **Running the tests**
 
 At the moment of writing this document, scenario tests can be launched directly from the MultiversX VSCode extension, from contextual menus.
+
+[comment]: # (mx-context-auto)
 
 ## **Go backend vs. Rust backend**
 
@@ -27,6 +31,8 @@ There are currently 2 implementations of the scenario specifications.
 2. The Rust backend is an implementation that is integrated into the Rust smart contract framework. It currently resides in the `multiversx-chain-vm` crate, but might get moved around in the future. The contracts only need to interact with the `multiversx-sc-scenario` crate. It mocks everything, including the VM and the WebAssembly engine. It is useful for debugging smart contracts and for generating high-level coverage for contracts. The Rust backend is not yet fully featured, parts of the ESDT specification are not yet implemented, as well as some of the contract-to-contract calls.
 
 Developers are expected to only write the scenario tests once, but they can run them on both systems, as needed. It is important to have the tests running with the Go backend in the first place. Running them in Rust too is convenient, but not critical.
+
+[comment]: # (mx-context-auto)
 
 ## **Test file extension**
 

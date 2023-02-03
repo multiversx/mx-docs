@@ -3,10 +3,17 @@ id: es-index-accountsesdthistory
 title: accountsesdthistory
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `accounts-esdt-history` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}_{timestamp}` (example: `erd.._abcd-0123-01`).
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -19,8 +26,11 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | tokenNonce | The tokenNonce field holds the sequence number of the token. This field can be empty in the case of `FungibleESDT`. |
 | timestamp  | The timestamp field represents the timestamp when the address balance was changed.                                  |
 
+[comment]: # (mx-context-auto)
 
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch the latest 10 entries of an address' tokens sorted by timestamp
 
@@ -58,4 +68,3 @@ curl --request GET \
     "size":10
 }'
 ```
-

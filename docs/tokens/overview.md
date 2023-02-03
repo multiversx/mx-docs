@@ -3,6 +3,12 @@ id: overview
 title: Native Tokens
 ---
 
+Fungible tokens, such as cryptocurrencies, are interchangeable and have the same value as other tokens of the same type. Non-fungible tokens (NFTs) are unique digital assets that are assigned unique identification codes and metadata, making them one-of-a-kind. Semi-fungible tokens are a combination of the two, offering both interchangeable and unique properties. For us they are ESDTs.
+
+With ESDTs, you can take advantage of the security, transparency, and versatility of MultiversX blockchain technology to manage and transfer your assets.
+
+[comment]: # (mx-context-auto)
+
 ## ESDT
 
 ESDT stands for eStandard Digital Token.
@@ -19,6 +25,7 @@ Technically, the balances of ESDT tokens held by an account are stored directly 
 
 ESDT tokens can be issued, owned and held by any account on the MultiversX network, which means that both users and smart contracts have the same functionality available to them. Due to the design of ESDT tokens, smart contracts can manage tokens with ease, and they can even react to an ESDT transfer.
 
+[comment]: # (mx-context-auto)
 
 ## Table of contents
 

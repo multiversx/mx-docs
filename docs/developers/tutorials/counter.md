@@ -2,12 +2,16 @@
 id: counter
 title: The Counter Smart Contract
 ---
+[comment]: # (mx-abstract)
+By following the tutorial on this page, you will learn how to write, build, and deploy a basic Smart Contract in C
 
-Write, build and deploy a simple Smart Contract written in C
+[comment]: # (mx-context-auto)
 
 ## **Prerequisites**
 
 You need to have [mxpy](/sdk-and-tools/sdk-py/installing-mxpy) installed.
+
+[comment]: # (mx-context-auto)
 
 ## **Create the contract**
 
@@ -23,6 +27,8 @@ This creates a new folder named `mycounter` which contains the C source code for
 - `increment()` and `decrement()`: these functions modify the internal state of the Smart Contract
 - `get()`: this is a pure function (does not modify the state) which we'll use to query the value of the counter
 
+[comment]: # (mx-context-auto)
+
 ## **Build the contract**
 
 In order to build the contract to WASM, run the following command:
@@ -32,6 +38,8 @@ mxpy --verbose contract build mycounter
 ```
 
 Above, `mycounter` refers to the previously created folder, the one that holds the source code. After executing the command, you can inspect the generated files in `mycounter/output`.
+
+[comment]: # (mx-context-auto)
 
 ## **Deploy the contract on the Testnet**
 
@@ -72,6 +80,8 @@ counter.json
 
 Feel free to inspect these values in the [Explorer](https://explorer.multiversx.com/).
 
+[comment]: # (mx-context-auto)
+
 ## **Interact with the deployed contract**
 
 Let's extract the contract address from `counter.json` before proceeding to an actual contract execution.
@@ -99,6 +109,8 @@ The output should look like this:
 ```
 [{'base64': 'AQ==', 'hex': '01', 'number': 1}]
 ```
+
+[comment]: # (mx-context-auto)
 
 ## **Interaction script**
 

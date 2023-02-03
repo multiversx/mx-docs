@@ -3,6 +3,14 @@ id: useful-links
 title: Useful Links & Tools
 ---
 
+[comment]: # (mx-abstract)
+
+This page offer useful links and resources that can be used by validators and nodes operators.
+
+[comment]: # (mx-context-auto)
+
+## Resources
+
 Official resources:
 
 - Blockchain Explorer: [https://explorer.multiversx.com/](https://explorer.multiversx.com/)
@@ -11,6 +19,8 @@ Official resources:
 - Dockerhub: https://hub.docker.com/u/multiversx
 - Telegram Validators Chat: https://t.me/MultiversXValidators
 - Telegram Bot for Staking & Validators: https://t.me/ElrondNetwork_Bot
+
+[comment]: # (mx-context)
 
 Community resources:
 

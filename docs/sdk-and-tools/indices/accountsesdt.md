@@ -3,9 +3,17 @@ id: es-index-accountsesdt
 title: accountsesdt
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `accounts-esdt` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
+
 ## _id
 
 The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}` (example: `erd.._abcd-0123-01`).
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -21,7 +29,6 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | timestamp   | The timestamp field represents the timestamp when the address balance was changed.                                                    |
 | type        | The type field represents the type of the ESDT token. It can be `FungibleESDT`, `NonFungibleESDT`, `SemiFungibleESDT`, or `MetaESDT`. |
 
-
 Docs with a non-empty `tokenNonce` field will have the `data` field populated with the following structure:
 
 | data fields        | Description                                                                                                                                                                                                       |
@@ -32,8 +39,11 @@ Docs with a non-empty `tokenNonce` field will have the `data` field populated wi
 | attributes         | The attributes field contains the attributes of the token.                                                                                                                                                        |
 | nonEmptyURIs       | The nonEmptyURIs field is true if the token has non empty uris.                                                                                                                                                   |
 
+[comment]: # (mx-context-auto)
 
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch addresses that hold a specific token, sorted by balance (top holders of a token)
 
@@ -60,6 +70,8 @@ curl --request GET \
     "size":10
 }'
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Fetch all the ESDT tokens in an address wallet
 

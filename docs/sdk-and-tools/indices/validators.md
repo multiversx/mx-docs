@@ -3,10 +3,17 @@ id: es-index-validators
 title: validators
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `validators` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is composed in this way: `{shardID}_{epoch}` (example: `1_123`)
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -14,8 +21,11 @@ The `_id` field of this index is composed in this way: `{shardID}_{epoch}` (exam
 |-------------|-------------------------------------------------------------------------------------------------|
 | publicKeys  | The publicKeys field contains a list of all validators' public keys from an epoch and a shard.  |
 
+[comment]: # (mx-context-auto)
 
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 #### Fetch all validators from a shard by epoch
 In the example below, we fetch all the validators' public keys from shard 1, epoch 600.
