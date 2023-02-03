@@ -225,7 +225,7 @@ We can see that it matches the previously fetched (or computed) codehash. That i
 
 ## How to verify a smart contract on Explorer?
 
-The new MultiversX Explorer provides a convenient way to visualise the source code of deployed smart contracts on blockchain. This is the beauty of the Web3 vision for a decentralized internet, where anybody can deploy contracts with which everybody can interact. 
+The new MultiversX Explorer provides a convenient way to visualise the source code of deployed smart contracts on blockchain. This is the beauty of the Web3 vision for a decentralized internet, where anyone can deploy contracts with which everybody can interact. 
 
 :::caution
 Please note that as a **Beta** feature still in development, certain steps described may undergo changes.
