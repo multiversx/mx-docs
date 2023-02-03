@@ -66,7 +66,7 @@ Click "Send" on the left-hand section of the wallet:
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN58eBinRmW5e6LVAG-%2F-MN59AGOnxN4jI64a7uH%2Fimage.png?alt=media&token=3f8c82f3-17eb-4be6-946b-1078e3cee773)
 
-Input the destination address & amount, and the click "Send"
+Input the destination address & amount, and then click "Send"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN54l80sMnQ48eunmLY%2Fimage.png?alt=media&token=04d0986b-b102-4e86-bd17-510265cac43a)
 
@@ -96,7 +96,7 @@ You can also click "Receive" on the left-hand side to see a QR code for the addr
 
 You can request test tokens from [Testnet Wallet](https://testnet-wallet.multiversx.com) or [Devnet Wallet](https://devnet-wallet.multiversx.com) in the `Faucet` tab.
 
-The faucet is only available once in a given time period. Another alternatives for getting test tokens are:
+The faucet is only available once in a given time period. Other alternatives for getting test tokens are:
 
 - request tokens on [Telegram - Validators chat](https://t.me/MultiversXValidators)
 - use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet)
