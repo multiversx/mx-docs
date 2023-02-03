@@ -17,7 +17,7 @@ This page provides an overview of the Validator Nodes and the associated Tools.
 
 | Name                                                                              | Description                                                              |
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [System requirements](/validators/system-requirements)                            | System requirements for running an MultiversX node.                      |
+| [System requirements](/validators/system-requirements)                            | System requirements for running a MultiversX node.                      |
 | [Install a Mainnet/Testnet/Devnet Node](/validators/nodes-scripts/config-scripts) | Instructions about how to get a Testnet or a Devnet node up and running. |
 
 [comment]: # (mx-context-auto)

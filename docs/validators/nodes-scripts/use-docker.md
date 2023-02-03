@@ -10,7 +10,7 @@ This page will guide you through the process of using the Docker image to run a 
 [comment]: # (mx-context-auto)
 
 ## Docker node images
-As an alternative to the recommended installation flow, one could choose to run an MultiversX Node using the official Docker images: [here](https://hub.docker.com/u/multiversx)
+As an alternative to the recommended installation flow, one could choose to run a MultiversX Node using the official Docker images: [here](https://hub.docker.com/u/multiversx)
 
 On the `dockerhub` there are Docker images for every chain (mainnet, devnet and testnet).
 
