@@ -75,16 +75,16 @@ The following table shows how the rating of a validator influences its probabili
 
 | Rating interval | Modifier |
 |-----------------|----------|
-| 0-10            | -100%    |
-| 10-20           | -20%     |
-| 20-30           | -15%     |
-| 30-40           | -10%     |
-| 40-50           | -5%      |
-| 50-60           | 0%       |
-| 60-70           | +5%      |
-| 70-80           | +10%     |
-| 80-90           | +15%     |
-| 90-100          | +20%     |
+| [0-10]          | -100%    |
+| (10-20]         | -20%     |
+| (20-30]         | -15%     |
+| (30-40]         | -10%     |
+| (40-50]         | -5%      |
+| (50-60]         | 0%       |
+| (60-70]         | +5%      |
+| (70-80]         | +10%     |
+| (80-90]         | +15%     |
+| (90-100]        | +20%     |
 
 :::important
 The algorithm that selects validators for consensus treats these modified selection probabilities as being relative to each other.
