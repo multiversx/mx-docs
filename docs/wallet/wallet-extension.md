@@ -7,7 +7,7 @@ Popularly referred to as the "future of money," Maiar currently has a robust web
 
 The Maiar DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the MultiversX mainnet, and store MultiversX tokens such as EGLD, ESDT, or NFTs on the MultiversX Network with easy accessibility.
 
-Let's walk through the steps how to install and set up the Maiar DeFi Wallet extension:
+Let's walk through the steps on how to install and set up the Maiar DeFi Wallet extension:
 
 ## Prerequisites
 
@@ -107,7 +107,7 @@ _(Optional)_ **Step 3**: Enter the data. This is a description of the transactio
 
 ### Lock/unlock
 
-After 60minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header.
+After 60 minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header.
 
 ### Deposit to a wallet
 
