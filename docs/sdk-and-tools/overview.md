@@ -127,6 +127,8 @@ MultiversX Network uses Elasticsearch to index historical data. Find out more ab
 |------------------------------------------------|-----------------------------------------------------------------------------|
 | [Elasticsearch](/sdk-and-tools/elastic-search) | Make use of Elasticsearch near your nodes in order to keep historical data. |
 
+[comment]: # (mx-context-auto)
+
 ### Events notifier
 
 Events notifier is an external service that can be used to fetch block events and push them to subscribers.

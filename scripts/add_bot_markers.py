@@ -28,7 +28,7 @@ class Context:
 def main():
     md_files = DOCS_ROOT.rglob("*.md")
     md_files = [
-        md_file for md_file in md_files if "node_modules" not in str(md_file) and "README.md" not in str(md_file) and "utils.md" not in str(md_file)]
+        md_file for md_file in md_files if "node_modules" not in str(md_file) and md_file.name not in ["README.md", "utils.md", "pull_request_template.md"]]
 
     all_contexts: List[Context] = []
 

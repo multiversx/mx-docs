@@ -3,6 +3,8 @@ id: notifier
 title: Events notifier
 ---
 
+[comment]: # (mx-abstract)
+
 ## Overview
 
 A MultiversX observer node can push block events to a notifier service, which will process
@@ -11,6 +13,8 @@ queue and receive block events, whenever a block is committed to the chain, inst
 polling an API frequently.
 
 The GitHub repository for the notifier service can be found [here](https://github.com/multiversx/mx-chain-notifier-go).
+
+[comment]: # (mx-context-auto)
 
 ## Architectural Overview
 
@@ -36,7 +40,11 @@ In the figure above:
 - Notifier will push events to RabbitMQ if enabled, or via Websockets. If Websockets will be enabled an additional endpoint will be available:
     - `/hub/ws` (GET) - this route can be used to manage the websocket connection subscription
 
+[comment]: # (mx-context-auto)
+
 ## Set up observer and notifier
+
+[comment]: # (mx-context-auto)
 
 ### Observer Client
 
@@ -83,6 +91,8 @@ Similar to Elasticsearch indexing, our implementation uses a concept of a queue 
 sure that everything is being processed. Consensus and synchronization mechanisms can have
 delays due to outport driver.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### Notifier Service
 
@@ -148,6 +158,8 @@ The `Redis` section includes the following parameters as described below:
 For more details on notifier service setup, please follow the **Install** and **Launching**
 sections from [README](https://github.com/multiversx/mx-chain-notifier-go) in the repository.
 
+[comment]: # (mx-context-auto)
+
 ### Subscribers
 
 Currently there are 2 supported subscribing solutions:
@@ -186,6 +198,8 @@ notifier service start.
 It is recommended to use the setup with RabbitMQ, if it is very important to avoid losing any event.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Events
 
 There are multiple event types:
@@ -202,6 +216,8 @@ The WS event is defined as follows:
 |------------|--------------------------------------------------------------------------------|
 | Type       | The type field defines the event type, it can be one of the following: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events. |
 | Data       | Serialized data corresponding to the event type. |
+
+[comment]: # (mx-context-auto)
 
 ### Push Block Event
 
@@ -225,6 +241,8 @@ Event structure
 | data        | The data field can contain information added by the smart contract that generated the event.                                                                                              |
 | order       | The order field represents the index of the event indicating the execution order.                                                                                                         |
 
+[comment]: # (mx-context-auto)
+
 ### Revert Block Event
 
 When there is a revert for a particular block on the chain, a revert event will be triggered,
@@ -236,6 +254,8 @@ containing basic info on the block.
 | nonce      | The nonce field represents the sequence number of the block.                   |
 | round      | The round field represents the round when the block was proposed and executed. |
 | epoch      | The epoch field represents the epoch when the block was proposed and executed. |
+
+[comment]: # (mx-context-auto)
 
 ### Finalized Block Event
 

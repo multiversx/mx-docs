@@ -47,10 +47,8 @@ const mnemonic = Mnemonic.generate();
 const password = "insert a password here";
 const addressIndex = 0;
 
-const privateKey = mnemonic.deriveKey(addressIndex);
-
-const userWallet = new UserWallet(privateKey, password);
-
+const secretKey = mnemonic.deriveKey(addressIndex);
+const userWallet = UserWallet.fromSecretKey({ secretKey, password });
 const jsonFileContent = userWallet.toJSON();
 
 fs.writeFileSync("myKeyFile.json", JSON.stringify(jsonFileContent));
