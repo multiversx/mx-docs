@@ -11,6 +11,10 @@ This tutorial will guide you through the process of migrating from one major ver
 Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook), in advance.
 :::
 
+## Migrate **sdk-wallet** from v2.x to v3 (February of 2023)
+
+See [release notes](https://github.com/multiversx/mx-sdk-js-wallet/releases/tag/v3.0.0).
+
 ## Migrate **erdjs** from v9.x to v10 (April of 2022)
 
 **erdjs 10** brought a series of breaking changes. Most importantly, the packages **walletcore**, **dapp**, **contractWrappers** and the network providers (`ApiProvider`, `ProxyProvider`) have been extracted to separate repositories - consequently, they are now distributed as separate NPM packages. **erdjs** does not depend anymore on the libraries **fs**, **crypto** and **axios**.
