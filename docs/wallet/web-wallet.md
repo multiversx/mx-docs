@@ -114,5 +114,6 @@ You can request test tokens from [Testnet Wallet](https://testnet-wallet.multive
 
 The faucet is only available once in a given time period. Another alternatives for getting test tokens are:
 
-- request tokens on [Telegram - Validators chat](https://t.me/MultiversXValidators)
-- use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet)
+- request tokens on [Telegram - Validators chat](https://t.me/MultiversXValidators);
+- use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet);
+- request tokens on [Discord - NETWORKS](https://discord.gg/multiversxbuilders) category.
