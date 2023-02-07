@@ -175,37 +175,37 @@ python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
 
 [comment]: # (mx-context-auto)
 
-### How to run a reproducible build using mxpy?
+### Reproducible build using mxpy
 
-As an alternative to the previous bash script, **mxpy** can be used to build a contract in a reproducible manner. The procedure is straightforward.
+A more straightforward alternative to the previous bash script is to use **mxpy** to build a contract in a reproducible manner.
 
-1. Make sure you have latest [mxpy]((/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended)) installed.
-2. Make sure you have latest [docker engine](https://docs.docker.com/engine/install/) installed.
+First, make sure you have the:
 
-:::tip
-If you are using a Mac with ARM64, we recommend setting the following variable beforehand (contract builds will be slower, but this eliminates the risk of not being able to reproduce the build on Linux):
+- latest [mxpy](<(/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended)>) installed,
+- latest [docker engine](https://docs.docker.com/engine/install/) installed.
 
-```
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
-```
-
-:::
-
-3. Build your contract using the `reproducible-build` command (below, the image tag is just an example):
+Then, use the `reproducible-build` command (below, the image tag is just an example):
 
 ```
-mxpy contract reproducible-build ~/contracts/reproducible-contract-build-example --docker-image="multiversx/sdk-rust-contract-builder:v1.2.3"
+mxpy contract reproducible-build --docker-image="multiversx/sdk-rust-contract-builder:v4.1.3"
 ```
+
+This will build all the smart contracts inside the current working directory. If you want to build the smart contracts inside another directory, you can specify an input directory:
+
+```
+mxpy contract reproducible-build ~/contracts/reproducible-contract-build-example --docker-image="multiversx/sdk-rust-contract-builder:v4.1.3"
+```
+
+Upon a successful build, an output folder named `output-docker` will be generated containing:
+
+- `contract.wasm`: the actual bytecode of the smart contract, to be deployed on the network;
+- `contract.abi.json`: the ABI of the smart contract (a listing of endpoints and types definitions), to be used when developing dApps or simply interacting with the contract (e.g. using _sdk-js_);
+- `contract.codehash.txt`: the computed `codehash` of the contract.
+- **`contract-1.2.3.source.json`** : packaged (bundled) source code.
 
 :::tip
 You can run a local test using this [example-sc](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
 :::
-
-4. Upon a successful build, an output folder will be generated containing:
-- `contract.wasm`: the actual bytecode of the smart contract, to be deployed on the network;
-- `contract.abi.json`: the ABI of the smart contract (a listing of endpoints and types definitions), to be used when developing dApps or simply interacting with the contract (e.g. using _erdjs_);
-- `contract.codehash.txt`: a file containing the computed `codehash` of the contract.
-- **`contract.source.json`** : packaged (bundled) source code.
 
 [comment]: # (mx-context-auto)
 
