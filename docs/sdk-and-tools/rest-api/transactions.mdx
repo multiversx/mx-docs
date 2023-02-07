@@ -766,7 +766,7 @@ Query Parameters
 
 | Param     | Required                                  | Type     | Description                |
 | --------- | ----------------------------------------- | -------- | -------------------------- |
-| by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender. |
+| by-sender | <span class="text-danger">REQUIRED</span> | `string` | The Address of the sender. |
 
 Example:
 
@@ -816,7 +816,7 @@ Query Parameters
 
 | Param     | Required                                  | Type     | Description                          |
 | --------- | ----------------------------------------- | -------- | ------------------------------------ |
-| by-sender | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.           |
+| by-sender | <span class="text-danger">REQUIRED</span> | `string` | The Address of the sender.           |
 | fields    | <span class="text-normal">OPTIONAL</span> | `string` | A list of the fields to be included. |
 
 As seen above, if the `fields` item is empty, only the transaction hash will be displayed.
@@ -874,7 +874,7 @@ Transaction status retrieved successfully.
 
 `https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&last-nonce=true`
 
-This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
+This endpoint allows one to fetch the latest nonce of a sender from the transactions pool.
 
 <Tabs
 defaultValue="Request"
@@ -888,8 +888,8 @@ Query Parameters
 
 | Param      | Required                                  | Type     | Description                                     |
 | ---------- | ----------------------------------------- | -------- | ----------------------------------------------- |
-| by-sender  | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.                      |
-| last-nonce | <span class="text-normal">REQUIRED</span> | `bool`   | Specifies if the last nonce has to be returned. |
+| by-sender  | <span class="text-danger">REQUIRED</span> | `string` | The Address of the sender.                      |
+| last-nonce | <span class="text-danger">REQUIRED</span> | `bool`   | Specifies if the last nonce has to be returned. |
 
 </TabItem>
 <TabItem value="Response">
@@ -917,7 +917,7 @@ Transaction status retrieved successfully.
 
 `https://gateway.multiversx.com/transaction/pool?by-sender=:sender:&nonce-gaps=true`
 
-This endpoint allows one to fetch the entire transactions pool, merging the pools from each shard.
+This endpoint allows one to fetch the nonce gaps of a sender from the transactions pool.
 
 <Tabs
 defaultValue="Request"
@@ -931,8 +931,8 @@ Query Parameters
 
 | Param      | Required                                  | Type     | Description                                     |
 | ---------- | ----------------------------------------- | -------- | ----------------------------------------------- |
-| by-sender  | <span class="text-normal">REQUIRED</span> | `string` | The Address of the sender.                      |
-| nonce-gaps | <span class="text-normal">REQUIRED</span> | `bool`   | Specifies if the nonce gaps should be returned. |
+| by-sender  | <span class="text-danger">REQUIRED</span> | `string` | The Address of the sender.                      |
+| nonce-gaps | <span class="text-danger">REQUIRED</span> | `bool`   | Specifies if the nonce gaps should be returned. |
 
 </TabItem>
 <TabItem value="Response">
