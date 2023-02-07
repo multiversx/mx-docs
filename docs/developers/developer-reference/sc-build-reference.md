@@ -223,13 +223,20 @@ output
 
 Several arguments can be added to the `build` command, both in mxpy and directly:
 
-- `--wasm-symbols`: Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
-- `--no-wasm-opt`: Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
-- `--wat`: Also generates a WAT file for each of the contract outputs. It does so by calling `wasm2wat`.
-- `--no-imports`: Does not generate an EI imports JSON file for each contract, as is the default.
+- `--locked` Uses the version from `Cargo.lock`, without updating. Required for reproducible builds.
 - `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts.
 - `--wasm-suffix` followed by a suffix: Adds a dash and this suffix to all produced contracts. E.g. `cargo run build --wasm-suffix dbg` on multisig will produce contracts `multisig-dbg.wasm`, `multisig-view-dbg.wasm` and `multisig-full-dbg.wasm`.
-- `--target-dir` specifies which target folder the rust compiler should use. In case more contracts are compiled, it is faster for them to share the target directory, since common crates will not need to be recompiled for each contract. mxpy always sets this explicitly.
+- `--wasm-symbols` Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
+- `--no-wasm-opt` Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
+- `--wat` Also generates a WAT file for each of the contract outputs. It does so by calling `wasm2wat`.
+- `--mir` Also emit MIR files when building. 
+- `--no-abi-git-version` Skips loading the Git version into the ABI.
+- `--no-imports` Does not generate an EI imports JSON file for each contract, as is the default.
+- `--target-dir` Allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
+- `--twiggy-top` Generate a twiggy top report after building.
+- `--twiggy-paths` Generate a twiggy paths report after building.
+- `--twiggy-monos` Generate a twiggy monos report after building.
+- `--twiggy-dominators` Generate a twiggy dominators report after building.
 
 [comment]: # (mx-context-auto)
 
@@ -253,6 +260,14 @@ output
 ```
 
 It accepts all the arguments from `build`, so `--target-dir` works here too.
+
+[comment]: # (mx-context-auto)
+
+
+### Calling `twiggy`
+
+This command is similar to `build-dbg`, in that it provides a shorthand for building contracts and analyzing their size. It is equivalent to running `cargo run build-dbg --twiggy-top --twiggy-paths --twiggy-monos --twiggy-dominators`.
+
 
 [comment]: # (mx-context-auto)
 
@@ -310,7 +325,7 @@ To produce the ABI, in fact, it is enough to call:
 
 ```sh
 cd meta
-cargo run
+cargo run abi
 ```
 
 The meta crate has access to the ABI generator, because it always has a dependency to the contract crate. This is the `my_contract_crate::AbiProvider` in the example above.
