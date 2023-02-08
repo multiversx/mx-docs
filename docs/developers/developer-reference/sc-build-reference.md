@@ -263,11 +263,9 @@ It accepts all the arguments from `build`, so `--target-dir` works here too.
 
 [comment]: # (mx-context-auto)
 
-
 ### Calling `twiggy`
 
 This command is similar to `build-dbg`, in that it provides a shorthand for building contracts and analyzing their size. It is equivalent to running `cargo run build-dbg --twiggy-top --twiggy-paths --twiggy-monos --twiggy-dominators`.
-
 
 [comment]: # (mx-context-auto)
 

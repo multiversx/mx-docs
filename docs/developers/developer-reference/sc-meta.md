@@ -3,6 +3,8 @@ id: sc-meta
 title: Smart Contract Developer Tooling
 ---
 
+[comment]: # (mx-abstract)
+
 ## Introduction
 
 We have developed a universal smart contract management tool, called `multiversx-sc-meta` (`sc-meta` in short).
@@ -19,6 +21,7 @@ cargo install multiversx-sc-meta
 
 After that, try calling `sc-meta help` or `sc-meta -h` to see the CLI docs.
 
+[comment]: # (mx-context-auto)
 
 ## Standalone tool vs. contract tool
 
@@ -40,6 +43,7 @@ Therefore, all the functionality that needs the ABI goes into the contract tool,
 
 To see the contract meta CLI docs, `cd` into the `/meta` crate and call `cargo run help` or `cargo run -- -h`.
 
+[comment]: # (mx-context-auto)
 
 ## Contract functionality
 
@@ -56,6 +60,7 @@ To learn more about building contracts, see the [the build reference](/developer
 
 The `snippets` documentation is still under construction, it will follow soon.
 
+[comment]: # (mx-context-auto)
 
 ## Standalone functionality
 
@@ -67,6 +72,7 @@ The standalone functionality is:
 
 All the standalone tools take an optional `--path` argument. if not provided, it will be the current directory.
 
+[comment]: # (mx-context-auto)
 
 ### The `all` command
 
@@ -84,6 +90,8 @@ You can even call `sc-meta all help` and see that the CLI docs are almost the sa
 
 A related command is the `info` command, which just prints a tree with all the contract and contract libraries in a folder, without doing anything to them.
 
+[comment]: # (mx-context-auto)
+
 ### The contract upgrade tool
 
 Calling `sc-meta upgrade` will try to automatically upgrade a contract or group of contracts to the latest version.
@@ -95,6 +103,8 @@ It is especially important when upgrading from `0.38` to `0.39.0`, since a lot o
 :::tip
 For projects with multiple contract crates, we recommend upgrading all of them at once. The upgrade algorithm goes step by step, version after version. For some of the major versions, it also checks that the project compiles before moving on. This is to give developers the chance to fix issues manually, if necessary, and not have those issues pile up. If there are local depdencies between contracts, the upgrader will not be able to do the check unless all of them are upgraded together.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### Local depdendencies
 
