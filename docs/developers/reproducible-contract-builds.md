@@ -181,7 +181,7 @@ A more straightforward alternative to the previous bash script is to use **mxpy*
 
 First, make sure you have the:
 
-- latest [mxpy](<(/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended)>) installed,
+- latest [mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended) installed,
 - latest [docker engine](https://docs.docker.com/engine/install/) installed.
 
 Then, use the `reproducible-build` command (below, the image tag is just an example):
