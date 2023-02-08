@@ -112,6 +112,12 @@ const config = {
             "aria-label": "GitHub",
           },
           {
+            href: "https://discord.gg/multiversxbuilders",
+            position: "right",
+            className: "header-discord-link",
+            "aria-label": "Discord",
+          },
+          {
             href: "https://t.me/MultiversX",
             position: "right",
             className: "header-telegram-link",

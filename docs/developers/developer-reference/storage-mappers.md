@@ -333,7 +333,7 @@ Stores a whitelist of items. Does not provide any means of iterating over the el
 
 Examples:
 ```rust
-fn my_whitelist(&self) -> WhitelistMapper<Self::Api, Type>
+fn my_whitelist(&self) -> WhitelistMapper<Type>
 ```
 
 Available methods:
@@ -660,7 +660,7 @@ Stores a token identifier (like a `SingleValueMapper<TokenIdentifier>`) and prov
 
 Examples:
 ```rust
-fn my_token_id(&self) -> FungibleTokenMapper<Self::Api>
+fn my_token_id(&self) -> FungibleTokenMapper
 ```
 
 Available methods:
@@ -704,7 +704,7 @@ Alternatively, if you want to issue and also have all roles set for the SC, you 
 
 ### mint
 ```rust
-fn mint(amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn mint(amount: BigUint) -> EsdtTokenPayment
 ```
 
 Mints `amount` tokens for the stored token ID, using the `ESDTLocalMint` built-in function. Returns a payment struct, containing the token ID and the given amount.
@@ -757,9 +757,9 @@ Same as the previous issue function, but also takes an `EsdtTokenType` enum as a
 
 ### nft_create/nft_create_named
 ```rust
-fn nft_create<T: TopEncode>(amount: BigUint, attributes: &T) -> EsdtTokenPayment<Self::Api>
+fn nft_create<T: TopEncode>(amount: BigUint, attributes: &T) -> EsdtTokenPayment
 
-fn nft_create_named<T: TopEncode>(amount: BigUint, name: &ManagedBuffer, attributes: &T) -> EsdtTokenPayment<Self::Api>
+fn nft_create_named<T: TopEncode>(amount: BigUint, name: &ManagedBuffer, attributes: &T) -> EsdtTokenPayment
 ```
 
 Creates an NFT (optionally with a display `name`) and returns the token ID, the created token's nonce, and the given amount in a payment struct.
@@ -768,9 +768,9 @@ Creates an NFT (optionally with a display `name`) and returns the token ID, the 
 
 ### nft_create_and_send/nft_create_and_send_named
 ```rust
-fn nft_create_and_send<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment
 
-fn nft_create_and_send_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment
 ```
 
 Same as the methods above, but also sends the created token to the provided address.
@@ -779,7 +779,7 @@ Same as the methods above, but also sends the created token to the provided addr
 
 ### nft_add_quantity
 ```rust
-fn nft_add_quantity(token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn nft_add_quantity(token_nonce: u64, amount: BigUint) -> EsdtTokenPayment
 ```
 
 Adds quantity for the given token nonce. This can only be used if one of the `nft_create` functions was used before AND the SC holds at least 1 token for the given nonce.
@@ -788,7 +788,7 @@ Adds quantity for the given token nonce. This can only be used if one of the `nf
 
 ### nft_add_quantity_and_send
 ```rust
-fn nft_add_quantity_and_send(to: &ManagedAddress, token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn nft_add_quantity_and_send(to: &ManagedAddress, token_nonce: u64, amount: BigUint) -> EsdtTokenPayment
 ```
 
 Same as the method above, but also sends the tokens to the provided address.
@@ -881,8 +881,8 @@ Manually sets the token ID for this mapper. This can only be used once, and can 
 
 ### require_same_token/require_all_same_token
 ```rust
-fn require_same_token(expected_token_id: &TokenIdentifier<SA>)
-fn require_all_same_token(payments: &ManagedVec<EsdtTokenPayment<Self::Api>>)
+fn require_same_token(expected_token_id: &TokenIdentifier)
+fn require_all_same_token(payments: &ManagedVec<EsdtTokenPayment>)
 ```
 
 Will signal an error if the provided token ID argument(s) differs from the stored token. Useful in `#[payable]` methods when you only want to this token as payment.

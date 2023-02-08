@@ -65,6 +65,7 @@ const sidebars = {
             type: "category",
             label: "Rust Developer reference",
             items: [
+              "developers/developer-reference/sc-meta",
               "developers/developer-reference/serialization-format",
               "developers/developer-reference/sc-annotations",
               "developers/developer-reference/sc-modules",

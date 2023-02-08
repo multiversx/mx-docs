@@ -349,7 +349,7 @@ Returns the amount of EGLD transferred in the current transaction. Will return 0
 ### all_esdt_transfers
 
 ```rust
-all_esdt_transfers() -> ManagedVec<EsdtTokenPayment<Self::Api>>
+all_esdt_transfers() -> ManagedVec<EsdtTokenPayment>
 ```
 
 Returns all ESDT transfers. Useful when you're expecting a variable number of transfers.
@@ -369,7 +369,7 @@ pub struct EsdtTokenPayment<M: ManagedTypeApi> {
 ### multi_esdt
 
 ```rust
-multi_esdt<const N: usize>() -> [EsdtTokenPayment<Self::Api>; N]
+multi_esdt<const N: usize>() -> [EsdtTokenPayment; N]
 ```
 
 Returns a fixed number of ESDT transfers as an array. Will signal an error if the number of ESDT transfers differs from `N`.
@@ -382,7 +382,7 @@ For example, if you always expect exactly 3 payments in your endpoint, you can u
 ### single_esdt
 
 ```rust
-single_esdt() -> EsdtTokenPayment<Self::Api>
+single_esdt() -> EsdtTokenPayment
 ```
 
 Returns the received ESDT token payment if exactly one was received. Will signal an error in case of multi-transfer or no transfer.
@@ -402,7 +402,7 @@ Similar to the function above, but also enforces the payment to be a fungible ES
 ### egld_or_single_fungible_esdt
 
 ```rust
-egld_or_single_fungible_esdt(&self) -> (EgldOrEsdtTokenIdentifier<Self::Api>, BigUint)
+egld_or_single_fungible_esdt(&self) -> (EgldOrEsdtTokenIdentifier, BigUint)
 ```
 
 Same as the function above, but also allows EGLD to be received.
@@ -412,7 +412,7 @@ Same as the function above, but also allows EGLD to be received.
 ### egld_or_single_esdt
 
 ```rust
-egld_or_single_esdt() -> EgldOrEsdtTokenPayment<Self::Api>
+egld_or_single_esdt() -> EgldOrEsdtTokenPayment
 ```
 
 Allows EGLD or any single ESDT token to be received.
@@ -570,7 +570,7 @@ The ESDT-only version for the `direct` function. Used so you don't have to wrap 
 ### direct_multi
 
 ```rust
-direct_multi(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment<Self::Api>>)
+direct_multi(to: &ManagedAddress, payments: &ManagedVec<EsdtTokenPayment>)
 ```
 
 The multi-transfer version for the `direct_esdt` function. Keep in mind you cannot transfer EGLD with this function, only ESDTs.
