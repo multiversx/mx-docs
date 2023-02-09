@@ -28,7 +28,7 @@ The top-level fields are as follows:
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `externalSteps`**
+## Step type: `externalSteps`
 
 ```json
 {
@@ -51,7 +51,7 @@ Also beware that there is currently no protection against cyclic imports.
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `setState`**
+## Step type: `setState`
 
 ```json
 {
@@ -182,7 +182,7 @@ Not all of its sections are required each time. These sections are:
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `checkState`**
+## Step type: `checkState`
 
 This step checks the state of the blockchain mock at a certain point. It can check the entire state or just part of it.
 
@@ -269,7 +269,7 @@ Fields:
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `dumpState`**
+## Step type: `dumpState`
 
 Simply prints the entire state of the blockchain mock to the console.
 
@@ -282,7 +282,7 @@ Simply prints the entire state of the blockchain mock to the console.
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `scCall`**
+## Step type: `scCall`
 
 ```
 {
@@ -371,7 +371,7 @@ This step simulates a transaction to an existing smart contract. Fields:
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `scQuery`**
+## Step type: `scQuery`
 
 ```
 {
@@ -426,7 +426,7 @@ Fields:
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `scDeploy`**
+## Step type: `scDeploy`
 
 It is very similar to `scCall`, but it is used specifically for simulating deployment of new smart contracts.
 
@@ -475,7 +475,7 @@ Please note: cannot transfer ESDT during contract deploy. If you need to feed ES
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `transfer`**
+## Step type: `transfer`
 
 Lesser used step type. Simulates a simple transfer of EGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
 
@@ -519,7 +519,7 @@ The fields are:
 
 [comment]: # (mx-context-auto)
 
-## **Step type: `validatorReward`**
+## Step type: `validatorReward`
 
 Lesser used step type. Simulates a validator reward being sent by the protocol. This transaction has no sender, and beside increasing the recipient balance, it also increments the `ELRONDrewards` field in the smart contract storage. Useful when building delegation or other staking contracts.
 
