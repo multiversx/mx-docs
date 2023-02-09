@@ -75,7 +75,6 @@
 }
 .table-of-contents__link,
 .anchor {
-  display: flex;
   align-items: center;
 }
 .table-of-contents__link .badge,
