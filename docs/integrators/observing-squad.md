@@ -122,6 +122,43 @@ After running the commands above, the upgraded Observing Squad will start again.
 
 [comment]: # (mx-context-auto)
 
+## **February 2023 upgrade**
+
+:::note
+For observing squad users that still use the old `elrond-go-scripts`: since the rebranding to `MultiversX`, the scripts have been rebranded as well to `mx-chain-scripts`. 
+:::
+
+In order to upgrade the squad, you first need to migrate to the new scripts, while still running the squad via the old scripts. After that,
+we'll use the new scripts to upgrade the squad.
+
+### **How to migrate to the new scripts**
+
+If you already migrated from `elrond-go-scripts` to `mx-chain-scripts`, you can skip this section.
+
+Make sure you are on the same directory as the old scripts.
+
+```bash
+$ cd ~
+$ git clone https://github.com/multiversx/mx-chain-scripts
+$ cd mx-chain-scripts
+$ ./script.sh migrate
+```
+
+The above commands should clone the new scripts and migrate the old configuration files to the new ones. You may now proceed to the next section.
+
+### **How to upgrade to the newest version via the new scripts**
+
+In order to upgrade the squad, we first need to stop the squad, then upgrade the squad and finally start the squad again. These steps are done by:
+
+```bash
+$ cd ~/mx-chain-scripts
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
+
 ## **Monitoring and trivial checks**
 
 One can monitor the running Observers using the **termui** utility (installed during the setup process itself in the `CUSTOM_HOME="/home/ubuntu"
