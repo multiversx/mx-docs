@@ -159,6 +159,9 @@ $ ./script.sh upgrade_proxy
 $ ./script.sh start
 ```
 
+After successfully migrating to the new scripts and upgrading the squad, you can not remove the old scripts. (example: `rm -rf ~/elrond-go-scripts`)
+
+
 ## **Monitoring and trivial checks**
 
 One can monitor the running Observers using the **termui** utility (installed during the setup process itself in the `CUSTOM_HOME="/home/ubuntu"
