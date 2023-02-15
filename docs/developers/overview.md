@@ -43,13 +43,13 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 
 ### Signing transactions
 
-The following content explain the structure of a transaction, how to sign or send them
+The following content explains the structure of a transaction, how to sign or send them
 
 | Name                                                                                 | Description                                             |
 |--------------------------------------------------------------------------------------|---------------------------------------------------------|
 | [Signing transactions](/developers/signing-transactions)                             | How to serialize and sign transactions.                 |
 | [Tools for signing](/developers/signing-transactions/tools-for-signing)              | What to use in order to generate and sign transactions. |
-| [Signing programatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
+| [Signing programmatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
 
 [comment]: # (mx-context-auto)
 
@@ -72,7 +72,7 @@ Learn about transaction's gas and how a fee is calculated
 |--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
 | [MultiversX serialization format](/developers/developer-reference/serialization-format)                                  | How MultiversX smart contracts serialize arguments, results, and storage.                       |
-| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations your contracts to make use of many built-in features from the framework. |
+| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations in your contracts to make use of many built-in features from the framework. |
 | [MultiversX wasm modules](/developers/developer-reference/sc-modules)                                                    | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
 | [MultiversX wasm contract calls](/developers/developer-reference/sc-contract-calls)                                      | Learn how to call a Smart Contract from another Smart Contract.                                 |
 | [Code metadata](/developers/developer-reference/code-metadata)                                                           | Choose the properties / eligible actions of your Smart Contract.                                |

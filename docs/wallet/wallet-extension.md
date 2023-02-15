@@ -7,11 +7,13 @@ title: MultiversX Web Wallet Extension
 
 Popularly referred to as the "future of money," MultiversX currently has a robust web wallet extension known as the **MultiversX DeFi Wallet Extension**. It is a powerful browser extension for the MultiversX Wallet that effectively automates and reduces the steps and time required for users to interact with MultiversX Decentralized apps.
 
+
 The MultiversX DeFi Wallet can be installed on Chrome, Brave, and other chromium-based browsers. This extension is free and secure, with compelling features that allow you to create a new wallet or import existing wallets, manage multiple wallets on the MultiversX mainnet, and store MultiversX tokens such as EGLD, ESDT, or NFTs on the MultiversX Network with easy accessibility.
 
-Let's walk through the steps how to install and set up the MultiversX DeFi Wallet extension:
+Let's walk through the steps on how to install and set up the MultiversX DeFi Wallet extension:
 
 [comment]: # (mx-context-auto)
+
 
 ## Prerequisites
 Wallets don't have custody of your funds, you do. Before utilizing the MultiversX DeFi Wallet Extension, certain preliminary steps must be taken to ensure its proper use.  
@@ -126,7 +128,7 @@ _(Optional)_ **Step 3**: Enter the data. This is a description of the transactio
 
 ### Lock/unlock
 
-After 60minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header.
+After 60 minutes of being inactive, the extension automatically locks itself. You can unlock it at any time using your password. In addition, you can lock the extension manually, by clicking the **“lock”** icon in the header.
 
 [comment]: # (mx-context-auto)
 
