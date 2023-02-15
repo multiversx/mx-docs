@@ -2,12 +2,17 @@
 id: storage-mappers
 title: Storage Mappers
 ---
+[comment]: # (mx-abstract)
 
 The Rust framework provides various storage mappers you can use. Deciding which one to use for every situation is critical for performance. There will be a comparison section after each mapper is described.
 
 Note: All the storage mappers support additional key arguments.
 
+[comment]: # (mx-context-auto)
+
 # General purpose mappers
+
+[comment]: # (mx-context-auto)
 
 ## SingleValueMapper
 
@@ -23,12 +28,16 @@ Keep in mind there is no way of iterating over all `key_arg`s, so if you need to
 
 Available methods:
 
+[comment]: # (mx-context-auto)
+
 ### get
 ```rust
 fn get() -> Type
 ```
 
 Reads the value from storage and deserializes it to the given `Type`. For numerical types and vector types, this will return the default value for empty storage, i.e. 0 and empty vec respectively. For custom structs, this will signal an error if trying to read from empty storage.
+
+[comment]: # (mx-context-auto)
 
 ### set
 ```rust
@@ -37,12 +46,16 @@ fn set(value: &Type)
 
 Sets the stored value to the provided `value` argument. For base Rust numerical types, the reference is not needed.
 
+[comment]: # (mx-context-auto)
+
 ### is_empty
 ```rust
 fn is_empty() -> bool
 ```
 
 Returns `true` is the storage entry is empty. Usually used when storing struct types to prevent crashes on `get()`.
+
+[comment]: # (mx-context-auto)
 
 ### set_if_empty
 ```rust
@@ -51,12 +64,16 @@ fn set_if_empty(value: &Type)
 
 Sets the value only if the storage for that value is currently empty. Usually used in #init functions to not overwrite values on contract upgrade.
 
+[comment]: # (mx-context-auto)
+
 ### clear
 ```rust
 fn clear()
 ```
 
 Clears the entry.
+
+[comment]: # (mx-context-auto)
 
 ### update
 ```rust
@@ -94,12 +111,16 @@ let new_val = self.my_value().update(|val| {
 });
 ```
 
+[comment]: # (mx-context-auto)
+
 ### raw_byte_length
 ```rust
 fn raw_byte_length() -> usize
 ```
 
 Returns the raw byte length of the stored value. This should be rarely used.
+
+[comment]: # (mx-context-auto)
 
 ## VecMapper
 
@@ -112,12 +133,16 @@ fn my_vec_with_args(&self, arg: Type1) -> VecMapper<Type2>;
 
 Available methods:
 
+[comment]: # (mx-context-auto)
+
 ### push
 ```rust
 fn push(elem: &T)
 ```
 
 Stores the element at index `len` and increments `len` afterwards.
+
+[comment]: # (mx-context-auto)
 
 ### get
 ```rust
@@ -126,12 +151,16 @@ fn get(index: usize) -> Type
 
 Gets the element at the specific index. Valid indexes are 1 to `len`, both ends included. Attempting to read from an invalid index will signal an error.
 
+[comment]: # (mx-context-auto)
+
 ### set
 ```rust
 fn set(index: usize, value: &Type)
 ```
 
 Sets the element at the given index. Index must be in inclusive range 1 to `len`.
+
+[comment]: # (mx-context-auto)
 
 ### clear_entry
 ```rust
@@ -140,12 +169,16 @@ fn clear_entry(index: usize)
 
 Clears the entry at the given index. This does not decrease the length.
 
+[comment]: # (mx-context-auto)
+
 ### is_empty
 ```rust
 fn is_empty() -> bool
 ```
 
 Returns `true` if the mapper has no elements stored.
+
+[comment]: # (mx-context-auto)
 
 ### len
 ```rust
@@ -154,12 +187,16 @@ fn len() -> usize
 
 Returns the number of items stored in the mapper.
 
+[comment]: # (mx-context-auto)
+
 ### extend_from_slice
 ```rust
 fn extend_from_slice(slice: &[Type])
 ```
 
 Pushes all elements from the given slice at the end of the mapper. More efficient than manual `for` of `push`, as the internal length is only read and updated once.
+
+[comment]: # (mx-context-auto)
 
 ### swap_remove
 ```rust
@@ -168,6 +205,8 @@ fn swap_remove(index: usize)
 
 Removes the element at `index`, moves the last element to `index` and decreases the `len` by 1. There is no way of removing an element and preserving the order.
 
+[comment]: # (mx-context-auto)
+
 ### clear
 ```rust
 fn clear()
@@ -175,12 +214,16 @@ fn clear()
 
 Clears all the elements from the mapper. This function can run out of gas for big collections.
 
+[comment]: # (mx-context-auto)
+
 ### iter
 ```rust
 fn iter() -> Iter<Type>
 ```
 
 Provides an iterator over all the elements.
+
+[comment]: # (mx-context-auto)
 
 ## SetMapper
 
@@ -195,12 +238,16 @@ fn my_set(&self) -> SetMapper<Type>;
 
 Available methods:
 
+[comment]: # (mx-context-auto)
+
 ### insert
 ```rust
 fn insert(value: Type) -> bool
 ```
 
 Insers the value into the set. Returns `false` if the item was already present.
+
+[comment]: # (mx-context-auto)
 
 ### remove
 ```rust
@@ -209,12 +256,16 @@ fn remove(value: &Type)
 
 Removes the value from the set. Returns `false` if the set did not contain the value.
 
+[comment]: # (mx-context-auto)
+
 ### contains
 ```rust
 fn contains(value: &Type) -> bool
 ```
 
 Returns `true` if the mapper contains the given value.
+
+[comment]: # (mx-context-auto)
 
 ### is_empty
 ```rust
@@ -223,12 +274,16 @@ fn is_empty() -> bool
 
 Returns `true` if the mapper has no elements stored.
 
+[comment]: # (mx-context-auto)
+
 ### len
 ```rust
 fn len() -> usize
 ```
 
 Returns the number of items stored in the mapper.
+
+[comment]: # (mx-context-auto)
 
 ### clear
 ```rust
@@ -237,12 +292,16 @@ fn clear()
 
 Clears all the elements from the mapper. This function can run out of gas for big collections.
 
+[comment]: # (mx-context-auto)
+
 ### iter
 ```rust
 fn iter() -> Iter<Type>
 ```
 
 Returns an iterator over all the stored elements.
+
+[comment]: # (mx-context-auto)
 
 ## UnorderedSetMapper
 
@@ -257,6 +316,8 @@ Available methods:
 
 `UnorderedSetMapper` contains the same methods as `SetMapper`, the only difference being item removal. Instead of `remove`, we only have `swap_remove` available.
 
+[comment]: # (mx-context-auto)
+
 ### swap_remove
 ```rust
 fn swap_remove(value: &Type) -> bool
@@ -264,16 +325,20 @@ fn swap_remove(value: &Type) -> bool
 
 Uses the internal `VecMapper`'s swap_remove method to remove the element. Additionally, it overwrites the last element's stored index with the removed value's index. Returns `false` if the element was not present in the set.
 
+[comment]: # (mx-context-auto)
+
 ## WhitelistMapper
 
 Stores a whitelist of items. Does not provide any means of iterating over the elements, so if you need to iterate over the elements, use `UnorderedSetMapper` instead. Internally, this mapper simply stores a flag in storage for each item if they're whitelisted.
 
 Examples:
 ```rust
-fn my_whitelist(&self) -> WhitelistMapper<Self::Api, Type>
+fn my_whitelist(&self) -> WhitelistMapper<Type>
 ```
 
 Available methods:
+
+[comment]: # (mx-context-auto)
 
 ### add
 ```rust
@@ -282,12 +347,16 @@ fn add(value: &Type)
 
 Adds the value to the whitelist.
 
+[comment]: # (mx-context-auto)
+
 ### remove
 ```rust
 fn remove(value: &Type)
 ```
 
 Removes the value from the whitelist.
+
+[comment]: # (mx-context-auto)
 
 ### contains
 ```rust
@@ -296,12 +365,16 @@ fn contains(value: &Type) -> bool
 
 Returns `true` if the mapper contains the given value.
 
+[comment]: # (mx-context-auto)
+
 ### require_whitelisted
 ```rust
 fn require_whitelisted(value: &Type)
 ```
 
 Will signal an error if the item is not whitelisted. Does nothing otherwise.
+
+[comment]: # (mx-context-auto)
 
 ## LinkedListMapper
 
@@ -314,12 +387,16 @@ fn my_linked_list(&self) -> LinkedListMapper<Type>
 
 Available methods:
 
+[comment]: # (mx-context-auto)
+
 ### is_empty
 ```rust
 fn is_empty() -> bool
 ```
 
 Returns `true` if the mapper has no elements stored.
+
+[comment]: # (mx-context-auto)
 
 ### len
 ```rust
@@ -328,12 +405,16 @@ fn len() -> usize
 
 Returns the number of items stored in the mapper.
 
+[comment]: # (mx-context-auto)
+
 ### clear
 ```rust
 fn clear()
 ```
 
 Clears all the elements from the mapper. This function can run out of gas for big collections.
+
+[comment]: # (mx-context-auto)
 
 ### iter
 ```rust
@@ -342,12 +423,16 @@ fn iter() -> Iter<Type>
 
 Returns an iterator over all the stored elements.
 
+[comment]: # (mx-context-auto)
+
 ### iter_from_node_id
 ```rust
 fn iter_from_node_id(node_id: u32) -> Iter<Type>
 ```
 
 Returns an iterator starting from the given `node_id`. Useful when splitting iteration over multiple SC calls.
+
+[comment]: # (mx-context-auto)
 
 ### front
 ```rust
@@ -391,6 +476,8 @@ impl<Type> LinkedListNode<Type> {
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ### pop_front/pop_back
 ```rust
 fn pop_front(&mut self) -> Option<LinkedListNode<Type>>
@@ -398,6 +485,8 @@ fn pop_back(&mut self) -> Option<LinkedListNode<Type>>
 ```
 
 Removes and returns the first/last element from the list.
+
+[comment]: # (mx-context-auto)
 
 ### push_after/pus_after
 ```rust
@@ -407,6 +496,8 @@ pub fn push_before(node: &mut LinkedListNode<Type>, element: Type) -> Option<Lin
 
 Inserts the given `element` into the list after/before the given `node`. Returns the newly inserted node if the insertion was successful, `None` otherwise.
 
+[comment]: # (mx-context-auto)
+
 ### push_after_node_id/push_before_node_id
 ```rust
 pub fn push_after_node_id(node_id: usize, element: Type) -> Option<LinkedListNode<Type>>
@@ -414,6 +505,8 @@ pub fn push_before_node_id(node_id: usize, element: Type) -> Option<LinkedListNo
 ```
 
 Same as the methods above, but uses node_id instead of a full node struct.
+
+[comment]: # (mx-context-auto)
 
 ### push_front/push_back
 ```rust
@@ -423,12 +516,16 @@ fn push_back(element: Type)
 
 Pushes the given `element` at the front/back of the list. Can be seen as specialized versions of `push_before_node_id` and `push_after_node_id`.
 
+[comment]: # (mx-context-auto)
+
 ### set_node_value
 ```rust
 fn set_node_value(mut node: LinkedListNode<Type>, new_value: Type)
 ```
 
 Sets a node's value, if the node exists in the list.
+
+[comment]: # (mx-context-auto)
 
 ### set_node_value_by_id
 ```rust
@@ -437,6 +534,7 @@ fn set_node_value_by_id(node_id: usize, new_value: Type)
 
 Same as the method above, but uses node_id instead of a full node struct.
 
+[comment]: # (mx-context-auto)
 
 ### remove_node
 ```rust
@@ -445,12 +543,16 @@ fn remove_node(node: &LinkedListNode<Type>)
 
 Removes the node from the list, if it exists.
 
+[comment]: # (mx-context-auto)
+
 ### remove_node_by_id
 ```rust
 fn remove_node(node_id: usize)
 ```
 
 Same as the method above, but uses node_id instead of a full node struct.
+
+[comment]: # (mx-context-auto)
 
 ### iter
 ```rust
@@ -459,12 +561,16 @@ fn iter() -> Iter<Type>
 
 Returns an iterator over all the stored elements.
 
+[comment]: # (mx-context-auto)
+
 ### iter_from_node_id
 ```rust
 fn iter_from_node_id(node_id: u32) -> Iter<Type>
 ```
 
 Returns an iterator starting from the given `node_id`. Useful when splitting iteration over multiple SC calls.
+
+[comment]: # (mx-context-auto)
 
 ## MapMapper
 
@@ -477,12 +583,16 @@ fn my_map(&self) -> MapMapper<KeyType, ValueType>
 
 Available methods:
 
+[comment]: # (mx-context-auto)
+
 ### is_empty
 ```rust
 fn is_empty() -> bool
 ```
 
 Returns `true` if the mapper has no elements stored.
+
+[comment]: # (mx-context-auto)
 
 ### len
 ```rust
@@ -491,12 +601,16 @@ fn len() -> usize
 
 Returns the number of items stored in the mapper.
 
+[comment]: # (mx-context-auto)
+
 ### contains_key
 ```rust
 fn contains_key(k: &KeyType) -> bool
 ```
 
 Returns `true` if the mapper contains the given key.
+
+[comment]: # (mx-context-auto)
 
 ### get
 ```rust
@@ -505,6 +619,8 @@ fn get(k: &KeyType) -> Option<ValueType>
 
 Returns `Some(value)` if the key exists. Returns `None` if the key does not exist in the map.
 
+[comment]: # (mx-context-auto)
+
 ### insert
 ```rust
 fn insert(k: KeyType, v: ValueType) -> Option<V>
@@ -512,12 +628,16 @@ fn insert(k: KeyType, v: ValueType) -> Option<V>
 
 Inserts the given key, value pair into the map, and returns `Some(old_value)` if the key was already present.
 
+[comment]: # (mx-context-auto)
+
 ### remove
 ```rust
 fn remove(k: &KeyType) -> Option<ValueType>
 ```
 
 Removes the key and the corresponding value from the map, and returns the value. If the key was not present in the map, `None` is returned.
+
+[comment]: # (mx-context-auto)
 
 ### keys/values/iter
 ```rust
@@ -528,7 +648,11 @@ fn iter() -> Iter<KeyType, ValueType>
 
 Provides an iterator over all keys, values, and (key, value) pairs respectively.
 
+[comment]: # (mx-context-auto)
+
 # Specialized mappers
+
+[comment]: # (mx-context-auto)
 
 ## FungibleTokenMapper
 
@@ -536,10 +660,12 @@ Stores a token identifier (like a `SingleValueMapper<TokenIdentifier>`) and prov
 
 Examples:
 ```rust
-fn my_token_id(&self) -> FungibleTokenMapper<Self::Api>
+fn my_token_id(&self) -> FungibleTokenMapper
 ```
 
 Available methods:
+
+[comment]: # (mx-context-auto)
 
 ### issue/issue_and_set_all_roles
 ```rust
@@ -574,12 +700,16 @@ Note the "never" type `-> !` as return type for this function. This means this f
 
 Alternatively, if you want to issue and also have all roles set for the SC, you can use the `issue_and_set_all_roles` method instead.
 
+[comment]: # (mx-context-auto)
+
 ### mint
 ```rust
-fn mint(amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn mint(amount: BigUint) -> EsdtTokenPayment
 ```
 
 Mints `amount` tokens for the stored token ID, using the `ESDTLocalMint` built-in function. Returns a payment struct, containing the token ID and the given amount.
+
+[comment]: # (mx-context-auto)
 
 ### mint_and_send
 ```rust
@@ -588,12 +718,16 @@ fn mint_and_send(to: &ManagedAddress, amount: BigUint) -> EsdtTokenPayment<SA>
 
 Same as the method above, but also sends the minted tokens to the given address.
 
+[comment]: # (mx-context-auto)
+
 ### burn
 ```rust
 fn burn(amount: &BigUint)
 ```
 
 Burns `amount` tokens, using the `ESDTLocalBurn` built-in function.
+
+[comment]: # (mx-context-auto)
 
 ### get_balance
 ```rust
@@ -602,9 +736,13 @@ fn get_balance() -> BigUint
 
 Gets the current balance the SC has for the token.
 
+[comment]: # (mx-context-auto)
+
 ## NonFungibleTokenMapper
 
 Similar to the `FungibleTokenMapper`, but is used for NFT, SFT and META-ESDT tokens.
+
+[comment]: # (mx-context-auto)
 
 ### issue/issue_and_set_all_roles
 ```rust
@@ -615,37 +753,47 @@ fn issue_and_set_all_roles(token_type: EsdtTokenType, issue_cost: BigUint, token
 
 Same as the previous issue function, but also takes an `EsdtTokenType` enum as argument, to decide which type of token to issue. Accepted values are `EsdtTokenType::NonFungible`, `EsdtTokenType::SemiFungible` and `EsdtTokenType::Meta`.
 
+[comment]: # (mx-context-auto)
+
 ### nft_create/nft_create_named
 ```rust
-fn nft_create<T: TopEncode>(amount: BigUint, attributes: &T) -> EsdtTokenPayment<Self::Api>
+fn nft_create<T: TopEncode>(amount: BigUint, attributes: &T) -> EsdtTokenPayment
 
-fn nft_create_named<T: TopEncode>(amount: BigUint, name: &ManagedBuffer, attributes: &T) -> EsdtTokenPayment<Self::Api>
+fn nft_create_named<T: TopEncode>(amount: BigUint, name: &ManagedBuffer, attributes: &T) -> EsdtTokenPayment
 ```
 
 Creates an NFT (optionally with a display `name`) and returns the token ID, the created token's nonce, and the given amount in a payment struct.
 
+[comment]: # (mx-context-auto)
+
 ### nft_create_and_send/nft_create_and_send_named
 ```rust
-fn nft_create_and_send<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment
 
-fn nft_create_and_send_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment
 ```
 
 Same as the methods above, but also sends the created token to the provided address.
 
+[comment]: # (mx-context-auto)
+
 ### nft_add_quantity
 ```rust
-fn nft_add_quantity(token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn nft_add_quantity(token_nonce: u64, amount: BigUint) -> EsdtTokenPayment
 ```
 
 Adds quantity for the given token nonce. This can only be used if one of the `nft_create` functions was used before AND the SC holds at least 1 token for the given nonce.
 
+[comment]: # (mx-context-auto)
+
 ### nft_add_quantity_and_send
 ```rust
-fn nft_add_quantity_and_send(to: &ManagedAddress, token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn nft_add_quantity_and_send(to: &ManagedAddress, token_nonce: u64, amount: BigUint) -> EsdtTokenPayment
 ```
 
 Same as the method above, but also sends the tokens to the provided address.
+
+[comment]: # (mx-context-auto)
 
 ### nft_burn
 ```rust
@@ -653,6 +801,8 @@ fn nft_burn(token_nonce: u64, amount: &BigUint)
 ```
 
 Burns `amount` tokens for the given nonce.
+
+[comment]: # (mx-context-auto)
 
 ### get_all_token_data
 ```rust
@@ -676,12 +826,16 @@ pub struct EsdtTokenData<M: ManagedTypeApi> {
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ### get_balance
 ```rust
 fn get_balance(token_nonce: u64) -> BigUint
 ```
 
 Gets the SC's balance for the given token nonce.
+
+[comment]: # (mx-context-auto)
 
 ### get_token_attributes
 ```rust
@@ -690,9 +844,13 @@ fn get_token_attributes<T: TopDecode>(token_nonce: u64) -> T
 
 Gets the attributes for the given token nonce. The SC must own the given nonce for this function to work.
 
+[comment]: # (mx-context-auto)
+
 ## Common functions for FungibleTokenMapper and NonFungibleTokenMapper
 
 Both mappers work similarly, so some functions have the same implementation for both.
+
+[comment]: # (mx-context-auto)
 
 ### is_empty
 ```rust
@@ -701,12 +859,16 @@ fn is_empty() -> bool
 
 Returns `true` if the token ID is not set yet.
 
+[comment]: # (mx-context-auto)
+
 ### get_token_id
 ```rust
 fn get_token_id() -> TokenIdentifier<SA>
 ```
 
 Gets the stored token ID.
+
+[comment]: # (mx-context-auto)
 
 ### set_token_id
 ```rust
@@ -715,13 +877,17 @@ fn set_token_id(token_id: &TokenIdentifier)
 
 Manually sets the token ID for this mapper. This can only be used once, and can not be overwritten afterwards. This will fail if the token was issue previously, as the token ID was automatically set.
 
+[comment]: # (mx-context-auto)
+
 ### require_same_token/require_all_same_token
 ```rust
-fn require_same_token(expected_token_id: &TokenIdentifier<SA>)
-fn require_all_same_token(payments: &ManagedVec<EsdtTokenPayment<Self::Api>>)
+fn require_same_token(expected_token_id: &TokenIdentifier)
+fn require_all_same_token(payments: &ManagedVec<EsdtTokenPayment>)
 ```
 
 Will signal an error if the provided token ID argument(s) differs from the stored token. Useful in `#[payable]` methods when you only want to this token as payment.
+
+[comment]: # (mx-context-auto)
 
 ### set_local_roles
 ```rust
@@ -734,6 +900,8 @@ You don't need to call this function if you use `issue_and_set_all_roles` for is
 
 Same as the issue function, this will terminate execution when called.
 
+[comment]: # (mx-context-auto)
+
 ### set_local_roles_for_address
 ```rust
 fn set_local_roles_for_address(address: &ManagedAddress, roles: &[EsdtLocalRole], opt_callback: Option<CallbackClosure>) -> !
@@ -741,6 +909,7 @@ fn set_local_roles_for_address(address: &ManagedAddress, roles: &[EsdtLocalRole]
 
 Similar to the previous function, but sets the roles for a specific address instead of the SC address.
 
+[comment]: # (mx-context-auto)
 
 ## UniqueIdMapper
 
@@ -759,12 +928,16 @@ fn my_id_mapper(&self) -> UniqueIdMapper<Self::Api>
 
 Available methods:
 
+[comment]: # (mx-context-auto)
+
 ### set_initial_len
 ```rust
 fn set_initial_len(&mut self, len: usize)
 ```
 
 Sets the initial mapper length, i.e. the `N`. The length may only be set once.
+
+[comment]: # (mx-context-auto)
 
 ### is_empty
 ```rust
@@ -773,12 +946,16 @@ fn is_empty() -> bool
 
 Returns `true` if the mapper has no elements stored.
 
+[comment]: # (mx-context-auto)
+
 ### len
 ```rust
 fn len() -> usize
 ```
 
 Returns the number of items stored in the mapper.
+
+[comment]: # (mx-context-auto)
 
 ### get
 ```rust
@@ -787,6 +964,8 @@ fn get(index: usize) -> usize
 
 Gets the value for the given index. If the entry is empty, then `index` is returned, as per the mapper's property.
 
+[comment]: # (mx-context-auto)
+
 ### set
 ```rust
 fn set(&mut self, index: usize, id: usize)
@@ -794,6 +973,7 @@ fn set(&mut self, index: usize, id: usize)
 
 Sets the value at the given index. The mapper's internal property of `mapper[i] == i` if empty entry is maintained.
 
+[comment]: # (mx-context-auto)
 
 ### swap_remove
 ```rust
@@ -802,6 +982,8 @@ fn swap_remove(index: usize) -> usize
 
 Removes the ID at the given `index` and returns it. Also, the value at `index` is now set the value of the last entry in the map. Length is decreased by 1.
 
+[comment]: # (mx-context-auto)
+
 ### iter
 ```rust
 fn iter() -> Iter<usize>
@@ -809,11 +991,17 @@ fn iter() -> Iter<usize>
 
 Provides an iterator over all the IDs.
 
+[comment]: # (mx-context-auto)
+
 ## Comparisons between the different mappers
+
+[comment]: # (mx-context-auto)
 
 ### SingleValueMapper vs old storage_set/storage_get pairs
 
 There is no difference between `SingleValueMapper` and the old-school setters/getters. In fact, `SingleValueMapper` is basically a combination between `storage_set`, `storage_get`, `storage_is_empty` and `storage_clear`. Use of `SingleValueMapper` is encouraged, as it's a lot more compact, and has no performance penalty (if, for example, you never use `is_empty()`, that code will be removed by the compiler).
+
+[comment]: # (mx-context-auto)
 
 ### SingleValueMapper vs VecMapper
 
@@ -837,6 +1025,8 @@ Use `VecMapper` when:
 - you only require reading a part of the array
 - `T`'s top-encoding is vastly more efficient than `T`'s nested-encoding (for example: `u64`)
 
+[comment]: # (mx-context-auto)
+
 ### VecMapper vs SetMapper
 
 The primary use for `SetMapper` is storing a whitelist of addresses, token ids, etc. A token ID whitelist can be stored in these two ways:
@@ -853,7 +1043,7 @@ This might look very similar, but the implications of using `VecMapper` for this
 
 `SetMapper` is vastly more efficient than this, as it provides checking for a value in O(1). However, this does not come without a cost. This is how the storage looks for a `SetMapper` with two elements (this snippet is taken from a scenario test):
 
-```json
+```rust
 "str:tokenWhitelist.info": "u32:2|u32:1|u32:2|u32:2",
 "str:tokenWhitelist.node_idEGLD-123456": "2",
 "str:tokenWhitelist.node_idETH-123456": "1",
@@ -867,11 +1057,13 @@ A `SetMapper` uses 3 * N + 1 storage entries, where N is the number of elements.
 
 Even so, for this particular case, `SetMapper` is way better than `VecMapper`.
 
+[comment]: # (mx-context-auto)
+
 ### VecMapper vs LinkedListMapper
 
 `LinkedListMapper` can be seen as a specialization for the `VecMapper`. It allows insertion/removal only at either end of the list, known as pushing/popping. It's also storage-efficient, as it only requires 2 * N + 1 storage entries. The storage for such a mapper looks like this:
 
-```json
+```rust
 "str:list_mapper.node_links|u32:1": "u32:0|u32:2",
 "str:list_mapper.node_links|u32:2": "u32:1|u32:0",
 "str:list_mapper.value|u32:1": "123",
@@ -880,6 +1072,8 @@ Even so, for this particular case, `SetMapper` is way better than `VecMapper`.
 ```
 
 This is one of the lesser used mappers, as its purpose is very specific, but it's very useful if you ever need to store a queue.
+
+[comment]: # (mx-context-auto)
 
 ### SingleValueMapper vs MapMapper
 
@@ -900,7 +1094,7 @@ Both of them provide (almost) the same functionality. The difference is that the
 
 Unless you need to iterate over all the entries, `MapMapper` should be avoided, as this is the most expensive mapper. It uses 4 * N + 1 storage entries. The storage for a `MapMapper` looks like this:
 
-```json
+```rust
 "str:map_mapper.node_links|u32:1": "u32:0|u32:2",
 "str:map_mapper.node_links|u32:2": "u32:1|u32:0",
 "str:map_mapper.value|u32:1": "123",

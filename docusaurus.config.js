@@ -112,6 +112,12 @@ const config = {
             "aria-label": "GitHub",
           },
           {
+            href: "https://discord.gg/multiversxbuilders",
+            position: "right",
+            className: "header-discord-link",
+            "aria-label": "Discord",
+          },
+          {
             href: "https://t.me/MultiversX",
             position: "right",
             className: "header-telegram-link",
@@ -173,7 +179,7 @@ const config = {
         appId: `${process.env.REACT_APP_ALGOLIA_APP_ID}`,
         // Public API key: it is safe to commit it
         apiKey: `${process.env.REACT_APP_ALGOLIA_SEARCH_KEY}`,
-        indexName: "mx_test",
+        indexName: "dev_multiversx",
         contextualSearch: false,
       },
       slugPreprocessor: (slugBase) =>

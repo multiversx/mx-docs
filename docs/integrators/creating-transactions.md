@@ -3,6 +3,12 @@ id: creating-transactions
 title: Creating Transactions
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes how to create, sign and broadcast transactions to the MultiversX Network.
+
+[comment]: # (mx-context-auto)
+
 ## **Transaction structure**
 
 As described in section [Signing Transactions](/developers/signing-transactions), a ready-to-broadcast transaction is structured as follows:
@@ -22,6 +28,8 @@ As described in section [Signing Transactions](/developers/signing-transactions)
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **SDK and tools support for creating and signing transactions**
 
 There are SDKs or tools with support for interacting with the MultiversX blockchain, so one can use one of the following SDKs to perform
@@ -33,6 +41,8 @@ transactions creation and signing:
 - [erdjava - Java SDK](/sdk-and-tools/erdjava)
 - [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
 - [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
+
+[comment]: # (mx-context-auto)
 
 ## **General network parameters**
 
@@ -51,6 +61,8 @@ General network parameters, such as the **chain ID**, **the minimum gas price**,
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Nonce management**
 
 Each transaction broadcasted to the Network must have the **nonce** field set consistently with the **account nonce**. In the Network, transactions of a given sender address are processed in order, with respect to the transaction nonce.
@@ -58,6 +70,8 @@ Each transaction broadcasted to the Network must have the **nonce** field set co
 The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-nonce).
 
 **The nonce must be a strictly increasing number, scoped to a given sender.** The sections below describe common issues and possible solutions when managing the nonce for transaction construction.
+
+[comment]: # (mx-context-auto)
 
 ### **Issue: competing transactions**
 
@@ -69,6 +83,8 @@ Avoid competing transactions by maintaining a strictly increasing nonce sequence
 
 Although an explicit _transaction cancellation trigger_ is not yet available in the Network, cancellation of a transaction T1 with nonce 42 could be _possible_ if one broadcasts a second transaction T2 with same nonce 42, with higher gas price (and without a value to transfer) **immediately** (e.g. 1 second) after broadcasting T1.
 
+[comment]: # (mx-context-auto)
+
 ### **Issue: nonce gaps**
 
 If broadcasted transactions have their nonces higher than the current account nonce of the sender, this is considered a _nonce gap_, and the transactions will remain in the mempool unprocessed, until new transactions from the same sender arrive _to resolve the nonce gap -_ or until the transactions are swept from the mempool (sweeping takes place regularly).
@@ -76,6 +92,8 @@ If broadcasted transactions have their nonces higher than the current account no
 :::tip
 Avoid nonce gaps by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### **Issue: fetching a stale account nonce**
 
@@ -94,13 +112,19 @@ Avoid fetching stale account nonces by **periodically recalling the nonce.**
 Avoid recalling the nonce in between **rapidly sequenced transactions from the same sender** . For rapidly sequenced transactions, you have to programmatically manage, keep track of the account nonce using a **local mirror (copy) of the account nonce** and increment it appropriately.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## **Gas limit computation**
 
 Please follow [Gas and Fees](/developers/gas-and-fees/overview/).
 
+[comment]: # (mx-context-auto)
+
 ## **Signing transactions**
 
 Please follow [Signing Transactions](/developers/signing-transactions).
+
+[comment]: # (mx-context-auto)
 
 ## **Simulate transaction execution**
 

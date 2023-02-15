@@ -3,7 +3,11 @@ id: web-wallet
 title: Web Wallet
 ---
 
+[comment]: # (mx-abstract)
+
 Use the wallet to send, receive and store EGLD in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
+
+[comment]: # (mx-context-auto)
 
 ## **Create a new wallet**
 
@@ -16,6 +20,8 @@ Click on "Create Wallet":
 Carefully read and acknowledge the information, then click "Continue"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwZzp7ogHdlTGeMJfS%2Fimage.png?alt=media&token=1bfb4aaa-f100-42bc-8c67-c88a6696621b)
+
+[comment]: # (mx-context-auto)
 
 ## **Save your secret phrase! This is very important.**
 
@@ -39,6 +45,8 @@ Congratulations, you have a new wallet! The associated Keystore File was downloa
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwaXxYLTy7eQxaSdTu%2Fimage.png?alt=media&token=fee26efa-acc3-4747-b4ff-28c48ec4eff9)
 
+[comment]: # (mx-context-auto)
+
 ## **Access a wallet**
 
 Go to https://wallet.multiversx.com/ and click on "Access Existing" Make sure the “Keystore file” access method is selected, click Browse and locate your Keystore File [erd1… .json], then put in your password and click "Access Wallet"
@@ -48,6 +56,8 @@ Go to https://wallet.multiversx.com/ and click on "Access Existing" Make sure th
 And you’re in! Your EGLD address is on top, you can use the “copy” button (the two rectangles) to copy it to the clipboard.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwbFt_D472wfHJBEMY%2Fimage.png?alt=media&token=ebd64bce-707b-4c26-bbe0-b87c3400edd4)
+
+[comment]: # (mx-context-auto)
 
 ## **Overview of your EGLD balance**
 
@@ -59,6 +69,8 @@ After logging into your wallet, your EGLD balances are immediately visible and d
 - **Claimable rewards:** delegation rewards that can be claimed
 - **Delegated:** Amount of EGLD delegated towards a Staking Services provider
 - **Total:** the total amount of EGLD associated with this address, sum of the above
+
+[comment]: # (mx-context-auto)
 
 ## **Send a transaction**
 
@@ -82,6 +94,8 @@ You can always review your transaction history in the "Transactions" menu on the
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN56UkAcWIpyzH3P1wn%2Fimage.png?alt=media&token=4095fb27-0e42-4d6e-8501-312e8ee59070)
 
+[comment]: # (mx-context-auto)
+
 ## **Receiving EGLD in your wallet**
 
 After logging into your wallet, as described above, you will be able to see your wallet address and share it with others, so they can send you EGLD.
@@ -91,6 +105,8 @@ Your address is immediately visible on the top part of the wallet, as "Address e
 You can also click "Receive" on the left-hand side to see a QR code for the address, which can be scanned to reveal the public address.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJYD3eLB-qPT94-W4_%2F-MIJYv-OyKPBpE3IX1Zb%2Fimage.png?alt=media&token=f2897077-834a-43b2-a22f-ce4687faa1fe)
+
+[comment]: # (mx-context-auto)
 
 ## **Testnet and Devnet faucet**
 

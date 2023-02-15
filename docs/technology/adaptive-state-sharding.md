@@ -5,6 +5,8 @@ title: Adaptive State Sharding
 
 Sharding was first used in databases and is a method for distributing data across multiple machines. This makes it a _scaling technique_, and can be used by blockchain networks to partition states and transaction processing, so that each node of the network would only need to process a fraction of all the transactions. Moreover, sharding allows for the parallel processing of transactions. As long as there is a sufficient number of nodes verifying each transaction, ensuring high reliability and security, then splitting a blockchain into shards will allow it to process far more transactions by means of parallelization, and thus greatly improving transaction throughput and efficiency. Moreover, sharding promises to increase the throughput of the network as it expands and the number of validator grows - a property called _horizontal scaling_.
 
+[comment]: # (mx-context-auto)
+
 ## **Sharding types**
 
 We emphasize the three main types of sharding: network sharding, transaction sharding and state sharding, described in the next paragraphs.
@@ -15,13 +17,19 @@ We emphasize the three main types of sharding: network sharding, transaction sha
 
 **State sharding** is the most challenging approach. In contrast to the previously described sharding mechanisms, where all nodes store the entire state, in the case of state-sharded blockchains each shard maintains only a portion of the state. If the accounts involved in a transaction reside in different shards, executing that transaction will require the state to be updated in both shards and will involve the exchange of messages between the nodes of the two shards. In order to increase resiliency to malicious attacks, the nodes in the shards have to be reshuffled from time to time. However, moving nodes between shards introduces synchronization overheads, that is, the time taken for the newly added nodes to download the latest state from their new shard. Thus, it is imperative that only a subset of all nodes should be redistributed during each epoch, to prevent down times during the synchronization process.
 
+[comment]: # (mx-context-auto)
+
 ## **Sharding directions**
 
 Some sharding proposals attempt to focus on transaction sharding or state sharding alone, which increases transaction's throughput, either by forcing every node to store lots of state data or each node to be a supercomputer.
 
 Sharding introduces some new challenges, such as the single-shard takeover attack, potentially intensive cross-shard communication, overall data availability and also the need of an abstraction layer that hides the shards. However, given that the above problems are addressed correctly, state sharding brings considerable overall improvements: transaction throughput will increase significantly due to parallel transaction processing and transaction fees will be considerably reduced. These two criteria are widely considered to be the main obstacles against mainstream adoption of blockchain technology. MultiversX has undertaken the task of transforming these obstacles into advantages and incentives towards massive mainstream adoption.
 
-# **The MultiversX sharding approach**
+[comment]: # (mx-context-auto)
+
+## **The MultiversX sharding approach**
+
+[comment]: # (mx-context-auto)
 
 ## **Goals**
 
@@ -36,6 +44,8 @@ A trivial step-by-step example of how it works is depicted in the animation belo
 ![img](/technology/sharding.gif)
 
 Adaptive State Sharding workflow
+
+[comment]: # (mx-context-auto)
 
 ## Node shuffling
 

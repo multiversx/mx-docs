@@ -13,6 +13,8 @@ The block’s structure is represented by a block Header that contains informati
 
 There is no limitation on the number of miniblocks with the same sender and receiver in one block. Meaning multiple miniblocks with the same sender and receiver can appear in the same block.
 
+[comment]: # (mx-context-auto)
+
 ## **Processing**
 
 Currently, the atomic unit of processing in cross-shard execution is a miniblock: either all the transactions of the miniblock are processed at once or none and the miniblock’s execution will be retried in the next round.

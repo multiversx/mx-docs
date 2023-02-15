@@ -3,7 +3,11 @@ id: accounts-management
 title: Accounts Management
 ---
 
+[comment]: # (mx-abstract)
+
 Managing Wallets and Addresses
+
+This page summarizes the recommended approach for managing accounts in an application that integrates with the Network.
 
 :::tip
 If integrating a **system** with the **Network** involves transfers between different users (accounts) - a good example for this case is the integration between an **exchange system** and the **Network** - the recommended approach is to have **a MultiversX Account (Address) for each user of the system**.

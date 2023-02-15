@@ -3,12 +3,18 @@ id: architecture
 title: Architecture
 ---
 
+[comment]: # (mx-abstract)
+
 Ad-Astra Bridge is a system that allows for the transfer of ERC20 tokens between the Ethereum and MultiversX networks. The system is composed of several contracts and relayers that work together to facilitate the transfer of tokens.
+
+[comment]: # (mx-context-auto)
 
 ## Ethereum Contracts
 - **Repo**: https://github.com/multiversx/mx-bridge-eth-sc-sol
 - **Safe (1)**: A contract that allows users to deposit ERC20 tokens that they want to transfer to the MultiversX network.
 - **Bridge(2)**: A contract that facilitates the transfer of tokens from Ethereum to MultiversX.
+
+[comment]: # (mx-context-auto)
 
 ## MultiversX Contracts
 - **Repo**: https://github.com/multiversx/mx-bridge-eth-sc-rs
@@ -17,8 +23,9 @@ Ad-Astra Bridge is a system that allows for the transfer of ERC20 tokens between
 - **MultiTransfer (5)**: A helper contract that is used to perform multiple token transfers at once.
 - **BridgedTokensWrapper (6)**: A helper contract that is used to support wrapping the same token from multiple chains into a single ESDT token.
 
+[comment]: # (mx-context-auto)
+
 ## Relayers
 - **Repo**: https://github.com/multiversx/mx-bridge-eth-go
 - **5 Relayers**: Managed by the MultiversX Foundation.
 - **5 Relayers**: Distributed to the MultiversX validators community, with each validator having one relayer.
-

@@ -3,7 +3,9 @@ id: welcome-to-multiversx
 title: Welcome to MultiversX
 ---
 
-# **At a glance:**
+[comment]: # (mx-abstract)
+
+## **At a glance:**
 
 - **What**: Sharded Smart Contracts execution platform with a PoS consensus mechanism
 - **When:** Mainnet live, project started in 2018
@@ -16,13 +18,17 @@ title: Welcome to MultiversX
   - Validators: ~13% APR for running nodes, low system requirements
   - Network setup: 3,200 nodes, 3 shards + Metachain (adaptivity allows throughput to increase with demand)
 
-# **What is MultiversX?**
+[comment]: # (mx-context-auto)
+
+## **What is MultiversX?**
 
 MultiversX is a distributed transactional computation protocol which relies on a sharded state architecture and a secure Proof of Stake consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, MultiversX runs on average computers.
 
 By employing _sharding_, a method of parallelizing data & transactions processing, MultiversX’s performance will scale up with the number of computers joining the network, reaching more than 100.000 transactions per second while growing increasingly decentralized.
 
-# **How is MultiversX different?**
+[comment]: # (mx-context-auto)
+
+## **How is MultiversX different?**
 
 The MultiversX network is the first to present a viable solution where all the three aspects of sharding - state, network and transactions - have been implemented at once. Combined with its “Adaptive” component, this novel architecture allows for dynamic network configuration to maintain a high level of security while scaling with demand.
 
@@ -30,7 +36,9 @@ In addition to scaling through sharding, MultiversX also approaches the consensu
 
 By solving some of the hardest consensus and sharding problems in the blockchain space, MultiversX is able to provide a very high level of performance on a network made of inexpensive computers, resulting in a very low cost per transaction. In addition to performance and cost, MultiversX also stands out through the quality of the developer experience and the resulting boost in usability on the end-user side.
 
-# **Roadmap and current status**
+[comment]: # (mx-context-auto)
+
+## **Roadmap and current status**
 
 **Important achievements:**
 

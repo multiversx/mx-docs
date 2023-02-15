@@ -3,6 +3,8 @@ id: code-metadata
 title: Code Metadata
 ---
 
+[comment]: # (mx-abstract)
+
 ## Introduction
 
 Code metadata are flags representing the smart contract's allowed actions after deploy, specifically:
@@ -19,6 +21,8 @@ The code metadata **must be specified** at deploy-time and, if the contract is _
 Once a contract is marked as _**not** upgradeable_, its code and code metadata become **immutable, forever**.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Usability
 
 When deploying (or upgrading) a smart contract using **mxpy**, its default _code metadata flags_ are: `upgradeable`, `readable` and **non-**`payable`. The default values can be overwritten by decorating the command `mxpy contract deploy` (or `mxpy contract upgrade`) as follows:
@@ -28,6 +32,8 @@ When deploying (or upgrading) a smart contract using **mxpy**, its default _code
 - `--metadata-payable-by-sc` - mark the contract as `payable by smart contracts`
 
 For more information, please follow [mxpy CLI](/sdk-and-tools/sdk-py/mxpy-cli).
+
+[comment]: # (mx-context-auto)
 
 ## Converting Metadata to bytes
 
@@ -52,6 +58,8 @@ const PAYABLE_BY_SC = 0x00_04;
 ```
 
 For example, if we wish to deploy a contract that is payable and upgradeable our metadata would be `0x0102`.
+
+[comment]: # (mx-context-auto)
 
 ## Conclusion
 
