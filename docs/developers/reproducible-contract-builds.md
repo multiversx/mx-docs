@@ -63,7 +63,7 @@ As of October 2022, the recommended approach to support reproducible builds for 
 This approach is recommended in order to counteract eventual pieces of non-determinism related to `cargo`'s (essential component of the Rust toolchain) sensibility on the environment.
 
 :::important
-If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [this one](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/blob/main/.github/workflows/release-create.yml), which performs the deployment (production-ready) build within the _release_ procedure.
+If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [this one](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/blob/main/.github/workflows/on_release_build_contracts.yml), which performs the deployment (production-ready) build within the _release_ procedure.
 :::
 
 [comment]: # (mx-context-auto)
@@ -181,7 +181,7 @@ A more straightforward alternative to the previous bash script is to use **mxpy*
 
 First, make sure you have the:
 
-- latest [mxpy](<(/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended)>) installed,
+- latest [mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended) installed,
 - latest [docker engine](https://docs.docker.com/engine/install/) installed.
 
 Then, use the `reproducible-build` command (below, the image tag is just an example):
@@ -237,7 +237,7 @@ Please note that as a **Beta** feature still in development, certain steps descr
 Make sure that you have the latest `mxpy` installed. In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
 :::
 
-1. The contract must be deterministically built as described [above](/developers/reproducible-contract-builds#how-to-run-a-reproducible-build-using-mxpy).
+1. The contract must be deterministically built as described [above](/developers/reproducible-contract-builds#building-via-docker-reproducible-build).
 2. To start with the verification process, we need to first deploy the smart contract. For deploying contracts have a look here: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/#deploy--upgrade.
 3. Upon deploying, the output will not only provide information such as the transaction hash and data, but also the address of the newly deployed contract.
 4. In order to verify your contract the command you have to use is (below, the image tag is just an example):
