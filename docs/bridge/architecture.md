@@ -21,7 +21,7 @@ Ad-Astra Bridge is a system that allows for the transfer of ERC20 tokens between
 - **Safe (3)**: A contract that allows users to deposit ESDT tokens that they want to transfer to the Ethereum network.
 - **Bridge (4)**: A contract that facilitates the transfer of tokens from MultiversX to Ethereum.
 - **MultiTransfer (5)**: A helper contract that is used to perform multiple token transfers at once.
-- **BridgedTokensWrapper (6)**: A helper contract that is used to support wrap the same token from multiple chains into a single ESDT token.
+- **BridgedTokensWrapper (6)**: A helper contract that is used to support wrapping the same token from multiple chains into a single ESDT token.
 
 [comment]: # (mx-context-auto)
 

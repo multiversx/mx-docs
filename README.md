@@ -1,6 +1,6 @@
 # MultiversX docs
 
-The repository containing the [documentation](https://docs.multiversx.com) for the MultiversX Network protocol.
+The repository contains the [documentation](https://docs.multiversx.com) for the MultiversX Network protocol.
 
 ## About
 
@@ -9,7 +9,7 @@ This repository also has GitHub actions that will trigger the real-time updating
 
 ## How to use locally
 
-In order to ensure that the new added content is correctly aligned and every Markdown feature is working as intended, one can run the project on a local machine.
+In order to ensure that the newly added content is correctly aligned and every Markdown feature is working as intended, one can run the project on a local machine.
 
 ### Requirements:
 
