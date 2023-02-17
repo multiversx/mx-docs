@@ -189,7 +189,7 @@ Create a single ESDT transfer:
 ```
 from multiversx_sdk_core.transaction_builders import ESDTTransferBuilder
 
-payment = TokenPayment.fungible_from_amount("COUNTER-8b028f", "100.00", 2)
+payment = TokenPayment.fungible_from_amount("TEST-8b028f", "100.00", 2)
 
 builder = ESDTTransferBuilder(
     config=config,
@@ -278,7 +278,7 @@ builder = ContractDeploymentBuilder(
     owner=alice,
     deploy_arguments=[42, "test"],
     code_metadata=metadata,
-    code=Path("./contracts/counter.wasm").read_bytes(),
+    code=Path("./contracts/contract.wasm").read_bytes(),
     gas_limit=10000000
 )
 
@@ -302,7 +302,7 @@ builder = ContractUpgradeBuilder(
     owner=owner,
     upgrade_arguments=[42, "test"],
     code_metadata=metadata,
-    code=Path("./contracts/counter.wasm").read_bytes(),
+    code=Path("./contracts/contract.wasm").read_bytes(),
     gas_limit=10000000
 )
 
