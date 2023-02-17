@@ -218,7 +218,7 @@ For a different awaiting strategy, also see [extending sdk-js](/sdk-and-tools/sd
 ### Single ESDT transfer
 
 ```
-let payment = TokenPayment.fungibleFromAmount("COUNTER-8b028f", "100.00", 2);
+let payment = TokenPayment.fungibleFromAmount("TEST-8b028f", "100.00", 2);
 let data = new ESDTTransferPayloadBuilder()
     .setPayment(payment)
     .build();

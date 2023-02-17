@@ -17,7 +17,7 @@ In order to get the required `gasLimit` (the **actual gas cost**) for a deployme
 At first, pass the maximum possible amount for `gas-limit` (no guessing).
 
 ```bash
-$ mxpy --verbose contract deploy --bytecode=./counter.wasm \
+$ mxpy --verbose contract deploy --bytecode=./contract.wasm \
  --recall-nonce --gas-limit=600000000 \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --simulate
@@ -42,7 +42,7 @@ The simulated cost `txGasUnits` contains both components of the cost.
 After that, check the cost simulation by running the simulation once again, but this time with the precise`gas-limit`:
 
 ```bash
-$ mxpy --verbose contract deploy --bytecode=./counter.wasm \
+$ mxpy --verbose contract deploy --bytecode=./contract.wasm \
  --recall-nonce --gas-limit=1849711 \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --simulate
@@ -64,7 +64,7 @@ In the output, look for the `status` - it should be `success`:
 In the end, let's actually deploy the contract:
 
 ```bash
-$ mxpy --verbose contract deploy --bytecode=./counter.wasm \
+$ mxpy --verbose contract deploy --bytecode=./contract.wasm \
  --recall-nonce --gas-limit=1849711 \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --send --wait-result

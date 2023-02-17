@@ -55,12 +55,7 @@ Automated testing is exceptionally important for the development of smart contra
 
 The best way to build on MultiversX is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
 
-MultiversX IDE is an extension for Visual Studio Code that offers development support for MultiversX Smart Contracts.
-
-MultiversX IDE supports the following programming languages:
-
-- Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via multiversx-sc-scenario and CodeLLDB.
-- C / C++
+MultiversX IDE is an extension for Visual Studio Code that offers development support for MultiversX Smart Contracts written in Rust.
 
 Follow the video guide for a detailed explanation about how to get started.
 
