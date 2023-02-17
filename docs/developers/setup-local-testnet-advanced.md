@@ -203,14 +203,14 @@ $ curl http://localhost:7950/transaction/1363...
 
 ## **Deploying and interacting with Smart Contracts**
 
-Let's deploy a Smart Contract using **mxpy**. We'll use the Simple Counter as an example.
+Let's deploy a Smart Contract using **mxpy**.
 
 ```bash
 Deploy
-mxpy --verbose contract deploy --bytecode=./mycounter/output/counter.wasm \
+mxpy --verbose contract deploy --bytecode=./myContract/output/contract.wasm \
  --recall-nonce --gas-limit=5000000 \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
- --outfile=myCounter.json \
+ --outfile=myContract.json \
  --send
 ```
 

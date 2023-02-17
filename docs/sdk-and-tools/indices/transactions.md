@@ -7,6 +7,8 @@ title: transactions
 
 This page describes the structure of the `transactions` index (Elasticsearch), and also depicts a few examples of how to query it.
 
+That is, you will learn how to query Elasticsearch in order to fetch transactions.
+
 [comment]: # (mx-context-auto)
 
 ## _id

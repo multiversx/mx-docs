@@ -51,7 +51,6 @@ const sidebars = {
           "developers/tutorials/your-first-microservice",
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
-          "developers/tutorials/counter",
           "developers/tutorials/custom-wallet-connect",
           "developers/tutorials/staking-contract",
         ],
