@@ -113,16 +113,14 @@ $ mxpy tx get --hash=1dcfb2227e32483f0a5148b98341af319e9bd2824a76f605421482b36a1
 
 ## **Deploying and interacting with Smart Contracts**
 
-Let's deploy a Smart Contract using **mxpy**. We'll use the simple Counter as an example.
-
-If you need guidance on how to build the Counter sample contract, please follow the [Counter SmartContract Tutorial](/developers/tutorials/counter).
+Let's deploy a Smart Contract using **mxpy**.
 
 ```rust
 Deploy Contract
-mxpy --verbose contract deploy --bytecode=./counter.wasm \
+mxpy --verbose contract deploy --bytecode=./contract.wasm \
  --recall-nonce --gas-limit=5000000 \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
- --outfile=myCounter.json \
+ --outfile=contract.json \
  --send
 ```
 

@@ -3,7 +3,11 @@ id: counter
 title: The Counter Smart Contract
 ---
 [comment]: # (mx-abstract)
-By following the tutorial on this page, you will learn how to write, build, and deploy a basic Smart Contract in C
+By following the tutorial on this page, you will learn how to build, deploy and interact with a basic Smart Contract (written in C).
+
+:::important
+This is a mere example. We **do not offer support for writing contracts in C**. The recommended language to write smart contracts is **Rust**.
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -15,13 +19,9 @@ You need to have [mxpy](/sdk-and-tools/sdk-py/installing-mxpy) installed.
 
 ## **Create the contract**
 
-In a folder of your choice, run the following command:
+In a folder of your choice, add the files contained at [this](https://github.com/multiversx/mx-deprecated-sc-examples-clang/tree/master/simple-counter) location.
 
-```
-mxpy contract new --template="simple-counter" mycounter
-```
-
-This creates a new folder named `mycounter` which contains the C source code for a simple Smart Contract - based on the template [simple-counter](https://github.com/multiversx/mx-sc-examples/tree/master/simple-counter). The file `counter.c` is the implementation of the Smart Contract, which defines the following functions:
+The file `counter.c` is the implementation of the Smart Contract, which defines the following functions:
 
 - `init()`: this function is executed when the contract is deployed on the Blockchain
 - `increment()` and `decrement()`: these functions modify the internal state of the Smart Contract
@@ -37,7 +37,7 @@ In order to build the contract to WASM, run the following command:
 mxpy --verbose contract build mycounter
 ```
 
-Above, `mycounter` refers to the previously created folder, the one that holds the source code. After executing the command, you can inspect the generated files in `mycounter/output`.
+Above, `mycounter` refers to the folder that holds the source code. After executing the command, you can inspect the generated files in `mycounter/output`.
 
 [comment]: # (mx-context-auto)
 
