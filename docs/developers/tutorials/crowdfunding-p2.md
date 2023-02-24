@@ -359,7 +359,7 @@ We can now use the type Status just like we use the other types, so we can write
 
   #[view(getCurrentFunds)]
   fn get_current_funds(&self) -> BigUint {
-      self.blockchain().get_sc_balance(&TokenIdentifier::egld(), 0)
+      self.blockchain().get_sc_balance(&EgldOrEsdtTokenIdentifier::egld(), 0)
   }
 ```
 
