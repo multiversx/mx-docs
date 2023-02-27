@@ -7,8 +7,9 @@ title: MultiversX Smart Contracts API limits
 
 ## MultiversX Smart Contracts API limits
 
-Starting with the release v1.4.8, we have added maximum API limits that a Smart Contract can make towards the
-node's API. These limits are set in the gas schedule files in the `MaxPerTransaction` section. For example, this 
+Starting with the Polaris release (February 2023), we have added blockchain data call limits for Smart Contracts. This means that in a single transaction, a Smart Contract cannot perform more than a protocol-level configured number of transfers, trie reads, or built-in function calls.
+This approach comes as a better alternative than increasing the gas costs of those operations since the limits are still very high, so most probably only the most expensive contracts' functions will suffer from these limitations.
+These limits are set in the gas schedule files in the `MaxPerTransaction` section. For example, this 
 gas schedule file https://github.com/multiversx/mx-chain-mainnet-config/blob/master/gasSchedules/gasScheduleV7.toml has the following limits:
 
 ```toml
