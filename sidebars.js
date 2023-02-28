@@ -136,6 +136,7 @@ const sidebars = {
           "developers/setup-local-testnet-advanced",
           "developers/creating-wallets",
           "developers/reproducible-contract-builds",
+          "developers/contract-api-limits",
         ]
       },
     ],
