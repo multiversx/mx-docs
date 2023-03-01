@@ -30,8 +30,8 @@ Signing providers for dApps:
 | [sdk-dapp](https://www.npmjs.com/package/@multiversx/sdk-dapp)                                   | [Github](https://github.com/multiversx/mx-sdk-dapp)                       | A library that holds the core functional & signing logic of a dapp on the MultiversX Network. |
 | [sdk-hw-provider](https://www.npmjs.com/package/@multiversx/sdk-hw-provider)                     | [Github](https://github.com/multiversx/mx-sdk-js-hw-provider)             | Sign using the hardware wallet (Ledger).                                                      |
 | [sdk-web-wallet-provider](https://www.npmjs.com/package/@multiversx/sdk-web-wallet-provider)     | [Github](https://github.com/multiversx/mx-sdk-js-web-wallet-provider)     | Sign using the MultiversX web wallet.                                                         |
-| [sdk-wallet-connect-provider](https://www.npmjs.com/package/@multiversx/sdk-web-wallet-provider) | [Github](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) | Sign using Wallet Connect.                                                                    |
-| [sdk-extension-provider](https://www.npmjs.com/package/@multiversx/sdk-extension-provider)       | [Github](https://github.com/multiversx/mx-sdk-js-extension-provider)      | Sign using the Maiar DeFi Wallet (browser extension).                                         |
+| [sdk-wallet-connect-provider](https://www.npmjs.com/package/@multiversx/sdk-wallet-connect-provider) | [Github](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) | Sign using Wallet Connect.                                                                    |
+| [sdk-extension-provider](https://www.npmjs.com/package/@multiversx/sdk-extension-provider)       | [Github](https://github.com/multiversx/mx-sdk-js-extension-provider)      | Sign using the MultiversX DeFi Wallet (browser extension).                                         |
 
 :::important
 For all purposes, **we recommend using [sdk-dapp](/sdk-and-tools/sdk-dapp)** instead of integrating the signing providers on your own.
