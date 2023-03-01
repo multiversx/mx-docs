@@ -52,8 +52,8 @@ const sidebars = {
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
           "developers/tutorials/counter",
-          "developers/tutorials/custom-wallet-connect",
           "developers/tutorials/staking-contract",
+          "developers/tutorials/wallet-connect-v2-migration",
         ],
       },
       {

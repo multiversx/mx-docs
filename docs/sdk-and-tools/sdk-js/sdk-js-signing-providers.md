@@ -271,6 +271,9 @@ const callbacks = {
     },
     onClientLogout: async function () {
         console.log("onClientLogout()");
+    },
+    onClientEvent: async function (event) {
+        console.log("onClientEvent()", event);
     }
 };
 
