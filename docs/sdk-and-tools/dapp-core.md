@@ -1044,7 +1044,7 @@ import { ExplorerLink } from "@multiversx/sdk-dapp/UI/ExplorerLink";
 
 Starting with the 2.0 version of the dApp SDK ( previously `@elrondnetwork/dapp-core@2.0.0` ) and `@multiversx/sdk-dapp@2.2.8` [WalletConnect 2.0](https://docs.walletconnect.com/2.0/) is available as a login and signing provider, allowing users to login by scanning a QR code with the Mobile App
 
-This is an implementation of [sdk-wallet-connect-provider](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider/tree/providerV2) ( [docs](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-signing-providers/#the-wallet-connect-provider) ) signing provider
+This is an implementation of the [sdk-wallet-connect-provider](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider/tree/providerV2) ( [docs](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-signing-providers/#the-wallet-connect-provider) ) signing provider
 
 As WalletConnect 2.0 is not enabled by default there are a few steps needed to enable it:
 
