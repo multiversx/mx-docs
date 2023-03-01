@@ -320,11 +320,11 @@ you can easily import and use them.
 ```jsx
 <WalletConnectLoginContainer
   callbackRoute={callbackRoute}
-  loginButtonText="Login with Maiar"
-  title="Maiar Login"
+  loginButtonText="Login with xPortal"
+  title="xPortal Login"
   logoutRoute="/unlock"
   className="wallect-connect-login-modal"
-  lead="Scan the QR code using Maiar"
+  lead="Scan the QR code using xPortal"
   wrapContentInsideModal={wrapContentInsideModal}
   redirectAfterLogin={redirectAfterLogin}
   token={token}
@@ -548,7 +548,7 @@ Transaction Signing Flow
 ### Transaction Signing Flow
 
 Once a transaction has been submitted, you have to use either the `SignTransactionsModals` or the `useSignTransactions` hook,
-for the user to be prompted in his provider (Extension, Maiar etc) to sign the transaction.
+for the user to be prompted in his provider (Web Wallet, MultiversX Defi Wallet Extension, xPortal, Ledger etc) to sign the transaction.
 
 If you don't want to use the default modals that appear for the user when the signing process happens,
 you have to use the `useSignTransactions` hook to sign those transactions.
