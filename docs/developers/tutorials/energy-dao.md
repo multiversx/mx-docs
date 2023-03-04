@@ -490,7 +490,7 @@ Going futher to the `claim_user_rewards` endpoint, we can observe the same logic
 
 **Unstake and unbond**
 
-There are a few things that are important to keep in mind when exiting from a farm. In order to avoid having users that enter & benefit from the boosted rewards, to then just exit after the boosted rewards are computed, the farm contract has a 7 day penalty period policy, in which if the user exists the farm after entering, he will receive a certain penalty fee. That is why, there is a __farm_unbond_period__ in the DAO contract (should be equal or greater than the DEX farm penalty period) that the user needs to wait before exiting the farm.
+There are a few things that are important to keep in mind when exiting from a farm. In order to avoid having users that enter & benefit from the boosted rewards, to then just exit after the boosted rewards are computed, the farm contract has a 7 day penalty period policy, in which if the user exits the farm after entering, he will receive a certain penalty fee. That is why, there is a __farm_unbond_period__ in the DAO contract (should be equal or greater than the DEX farm penalty period) that the user needs to wait before exiting the farm.
 
 For that, the Energy DAO SC has an unstake & unbond mechanism, that is actually imposed only at the DAO SC level, and not by the actual farm contract. But how exactly can the user wait a predefined period of time, if the contract always keeps one general aggregated position?
 When the users calls the `unstake_farm` endpoint, the farm proxy `claim_rewards` endpoint is called with the full position, which then gives the user his last rewards before unstaking his position. Then, while the newly created total farm position nonce is saved in both the farm state and the __UnstakeFarmToken__ attributes, the __farm_staked_value__ value is updated to reflect the user exit, by substracting the payment amount. And from this point forward, in future user interactions, the new amount and that token nonce will be used to do any kind of farm interaction, which will then lead to creating a new aggregated farm position (which in turn will have a different nonce).
@@ -752,7 +752,7 @@ The __RewardsWrapper__ is basically a small struct with a few custom implementat
 ```
 
 But then, what about the __UniquePayments__ struct? Well, the __UniquePayments__ is a single field struct, containing a simple __PaymentsVec__, but with a few implementations of its own. It implements the more generic __default()__ and __new()__ functions, and also a few other simple utility functions, like __new_from_payments()__ and __into_payments()__, which are self explanatory.
-Now, the magic under the hood, so to speak, is that it also implements the __Mergeable__ trait from the DEX modules, which allows it to check if a new payment can be merged, and also handles the entire merging process, comparing both the token_id and the token_nonce of the payment. This merging argorithm is then used inside the custom __add_payment()__ function of the __UniquePayments__ struct, which simply receives the new payment that needs to be either added or merged, depending if another similiar ESDTTokenPayment already exists or not, always keeping only one instance of a token id/nonce pair (hence the name __UniquePayments__).
+Now, the magic under the hood, so to speak, is that it also implements the __Mergeable__ trait from the DEX modules, which allows it to check if a new payment can be merged, and also handles the entire merging process, comparing both the token_id and the token_nonce of the payment. This merging algorithm is then used inside the custom __add_payment()__ function of the __UniquePayments__ struct, which simply receives the new payment that needs to be either added or merged, depending if another similiar ESDTTokenPayment already exists or not, always keeping only one instance of a token id/nonce pair (hence the name __UniquePayments__).
 This all helps throughout the contract, including in the __claim_fees_collector_rewards__ presented above, where we simply call the __add_tokens__ function of the __PaymentsWrapper__, and all the checks and merging computation is done by the wrapper.
 
 ```rust
@@ -856,6 +856,20 @@ This all helps throughout the contract, including in the __claim_fees_collector_
         }
     }
 ```
+
+[comment]: # (mx-context-auto)
+
+## **Testing**
+
+The Energy DAO SC was tested through various unit tests, that were conducted on top of a complete setup of the xExchange suite of contracts. Specifically, all the involved DEX contracts (like pair, farm, farm-staking, farm-staking-proxy, energy factory & so on) were set up from scratch, so the testing scenario could follow a complete flow where the owner locks his tokens through the SC in order to get Energy for the contract, and users provide liquidity in the pair contract, to later enter farm or metastaking, claim rewards and exit the Energy DAO contract.
+
+:::note
+In order to be able to have a complete step-by-step debugging layout, all the Github references from the main `Cargo.toml` file need to be updated to a local DEX repo path, as shown below.
+```rust
+[dependencies.pair]
+path = "../../mx-exchange-sc/dex/pair"
+```
+:::
 
 [comment]: # (mx-context-auto)
 
