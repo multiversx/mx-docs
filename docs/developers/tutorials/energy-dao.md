@@ -281,7 +281,8 @@ Here we have a code snippet, that does the actual interaction with the farm cont
 ```
 
 :::important
-A very important aspect here is that in order to work as intended, the EnergyDAO SC must be deployed on the same shard as the DEX, in order to use intrashard contract calls and have syncronous, realtime SC results from the xExchange contracts.
+A very important aspect here is that, with the current protocol design, in order to work as intended, the EnergyDAO SC must be deployed on the same shard as the DEX, in order to use intrashard contract calls and have syncronous, realtime SC results from the xExchange contracts.
+Later on, with the launch of the AsyncV2 functionality, these kinds of contracts will be able to be deployed in other shards as well, as the protocol will support multiple asyncCalls.
 :::
 
 The other farm_proxy calls (__exit_farm__ & __claim_rewards__) follow the same logic as the one presented above, using the proper parameters for each case individually.
