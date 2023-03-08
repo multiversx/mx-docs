@@ -170,6 +170,7 @@ const sidebars = {
         label: "Elasticsearch",
         items: [
           "sdk-and-tools/elastic-search",
+          "sdk-and-tools/es-index-wrong-mapping",
           {
             type: "category",
             label: "Elasticsearch indices",
