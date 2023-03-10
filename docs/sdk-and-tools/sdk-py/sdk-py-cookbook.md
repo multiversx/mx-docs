@@ -399,6 +399,15 @@ words = mnemonic.get_words()
 print(words)
 ```
 
+The mnemonic can be saved to a keystore file:
+
+```
+from multiversx_sdk_wallet import UserWallet
+
+wallet = UserWallet.from_mnemonic(mnemonic.get_text(), "password")
+wallet.save(Path("./output/walletWithMnemonic.json"))
+```
+
 Given a mnemonic, one can derive keypairs:
 
 ```
@@ -409,12 +418,10 @@ print("Secret key", secret_key.hex())
 print("Public key", public_key.hex())
 ```
 
-A keypair can be saved as a JSON wallet (recommended):
+A keypair can be saved as a JSON wallet:
 
 ```
-from multiversx_sdk_wallet import UserWallet
-
-wallet = UserWallet(secret_key, "password")
+wallet = UserWallet.from_secret_key(secret_key, "password")
 wallet.save(Path("./output/wallet.json"), address_hrp="erd")
 ```
 
@@ -434,19 +441,29 @@ pem.save(Path("./output/wallet.pem"))
 
 This is not a very common use-case - you might refer to [signing objects](#signing-objects) instead.
 
-From a JSON wallet:
+Load a keystore that holds an **encrypted mnemonic** (and perform wallet derivation at the same time):
 
 ```
 from multiversx_sdk_wallet import UserWallet
 
-secret_key = UserWallet.decrypt_secret_key_from_file(Path("./testwallets/alice.json"), "password")
-public_key = secret_key.generate_public_key()
+secret_key = UserWallet.load_secret_key(Path("./testwallets/withMnemonic.json"), "password", address_index=0)
+address = secret_key.generate_public_key().to_address("erd")
 
 print("Secret key", secret_key.hex())
-print("Public key", public_key.hex())
+print("Address", address)
 ```
 
-From a PEM file:
+Load a keystore that holds an **encrypted secret** key:
+
+```
+secret_key = UserWallet.load_secret_key(Path("./testwallets/alice.json"), "password")
+address = secret_key.generate_public_key().to_address("erd")
+
+print("Secret key", secret_key.hex())
+print("Address", address)
+```
+
+Load the secret key from a PEM file:
 
 ```
 from multiversx_sdk_wallet import UserPEM
@@ -507,9 +524,9 @@ print("Signature", tx.signature.hex())
 Signing an arbitrary message:
 
 ```
-from multiversx_sdk_core import Message
+from multiversx_sdk_core import MessageV1
 
-message = Message.from_string("hello")
+message = MessageV1.from_string("hello")
 message.signature = signer.sign(message)
 
 print("Signature", message.signature.hex())
