@@ -50,3 +50,7 @@ At first, you will see an unappealing JSON file, which appears to contain magic 
 - **kdf** - A Key Derivation Function used to let you encrypt your keystore file with a password;
 - **kdfparams** - The parameters required for the “kdf” algorithm above;
 - **mac** - A code used to verify your password.
+
+Starting from February 14th, 2023, the Elrond Web Wallet has been renamed to MultiversX Wallet, and some changes have been made to the keystore.json file. In particular, a new field called **kind** has been added, which can have two values: `secretKey` (or none) and `mnemonic`.
+
+When **kind** is set to `secretKey` (or not set at all), the `ciphertext` field will contain the encrypted secret key, as it did before. However, when **kind** is set to `mnemonic`, the `ciphertext` field will contain the encrypted mnemonic instead.
