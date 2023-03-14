@@ -65,14 +65,14 @@ the ability to query the balance or the nonce of an address at blocks that were 
 
 [comment]: # (mx-context-auto)
 
-### Lite observers
+### Snapshotless observers
 
 Usage:
 ```
-./node --operation-mode lite-observer
+./node --operation-mode snapshotless-observer
 ```
 
-The `lite-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests 
+The `snapshotless-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests 
 by disabling the trie snapshotting mechanism and making sure that older data is removed. 
 
 A use-case for such an observer would be serving live balances requests, or broadcasting transactions, eliminating the costly operations 
