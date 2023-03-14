@@ -244,6 +244,7 @@ const sidebars = {
       "wallet/webhooks",
       "wallet/ledger",
       "wallet/create-a-fungible-token",
+      "wallet/keystore",
     ],
     Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     Validators: [
