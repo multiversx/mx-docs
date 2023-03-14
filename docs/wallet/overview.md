@@ -27,3 +27,4 @@ There are multiple ways you can store your funds. This page will present some of
 | [Web Wallet - tokens operations](/wallet/create-a-fungible-token) | Learn how to perform tokens operation inside Web Wallet                                                           |
 | [MultiversX DeFi Wallet](/wallet/wallet-extension/)           | MultiversX DeFi Wallet Extension                                                                                        |
 | [Ledger](/wallet/ledger)                                          | Ledger Hardware Wallet                                                                                            |
+| [Keystore](/wallet/keystore)                                          | Learn more about how to use the **keystore** file                                                                                         |
