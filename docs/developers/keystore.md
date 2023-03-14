@@ -1,13 +1,11 @@
 ---
 id: keystore
-title: MultiversX Smart Contracts
+title: MultiversX Wallet - Keystore files
 ---
 
 [comment]: # (mx-abstract)
 
-A keystore is a mechanism for storing private keys. It is a JSON file that encrypts a private key and is the standard for interchanging keys between devices as until a user provides their password, their key is safe.
-
-Before continuing, please read this reference: [ERC-2335: BLS12-381 Keystore](https://eips.ethereum.org/EIPS/eip-2335).
+The keystore is a JSON file that encrypts a mnemonic (seed phrase). Until the user uses their password, the seed phrase remains encrypted, ensuring the safety and security of their transactions. The MultiversX keystore file provides users with a reliable and convenient method for managing their keys, protecting their assets, and ensuring the integrity of their transactions.
 
 [comment]: # (mx-context-auto)
 
@@ -15,7 +13,7 @@ Before continuing, please read this reference: [ERC-2335: BLS12-381 Keystore](ht
 
 **How does a MultiversX Keystore look like?**
 
-If you were to open Alice's keystore, it would look like this:
+Here is an example:
 
 ```json
 {
@@ -44,13 +42,15 @@ If you were to open Alice's keystore, it would look like this:
 
 At first, you will see an unappealing JSON file, which appears to contain magic parameters used for numerous complex cryptographic operations with unclear and vague purpose. But if you dig a little deeper you will see that it contains:
 
-- **ciphertext** - Your MultiversX private key encrypted using the “cipher” algorithm below;
+- **ciphertext** - Your MultiversX mnemonic or secret key encrypted using the `cipher` algorithm below;
 - **cipher** - The name of a symmetric AES algorithm;
-- **cipherparams** - The parameters required for the “cipher” algorithm above;
-- **kdf** - A Key Derivation Function used to let you encrypt your keystore file with a password;
-- **kdfparams** - The parameters required for the “kdf” algorithm above;
+- **cipherparams** - The parameters required for the `cipher` algorithm above;
+- **kdf** - A key derivation function used to let you encrypt your keystore file with a password;
+- **kdfparams** - The parameters required for the `kdf` algorithm above;
 - **mac** - A code used to verify your password.
 
-Starting from February 14th, 2023, the Elrond Web Wallet has been renamed to MultiversX Wallet, and some changes have been made to the keystore.json file. In particular, a new field called **kind** has been added, which can have two values: `secretKey` (or none) and `mnemonic`.
+With the advent of the new wallet (February 14th, 2023), newly generated keystore files will hold the encrypted mnemonic, instead of the encrypted secret key. In particular, a new field called **kind** has been added, which can have two values: `secretKey` and `mnemonic`.
 
-When **kind** is set to `secretKey` (or not set at all), the `ciphertext` field will contain the encrypted secret key, as it did before. However, when **kind** is set to `mnemonic`, the `ciphertext` field will contain the encrypted mnemonic instead.
+When **kind** is set (or not set at all) to `secretKey`, the `ciphertext` field will contain the encrypted secret key, as it did before. However, when **kind** is set to `mnemonic`, the `ciphertext` field will contain the encrypted mnemonic instead. This will allow users to initiate a wallet at any index, not only index 0 as it was before when only the secrey key was encrypted (similar to how it is initiated when using the Ledger device).
+
+Auxiliary reference: [ERC-2335: BLS12-381 Keystore](https://eips.ethereum.org/EIPS/eip-2335).
