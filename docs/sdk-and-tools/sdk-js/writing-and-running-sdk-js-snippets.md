@@ -5,6 +5,10 @@ title: Writing and testing interactions
 
 [comment]: # (mx-abstract)
 
+:::important
+Documentation on this page is partly deprecated, and subject to change.
+:::
+
 This tutorial will guide you through the process of (system) testing smart contracts by means of actual contract interactions, using **sdk-js** and **sdk-js snippets**. Everything in here is meant for **testing & auditing Smart Contracts**. This is not a tutorial for writing dApps.
 
 :::important
