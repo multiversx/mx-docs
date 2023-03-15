@@ -13,7 +13,7 @@ If you are building a project that involves decentralized exchange functionality
 
 ## Prerequisites
 
-The DEX contracts are a bit more advance than you standard SCs, so basic knowledge about Rust SC development is required. If you are a beginner, an easier starting point (like the Crowdfunding SC or the Staking SC tutorials) is strongly advised. Also, to better grasp the DEX contracts implementation, it is important that you first understand the xExchange economic model.
+The DEX contracts are a bit more advanced than the standard SCs, so basic knowledge about Rust SC development is required. If you are a beginner, an easier starting point (like the Crowdfunding SC or the Staking SC tutorials) is strongly advised. Also, to better grasp the DEX contracts implementation, it is important that you first understand the xExchange economic model.
 
 :::important
 You can find the xExchange whitepaper here:
@@ -27,6 +27,7 @@ https://xexchange.com/x-exchange-economics.pdf
 The main DEX contracts are as follow:
 
 - __Pair SC__
+- __Router SC__
 - __Farm SC__
 - __Proxy DEX SC__
 - __Farm Staking SC__
@@ -173,6 +174,31 @@ The flow is approximately the same as with the SwapFixedInput function, with the
 In the end, the endpoint returns a __MultiValue__ of 2 __EsdtTokenPayment__.
 
 [comment]: # (mx-context-auto)
+
+## Router SC
+
+The __Router SC__ serves as a convenient tool for efficiently managing and monitoring Pair contracts in a decentralized environment. It enables the deployer to easily keep track of the existing Pair contracts and offers a wide array of settings functions, that makes the manangement of the liquidity pools much more easier.
+
+Taking into consideration that this tutorial is intended for developers who wish to import more easily the DEX contracts into their own projects, we will concentrate on the only public endpoint that can be particularly beneficial for external projects, the `multiPairSwap` endpoint.
+
+[comment]: # (mx-context-auto)
+
+### Multi pair swap
+
+```rust
+    type SwapOperationType<M> =
+        MultiValue4<ManagedAddress<M>, ManagedBuffer<M>, TokenIdentifier<M>, BigUint<M>>;
+
+    #[payable("*")]
+    #[endpoint(multiPairSwap)]
+    fn multi_pair_swap(&self, swap_operations: MultiValueEncoded<SwapOperationType<Self::Api>>)
+```
+
+The `multiPairSwap` endpoint allows users to swap two different tokens, that don't have a direct pool, in one transaction. It receives an array (of type __MultiValueEncoded__) of __SwapOperationType__ (which are basically a __MultiValue__ of 4 different parameters). The 4 parameters are (in this exact order): __pair_address__, __function__, __token_wanted__, __amount_wanted__. So, for each __SwapOperationType__, the flow is as follows:
+- The endpoint checks if the __pair_address__ is indeed a pair contract, in order to be able to call the swap function.
+- It then calls the specified __function__ (which can be of type __swap_tokens_fixed_input__ or __swap_tokens_fixed_output__), by sending the tokens received as a payment in the endpoint, in return of the __token_wanted__, with the specified __amount_wanted__.
+- A __PaymentsVec__ is then created, consisting in the desired token (the last token from the __swap_operations__ list), along with all the remaining tokens that were not used during the swap operations.
+- In case the entire flow works as intended, the __PaymentsVec__ is then sent back to the user.
 
 ## Farm SC
 
