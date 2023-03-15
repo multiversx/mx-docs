@@ -77,12 +77,7 @@ then, we will have to see a log line like this one:
 Ok, let's get started with the microservice. First, we'll clone the template provided by the MultiversX team.
 
 ```sh
-git clone https://github.com/multiversx/mx-ping-pong-sc microservice
-```
-
-```sh
-cd microservice
-ls -l
+git clone https://github.com/multiversx/mx-ping-pong-service
 ```
 
 Let's take a look at the app structure:
