@@ -37,6 +37,7 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 | [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                  |
 | [The Counter Smart Contract](/developers/tutorials/counter)                         | The Counter SC tutorial.                                         |
 | [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract. |
+| [DEX Walkthrough](/developers/tutorials/dex-walkthrough)                            | In depth walkthrough of all the main DEX contracts.              |
 | [WalletConnect 2.0 Migration](/developers/tutorials/wallet-connect-v2-migration)    | WalletConnect 2.0 Migration Guide                                |
 
 [comment]: # (mx-context-auto)
