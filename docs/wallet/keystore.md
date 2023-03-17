@@ -11,6 +11,8 @@ The MultiversX keystore is a JSON file that holds a mnemonic (seed phrase), encr
 
 ## MultiversX Keystore
 
+[comment]: # (mx-exclude-context)
+
 ### Loading a keystore into the web wallet
 
 Choose connecting with keystore:
@@ -26,6 +28,7 @@ Upon loading the keystore, the user is presented with a choice of addresses, as 
 ![img](/developers/keystore/bech32.png)
 
 [comment]: # (mx-context-auto)
+
 ### **How does a MultiversX Keystore look like?**
 
 Here is an example:
