@@ -272,7 +272,7 @@ The important parts that makes this component work are the flag **authenticatedR
     Login UI
   </summary>
 
-[comment]: # (mx-context-auto)
+[comment]: # (mx-context)
 
 **Login UI**
 
@@ -1048,6 +1048,8 @@ This is an implementation of the [sdk-wallet-connect-provider](https://github.co
 
 As WalletConnect 2.0 is not enabled by default there are a few steps needed to enable it:
 
+[comment]: # (mx-context-auto)
+
 ### Set the Project ID
 
 In the [DappProvider](#dappprovider) wrapper a `walletConnectV2ProjectId` must be provided in the `customNetworkConfig`
@@ -1065,6 +1067,8 @@ The Project ID can be generated for free here: [https://cloud.walletconnect.com/
 ```
 
 The WalletConnect Project ID grants you access to the [WalletConnect Cloud Relay](https://docs.walletconnect.com/2.0/cloud/relay) that securely manages communication between the device and the dApp.
+
+[comment]: # (mx-context-auto)
 
 ### Set the WalletConnect Flag
 
@@ -1099,11 +1103,15 @@ Or, if you want access to the container without the button set the `isWalletConn
 />
 ```
 
+[comment]: # (mx-context-auto)
+
 #### That's it
 
 If the Project ID is valid and the `isWalletConnectV2` flag is `true` the new functionality will work out of the box with the [Transactions and Message signing](#transactions) flows.
 
 You can check out [this PR](https://github.com/multiversx/mx-template-dapp/commit/ca2826be499da892c1180d26f93e1497be77af09) on the [dApp Template](https://github.com/multiversx/mx-template-dapp) with the all the changes required to activate the updated functionality.
+
+[comment]: # (mx-context-auto)
 
 ## React Native support
 
