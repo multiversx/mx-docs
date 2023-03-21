@@ -1124,9 +1124,9 @@ The solution has multiple steps and the finalization of a cross-shard
 smart contract call will need at least 5 rounds, but it does not need
 locking and state movement across shards.
 
-# Bootstrapping and Storage {#sec:bootstraping_and_storage}
+# Bootstrapping and Storage
 
-## Timeline division {#subsec:timeline_division}
+## Timeline division
 
 Proof of Stake systems tend to generally divide timeline into epochs and
 each epoch into smaller rounds. The timeline and
@@ -1187,7 +1187,7 @@ of unfair coalitions, diminishes the possibility of DDoS and bribery
 attacks while maintaining decentralization and a high transactions
 throughput.
 
-## Pruning {#subsec:pruning}
+## Pruning
 
 A high throughput will lead to a distributed ledger that rapidly grows
 in size and increases bootstrapping cost (time+storage).
@@ -1218,9 +1218,9 @@ Using this mechanism, the bootstrapping of the new nodes should be very
 efficient. Actually, they start only from the last valid state block and
 compute only the following blocks instead of its full history.
 
-# Security Evaluation {#sec:security_evaluation}
+# Security Evaluation
 
-## Randomness source {#subsec:randomness_source}
+## Randomness source
 
 MultiversX makes use of random numbers in its operation e.g. for the
 random sampling of block proposer and validators into consensus groups
@@ -1239,7 +1239,7 @@ deterministic k generation and is due to the scheme not using any random
 parameters: $$sig = sk \cdot H(m)$$ where $H$ is a hashing function that
 hashes to points on the used curve and $sk$ is the private key.
 
-## Randomness creation in MultiversX {#subsec:randomness_creation}
+## Randomness creation in MultiversX
 
 One random number is created in every round, and added by the block
 proposer to every block in the blockchain. This ensures that the random
@@ -1296,7 +1296,7 @@ consequently. The probability for this is  $10^{-18}$. Furthermore, the
 consequently selected groups must be colluding, otherwise the blocks
 will not be signed.
 
-## Fisherman challenge {#subsec:fisherman_challenge}
+## Fisherman challenge
 
 When one invalid block is proposed by a malicious majority, the shard
 state root is tampered with an invalid result (after including invalid
@@ -1331,7 +1331,7 @@ challenges, which are very low in number and highly improbable since if
 detected (high probability of being detected) the nodes risk their
 entire stake.
 
-## Shard reorganization {#subsec:shard_reorganization}
+## Shard reorganization
 
 After each epoch, less than $\frac{1}{3} \cdot n$ of the nodes from each
 shard are redistributed uniformly and non-deterministically across the
@@ -1342,7 +1342,7 @@ epoch they have been redistributed. The pruning mechanism will decrease
 this time to a feasible amount, as explained in section
 [9.2](#subsec:pruning){reference-type="ref" reference="subsec:pruning"}.
 
-## Consensus group selection {#subsec:consensus_group_selection}
+## Consensus group selection
 
 After each round a new set of validators are selected using the random
 seed of the last commited block, current round and the eligible nodes
@@ -1355,7 +1355,7 @@ This avoids forking and allows synchronization on last block.
 The small time window (round time) in which the validators group is
 known, minimizes the attack vectors.
 
-## Node rating {#subsec:node_rating}
+## Node rating
 
 Beside stake, the eligible validator's rating influences the chances to
 be selected as part of the consensus group. If the block proposer is
@@ -1365,7 +1365,7 @@ each possible validator is incentivized to be honest, run the most
 up-to-date client software version, increase its service availability
 and thus ensuring the network functions as designed.
 
-## Shard redundancy {#subsec:shard_redundancy}
+## Shard redundancy
 
 The nodes that were distributed in sibling shards on the tree's lowest
 level (see section
@@ -1376,7 +1376,7 @@ shard redundancy, when the number of nodes in the network decreases,
 some of the sibling shards will need to be merged. The targeted nodes
 will instantly initiate the process of shard merging.
 
-# Understanding the real problems {#sec:understanding_real_problems}
+# Understanding the real problems
 
 ::: figure*
 ::: center
