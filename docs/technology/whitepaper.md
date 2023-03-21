@@ -1,5 +1,5 @@
----
-abstract: |
+[comment]: # (mx-abstract)
+
   The advent of secure public blockchains through Bitcoin and later
   Ethereum, has brought forth a notable degree of interest and capital
   influx, providing the premise for a global wave of permissionless
@@ -21,9 +21,12 @@ abstract: |
   three orders of magnitude or 1000x compared to the existing viable
   approaches, while drastically reducing the costs of bootstrapping and
   storage to ensure long term sustainability.
----
+
+[comment]: # (mx-exclude-context)
 
 # Introduction 
+
+[comment]: # (mx-context-auto)
 
 ## General aspects 
 
@@ -40,6 +43,8 @@ boundaries imposed by the trade-offs in the blockchain trilemma paradigm.
 Several solutions have been proposed, but few of them have shown significant and viable results. Thus, in order to
 solve the scalability problem, a complete rethinking of public
 blockchain infrastructures was required.
+
+[comment]: # (mx-context-auto)
 
 ## Defining the challenges
 
@@ -77,6 +82,8 @@ MultiversX' main contribution rests on two cornerstone building blocks:
     of Proof of Stake (PoS) that ensures long term security and
     distributed fairness, while eliminating the need for energy
     intensive PoW algorithms.
+
+[comment]: # (mx-context-auto)
 
 ## Adaptive State Sharding
 
@@ -123,6 +130,8 @@ MultiversX solves this challenge by:
     bootstrapping and storage, MultiversX makes use of a shard pruning
     mechanism. This ensures sustainability of our architecture even with
     a throughput of tens of thousands of transactions per second (TPS).
+
+[comment]: # (mx-context-auto)
 
 ## Secure Proof of Stake (SPoS)
 
@@ -173,7 +182,11 @@ mechanism, differentiating itself through the following aspects:
     implementations (e.g. SPoS consensus mechanism) in order to validate
     the correctness of our algorithms.
 
+[comment]: # (mx-exclude-context)
+
 # Architecture Overview
+
+[comment]: # (mx-context-auto)
 
 ## Entities
 
@@ -200,6 +213,8 @@ block. The validators are responsible to either reject, or approve the
 proposed block, thereby validating it and committing it to the
 blockchain.
 
+[comment]: # (mx-context-auto)
+
 ## Intrinsic token
 
 MultiversX grants access to the usage of its network through intrinsic
@@ -207,6 +222,8 @@ utility token called $eGold$, in short $EGLD$. All costs for processing
 transactions, running smart contracts and rewards for various
 contributions to the network will be paid in $EGLD$. References to fees,
 payments or balances are assumed to be in $EGLD$.
+
+[comment]: # (mx-context-auto)
 
 ## Threat model
 
@@ -253,6 +270,8 @@ Other attack vectors we have taken into consideration are: shard
 takeover attack, transaction censorship, double spend, bribery attacks,
 etc.
 
+[comment]: # (mx-context-auto)
+
 ## Chronology
 
 In MultiversX' network, the timeline is split into epochs and rounds.
@@ -269,6 +288,8 @@ waiting list of a shard at the beginning of epoch $e+1$, but can only
 become eligible validators to participate in consensus and get rewarded
 in the next epoch $e+2$.
 
+[comment]: # (mx-context-auto)
+
 # Related Work
 
 MultiversX was designed upon and inspired by the ideas from Ethereum, Omniledger, 
@@ -276,6 +297,8 @@ Zilliqa, Algorand and ChainSpace. Our architecture goes beyond state of the
 art and can be seen as an augmentation of the existing models, improving
 the performance while focusing to achieve a better nash equilibrium
 state between security, scalability and decentralization.
+
+[comment]: # (mx-context-auto)
 
 ## Ethereum
 
@@ -295,6 +318,8 @@ problem at least partially.
 Compared to Ethereum, MultiversX eliminates both energy and
 computational waste from PoW algorithms by implementing a SPoS consensus
 while using transaction processing parallelism through sharding.
+
+[comment]: # (mx-context-auto)
 
 ## Omniledger
 
@@ -320,6 +345,8 @@ sharding, a faster random selection of the consensus group and an
 improved security by replacing the validators' set after every round (a
 few seconds) not after every epoch (1 day).
 
+[comment]: # (mx-context-auto)
+
 ## Zilliqa
 
 Zilliqa is the first transaction-sharding
@@ -339,6 +366,8 @@ MultiversX aims not only for EVM compliance, so that SC written for
 Ethereum will run seamlessly on our VM, but also aims to achieve
 interoperability between blockchains.
 
+[comment]: # (mx-context-auto)
+
 ## Algorand
 
 Algorand proposes a public ledger that keeps the
@@ -355,6 +384,8 @@ instead it increases transaction's throughput using sharding. MultiversX
 also improves on Algorand's idea of random selection by reducing the
 selection time of the consensus group from over 12 seconds to less than
 a second, but assumes that the adversaries cannot adapt within a round.
+
+[comment]: # (mx-context-auto)
 
 ## Chainspace
 
@@ -380,7 +411,11 @@ MultiversX exhibits a higher resistance to sudden changes in node
 population and malicious shard takeover by introducing shard redundancy,
 a new feature for sharded blockchains.
 
+[comment]: # (mx-exclude-context)
+
 # Scalability via Adaptive State Sharding
+
+[comment]: # (mx-context-auto)
 
 ## Why sharding
 
@@ -395,6 +430,8 @@ process many transactions in parallel, and thus greatly improving
 transaction throughput and efficiency. Sharding promises to increase the
 throughput as the validator network expands, a property that is referred
 to as horizontal scaling.
+
+[comment]: # (mx-context-auto)
 
 ## Sharding types
 
@@ -422,6 +459,8 @@ newly added nodes to download the latest state. Thus, it is imperative
 that only a subset of all nodes should be redistributed during each
 epoch, to prevent down times during the synchronization process.
 
+[comment]: # (mx-context-auto)
+
 ## Sharding directions
 
 Some sharding proposals attempt to only shard transactions
@@ -441,6 +480,8 @@ increase significantly due to parallel transaction processing and
 transaction fees will be considerably reduced. Two main criterias widely
 considered to be obstacles transforming into advantages and incentives
 for mainstream adoption of the blockchain technology.
+
+[comment]: # (mx-context-auto)
 
 ## MultiversX sharding approach
 
@@ -484,7 +525,6 @@ From one epoch to another, there is a probability that the number of
 active nodes changes. If this aspect influences the number of shards,
 anyone can calculate the two masks $m_1$ and $m_2$, used in transaction
 dispatching.
-
 
 As the main goal is to increase the throughput beyond thousands of
 transactions per second and to diminish the cross-shard communication,
@@ -588,6 +628,8 @@ $\frac{1}{3}$ of these nodes will be uniformly re-distributed across
 shards. This mechanism is highly effective against forming malicious
 groups.
 
+[comment]: # (mx-context-auto)
+
 ## Notarization (Meta) chain
 
 All network and global data operations (node joining the network, node
@@ -609,7 +651,11 @@ transactions. Further details about the cross-shard transaction
 execution, communication between shards and metachain will be presented
 in Chapter VII Cross-shard transaction processing.
 
+[comment]: # (mx-exclude-context)
+
 # Consensus via Secure Proof of Stake
+
+[comment]: # (mx-context-auto)
 
 ## Consensus Analysis
 
@@ -644,6 +690,8 @@ elected by stakeholders. Although it has a high throughput, the model is
 susceptible to human related social problems such as bribing and
 corruption. Also, a small number of delegates makes the system prone to
 DDoS attacks and centralization.
+
+[comment]: # (mx-context-auto)
 
 ## Secure Proof of Stake (SPoS)
 
@@ -730,7 +778,11 @@ both intra- and cross-shard transactions. After consensus is reached,
 the block header of each shard is sent to the metachain for
 notarization.
 
+[comment]: # (mx-exclude-context)
+
 # Cryptographic Layer
+
+[comment]: # (mx-context-auto)
 
 ## Signature Analysis
 
@@ -827,6 +879,8 @@ multi-signature scheme for block signing in MultiversX is BLS
 multi-signature, which is faster overall than
 the other options due to only two communication rounds.
 
+[comment]: # (mx-context-auto)
+
 ## Block signing in MultiversX
 
 For block signing, MultiversX uses curve cryptography based on the BLS
@@ -888,6 +942,8 @@ is a point on $g_1$. The final verification is
 $$e(G_1, SigAgg) == e(PkAgg, H_0(m))$$ where $e$ is the pairing
 function.
 
+[comment]: # (mx-context-auto)
+
 # Cross-shard Execution
 
 For an in depth example of how the cross-shard transactions are being
@@ -919,6 +975,8 @@ normally be $3$ miniblocks:
 There is no limitation on the number of miniblocks with the same sender
 and receiver in one block. Meaning multiple miniblocks with the same
 sender and receiver can appear in the same block.
+
+[comment]: # (mx-context-auto)
 
 ## Processing
 
@@ -954,6 +1012,8 @@ transaction set can be considered finalized.
 The next diagram shows the number of rounds required for a transaction
 to be finalized. The rounds are considered between the first inclusion
 in a miniblock until the last miniblock is notarised.
+
+[comment]: # (mx-context-auto)
 
 # Smart Contracts
 
@@ -996,6 +1056,8 @@ using some specialized smart contracts acting as asset custodians,
 capable of taking custody of adapted chain native tokens and issuing
 MultiversX native tokens.
 
+[comment]: # (mx-context-auto)
+
 ## VM Infrastructure
 
 MultiversX builds its VM infrastructure on top of the K Framework, which
@@ -1014,6 +1076,8 @@ implementation directly, or one can generate an interpreter in several
 programming languages. These are also referred to as \"backends\". For
 the sake of execution speed and ease of interoperability, MultiversX
 uses its own custom-built K Framework backend.
+
+[comment]: # (mx-context-auto)
 
 ## Smart contract languages
 
@@ -1050,6 +1114,8 @@ interface, that enables us to plug in any VM into an MultiversX node. Each VM th
 that implements this interface. Each contract is saved as bytecode of
 the VM for which it was compiled and runs on its corresponding VM.
 
+[comment]: # (mx-context-auto)
+
 ## Support for formal modelling and verification
 
 Because the smart contract languages are formally defined in K
@@ -1057,6 +1123,8 @@ Framework, it is possible to perform formal verification of smart
 contracts written in these languages. To do this, it is necessary to
 also formally model their requirements, which can also be performed
 using the K Framework.
+
+[comment]: # (mx-context-auto)
 
 ## Smart contracts on the sharded architecture
 
@@ -1124,7 +1192,11 @@ The solution has multiple steps and the finalization of a cross-shard
 smart contract call will need at least 5 rounds, but it does not need
 locking and state movement across shards.
 
+[comment]: # (mx-exclude-context)
+
 # Bootstrapping and Storage
+
+[comment]: # (mx-context-auto)
 
 ## Timeline division
 
@@ -1187,6 +1259,8 @@ of unfair coalitions, diminishes the possibility of DDoS and bribery
 attacks while maintaining decentralization and a high transactions
 throughput.
 
+[comment]: # (mx-context-auto)
+
 ## Pruning
 
 A high throughput will lead to a distributed ledger that rapidly grows
@@ -1218,7 +1292,11 @@ Using this mechanism, the bootstrapping of the new nodes should be very
 efficient. Actually, they start only from the last valid state block and
 compute only the following blocks instead of its full history.
 
+[comment]: # (mx-exclude-context)
+
 # Security Evaluation
+
+[comment]: # (mx-context-auto)
 
 ## Randomness source
 
@@ -1238,6 +1316,8 @@ results. This is similar to what is achieved using ECDSA with
 deterministic k generation and is due to the scheme not using any random
 parameters: $$sig = sk \cdot H(m)$$ where $H$ is a hashing function that
 hashes to points on the used curve and $sk$ is the private key.
+
+[comment]: # (mx-context-auto)
 
 ## Randomness creation in MultiversX
 
@@ -1268,6 +1348,8 @@ The evolution of randomness source in each round can be seen as an
 unbiasable and verifiable blockchain, where each new random number can
 be linked to and verified against the previous random number.
 
+[comment]: # (mx-context-auto)
+
 ## \"K\" block finality scheme
 
 The signed block at round $n$ is final, if and only if blocks
@@ -1295,6 +1377,8 @@ malicious blocks equals with selecting two subgroups with at least
 consequently. The probability for this is  $10^{-18}$. Furthermore, the
 consequently selected groups must be colluding, otherwise the blocks
 will not be signed.
+
+[comment]: # (mx-context-auto)
 
 ## Fisherman challenge
 
@@ -1331,6 +1415,8 @@ challenges, which are very low in number and highly improbable since if
 detected (high probability of being detected) the nodes risk their
 entire stake.
 
+[comment]: # (mx-context-auto)
+
 ## Shard reorganization
 
 After each epoch, less than $\frac{1}{3} \cdot n$ of the nodes from each
@@ -1341,6 +1427,8 @@ liveness as shuffled nodes do not participate in the consensus in the
 epoch they have been redistributed. The pruning mechanism will decrease
 this time to a feasible amount, as explained in section
 [9.2](#subsec:pruning){reference-type="ref" reference="subsec:pruning"}.
+
+[comment]: # (mx-context-auto)
 
 ## Consensus group selection
 
@@ -1355,6 +1443,8 @@ This avoids forking and allows synchronization on last block.
 The small time window (round time) in which the validators group is
 known, minimizes the attack vectors.
 
+[comment]: # (mx-context-auto)
+
 ## Node rating
 
 Beside stake, the eligible validator's rating influences the chances to
@@ -1364,6 +1454,8 @@ rating increased, otherwise, it's rating will be decreased. This way,
 each possible validator is incentivized to be honest, run the most
 up-to-date client software version, increase its service availability
 and thus ensuring the network functions as designed.
+
+[comment]: # (mx-context-auto)
 
 ## Shard redundancy
 
@@ -1376,15 +1468,7 @@ shard redundancy, when the number of nodes in the network decreases,
 some of the sibling shards will need to be merged. The targeted nodes
 will instantly initiate the process of shard merging.
 
-# Understanding the real problems
-
-::: figure*
-::: center
-[image]{.image .placeholder
-original-image-src="./images/04_StorageEstimation"
-original-image-title="" width="0.90\\linewidth"}
-:::
-:::
+[comment]: # (mx-context-auto)
 
 ## Centralized vs Decentralized
 
@@ -1395,9 +1479,7 @@ undisputed advantage, the performance has to be analyzed at a global
 scale in a real-world environment.
 
 The most relevant metric measuring performance is transactions per
-second (TPS), as seen in Table
-[1](#table:CentralizedVDecentralizedTPS){reference-type="ref"
-reference="table:CentralizedVDecentralizedTPS"}. A TPS comparison of
+second (TPS). A TPS comparison of
 traditional centralized systems with decentralized novel architectures
 that were validated as trusted and efficient on a large scale, reflects
 an objective yet unsettling reality.
@@ -1409,6 +1491,8 @@ architectures suddenly functioning at Visa level throughput. By
 performing such exercises, the magnitude of multiple secondary problems
 becomes obvious.
 
+[comment]: # (mx-context-auto)
+
 ## Centralized vs Decentralized TPS comparison
   **Archi-tecture**   **Type**                     **Dispersion**   **TPS   (average)**   **TPS     (max limit)**
   ------------------- ---------------------------- ---------------- --------------------- -------------------------
@@ -1418,6 +1502,8 @@ becomes obvious.
   NEO                 Private Blockchain           Mixed                                  
   Ethereum            Public Blockchain            Decentralized                          
   Bitcoin             Public Blockchain            Decentralized                          
+
+[comment]: # (mx-context-auto)
 
 # The blockchain performance paradigm
 
@@ -1488,7 +1574,11 @@ In MultiversX, the dispatching mechanism allows an improved time to finality by
 routing the transactions directly to the right shard, mitigating the
 overall delays.
 
+[comment]: # (mx-exclude-context)
+
 # Conclusion {#sec:conclusion}
+
+[comment]: # (mx-context-auto)
 
 ## Performance {#subsec:performance}
 
@@ -1500,6 +1590,8 @@ rounds, thus the result is highly influenced by the network quality
 worldwide network speed averages, at its maximum theoretical limit,
 suggest MultiversX exceeds the average VISA level with just 2 shards,
 and approaches peak VISA level with 16 shards.
+
+[comment]: # (mx-context-auto)
 
 ## Ongoing and future research {#subsec:research}
 
@@ -1533,6 +1625,8 @@ include:
     Non-Interactive Argument of Knowledge 
     to protect the identity of the participants and offer auditing
     capabilities while preserving the privacy.
+
+[comment]: # (mx-context-auto)
 
 ## Overall Conclusions
 
