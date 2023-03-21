@@ -104,7 +104,7 @@ The owner of the delegation contract has a number of operations at their disposa
 
 ### Metadata
 
-The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated keybase.io identity.
+The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated GitHub identity.
 
 ```rust
 SetMetadataTransaction {
@@ -115,13 +115,13 @@ SetMetadataTransaction {
     Data: "setMetaData"
           "@" + <name of the staking pool, in hexadecimal encoding> +
           "@" + <website of the staking pool, in hexadecimal encoding > +
-          "@" + <keybase.io identity of the staking pool, in hexadecimal encoding>
+          "@" + <GitHub identity of the staking pool, in hexadecimal encoding>
 }
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-An example for the `Data` field that sets the name to `"Test Mx Provider"`, the website to `"testmx.provider"` and the keybase.io identifier to `"testmxprovider"` is:
+An example for the `Data` field that sets the name to `"Test Mx Provider"`, the website to `"testmx.provider"` and the GitHub identifier to `"testmxprovider"` is:
 
 ```rust
     "setMetaData" +
@@ -131,54 +131,45 @@ An example for the `Data` field that sets the name to `"Test Mx Provider"`, the 
 ```
 
 :::important
-Setting the keybase.io identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a keybase.io identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the keybase.io identity to the delegation contract address.
+Setting the identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a GitHub identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the GitHub identity to the delegation contract address.
 :::
 
 [comment]: # (mx-context-auto)
 
+:::caution
+As of March 2023, keybase.pub is no longer available. As a consequence, the identity verification mechanism has been switched to GitHub, including the profile information fetched from keybase.io.
+:::
+
 ### Display information
 
-To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in xPortal and the web wallet, some additional information has to be added on the keybase.io account. Please fill in the **avatar picture** and edit the profile providing the **name** and **bio**. This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and xPortal. If this information cannot be found a generic logo and the delegation contract's address is displayed.
+To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in xPortal and the web wallet, some additional information has to be added on a GitHub account with the same identifier as the identity. If a GitHub username matching the node identity is already taken, you will need to change the identity in the node provider to a GitHub username that you control.
 
-In order to complete the matching between the delegation contract and keybase.io identity of the staking pool an empty file with the name set to the delegation contract's address has to be added in the `/public/<keybase.io identity>/multiversx/` folder.
+Please fill in the **avatar picture** and edit the profile providing the **name**, **bio**, **website** and **twitter** (if applicable). This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and xPortal. If this information cannot be found a generic logo and the delegation contract's address is displayed.
 
-:::tip
-As of January 2023, the keybase.io's folder that contains the delegation contract's address can be either `elrond` or `multiversx` but in the near future only the `multiversx` folder will be accepted.
-:::
+In order to complete the matching between the delegation contract and GitHub identity of the staking pool, a repository needs to be created with the name "multiversx" which contains one single file: "keys.json". This file contains a json array with the provider's address and the node BLSes, just like it was on GitHub. For devnet/testnet, you need to have a folder called devnet/testnet in the same repository, with the "keys.json" file underneath.
 
-An example for the path to the empty file for the `"testmxprovider"` keybase.io identity would be:
+An example for the contents of the `keys.json` file for the `"testmxprovider"` GitHub identity would be:
 
-```rust
- public/testmxprovider/multiversx/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
+```json
+ [
+  "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py"
+ ]
 ```
 
-:::important
-The **second step** in connecting the delegation contract and the keybase.io identity is finalized by adding the empty file, which has the name equal to the delegation contract's address, and certifying that the referenced keybase.io identity, set in the [metadata](/validators/delegation-manager#metadata), also references the delegation contract address. This way the connection from both directions is sealed.
-:::
-
-:::tip
-To be able to connect a **testnet** or **devnet** contract to a keybase.io identity, a new folder - named `"testnet"` for the testnet, or `"devnet"` for the devnet, has to be created inside the `/multiversx` folder. An example for the same delegation contract on the `testnet` would be:
-
-```rust
-public/testmxprovider/multiversx/testnet/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py
-```
-
-:::
-
-An example of how the delegation contract will be displayed based on the information provided in the keybase.io is provided below.
+An example of how the delegation contract will be displayed based on the information provided in the GitHub is provided below.
 
 ![stakingpool](/img/stakingpool.png)
 
 :::important
-To also connect the validators themselves to a specific keybase.io staking pool identity, two additional steps have to be completed:
+To also connect the validators themselves to a specific GitHub staking pool identity, two additional steps have to be completed:
 
-1. Create an empty file with the name set to the `"<BLS key>"` for every validator and add the empty file to the `/multiversx` folder on your keybase.io identity: `public/<keybase.io identity>/multiversx/<BLS key>`
-2. Set the `Identity` of each validator in the `config/prefs.toml` file to the keybase.io staking pool identity.
+1. In the `keys.json` file, add the BLS key to the JSON array.
+2. Set the `Identity` of each validator in the `config/prefs.toml` file to the GitHub staking pool identity.
 
 ```rust
 [Preferences]
-   # Identity represents the keybase's identity
-   Identity = "<keybase.io identity>"    // e.g.  Identity = "testmxprovider"
+   # Identity represents the GitHub identity
+   Identity = "<GitHub identity>"    // e.g.  Identity = "testmxprovider"
 ```
 
 :::
@@ -346,7 +337,7 @@ The `Data` field contains an enumeration of `N` public BLS keys corresponding to
 Validator nodes that are already staked (active) can be manually unstaked.
 
 :::important
-Validators are demoted to validator status at the beginning of the next epoch _after unstaking_. This means that they stop receiving rewards.
+Validators are demoted to observer status at the beginning of the next epoch _after unstaking_. This means that they stop receiving rewards.
 
 Unstaking _does not_ mean that the staked amount returns to the staking pool (see [undelegating](/validators/delegation-manager#undelegating-funds) and [withdrawing](/validators/delegation-manager#withdrawing)).
 :::
