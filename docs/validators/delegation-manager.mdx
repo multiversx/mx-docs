@@ -26,9 +26,9 @@ This page describes how to request a new delegation contract from the delegation
 
 Note that the delegation manager is not required to set up a staking pool. For example, it is also possible to set up delegation using a regular smart contract, although that is a more complex process and is not discussed here.
 
-Node operators may also choose to set up a delegation dashboard, although they may use any user interface or none whatsoever. As an example, the boilerplate for such a delegation dashboard can be found here: https://github.com/multiversx/mx-delegation-dapp. Alternatively, the old boilerplate is located here: https://github.com/multiversx/mx-deprecated-starter-dapp/tree/master/react-delegationdashboard.
+Node operators may also choose to set up a delegation dashboard, although they may use any user interface or none whatsoever. As an example, the boilerplate for such a delegation dashboard can be found here: https://GitHub.com/multiversx/mx-delegation-dapp. Alternatively, the old boilerplate is located here: https://GitHub.com/multiversx/mx-deprecated-starter-dapp/tree/master/react-delegationdashboard.
 
-A detailed description of the delegation process can be consulted at https://github.com/multiversx/mx-specs/blob/main/sc-delegation-specs.md.
+A detailed description of the delegation process can be consulted at https://GitHub.com/multiversx/mx-specs/blob/main/sc-delegation-specs.md.
 
 [comment]: # (mx-context-auto)
 
@@ -104,7 +104,7 @@ The owner of the delegation contract has a number of operations at their disposa
 
 ### Metadata
 
-The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated github identity.
+The delegation contract can store information that identifies the staking pool: its human-readable name, its website and its associated GitHub identity.
 
 ```rust
 SetMetadataTransaction {
@@ -115,13 +115,13 @@ SetMetadataTransaction {
     Data: "setMetaData"
           "@" + <name of the staking pool, in hexadecimal encoding> +
           "@" + <website of the staking pool, in hexadecimal encoding > +
-          "@" + <github identity of the staking pool, in hexadecimal encoding>
+          "@" + <GitHub identity of the staking pool, in hexadecimal encoding>
 }
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-An example for the `Data` field that sets the name to `"Test Mx Provider"`, the website to `"testmx.provider"` and the github identifier to `"testmxprovider"` is:
+An example for the `Data` field that sets the name to `"Test Mx Provider"`, the website to `"testmx.provider"` and the GitHub identifier to `"testmxprovider"` is:
 
 ```rust
     "setMetaData" +
@@ -131,20 +131,20 @@ An example for the `Data` field that sets the name to `"Test Mx Provider"`, the 
 ```
 
 :::important
-Setting the identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a github identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the github identity to the delegation contract address.
+Setting the identity of the staking pool in the metadata is the **first step** in connecting the delegation contract and a GitHub identity. The second step is explained in the next section [Display information](/validators/delegation-manager#display-information) where the inverse connection is made: from the GitHub identity to the delegation contract address.
 :::
 
 [comment]: # (mx-context-auto)
 
 ### Display information
 
-To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in xPortal and the web wallet, some additional information has to be added on a github account with the same identifier as the identity. If a github username matching the node identity is already taken, you will need to change the identity in the node provider to a github username that you control.
+To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in xPortal and the web wallet, some additional information has to be added on a GitHub account with the same identifier as the identity. If a GitHub username matching the node identity is already taken, you will need to change the identity in the node provider to a GitHub username that you control.
 
 Please fill in the **avatar picture** and edit the profile providing the **name**, **bio**, **website** and **twitter** (if applicable). This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and xPortal. If this information cannot be found a generic logo and the delegation contract's address is displayed.
 
-In order to complete the matching between the delegation contract and github identity of the staking pool, a repository needs to be created with the name "multiversx" which contains one single file: "keys.json". This file contains a json array with the provider's address and the node blses, just like it was on github. For devnet/testnet, you need to have a folder called devnet/testnet in the same repository, with the "keys.json" file underneath
+In order to complete the matching between the delegation contract and GitHub identity of the staking pool, a repository needs to be created with the name "multiversx" which contains one single file: "keys.json". This file contains a json array with the provider's address and the node blses, just like it was on GitHub. For devnet/testnet, you need to have a folder called devnet/testnet in the same repository, with the "keys.json" file underneath
 
-An example for the contents of the `keys.json` file for the `"testmxprovider"` github identity would be:
+An example for the contents of the `keys.json` file for the `"testmxprovider"` GitHub identity would be:
 
 ```json
  [
@@ -152,20 +152,20 @@ An example for the contents of the `keys.json` file for the `"testmxprovider"` g
  ]
 ```
 
-An example of how the delegation contract will be displayed based on the information provided in the github is provided below.
+An example of how the delegation contract will be displayed based on the information provided in the GitHub is provided below.
 
 ![stakingpool](/img/stakingpool.png)
 
 :::important
-To also connect the validators themselves to a specific github staking pool identity, two additional steps have to be completed:
+To also connect the validators themselves to a specific GitHub staking pool identity, two additional steps have to be completed:
 
 1. In the `keys.json` file, add the BLS key to the JSON array.
-2. Set the `Identity` of each validator in the `config/prefs.toml` file to the github staking pool identity.
+2. Set the `Identity` of each validator in the `config/prefs.toml` file to the GitHub staking pool identity.
 
 ```rust
 [Preferences]
-   # Identity represents the github identity
-   Identity = "<github identity>"    // e.g.  Identity = "testmxprovider"
+   # Identity represents the GitHub identity
+   Identity = "<GitHub identity>"    // e.g.  Identity = "testmxprovider"
 ```
 
 :::
