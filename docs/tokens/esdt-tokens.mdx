@@ -64,8 +64,6 @@ IssuanceTransaction {
           "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
-          "@" + <"canMint" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
-          "@" + <"canBurn" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
@@ -408,8 +406,6 @@ The Account which submitted the issuance request for a custom token automaticall
 
 Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/tokens/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
-- `canMint` - more units of this token can be minted by the token manager after initial issuance, increasing the supply
-- `canBurn` - users may "burn" some of their tokens, reducing the supply
 - `canPause` - the token manager may prevent all transactions of the token, apart from minting and burning
 - `canFreeze` - the token manager may freeze the token balance in a specific account, preventing transfers to and from that account
 - `canWipe` - the token manager may wipe out the tokens held by a frozen account, reducing the supply
@@ -450,9 +446,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the manager receives that amount of tokens into their balance.
 
-This operation requires that the option `canMint` is set to `true` for the token.
-
-Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:
+An account with the `ESDTRoleLocalMint` role set can perform a local mint:
 
 ```rust
 LocalMintTransaction {
@@ -460,7 +454,7 @@ LocalMintTransaction {
     Receiver: <same as sender>
     Value: 0
     GasLimit: 300000
-    Data: "ESDTLocalMint" +
+    Data: "ESDTRoleLocalMint" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <supply to mint in hexadecimal encoding>
 }
@@ -494,9 +488,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
-This operation requires that the option `canBurn` is set to `true` for the token.
-
-Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:
+An account with the `ESDTRoleLocalBurn` role set can perform a local burn:
 
 ```rust
 LocalBurnTransaction {
@@ -754,7 +746,7 @@ UpgradingTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token manager, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
+As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true`, but Alice, the token manager, wants to change these properties to `false`. The transaction that would achieve this change is:
 
 ```rust
 UpgradingTransaction {
@@ -766,8 +758,6 @@ UpgradingTransaction {
           "@414c432d363235386432" + # ALC-6258d2
           "@63616e57697065" +       # canWipe
           "@66616c7365" +           # false
-          "@63616e4275726e" +       # canBurn
-          "@74727565"               # true
 }
 ```
 
