@@ -13,32 +13,12 @@ If an observer with `elastic-indexer` enabled will throw a `log.WARN` that conta
 for an index, then one should follow the next steps: 
 
 In the example below we will repair the `operations` index.
+
 ## Solution 1
-:::caution
-This solution will take more time because all the documents from the index with problems 
-have to be reindexed from a public cluster.
-:::
-
-
-1. Stop the observers nodes that index data in the Elasticsearch cluster.
-2. Delete affected index: `operations`
-3. Create the index again with the correct mappings:
-   -  in order to do this, clone this [repository](https://github.com/multiversx/mx-chain-tools-go)
-   - `cd elasticreindexer/indices-creator`
-   - open `config/cluster.toml` file and update it with the information about your cluster and at the `enabled-indices`
-   section put `["operations"]`
-   - build the binary and run it in order to create the index with the correct mappings.
-
-4. After the index was created you can start again the observers. 
-5. Copy all the data from a public Elasticsearch cluster for the index with problems.
-   - in order to do this follow the steps from this [documentation](https://github.com/multiversx/mx-chain-tools-go/tree/mappings-for-all-fields/elasticreindexer#step-2) (only for the index/indices with problems)
-
-
-## Solution 2
 
 1. Stop the observers nodes that index data in the Elasticsearch cluster.
 2. Force a `rollover` for the index with problems in this case `operations` index and the rollover have to contain the correct
-mappings.
+   mappings.
    ```
    curl --request POST \
      --url ${ES_CLUSTER_URL}/operations/_rollover \
@@ -83,3 +63,25 @@ mappings.
    ```
 
 4. Start again the observers.
+
+
+## Solution 2
+:::caution
+This solution will take more time because all the documents from the index with problems 
+have to be reindexed from a public cluster.
+:::
+
+
+1. Stop the observers nodes that index data in the Elasticsearch cluster.
+2. Delete affected index: `operations`
+3. Create the index again with the correct mappings:
+   -  in order to do this, clone this [repository](https://github.com/multiversx/mx-chain-tools-go)
+   - `cd elasticreindexer/indices-creator`
+   - open `config/cluster.toml` file and update it with the information about your cluster and at the `enabled-indices`
+   section put `["operations"]`
+   - build the binary and run it in order to create the index with the correct mappings.
+
+4. After the index was created you can start again the observers. 
+5. Copy all the data from a public Elasticsearch cluster for the index with problems.
+   - in order to do this follow the steps from this [documentation](https://github.com/multiversx/mx-chain-tools-go/tree/mappings-for-all-fields/elasticreindexer#step-2) (only for the index/indices with problems)
+
