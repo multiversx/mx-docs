@@ -43,7 +43,8 @@ Wallet Keys are not required on host running the Node. Store them on a different
 
 Secure your MultiversX node
 
-- no ports should open in the firewall
+- no ports should open in the firewall except for the ones used by the node's normal operation 
+(the port range can be checked [here](/validators/system-requirements.md).)
 - don't run the node as `root`
 - use encryption, all other measures
 - [some hints ](https://www.liquidweb.com/kb/security-for-your-linux-server/)
