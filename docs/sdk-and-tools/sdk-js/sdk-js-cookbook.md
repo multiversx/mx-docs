@@ -11,7 +11,7 @@ This page will guide you through the process of handling common tasks using **sd
 This cookbook makes use of `sdk-js 12`. In order to migrate from `sdk-js 11.x` to `sdk-js 12`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
 :::
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/basic.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/basic.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -172,7 +172,7 @@ let txHash = await proxyNetworkProvider.sendTransaction(tx);
 console.log("Hash:", txHash); 
 ```
 
-Note that the transaction **must to be signed before being broadcasted**. Signing can be achieved using a signing provider.
+Note that the transaction **must be signed before being broadcasted**. Signing can be achieved using a signing provider.
 
 :::important
 Note that, for all purposes, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
@@ -223,7 +223,7 @@ For a different awaiting strategy, also see [extending sdk-js](https://docs.mult
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/transfers.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/transfers.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -305,7 +305,7 @@ const tx4 = factory.createMultiESDTNFTTransfer({
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_01_deployments.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_01_deployments.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -415,8 +415,7 @@ console.log("Return code:", returnCode);
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_02_abi.md" } -->
-
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_02_abi.md" } -->
 [comment]: # (mx-context-auto)
 
 ## ABI
@@ -450,7 +449,7 @@ existingContract = new SmartContract({ address: existingContractAddress, abi: ab
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_03_queries.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_03_queries.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -566,7 +565,7 @@ let firstValueAsStruct = <Struct>firstValue;
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_04_interactions.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_04_interactions.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -748,7 +747,7 @@ For customizing the default parser, also see [extending sdk-js](/sdk-and-tools/s
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/signing.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/signing.md" } -->
 
 [comment]: # (mx-context-auto)
 

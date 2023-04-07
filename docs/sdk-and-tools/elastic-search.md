@@ -122,6 +122,7 @@ Each entry in an Elasticsearch index will have a format similar to this:
 | [delegators](/sdk-and-tools/indices/es-index-delegators)                   | Contains details about all the delegators.                                  |
 | [operations](/sdk-and-tools/indices/es-index-operations)                   | Contains all transactions and smart contract results.                       |
 
+[comment]: # (mx-context-auto)
 
 ## Troubleshooting
 
