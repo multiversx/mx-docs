@@ -48,7 +48,7 @@ The contract acts like a wrapper over the xExchange contracts, with different ap
 - The SC always keeps one aggregated position for each feature (__Farms__ and __Metastaking__), and computes rewards using a rewards-per-share algorithm.
 - Each user position is represented by specific tokens issued by the Energy DAO SC. There are tokens for both Farm & Metastaking current positions, as well as tokens for unbonding positions.
 - The tokens are storing different metadata according to the user position, including the position's __rps__.
-- The __Farms__ integration covers all 3 interaction points of the farm contract, including __enter_farm__, __exit_farm__ (with a 7 days unbonding period) and __claim_rewards__ as well, which aggregates all rewards and distributes them using an internal __rps__ computation.
+- The __Farms__ integration covers all 3 interaction points of the farm contract, including __enter_farm__, __exit_farm__ (with a base farm dependent unbonding period) and __claim_rewards__ as well, which aggregates all rewards and distributes them using an internal __rps__ computation.
 - The __Metastaking__ integration resembles pretty much with the __Farms__ integration, with a few differences, including a double __rps__ computation, for each reward token, as well as a different unbonding implementation, in line with the __Metastaking__ SC logic.
 - This SC template keeps the rewards from the __Fees Collector__ contract as rewards for providind Energy. Also, while entering the SC and claiming rewards are penalty free, a fee of __x%__ is imposed on every user exit action (the fee percentage is subject to change for each project individually).
 
@@ -76,7 +76,6 @@ The `init` method of the Energy DAO smart contract is quite simple, as it only s
         fees_collector_sc_address: ManagedAddress,
         locked_token_wrapper_sc_address: ManagedAddress,
         exit_penalty_percent: u64,
-        farm_unbond_period: u64,
     ) {
         self.require_sc_address(&energy_factory_address);
         self.require_sc_address(&fees_collector_sc_address);
@@ -88,9 +87,7 @@ The `init` method of the Energy DAO smart contract is quite simple, as it only s
             .set_if_empty(fees_collector_sc_address);
         self.locked_token_wrapper_sc_address()
             .set_if_empty(locked_token_wrapper_sc_address);
-        self.exit_penalty_percent()
-            .set_if_empty(exit_penalty_percent);
-        self.farm_unbond_period().set_if_empty(farm_unbond_period);
+        self.set_exit_penalty_percent(exit_penalty_percent);
 
         let caller = self.blockchain().get_caller();
         self.add_permissions(caller, Permissions::OWNER);
@@ -213,7 +210,7 @@ https://docs.multiversx.com/developers/developer-reference/storage-mappers/#nonf
 
 **Farms & Metastaking addresses management**
 
-The template SC stores the data for each farm or farm staking in a __SingleValueMapper__, having the address of that contract as the key for the storage mapper. For each __Farm__ or __Metastaking__ address, we save a __FarmState__ or a __MetastakingState__ respectively, each with its own specific variables. Please observe the fact that these management endpoints do not have the `#[only_owner]` adnotation, but instead restricts the possibility of being called in a custom way, so that it allows both the owner and some designated admins to manage these settings.  
+The template SC stores the data for each farm or farm staking in a __SingleValueMapper__, having the address of that contract as the key for the storage mapper. For each __Farm__ or __Metastaking__ address, we save a __FarmState__ or a __MetastakingState__ respectively, each with its own specific variables. Please observe the fact that these management endpoints do not have the `#[only_owner]` adnotation, but instead restricts the possibility of being called in a custom way, so that it allows both the owner and some designated admins to manage these settings. For this template SC, we only allow the owner to add new farms, to underline the importance of having trustworthy admins (but this can be changed by updating only one line of code).
 
 ```rust
     #[derive(TypeAbi, TopEncode, TopDecode, Debug)]
@@ -228,7 +225,7 @@ The template SC stores the data for each farm or farm staking in a __SingleValue
 
     #[endpoint(addFarms)]
     fn add_farms(&self, farms: MultiValueEncoded<ManagedAddress>) {
-        self.require_caller_has_owner_or_admin_permissions();
+        self.require_caller_has_owner_permissions();
         for farm_addr in farms {
             let farm_state_mapper = self.farm_state(&farm_addr);
             require!(farm_state_mapper.is_empty(), ERROR_FARM_ALREADY_DEFINED);
@@ -262,7 +259,7 @@ This template contract splits the __Farm__ integration in 2 different files, for
 
 ### Farm actions
 
-Here we have a code snippet, that does the actual interaction with the farm contract. We use a __farm_proxy__ imported from the DEX reference declared in the Cargo.toml file, proxy that receives the address of the corresponding farm. We then call the desired endpoint on the farm contract (in our case __enter_farm_endpoint__) using a multi_token_transfer of a __PaymentsVec__ received as an argument. Under the hood, this is a __ManagedVec__ of __ESDTTokenPayments__ usually consisting in two payments, the first one the being the position with which the user wants to enter the contract, and the second one the rest of the contract's aggregated position. Finally, the function returns an __EnterFarmResultType__ (type imported from the farm contract), which represents a __MultiValue2__ of __ESDTTokenPayments__, the first payment representing the new aggregated farm position, and the second one the boosted_rewards, if any.
+Here we have a code snippet, that does the actual interaction with the farm contract. We use a __farm_proxy__ imported from the DEX reference declared in the Cargo.toml file, proxy that receives the address of the corresponding farm. We then call the desired endpoint on the farm contract (in our case __enter_farm_endpoint()__) using a multi_token_transfer of a __PaymentsVec__ received as an argument. Under the hood, this is a __ManagedVec__ of __ESDTTokenPayments__ usually consisting in two payments, the first one the being the position with which the user wants to enter the contract, and the second one the rest of the contract's aggregated position. Finally, the function returns an __EnterFarmResultType__ (type imported from the farm contract), which represents a __MultiValue2__ of __ESDTTokenPayments__, the first payment representing the new aggregated farm position, and the second one the boosted_rewards, if any.
 
 ```rust
     fn call_enter_farm(
@@ -491,7 +488,7 @@ Going futher to the `claim_user_rewards` endpoint, we can observe the same logic
 
 **Unstake and unbond**
 
-There are a few things that are important to keep in mind when exiting from a farm. In order to avoid having users that enter & benefit from the boosted rewards, to then just exit after the boosted rewards are computed, the farm contract has a 7 day penalty period policy, in which if the user exits the farm after entering, he will receive a certain penalty fee. That is why, there is a __farm_unbond_period__ in the DAO contract (should be equal or greater than the DEX farm penalty period) that the user needs to wait before exiting the farm.
+There are a few things that are important to keep in mind when exiting from a farm. In order to avoid having users that enter & benefit from the boosted rewards, to then just exit after the boosted rewards are computed, the farm contract has a 7 day penalty period policy, in which if the user exits the farm after entering, he will receive a certain penalty fee. That is why, there is a __farm_unbond_period__ in the DAO contract (in our case, the period is read directly from the __Farm SC__) that the user needs to wait before exiting the farm.
 
 For that, the Energy DAO SC has an unstake & unbond mechanism, that is actually imposed only at the DAO SC level, and not by the actual farm contract. But how exactly can the user wait a predefined period of time, if the contract always keeps one general aggregated position?
 When the users calls the `unstake_farm` endpoint, the farm proxy `claim_rewards` endpoint is called with the full position, which then gives the user his last rewards before unstaking his position. Then, while the newly created total farm position nonce is saved in both the farm state and the __UnstakeFarmToken__ attributes, the __farm_staked_value__ value is updated to reflect the user exit, by substracting the payment amount. And from this point forward, in future user interactions, the new amount and that token nonce will be used to do any kind of farm interaction, which will then lead to creating a new aggregated farm position (which in turn will have a different nonce).
@@ -600,8 +597,7 @@ Finally, when the unbonding period has passed, the Energy DAO contract exits the
 The __Metastaking__ integration is quite similar to the __Farms__ integration, so following this integration should be pretty straightforward by now. There are still a few different nuances, especially regarding rewards computation (there are now 2 different reward tokens and for that we have 2 different rps amounts, one for each token) and the unstake & unbond mechanism (as this differs from the farm logic, by being imposed by the DEX contract), but none should provide any difficulties at this point.
 
 :::note
-You can find the entire Energy DAO contract, including the __Metastaking__ implementation, here:
-https://github.com/multiversx/mx-exchange-tools-sc/tree/main/energy-dao/src/external_sc_interactions
+There is an important aspect that needs mentioning, and that is the fact the both __Farm__ and __Metastaking__ implementations cannot coexist for the same underlying tokens, while having maximum rewards efficiency. Combining these two approaches results in a loss of rewards for one of the farms, as boosted rewards are given per account, and cannot be claimed with one aggregated position consisting of both farm and metastaking tokens. To address this issue, the __Energy DAO SC__ template does not allow to use both options at the same time. In other words, you cannot enter a __Farm__ contract, if for that __Farm__ you have defined the __Metastaking__ contract as well. Of course, each project can define its own custom logic regarding the rewards distribution, which may allow both implementations to work simultaneously.
 :::
 
 [comment]: # (mx-context-auto)
@@ -647,6 +643,37 @@ Diving deeper into the `lock_tokens` endpoint, the external interaction for lock
             .lock_tokens_endpoint(epoch, OptionalValue::<ManagedAddress>::None)
             .with_egld_or_single_esdt_transfer(payment)
             .execute_on_dest_context()
+    }
+```
+
+As stated in the beginning, Energy is computed using the amount of MEX tokens that an account has and the number of epochs that the tokens are locked. Naturally, as time passes, the energy decreases. That's why, an XMEX holder can choose to extend the lock period of his tokens, to gain back the Energy that he lost, in order to further maximize the generated rewards. The same option is available for the __Energy DAO SC__, through the `extend_lock_period()` endpoint, which allows the owner to extend the lock period of his deposited MEX tokens. Furthermore, as the XMEX tokens are not merged but rather kept as a list of ESDTTokenPayments, the endpoint allows an optional nonce parameter, in case the owner wants to extend the lock period of only one particular XMEX token. 
+
+```rust
+    #[only_owner]
+    #[endpoint(extendLockPeriod)]
+    fn extend_lock_period(&self, lock_epoch: u64, opt_nonce_to_update: OptionalValue<u64>) {
+        let locked_tokens_mapper = self.internal_locked_tokens();
+        require!(
+            !locked_tokens_mapper.is_empty(),
+            ERROR_LOCKED_TOKENS_NOT_FOUND
+        );
+        let initial_locked_tokens = locked_tokens_mapper.get();
+        let nonce_to_update = match opt_nonce_to_update {
+            OptionalValue::Some(nonce_to_update) => nonce_to_update,
+            OptionalValue::None => 0u64,
+        };
+
+        let mut new_locked_tokens = ManagedVec::new();
+        for locked_token in initial_locked_tokens.iter() {
+            if locked_token.token_nonce == nonce_to_update || nonce_to_update == 0u64 {
+                let new_token = self.lock_tokens(locked_token, lock_epoch);
+                new_locked_tokens.push(new_token);
+            } else {
+                new_locked_tokens.push(locked_token);
+            }
+        }
+
+        locked_tokens_mapper.set(new_locked_tokens);
     }
 ```
 
