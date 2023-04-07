@@ -8,11 +8,12 @@ title: Cookbook
 This page will guide you through the process of handling common tasks using **sdk-js**.
 
 :::important
-This cookbook makes use of `sdk-js 10`. In order to migrate from `sdk-js 9.x` to `sdk-js 10`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
+This cookbook makes use of `sdk-js 12`. In order to migrate from `sdk-js 11.x` to `sdk-js 12`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
 :::
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/basic.md" } -->
 
+[comment]: # (mx-context-auto)
 
 ## Creating network providers
 
@@ -38,6 +39,8 @@ As your dApp matures, make sure you **switch to using your own network provider*
 
 On this topic, please see [extending sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/extending-sdk-js).
 
+[comment]: # (mx-context-auto)
+
 ## Fetching network parameters
 
 ```
@@ -46,7 +49,11 @@ console.log(networkConfig.MinGasPrice);
 console.log(networkConfig.ChainID);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Working with accounts
+
+[comment]: # (mx-context-auto)
 
 ### Synchronizing an account object
 
@@ -62,6 +69,8 @@ alice.update(aliceOnNetwork);
 console.log("Nonce:", alice.nonce);
 console.log("Balance:", alice.balance.toString());
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Managing the sender nonce locally
 
@@ -79,6 +88,8 @@ notYetSignedTx.setNonce(alice.getNonceThenIncrement());
 ```
 
 For further reference, please see [nonce management](https://docs.multiversx.com/integrators/creating-transactions/#nonce-management).
+
+[comment]: # (mx-context-auto)
 
 ## Preparing `TokenTransfer` objects
 
@@ -129,7 +140,11 @@ A `TokenTransfer` object for transferring **meta-esdt** tokens:
 transfer = TokenTransfer.metaEsdtFromAmount(identifier, nonce, "0.1", numDecimals);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Broadcasting transactions
+
+[comment]: # (mx-context-auto)
 
 ### Preparing a simple transaction
 
@@ -148,6 +163,8 @@ const tx = new Transaction({
 tx.setNonce(alice.getNonceThenIncrement());
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Broadcast using a network provider
 
 ```
@@ -158,8 +175,10 @@ console.log("Hash:", txHash);
 Note that the transaction **must to be signed before being broadcasted**. Signing can be achieved using a signing provider.
 
 :::important
-Note that, for all purposes, ** we recommend using[sdk - dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
+Note that, for all purposes, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### Broadcast using `axios`
 
@@ -175,6 +194,8 @@ const response = await axios.post(url, data, {
 });
 let txHash = response.data.txHash;
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Wait for transaction completion
 
@@ -204,6 +225,8 @@ For a different awaiting strategy, also see [extending sdk-js](https://docs.mult
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/transfers.md" } -->
 
+[comment]: # (mx-context-auto)
+
 ## Token transfers
 
 First, let's create a `TransferTransactionsFactory`.
@@ -214,11 +237,12 @@ import { GasEstimator, TransferTransactionsFactory } from "@multiversx/sdk-core"
 const factory = new TransferTransactionsFactory(new GasEstimator());
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Single ESDT transfer
 
 ```
 import { TokenTransfer } from "@multiversx/sdk-core";
-
 
 const transfer1 = TokenTransfer.fungibleFromAmount("TEST-8b028f", "100.00", 2);
 
@@ -230,6 +254,8 @@ const tx1 = factory.createESDTTransfer({
     chainID: "D"
 });
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Single NFT transfer
 
@@ -245,6 +271,8 @@ const tx2 = factory.createESDTNFTTransfer({
 });
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Single SFT transfer
 
 ```
@@ -258,6 +286,8 @@ const tx3 = factory.createESDTNFTTransfer({
     chainID: "D"
 });
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Multi ESDT / NFT transfer
 
@@ -277,8 +307,11 @@ const tx4 = factory.createMultiESDTNFTTransfer({
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_01_deployments.md" } -->
 
+[comment]: # (mx-context-auto)
 
 ## Contract deployments
+
+[comment]: # (mx-context-auto)
 
 ### Load the bytecode from a file
 
@@ -289,6 +322,8 @@ import { promises } from "fs";
 let buffer = await promises.readFile("../contracts/counter.wasm");
 let code = Code.fromBuffer(buffer);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Load the bytecode from an URL
 
@@ -306,6 +341,8 @@ let response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/raw
 buffer = Buffer.from(response.data);
 code = Code.fromBuffer(buffer);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Perform a contract deployment
 
@@ -351,8 +388,6 @@ deployTransaction.setNonce(deployer.getNonceThenIncrement());
 
 Then **sign the transaction** using a wallet / signing provider of your choice (not shown here).
 
-
-
 Upon signing, you would usually compute the contract address (deterministically computable), as follows:
 
 ```
@@ -381,7 +416,12 @@ console.log("Return code:", returnCode);
 <!-- END_INCLUDE_FILE -->
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_02_abi.md" } -->
+
+[comment]: # (mx-context-auto)
+
 ## ABI
+
+[comment]: # (mx-context-auto)
 
 ### Load the ABI from a file
 
@@ -395,6 +435,8 @@ let abiRegistry = AbiRegistry.create(abiObj);
 let existingContractAddress = Address.fromBech32("erd1qqqqqqqqqqqqqpgq5sup58y38q3pwyqklagxmuraetshrqwpd8ssh0ssph");
 let existingContract = new SmartContract({ address: existingContractAddress, abi: abiRegistry });
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Load the ABI from an URL
 
@@ -410,8 +452,11 @@ existingContract = new SmartContract({ address: existingContractAddress, abi: ab
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_03_queries.md" } -->
 
+[comment]: # (mx-context-auto)
 
 ## Contract queries
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is not available
 
@@ -438,6 +483,8 @@ console.log(bundle.values);
 console.log(decodedValue.valueOf().toFixed(0));
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Using `Interaction`, when the ABI is not available
 
 ```
@@ -453,6 +500,8 @@ console.assert(JSON.stringify(queryResponseFromInteraction) === JSON.stringify(q
 ```
 
 Then, parse the response as above.
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is available
 
@@ -484,6 +533,8 @@ queryResponse = await networkProvider.queryContract(query);
 let { values } = new ResultsParser().parseQueryResponse(queryResponse, getClaimableRewardsEndpoint);
 console.log(values[0].valueOf().toFixed(0));
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Using `Interaction`, when the ABI is available
 
@@ -517,8 +568,11 @@ let firstValueAsStruct = <Struct>firstValue;
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/contracts_04_interactions.md" } -->
 
+[comment]: # (mx-context-auto)
 
 ## Contract interactions
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is not available
 
@@ -541,6 +595,8 @@ tx1.setNonce(42);
 
 Then, sign, broadcast `tx` and wait for its completion.
 
+[comment]: # (mx-context-auto)
+
 ### Using `Interaction`, when the ABI is not available
 
 ```
@@ -559,6 +615,8 @@ let tx2 = interaction
 ```
 
 Then, sign, broadcast `tx` and wait for its completion.
+
+[comment]: # (mx-context-auto)
 
 ### Using `Interaction`, when the ABI is available
 
@@ -599,6 +657,8 @@ let tx3 = contract.methods.doSomethingWithValue([1, 2, 3])
     .buildTransaction();
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Transfer & execute
 
 Given an interaction:
@@ -628,11 +688,15 @@ interaction.withMultiESDTNFTTransfer([
 ]);
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Parsing contract results
 
 :::important
 When the default `ResultsParser` misbehaves, please open an issue [on GitHub](https://github.com/multiversx/mx-sdk-js-core/issues), and also provide as many details as possible about the unparsable results (e.g. provide a dump of the transaction object if possible - make sure to remove any sensitive information).
 :::
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is not available
 
@@ -646,6 +710,8 @@ let untypedBundle = resultsParser.parseUntypedOutcome(transactionOnNetwork);
 
 console.log(untypedBundle.returnCode, untypedBundle.values.length);
 ```
+
+[comment]: # (mx-context-auto)
 
 ### When the ABI is available
 
@@ -683,6 +749,8 @@ For customizing the default parser, also see [extending sdk-js](/sdk-and-tools/s
 <!-- END_INCLUDE_FILE -->
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/next/cookbook/generated/signing.md" } -->
+
+[comment]: # (mx-context-auto)
 
 ## Signing objects
 
@@ -745,6 +813,8 @@ message.applySignature(messageSignature);
 
 console.log("Message signature", message.getSignature().toString("hex"));
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Verifying signatures
 
