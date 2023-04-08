@@ -576,14 +576,14 @@ let firstValueAsStruct = <Struct>firstValue;
 ### When the ABI is not available
 
 ```
-import { Address, AddressValue, SmartContract, U64Value } from "@multiversx/sdk-core";
+import { Address, AddressValue, SmartContract, U64Value, ContractFunction } from "@multiversx/sdk-core";
 
 let contractAddress = new Address("erd1qqqqqqqqqqqqqpgq5sup58y38q3pwyqklagxmuraetshrqwpd8ssh0ssph");
 let contract = new SmartContract({ address: contractAddress });
 
 let tx1 = contract.call({
     caller: addressOfAlice,
-    func: "doSomething",
+    func: new ContractFunction("doSomething"),
     gasLimit: 5000000,
     args: [new AddressValue(addressOfCarol), new U64Value(1000)],
     chainID: "D"
