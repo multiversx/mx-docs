@@ -488,16 +488,14 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
     console.log("authToken:", authToken);
     console.log("signature:", signature);
 
-    // Note that the verification API will be improved in a future version of sdk-wallet.
-    // As of @multiversx/sdk-wallet@v1.0.0, this API is a bit tedious:
     const verifier = UserVerifier.fromAddress(new Address(address));
 
     const message = new SignableMessage({
-        signature: { hex: () => signature },
         message: Buffer.from(`${address}${authToken}{}`)
     });
 
-    const ok = verifier.verify(message);
+    const serializedMessage = message.serializeForSigning();
+    const ok = verifier.verify(serializedMessage, Buffer.from(signature, "hex"));
     if (ok) {
         return `The bearer of the token [${authToken}] is also the owner of the address [${address}].`;
     }
@@ -505,7 +503,3 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
     return "Verification failed.";
 }
 ```
-
-:::note
-The workaround applied in the code snippet above is subject for improvement.
-:::
