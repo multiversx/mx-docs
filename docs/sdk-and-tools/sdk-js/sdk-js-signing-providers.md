@@ -479,6 +479,10 @@ console.log(message.toJSON());
 
 ## Verifying the signature of a login token
 
+:::note
+Generally speaking, you should be using [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client) and [`sdk-native-auth-server`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-server) to handle the **native authentication** flow. This section refers to a legacy approach.
+:::
+
 As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to a MultiversX address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
 
 ```js
@@ -488,16 +492,14 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
     console.log("authToken:", authToken);
     console.log("signature:", signature);
 
-    // Note that the verification API will be improved in a future version of sdk-wallet.
-    // As of @multiversx/sdk-wallet@v1.0.0, this API is a bit tedious:
     const verifier = UserVerifier.fromAddress(new Address(address));
 
     const message = new SignableMessage({
-        signature: { hex: () => signature },
         message: Buffer.from(`${address}${authToken}{}`)
     });
 
-    const ok = verifier.verify(message);
+    const serializedMessage = message.serializeForSigning();
+    const ok = verifier.verify(serializedMessage, Buffer.from(signature, "hex"));
     if (ok) {
         return `The bearer of the token [${authToken}] is also the owner of the address [${address}].`;
     }
@@ -505,7 +507,3 @@ export function verifyAuthTokenSignature(address, authToken, signature) {
     return "Verification failed.";
 }
 ```
-
-:::note
-The workaround applied in the code snippet above is subject for improvement.
-:::
