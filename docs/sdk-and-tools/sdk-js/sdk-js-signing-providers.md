@@ -480,7 +480,7 @@ console.log(message.toJSON());
 ## Verifying the signature of a login token
 
 :::note
-Generally speaking, you should be using [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client) and [`@multiversx/sdk-native-auth-server`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-server) to handle the **native authentication** flow. This section refers to a legacy approach.
+Generally speaking, you should be using [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client) and [`sdk-native-auth-server`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-server) to handle the **native authentication** flow. This section refers to a legacy approach.
 :::
 
 As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to a MultiversX address. On this purpose, the signing providers allow a _login token_ to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, as follows:
