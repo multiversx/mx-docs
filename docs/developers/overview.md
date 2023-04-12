@@ -27,7 +27,7 @@ A list with everything that you can explore as a developer on MultiversX.
 
 ### Tutorials
 
-Below is a list of tutorials that one can you to get a full experience of building on MultiversX
+Below is a list of tutorials that one can you to get a full experience of building on MultiversX:
 
 | Name                                                                                | Description                                                      |
 |-------------------------------------------------------------------------------------|------------------------------------------------------------------|
@@ -41,9 +41,19 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 
 [comment]: # (mx-context-auto)
 
+### SDKs and Tools
+
+One can (programatically) interact with the MultiversX Network by leveraging a set of **SDKs, tools and APIs**. For more details, please follow:
+
+| Name                                                              | Description                                                                     |
+|-------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| [SDKs and Tools - Overview](/sdks-and-tools/overview)             | The complete list of SDKs, tools and APIs.                                      |
+
+[comment]: # (mx-context-auto)
+
 ### Signing transactions
 
-The following content explains the structure of a transaction, how to sign or send them
+The following content explains the structure of a transaction, how to sign or send them:
 
 | Name                                                                                 | Description                                             |
 |--------------------------------------------------------------------------------------|---------------------------------------------------------|
@@ -55,7 +65,7 @@ The following content explains the structure of a transaction, how to sign or se
 
 ### Gas and fees
 
-Learn about transaction's gas and how a fee is calculated
+Learn about transaction's gas and how a fee is calculated:
 
 | Name                                                                                      | Description                                                               |
 |-------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
