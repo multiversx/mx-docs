@@ -43,11 +43,11 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 
 ### SDKs and Tools
 
-One can (programatically) interact with the MultiversX Network by leveraging a set of **SDKs, tools and APIs**. For more details, please follow:
+One can (programatically) interact with the MultiversX Network by leveraging a set of **SDKs (TypeScript, Go, Python, C++ etc.), tools and APIs**. For more details, please follow:
 
 | Name                                                              | Description                                                                     |
 |-------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| [SDKs and Tools - Overview](/sdks-and-tools/overview)             | The complete list of SDKs, tools and APIs.                                      |
+| [SDKs and Tools - Overview](/sdk-and-tools/overview)             | The complete list of SDKs, tools and APIs.                                      |
 
 [comment]: # (mx-context-auto)
 
