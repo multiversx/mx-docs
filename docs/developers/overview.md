@@ -27,7 +27,7 @@ A list with everything that you can explore as a developer on MultiversX.
 
 ### Tutorials
 
-Below is a list of tutorials that one can you to get a full experience of building on MultiversX:
+Below is a list of tutorials for building on MultiversX:
 
 | Name                                                                                | Description                                                      |
 |-------------------------------------------------------------------------------------|------------------------------------------------------------------|
