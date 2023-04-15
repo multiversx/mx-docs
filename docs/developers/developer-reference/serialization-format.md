@@ -94,8 +94,8 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 | `i8`    | `1`                   | `0x01`               | `0x01`               |
 | `i8`    | `-1`                  | `0xFF`               | `0xFF`               |
 | `i8`    | `127`                 | `0x7F`               | `0x7F`               |
+| `i8`    | `-0x11`               | `0xEF`               | `0xEF`               |
 | `i8`    | `-128`                | `0x80`               | `0x80`               |
-| `i16`   | `-0x11`               | `0xEF`               | `0xEF`               |
 | `i16`   | `-1`                  | `0xFF`               | `0xFFFF`             |
 | `i16`   | `-0x11`               | `0xEF`               | `0xFFEF`             |
 | `i16`   | `-0x1122`             | `0xEEDE`             | `0xEEDE`             |
