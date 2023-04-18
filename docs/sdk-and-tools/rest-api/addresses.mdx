@@ -71,7 +71,7 @@ Address details retrieved successfully.
 </Tabs>
 
 :::important
-If an account has an ActiveGuardian and is Guarded, the codeMetadata of the account should be Guarded.
+If an account (that is not a smart contract, smart contracts cannot be guarded) has an ```activeGuardian``` and is ```guarded```, the ```codeMetadata``` of the account should be [Guarded](https://github.com/multiversx/mx-chain-vm-common-go/blob/master/codeMetadata.go).
 :::
 
 [comment]: # (mx-context-auto)
@@ -134,7 +134,7 @@ Guardian Data successfully retrieved.
 </Tabs>
 
 :::caution
-For the above response example, the account has already set the ActiveGuardian (through a SetGuardian transaction), guarded the account (with a GuardAccount transaction) and also set the pendingGuardian (with a unGuarded SetGuardian transaction). We chose this situation so that the entire blockInfo and guardianData is displayed.
+In the response example mentioned above, the account has already set the ```activeGuardian``` (using a ```SetGuardian``` transaction), guarded the account (with a ```GuardAccount``` transaction), and also set the ```pendingGuardian``` (using an unguarded ```SetGuardian``` transaction). We intentionally chose this scenario to display all the fields for ```blockInfo``` and ```guardianData```.
 :::
 
 [comment]: # (mx-context-auto)

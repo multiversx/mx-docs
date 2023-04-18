@@ -36,12 +36,14 @@ Body Parameters
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
 | sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
+| guardian         | <span class="text-danger">OPTIONAL</span> | `string` | The Address (bech32) of the Guardian.                                            |
 | senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                       |
 | receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.                     |
 | gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                            |
 | gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                                      |
 | data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
 | signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                                  |
+| guardianSignature| <span class="text-danger">REQUIRED</span> | `string` | The Guardian's Signature (hex-encoded) of the Transaction.                       |
 | chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
 | version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
 | options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                         |
@@ -103,6 +105,54 @@ Content-Type: application/json
     "version": 1
 }
 ```
+
+Here's an example of a **guarded transaction** request:
+
+```bash
+POST https://gateway.multiversx.com/transaction/send HTTP/1.1
+Content-Type: application/json
+```
+
+```json
+{
+    "nonce": 2,
+    "value": "0",
+    "receiver": "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+    "sender": "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+    "guardian": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
+    "gasPrice": 1000000000,
+    "gasLimit": 1177500,
+    "data": "U2V0R3VhcmRpYW5AYjEzYTAxNzQyM2MzNjZjYWZmOGNlY2ZiNzdhMTI2MTBhMTMwZjQ4ODgxMzQxMjJjNzkzN2ZlYWUwZDZkN2QxN0A3NTc1Njk2NA==", #base64 representation of Seting a Guardian
+    "signature": "08e324107be096fa887d3a7679c1a612f138a7fb99936c60f767ac2ff98bd9cb1d161f738971da3934aac639de83870e03fdf0753f40b59b250334ffc881af03",
+    "guardianSignature": "595a2fe26259c68789450f479515d40455b54507caf3a2e9bf62aa5e67ba45d38ea15c9ed06abb43a9a3644315ea2e3efefb83ce4a0f08ab89a99ac878049f01",
+    "chainId": "local-testnet",
+    "version": 2,
+    "options": 2,
+}
+
+```
+:::note
+Both the guardian and sender have to sign:
+```json
+{
+    "nonce": 2,
+    "value": "0",
+    "receiver": "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+    "sender": "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+    "guardian": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
+    "gasPrice": 1000000000,
+    "gasLimit": 1177500,
+    "data": "U2V0R3VhcmRpYW5AYjEzYTAxNzQyM2MzNjZjYWZmOGNlY2ZiNzdhMTI2MTBhMTMwZjQ4ODgxMzQxMjJjNzkzN2ZlYWUwZDZkN2QxN0A3NTc1Njk2NA==", #base64 representation of Seting a Guardian
+    "signature": "",
+    "guardianSignature": "",
+    "chainId": "local-testnet",
+    "version": 2,
+    "options": 2,
+}
+```
+Notice the fact that neither the signature of the sender nor the signature of the guardian need to be completed for the signature action.
+:::
+
 
 [comment]: # (mx-context-auto)
 
