@@ -178,5 +178,9 @@ UnGuardAccountTransaction {
     Value: 0
     GasLimit: 1_000_000
     Data: "UnGuardAccount"
+    Signature: <sender signed transaction>
+    GuardianSignature: <guardian signed transaction>
+    Version: 2
+    Options: <set 1 the bit from the second position>
 }
 ```
