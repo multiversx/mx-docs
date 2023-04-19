@@ -36,14 +36,14 @@ Body Parameters
 | value            | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver         | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
 | sender           | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
-| guardian         | <span class="text-danger">OPTIONAL</span> | `string` | The Address (bech32) of the Guardian.                                            |
+| guardian         | <span class="text-normal">OPTIONAL</span> | `string` | The Address (bech32) of the Guardian.                                            |
 | senderUsername   | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Sender's username.                       |
 | receiverUsername | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Receiver's username.                     |
 | gasPrice         | <span class="text-danger">REQUIRED</span> | `number` | The desired Gas Price (per Gas Unit).                                            |
 | gasLimit         | <span class="text-danger">REQUIRED</span> | `number` | The maximum amount of Gas Units to consume.                                      |
 | data             | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
 | signature        | <span class="text-danger">REQUIRED</span> | `string` | The Signature (hex-encoded) of the Transaction.                                  |
-| guardianSignature| <span class="text-danger">REQUIRED</span> | `string` | The Guardian's Signature (hex-encoded) of the Transaction.                       |
+| guardianSignature| <span class="text-normal">OPTIONAL</span> | `string` | The Guardian's Signature (hex-encoded) of the Transaction.                       |
 | chainID          | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
 | version          | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
 | options          | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                         |
