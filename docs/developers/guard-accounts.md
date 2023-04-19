@@ -131,3 +131,4 @@ Both sender and guardian must sign the following serialized transaction:
 For unguarding the account, a guarded ```UnGuardAccount``` transaction has to be sent (see details in [built-in functions](/developers/built-in-functions#unguardaccount)).
 
 # For integrators
+
