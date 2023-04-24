@@ -488,7 +488,7 @@ Removes and returns the first/last element from the list.
 
 [comment]: # (mx-context-auto)
 
-### push_after/pus_after
+### push_after/push_before
 ```rust
 pub fn push_after(node: &mut LinkedListNode<Type>, element: Type) -> Option<LinkedListNode<Type>>
 pub fn push_before(node: &mut LinkedListNode<Type>, element: Type) -> Option<LinkedListNode<Type>>
