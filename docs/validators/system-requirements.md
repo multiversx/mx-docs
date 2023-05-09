@@ -21,7 +21,7 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 - 8 GB RAM
 - 200 GB SSD
 - 100 Mbit/s always-on internet connection, at least 4 TB/month data plan
-- Linux OS (Ubuntu 20.04 recommended) / MacOS
+- Linux OS (Ubuntu 22.04 recommended) / MacOS
 
 :::tip
 Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pending third-party issues.
