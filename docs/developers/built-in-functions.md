@@ -137,6 +137,8 @@ SetGuardianTransaction {
 }
 ```
 
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
 :::note
 1. After sending a `SetGuardian` transaction, the user has to wait for **20 epochs** until the chosen guardian becomes `activeGuardian` (`activationEpoch` field will show the epoch when a `pendingGuardian` will become active). Until the `activationEpoch` is reached, the chosen guardian will be seen as `pendingGuardian`. See [Guardian Data](/sdk-and-tools/rest-api/addresses) for more information.
 2. In the case an address already has an activeGuardian, and the user wants to change it, a `SetGuardian` transaction has to be sent again and **20 epochs** have to be awaited.
@@ -158,6 +160,8 @@ GuardAccountTransaction {
     Data: "GuardAccount"
 }
 ```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 :::note
 After sending a successfull `GuardAccount` transaction, only co-signed (guarded) transactions can be sent. Any other transaction will not be processed, except a new `SetGuardian` (for which **20 epochs** must pass until the changes will occur).
@@ -181,6 +185,7 @@ UnGuardAccountTransaction {
     Signature: <sender signed transaction>
     GuardianSignature: <guardian signed transaction>
     Version: 2
-    Options: <set 1 the bit from the second position>
+    Options: <the second least significant bit should be 1 (example: 02, or 03)>
 }
 ```
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._

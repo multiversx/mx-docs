@@ -11,11 +11,11 @@ On this page, you will find comprehensive information on all aspects of guarded 
 
 # Introduction
 
-Phishing attacks that scam people have become a constant problem on blockchains in general, especially when newbies to the crypto world are granted easy access to this new economy. In light of these new challenges, it is important to continue educating people on specific ways to protect themselves while also considering new methods to add protection against such attacks. That's how we came to a method that we called Guardians, with the scope of having a guardian for each account.
+Phishing attacks that scam people have become a constant problem on blockchains in general, especially when newbies to the crypto world are granted easy access to this new economy. In light of these new challenges, it is important to continue educating people on specific ways to protect themselves while also considering new methods to add protection against such attacks. That's how we came to a method that we called Guardians, an optional security feature that any user can enable.
 
 [comment]: # (mx-context-auto)
 
-# For consumers
+# For users
 
 ## Web-Wallet
 
@@ -29,7 +29,12 @@ There is no solution released for the **Ledger**. As soon as there is one, it wi
 
 # For developers
 
-If you are a developer and you understand what a transaction is, what fields it contains and how a signing of a transaction happens you may be interested by the technical aspects of the implementation.  can be achieved by adding another field in the transaction structure for a second signature, and defining the option to flag the transactions that are supposed to be executed/verified as multisig transactions. The option field in the transaction is currently used to differentiate between transactions where the signature should be verified over the marshaled transaction and transactions where the signature should be verified over the hash of the transaction, but additional options could be defined.
+If you are a developer and you understand what a transaction is, what fields it contains and how a signing of a transaction happens you may be interested in the technical aspects of the implementation.  On top of a regular transaction, 2 fields must be filled in:
+- `guardian` - representing the address of the Guadian that has to co-sign the transaction
+- `guardianSignature` - representing the the signature computed by the guardian
+Also, some other fields have to be altered:
+- `version` needs to be at least `2`
+- `options` needs to have the second least significant bit set to `1`. For example: `0011` _bin_ = `3` _dec_
 
 The full activation of the extra protection requires two actions:
 
@@ -45,17 +50,15 @@ After guarding the account, _almost_ every action the user takes should be co-si
 This is done in order to not have the user locked out of his account (e.g user guards his account but the guardian also loses access to his account). For this reason, the user should not only be able to **_set up a new guardian_**, but also **_change the guardian_** if he wishes so (e.g when the guardian is compromised).
 :::
 
-## Registering & Changing the guardian
+## Setting & Changing the guardian
 
-
-
-### Register a Guardian
+### Set a Guardian
 
 In order to register a guardian a user has to set a **guardian** address by sending a ```SetGuardian``` transaction (described in built-in functions [here](/developers/built-in-functions#setguardian)). The guardian address becomes active after **20 epochs**, a period longer than the unbond time (**10 epochs**). The guardian address should be set into the account’s key-value store.
 
 ### Change the Active Guardian
 
-Accounts will continue to be compromised. For unknown reasons, you may be confronted with the necessity to change the active guardian. The scope of account guarding is to protect users in case of a compromised account, but there are edge cases where it is uncertain whether a user or a scammer is changing the guardian, potentially leading to a scammer taking control of a user's funds. To address this issue, additional measures are necessary to allow users to protect their funds. One solution is the implement for an activation time for setting a new guardian. If the transaction is not confirmed by an existing guardian, the activation time would give the user a chance to take action before the new guardian is set. In case the guardian confirms the transaction, the change could be made immediately. This solution would ensure that users have control over their accounts and can protect their funds even in the face of unexpected changes.
+Accounts can still be compromised by phishing attacks or other different ways. For unknown reasons, you may be confronted with the necessity to change the active guardian. The scope of account guarding is to protect users in case of a compromised account, but there are edge cases where it is uncertain whether a user or a scammer is changing the guardian, potentially leading to a scammer taking control of a user's funds. To address this issue, additional measures are necessary to allow users to protect their funds. One solution is the need for an activation time for setting a new guardian. If the transaction is not confirmed by an existing guardian, the activation time will give the user a chance to take action before the new guardian is set. In case the guardian confirms the transaction, the change will be made immediately. This solution will ensure that users have control over their accounts and can protect their funds even in the face of unexpected changes.
 
 Taking into account the aforementioned considerations for changing to a new guardian, it's worth noting that a user must send a new ```SetGuardian``` ([described here](/developers/built-in-functions#setguardian)) transaction to change guardians. This transaction may either be unguarded (meaning that the guardian does not have to co-sign it, so the transaction will not contain a guardian address on the ```guardian``` field, nor the ```guardianSignature```, with proper transaction version and option, see [transaction fields](/sdk-and-tools/rest-api/transactions#send-transaction)), or it may be a guarded transaction (in the event that the account was already guarded). In the case of an unguarded transaction, it will take 20 days to become active, whereas a guarded transaction will occur instantly.
 
@@ -82,12 +85,12 @@ The ```GuardAccount``` transaction should clear any pending guardian.
 Sending a guarded transaction will follow the same process of using the [Send Transaction](/sdk-and-tools/rest-api-/transactions#send-transaction) endpoint. In order for the transaction to be accepted by the protocol (when account is guarded and more than 20 epochs passed after sending the ```SetGuardian``` transaction), the optional fields ```guardian``` and ```guardianSignature``` have to be completed along with the proper version and option.
 
 :::info
-For a Guarded Transaction the **Version** must be set to **2** and **Options** must have the **second bit** set.
+For a Guarded Transaction the **Version** must be set to **2** and **Options** needs to have the second least significant bit set to `1`.
 :::
 
 A guarded transaction would look like:
 
-```json
+```rust
 {
     "nonce": 2,
     "value": "0",
@@ -107,7 +110,7 @@ A guarded transaction would look like:
 
 :::info
 Both sender and guardian must sign the following serialized transaction:
-```json
+```rust
 {
     "nonce": 2,
     "value": "0",

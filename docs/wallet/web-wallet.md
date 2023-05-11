@@ -116,3 +116,16 @@ The faucet is only available once in a given time period. Other alternatives for
 
 - request tokens on [Telegram - Validators chat](https://t.me/MultiversXValidators)
 - use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet)
+
+## **Guardian**
+
+:::note
+In case your balance is 0 , the **Guardian** option is not displayed.
+:::
+
+:::note
+All screenshots have been taken from an internal private wallet on a private internal blockchain. The design of the feature may change for the final release on mainnet.
+:::
+
+![img](/wallet/web-wallet/guardian_feature1.png)
+
