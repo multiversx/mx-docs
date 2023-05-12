@@ -127,6 +127,8 @@ In case your balance is 0 eGLD, the **Guardian** option is not displayed.
 All screenshots have been taken from an internal private wallet on a private internal blockchain. The design of the feature may change for the final release on mainnet.
 :::
 
+Starting with Altair release, a new section for Guardian feature is available in the wallet interface:
+
 ![img](/wallet/web-wallet/guardian_feature1.png)
 
 ### **Registering the Guardian**
@@ -135,7 +137,7 @@ First step should be registering your guardian. After selecting the Guardian fea
 
 ![img](/wallet/web-wallet/guardian_step1.png)
 
-In order to set a Guardian you should use a software-based authenticator. This tool should be able to generate two-factor authentication (2FA's) codes. After installing your authenticator, use it for scanning the QR code and introduce the Guardian Code in the designated fields. 
+In order to set a Guardian you should use a software-based authenticator. This tool should be able to generate two-factor authentication (2FA's) codes. After installing your authenticator, use it for scanning the QR code and introduce the Guardian Code in the designated fields (see picture below). 
 
 :::important
 If this is the first time when you are doing the registration, you don't have to select the **I cannot access my guardian**.
@@ -149,7 +151,7 @@ If this is the first time when you are doing the registration, you don't have to
 
 ### **Activation period**
 
-After passing through all of the above steps, you have to wait the registration period. For Mainnet it will consist of **20 epochs**.
+Once you have successfully completed all the aforementioned steps, you will be required to wait for the registration period to finalize. In the case of Mainnet, this period will span across **20 epochs**.
 
 :::important
 While waiting for your Guardian to become active, all interactions with the blockchain should not behave differently. 
@@ -164,7 +166,7 @@ After the activation period passes, you should be able to Guard your account:
 ![img](/wallet/web-wallet/guardian_step5.png)
 
 :::important
-In order to Guard your account, a normal ```GuardAccount``` transaction will be sent.
+In order to Guard your account, a normal ```GuardAccount``` transaction must be sent.
 :::
 
 ![img](/wallet/web-wallet/guardian_step6.png)
@@ -181,13 +183,13 @@ Confirm the transaction:
 
 ![img](/wallet/web-wallet/guardian_sendTx2.png)
 
-And on the last step you have to check your authenticator tool in order to get the code and introduce it:
+In the last step, you will need to check your authenticator tool to retrieve the Guardian code (2FA code) and enter it for verification. See picture below:
 
 ![img](/wallet/web-wallet/guardian_sendTx3.png)
 
 ### **Unguarding your account**
 
-Unguarding your account consists of sending an ```UnGuardAccount``` transaction to your own address. You can do it by simply using the **Unguard Account** button fromt he Guardian section:
+Unguarding your account consists of sending an ```UnGuardAccount``` transaction to your own address. You can do it by simply using the **Unguard Account** button from the Guardian section:
 
 ![img](/wallet/web-wallet/guardian_unguard.png)
 
@@ -202,7 +204,7 @@ The Guardians feature allows you to change your guardian in situations where you
 ![img](/wallet/web-wallet/guardian_step8.png)
 
 :::important
-If it was not you the one triggering the change of the guardian, it may be the case that your account has been compromised and the scammer is trying to change the guardian to a new one, that he can control. Don't worry, he has to wait 20epochs in order to have his own guardian becoming active. By then you can:
+If it was not you the one triggering the change of the guardian, it may be the case that your account has been compromised and the scammer is trying to change the guardian to a new one, that he can control. Don't worry, he has to wait 20 epochs in order to have his own guardian becoming active. By then you can:
  - move the funds to a different account, that you control, by using the still active guardian.
  - instantly erase the pending guardian by using the **Cancel Guardian Change**, and play the "owning" game with the scammer.
 

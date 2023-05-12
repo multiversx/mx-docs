@@ -180,3 +180,7 @@ Follow these steps to proceed:
 ![wallet_extension_step18](/wallet/wallet-extension/wallet_extension_step18.png)
 
 Successful 🎉
+
+## Guardian
+
+You can use the MultiversX DeFi wallet with Guardians as well.
