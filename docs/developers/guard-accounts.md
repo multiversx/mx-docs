@@ -158,10 +158,14 @@ In the meantime you can use the **MultiversX Guardians Test - BETA** version:
 **How to activate it?**
 1. In Ledger Live
 2. Go to My Ledger
-3. Go to Settings
+3. Go to ⚙️
 4. Go to Experimental features
-5. Activate Developer Mode
-6. Activate **My Ledger Provider** and use **4** instead of **1**.
+5. Developer Mode - ✅
+6. **My Ledger Provider** - ✅ and use **4** instead of **1**.
+:::
+
+:::important
+This application is not yet approved and/or reviewed by Ledger and should only be used for testing, such as **The Great Heist** campaign. It is not recommended for production use.
 :::
 
 ![img](/wallet/ledger/guardians_ledger.png)
