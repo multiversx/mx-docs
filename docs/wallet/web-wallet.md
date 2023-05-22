@@ -117,6 +117,8 @@ The faucet is only available once in a given time period. Other alternatives for
 - request tokens on [Telegram - Validators chat](https://t.me/MultiversXValidators)
 - use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet)
 
+[comment]: # (mx-context-auto)
+
 ## **Guardian**
 
 :::note
@@ -130,6 +132,8 @@ All screenshots have been taken from an internal private wallet on a private int
 Starting with Altair release, a new section for Guardian feature is available in the wallet interface:
 
 ![img](/wallet/web-wallet/guardian_feature1.png)
+
+[comment]: # (mx-context-auto)
 
 ### **Registering the Guardian**
 
@@ -149,6 +153,8 @@ If this is the first time when you are doing the registration, you don't have to
 
 ![img](/wallet/web-wallet/guardian_step3.png)
 
+[comment]: # (mx-context-auto)
+
 ### **Activation period**
 
 Once you have successfully completed all the aforementioned steps, you will be required to wait for the registration period to finalize. In the case of Mainnet, this period will span across **20 epochs**.
@@ -158,6 +164,8 @@ While waiting for your Guardian to become active, all interactions with the bloc
 :::
 
 ![img](/wallet/web-wallet/guardian_step4.png)
+
+[comment]: # (mx-context-auto)
 
 ### **Guarding your account**
 
@@ -170,6 +178,8 @@ In order to Guard your account, a normal ```GuardAccount``` transaction must be 
 :::
 
 ![img](/wallet/web-wallet/guardian_step6.png)
+
+[comment]: # (mx-context-auto)
 
 ### **Sending a guarded transaction**
 
@@ -187,6 +197,8 @@ In the last step, you will need to check your authenticator tool to retrieve the
 
 ![img](/wallet/web-wallet/guardian_sendTx3.png)
 
+[comment]: # (mx-context-auto)
+
 ### **Unguarding your account**
 
 Unguarding your account consists of sending an ```UnGuardAccount``` transaction to your own address. You can do it by simply using the **Unguard Account** button from the Guardian section:
@@ -196,6 +208,8 @@ Unguarding your account consists of sending an ```UnGuardAccount``` transaction 
 And confirming the transaction after checking the validity of it:
 
 ![img](/wallet/web-wallet/guardian_unguard2.png)
+
+[comment]: # (mx-context-auto)
 
 ### **Changing your guardian**
 

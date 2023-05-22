@@ -13,6 +13,8 @@ On this page, you will find comprehensive information on all aspects of guarded 
 
 Phishing attacks that scam people have become a constant problem on blockchains in general, especially when newbies to the crypto world are granted easy access to this new economy. In light of these new challenges, it is important to continue educating people on specific ways to protect themselves while also considering new methods to add protection against such attacks. That's how we came to a method that we called Guardians, an optional security feature that any user can enable.
 
+[comment]: # (mx-context-auto)
+
 ### Trusted Co-Signer Service (TCS)
 
 In the proposed setup, an off-chain handshaking process is necessary between the user and the guardian to ensure transaction security. This protocol requires integration at the wallet application level, such as the MultiversX web wallet, MultiversX wallet extension, or xPortal wallet app. The purpose of the guardian feature is to protect users whose accounts may have been compromised due to leaked secret keys.
@@ -22,6 +24,8 @@ Let's consider a scenario where two friends, Alice and Bob, have MultiversX wall
 For example, when Alice creates a guarded transaction to transfer 1EGLD to Charlie, the transaction includes two new fields: GuardianAddr and GuardianSignature, in addition to the regular transaction details. Alice signs the transaction and sends it to Bob for co-signing. The wallet back-end can handle the transaction submission and temporarily store incomplete guarded transactions, displaying them in the guardian wallet (Bob's wallet) as "transactions waiting for guardian approval." Bob then verifies if these transactions are genuinely from Alice or from someone impersonating her. In this scenario, Bob can directly ask Alice if the pending transaction is hers. If confirmed, he will sign it; otherwise, he may choose to reject it.
 
 While this process appears feasible in theory, there may be practical challenges. Alice might not want to wait for Bob's approval for a DEX transaction, or Bob could be overwhelmed with transactions from both Alice and potentially Eve, who gained access to Alice's secret key. Thus, it is crucial to automate the entire process to balance security and user experience without imposing high costs. One proposed automation solution is to use a Trusted Co-Signer (TCS) service that acts as a guardian, based on 2FA validation. This solution requires support from all wallet implementations that offer guardian-setting flows. In the case of the xPortal wallet, a separate proposal may be using the device as the guardian, optimizing communication and eliminating the need for the TCS service.
+
+[comment]: # (mx-context-auto)
 
 ## For developers
 
@@ -45,11 +49,17 @@ After guarding the account, _almost_ every action the user takes should be co-si
 This is done in order to not have the user locked out of his account (e.g user guards his account but the guardian also loses access to his account). For this reason, the user should not only be able to **_set up a new guardian_**, but also **_change the guardian_** if he wishes so (e.g when the guardian is compromised).
 :::
 
+[comment]: # (mx-context-auto)
+
 ### Setting & Changing the guardian
+
+[comment]: # (mx-context-auto)
 
 ### Set a Guardian
 
 In order to register a guardian a user has to set a **guardian** address by sending a ```SetGuardian``` transaction (described in built-in functions [here](/developers/built-in-functions#setguardian)). The guardian address becomes active after **20 epochs**, a period longer than the unbond time (**10 epochs**). The guardian address should be set into the account’s key-value store.
+
+[comment]: # (mx-context-auto)
 
 ### Guard account
 
@@ -70,6 +80,8 @@ The exception is the ```setGuardian``` transaction which can either:
 :::note
 The ```GuardAccount``` transaction should clear any pending guardian.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### Sending guarded (co-signed) transactions
 
@@ -120,9 +132,13 @@ Both sender and guardian must sign the following serialized transaction:
 ```
 :::
 
+[comment]: # (mx-context-auto)
+
 ### Deactivate guarding the account
 
 For unguarding the account, a guarded ```UnGuardAccount``` transaction has to be sent (see details in [built-in functions](/developers/built-in-functions#unguardaccount)).
+
+[comment]: # (mx-context-auto)
 
 ### Change the Active Guardian
 
@@ -136,17 +152,25 @@ If the sent ```SetGuardian``` transaction is an unguarded one, the user will be 
 
 ## For users
 
+[comment]: # (mx-context-auto)
+
 ### Wallet Extension
 
 The process of utilizing the wallet extension generally remains unchanged, with one additional step. Now, whenever you wish to initiate a guarded transaction, you will need to input the 2FA code for the TCS service. This step ensures that your transaction is properly signed by the guardian. Refer to [wallet-extension](/wallet/wallet-extension#guardian) page for more information.
+
+[comment]: # (mx-context-auto)
 
 ### Web-Wallet
 
 Follow on details about web-wallet [here](/wallet/web-wallet.md#guardian).
 
+[comment]: # (mx-context-auto)
+
 ### xPortal
 
 There is no solution released for the **xPortal Wallet**. As soon as there is one, it will be documented and referenced here.
+
+[comment]: # (mx-context-auto)
 
 ### Ledger
 
@@ -170,9 +194,13 @@ This application is not yet approved and/or reviewed by Ledger and should only b
 
 ![img](/wallet/ledger/guardians_ledger.png)
 
+[comment]: # (mx-context-auto)
+
 ## For integrators
 
 There should be no impact on integrators who utilize the [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp). For everybody else, let's take the subject in the thread open on this [Discord](https://discord.com/channels/1045353153073258557/1110128760595959838) channel.
+
+[comment]: # (mx-context-auto)
 
 ### Trusted Co-Signer Service for Guardians
 

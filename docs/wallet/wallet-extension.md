@@ -181,6 +181,8 @@ Follow these steps to proceed:
 
 Successful 🎉
 
+[comment]: # (mx-context-auto)
+
 ## Guardian
 
 You can use the MultiversX DeFi wallet with [Guardians](/docs/developers/guard-accounts.md). It is as simple as it was before, with the only mention that you have to introduce the 2FA code for guardian signature when requested:
