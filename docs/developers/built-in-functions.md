@@ -188,4 +188,9 @@ UnGuardAccountTransaction {
     Options: <the second least significant bit should be 1 (example: 02, or 03)>
 }
 ```
+
+:::note
+Please be aware that the ```UnGuardAccount``` operation can only be performed through a guarded transaction when you have access to your activated guardian. Otherwise, you will need to change the guardian (and wait the 20 epochs) prior to performing the unguarding process.
+:::
+
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._

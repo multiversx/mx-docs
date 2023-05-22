@@ -21,9 +21,9 @@ In the proposed setup, an off-chain handshaking process is necessary between the
 
 Let's consider a scenario where two friends, Alice and Bob, have MultiversX wallets with addresses addrAlice and addrBob, respectively. Alice asks Bob to become her guardian, and after Bob agrees, Alice sets addrBob as her guardian. Once the guardian signing is activated through the GuardAccount function (which can only be done 20 days after setting the guardian), every transaction from Alice requires not only her signature but also Bob's signature.
 
-For example, when Alice creates a guarded transaction to transfer 1EGLD to Charlie, the transaction includes two new fields: GuardianAddr and GuardianSignature, in addition to the regular transaction details. Alice signs the transaction and sends it to Bob for co-signing. The wallet back-end can handle the transaction submission and temporarily store incomplete guarded transactions, displaying them in the guardian wallet (Bob's wallet) as "transactions waiting for guardian approval." Bob then verifies if these transactions are genuinely from Alice or from someone impersonating her. In this scenario, Bob can directly ask Alice if the pending transaction is hers. If confirmed, he will sign it; otherwise, he may choose to reject it.
+For example, when Alice creates a guarded transaction to transfer 1 EGLD to Charlie, the transaction includes two new fields: GuardianAddr and GuardianSignature, in addition to the regular transaction details. Alice signs the transaction and sends it to Bob for co-signing. The wallet back-end can handle the transaction submission and temporarily store incomplete guarded transactions, displaying them in the guardian wallet (Bob's wallet) as "transactions waiting for guardian approval." Bob then verifies if these transactions are genuinely from Alice or from someone impersonating her. In this scenario, Bob can directly ask Alice if the pending transaction is hers. If confirmed, he will sign it; otherwise, he may choose to reject it.
 
-While this process appears feasible in theory, there may be practical challenges. Alice might not want to wait for Bob's approval for a DEX transaction, or Bob could be overwhelmed with transactions from both Alice and potentially Eve, who gained access to Alice's secret key. Thus, it is crucial to automate the entire process to balance security and user experience without imposing high costs. One proposed automation solution is to use a Trusted Co-Signer (TCS) service that acts as a guardian, based on 2FA validation. This solution requires support from all wallet implementations that offer guardian-setting flows. In the case of the xPortal wallet, a separate proposal may be using the device as the guardian, optimizing communication and eliminating the need for the TCS service.
+While this process appears feasible in theory, there may be practical challenges. Alice might not want to wait for Bob's approval for a DEX transaction, or Bob could be overwhelmed with transactions from both Alice and potentially Eve, who gained access to Alice's secret key. Thus, it is crucial to automate the entire process to balance security and user experience without imposing high costs. One proposed automation solution is to use a Trusted Co-Signer (TCS) service that acts as a guardian, based on 2FA validation. This solution requires support from all wallet implementations that offer guardian-setting flows. In the case of the xPortal wallet, the application on the device will act as the guardian, optimizing the communication and eliminating the need for the TCS service.
 
 [comment]: # (mx-context-auto)
 
@@ -168,7 +168,7 @@ Follow on details about web-wallet [here](/wallet/web-wallet.md#guardian).
 
 ### xPortal
 
-There is no solution released for the **xPortal Wallet**. As soon as there is one, it will be documented and referenced here.
+The development of the **xPortal Wallet** solution for Guardians is currently in progress. Once the development and testing phase is completed, documentation and references will be provided at this location.
 
 [comment]: # (mx-context-auto)
 
@@ -182,10 +182,10 @@ In the meantime you can use the **MultiversX Guardians Test - BETA** version:
 **How to activate it?**
 1. In Ledger Live
 2. Go to My Ledger
-3. Go to ⚙️
+3. Go to Settings (⚙️)
 4. Go to Experimental features
-5. Developer Mode - ✅
-6. **My Ledger Provider** - ✅ and use **4** instead of **1**.
+5. Enable Developer Mode - ✅
+6. Enable **My Ledger Provider** - ✅ and use **4** instead of **1**.
 :::
 
 :::important
