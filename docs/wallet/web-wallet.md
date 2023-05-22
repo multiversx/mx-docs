@@ -116,3 +116,111 @@ The faucet is only available once in a given time period. Other alternatives for
 
 - request tokens on [Telegram - Validators chat](https://t.me/MultiversXValidators)
 - use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet)
+
+[comment]: # (mx-context-auto)
+
+## **Guardian**
+
+:::note
+In case your balance is 0 eGLD, the **Guardian** option is not displayed.
+:::
+
+:::note
+All screenshots have been taken from an internal private wallet on a private internal blockchain. The design of the feature may change for the final release on mainnet.
+:::
+
+Starting with Altair release, a new section for Guardian feature is available in the wallet interface:
+
+![img](/wallet/web-wallet/guardian_feature1.png)
+
+[comment]: # (mx-context-auto)
+
+### **Registering the Guardian**
+
+First step should be registering your guardian. After selecting the Guardian feature from the menu, you should be able to set it:
+
+![img](/wallet/web-wallet/guardian_step1.png)
+
+In order to set a Guardian you should use a software-based authenticator. This tool should be able to generate two-factor authentication (2FA's) codes. After installing your authenticator, use it for scanning the QR code and introduce the Guardian Code in the designated fields (see picture below). 
+
+:::important
+If this is the first time when you are doing the registration, you don't have to select the **I cannot access my guardian**.
+:::
+
+![img](/wallet/web-wallet/guardian_step2.png)
+
+**Check & Confirm** the transaction:
+
+![img](/wallet/web-wallet/guardian_step3.png)
+
+[comment]: # (mx-context-auto)
+
+### **Activation period**
+
+Once you have successfully completed all the aforementioned steps, you will be required to wait for the registration period to finalize. In the case of Mainnet, this period will span across **20 epochs**.
+
+:::important
+While waiting for your Guardian to become active, all interactions with the blockchain should not behave differently. 
+:::
+
+![img](/wallet/web-wallet/guardian_step4.png)
+
+[comment]: # (mx-context-auto)
+
+### **Guarding your account**
+
+After the activation period passes, you should be able to Guard your account:
+
+![img](/wallet/web-wallet/guardian_step5.png)
+
+:::important
+In order to Guard your account, a normal ```GuardAccount``` transaction must be sent.
+:::
+
+![img](/wallet/web-wallet/guardian_step6.png)
+
+[comment]: # (mx-context-auto)
+
+### **Sending a guarded transaction**
+
+After setting a guardian and sending the ```GuardAccount``` transaction, all following transactions must be guarded in order to be notarized by the blockchain. This translates that the 2FA code has to be filled in:
+
+Let's take for example a simple eGLD transfer transaction:
+
+![img](/wallet/web-wallet/guardian_sendTx1.png)
+
+Confirm the transaction:
+
+![img](/wallet/web-wallet/guardian_sendTx2.png)
+
+In the last step, you will need to check your authenticator tool to retrieve the Guardian code (2FA code) and enter it for verification. See picture below:
+
+![img](/wallet/web-wallet/guardian_sendTx3.png)
+
+[comment]: # (mx-context-auto)
+
+### **Unguarding your account**
+
+Unguarding your account consists of sending an ```UnGuardAccount``` transaction to your own address. You can do it by simply using the **Unguard Account** button from the Guardian section:
+
+![img](/wallet/web-wallet/guardian_unguard.png)
+
+And confirming the transaction after checking the validity of it:
+
+![img](/wallet/web-wallet/guardian_unguard2.png)
+
+[comment]: # (mx-context-auto)
+
+### **Changing your guardian**
+
+The Guardians feature allows you to change your guardian in situations where you suspect your account has been compromised or if you have lost access to your Authenticator. It is crucial to be aware of certain indicators that signal the need for changing your guardian. One such indicator is the appearance of the image displayed below on the dashboard screen:
+
+![img](/wallet/web-wallet/guardian_step8.png)
+
+:::important
+If it was not you the one triggering the change of the guardian, it may be the case that your account has been compromised and the scammer is trying to change the guardian to a new one, that he can control. Don't worry, he has to wait 20 epochs in order to have his own guardian becoming active. By then you can:
+ - move the funds to a different account, that you control, by using the still active guardian.
+ - instantly erase the pending guardian by using the **Cancel Guardian Change**, and play the "owning" game with the scammer.
+
+We recommend the first solution. Even though you have your funds staked, the unbound period (10 epochs) is shorther than the guardian activation period so that you have enough time to unstake and safely move them to a safe account.
+:::
