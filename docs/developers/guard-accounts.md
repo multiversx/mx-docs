@@ -150,11 +150,25 @@ There is no solution released for the **xPortal Wallet**. As soon as there is on
 
 ### Ledger
 
-There is no solution released for the **Ledger**. As soon as there is one, it will be documented and referenced here.
+There is no official solution released for the **Ledger**. As soon as there is one, it will be documented and referenced here.
+
+:::note
+In the meantime you can use the **MultiversX Guardians Test - BETA** version:
+
+**How to activate it?**
+1. In Ledger Live
+2. Go to My Ledger
+3. Go to Settings
+4. Go to Experimental features
+5. Activate Developer Mode
+6. Activate **My Ledger Provider** and use **4** instead of **1**.
+:::
+
+![img](/wallet/ledger/guardians_ledger.png)
 
 ## For integrators
 
-
+There should be no impact on integrators who utilize the [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp). For everybody else, let's take the subject in the thread open on this [Discord](https://discord.com/channels/1045353153073258557/1110128760595959838) channel.
 
 ### Trusted Co-Signer Service for Guardians
 
