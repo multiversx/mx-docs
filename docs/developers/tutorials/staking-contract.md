@@ -1390,7 +1390,7 @@ running 1 test
 test stake_unstake_test ... ok
 ```
 
-To have this changes on devnet you will have to build the contract and the upgrade it. Because we added the APY on init now for the upgrade we will have to pass it as an argument.
+In order to apply these changes on devnet, you should build the contract and then upgrade it. Because we added the APY on init now for the upgrade we will have to pass it as an argument.
 
 ```bash
     mxpy --verbose contract upgrade ${SC_ADDRESS} \
