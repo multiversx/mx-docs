@@ -232,7 +232,8 @@ Now, we could use the keystore file with a password, but it's more convenient to
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 
 ```
-mxpy --verbose wallet derive ./tutorialKey.pem --mnemonic
+mkdir -p ~/MyTestWallets
+mxpy wallet convert --in-format=raw-mnemonic --out-format=pem --outfile=~/MyTestWallets/tutorialKey.pem
 ```
 
 :::note  
@@ -243,14 +244,16 @@ You have to press "space" between the words, not "enter"!
 
 ### Deploying the contract on devnet
 
-Now that we've created a wallet, it's time to deploy our contract, make sure you build the contract before deploying it. Open a command line and run the following command:
+Now that we've created a wallet, it's time to deploy our contract. **Make sure you build the contract before deploying it**. Open a command line and run the following command:
 
 ```bash
-mxpy --verbose contract deploy --project=/Projects/staking-contract/ \
-    --recall-nonce --pem=/Downloads/tutorialKey.pem \
+
+
+    mxpy --verbose contract deploy --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
+    --recall-nonce --pem=~/Downloads/tutorialKey.pem \
     --gas-limit=10000000 \
-    --send --outfile="deploy-devnet.interaction.json" \
-    --proxy=https://devnet-gateway.multiversx.com --chain=D || return
+    --send --outfile="deploy-devnet.interaction.json" --wait-result \
+    --proxy=https://devnet-gateway.multiversx.com --chain=D
 ```
 
 :::note  
@@ -259,7 +262,7 @@ If you wanted to use testnet, the proxy would be "https://testnet-gateway.multiv
 More details can be found [here](/developers/constants/).
 :::
 
-The things you need to edit is the PEM variable and the PROJECT path with your local paths.
+The things you need to edit are the CLI parameters --pem and --project with your local paths.
 
 ### Account was not found? But I just created the wallet!
 
@@ -313,7 +316,7 @@ Make sure you selected "devnet" and input your address! It might take a bit depe
 
 ### Deploying the contract, second try
 
-Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. mxpy will print it in the console for you:
+Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` command again and let's see the results. Make sure you save the contract address. mxpy will print it in the console for you:
 
 ```bash
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
@@ -339,13 +342,13 @@ Let's call the stake function:
 ```bash
 mxpy --verbose contract call ${SC_ADDRESS}... \
     --proxy=https://devnet-gateway.multiversx.com --chain=D \
-    --send --recall-nonce --pem=/Downloads/tutorialKey.pem \
+    --send --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=10000000 \
     --value=1 \
     --function="stake"
 ```
 
-To pay EGLD, the `--value` argument is used, and, as you can guess, the `--function` argument is used to select which endpoint we want to call, also for the SC_ADDRESS pass the Contract address received after deploy
+To pay EGLD, the `--value` argument is used, and, as you can guess, the `--function` argument is used to select which endpoint we want to call. Make sure to adjust the first argument of the contract call command, with respect to the address of your previously deployed contract.
 
 We've now successfully staked 1 EGLD... or have we? If we look at the transaction, that's not quite the case:  
 ![img](/developers/staking-contract-tutorial-img/first_stake.png)
@@ -616,7 +619,7 @@ UNSTAKE_AMOUNT=500000000000000000
 
 mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=https://devnet-gateway.multiversx.com --chain=D \
-    --send --recall-nonce --pem=/Downloads/tutorialKey.pem \
+    --send --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=10000000 \
     --function="unstake" \
     --arguments ${UNSTAKE_AMOUNT}
@@ -631,15 +634,15 @@ Now run this function, and you'll get this result:
 
 ## Upgrading smart contracts
 
-Since we've added some new functionality, we also want to update the currently deployed implementation. Add the upgrade snippet to your snippets.sh and run it:
+Since we've added some new functionality, we also want to update the currently deployed implementation. **Build the contract** and then run the following command:
 
 ```bash
     mxpy --verbose contract upgrade ${SC_ADDRESS} \
-    --project=/Projects/staking-contract/ \
-    --recall-nonce --pem=/Downloads/tutorialKey.pem \
+    --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
+    --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=20000000 \
     --send --outfile="upgrade-devnet.interaction.json" \
-    --proxy=https://devnet-gateway.multiversx.com --chain=D || return
+    --proxy=https://devnet-gateway.multiversx.com --chain=D
 ```
 
 :::note
@@ -679,7 +682,7 @@ Let's also test the optional argument functionality. Remove the `--arguments` li
 unstake() {
     mxpy --verbose contract call ${SC_ADDRESS} \
     --proxy=https://devnet-gateway.multiversx.com --chain=D \
-    --send --recall-nonce --pem=/Downloads/tutorialKey.pem \
+    --send --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=10000000 \
     --function="unstake"
 }
@@ -1385,6 +1388,18 @@ Running the test after the suggested changes should work just fine now:
 ```
 running 1 test
 test stake_unstake_test ... ok
+```
+
+To have this changes on devnet you will have to build the contract and the upgrade it. Because we added the APY on init now for the upgrade we will have to pass it as an argument.
+
+```bash
+    mxpy --verbose contract upgrade ${SC_ADDRESS} \
+    --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
+    --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
+    --gas-limit=20000000 \
+    --send --outfile="upgrade-devnet.interaction.json" \
+    --proxy=https://devnet-gateway.multiversx.com --chain=D \
+    --arguments 100
 ```
 
 [comment]: # (mx-context-auto)
