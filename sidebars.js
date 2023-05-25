@@ -89,7 +89,7 @@ const sidebars = {
               "developers/best-practices/biguint-operations",
               "developers/best-practices/the-dynamic-allocation-problem",
               "developers/best-practices/multi-values",
-            ]
+            ],
           },
           {
             type: "category",
@@ -138,7 +138,7 @@ const sidebars = {
               "developers/signing-transactions/signing-programmatically",
             ],
           },
-        ]
+        ],
       },
     ],
     "SDK and Tools": [
@@ -196,8 +196,8 @@ const sidebars = {
               "sdk-and-tools/indices/es-index-transactions",
               "sdk-and-tools/indices/es-index-validators",
             ],
-          }
-        ]
+          },
+        ],
       },
       "sdk-and-tools/notifier",
       {
@@ -231,12 +231,23 @@ const sidebars = {
           },
           "sdk-and-tools/erdgo",
           "sdk-and-tools/erdjava",
-          "sdk-and-tools/sdk-dapp",
+          {
+            type: "category",
+            label: "dApp SDK",
+            items: [
+              "sdk-and-tools/sdk-dapp/sdk-dapp",
+              {
+                type: "category",
+                label: "Internal Processes",
+                items: ["sdk-and-tools/sdk-dapp/internal-processes/guardians"],
+              },
+            ],
+          },
           "sdk-and-tools/erdcpp",
           "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
           "sdk-and-tools/sdk-js-wallet-cli",
-        ]
+        ],
       },
     ],
     Wallet: [
@@ -310,22 +321,21 @@ const sidebars = {
         items: ["validators/faq", "validators/useful-links"],
       },
     ],
-    Economics: ["economics/economics-overview", "economics/staking-providers-apr"],
+    Economics: [
+      "economics/economics-overview",
+      "economics/staking-providers-apr",
+    ],
     Integrators: [
       "integrators/overview",
       {
         type: "category",
         label: "Integrate EGLD",
-        items: [
-          "integrators/egld-integration-guide",
-        ],
+        items: ["integrators/egld-integration-guide"],
       },
       {
         type: "category",
         label: "Integrate ESDT tokens",
-        items: [
-          "integrators/esdt-tokens-integration-guide",
-        ],
+        items: ["integrators/esdt-tokens-integration-guide"],
       },
       {
         type: "category",
@@ -333,7 +343,7 @@ const sidebars = {
         items: [
           "integrators/observing-squad",
           "integrators/deep-history-squad",
-        ]
+        ],
       },
       {
         type: "category",
@@ -342,7 +352,7 @@ const sidebars = {
           "integrators/accounts-management",
           "integrators/creating-transactions",
           "integrators/querying-the-blockchain",
-        ]
+        ],
       },
     ],
     "Ad-Astra Bridge": [
