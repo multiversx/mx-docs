@@ -22,10 +22,13 @@ Before installing **mxpy**, please make sure you have a working **Python 3** env
 Smart contracts written in C require the ncurses library routines for compiling. Install them using the following:
 
 For Linux:
+
 ```
 sudo apt install libncurses5
 ```
+
 For MacOS:
+
 ```
 brew install ncurses
 ```
@@ -41,7 +44,11 @@ wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/ma
 python3 mxpy-up.py
 ```
 
-This will create a light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv `and also include `~/multiversx-sdk`in your **`$PATH`** variable (by editing the appropriate `.profile` file).
+This will create a light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv `. Since `mxpy v6.0.0` we do not alter the **`$PATH`** variable.
+You'll need to manually include `~/multiversx-sdk` in your **`$PATH`** variable (by editing the appropriate `.profile` file) as done bellow:
+```
+export PATH="$HOME/multiversx-sdk:$PATH"
+```
 
 [comment]: # (mx-context-auto)
 
