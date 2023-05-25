@@ -47,7 +47,7 @@ python3 mxpy-up.py
 This will create a light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv `. Since `mxpy v6.0.0` we do not alter the **`$PATH`** variable.
 You'll need to manually include `~/multiversx-sdk` in your **`$PATH`** variable (by editing the appropriate `.profile` file) as done bellow:
 ```
-export PATH="${{HOME}}/multiversx-sdk:${{PATH}}"
+export PATH="$HOME/multiversx-sdk:$PATH"
 ```
 
 [comment]: # (mx-context-auto)
