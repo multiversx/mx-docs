@@ -185,7 +185,7 @@ In the meantime you can use the **MultiversX Guardians Test - BETA** version:
 3. Go to Settings (⚙️)
 4. Go to Experimental features
 5. Enable Developer Mode - ✅
-6. Enable **My Ledger Provider** - ✅ and use **4** instead of **1**.
+6. Search and install MultiversX Guardians Test
 :::
 
 :::important
