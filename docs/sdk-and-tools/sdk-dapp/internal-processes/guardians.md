@@ -16,7 +16,7 @@ The guardians feature adds an extra signing layer on top of transactions. This m
 The differences between a guarded transaction and a simple transaction are the following:
 - it contains the `guardianAddress` field
 - `gasLimit` has an extra `50000` gas added to it
-- `options` field needs to have the second least signinficant bit set to "1" (ex: `2`)
+- `options` field needs to have the second least signinficant bit set to "1" (ex: options: `2`)
 - `version` field needs to be set to `2`
 
 This is how a transaction can be formatted using `@multiversx/sdk-core`:
