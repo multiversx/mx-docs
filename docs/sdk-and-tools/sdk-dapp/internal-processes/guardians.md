@@ -16,7 +16,7 @@ The guardians feature adds an extra signing layer on top of transactions. This m
 The differences between a guarded transaction and a simple transaction are the following:
 - it contains the `guardianAddress` field
 - the `gasLimit` has an extra `50000` gas added to it
-- `options` field needs to be set to `2`
+- `options` field needs to be set to the least signinficant bit (ex: `2`)
 - `version` field needs to be set to `2`
 
 This is how a transaction can be formatted using `@multiversx/sdk-core`:
@@ -24,7 +24,10 @@ This is how a transaction can be formatted using `@multiversx/sdk-core`:
 ```js
 transaction.setGuardian(Address.fromBech32(activeGuardianAddress));
 transaction.setVersion(TransactionVersion.withTxOptions());
-transaction.setOptions(TransactionOptions.withOptions({guarded: true}));
+transaction.setOptions(TransactionOptions.withOptions({
+    guarded: true,
+    hashSign: true // if available
+}));
 ```
 
 ### Signing the transaction
