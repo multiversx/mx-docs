@@ -7,6 +7,10 @@ title: Developers - Overview
 
 This page serves as the landing destination for builders seeking to construct on the Multiversx platform.
 
+If anything is missing, or you want to get more support, please refer to Discord or Telegram developers chats: 
+- [Discord: MultiversX Builders](https://discord.gg/multiversxbuilders)
+- [Telegram: MultiversX Developers](https://t.me/MultiversXDevelopers)
+
 [comment]: # (mx-context-auto)
 
 ## Developer documentation
