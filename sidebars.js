@@ -215,6 +215,7 @@ const sidebars = {
               "sdk-and-tools/sdk-py/mxpy-cli",
               "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
               "sdk-and-tools/sdk-py/smart-contract-interactions",
+              "sdk-and-tools/sdk-js/sdk-py-migration-guides",
             ],
           },
           {
