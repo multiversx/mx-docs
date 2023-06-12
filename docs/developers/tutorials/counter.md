@@ -48,7 +48,7 @@ In order to deploy the contract on the Testnet you need to have an account with 
 The deployment command is as follows:
 
 ```
-mxpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
+mxpy --verbose contract deploy --bytecode=./mycounter/output/counter.wasm --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
 ```
 
 Above, `mycounter` refers to the same folder that contains the source code and the build artifacts. The `deploy` command knows to search for the WASM bytecode within this folder.
@@ -58,24 +58,22 @@ Note the last parameter of the command - this instructs mxpy to dump the output 
 ```
 counter.json
 {
-    "emitted_tx": {
-        "tx": {
-            "nonce": 0,
-            "value": "0",
-            "receiver": "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu",
-            "sender": "erd1...",
-            "gasPrice": 1000000000,
-            "gasLimit": 5000000,
-            "data": "MDA2MTczNmQwMTAwMDA...MDA=",
-            "chainID": "T",
-            "version": 1,
-            "signature": "a0ba..."
-        },
-        "hash": "...",
-        "data": "...",
-        "address": "erd1qqqqqqqqqqqqqpgqp93y6..."
-    }
+    "emittedTransaction": {
+        "nonce": 773,
+        "value": "0",
+        "receiver": "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu",
+        "sender": "erd1...",
+        "gasPrice": 1000000000,
+        "gasLimit": 5000000,
+        "data": "MDA2MTczNmQwMTAwMDA...MDA=",
+        "chainID": "T",
+        "version": 2,
+        "signature": "bfee..."
+    },
+    "emittedTransactionData": "0061...",
+    "contractAddress": "erd1qqqqqqqqqqqqq..."
 }
+
 ```
 
 Feel free to inspect these values in the [Explorer](https://explorer.multiversx.com/).
@@ -87,7 +85,7 @@ Feel free to inspect these values in the [Explorer](https://explorer.multiversx.
 Let's extract the contract address from `counter.json` before proceeding to an actual contract execution.
 
 ```
-export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counter.json')); print(data['emitted_tx']['address'])")
+export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('counter.json')); print(data['contractAddress'])")
 ```
 
 Now that we have the contract address saved in a shell variable, we can call the `increment` function of the contract as follows:
@@ -120,8 +118,8 @@ The previous steps can be summed up in a simple script as follows:
 #!/bin/bash
 
 # Deployment
-mxpy --verbose contract deploy --project=mycounter --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
-export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('address.json')); print(data['emitted_tx']['contract'])")
+mxpy --verbose contract deploy --bytecode=./mycounter/output/counter.wasm --pem="alice.pem" --gas-limit=5000000 --proxy="https://testnet-gateway.multiversx.com" --outfile="counter.json" --recall-nonce --send
+export CONTRACT_ADDRESS=$(python3 -c "import json; data = json.load(open('address.json')); print(data['contractAddress'])")
 
 # Interaction
 mxpy --verbose contract call $CONTRACT_ADDRESS --pem="alice.pem" --gas-limit=2000000 --function="increment" --proxy="https://testnet-gateway.multiversx.com" --recall-nonce --send
