@@ -23,11 +23,8 @@ be part of the consensus group and the shard should be specified in the `prefs.t
 - the validator characteristic comes from the fact that the node will monitor the consensus activity and emmit consensus messages,
 whenever required on the behalf of the managed keys set.
 
-Since an observer already does the full validation of every block in its own shard, and the only missing operation, as 
-opposed to a validator being its selection and voting during consensus, it becomes easy to adapt such an observer node 
-to manage a group of validator keys, and whenever one of those keys is selected for the consensus, 
-the observer can propose and/or validate and vote for the proposed block on behalf of the keys from the consensus group 
-it manages. 
+Since an observer already performs block validation in its own shard, it can be easily used to manage a group of validator 
+keys and propose or validate blocks on behalf of the keys it possesses.
 To summarize, this type of node can use any provided keys, in any combination, to generate consensus messages provided 
 that those used keys are part of the consensus group in the current round. With the multikey feature, the relationship 
 now becomes `n:m`, providing that `n` is the number of keys managed by an entity and `m` is the number of shards + 1.

@@ -24,12 +24,12 @@ This page provides an overview of the Validator Nodes and the associated Tools.
 
 ### Keys Management
 
-| Name                                                            | Description                                                   |
-|-----------------------------------------------------------------|---------------------------------------------------------------|
-| [Validator keys](/validators/key-management/validator-keys)     | Learn about a validator key.                                  |
-| [Wallet keys](/validators/key-management/wallet-keys)           | Learn about a wallet key.                                     |
-| [Protecting your keys](/validators/key-management/protect-keys) | Learn how you can secure your keys.                           |
-| [Multikey nodes](/validators/key-management/multikey-nodes)     | Learn about how to manage a set of keys on an observer squad. |
+| Name                                                            | Description                                                  |
+|-----------------------------------------------------------------|--------------------------------------------------------------|
+| [Validator keys](/validators/key-management/validator-keys)     | Learn about a validator key.                                 |
+| [Wallet keys](/validators/key-management/wallet-keys)           | Learn about a wallet key.                                    |
+| [Protecting your keys](/validators/key-management/protect-keys) | Learn how you can secure your keys.                          |
+| [Multikey nodes](/validators/key-management/multikey-nodes)     | Learn how to manage a set of keys by using a group of nodes. |
 
 [comment]: # (mx-context-auto)
 
