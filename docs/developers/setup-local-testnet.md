@@ -4,22 +4,26 @@ title: Set up a Localnet (mxpy)
 ---
 [comment]: # (mx-abstract)
 
-This guide describes how to set up a local mini-testnet - also known as **localnet** - using **mxpy**. The purpose of a localnet is to allow developers to experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
+This guide describes how to set up a local mini-testnet - also known as **localnet** - using **mxpy**. The purpose of a localnet is to allow developers experiment with and test their Smart Contracts, in addition to writing unit and integration tests.
 
 The localnet contains:
 
 - **Validator Nodes** (two, by default)
-- **Observer Nodes** (two, by default)
+- **Observer Nodes** (zero, by default)
 - A **Seednode**
 - A **MultiversX Proxy**
 
-If not specified otherwise, the localnet starts with two Shards plus the Metachain (each with one Validator).
+If not specified otherwise, the localnet starts with two shards plus the metachain (each with one validator).
 
 [comment]: # (mx-context-auto)
 
 ## Prerequisites: mxpy
 
 In order to install **mxpy**, follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
+
+:::note
+This guide assumes you are using `mxpy v7` or newer.
+:::
 
 ## The easy way to start a localnet
 
@@ -68,11 +72,11 @@ INFO:localnet:Starting process ['./proxy', ...
 ```
 
 :::tip
-The logs from all processes of the localnet can also be found in the `~/my-first-localnet/localnet` folder. Just look for `*.log` files.
+The logs from all processes of the localnet can also be found in `~/my-first-localnet/localnet`. Simply look for `*.log` files.
 :::
 
 :::important
-Note that the Proxy starts with a delay of about 30 seconds.
+Note that the proxy starts with a delay of about 30 seconds.
 :::
 
 ## Halting and resuming the localnet
@@ -140,7 +144,7 @@ archive_url = "https://github.com/multiversx/mx-chain-proxy-go/archive/refs/head
 ```
 
 :::tip
-Generally speaking, it's a good idea to only alter the `localnet.toml` before first starting a localnet. Once the localnet is started, the configuration file should not be modified anymore (e.g. when halting and resuming the localnet).
+Generally speaking, it's a good idea to only alter the `localnet.toml` **before first starting a localnet**. Once the localnet is started, the configuration file should not be modified anymore (e.g. when halting and resuming the localnet).
 :::
 
 
@@ -206,7 +210,7 @@ Example output:
 └── localnet.toml
 ```
 
-We can then start, halt and resume the localnet as described above.
+We can then start, halt and resume the localnet as previously described.
 
 ### Altering chronology parameters
 
@@ -217,7 +221,7 @@ mkdir -p ~/my-localnet-with-altered-chronology && cd ~/my-localnet-with-altered-
 mxpy localnet new
 ```
 
-**Before first starting a localnet**, we can alter the chronology parameters in `localnet.toml`. For example, let's have shorter epochs and shorter rounds:
+**Before first starting a localnet**, you can alter the chronology parameters in `localnet.toml`. For example, let's have shorter epochs and shorter rounds:
 
 ```
 [general]
@@ -241,7 +245,7 @@ mkdir -p ~/my-localnet-with-altered-sharding && cd ~/my-localnet-with-altered-sh
 mxpy localnet new
 ```
 
-**Before first starting a localnet**, you can alter the sharding configuration in `localnet.toml`. For example, let's have 3 shards, each with 2 validators and 1 observer (thus, 9 nodes in total):
+**Before first starting a localnet**, you can alter the sharding configuration in `localnet.toml`. For example, let's have 3 shards, each with 2 validators and 1 observer (thus, 9 nodes, without the metachain ones):
 
 ```
 [shards]
@@ -267,7 +271,7 @@ mkdir -p ~/my-localnet-from-local-src && cd ~/my-localnet-from-local-src
 mxpy localnet new
 ```
 
-In order to build the **node** or the **proxy** from local source code (instead of fetching the source code from a remote archive), you can use the `resolution = local` option in `localnet.toml`. For example, let's build both the node and the proxy from local source code:
+In order to build the **node** or the **proxy** from local source code (instead of fetching the source code from a remote archive), you can set `resolution = local` in `localnet.toml`. For example, let's build both the node and the proxy from local source code:
 
 ```
 [software.mx_chain_go]
@@ -288,7 +292,7 @@ mxpy localnet start
 
 ## Test (development) wallets
 
-The development wallets are minted at genesis of the localnet and their keys (both PEM files and Wallet JSON files) can be found in `~/multiversx-sdk/testwallets/latest/users`.
+The development wallets **are minted at the genesis of the localnet** and their keys (both PEM files and Wallet JSON files) can be found in `~/multiversx-sdk/testwallets/latest/users`.
 
 :::caution
 These wallets (Alice, Bob, Carol, ..., Mike) **are publicly known** - they should only be used for development and testing purpose.
