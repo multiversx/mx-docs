@@ -16,11 +16,12 @@ The multikey feature allows a node instance to hold more than one key. However, 
 and a single node is only able to store the state of a single shard at a time, we need a group of nodes with exactly
 one node in each shard, similar with what we have on observing squad. Also, in each epoch, the keys can be shuffled among shards. 
 This means that running multiple keys will require at least the number of shards + 1 node instances (one for each shard + metachain).
-The same set of keys should be provided for all node instances. This type of nodes used in multikey operation can be assimilated
-as a hybrid between an observer node and a validator. The reason behind this affirmation is synthesized below:
-- the observer characteristic is defined by the fact that the node will hold in the `validatorKey.pem` a BLS key that will never 
-be part of the consensus group and the shard should be specified in the `prefs.toml` file, so the node will not change shards;
-- the validator characteristic comes from the fact that the node will monitor the consensus activity and emmit consensus messages,
+The same set of keys should be provided for all node instances. 
+
+This type of nodes used in multikey operation can be assimilated as a hybrid between an observer node and a validator. 
+It behaves as an observer by holding in the `validatorKey.pem` file a BLS key that will never be part of the consensus 
+group and the shard should be specified in the `prefs.toml` file, so the node will not change shards. 
+The node behaves also as a validator (or multiple validators) by monitoring and emitting consensus messages, 
 whenever required on the behalf of the managed keys set.
 
 Since an observer already performs block validation in its own shard, it can be easily used to manage a group of validator 
