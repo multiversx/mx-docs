@@ -1,6 +1,6 @@
 ---
 id: setup-local-testnet-advanced
-title: Set up a Localnet (advanced)
+title: Set up a Localnet (raw)
 ---
 [comment]: # (mx-abstract)
 
