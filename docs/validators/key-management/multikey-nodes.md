@@ -4,58 +4,75 @@ title: Multikey nodes management
 ---
 
 [comment]: # (mx-abstract)
-This page contains information about how to manage multiple keys on an observing squad.
+This page contains information about how to manage multiple keys on a group of nodes.
 
 [comment]: # (mx-context-auto)
 ## Multikey architecture overview
 
-At the mainnet launch, and up until the release candidate RC/v1.6.0 becomes mainstream, each node could have managed only
-one key. So the relationship between the nodes and keys is `1:1`, the node "following" the shard where the managed key is assigned.
-The main idea behind the multikey feature is that a set of keys can be managed by an observing squad set. The same set of keys
-should be provided for all observing squad nodes, so the nodes can **pick** any key from that set and use it to propose or sign
-blocks whenever the consensus group in a round contains at least one managed key. The observing node that runs in multikey mode
-is able to use the provided keys in any combination possible. So one node can use one key to propose a block and one or more other
-keys to already sign on that proposed block automatically to improve performance.
-So, with the multikey feature, the relationship now becomes `n:[num_shards]`, providing that `n` is the number of keys 
-managed by an entity.
+Since the mainnet launch, and up until the release candidate RC/v1.6.0, each node could have managed only
+one key. So the relationship between the nodes and staked validator keys is `1:1`, the node "following" the shard where 
+the managed key is assigned.
+The multikey feature allows a node instance to hold more than one key. However, since MultiversX is a sharded blockchain 
+and a single node is only able to store the state of a single shard at a time, we need a group of nodes with exactly
+one node in each shard, similar with what we have on observing squad. Also, in each epoch, the keys can be shuffled among shards. 
+This means that running multiple keys will require at least the number of shards + 1 node instances (one for each shard + metachain).
+The same set of keys should be provided for all node instances. This type of nodes used in multikey operation can be assimilated
+as a hybrid between an observer node and a validator. The reason behind this affirmation is synthesized below:
+- the observer characteristic is defined by the fact that the node will hold in the `validatorKey.pem` a BLS key that will never 
+be part of the consensus group and the shard should be specified in the `prefs.toml` file, so the node will not change shards;
+- the validator characteristic comes from the fact that the node will monitor the consensus activity and emmit consensus messages,
+whenever required on the behalf of the managed keys set.
+
+Since an observer already does the full validation of every block in its own shard, and the only missing operation, as 
+opposed to a validator being its selection and voting during consensus, it becomes easy to adapt such an observer node 
+to manage a group of validator keys, and whenever one of those keys is selected for the consensus, 
+the observer can propose and/or validate and vote for the proposed block on behalf of the keys from the consensus group 
+it manages. 
+To summarize, this type of node can use any provided keys, in any combination, to generate consensus messages provided 
+that those used keys are part of the consensus group in the current round. With the multikey feature, the relationship 
+now becomes `n:m`, providing that `n` is the number of keys managed by an entity and `m` is the number of shards + 1.
 
 :::important
 This feature is purely optional. Normal `1:1` relationship between the keys and the nodes is still supported. The multikey
 mode should optimize the costs when running a set of keys (check [Economics running multikey nodes](#economics-running-multikey-nodes) section)
 :::
 
+The following image describes the keys and nodes relationship between the single operation mode versus multikey operation mode.
+<!--- check /static/validators/multikey-diagram.drawio for the source file --->
+![img](/validators/multikey-diagram.drawio.png) 
+
 [comment]: # (mx-context-auto)
 ## General implementation details
 
-The observers running with the multikey feature, beside deciding the consensus group (which is normally done on each node), 
-can access the provided keys set and use, in any combination one or more key, if the node detects that the at least one managed
+The nodes running with the multikey feature, beside deciding the consensus group (which is normally done on each node), 
+can access the provided keys set and use, in any combination, one or more keys, if the node detects that at least one managed
 key is part of the consensus group.
-Code-wise, the implementation focused on the `consensus`, `keyManagement` and `heartbeat` packages.
+The code changes to support multikey nodes affected mainly the `consensus`, `keyManagement` and `heartbeat` packages.
 
 [comment]: # (mx-context-auto)
 ### Heartbeat information
 
-The squad managing the set of keys (we will call them multikey nodes or multikey squad), will pass the validators BLS information tight to 
-"virtual" peer IDs. A "virtual peer ID" is a generated p2p identity that the p2p network can not connect to as it does not
-have a real address bind to. Consequentially, this feature brings a new layer of security as the multikey nodes interface 
-the network on a random BLS key, emitting managed heartbeat information on the behalf of generated p2p identities. 
+The group managing the set of keys (we will call them multikey nodes or multikey group), will pass the validators BLS 
+information tight to "virtual" peer IDs. A "virtual peer ID" is a generated p2p identity that the p2p network can not 
+connect to as it does not have a real address bind to. Consequentially, this feature brings a new layer of security as 
+the multikey nodes will hide the relationship between the validator BLS keys and the host that manages those BLS keys.
 
 [comment]: # (mx-context-auto)
 ### Redundancy
 
 The redundancy sub-system has been upgraded to accommodate the multikey requirements keeping the multiple redundancy 
-fallback squads operation. A fallback multikey squad will monitor each managed key for missed consensus activity **independent on 
-each managed node**. So, a bad configured main squad, offline or stuck main squad nodes should trigger fallback events on 
-the redundancy squad. 
-Example: if main multikey squad was set to manage the following key set `[key_0, key_1 ... key_e-1, key_e+1 ... key_n]`
-(mind the missing `key_e`) and the redundancy fallback multikey squad has the set `[key_0, key_1 ... key_e-1, key_e, key_e+1 ... key_n]`,
-then, the fallback squad, after `k` misses in the consensus activity (propose/sign block) will start using that `key_e` as it 
-was the only key assigned to the multikey squad (`k` is the value defined in the `prefs.toml` file, `RedundancyLevel` option).
+fallback groups operation. A fallback multikey group will monitor each managed key for missed consensus activity **independent on 
+each managed node**. So, a bad configured main group, offline or stuck main group nodes should trigger fallback events on 
+the redundancy group. 
+Example: if main multikey group was set to manage the following key set `[key_0, key_1 ... key_e-1, key_e+1 ... key_n]`
+(mind the missing `key_e`) and the redundancy fallback multikey group has the set `[key_0, key_1 ... key_e-1, key_e, key_e+1 ... key_n]`,
+then, the fallback group, after `k` misses in the consensus activity (propose/sign block) will start using that `key_e` as it 
+was the only key assigned to the multikey group (`k` is the value defined in the `prefs.toml` file, `RedundancyLevel` option).
 
 [comment]: # (mx-context-auto)
 ## Economics running multikey nodes
 
-As for `n` managed keys we will need at least a squad of observing nodes, there is a threshold that a staking operator
+As for `n` managed keys we will need at least a group of nodes, there is a threshold that a staking operator
 will want to consider when deciding to switch the operation towards the multikey mode. The switch becomes attractive for the
 operator when the number of managed keys is greater or equal of the number of shards. So, for the time being, when we have 
 at least 4 keys that are either *eligible* or *waiting*, the switch to multikey mode becomes feasible.
