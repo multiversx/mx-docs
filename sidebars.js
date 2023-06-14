@@ -302,6 +302,7 @@ const sidebars = {
           "validators/key-management/validator-keys",
           "validators/key-management/wallet-keys",
           "validators/key-management/protect-keys",
+          "validators/key-management/multikey-nodes",
         ],
       },
       {
