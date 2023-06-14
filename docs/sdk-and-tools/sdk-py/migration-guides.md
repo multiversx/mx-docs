@@ -22,5 +22,3 @@ See [migration support](https://github.com/multiversx/mx-sdk-py-core/issues?q=la
 ## Migrate to a newer sdk-wallet
 
 See [migration support](https://github.com/multiversx/mx-sdk-py-wallet/issues?q=label:migration).
-
-

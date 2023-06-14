@@ -25,6 +25,8 @@ In order to install **mxpy**, follow [these instructions](/sdk-and-tools/sdk-py/
 This guide assumes you are using `mxpy v7` or newer.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## The easy way to start a localnet
 
 You can simply setup and start a localnet in a workspace (folder) of your choice by following the steps below.
@@ -79,9 +81,13 @@ The logs from all processes of the localnet can also be found in `~/my-first-loc
 Note that the proxy starts with a delay of about 30 seconds.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Halting and resuming the localnet
 
 In order to **halt the localnet**, press `Ctrl+C` in the terminal. This will stop all the processes (nodes, proxy etc.). The localnet can be **resumed at any time** by running again the command `mxpy localnet start` (from within your workspace).
+
+[comment]: # (mx-context-auto)
 
 ## Removing the localnet
 
@@ -93,7 +99,11 @@ mxpy localnet clean
 
 This will delete the `~/my-first-localnet/localnet` folder. Note that the configuration file (e.g. `localnet.toml`) will not be deleted automatically.
 
+[comment]: # (mx-context-auto)
+
 ## Gaining more control over the localnet
+
+[comment]: # (mx-context-auto)
 
 ### Perform setup steps individually
 
@@ -146,7 +156,6 @@ archive_url = "https://github.com/multiversx/mx-chain-proxy-go/archive/refs/head
 :::tip
 Generally speaking, it's a good idea to only alter the `localnet.toml` **before first starting a localnet**. Once the localnet is started, the configuration file should not be modified anymore (e.g. when halting and resuming the localnet).
 :::
-
 
 Now, the following command will fetch the software prerequisites - **mx-chain-go**, **mx-chain-proxy-go** etc. - into `~/multiversx-sdk`:
 
@@ -212,6 +221,8 @@ Example output:
 
 We can then start, halt and resume the localnet as previously described.
 
+[comment]: # (mx-context-auto)
+
 ### Altering chronology parameters
 
 Let's create a new localnet workspace:
@@ -235,6 +246,8 @@ Then, setup and start the localnet as previously described.
 mxpy localnet setup
 mxpy localnet start
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Altering sharding configuration
 
@@ -261,6 +274,8 @@ Then, setup and start the localnet as previously described.
 mxpy localnet setup
 mxpy localnet start
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Building from local source code
 
@@ -290,6 +305,8 @@ mxpy localnet setup
 mxpy localnet start
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Test (development) wallets
 
 The development wallets **are minted at the genesis of the localnet** and their keys (both PEM files and Wallet JSON files) can be found in `~/multiversx-sdk/testwallets/latest/users`.
@@ -298,7 +315,11 @@ The development wallets **are minted at the genesis of the localnet** and their 
 These wallets (Alice, Bob, Carol, ..., Mike) **are publicly known** - they should only be used for development and testing purpose.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Interacting with our localnet
+
+[comment]: # (mx-context-auto)
 
 ### Sending transactions
 
