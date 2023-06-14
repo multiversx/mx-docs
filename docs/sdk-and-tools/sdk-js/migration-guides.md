@@ -11,11 +11,11 @@ This page links to resources which are helpful in upgrading to newer versions of
 Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook), in advance.
 :::
 
-## Migrate sdk-core
+## Migrate to a newer sdk-core
 
 See [migration support](https://github.com/multiversx/mx-sdk-js-core/issues?q=label:migration).
 
-## Migrate sdk-wallet
+## Migrate to a newer sdk-wallet
 
 See [migration support](https://github.com/multiversx/mx-sdk-js-wallet/issues?q=label:migration).
 
