@@ -204,8 +204,8 @@ const config = {
             to: "/validators/nodes-scripts/install-update",
           },
           {
-            from: "/sdk-and-tools/sdk-dapp/sdk-dapp",
-            to: "/sdk-and-tools/sdk-dapp/sdk-dapp",
+            from: "/sdk-and-tools/dapp-core",
+            to: "/sdk-and-tools/sdk-dapp"
           },
           {
             from: "/validators/staking-providers-apr",
