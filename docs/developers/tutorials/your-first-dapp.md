@@ -136,7 +136,7 @@ We can also generate a private key PEM file, like this we won't need to enter ou
 
 ```sh
 cd ~/ping-pong/wallet
-mxpy --verbose wallet derive ./wallet-owner.pem --mnemonic
+mxpy wallet convert --in-format=raw-mnemonic --out-format=pem --outfile=./wallet-owner.pem
 ```
 
 We will enter our **24 secret words** when prompted and a new PEM file will be created. This command requires that you enter all 24 words each separated by a space.
