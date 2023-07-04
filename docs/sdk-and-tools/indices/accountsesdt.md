@@ -28,7 +28,7 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | token      | The token field holds the name of the token.                                                                                          |
 | timestamp  | The timestamp field represents the timestamp when the address balance was changed.                                                    |
 | type       | The type field represents the type of the ESDT token. It can be `FungibleESDT`, `NonFungibleESDT`, `SemiFungibleESDT`, or `MetaESDT`. |
-| frozen     | The frozen field is true if the current ESDT token the address possesses is frozen.                                                   |
+| frozen     | The frozen field is set to true when the address possesses a current ESDT token that is in a frozen state.                            |
 
 Docs with a non-empty `tokenNonce` field will have the `data` field populated with the following structure:
 
