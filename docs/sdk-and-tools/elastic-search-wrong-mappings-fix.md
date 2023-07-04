@@ -14,6 +14,8 @@ for an index, then one should follow the next steps:
 
 In the example below we will repair the `operations` index.
 
+[comment]: # (mx-context-auto)
+
 ## Solution 1
 
 1. Stop the observers nodes that index data in the Elasticsearch cluster.
@@ -64,13 +66,13 @@ In the example below we will repair the `operations` index.
 
 4. Start again the observers.
 
+[comment]: # (mx-context-auto)
 
 ## Solution 2
 :::caution
 This solution will take more time because all the documents from the index with problems 
 have to be reindexed from a public cluster.
 :::
-
 
 1. Stop the observers nodes that index data in the Elasticsearch cluster.
 2. Delete affected index: `operations`

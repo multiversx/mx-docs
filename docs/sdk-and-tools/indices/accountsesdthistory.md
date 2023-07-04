@@ -17,14 +17,16 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 
 ## Fields
 
-| Field      | Description                                                                                                         |
-|------------|---------------------------------------------------------------------------------------------------------------------|
-| address    | The address field holds the address in a bech32 encoding.                                                           |
-| balance    | The balance field holds the amount of ESDT tokens the address possesses.                                            |
-| token      | The token field holds the token name of the token.                                                                  |
-| identifier | The identifier field is composed of the `token` field and the `nonce` field, hex encoded.                           |
-| tokenNonce | The tokenNonce field holds the sequence number of the token. This field can be empty in the case of `FungibleESDT`. |
-| timestamp  | The timestamp field represents the timestamp when the address balance was changed.                                  |
+| Field           | Description                                                                                                         |
+|-----------------|---------------------------------------------------------------------------------------------------------------------|
+| address         | The address field holds the address in a bech32 encoding.                                                           |
+| balance         | The balance field holds the amount of ESDT tokens the address possesses.                                            |
+| token           | The token field holds the token name of the token.                                                                  |
+| identifier      | The identifier field is composed of the `token` field and the `nonce` field, hex encoded.                           |
+| tokenNonce      | The tokenNonce field holds the sequence number of the token. This field can be empty in the case of `FungibleESDT`. |
+| timestamp       | The timestamp field represents the timestamp when the address balance was changed.                                  |
+| isSmartContract | The isSmartContract field is true if the address is a smart contract address.                                       |
+| shardID         | The shardID field represents the shard where the address belongs to, based on its bytes.                            |
 
 [comment]: # (mx-context-auto)
 
