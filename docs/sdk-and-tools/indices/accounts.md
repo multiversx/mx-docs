@@ -25,9 +25,9 @@ The `_id` field of this index is represented by a bech32 encoded address.
 | nonce            | The nonce field represents the sequence number of the address.                                                                                                                       |
 | shardID          | The shardID field represents the shard where the address belongs to, based on its bytes.                                                                                             |
 | timestamp        | The timestamp field represents the last moment when the address balance was changed.                                                                                                 |
-| developerRewards | The developerRewards represents the fees that were accumulated after all the smart contract calls that can be claimed by the owner.                                                  |
+| developerRewards | The developerRewards represents the fees that were accumulated after all the smart contract calls. They can be claimed by the owner.                                                 |
 | currentOwner     | The currentOwner field holds the address in a bech32 format of the current owner of the smart contract. This field is populated only for the smart contract addresses.               |
-| userName         | The userName field contains the heretag the address possesses.                                                                                                                       |
+| userName         | The userName field contains the herotag the address possesses.                                                                                                                       |
 
 [comment]: # (mx-context-auto)
 

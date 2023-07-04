@@ -24,7 +24,7 @@ The `_id` field of this index is composed in this way: `blake2bHash(delegatorAdd
 | activeStake    | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable).                                    |
 | activeStakeNum | The activeStake field holds the EGLD amount of the active stake (not undelegated nor unbondable), in a numeric format. Example: 1.5. |
 | unDelegateInfo | The unDelegateInfo contains a list with data about the unDelegated values.                                                           |
-| timestamp      | The timestamp field represents the last moment when was a interation with the delegation contract.                                   |
+| timestamp      | The timestamp field represents the last moment of an interaction with the delegation contract.                                       |
 
 The `unDelegateInfo` field is populated with the fields below:
 
