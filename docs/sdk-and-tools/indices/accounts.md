@@ -77,3 +77,18 @@ curl --request GET \
     "size":10
 }'
 ```
+
+### Fetch addresses with username
+
+```
+curl --request GET \
+  --url ${ES_URL}/accounts/_search \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "query": {
+    "exists": {
+      "field": "userName"
+    }
+  }
+}'
+```
