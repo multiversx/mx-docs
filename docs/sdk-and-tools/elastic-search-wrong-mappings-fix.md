@@ -76,7 +76,7 @@ have to be reindexed from a public cluster.
 2. Delete affected index: `operations`
 3. Create the index again with the correct mappings:
    -  in order to do this, clone this [repository](https://github.com/multiversx/mx-chain-tools-go)
-   - `cd elasticreindexer/indices-creator`
+   - `cd elasticreindexer/cmd/indices-creator`
    - open `config/cluster.toml` file and update it with the information about your cluster and at the `enabled-indices`
    section put `["operations"]`
    - build the binary and run it in order to create the index with the correct mappings.
