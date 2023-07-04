@@ -78,6 +78,8 @@ curl --request GET \
 }'
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Fetch addresses with username
 
 ```

@@ -26,7 +26,6 @@ The `_id` field of this index is composed in this way: `blake2bHash(delegatorAdd
 | unDelegateInfo | The unDelegateInfo contains a list with data about the unDelegated values.                                                           |
 | timestamp      | The timestamp field represents the last moment when was a interation with the delegation contract.                                   |
 
-
 The `unDelegateInfo` field is populated with the fields below:
 
 | unDelegateInfo fields | Description                                                                                     |
@@ -34,7 +33,6 @@ The `unDelegateInfo` field is populated with the fields below:
 | value                 | The value field holds the EGLD amount that was undelegated.                                     |
 | valueNum              | The value field holds the EGLD amount that was undelegated, in a numeric format (example: 1.5). |
 | timestamp             | The timestamp field represents the timestamp when the unDelegation operation was done.          |
-
 
 [comment]: # (mx-context-auto)
 
