@@ -7,6 +7,7 @@ title: Multikey nodes management
 This page contains information about how to manage multiple keys on a group of nodes.
 
 [comment]: # (mx-context-auto)
+
 ## Multikey architecture overview
 
 Since the mainnet launch, and up until the release candidate RC/v1.6.0, each node could have managed only
@@ -40,6 +41,7 @@ The following image describes the keys and nodes relationship between the single
 ![img](/validators/multikey-diagram.drawio.png) 
 
 [comment]: # (mx-context-auto)
+
 ## General implementation details
 
 The nodes running with the multikey feature, beside deciding the consensus group (which is normally done on each node), 
@@ -48,6 +50,7 @@ key is part of the consensus group.
 The code changes to support multikey nodes affected mainly the `consensus`, `keyManagement` and `heartbeat` packages.
 
 [comment]: # (mx-context-auto)
+
 ### Heartbeat information
 
 The group managing the set of keys (we will call them multikey nodes or multikey group), will pass the validators BLS 
@@ -56,6 +59,7 @@ connect to as it does not have a real address bind to. Consequentially, this fea
 the multikey nodes will hide the relationship between the validator BLS keys and the host that manages those BLS keys.
 
 [comment]: # (mx-context-auto)
+
 ### Redundancy
 
 The redundancy sub-system has been upgraded to accommodate the multikey requirements keeping the multiple redundancy 
@@ -68,6 +72,7 @@ then, the fallback group, after `k` misses in the consensus activity (propose/si
 was the only key assigned to the multikey group (`k` is the value defined in the `prefs.toml` file, `RedundancyLevel` option).
 
 [comment]: # (mx-context-auto)
+
 ## Economics running multikey nodes
 
 As for `n` managed keys we will need at least a group of nodes, there is a threshold that a staking operator
@@ -76,9 +81,11 @@ operator when the number of managed keys is greater or equal of the number of sh
 at least 4 keys that are either *eligible* or *waiting*, the switch to multikey mode becomes feasible.
 
 [comment]: # (mx-context-auto)
+
 ## Usage
 
 [comment]: # (mx-context-auto)
+
 ### allValidatorsKeys.pem file
 The switch towards the multikey operation will only require aggregating all BLS keys in a new file, called `allValidatorsKeys.pem`
 that will be loaded by default from the same directory where the `validatorKey.pem` file resides. The path can be altered by using the
@@ -100,6 +107,7 @@ NTA4YjFjMTVlYTIwNDYyMw==
 ```
 
 [comment]: # (mx-context-auto)
+
 ### prefs.toml file
 
 The existing fields `NodeDisplayName` and `Identity` will be applied to all managed and loaded BLS keys. The `NodeDisplayName` will 

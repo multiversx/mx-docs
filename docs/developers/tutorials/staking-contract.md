@@ -218,7 +218,6 @@ Every smart contract needs to have a function annotated with `#[init]`. This fun
 
 [comment]: # (mx-context-auto)
 
-
 ### Creating a devnet wallet
 
 :::note  
@@ -248,7 +247,6 @@ Now that we've created a wallet, it's time to deploy our contract. **Make sure y
 
 ```bash
 
-
     mxpy --verbose contract deploy --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
     --recall-nonce --pem=~/Downloads/tutorialKey.pem \
     --gas-limit=10000000 \
@@ -263,6 +261,8 @@ More details can be found [here](/developers/constants/).
 :::
 
 The things you need to edit are the CLI parameters --pem and --project with your local paths.
+
+[comment]: # (mx-context-auto)
 
 ### Account was not found? But I just created the wallet!
 
