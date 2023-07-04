@@ -9,14 +9,14 @@ Submitting transactions with **mxpy** requires a JSON wallet (keystore) or a PEM
 
 [comment]: # (mx-context-auto)
 
-## The `wallet derive` command
+## The `wallet convert` command
 
 To derive a PEM file for a Wallet, the mnemonic words (seed phrase) of that account are needed. Make sure you have them before continuing.
 
 The command for generating the PEM file from mnemonic words is:
 
 ```
-mxpy --verbose wallet derive <output-file> --mnemonic
+mxpy wallet convert --in-format=raw-mnemonic --out-format=pem --outfile=<output-file>
 ```
 
 In the above command, you must replace `<output-file>` with the name of the PEM file to be created. Upon running the command you will be asked to provide the mnemonic words.
@@ -24,7 +24,7 @@ In the above command, you must replace `<output-file>` with the name of the PEM 
 Here is an example:
 
 ```
-mxpy --verbose wallet derive ./walletKey.pem --mnemonic
+mxpy wallet convert --in-format=raw-mnemonic --out-format=pem --outfile=./walletKey.pem
 > words here some mnemonic words more words et cetera
 ```
 

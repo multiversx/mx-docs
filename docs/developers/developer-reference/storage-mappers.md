@@ -488,7 +488,7 @@ Removes and returns the first/last element from the list.
 
 [comment]: # (mx-context-auto)
 
-### push_after/pus_after
+### push_after/push_before
 ```rust
 pub fn push_after(node: &mut LinkedListNode<Type>, element: Type) -> Option<LinkedListNode<Type>>
 pub fn push_before(node: &mut LinkedListNode<Type>, element: Type) -> Option<LinkedListNode<Type>>
@@ -1008,10 +1008,10 @@ There is no difference between `SingleValueMapper` and the old-school setters/ge
 Storing a `ManagedVec<T>` can be done in two ways:
 
 ```rust
-#[storage_mapper("my_vec_single)]
+#[storage_mapper("my_vec_single")]
 fn my_vec_single(&self) -> SingleValueMapper<ManagedVec<T>>
 
-#[storage_mapper("my_vec_mapper)]
+#[storage_mapper("my_vec_mapper")]
 fn my_vec_mapper(&self) -> VecMapper<T>;
 ```
 
@@ -1032,10 +1032,10 @@ Use `VecMapper` when:
 The primary use for `SetMapper` is storing a whitelist of addresses, token ids, etc. A token ID whitelist can be stored in these two ways:
 
 ```rust
-#[storage_mapper("my_vec_whitelist)]
+#[storage_mapper("my_vec_whitelist")]
 fn my_vec_whitelist(&self) -> VecMapper<TokenIdentifier>
 
-#[storage_mapper("my_set_mapper)]
+#[storage_mapper("my_set_mapper")]
 fn my_set_mapper(&self) -> SetMapper<TokenIdentifier>;
 ```
 

@@ -1,6 +1,6 @@
 ---
 id: sdk-dapp
-title: dApp SDK
+title: sdk-dapp
 ---
 
 Library used to build React dApps on MultiversX Network.

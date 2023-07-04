@@ -205,7 +205,7 @@ const config = {
           },
           {
             from: "/sdk-and-tools/dapp-core",
-            to: "/sdk-and-tools/sdk-dapp",
+            to: "/sdk-and-tools/sdk-dapp"
           },
           {
             from: "/validators/staking-providers-apr",
