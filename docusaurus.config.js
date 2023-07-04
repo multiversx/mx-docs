@@ -112,6 +112,12 @@ const config = {
             "aria-label": "GitHub",
           },
           {
+            href: "https://discord.gg/multiversxbuilders",
+            position: "right",
+            className: "header-discord-link",
+            "aria-label": "Discord",
+          },
+          {
             href: "https://t.me/MultiversX",
             position: "right",
             className: "header-telegram-link",
@@ -173,7 +179,7 @@ const config = {
         appId: `${process.env.REACT_APP_ALGOLIA_APP_ID}`,
         // Public API key: it is safe to commit it
         apiKey: `${process.env.REACT_APP_ALGOLIA_SEARCH_KEY}`,
-        indexName: "dev_multiversx",
+        indexName: "elrond",
         contextualSearch: false,
       },
       slugPreprocessor: (slugBase) =>
@@ -207,7 +213,7 @@ const config = {
           },
           {
             from: "/sdk-and-tools/rest-api/rest-api",
-            to: "/sdk-and-tools/rest-api"
+            to: "/sdk-and-tools/rest-api",
           },
           {
             from: "/developers/developer-reference/wasm-annotations",
@@ -321,7 +327,6 @@ const config = {
             from: "/developers/mandos-reference/embed",
             to: "/developers/scenario-reference/embed",
           },
-
         ],
         createRedirects(existingPath) {
           return undefined; // Return a falsy value: no redirect created

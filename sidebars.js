@@ -52,8 +52,8 @@ const sidebars = {
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
           "developers/tutorials/counter",
-          "developers/tutorials/custom-wallet-connect",
           "developers/tutorials/staking-contract",
+          "developers/tutorials/wallet-connect-v2-migration",
         ],
       },
       {
@@ -65,6 +65,7 @@ const sidebars = {
             type: "category",
             label: "Rust Developer reference",
             items: [
+              "developers/developer-reference/sc-meta",
               "developers/developer-reference/serialization-format",
               "developers/developer-reference/sc-annotations",
               "developers/developer-reference/sc-modules",
@@ -107,15 +108,11 @@ const sidebars = {
         type: "category",
         label: "Blockchain Operations",
         items: [
-          {
-            type: "category",
-            label: "Signing Transactions",
-            items: [
-              "developers/signing-transactions/signing-transactions",
-              "developers/signing-transactions/tools-for-signing",
-              "developers/signing-transactions/signing-programmatically",
-            ],
-          },
+          "developers/account-storage",
+          "developers/built-in-functions",
+          "developers/constants",
+          "developers/contract-api-limits",
+          "developers/creating-wallets",
           {
             type: "category",
             label: "Gas and Fees",
@@ -126,15 +123,21 @@ const sidebars = {
               "developers/gas-and-fees/user-defined-smart-contracts",
             ],
           },
-          "developers/constants",
-          "developers/sc-calls-format",
-          "developers/built-in-functions",
-          "developers/account-storage",
+          "developers/guard-accounts",
           "developers/relayed-transactions",
+          "developers/reproducible-contract-builds",
+          "developers/sc-calls-format",
           "developers/setup-local-testnet",
           "developers/setup-local-testnet-advanced",
-          "developers/creating-wallets",
-          "developers/reproducible-contract-builds",
+          {
+            type: "category",
+            label: "Signing Transactions",
+            items: [
+              "developers/signing-transactions/signing-transactions",
+              "developers/signing-transactions/tools-for-signing",
+              "developers/signing-transactions/signing-programmatically",
+            ],
+          },
         ]
       },
     ],
@@ -168,6 +171,7 @@ const sidebars = {
         label: "Elasticsearch",
         items: [
           "sdk-and-tools/elastic-search",
+          "sdk-and-tools/es-index-wrong-mapping",
           {
             type: "category",
             label: "Elasticsearch indices",
@@ -211,6 +215,7 @@ const sidebars = {
               "sdk-and-tools/sdk-py/mxpy-cli",
               "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
               "sdk-and-tools/sdk-py/smart-contract-interactions",
+              "sdk-and-tools/sdk-py/sdk-py-migration-guides",
             ],
           },
           {
@@ -242,6 +247,7 @@ const sidebars = {
       "wallet/webhooks",
       "wallet/ledger",
       "wallet/create-a-fungible-token",
+      "wallet/keystore",
     ],
     Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     Validators: [
@@ -297,6 +303,7 @@ const sidebars = {
           "validators/key-management/validator-keys",
           "validators/key-management/wallet-keys",
           "validators/key-management/protect-keys",
+          "validators/key-management/multikey-nodes",
         ],
       },
       {

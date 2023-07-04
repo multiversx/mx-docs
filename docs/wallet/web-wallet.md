@@ -3,7 +3,11 @@ id: web-wallet
 title: Web Wallet
 ---
 
+[comment]: # (mx-abstract)
+
 Use the wallet to send, receive and store EGLD in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
+
+[comment]: # (mx-context-auto)
 
 ## **Create a new wallet**
 
@@ -16,6 +20,8 @@ Click on "Create Wallet":
 Carefully read and acknowledge the information, then click "Continue"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwZzp7ogHdlTGeMJfS%2Fimage.png?alt=media&token=1bfb4aaa-f100-42bc-8c67-c88a6696621b)
+
+[comment]: # (mx-context-auto)
 
 ## **Save your secret phrase! This is very important.**
 
@@ -39,6 +45,8 @@ Congratulations, you have a new wallet! The associated Keystore File was downloa
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwaXxYLTy7eQxaSdTu%2Fimage.png?alt=media&token=fee26efa-acc3-4747-b4ff-28c48ec4eff9)
 
+[comment]: # (mx-context-auto)
+
 ## **Access a wallet**
 
 Go to https://wallet.multiversx.com/ and click on "Access Existing" Make sure the “Keystore file” access method is selected, click Browse and locate your Keystore File [erd1… .json], then put in your password and click "Access Wallet"
@@ -48,6 +56,8 @@ Go to https://wallet.multiversx.com/ and click on "Access Existing" Make sure th
 And you’re in! Your EGLD address is on top, you can use the “copy” button (the two rectangles) to copy it to the clipboard.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MMwSng2Vnw9g-Bu5MLu%2F-MMwbFt_D472wfHJBEMY%2Fimage.png?alt=media&token=ebd64bce-707b-4c26-bbe0-b87c3400edd4)
+
+[comment]: # (mx-context-auto)
 
 ## **Overview of your EGLD balance**
 
@@ -60,13 +70,15 @@ After logging into your wallet, your EGLD balances are immediately visible and d
 - **Delegated:** Amount of EGLD delegated towards a Staking Services provider
 - **Total:** the total amount of EGLD associated with this address, sum of the above
 
+[comment]: # (mx-context-auto)
+
 ## **Send a transaction**
 
 Click "Send" on the left-hand section of the wallet:
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN58eBinRmW5e6LVAG-%2F-MN59AGOnxN4jI64a7uH%2Fimage.png?alt=media&token=3f8c82f3-17eb-4be6-946b-1078e3cee773)
 
-Input the destination address & amount, and the click "Send"
+Input the destination address & amount, and then click "Send"
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN54l80sMnQ48eunmLY%2Fimage.png?alt=media&token=04d0986b-b102-4e86-bd17-510265cac43a)
 
@@ -82,6 +94,8 @@ You can always review your transaction history in the "Transactions" menu on the
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MN53mxXcxe6zS8FkywI%2F-MN56UkAcWIpyzH3P1wn%2Fimage.png?alt=media&token=4095fb27-0e42-4d6e-8501-312e8ee59070)
 
+[comment]: # (mx-context-auto)
+
 ## **Receiving EGLD in your wallet**
 
 After logging into your wallet, as described above, you will be able to see your wallet address and share it with others, so they can send you EGLD.
@@ -92,11 +106,121 @@ You can also click "Receive" on the left-hand side to see a QR code for the addr
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJYD3eLB-qPT94-W4_%2F-MIJYv-OyKPBpE3IX1Zb%2Fimage.png?alt=media&token=f2897077-834a-43b2-a22f-ce4687faa1fe)
 
+[comment]: # (mx-context-auto)
+
 ## **Testnet and Devnet faucet**
 
 You can request test tokens from [Testnet Wallet](https://testnet-wallet.multiversx.com) or [Devnet Wallet](https://devnet-wallet.multiversx.com) in the `Faucet` tab.
 
-The faucet is only available once in a given time period. Another alternatives for getting test tokens are:
+The faucet is only available once in a given time period. Other alternatives for getting test tokens are:
 
 - request tokens on [Telegram - Validators chat](https://t.me/MultiversXValidators)
 - use a third-party faucet, such as [https://r3d4.fr/faucet](https://r3d4.fr/faucet)
+
+[comment]: # (mx-context-auto)
+
+## **Guardian**
+
+:::note
+In case your balance is 0 eGLD, the **Guardian** option is not displayed.
+:::
+
+:::note
+All screenshots have been taken from an internal private wallet on a private internal blockchain. The design of the feature may change for the final release on mainnet.
+:::
+
+Starting with Altair release, a new section for Guardian feature is available in the wallet interface:
+
+![img](/wallet/web-wallet/guardian_feature1.png)
+
+[comment]: # (mx-context-auto)
+
+### **Registering the Guardian**
+
+First step should be registering your guardian. After selecting the Guardian feature from the menu, you should be able to set it:
+
+![img](/wallet/web-wallet/guardian_step1.png)
+
+In order to set a Guardian you should use a software-based authenticator. This tool should be able to generate two-factor authentication (2FA's) codes. After installing your authenticator, use it for scanning the QR code and introduce the Guardian Code in the designated fields (see picture below). 
+
+:::important
+If this is the first time when you are doing the registration, you don't have to select the **I cannot access my guardian**.
+:::
+
+![img](/wallet/web-wallet/guardian_step2.png)
+
+**Check & Confirm** the transaction:
+
+![img](/wallet/web-wallet/guardian_step3.png)
+
+[comment]: # (mx-context-auto)
+
+### **Activation period**
+
+Once you have successfully completed all the aforementioned steps, you will be required to wait for the registration period to finalize. In the case of Mainnet, this period will span across **20 epochs**.
+
+:::important
+While waiting for your Guardian to become active, all interactions with the blockchain should not behave differently. 
+:::
+
+![img](/wallet/web-wallet/guardian_step4.png)
+
+[comment]: # (mx-context-auto)
+
+### **Guarding your account**
+
+After the activation period passes, you should be able to Guard your account:
+
+![img](/wallet/web-wallet/guardian_step5.png)
+
+:::important
+In order to Guard your account, a normal ```GuardAccount``` transaction must be sent.
+:::
+
+![img](/wallet/web-wallet/guardian_step6.png)
+
+[comment]: # (mx-context-auto)
+
+### **Sending a guarded transaction**
+
+After setting a guardian and sending the ```GuardAccount``` transaction, all following transactions must be guarded in order to be notarized by the blockchain. This translates that the 2FA code has to be filled in:
+
+Let's take for example a simple eGLD transfer transaction:
+
+![img](/wallet/web-wallet/guardian_sendTx1.png)
+
+Confirm the transaction:
+
+![img](/wallet/web-wallet/guardian_sendTx2.png)
+
+In the last step, you will need to check your authenticator tool to retrieve the Guardian code (2FA code) and enter it for verification. See picture below:
+
+![img](/wallet/web-wallet/guardian_sendTx3.png)
+
+[comment]: # (mx-context-auto)
+
+### **Unguarding your account**
+
+Unguarding your account consists of sending an ```UnGuardAccount``` transaction to your own address. You can do it by simply using the **Unguard Account** button from the Guardian section:
+
+![img](/wallet/web-wallet/guardian_unguard.png)
+
+And confirming the transaction after checking the validity of it:
+
+![img](/wallet/web-wallet/guardian_unguard2.png)
+
+[comment]: # (mx-context-auto)
+
+### **Changing your guardian**
+
+The Guardians feature allows you to change your guardian in situations where you suspect your account has been compromised or if you have lost access to your Authenticator. It is crucial to be aware of certain indicators that signal the need for changing your guardian. One such indicator is the appearance of the image displayed below on the dashboard screen:
+
+![img](/wallet/web-wallet/guardian_step8.png)
+
+:::important
+If it was not you the one triggering the change of the guardian, it may be the case that your account has been compromised and the scammer is trying to change the guardian to a new one, that he can control. Don't worry, he has to wait 20 epochs in order to have his own guardian becoming active. By then you can:
+ - move the funds to a different account, that you control, by using the still active guardian.
+ - instantly erase the pending guardian by using the **Cancel Guardian Change**, and play the "owning" game with the scammer.
+
+We recommend the first solution. Even though you have your funds staked, the unbound period (10 epochs) is shorther than the guardian activation period so that you have enough time to unstake and safely move them to a safe account.
+:::

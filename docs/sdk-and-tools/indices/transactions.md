@@ -3,11 +3,18 @@ id: es-index-transactions
 title: transactions
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `transactions` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field for this index is composed of hex encoded transaction hash.
 (example: `cad4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -46,7 +53,11 @@ The `_id` field for this index is composed of hex encoded transaction hash.
 | version           | The version field represents the version of the transaction.                                                                                                                         |
 | hasLogs           | The hasLogs field is true if the transaction has logs.                                                                                                                               |
 
+[comment]: # (mx-context-auto)
+
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch the latest transactions of an address
 

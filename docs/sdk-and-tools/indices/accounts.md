@@ -3,9 +3,17 @@ id: es-index-accounts
 title: accounts
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `accounts` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
+
 ## _id
 
 The `_id` field of this index is represented by a bech32 encoded address.
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -21,7 +29,11 @@ The `_id` field of this index is represented by a bech32 encoded address.
 | currentOwner     | The currentOwner field holds the address in a bech32 format of the current owner of the smart contract. This field is populated only for the smart contract addresses.               |
 | userName         | The userName field contains the heretag the address possesses.                                                                                                                       |
 
+[comment]: # (mx-context-auto)
+
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch addresses sorted by balance
 
@@ -40,6 +52,8 @@ curl --request GET \
     "size":10
 }'
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Fetch addresses in a shard, sorted by balance
 

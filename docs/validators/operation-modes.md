@@ -3,14 +3,26 @@ id: node-operation-modes
 title: Node operation modes
 ---
 
+[comment]: # (mx-abstract)
+
+Without configuration changes, nodes will start by using the default settings. However, there are several ways to configure the node, depending on the desired operation mode.
+Instead of manually (or programmatically via `sed`s for example) editing the `toml` files, you can use the `--operation-mode` CLI flag described below to specify a custom
+operation mode that will result in config changes.
+
+[comment]: # (mx-context-auto)
+
 ## Introduction
 
 Starting with `v1.4.x` release, a new CLI flag has been introduced to the node. It is `--operation-mode` and its purpose 
 is to override some configuration values that will allow the node to act differently, depending on the use-case.
 
+[comment]: # (mx-context-auto)
+
 ## List of available operation modes
 
 Below you can find a list of operation modes that are supported:
+
+[comment]: # (mx-context-auto)
 
 ### Full archive
 
@@ -22,6 +34,8 @@ Usage:
 The `full-archive` operation mode will change the node's configuration in order to make it able to sync from genesis and also
 be able to serve historical requests. 
 Syncing a node from genesis might take some time since there aren't that many full archive peers to sync from. 
+
+[comment]: # (mx-context-auto)
 
 ### Db Lookup Extension
 
@@ -36,6 +50,8 @@ able to store more data that is to be used in further Rest API requests, such as
 For example, the proxy's `hyperblock` endpoint relies on the fact that it's observers have this setting enabled. Other examples 
 are `/network/esdt/supply/:tokenID` or `/transaction/:txhash?withResults=true`. 
 
+[comment]: # (mx-context-auto)
+
 ### Historical balances
 
 Usage:
@@ -47,14 +63,16 @@ The `historical-balances` operation mode will change the node's configuration in
 By setting this mode, the node won't perform the usual trie pruning, resulting in a more disk usage, but also in 
 the ability to query the balance or the nonce of an address at blocks that were proposed long time ago. 
 
-### Lite observers
+[comment]: # (mx-context-auto)
+
+### Snapshotless observers
 
 Usage:
 ```
-./node --operation-mode lite-observer
+./node --operation-mode snapshotless-observer
 ```
 
-The `lite-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests 
+The `snapshotless-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests 
 by disabling the trie snapshotting mechanism and making sure that older data is removed. 
 
 A use-case for such an observer would be serving live balances requests, or broadcasting transactions, eliminating the costly operations 

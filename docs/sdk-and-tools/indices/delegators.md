@@ -3,14 +3,19 @@ id: es-index-delegators
 title: delegators
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `delegators` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
-
 The `_id` field of this index is composed in this way: `blake2bHash(delegatorAddress+stakingProviderAddress)`, in a base64 encoding (example: `YZNG+r3ZwFtOj0c057MnpVnXAfmSqLai15lusLWg+KM=`).
 
-## Fields
+[comment]: # (mx-context-auto)
 
+## Fields
 
 | Field          | Description                                                                                                                          |
 |----------------|--------------------------------------------------------------------------------------------------------------------------------------|
@@ -31,7 +36,11 @@ The `unDelegateInfo` field is populated with the fields below:
 | timestamp             | The timestamp field represents the timestamp when the unDelegation operation was done.          |
 
 
+[comment]: # (mx-context-auto)
+
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch all delegations of an address
 
@@ -47,6 +56,8 @@ curl --request GET \
 	}
 }'
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Fetch all delegators to a staking provider
 

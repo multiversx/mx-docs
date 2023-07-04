@@ -3,6 +3,16 @@ id: overview
 title: Developers - Overview
 ---
 
+[comment]: # (mx-abstract)
+
+This page serves as the landing destination for builders seeking to construct on the Multiversx platform.
+
+If anything is missing, or you want to get more support, please refer to Discord or Telegram developers chats: 
+- [Discord: MultiversX Builders](https://discord.gg/multiversxbuilders)
+- [Telegram: MultiversX Developers](https://t.me/MultiversXDevelopers)
+
+[comment]: # (mx-context-auto)
+
 ## Developer documentation
 
 Get started with MultiversX by learning to write your first Smart Contract, build your first dApp or learn how to use our
@@ -12,11 +22,16 @@ API.
 For interacting with MultiversX Blockchain via SDKs or Rest API, please refer to [SDKs & Tools](/sdk-and-tools/overview).
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Table of contents
+A list with everything that you can explore as a developer on MultiversX.
+
+[comment]: # (mx-context-auto)
 
 ### Tutorials
 
-Below is a list of tutorials that one can you to get a full experience of building on MultiversX
+Below is a list of tutorials for building on MultiversX:
 
 | Name                                                                                | Description                                                      |
 |-------------------------------------------------------------------------------------|------------------------------------------------------------------|
@@ -25,22 +40,36 @@ Below is a list of tutorials that one can you to get a full experience of buildi
 | [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                  |
 | [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                  |
 | [The Counter Smart Contract](/developers/tutorials/counter)                         | The Counter SC tutorial.                                         |
-| [Custom Wallet Connect](/developers/tutorials/custom-wallet-connect)                | Custom Wallet Connect tutorial.                                  |
 | [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract. |
+| [WalletConnect 2.0 Migration](/developers/tutorials/wallet-connect-v2-migration)    | WalletConnect 2.0 Migration Guide                                |
+
+[comment]: # (mx-context-auto)
+
+### SDKs and Tools
+
+One can (programatically) interact with the MultiversX Network by leveraging a set of **SDKs (TypeScript, Go, Python, C++ etc.), tools and APIs**. For more details, please follow:
+
+| Name                                                              | Description                                                                     |
+|-------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| [SDKs and Tools - Overview](/sdk-and-tools/overview)             | The complete list of SDKs, tools and APIs.                                      |
+
+[comment]: # (mx-context-auto)
 
 ### Signing transactions
 
-The following content explain the structure of a transaction, how to sign or send them
+The following content explains the structure of a transaction, how to sign or send them:
 
 | Name                                                                                 | Description                                             |
 |--------------------------------------------------------------------------------------|---------------------------------------------------------|
 | [Signing transactions](/developers/signing-transactions)                             | How to serialize and sign transactions.                 |
 | [Tools for signing](/developers/signing-transactions/tools-for-signing)              | What to use in order to generate and sign transactions. |
-| [Signing programatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
+| [Signing programmatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
+
+[comment]: # (mx-context-auto)
 
 ### Gas and fees
 
-Learn about transaction's gas and how a fee is calculated
+Learn about transaction's gas and how a fee is calculated:
 
 | Name                                                                                      | Description                                                               |
 |-------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
@@ -49,13 +78,15 @@ Learn about transaction's gas and how a fee is calculated
 | [For System Smart Contracts](/developers/gas-and-fees/system-smart-contracts)             | How fees are computed when interacting with system smart contracts.       |
 | [For User defined Smart Contracts](/developers/gas-and-fees/user-defined-smart-contracts) | How fees are computed when interacting with user defined smart contracts. |
 
+[comment]: # (mx-context-auto)
+
 ### Smart Contract Developer reference
 
 | Name                                                                                                                     | Description                                                                                     |
 |--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
 | [MultiversX serialization format](/developers/developer-reference/serialization-format)                                  | How MultiversX smart contracts serialize arguments, results, and storage.                       |
-| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations your contracts to make use of many built-in features from the framework. |
+| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations in your contracts to make use of many built-in features from the framework. |
 | [MultiversX wasm modules](/developers/developer-reference/sc-modules)                                                    | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
 | [MultiversX wasm contract calls](/developers/developer-reference/sc-contract-calls)                                      | Learn how to call a Smart Contract from another Smart Contract.                                 |
 | [Code metadata](/developers/developer-reference/code-metadata)                                                           | Choose the properties / eligible actions of your Smart Contract.                                |
@@ -68,6 +99,8 @@ Learn about transaction's gas and how a fee is calculated
 | [Rust smart contract build reference](/developers/developer-reference/sc-build-reference)                                | How to build and organize your Smart Contract.                                                  |
 | [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                                   | How to generate random number in Smart Contracts.                                               |
 
+[comment]: # (mx-context-auto)
+
 ### Smart Contract Developers Best Practices
 
 | Name                                                                                        | Description                                        |
@@ -76,6 +109,8 @@ Learn about transaction's gas and how a fee is calculated
 | [Biguint operations](/developers/best-practices/biguint-operations)                         | Handle Biguint operations in a more efficient way. |
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
 | [Multi values](/developers/best-practices/multi-values)                                     | Take advantage of the variadic input and output.   |
+
+[comment]: # (mx-context-auto)
 
 ### Scenarios Reference
 
@@ -87,15 +122,18 @@ Learn about transaction's gas and how a fee is calculated
 | [Scenario Complex Values](/developers/scenario-reference/values-complex) | Handle complex values in scenario tests.                   |
 | [Embedding Scenario code in GO](/developers/scenario-reference/embed)    | How to embed scenario code in Go.                          |
 
+[comment]: # (mx-context-auto)
+
 ### Others
 
-| Name                                                                     | Description                                                                      |
-|--------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| [Constants](/developers/constants)                                       | A list of useful constants that governs the MultiversX Mainnet.                  |
-| [Built in functions](/developers/built-in-functions)                     | Built-in functions - protocol-side functions.                                    |
-| [Account storage](/developers/account-storage)                           | How the data is stored under an account + how to query and change it.            |
-| [Relayed/meta transactions](/developers/relayed-transactions)            | How to prepare transactions whose fee is not paid by the user, but by a relayer. |
-| [Setup local testnet](/developers/setup-local-testnet)                   | How to set up a local testnet - basic solution                                   |
-| [Setup local testnet advanced](/developers/setup-local-testnet-advanced) | How to set up a local testnet - advanced solution                                |
-| [Creating wallets](/developers/creating-wallets)                         | Examples on creating wallets.                                                    |
-| [Reproducible builds](/developers/reproducible-contract-builds)          | How to perform reproducible contract builds.                                     |
+| Name                                                                     | Description                                                                             |
+|--------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| [Constants](/developers/constants)                                       | A list of useful constants that governs the MultiversX Mainnet.                         |
+| [Built in functions](/developers/built-in-functions)                     | Built-in functions - protocol-side functions.                                           |
+| [Account storage](/developers/account-storage)                           | How the data is stored under an account + how to query and change it.                   |
+| [Relayed/meta transactions](/developers/relayed-transactions)            | How to prepare transactions whose fee is not paid by the user, but by a relayer.        |
+| [Setup local testnet](/developers/setup-local-testnet)                   | How to set up a localnet (local testnet) - basic solution                                          |
+| [Setup local testnet advanced](/developers/setup-local-testnet-advanced) | How to set up a localnet (local testnet) - advanced solution                                       |
+| [Creating wallets](/developers/creating-wallets)                         | Examples on creating wallets.                                                           |
+| [Reproducible builds](/developers/reproducible-contract-builds)          | How to perform reproducible contract builds.                                            |
+| [Contract API limits](/developers/contract-api-limits)                   | Limits that a smart contract must abide when calling external (node-related) functions  | 

@@ -3,9 +3,11 @@ id: multi-values
 title: Multi-values
 ---
 
+[comment]: # (mx-context-auto)
+
 ## Variadic inputs and outputs (multi-values)
 
-The Rust language does not natively support variadic arguments. Smart contracts, on the other hand, have no limitations on accepting a variable number of inputs or producing a variable number of results. To accommodate this, and to make I/O processing succint, the Rust framework provides a number of so-called multi-value types, that deserialize from multiple inputs and serialize to multiple outputs.
+The Rust language does not natively support variadic arguments. Smart contracts, on the other hand, have no limitations on accepting a variable number of inputs or producing a variable number of results. To accommodate this, and to make I/O processing succinct, the Rust framework provides a number of so-called multi-value types, that deserialize from multiple inputs and serialize to multiple outputs.
 
 Please note that the same types are used both as arguments and as results. This makes sense especially for places like the callbacks, where the results of the asynchronous call become the inputs of the callback.
 
@@ -25,6 +27,8 @@ fn my_var_args_endpoint(&self, obligatory_arg: T1, args: MultiValueEncoded<T2>) 
 ```
 
 This might seem over-complicated for no good reason. Why not simply use `Option<T>` instead of `OptionalValue<T>` and `ManagedVec<T>` instead of `MultiValueEncoded<T>`? The reason is the type of encoding used for each of them.
+
+[comment]: # (mx-context-auto)
 
 ### Option\<T\> vs OptionalValue\<T\>
 
@@ -53,6 +57,8 @@ For the same token ID and skipped nonce, the encodings look like this:
 `myOptArgEndpoint@544f4b454e2d313233343536`
 
 As you can see, the argument can be skipped altogether instead of passing a `00` (`None`).
+
+[comment]: # (mx-context-auto)
 
 ### ManagedVec\<T\> vs MultiValueEncoded\<T\>
 

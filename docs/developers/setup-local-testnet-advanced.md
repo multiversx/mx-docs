@@ -1,11 +1,14 @@
 ---
 id: setup-local-testnet-advanced
-title: Set up a Local Testnet (advanced)
+title: Set up a Localnet (raw)
 ---
+[comment]: # (mx-abstract)
 
 How to set up a local MultiversX Testnet on a workstation.
 
-# **Prerequisites**
+[comment]: # (mx-context-auto)
+
+## **Prerequisites**
 
 First, clone [mx-chain-go](https://github.com/multiversx/mx-chain-go) and [mx-chain-proxy-go](https://github.com/multiversx/mx-chain-proxy-go) in a directory of your choice.
 
@@ -31,12 +34,14 @@ sudo apt install tmux
 sudo apt install gnome-terminal
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Configure the Testnet**
 
 The variables that dictate the structure of the Testnet are located in the file `scripts/testnet/variables.sh`. For example:
 
 ```bash
-export TESTNETDIR="$HOME/Elrond/testnet"
+export TESTNETDIR="$HOME/MultiversX/testnet"
 export SHARDCOUNT=2
 ...
 ```
@@ -105,6 +110,8 @@ $HOME/Desktop/mytestnet/sandbox
         └── p2p.toml
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Starting and stopping the Testnet**
 
 In order to start the Testnet, run the `start` command.
@@ -128,6 +135,8 @@ $ ./pause.sh
 $ ./resume.sh
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Recreating the Testnet**
 
 In order to destroy the Testnet, run the `clean` command:
@@ -147,6 +156,8 @@ If you need to recreate a Testnet from scratch, use the `reset` command (which a
 $ ./reset.sh
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Inspecting the Proxy**
 
 By default, the local Testnet also includes a local MultiversX Proxy instance, listening on port **7950**. You can query in a browser or directly in the command line. Also see [REST API](/sdk-and-tools/rest-api/).
@@ -157,6 +168,8 @@ $ curl http://localhost:7950/network/config
 
 Given the request above, extract and save the fields `erd_chain_id` and `erd_min_transaction_version` from the response. You will need them in order to send transactions against your local Testnet.
 
+[comment]: # (mx-context-auto)
+
 ## **Configuring mxpy**
 
 You can configure mxpy to point to your local Testnet by default:
@@ -166,6 +179,8 @@ $ mxpy config set chainID 15...
 $ mxpy config set txVersion 123
 $ mxpy config set proxy http://localhost:7950
 ```
+
+[comment]: # (mx-context-auto)
 
 ## **Sending transactions**
 
@@ -184,16 +199,18 @@ You should see the prepared transaction and the **transaction hash** in the `std
 $ curl http://localhost:7950/transaction/1363...
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Deploying and interacting with Smart Contracts**
 
-Let's deploy a Smart Contract using **mxpy**. We'll use the Simple Counter as an example.
+Let's deploy a Smart Contract using **mxpy**.
 
 ```bash
 Deploy
-mxpy --verbose contract deploy --bytecode=./mycounter/output/counter.wasm \
+mxpy --verbose contract deploy --bytecode=./mycontract/output/contract.wasm \
  --recall-nonce --gas-limit=5000000 \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
- --outfile=myCounter.json \
+ --outfile=contract.json \
  --send
 ```
 
@@ -203,7 +220,7 @@ Upon deployment, you can check the status of the transaction and the existence o
 $ curl http://localhost:7950/transaction/daf2...
 $ curl http://localhost:7950/address/erd1qqqqqqqqqqqqqpgql...
 ```
-
+[comment]: # (mx-context)
 If everything is fine (transaction status is `executed` and the `code` property of the address is set), you can interact with or perform queries against the deployed contract:
 
 ```bash

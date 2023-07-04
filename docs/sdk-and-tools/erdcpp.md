@@ -3,9 +3,10 @@ id: erdcpp
 title: C++ SDK
 ---
 
+[comment]: # (mx-abstract)
+
 MultiversX SDK for C++
 
-**erdcpp** can be found here: [mx-sdk-erdcpp](https://github.com/multiversx/mx-sdk-erdcpp).
-It consists of C++ helpers and utilities for interacting with the Blockchain.
+**erdcpp** consists of C++ helpers and utilities for interacting with the Blockchain. 
 
-The SDK documentation can be found [here](https://github.com/multiversx/mx-sdk-erdcpp).
+The source code be found here: [mx-sdk-erdcpp](https://github.com/multiversx/mx-sdk-erdcpp). For more details, follow [the documentation](https://github.com/multiversx/mx-sdk-erdcpp).

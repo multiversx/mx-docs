@@ -2,6 +2,10 @@
 id: structure
 title: Scenario Structure
 ---
+[comment]: # (mx-abstract)
+Good test scenarios ensure software reliability and functionality, that's why is important to follow the proposed structure for having them as robust as possible.
+
+[comment]: # (mx-context-auto)
 
 ## **Top level**
 
@@ -22,7 +26,9 @@ The top-level fields are as follows:
 - `comment` (optional) - it is possible to have some comment; this doesn’t have any effect on test execution
 - `steps` - the core of the scenario. Running a scenario means going through a number of different steps. There are several step types, we will go through each, one by one. Note that each item in this list will be a JSON map with a `step` field that discriminates the step type.
 
-## **Step type: `externalSteps`**
+[comment]: # (mx-context-auto)
+
+## Step type: `externalSteps`
 
 ```json
 {
@@ -43,7 +49,9 @@ The imported steps will be run or re-run every time they are imported. There is 
 
 Also beware that there is currently no protection against cyclic imports.
 
-## **Step type: `setState`**
+[comment]: # (mx-context-auto)
+
+## Step type: `setState`
 
 ```json
 {
@@ -95,7 +103,7 @@ Also beware that there is currently no protection against cyclic imports.
                     "nonce": "0",
                     "balance": "23,000",
                     "esdt": {
-                        "str:MYFUNGIBLE-0001": "100,000,000,000",
+                        "str:MYFUNGIBLE-0001": "100,000,000,000"
                     },
                     "storage": {
                         "str:storage-key-1": "-5",
@@ -172,7 +180,9 @@ Not all of its sections are required each time. These sections are:
     - `blockRound`
     - `blockEpoch`
 
-## **Step type: `checkState`**
+[comment]: # (mx-context-auto)
+
+## Step type: `checkState`
 
 This step checks the state of the blockchain mock at a certain point. It can check the entire state or just part of it.
 
@@ -180,66 +190,67 @@ Is allowed anywhere, not just as the end of tests, so progressive changes can be
 
 ```json
 {
-    "steps": [
-        {
-            "step": "checkState",
-            "comment": "check that previous tx did the right thing",
-            "accounts": {
-                "address:user_account": {
-                    "comment": "we can comment on individual account initializations",
-                    "nonce": "0",
-                    "balance": "*",
-                    "esdt": {
-                        "str:MYFUNGIBLE-0001": "*",
-                        "str:MYSFT-123456": {
-                            "instances": [
-                                {
-                                    "nonce": "24",
-                                    "balance": "*"
-                                },
-                                {
-                                    "nonce": "25",
-                                    "balance": "1",
-                                    "creator": "address:other_creator_address",
-                                    "royalties": "5000",
-                                    "hash": "keccak256:str:other_nft_hash",
-                                    "uri": [
-                                        "str:www.something.com/funny.jpeg"
-                                    ],
-                                    "attributes": "str:other_attributes"
-                                }
-                            ],
-                            "lastNonce": "7",
-                            "roles": [
-                                "ESDTRoleLocalMint",
-                                "ESDTRoleLocalBurn",
-                                "ESDTRoleNFTCreate",
-                                "ESDTRoleNFTAddQuantity",
-                                "ESDTRoleNFTBurn"
-                            ],
-                            "frozen": "false"
-                        }
-                    },
-                    "username": "str:myusername.x",
-                    "storage": {},
-                    "code": ""
+  "steps": [
+    {
+      "step": "checkState",
+      "comment": "check that previous tx did the right thing",
+      "accounts": {
+        "address:user_account": {
+          "comment": "we can comment on individual account initializations",
+          "nonce": "0",
+          "balance": "*",
+          "esdt": {
+            "str:MYFUNGIBLE-0001": "*",
+            "str:MYSFT-123456": {
+              "instances": [
+                {
+                  "nonce": "24",
+                  "balance": "*"
                 },
-                "sc:smart_contract_address": {
-                    "nonce": "0",
-                    "balance": "23,000",
-                    "esdt": {
-                        "str:MYFUNGIBLE-0001": "100,000,000,000",
-                    },
-                    "storage": {
-                        "str:storage-key-1": "-5",
-                        "str:storage-key-2|u32:4": "*",
-                        "+": ""
-                    },
-                    "code": "file:smart-contract.wasm"
+                {
+                  "nonce": "25",
+                  "balance": "1",
+                  "creator": "address:other_creator_address",
+                  "royalties": "5000",
+                  "hash": "keccak256:str:other_nft_hash",
+                  "uri": [
+                    "str:www.something.com/funny.jpeg"
+                  ],
+                  "attributes": "str:other_attributes"
                 }
+              ],
+              "lastNonce": "7",
+              "roles": [
+                "ESDTRoleLocalMint",
+                "ESDTRoleLocalBurn",
+                "ESDTRoleNFTCreate",
+                "ESDTRoleNFTAddQuantity",
+                "ESDTRoleNFTBurn"
+              ],
+              "frozen": "false"
             }
+          },
+          "username": "str:myusername.x",
+          "storage": {},
+          "code": ""
+        },
+        "sc:smart_contract_address": {
+          "nonce": "0",
+          "balance": "23,000",
+          "esdt": {
+            "str:MYFUNGIBLE-0001": "100,000,000,000"
+          },
+          "storage": {
+            "str:storage-key-1": "-5",
+            "str:storage-key-2|u32:4": "*",
+            "+": ""
+          },
+          "code": "file:smart-contract.wasm"
         }
-    ]
+      }
+    }
+  ]
+}
 ```
 
 Fields:
@@ -256,7 +267,9 @@ Fields:
   - `code` - expected smart contract code, or `"*"` to skip check
   - `asyncCallData` - this field is set by asynchronous calls and when contracts send funds to an account
 
-## **Step type: `dumpState`**
+[comment]: # (mx-context-auto)
+
+## Step type: `dumpState`
 
 Simply prints the entire state of the blockchain mock to the console.
 
@@ -267,7 +280,9 @@ Simply prints the entire state of the blockchain mock to the console.
 }
 ```
 
-## **Step type: `scCall`**
+[comment]: # (mx-context-auto)
+
+## Step type: `scCall`
 
 ```
 {
@@ -353,8 +368,10 @@ This step simulates a transaction to an existing smart contract. Fields:
     - `data` - same as the topics, but this is not indexed, cannot perform searches on data. Can be of any length (or sometimes empty).
   - `gas` - indicates the gas remaining for the transaction (`gasLimit` - gas consumed). To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
-  
-## **Step type: `scQuery`**
+
+[comment]: # (mx-context-auto)
+
+## Step type: `scQuery`
 
 ```
 {
@@ -407,9 +424,9 @@ Fields:
   - `gas` - here the consumed gas can be checked. To ignore this check, set to `"*"`
   - `refund` - some operations, like freeing up storage actually gives EGLD back to the caller. To ignore this check, set to `"*"`
 
+[comment]: # (mx-context-auto)
 
-
-## **Step type: `scDeploy`**
+## Step type: `scDeploy`
 
 It is very similar to `scCall`, but it is used specifically for simulating deployment of new smart contracts.
 
@@ -456,8 +473,9 @@ The fields are:
 
 Please note: cannot transfer ESDT during contract deploy. If you need to feed ESDTs to a contract when deploying, send them with a `scCall` immediately after deploy.
 
+[comment]: # (mx-context-auto)
 
-## **Step type: `transfer`**
+## Step type: `transfer`
 
 Lesser used step type. Simulates a simple transfer of EGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
 
@@ -499,9 +517,9 @@ The fields are:
   - `egldValue` - EGLD value
   - `esdtValue` - same as `scCall`
 
+[comment]: # (mx-context-auto)
 
-
-## **Step type: `validatorReward`**
+## Step type: `validatorReward`
 
 Lesser used step type. Simulates a validator reward being sent by the protocol. This transaction has no sender, and beside increasing the recipient balance, it also increments the `ELRONDrewards` field in the smart contract storage. Useful when building delegation or other staking contracts.
 

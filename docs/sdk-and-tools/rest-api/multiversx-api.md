@@ -3,10 +3,14 @@ id: multiversx-api
 title: MultiversX API
 ---
 
+[comment]: # (mx-abstract)
+
 ## About MultiversX API
 
 `api.multiversx.com` is the public instance of MultiversX API and is a wrapper over `gateway.multiversx.com` that brings a robust caching mechanism, alongside Elasticsearch
 historical queries support, tokens media support, delegation & staking data, and many others.
+
+[comment]: # (mx-context-auto)
 
 ## Public URLs
 
@@ -15,6 +19,8 @@ Mainnet: [https://api.multiversx.com](https://api.multiversx.com).
 Testnet: [https://testnet-api.multiversx.com](https://testnet-api.multiversx.com).
 
 Devnet: [https://devnet-api.multiversx.com](https://devnet-api.multiversx.com).
+
+[comment]: # (mx-context-auto)
 
 ## External Providers
 
@@ -28,7 +34,11 @@ Checkout information about [pricing](https://blastapi.io/pricing) and API [limit
 
 More details on how to get your private endpoint can be found [here](https://docs.blastapi.io/blast-documentation/tutorials-and-guides/using-blast-to-get-a-blockchain-endpoint-1).
 
+[comment]: # (mx-context-auto)
+
 ## Dependencies
+
+[comment]: # (mx-context-auto)
 
 ### Core dependencies
 
@@ -39,6 +49,8 @@ For its basic functionality (without including caching or storage improvements),
 - `index`: a database that indexes data that can be queries, such as transactions, blocks, nfts, etc.
   docs: [Elasticsearch](/sdk-and-tools/elastic-search).
 - `delegation`: a microservice used to fetch providers list from the delegation API. Not currently open for public access.
+
+[comment]: # (mx-context-auto)
 
 ### Other dependencies
 
@@ -51,7 +63,7 @@ It depends on the following optional external systems:
 
 - events notifier rabbitmq: queue that pushes logs & events which are handled internally e.g. to trigger NFT media fetch
 - data: provides EGLD price information for transactions
-- maiar exchange: provides price information regarding various tokens listed on the maiar exchange
+- xexchange: provides price information regarding various tokens listed on xExchange
 - ipfs: ipfs gateway for fetching mainly NFT metadata & media files
 - media: ipfs gateway which will be used as prefix for NFT media & metadata returned in the NFT details
 - media internal: caching layer for ipfs data to fetch from a centralized system such as S3 for performance reasons
@@ -62,6 +74,8 @@ It uses the following optional internal systems:
 
 - mysql database: used to store mainly NFT media & metadata information
 - mongo database: used to store mainly NFT media & metadata information
+
+[comment]: # (mx-context-auto)
 
 ## Ways to start MultiversX API
 
@@ -74,6 +88,8 @@ An API instance can be started with the following behavior:
 - elastic updater: used to attach various extra information to items in the elasticsearch, for not having to fetch associated data from other external systems when performing listing requests
 - events notifier: perform various decisions based on incoming logs & events
 
+[comment]: # (mx-context-auto)
+
 ## Rate limiting
 
 Public MultiversX APIs have a rate limit mechanism that brings the following limitations:
@@ -81,9 +97,13 @@ Public MultiversX APIs have a rate limit mechanism that brings the following lim
 - api.multiversx.com (_mainnet_): 2 requests / IP / second
 - devnet-api.multiversx.com (_devnet_): 5 requests / IP / second
 
+[comment]: # (mx-context-auto)
+
 ## Rest API documentation
 
 Rest API documentation of `api.multiversx.com` can be found on the [Swagger docs](https://api.multiversx.com).
+
+[comment]: # (mx-context-auto)
 
 ## References:
 

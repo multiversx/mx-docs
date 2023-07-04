@@ -3,6 +3,8 @@ id: observing-squad
 title: Observing Squad
 ---
 
+[comment]: # (mx-abstract)
+
 The N+1 setup for connecting to the MultiversX Network
 
 In order to integrate with the MultiversX Network and be able to [broadcast transactions](/integrators/creating-transactions) and [query blockchain data](/integrators/querying-the-blockchain) in an _optimized_ approach, one needs to set up an **on-premises Observing Squad**.
@@ -14,6 +16,8 @@ Currently the MultiversX Mainnet has 3 Shards, plus the Metachain. Therefore, th
 :::
 
 By setting up an Observing Squad and querying the blockchain data through the Proxy, the particularities of MultiversX's sharded architecture are abstracted away. **This means that the client interacting with the Proxy does not have to be concerned about sharding at all.**
+
+[comment]: # (mx-context-auto)
 
 ## **System requirements**
 
@@ -33,13 +37,19 @@ The recommended number of CPUs has been updated from `8` to `16` in April 2021, 
 These specs are only a recommendation. Depending on the load over the API or the observers, one should upgrade the machine as to keep the squad synced and with good performance.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## **Setup via the Mainnet scripts**
 
 :::caution
 `elrond-go-scripts-mainnet` are deprecated as of November 2022. Please use `mx-chain-scripts`, explained below.
 :::
 
+[comment]: # (mx-context-auto)
+
 ## **Setup via mx-chain-scripts**
+
+[comment]: # (mx-context-auto)
 
 ## **Installation and Configuration**
 
@@ -82,9 +92,13 @@ Start the nodes and the Proxy using the command:
 
 In order to check the status of the Observing Squad, please see the section **Monitoring and trivial checks** below.
 
+[comment]: # (mx-context-auto)
+
 ## **Upgrading the Observing Squad**
 
 The Observing Squad can be updated using the installation scripts.
+
+[comment]: # (mx-context-auto)
 
 ### **General upgrade procedure**
 
@@ -105,6 +119,53 @@ $ ./script.sh start
 ```
 
 After running the commands above, the upgraded Observing Squad will start again. The expected downtime is about 2-3 minutes.
+
+[comment]: # (mx-context-auto)
+
+## **February 2023 upgrade**
+
+:::note
+For observing squad users that still use the old `elrond-go-scripts`: since the rebranding to `MultiversX`, the scripts have been rebranded as well to `mx-chain-scripts`. 
+:::
+
+In order to upgrade the squad, you first need to migrate to the new scripts, while still running the squad via the old scripts. After that,
+we'll use the new scripts to upgrade the squad.
+
+[comment]: # (mx-context-auto)
+
+### **How to migrate to the new scripts**
+
+If you already migrated from `elrond-go-scripts` to `mx-chain-scripts`, you can skip this section.
+
+Make sure you are on the same directory as the old scripts.
+
+```bash
+$ cd ~
+$ git clone https://github.com/multiversx/mx-chain-scripts
+$ cd mx-chain-scripts
+$ ./script.sh migrate
+```
+
+The above commands should clone the new scripts and migrate the old configuration files to the new ones. You may now proceed to the next section.
+
+[comment]: # (mx-context-auto)
+
+### **How to upgrade to the newest version via the new scripts**
+
+In order to upgrade the squad, we first need to stop the squad, then upgrade the squad and finally start the squad again. These steps are done by:
+
+```bash
+$ cd ~/mx-chain-scripts
+$ ./script.sh github_pull
+$ ./script.sh stop
+$ ./script.sh upgrade_squad
+$ ./script.sh upgrade_proxy
+$ ./script.sh start
+```
+
+After successfully migrating to the new scripts and upgrading the squad, you can now remove the old scripts. (example: `rm -rf ~/elrond-go-scripts`)
+
+[comment]: # (mx-context-auto)
 
 ## **Monitoring and trivial checks**
 
@@ -140,6 +201,8 @@ export NONCE=$(curl http://localhost:8079/network/status/4294967295 | jq '.data[
 curl http://localhost:8079/hyperblock/by-nonce/$NONCE | jq
 
 ```
+
+[comment]: # (mx-context-auto)
 
 ## **Setup via Docker**
 

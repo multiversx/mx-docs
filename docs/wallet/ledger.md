@@ -3,13 +3,19 @@ id: ledger
 title: Ledger
 ---
 
+[comment]: # (mx-abstract)
+
 You can safely store your EGLD by installing the MultiversX EGLD app on your Ledger Nano S or Ledger Nano X device. We recommend using a hardware wallet for managing large amounts of EGLD.
+
+[comment]: # (mx-context-auto)
 
 ## Before you begin
 
 1. [Set up](https://support.ledger.com/hc/en-us/articles/360000613793) your Ledger device
 2. [Download](https://www.ledger.com/ledger-live/download) the Ledger Live application
 3. [Upgrade](https://support.ledger.com/hc/en-us/articles/360002731113) your device with the latest firmware‌
+
+[comment]: # (mx-context-auto)
 
 ## **Install the MultiversX EGLD app on your Ledger**
 
@@ -27,6 +33,8 @@ Teach your Ledger device to work with EGLD by installing the MultiversX app on i
 
 Awesome, you did everything perfectly!
 
+[comment]: # (mx-context-auto)
+
 ## Log into your MultiversX wallet using the Ledger device
 
 - Make sure your Ledger device is connected to your computer
@@ -43,6 +51,8 @@ Awesome, you did everything perfectly!
 
 Your MultiversX Wallet will now open.
 
+[comment]: # (mx-context-auto)
+
 ## Overview of your EGLD balance
 
 After logging into your wallet, your EGLD balances are immediately visible and displayed in easy to follow boxes.
@@ -53,6 +63,8 @@ After logging into your wallet, your EGLD balances are immediately visible and d
 - **Claimable rewards:** delegation rewards that can be claimed
 - **Delegated:** Amount of EGLD delegated towards a Staking Services provider
 - **Total:** the total amount of EGLD associated with this address, sum of the above
+
+[comment]: # (mx-context-auto)
 
 ## Send a transaction using the Ledger
 
@@ -72,6 +84,8 @@ Awesome, your transaction is now sent using your Ledger device.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MI5JAYXn9jokqVnl7aI%2F-MI5McKfmRDXK9_8Bkn2%2Fimage.png?alt=media&token=f2809457-70ed-48fc-9036-d86a625da01a)
 
+[comment]: # (mx-context-auto)
+
 ## **Receiving EGLD in your wallet**
 
 After logging into your wallet, as described above, you will be able to see your wallet address and share it with others, so they can send you EGLD.‌
@@ -81,6 +95,8 @@ Your address is immediately visible on the top part of the wallet, as "Address e
 You can also click "Receive" on the left-hand side to see a QR code for the address, which can be scanned to reveal the public address.
 
 ![img](https://gblobscdn.gitbook.com/assets%2F-LhHlNldCYgbyqXEGXUS%2F-MIJYD3eLB-qPT94-W4_%2F-MIJYv-OyKPBpE3IX1Zb%2Fimage.png?alt=media&token=f2897077-834a-43b2-a22f-ce4687faa1fe)
+
+[comment]: # (mx-context-auto)
 
 ## **Need help?**
 

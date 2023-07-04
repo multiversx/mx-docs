@@ -3,6 +3,13 @@ id: validator-keys
 title: Validator Keys
 ---
 
+[comment]: # (mx-abstract)
+
+Each validator required a private key to be used for signing blocks. This key is called the **Validator Key**.
+The Validator Key is also used to sign the consensus messages that the validator sends to the other validators.
+
+[comment]: # (mx-context-auto)
+
 ## Validator key format
 
 A file containing the keys for your node.
@@ -38,6 +45,8 @@ More clearly:
 Always save and protect **private keys**, they are like your username + password + 2FA at your bank, all combined.
 
 _Public keys_ are like your phone number - no harm in others knowing it, it actually is needed for some scenarios. Still, only share it on a need to basis, like you would do with your own phone number.
+
+[comment]: # (mx-context-auto)
 
 ## How to generate a new key
 

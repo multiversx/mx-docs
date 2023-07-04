@@ -3,6 +3,13 @@ id: use-docker
 title: How to use the Docker Image
 ---
 
+[comment]: # (mx-abstract)
+
+This page will guide you through the process of using the Docker image to run a MultiversX node.
+
+[comment]: # (mx-context-auto)
+
+## Docker node images
 As an alternative to the recommended installation flow, one could choose to run a MultiversX Node using the official Docker images: [here](https://hub.docker.com/u/multiversx)
 
 On the `dockerhub` there are Docker images for every chain (mainnet, devnet and testnet).
@@ -12,20 +19,23 @@ Images name:
 - for devnet: [chain-devnet](https://hub.docker.com/r/multiversx/chain-devnet)
 - for testnet: [chain-testnet](https://hub.docker.com/r/multiversx/chain-testnet)
 
-
 :::note Attention required
 
 In order to get the latest tag for an image check the latest `RELEASE` from the config repository ([mainnet](https://github.com/multiversx/mx-chain-mainnet-config/releases), [devnet](https://github.com/multiversx/mx-chain-devnet-config/releases) or [testnet](https://github.com/multiversx/mx-chain-testnet-config/releases)).
 :::
 
-### How to pull a Docker image from Dockerhub for node ? 
+[comment]: # (mx-context-auto)
+
+## How to pull a Docker image from Dockerhub for node ? 
 ```docker
 IMAGE_NAME=chain-mainnet
 IMAGE_TAG=[latest_release_tag]
 docker pull multiversx/${IMAGE_NAME}:${IMAGE_TAG}
 ```
 
-### How to generate a BLS key ? 
+[comment]: # (mx-context-auto)
+
+## How to generate a BLS key ? 
 In order to generate a new BLS key one has to pull from `dockerhub` an image for the `chain-keygenerator` tool:
 ```
 # pull image from dockerhub
@@ -39,8 +49,9 @@ mkdir ${BLS_KEY_FOLDER}
 docker run --rm --mount type=bind,source=${BLS_KEY_FOLDER},destination=/keys --workdir /keys multiversx/chain-keygenerator:latest
 ```
 
+[comment]: # (mx-context-auto)
 
-### How to run a node with Docker ? 
+## How to run a node with Docker ? 
 
 The following commands run a Node using the Docker image and map a container folder to a local one that holds the necessary configuration:
 
@@ -60,8 +71,10 @@ In the snippet above, make sure you adjust the path to a valid key file and also
 **Devnet** and **Testnet** validators **should carefully** specify the precise tag when using the Docker setup, always test the new releases themselves, and only deploy them once they understand and agree with the changes.
 :::
 
+[comment]: # (mx-context)
+
 :::tip For CentOS users
-If the docker image runs on CentOS, the machine needs the `allow_execheap` flag to be enabled.
+If the node's docker image runs on CentOS, the machine needs the `allow_execheap` flag to be enabled.
 
 In order to do this, run the command `sudo setsebool allow_execheap=true`
 :::

@@ -3,6 +3,8 @@ id: sdk-py-cookbook
 title: Cookbook
 ---
 
+[comment]: # (mx-abstract)
+
 ## Overview
 
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries).
@@ -24,10 +26,12 @@ git+https://git@github.com/multiversx/mx-sdk-py-network-providers.git@v7.8.9#egg
 These packages are distributed separately and have individual release schedules (make sure to check the **release tags on GitHub**), but they are designed to work together, with as little impedance mismatch as possible.
 
 :::important
-Documentation is preliminary and subject to change (the packages might suffer a series of breaking changes in January 2023).
+Documentation is preliminary and subject to change (the packages might suffer a series of breaking changes in 2023).
 :::
 
 <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py-examples/main/Cookbook.ipynb" } -->
+
+[comment]: # (mx-context-auto)
 
 ## Addresses
 
@@ -99,6 +103,8 @@ address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07g
 
 print("Is contract:", address.is_smart_contract())
 ```
+
+[comment]: # (mx-context-auto)
 
 ## EGLD / ESDT transfers
 
@@ -183,7 +189,7 @@ Create a single ESDT transfer:
 ```
 from multiversx_sdk_core.transaction_builders import ESDTTransferBuilder
 
-payment = TokenPayment.fungible_from_amount("COUNTER-8b028f", "100.00", 2)
+payment = TokenPayment.fungible_from_amount("TEST-8b028f", "100.00", 2)
 
 builder = ESDTTransferBuilder(
     config=config,
@@ -253,6 +259,8 @@ print("Transaction:", tx.to_dictionary())
 print("Transaction data:", tx.data)
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Contract deployments and interactions
 
 Create a transaction to deploy a smart contract:
@@ -270,7 +278,7 @@ builder = ContractDeploymentBuilder(
     owner=alice,
     deploy_arguments=[42, "test"],
     code_metadata=metadata,
-    code=Path("./contracts/counter.wasm").read_bytes(),
+    code=Path("./contracts/contract.wasm").read_bytes(),
     gas_limit=10000000
 )
 
@@ -294,7 +302,7 @@ builder = ContractUpgradeBuilder(
     owner=owner,
     upgrade_arguments=[42, "test"],
     code_metadata=metadata,
-    code=Path("./contracts/counter.wasm").read_bytes(),
+    code=Path("./contracts/contract.wasm").read_bytes(),
     gas_limit=10000000
 )
 
@@ -347,6 +355,8 @@ print("Transaction:", tx.to_dictionary())
 print("Transaction data:", tx.data)
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Contract queries
 
 In order to create a contract query and run it against a network provider (more details about **network providers** can be found below), do as follows:
@@ -374,6 +384,8 @@ print("Return code:", response.return_code)
 print("Return data:", response.return_data)
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Creating wallets
 
 Mnemonic generation is based on [`trezor/python-mnemonic`](https://github.com/trezor/python-mnemonic) and can be achieved as follows:
@@ -387,6 +399,15 @@ words = mnemonic.get_words()
 print(words)
 ```
 
+The mnemonic can be saved to a keystore file:
+
+```
+from multiversx_sdk_wallet import UserWallet
+
+wallet = UserWallet.from_mnemonic(mnemonic.get_text(), "password")
+wallet.save(Path("./output/walletWithMnemonic.json"))
+```
+
 Given a mnemonic, one can derive keypairs:
 
 ```
@@ -397,12 +418,10 @@ print("Secret key", secret_key.hex())
 print("Public key", public_key.hex())
 ```
 
-A keypair can be saved as a JSON wallet (recommended):
+A keypair can be saved as a JSON wallet:
 
 ```
-from multiversx_sdk_wallet import UserWallet
-
-wallet = UserWallet(secret_key, "password")
+wallet = UserWallet.from_secret_key(secret_key, "password")
 wallet.save(Path("./output/wallet.json"), address_hrp="erd")
 ```
 
@@ -416,23 +435,35 @@ pem = UserPEM(label=label, secret_key=secret_key)
 pem.save(Path("./output/wallet.pem"))
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Loading wallets
 
 This is not a very common use-case - you might refer to [signing objects](#signing-objects) instead.
 
-From a JSON wallet:
+Load a keystore that holds an **encrypted mnemonic** (and perform wallet derivation at the same time):
 
 ```
 from multiversx_sdk_wallet import UserWallet
 
-secret_key = UserWallet.decrypt_secret_key_from_file(Path("./testwallets/alice.json"), "password")
-public_key = secret_key.generate_public_key()
+secret_key = UserWallet.load_secret_key(Path("./testwallets/withMnemonic.json"), "password", address_index=0)
+address = secret_key.generate_public_key().to_address("erd")
 
 print("Secret key", secret_key.hex())
-print("Public key", public_key.hex())
+print("Address", address)
 ```
 
-From a PEM file:
+Load a keystore that holds an **encrypted secret** key:
+
+```
+secret_key = UserWallet.load_secret_key(Path("./testwallets/alice.json"), "password")
+address = secret_key.generate_public_key().to_address("erd")
+
+print("Secret key", secret_key.hex())
+print("Address", address)
+```
+
+Load the secret key from a PEM file:
 
 ```
 from multiversx_sdk_wallet import UserPEM
@@ -442,6 +473,8 @@ pem = UserPEM.from_file(Path("./testwallets/alice.pem"))
 print("Secret key", pem.secret_key.hex())
 print("Public key", pem.public_key.hex())
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Signing objects
 
@@ -491,13 +524,15 @@ print("Signature", tx.signature.hex())
 Signing an arbitrary message:
 
 ```
-from multiversx_sdk_core import Message
+from multiversx_sdk_core import MessageV1
 
-message = Message.from_string("hello")
+message = MessageV1.from_string("hello")
 message.signature = signer.sign(message)
 
 print("Signature", message.signature.hex())
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Verifying signatures
 
@@ -532,6 +567,8 @@ print(f"Is signature of Bob?", bob_verifier.verify(tx))
 print(f"Is signature of Bob?", bob_verifier.verify(message))
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Creating network providers
 
 It's recommended to use the `multiversx_sdk_network_providers` components **as a starting point**. As your application matures, switch to using your own network provider (e.g. deriving from the default ones), tailored to your requirements.
@@ -552,6 +589,8 @@ from multiversx_sdk_network_providers import ProxyNetworkProvider
 provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Fetching network parameters
 
 In order to fetch network parameters, do as follows:
@@ -562,6 +601,8 @@ config = provider.get_network_config();
 print("Chain ID", config.chain_id);
 print("Min gas price:", config.min_gas_price);
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Fetching account state
 
@@ -586,6 +627,8 @@ tx.nonce = nonce_holder.get_nonce_then_increment()
 ```
 
 For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
+
+[comment]: # (mx-context-auto)
 
 ## Broadcasting transactions
 

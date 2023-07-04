@@ -3,10 +3,17 @@ id: es-index-epochinfo
 title: epochinfo
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes the structure of the `epoch-info` index (Elasticsearch), and also depicts a few examples of how to query it.
+
+[comment]: # (mx-context-auto)
 
 ## _id
 
 The `_id` field of this index is represented by epoch.
+
+[comment]: # (mx-context-auto)
 
 ## Fields
 
@@ -15,7 +22,11 @@ The `_id` field of this index is represented by epoch.
 | accumulatedFees  | The accumulatedFees field represents the accumulated fees that were payed in the epoch.    |
 | developerFees    | The developerFees field represents the developer fees that were accumulated in the epoch.  |
 
+[comment]: # (mx-context-auto)
+
 ## Query examples
+
+[comment]: # (mx-context-auto)
 
 ### Fetch accumulatedFees and developerFees for a specific epoch
 

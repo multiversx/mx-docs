@@ -3,6 +3,8 @@ id: sc-random-numbers
 title: Random Numbers in Smart Contracts
 ---
 
+[comment]: # (mx-abstract)
+
 ## Introduction
 
 Randomness in the blockchain environment is a challenging task to accomplish. Due to the nature of the environemnt, nodes must all have the same "random" generator to be able to reach consensus. This is solved by using Golang's standard seeded random number generator, directly in the VM: https://cs.opensource.google/go/go/+/refs/tags/go1.17.5:src/math/rand/
@@ -14,6 +16,8 @@ The VM function `mBufferSetRandom` uses this library, seeded with the concatenat
 - tx hash
 
 We're not going to go into details about how exactly the Golang library uses the seed or how it generates said random numbers, as that's not the purpose of this tutorial.
+
+[comment]: # (mx-context-auto)
 
 ## Random numbers in smart contracts
 
@@ -27,7 +31,7 @@ For convenience, a wrapper over these methods was created, namely the `Randomnes
 For example, let's say you wanted to generate `n` random `u16`:
 
 ```rust
-let mut rand_source = RandomnessSource::<Self::Api>::new();
+let mut rand_source = RandomnessSource::new();
 for _ in 0..n {
     let my_rand_nr = rand_source.next_u16();
     // do something with the number
@@ -35,6 +39,8 @@ for _ in 0..n {
 ```
 
 Similar methods exist for all Rust unsigned numerical types.
+
+[comment]: # (mx-context-auto)
 
 ## Random numbers in a specific range
 
@@ -51,7 +57,7 @@ let mut my_vec = ManagedVec::new();
 // ...
 
 let vec_len = my_vec.len();
-let mut rand_source = RandomnessSource::<Self::Api>::new();
+let mut rand_source = RandomnessSource::new();
 for i in 0..vec_len {
     let rand_index = rand_source.next_usize_in_range(i, vec_len);
     let first_item = my_vec.get(i).unwrap();
@@ -64,15 +70,19 @@ for i in 0..vec_len {
 
 This algorithm will shuffle each element at position `i`, with an element from position `[i, vec_len)`.
 
+[comment]: # (mx-context-auto)
+
 ## Random bytes
 
 Let's say you want to create some NFTs in your contract, and want to give each of them a random hash of 32 bytes. To do that, you would use the `next_bytes(len: usize)` method of the `RandomnessSource` struct:
 
 ```rust
-let mut rand_source = RandomnessSource::<Self::Api>::new();
+let mut rand_source = RandomnessSource::new();
 let rand_hash = rand_source.next_bytes(32);
 // NFT create logic here
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Considerations
 
@@ -138,6 +148,8 @@ fn user_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 #[storage_mapper("winnersList")]
 fn winners_list(&self) -> UnorderedSetMapper<ManagedAddress>;
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Conclusion
 
