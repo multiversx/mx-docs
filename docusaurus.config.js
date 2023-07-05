@@ -43,6 +43,7 @@ const config = {
           /* other docs plugin options */
           remarkPlugins: [math],
           rehypePlugins: [katex],
+          editUrl: "https://github.com/multiversx/mx-docs/edit/development",
         },
         blog: false, // Optional: disable the blog plugin
         theme: {
