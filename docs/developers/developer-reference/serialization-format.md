@@ -643,7 +643,7 @@ A structure that does not have a natural default value can receive one via custo
 
 To do so, instead of deriving `TopEncode` and `TopDecode`, we will derive `TopEncodeOrDefault` and `TopDecodeOrDefault`, respectively.
 
-We need to also specify what we want that default value to be, both when encoding and decoding. For this, we need to explicitly implement traits `EncodeDefault` and `DecodeDefault` for out structure.
+We need to also specify what we want that default value to be, both when encoding and decoding. For this, we need to explicitly implement traits `EncodeDefault` and `DecodeDefault` for our structure.
 
 Let's look at an example:
 
@@ -687,7 +687,7 @@ Other than that, there are no constraints on what the default value should be.
 We can do the same for an enum:
 
 ```rust
-#[derive(TopEncode, TopDecode)]
+#[derive(TopEncodeOrDefault, TopDecodeOrDefault)]
 enum Either {
   Something(u32),
   SomethingElse(u64),
