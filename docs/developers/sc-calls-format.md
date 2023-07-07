@@ -349,7 +349,7 @@ numeric --> hex
 ```
 7  --> 07
 10 --> 0a
-35 --> 25
+35 --> 23
 ```
 
 [comment]: # (mx-context-auto)
