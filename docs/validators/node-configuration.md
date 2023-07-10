@@ -17,33 +17,44 @@ by using the node's CLI flags.
 Not all configuration values can be user-defined. For example, it is perfectly fine if a node operator increases the size of a cacher or sets an Elasticsearch instance, but changing the genesis total supply, for example, will lead to an inconsistent state as compared to the Network.
 :::
 
-Below you can find an example of how the configuration files look like for the `v1.3.44` node.
+Below you can find an example of how the configuration files look like for the `v1.5.8` node.
 
 ```
-├── api.toml                        
-├── config.toml                     
-├── economics.toml                  
-├── enableEpochs.toml               
-├── enableRounds.toml               
-├── external.toml                   
-├── gasSchedules                    
-│ ├── gasScheduleV1.toml            
-│ ├── gasScheduleV2.toml            
-│ ├── gasScheduleV3.toml            
-│ ├── gasScheduleV4.toml            
+├── api.toml
+├── config.toml
+├── economics.toml
+├── enableEpochs.toml
+├── enableRounds.toml
+├── external.toml
+├── gasSchedules
+│ ├── gasScheduleV1.toml
+│ ├── gasScheduleV2.toml
+│ ├── gasScheduleV3.toml
+│ ├── gasScheduleV4.toml
 │ ├── gasScheduleV5.toml
-│ ├── gasScheduleV6.toml            
-│ └── gasScheduleV7.toml            
-├── genesisContracts                
-│ ├── delegation.wasm               
-│ └── dns.wasm                      
-├── genesis.json                    
-├── genesisSmartContracts.json      
-├── nodesSetup.json                 
-├── p2p.toml                        
-├── prefs.toml                      
-├── ratings.toml                    
-├── systemSmartContractsConfig.toml 
+│ ├── gasScheduleV6.toml
+│ └── gasScheduleV7.toml
+├── genesisContracts
+│ ├── delegation.wasm
+│ └── dns.wasm
+├── genesis.json
+├── genesisSmartContracts.json
+├── nodesSetup.json
+├── p2p.toml
+├── prefs.toml
+├── ratings.toml
+├── systemSmartContractsConfig.toml
+├── testKeys
+│ ├── delegationWalletKey.pem
+│ ├── dnsWalletKey.pem
+│ ├── esdtWalletKey.pem
+│ └── protocolSustainabilityWalletKey.pem
+└── upgradeContracts
+    └── dns
+        └── v3.0
+            ├── deploy.json
+            └── dns.wasm
+
 ```
 
 - `api.toml`  contains the Rest API endpoints configuration (open or closed endpoints, logging and so on)
