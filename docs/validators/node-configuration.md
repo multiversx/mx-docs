@@ -31,8 +31,9 @@ Below you can find an example of how the configuration files look like for the `
 │ ├── gasScheduleV2.toml            
 │ ├── gasScheduleV3.toml            
 │ ├── gasScheduleV4.toml            
-│ ├── gasScheduleV5.toml            
-│ └── gasScheduleV6.toml            
+│ ├── gasScheduleV5.toml
+│ ├── gasScheduleV6.toml            
+│ └── gasScheduleV7.toml            
 ├── genesisContracts                
 │ ├── delegation.wasm               
 │ └── dns.wasm                      
