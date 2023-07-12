@@ -52,7 +52,7 @@ walletProvider.guardTransactions(transactions, {
 Once transactions are back from the web wallet, they can be retrieved as follows:
 
 ```js
-const signedTransactions = new WalletProvider('https://www.wallet.multiversx.com/dapp/init').getTransactionsFromWalletUrl();
+const signedTransactions = new WalletProvider('https://wallet.multiversx.com/dapp/init').getTransactionsFromWalletUrl();
 ```
 
 
