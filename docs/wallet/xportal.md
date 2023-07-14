@@ -6,7 +6,7 @@ title: xPortal
 [comment]: # (mx-abstract)
 
 :::info
-We will begin showcasing features from xPortal under this page. First feature is **Invisible Guardians** with others to follow.
+On this page, we will start presenting features from xPortal, beginning with the Invisible Guardians feature. Subsequently, we will introduce other features in the following sections.
 :::
 
 [comment]: # (mx-context-auto)
