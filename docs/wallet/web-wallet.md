@@ -121,10 +121,6 @@ The faucet is only available once in a given time period. Other alternatives for
 
 ## **Guardian**
 
-:::note
-The screenshots provided are captured from a private internal wallet running on a private internal testnet blockchain.
-:::
-
 Starting with Altair release, a new section for Guardian feature is available in the wallet interface:
 
 ![img](/wallet/web-wallet/guardian_feature1.png)
@@ -247,6 +243,8 @@ And validating it via the authenticator app:
 
 ![img](/wallet/web-wallet/guardian_step45.png)
 
+Due to the transaction being guarded, there is no cooldown period required. The transaction will be processed instantly without any delay.
+
 [comment]: # (mx-context-auto)
 
 ### **Changing your guardian**
@@ -272,7 +270,7 @@ This can be achieved by clicking th *Change Guardian* button from the Guardian's
 ![img](/wallet/web-wallet/guardian_change4.png)
 
 :::note
-The above described process will need 20 epochs for your Guardian to become active. If you did not loose access to the authenticator app there is no reason why you should proceed this way. If you will have a pending guardian for 20 epochs which was not registered by you it means that your account has been compromised and you must move your funds to a safe account.
+The above described process will need 20 epochs for your Guardian to become active. If you did not lose access to the authenticator app there is no reason why you should proceed this way. If you will have a pending guardian for 20 epochs which was not registered by you it means that your account has been compromised and you must move your funds to a safe account.
 :::
 
 It is important to be aware of certain indicators that indicate the necessity of changing your guardian. One such indicator is the presence of a red shield and frame, as depicted in the image below. This visual cue serves as a signal that prompts you to take action and investigate the situation of your account.

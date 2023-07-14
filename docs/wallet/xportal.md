@@ -5,6 +5,8 @@ title: xPortal
 
 [comment]: # (mx-abstract)
 
+Experience the power of convenience and security in one place. Built by MultiversX, [xPortal](https://xportal.com/) is the go-to app for all crypto needs. Securely store your cryptocurrencies and NFTs, effortlessly swap tokens, and soon, enjoy the perks of our upcoming debit cards with exciting cashback rewards. Join millions of users who trust xPortal for seamless finance management, gamified missions & AI avatar creation, global payments, and a social experience like no other.
+
 :::info
 On this page, we will start presenting features from xPortal, beginning with the Invisible Guardians feature. Subsequently, we will introduce other features in the following sections.
 :::
