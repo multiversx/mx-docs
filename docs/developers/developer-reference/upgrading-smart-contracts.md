@@ -72,6 +72,8 @@ You always need to add new fields at the end of the struct, otherwise, this appr
 To fix this, we need to manually implement the decoding traits, which were previously automatically added through the derives.
 
 ```rust
+use multiversx_sc::codec::{NestedDecodeInput, TopDecodeInput};
+
 #[derive(TypeAbi, TopEncode, NestedEncode)]
 pub struct UserData<M: ManagedTypeApi> {
     pub stake_amount: BigUint<M>,
@@ -82,7 +84,7 @@ pub struct UserData<M: ManagedTypeApi> {
 impl<M: ManagedTypeApi> TopDecode for UserData<M> {
     fn top_decode<I>(input: I) -> Result<Self, DecodeError>
     where
-        I: elrond_codec::TopDecodeInput,
+        I: TopDecodeInput,
     {
         let mut buffer = input.into_nested_buffer();
         Self::dep_decode(&mut buffer)
@@ -126,6 +128,8 @@ Unless you want to remove the very last field of the struct, and change nothing 
 Assuming you simply want to remove `last_update_block` for the example above, the implementation would be as follows:
 
 ```rust
+use multiversx_sc::codec::{NestedDecodeInput, TopDecodeInput};
+
 #[derive(TypeAbi, TopEncode, NestedEncode)]
 pub struct UserData<M: ManagedTypeApi> {
     pub stake_amount: BigUint<M>,
@@ -134,7 +138,7 @@ pub struct UserData<M: ManagedTypeApi> {
 impl<M: ManagedTypeApi> TopDecode for UserData<M> {
     fn top_decode<I>(input: I) -> Result<Self, DecodeError>
     where
-        I: elrond_codec::TopDecodeInput,
+        I: TopDecodeInput,
     {
         let mut buffer = input.into_nested_buffer();
         Self::dep_decode(&mut buffer)
