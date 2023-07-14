@@ -13,7 +13,7 @@ Use the wallet to send, receive and store EGLD in a secure manner. Includes auto
 
 Go to [https://wallet.multiversx.com](https://wallet.multiversx.com/) & carefully acknowledge the instructions provided.
 
-Click on "Create Wallet":
+Click on "Create a new wallet":
 
 ![img](/wallet/web-wallet/wallet_landing_page.png)
 
