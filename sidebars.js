@@ -257,6 +257,7 @@ const sidebars = {
       "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger",
+      "wallet/xportal",
       "wallet/create-a-fungible-token",
       "wallet/keystore",
     ],
