@@ -7,6 +7,8 @@ title: Web Wallet
 
 Use the wallet to send, receive and store EGLD in a secure manner. Includes automations for interacting with staking products and ecosystem pools.
 
+You can log in on the Web Wallet using a keystore file, using the xPortal App, using a Ledger device or a pem file. For now, we are going to create a keystore wallet and connect on the Web Wallet using it.
+
 [comment]: # (mx-context-auto)
 
 ## **Create a new wallet**
