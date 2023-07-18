@@ -22,15 +22,15 @@ Wallets don't have custody of your funds, you do. Before utilizing the Multivers
 
 - On the [Chrome Web Store Extension](https://chrome.google.com/webstore/category/extensions), search for **MultiversX DeFi Wallet.** and add it to your browser.
 
-  ![MultiversX-defi-chrome](/wallet/wallet-extension/wallet_extension_step1.png)
+  ![MultiversX-defi-chrome](/wallet/wallet-extension/add_extension.png)
 
 - Confirm the action in the pop-up.
 
-  ![wallet_extension_step2](/wallet/wallet-extension/wallet_extension_step2.png)
+  ![wallet_extension_step2](/wallet/wallet-extension/confirm_extension.png)
 
 - You should receive a notification that the extension has been added successfully.
 
-  ![wallet_extension_step3](/wallet/wallet-extension/wallet_extension_step3.png)
+  ![wallet_extension_step3](/wallet/wallet-extension/extension_installed.png)
 
 [comment]: # (mx-context-auto)
 
@@ -40,7 +40,7 @@ Wallets don't have custody of your funds, you do. Before utilizing the Multivers
 
 - You will be presented with two options: you can either _Create new wallet_ or _Import existing wallet._
 
-  ![MultiversX-defi-example-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
+  ![MultiversX-defi-example-welcome-page](/wallet/wallet-extension/extension.png)
 
 [comment]: # (mx-context-auto)
 
@@ -52,21 +52,21 @@ Wallets don't have custody of your funds, you do. Before utilizing the Multivers
 
 **Step 3:** Next, a secret phrase consisting of a set of 24 secret words will be displayed. Safely backup these secret words. We strongly recommend you write them down or copy and store them in a safe place like a password manager. These secret words are the key to your wallet account and cannot be recovered if lost.
 
-![MultiversX-defi-example-secret-phrase](/wallet/wallet-extension/wallet_extension_step5.png)
+![MultiversX-defi-example-secret-phrase](/wallet/wallet-extension/mnemonic_extension.png)
 
 **Step 4:** Before proceeding to the next step, confirm that you have safely stored your secret phrase.
 
 **Step 5:** For further verification, you will be prompted to input some of the secret words.
 
-![MultiversX-defi-example-authentication](/wallet/wallet-extension/wallet_extension_step6.png)
+![MultiversX-defi-example-authentication](/wallet/wallet-extension/confirm_secret_phrase.png)
 
 **Step 6:** Create a password that will be used to access the wallets stored in the MultiversX DeFi wallet extension. Ensure you keep this password safe as it will be needed to access your wallets regularly. Please note that this password cannot be recovered if lost.
 
-![MultiversX-defi-example-password](/wallet/wallet-extension/wallet_extension_step7.png)
+![MultiversX-defi-example-password](/wallet/wallet-extension/extension_password.png)
 
 **Step 7:** Completed! Your MultiversX DeFi Wallet has been successfully created and set to be used.
 
-![MultiversX-defi-example-successful](/wallet/wallet-extension/wallet_extension_step8.png)
+![MultiversX-defi-example-successful](/wallet/wallet-extension/wallet_extension_created.png)
 
 [comment]: # (mx-context-auto)
 
@@ -82,19 +82,19 @@ The MultiversX wallet has a set of 24-words, which serve as your wallet’s secr
 
 **Step 1:** With the [MultiversX DeFi wallet extension](https://chrome.google.com/webstore/detail/multiversx-defi-wallet/dngmlblcodfobpdpecaadgfbcggfjfnm) installed. Click on ‘’Import existing wallet”.
 
-![MultiversX-defi-example-welcome-page](/wallet/wallet-extension/wallet_extension_step4.png)
+![MultiversX-defi-example-welcome-page](/wallet/wallet-extension/extension.png)
 
 **Step 2:** Next, enter your 24-word secret phrase. You can either enter these words one at a time or you can simply paste in the words using the "_paste_" icon.
 
-![MultiversX-defi-example-import-wallet](/wallet/wallet-extension/wallet_extension_step14.png)
+![MultiversX-defi-example-import-wallet](/wallet/wallet-extension/write_secret_phase.png)
 
 **Step 3:** Enter in your wallet password and confirm this password.
 
-![MultiversX-defi-example-password](/wallet/wallet-extension/wallet_extension_step13.png)
+![MultiversX-defi-example-password](/wallet/wallet-extension/extension_password.png)
 
 **Step 4:** Completed! Your MultiversX DeFi Wallet has been successfully imported and set to be used.
 
-![MultiversX-defi-example-successful](/wallet/wallet-extension/wallet_extension_step8.png)
+![MultiversX-defi-example-successful](/wallet/wallet-extension/wallet.png)
 
 [comment]: # (mx-context-auto)
 
@@ -112,11 +112,11 @@ One of the key features of this extension is that it allows you to send funds fr
 
 **Step 1:** Go to the MultiversX Wallet extension, enter your password and click on _“**Send**”_.
 
-![MultiversX-defi-example-step9](/wallet/wallet-extension/wallet_extension_step9.png)
+![MultiversX-defi-example-step9](/wallet/wallet-extension/wallet.png)
 
 **Step 2:** Enter the address of the wallet you intend to send to and the amount.
 
-![MultiversX-defi-example-send](/wallet/wallet-extension/wallet_extension_step10.png)
+![MultiversX-defi-example-send](/wallet/wallet-extension/send.png)
 
 _(Optional)_ **Step 3**: Enter the data. This is a description of the transaction or any information you wish to pass through.
 
@@ -138,7 +138,7 @@ A deposit can be made to your wallet using the wallet extension. This feature al
 
 - Next, click on the _"*deposit*"_ and share your QR code or wallet address.
 
-  ![MultiversX-defi-example-deposit](/wallet/wallet-extension/wallet_extension_step11.png)
+  ![MultiversX-defi-example-deposit](/wallet/wallet-extension/receive.png)
 
 [comment]: # (mx-context-auto)
 
@@ -146,7 +146,7 @@ A deposit can be made to your wallet using the wallet extension. This feature al
 
 On the wallet extension dashboard, the wallet records all transactions sent and received in your wallet. If you are a new user, it says "_No transactions found for this wallet_" until you make your first transaction.
 
-![MultiversX-defi-example-step9](/wallet/wallet-extension/wallet_extension_step9.png)
+![MultiversX-defi-example-step9](/wallet/wallet-extension/wallet.png)
 
 [comment]: # (mx-context-auto)
 
@@ -165,19 +165,19 @@ Follow these steps to proceed:
 
 **Step 1:** To get started, go to the [MultiversX Exchange](https://xexchange.com) page on the right section of the page, click on the _“connect”_ button.
 
-![wallet_extension_step17](/wallet/wallet-extension/wallet_extension_step17.png)
+![wallet_extension_step17](/wallet/wallet-extension/xexchange.png)
 
 **Step 2:** Select "**_MultiversX DeFi Wallet_**" from the options displayed.
 
-![wallet_extension_step15](/wallet/wallet-extension/wallet_extension_step15.png)
+![wallet_extension_step15](/wallet/wallet-extension/login.png)
 
 **Step 3:** Lastly, enter your password and click on the wallet address you want to connect to.
 
-![wallet_extension_step16](/wallet/wallet-extension/wallet_extension_step16.png)
+![wallet_extension_step16](/wallet/wallet-extension/extension_login.png)
 
 - In a split second, the MultiversX Exchange home page automatically reloads. You’ll notice your account has been added to the right section of the page.
 
-![wallet_extension_step18](/wallet/wallet-extension/wallet_extension_step18.png)
+![wallet_extension_step18](/wallet/wallet-extension/logged.png)
 
 Successful 🎉
 
