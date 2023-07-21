@@ -584,27 +584,27 @@ The default value of a type is the value that we receive when deserializing an e
 
 For instance, for all numeric types, zero is the default value, because we represent it as an empty buffer.
 
-| Type                                      | Default value                  |
-| ----------------------------------------- | ------------------------------ | 
-| `u8`                                      | `0`                            |
-| `u16`                                     | `0`                            |
-| `u32`                                     | `0`                            |
-| `u64`                                     | `0`                            |
-| `usize`                                   | `0`                            |
-| `BigUnt`                                  | `0`                            |
-| `i8`                                      | `0`                            |
-| `i16`                                     | `0`                            |
-| `i32`                                     | `0`                            |
-| `i64`                                     | `0`                            |
-| `isize`                                   | `0`                            |
-| `BigInt`                                  | `0`                            |
-| `bool`                                    | `false`                        |
-| `Option<T>`                               | `None`                         |
-| `ManagedBuffer`                           | `ManagedBuffer::empty()`       |
-| `Vec<T>`                                  | `Vec::new()`                   |
-| `String`                                  | `"".to_string()`               |
-| `DayOfWeek` (see example above)           | `DayOfWeek::Monday`            |
-| `EnumWithEverything` (see example above)  | `EnumWithEverything::Default`  |
+| Type                                     | Default value                 |
+| ---------------------------------------- | ----------------------------- |
+| `u8`                                     | `0`                           |
+| `u16`                                    | `0`                           |
+| `u32`                                    | `0`                           |
+| `u64`                                    | `0`                           |
+| `usize`                                  | `0`                           |
+| `BigUint`                                | `0`                           |
+| `i8`                                     | `0`                           |
+| `i16`                                    | `0`                           |
+| `i32`                                    | `0`                           |
+| `i64`                                    | `0`                           |
+| `isize`                                  | `0`                           |
+| `BigInt`                                 | `0`                           |
+| `bool`                                   | `false`                       |
+| `Option<T>`                              | `None`                        |
+| `ManagedBuffer`                          | `ManagedBuffer::empty()`      |
+| `Vec<T>`                                 | `Vec::new()`                  |
+| `String`                                 | `"".to_string()`              |
+| `DayOfWeek` (see example above)          | `DayOfWeek::Monday`           |
+| `EnumWithEverything` (see example above) | `EnumWithEverything::Default` |
 
 ### Types that have no defaults 
 
