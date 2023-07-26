@@ -133,11 +133,9 @@ The `Redis` section includes the following parameters as described below:
 ```toml
 [Redis]
     # The url used to connect to a pubsub server
-    # Note: not required for running in the notifier mode
     Url = "redis://localhost:6379/0"
 
     # The pubsub channel used for publishing/subscribing
-    # Note: not required for running in the notifier mode
     Channel = "pub-sub"
 
     # The master name for failover client
@@ -178,7 +176,6 @@ notifier service start.
 ```toml
 [RabbitMQ]
     # The url used to connect to a rabbitMQ server
-    # Note: not required for running in the notifier mode
     Url = "amqp://guest:guest@localhost:5672"
 
     # The exchange which holds all logs and events
