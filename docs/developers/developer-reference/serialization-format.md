@@ -94,8 +94,8 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 | `i8`    | `1`                   | `0x01`               | `0x01`               |
 | `i8`    | `-1`                  | `0xFF`               | `0xFF`               |
 | `i8`    | `127`                 | `0x7F`               | `0x7F`               |
+| `i8`    | `-0x11`               | `0xEF`               | `0xEF`               |
 | `i8`    | `-128`                | `0x80`               | `0x80`               |
-| `i16`   | `-0x11`               | `0xEF`               | `0xEF`               |
 | `i16`   | `-1`                  | `0xFF`               | `0xFFFF`             |
 | `i16`   | `-0x11`               | `0xEF`               | `0xFFEF`             |
 | `i16`   | `-0x1122`             | `0xEEDE`             | `0xEEDE`             |
@@ -156,7 +156,7 @@ Next we encode:
 | `BigUint` | `256`  | `0x0100`           | `0x000000020100` | `256` is the smallest number that takes 2 bytes.                                                             |
 | `BigInt`  | `0`    | `0x`               | `0x00000000`     | Signed `0` is also represented as zero-length bytes.                                                         |
 | `BigInt`  | `1`    | `0x01`             | `0x0000000101`   | Signed `1` is also represented as 1 byte.                                                                    |
-| `BigInt`  | `-1`   | `0x01FF`           | `0x00000001FF`   | The shortest 2's complement representation of `-1` if `FF`. The most significant bit is 1.                   |
+| `BigInt`  | `-1`   | `0xFF`             | `0x00000001FF`   | The shortest 2's complement representation of `-1` is `FF`. The most significant bit is 1.                   |
 | `BigUint` | `127`  | `0x7F`             | `0x000000017F`   |                                                                                                              |
 | `BigInt`  | `127`  | `0x7F`             | `0x000000017F`   |                                                                                                              |
 | `BigUint` | `128`  | `0x80`             | `0x0000000180`   |                                                                                                              |
