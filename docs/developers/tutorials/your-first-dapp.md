@@ -194,39 +194,21 @@ After running this command line, we see that a wasm file was generated. This fil
 Deploy the smart contract on MultiversX Devnet
 Next step is to deploy the contract to the blockchain.
 
-**Customize the variables**
-
-Optionally we can customize the default params in `mxpy.json`:
-
-```javascript
-{
-    "configurations": {
-        "default": {
-            "proxy": "https://devnet-api.multiversx.com",
-            "chainID": "D"
-        }
-    },
-    "contract":{
-        "deploy":{
-            "verbose": true,
-            "bytecode": "output/ping-pong.wasm",
-            "recall-nonce": true,
-            "pem": "../../wallet/wallet-owner.pem",
-            "gas-limit": 60000000,
-            "arguments": [1000000000000000000, 600],
-            "send": true,
-            "outfile": "deploy-testnet.interaction.json"
-        }
-     }
-}
-```
-
-Make sure your _owner wallet PEM file_ is in the right folder, the smart contract is build and let's get to the deployment.
+Make sure your _owner wallet PEM file_ is in the right folder, the smart contract is built and let's get to the deployment.
 For now let's continue with the default values.
 We will run:
 
-```sh
-mxpy contract deploy
+```bash
+mxpy --verbose contract deploy \
+ --bytecode output/ping-pong.wasm \
+ --pem ../../wallet/wallet-owner.pem \
+ --recal-nonce \
+ --gas-limit 60000000 \
+ --arguments [1000000000000000000, 600] \
+ --chain D \
+ --proxy https://devnet-api.multiversx.com \
+ --outfile deploy-testnet.interaction.json \
+ --send
 ```
 
 We'll take a look at the log output. We have 2 elements that need our attention: the contract address and the transaction hash. Let's check them in the [Devnet Explorer](https://devnet-explorer.multiversx.com).
