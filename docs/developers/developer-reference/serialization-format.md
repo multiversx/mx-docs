@@ -128,7 +128,7 @@ Even when simulating smart contract execution on 64-bit systems, they must still
 
 For most smart contracts applications, number larger than the maximum uint64 value are needed.
 EGLD balances for instance are represented as fixed-point decimal numbers with 18 decimals.
-This means that to represent even just 1 EGLD we use the number 10<sup>18</sup>, which already exceeds the capacity of a regular 64-bit integer.
+This means that to represent even just 100 EGLD we use the number 100*10<sup>18</sup>, which already exceeds the capacity of a regular 64-bit integer.
 
 **Rust types**: `BigUint`, `BigInt`,
 
