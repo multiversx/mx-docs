@@ -227,7 +227,7 @@ Provides an iterator over all the elements.
 
 ## SetMapper
 
-Stores a set of values, with no duplicates being allowed. It also provides methods for checking if a value already exists in the set.
+Stores a set of values, with no duplicates being allowed. It also provides methods for checking if a value already exists in the set. Values order is given by their order of insertion.
 
 Unless you need to maintain the order of the elements, consider using `UnorderedSetMapper` or `WhitelistMapper` instead, as they're more efficient.
 
@@ -574,7 +574,7 @@ Returns an iterator starting from the given `node_id`. Useful when splitting ite
 
 ## MapMapper
 
-Stores (key, value) pairs, while also allowing iteration over keys. This is the most expensive mapper to use, so make sure you really need to use it.
+Stores (key, value) pairs, while also allowing iteration over keys. This is the most expensive mapper to use, so make sure you really need to use it. Keys order is given by their order of insertion (same as `SetMapper`).
 
 Examples:
 ```rust
