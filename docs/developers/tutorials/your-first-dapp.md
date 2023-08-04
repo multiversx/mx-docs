@@ -202,12 +202,12 @@ We will run:
 mxpy --verbose contract deploy \
  --bytecode output/ping-pong.wasm \
  --pem ../../wallet/wallet-owner.pem \
- --recal-nonce \
+ --recall-nonce \
  --gas-limit 60000000 \
- --arguments [1000000000000000000, 600] \
+ --arguments 1000000000000000000 600 \
  --chain D \
  --proxy https://devnet-api.multiversx.com \
- --outfile deploy-testnet.interaction.json \
+ --outfile deploy-devnet.interaction.json \
  --send
 ```
 
