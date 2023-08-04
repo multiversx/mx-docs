@@ -13,7 +13,7 @@ Upgrading a smart contract is a relatively easy process, but its implications ar
 mxpy --verbose contract upgrade SC_ADDRESS --recall-nonce \
     --pem=PEM_PATH --bytecode=WASM_PATH \
     --gas-limit=100000000 \
-    --send --proxy="https://devnet-gateway.multiversx.com" --chain=D
+    --send --proxy=https://devnet-gateway.multiversx.com --chain=D
 ```
 
 Replace SC_ADDRESS, PEM_PATH and WASM_PATH accordingly. Also, if you want to use testnet/mainnet, also change the proxy and chain ID.
@@ -25,7 +25,7 @@ mxpy --verbose contract upgrade SC_ADDRESS --recall-nonce \
     --pem=PEM_PATH --bytecode=WASM_PATH \
     --arguments arg1 arg2 arg3
     --gas-limit=100000000 \
-    --send --proxy="https://devnet-gateway.multiversx.com" --chain=D
+    --send --proxy=https://devnet-gateway.multiversx.com --chain=D
 ```
 
 You might've seen in many of the MultiversX contracts, we use the `set_if_empty` method in init, instead of plain `set`. This is so we don't accidentally overwrite an important config value during the upgrade process.
