@@ -1,6 +1,6 @@
 ---
 id: mxpy-cli
-title: mxpy CLI
+title: mxpy CLI cookbook
 ---
 
 [comment]: # (mx-abstract)
@@ -18,3 +18,17 @@ mxpy --help
 mxpy tx --help
 mxpy tx new --help
 ```
+
+This page will guide you through the process of handling common tasks using **mxpy**.
+
+## Upgrading mxpy
+
+## Managing dependencies
+
+## Building a contract
+
+## Deploying a contract
+
+## Verifying a contract
+
+## Converting a wallet
