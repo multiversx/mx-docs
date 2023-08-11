@@ -26,8 +26,7 @@ This page will guide you through the process of handling common tasks using **mx
 If you are using a older version of `mxpy` you can simply upgrade to a newer version by typing the following commands in a terminal:
 
 ```sh
-wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py
-python3 mxpy-up.py
+wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py && python3 mxpy-up.py
 ```
 
 This will recreate the light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv`. 
@@ -67,15 +66,20 @@ For example, to install `rust`, you can simply type the command:
 mxpy deps install rust
 ```
 
-If no tag is provided the default version will be installed.
+If no tag is provided **the default version** will be installed.
 
 :::note Default rust version
-The default rust version is the version referenced by the Docker image used for reproducible builds.
+Generally speaking, the default `rust` version installed by `mxpy` is the one referenced by [the latest Docker image](https://github.com/multiversx/mx-sdk-rust-contract-builder/blob/main/Dockerfile) used for reproducible builds.
 :::
+
+Here's how to install a specific version of `rust` (example):
+```sh
+mxpy deps install rust --tag nightly-2023-04-24 --overwrite
+```
 
 ## Building a smart contract
 
-Before deploying your smart contract on the network you need to build it first.
+In order to deploy a smart contract on the network, you need to build it first.
 
 The `mxpy` command used for building contracts is:
 ```sh
@@ -86,6 +90,8 @@ The command accepts a few parameters that you can check out [here](https://githu
 ```sh
 mxpy contract build --help
 ```
+
+If you'd like to build a smart contract directly using `sc-meta` instead, please follow [this](/developers/developer-reference/sc-meta).
 
 ## Deploying a smart contract
 
@@ -98,30 +104,54 @@ mxpy contract deploy
 
 To deploy a smart contract you have to send a transaction to the **Smart Contract Deploy Address** and that address is `erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu`, but you don't have to worry about setting the receiver of the transaction because the above command takes care of it.
 
-The `--bytecode` argument needs to be provided. That is responsible for providing the `.wasm` file after the contract has been built.
-
-If you've built the smart contract using `mxpy` the built `.wasm` file will be in a folder called _output_.
+The `--bytecode` argument specifies the path to your previously-built contract. If you've built the smart contract using `mxpy`, the generated `.wasm` file will be in a folder called _output_.
 
 For example, if your contract is in `~/contracts/adder` the `adder.wasm` file that is the built contract will be in `~/contracts/adder/output`. So, when providing the `--bytecode` argument the path should be `~/contracts/adder/output/adder.wasm`.
 
 The `mxpy contract deploy` command needs a multitude of other parameters that can be checked out [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#contractdeploy) or by simply typing the following:
 ```sh
-mxpy contract build --help
+mxpy contract deploy --help
+```
+
+Let's see an example:
+
+```sh
+mxpy contract deploy --bytecode ~/contracts/adder/output/adder.wasm \
+    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --arguments 42 --gas-limit 5000000 \
+    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --send
 ```
 
 ## Verifying a smart contract
 
-Verifying a smart contract means that the code you deployed on the network is the same as the code in your smart contract. That is done by an external service that builds the contract with the same configuration and checks the hashes. If the hashes match it means that the contracts are the same. If the code is slightly modified the hashes won't match.
+Verifying a smart contract means ensuring that the contract deployed on the network matches a specific version of the original source code. That is done by an external service that, under the hood, performs a reproducible build of the given contract and compares the resulting bytecode with the one deployed on the network.
+
+To learn more about reproducible builds, please follow [this](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [this repository](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
 
 The command used for verifying contracts is:
 ```sh
 mxpy contract verify
 ```
 
-**Add more details here**
+Let's see an example:
+
+```sh
+export CONTRACT_ADDRESS="erd1qqqqqqqqqqqqqpgq6eynj8xra5v87qqzpjhc5fnzzh0fqqzld8ssqrez2g"
+
+mxpy --verbose contract verify ${CONTRACT_ADDRESS} \
+    --packaged-src=adder-0.0.0.source.json \
+    --verifier-url="https://devnet-play-api.multiversx.com" \
+    --docker-image="multiversx/sdk-rust-contract-builder:v5.1.0" \
+    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem
+```
 
 :::info
-The deployer of the contract needs to be the one who initializes the code verification process
+The account that triggers the code verification process must the owner of the contract.
+:::
+
+:::info
+The _packaged source_ passed to `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
 :::
 
 ## Converting a wallet
@@ -133,14 +163,25 @@ To convert a wallet from a type to another you can use:
 mxpy wallet convert
 ```
 
+The available formats are:
+ - `raw-mnemonic` - secret phrase in plain text
+ - `keystore-mnemonic` - secret phrase, as an encrypted JSON keystore file
+ - `keystore-secret-key` - secret key (irreversibly derived from the secret phrase), as an encrypted JSON keystore file
+ - `pem` - secret key (irreversibly derived from the secret phrase), as a PEM file
+
 :::info
-Keep in mind that after converting your secret phrase in a PEM or keystore format, you **can not** convert back to secret phrase.
-We advise you keep a backup of your secret phrase somewhere safe.
+Keep in mind that the conversion isn't always possible (due to irreversible derivations of the secret phrase):
+ - `raw-mnemonic` can be converted to any other format
+ - `keystore-mnemonic` can be converted to any other format
+ - `keystore-secret-key` can only be converted to `pem`
+ - `pem` can only be converted to `keystore-secret-key`
+
+It's mandatory that you keep a backup of your secret phrase somewhere safe.
 :::
 
 For example, let's say you want to convert from _mnemonic_ to a _PEM_ file. We can do that by typing the following:
 ```sh
-mxpy wallet convert --in-format raw-mnemonic --out-format pem
+mxpy wallet convert --in-format raw-mnemonic --out-format pem --outfile key.pem
 ```
 
 You will then be asked to enter the mnemonic. After typing the mnemonic press `Ctrl + D` for Linux/MacOS or `Ctrl + Z` for Windows.
