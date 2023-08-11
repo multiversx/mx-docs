@@ -147,7 +147,7 @@ mxpy --verbose contract verify ${CONTRACT_ADDRESS} \
 ```
 
 :::info
-The account that triggers the code verification process must the owner of the contract.
+The account that triggers the code verification process must be the owner of the contract.
 :::
 
 :::info
