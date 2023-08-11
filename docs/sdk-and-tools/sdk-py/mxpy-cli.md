@@ -21,6 +21,8 @@ mxpy tx new --help
 
 This page will guide you through the process of handling common tasks using **mxpy**.
 
+[comment]: # (mx-context-auto)
+
 ## Upgrading mxpy
 
 If you are using a older version of `mxpy` you can simply upgrade to a newer version by typing the following commands in a terminal:
@@ -31,6 +33,8 @@ wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/ma
 
 This will recreate the light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv`. 
 Since you've had a previous `mxpy` version installed, you probably have already altered the **`$PATH`** variable so you don't have to re-alter it.
+
+[comment]: # (mx-context-auto)
 
 ## Managing dependencies
 
@@ -77,6 +81,8 @@ Here's how to install a specific version of `rust` (example):
 mxpy deps install rust --tag nightly-2023-04-24 --overwrite
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Building a smart contract
 
 In order to deploy a smart contract on the network, you need to build it first.
@@ -92,6 +98,8 @@ mxpy contract build --help
 ```
 
 If you'd like to build a smart contract directly using `sc-meta` instead, please follow [this](/developers/developer-reference/sc-meta).
+
+[comment]: # (mx-context-auto)
 
 ## Deploying a smart contract
 
@@ -123,6 +131,8 @@ mxpy contract deploy --bytecode ~/contracts/adder/output/adder.wasm \
     --send
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Verifying a smart contract
 
 Verifying a smart contract means ensuring that the contract deployed on the network matches a specific version of the original source code. That is done by an external service that, under the hood, performs a reproducible build of the given contract and compares the resulting bytecode with the one deployed on the network.
@@ -153,6 +163,8 @@ The account that triggers the code verification process must be the owner of the
 :::info
 The _packaged source_ passed as `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
 :::
+
+[comment]: # (mx-context-auto)
 
 ## Converting a wallet
 
