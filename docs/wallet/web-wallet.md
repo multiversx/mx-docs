@@ -167,7 +167,7 @@ During the waiting period for your Guardian to become active, all interactions w
 
 ### **Verify Access**
 
-As depicted in the above presented picture, you have the possibility to check if you still have access to your authenticator app by clicking the *Verify Access* button.
+As depicted in the above-presented picture, you have the possibility to check if you still have access to your authenticator app by clicking the *Verify Access* button.
 
 ![img](/wallet/web-wallet/guardian_step41.png)
 
@@ -196,7 +196,7 @@ Upon the successful completion of a transaction, your account will be guarded, s
 ![img](/wallet/web-wallet/guardian_step44.png)
 
 As depicted in the image, 3 new options are now available to the user.
-- [Verify Access]((/wallet/web-wallet#verify-access));
+- [Verify Access](/wallet/web-wallet#verify-access);
 - [Change Guardian](/wallet/web-wallet#changing-your-guardian);
 - [Unguard Account](/wallet/web-wallet#unguarding-your-account).
 
