@@ -137,7 +137,7 @@ It is not enough to receive the funds, the contract also needs to keep track of 
     fn fund(&self) {
         let payment = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment);
+        self.deposit(&caller).update(|deposit| *deposit += payment.clone_value());
     }
 ```
 
@@ -252,11 +252,11 @@ It doesn't make sense to fund after the deadline has passed, so fund transaction
     fn fund(&self) {
         let payment = self.call_value().egld_value();
 
-        let current_time = self.blockchain().get_block_timstamp();
+        let current_time = self.blockchain().get_block_timestamp();
         require!(current_time < self.deadline().get(), "cannot fund after deadline");
 
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment);
+        self.deposit(&caller).update(|deposit| *deposit += payment.clone_value());
     }
 ```
 
@@ -336,7 +336,11 @@ pub enum Status {
 ```
 
 Make sure to add it outside the contract trait.
+Don't forget to add the import for the derive types. This can be place on top off the file next to the other import.
 
+```rust
+multiversx_sc::derive_imports!();
+```
 The `#[derive]` keyword in Rust allows you to automatically implement certain traits for your type. `TopEncode` and `TopDecode` mean that objects of this type are serializable, which means they can be interpreted from/to a string of bytes.
 
 `TypeAbi` is needed to export the type when you want to interact with the already deployed contract. This is out of scope of this tutorial though.
@@ -502,7 +506,7 @@ pub trait Crowdfunding {
         );
 
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment);
+        self.deposit(&caller).update(|deposit| *deposit += payment.clone_value());
     }
 
     #[view]
