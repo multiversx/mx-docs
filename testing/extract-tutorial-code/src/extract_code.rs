@@ -34,7 +34,7 @@ fn main() {
             match filename.as_str() {
                 "Cargo.toml" => write_code_block("../crowdfunding-esdt/Cargo.toml", code_block),
                 "final.rs" => {
-                    write_code_block("../crowdfunding-esdt/src/crowdfunding_main.rs", code_block)
+                    write_code_block("../crowdfunding-esdt/src/crowdfunding.rs", code_block)
                 }
                 "crowdfunding-init.scen.json" => write_code_block(
                     "../crowdfunding-esdt/scenarios/crowdfunding-init.scen.json",
