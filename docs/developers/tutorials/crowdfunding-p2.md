@@ -137,7 +137,7 @@ It is not enough to receive the funds, the contract also needs to keep track of 
     fn fund(&self) {
         let payment = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment.clone_value());
+        self.deposit(&caller).update(|deposit| *deposit += &*payment);
     }
 ```
 
@@ -256,7 +256,7 @@ It doesn't make sense to fund after the deadline has passed, so fund transaction
         require!(current_time < self.deadline().get(), "cannot fund after deadline");
 
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment.clone_value());
+        self.deposit(&caller).update(|deposit| *deposit += &*payment);
     }
 ```
 
@@ -506,7 +506,7 @@ pub trait Crowdfunding {
         );
 
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment.clone_value());
+        self.deposit(&caller).update(|deposit| *deposit +=  &*payment);
     }
 
     #[view]
