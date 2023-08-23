@@ -15,13 +15,13 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy/. If you already have mxpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
+First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy/). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
 [comment]: # (mx-context-auto)
 
 ### mxpy
 
-We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/
+We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check [here](/sdk-and-tools/sdk-py/smart-contract-interactions/) for more detailed explanations regarding what each command does.
 
 [comment]: # (mx-context-auto)
 
@@ -161,7 +161,7 @@ pub trait StakingContract {
 
 `require!` is a macro that is a shortcut for `if !condition { signal_error(msg) }`. Signalling an error will terminate the execution and revert any changes made to the internal state, including token transfers from and to the SC. In this case, there is no reason to continue if the user did not pay anything.
 
-We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.multiversx.com/developers/developer-reference/sc-annotations/
+We've also added `#[view]` annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations [here](/developers/developer-reference/sc-annotations/).
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
@@ -170,7 +170,7 @@ Also, if you're confused about some of the functions used or the storage mappers
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
 
-Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.multiversx.com/developers/best-practices/biguint-operations/
+Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.multiversx.com/developers/best-practices/biguint-operations/.
 
 Secondly, the `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
 
@@ -224,7 +224,7 @@ Every smart contract needs to have a function annotated with `#[init]`. This fun
 You can skip this section if you already have a devnet wallet setup.
 :::
 
-Let's create a devnet wallet. Go to https://devnet-wallet.multiversx.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
+Let's create a devnet wallet. Access the [Web Wallet](https://devnet-wallet.multiversx.com/), and select "create new wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
 Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/
 
@@ -260,7 +260,7 @@ If you wanted to use testnet, the proxy would be "https://testnet-gateway.multiv
 More details can be found [here](/developers/constants/).
 :::
 
-The things you need to edit are the CLI parameters --pem and --project with your local paths.
+The things you need to edit are the CLI parameters `--pem` and `--bytecode` with your local paths.
 
 [comment]: # (mx-context-auto)
 
@@ -438,7 +438,7 @@ getAllStakers
 
 ### Converting erd1 addresses to hex
 
-The smart contracts never work with the erd1 address format, but rather with the hex format. This is NOT an ASCII to hex conversion. This is a bech32 to ASCII conversion.
+The smart contracts never work with the `erd1...` address format, but rather with the hex format. This is NOT an ASCII to hex conversion. This is a bech32 to ASCII conversion.
 
 But then, why did the previous query work?
 
@@ -875,9 +875,10 @@ Then, we've staked the user's entire balance, unstaked half, then unstaked fully
 ### Running the test
 
 To run a test, you can use click on the `Run Test` button from under the test name.
+
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
 
-There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.multiversx.com/developers/developer-reference/sc-debugging/
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that [here](/developers/developer-reference/sc-debugging/).
 
 Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
 
@@ -936,7 +937,7 @@ We've also added `TypeAbi`, since this is required for ABI generation. ABIs are 
 
 Additionally, we've added `PartialEq` and `Debug` derives, for easier use within tests. This will not affect performance in any way, as the code for these is only used during testing/debugging. `PartialEq` allows us to use `==` for comparing instances, while `Debug` will pretty-print the struct, field by field, in case of errors.
 
-If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/developer-reference/serialization-format):
+If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/developer-reference/serialization-format).
 
 [comment]: # (mx-context-auto)
 

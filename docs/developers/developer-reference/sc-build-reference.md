@@ -204,7 +204,7 @@ fn world() -> ScenarioWorld {
 
 ### Calling `build`
 
-A build can be triggered by calling either `mxpy contract build <project>` or `cargo run build` in the meta crate. In fact, mxpy calls the meta crate itself.
+A build can be triggered by calling either `mxpy contract build --path <project>` or `cargo run build` in the meta crate. In fact, mxpy calls the meta crate itself.
 
 By default, this command will produce three files for each output contract: the ABI (`<contract>.abi.json`), the contract (`<contract>.wasm`) and a json file with all the used VM EI imported functions (`<contract>.imports.json`). For the multisig example above, the produced files are as follows:
 
@@ -271,7 +271,7 @@ This command is similar to `build-dbg`, in that it provides a shorthand for buil
 
 ### Calling `clean`
 
-Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
+Calling `mxpy contract clean --path <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
 
 [comment]: # (mx-context-auto)
 
