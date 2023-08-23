@@ -123,6 +123,13 @@ const sidebars = {
               "developers/scenario-reference/embed",
             ],
           },
+          {
+            type: "category",
+            label: "Architecture",
+            items: [
+              "developers/architecture/architecture-overview",
+            ],
+          },
         ],
       },
       {
