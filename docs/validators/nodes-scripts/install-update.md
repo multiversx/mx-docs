@@ -46,7 +46,7 @@ After that, a menu will appear with the following options. Select the option `1`
 As an alternative, the installation can be triggered by executing the following command:
 
 ```bash
-~/mx-chain-scripts/script.sh start
+~/mx-chain-scripts/script.sh install
 ```
 :::
 
