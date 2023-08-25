@@ -14,7 +14,7 @@ In order to ensure that the newly added content is correctly aligned and every M
 ### Requirements:
 
 - a `git` client installed
-- `nodejs` and `npm` installed
+- `nodejs` (v16.14.2) and `npm` installed
 - optional, but useful: an IDE (Visual Code for example)
 
 ### Steps:
