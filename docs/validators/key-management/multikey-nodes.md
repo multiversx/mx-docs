@@ -77,8 +77,8 @@ was the only key assigned to the multikey group (`k` is the value defined in the
 
 As for `n` managed keys we will need at least a group of nodes, there is a threshold that a staking operator
 will want to consider when deciding to switch the operation towards the multikey mode. The switch becomes attractive for the
-operator when the number of managed keys is greater or equal of the number of shards. So, for the time being, when we have 
-at least 4 keys that are either *eligible* or *waiting*, the switch to multikey mode becomes feasible.
+operator when the number of managed keys is greater than the number of shards. So, for the time being, when we have 
+at least 5 keys that are either *eligible* or *waiting*, the switch to multikey mode becomes feasible.
 
 [comment]: # (mx-context-auto)
 
