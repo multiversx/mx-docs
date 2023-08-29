@@ -9,7 +9,7 @@ title: Elasticindexer service
 
 A MultiversX observer node can send messages over `WebSocket` to an elastic indexer service, which will process and index the data in an Elasticsearch database.
 
-The GitHub repository for the notifier service can be found [here](https://github.com/multiversx/mx-chain-es-indexer-go).
+The GitHub repository for the `elasticindexer` service can be found [here](https://github.com/multiversx/mx-chain-es-indexer-go).
 
 [comment]: # (mx-context-auto)
 
@@ -29,7 +29,7 @@ In the figure above:
 
 [comment]: # (mx-context-auto)
 
-## Set up observer and notifier
+## Set up observer and elasticindexer
 
 [comment]: # (mx-context-auto)
 
