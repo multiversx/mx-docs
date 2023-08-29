@@ -3,10 +3,14 @@ id: node-configuration
 title: Node Configuration
 ---
 
+[comment]: # (mx-context-auto)
+
 ## Introduction
 
 The node relies on some configuration files that are meant to allow the node operator to easily change some values
 that won't require a code change, a new release, or so on.
+
+[comment]: # (mx-context-auto)
 
 ## Configuration files
 
@@ -72,6 +76,8 @@ Below you can find an example of how the configuration files look like for the `
 - `prefs.toml` contains a set of custom configuration values, that should not be replaced from an upgrade to another
 - `ratings.toml` contains the parameters used for the nodes' rating mechanism, for example, the start rating, decrease steps, and so on
 - `systemSmartContractsConfig.toml` contains System Smart Contracts configurable values, such as parameters for Staking, ESDT, or Governance
+
+[comment]: # (mx-context-auto)
 
 ### Overriding config.toml values
 

@@ -11,6 +11,8 @@ A MultiversX observer node can send messages over `WebSocket` to an elastic inde
 
 The GitHub repository for the notifier service can be found [here](https://github.com/multiversx/mx-chain-es-indexer-go).
 
+[comment]: # (mx-context-auto)
+
 ## Architectural Overview
 
 The observer node in the network will be connected to `elasticindexer` service.
@@ -21,11 +23,9 @@ Set up one observer for each shard in order to handle all the data in the chain.
 
 ![img](/technology/indexer.png)
 
-
 In the figure above:
 - The observer nodes will send WebSocket messages to the `elasticindexer` service.
 - The `elasticindexer` service will receive and process the WebSocket messages and index data in an Elasticsearch cluster.
-
 
 [comment]: # (mx-context-auto)
 
@@ -53,8 +53,6 @@ The supported config variables are as follows:
 - `BlockingAckOnError`: sets if, in case of data payload processing error, we should block or not the advancement to the next processing event. Set this to true if you wish the node to stop processing blocks if the client/server encounters errors while processing requests
 - `DropMessagesIfNoConnection`: set to true to drop messages if there is no active WebSocket connection to send to.
 
-
-
 The corresponding config section for enabling the driver:
 
 ```toml
@@ -80,6 +78,7 @@ The corresponding config section for enabling the driver:
     DropMessagesIfNoConnection = false
 ```
 
+[comment]: # (mx-context-auto)
 
 ### Elasticindexer service
 
@@ -119,13 +118,11 @@ The `config.web-socket` section has to be aligned with the one from observer nod
         acknowledge-timeout-in-seconds = 50
 ```
 
-
 The supported config variables for the `elastic-cluster` section:
 - `url`: the url of the Elasticsearch cluster
 - `username`: username for authentication (leave empty if not required)
 - `password`: password associated with the username (leave empty if not required)
 - `bulk-request-max-size-in-bytes`: maximum size of a bulk request in bytes
-
 
 The corresponding config section for the Elasticsearch section:
 
@@ -137,7 +134,6 @@ The corresponding config section for the Elasticsearch section:
         password = ""
         bulk-request-max-size-in-bytes = 4194304 # 4MB
 ```
-
 
 For more details on `elasticindexer` service setup, please follow the **Install** and **Launching**
 sections from [README](https://github.com/multiversx/mx-chain-es-indexer-go) in the repository.

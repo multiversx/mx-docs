@@ -574,7 +574,11 @@ export const ExampleTable = () => (
   </table>
 );
 
+[comment]: # (mx-context-auto)
+
 ## Defaults
+
+[comment]: # (mx-context-auto)
 
 ### Built-in defaults
 
@@ -606,6 +610,8 @@ For instance, for all numeric types, zero is the default value, because we repre
 | `DayOfWeek` (see example above)           | `DayOfWeek::Monday`            |
 | `EnumWithEverything` (see example above)  | `EnumWithEverything::Default`  |
 
+[comment]: # (mx-context-auto)
+
 ### Types that have no defaults 
 
 Certain types have no values that can be represented as an empty buffer, and therefore they have no default value.
@@ -636,6 +642,8 @@ enum Either {
 If you need the default, one workaround is to place these structures inside an `Option`. Options always have the default `None`, no matter the contents.
 
 There is, however, another way to do it: for custom structures it is possible to define custom defaults, as we will see in the next section.
+
+[comment]: # (mx-context-auto)
 
 ### Custom defaults
 
