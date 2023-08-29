@@ -19,6 +19,17 @@ Our implementation uses a concept of a queue and makes sure that everything is b
 
 ## Setup
 
+### Option 1
+
+Set up four observers, each corresponding to a shard, with the `WebSocketHost` enabled, and create an instance of the `elasticindexer` service.
+Follow the instructions provided on [this](/sdk-and-tools/indexer) page to accomplish this.
+
+### Option 2 
+
+:::warning
+this Option will be removed on the release `rc/v1.7.0`
+:::
+
 In order to set up an observer that indexes in Elasticsearch, one has to update the `external.toml` file from the node's
 configuration directory. A minimum configuration would have `Enabled` set to `true` and the rest of the fields updated
 accordingly (`URL`, `Username`, `Password`).
