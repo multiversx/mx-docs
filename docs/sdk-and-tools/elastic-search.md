@@ -31,7 +31,7 @@ Follow the instructions provided on [this](/sdk-and-tools/indexer) page to accom
 ### Option 2 
 
 :::warning
-We plan to remove this option in the release `rc/v1.7.0`
+We plan to remove this option in the `rc/v1.7.0` release.
 :::
 
 In order to set up an observer that indexes in Elasticsearch, one has to update the `external.toml` file from the node's
