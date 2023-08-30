@@ -7,9 +7,14 @@ title: Elasticindexer service
 
 ## Overview
 
+:::tip
+This feature will work starting from `rc/v1.6.0` version of the node
+:::
+
+
 A MultiversX observer node can send messages over `WebSocket` to an elastic indexer service, which will process and index the data in an Elasticsearch database.
 
-The GitHub repository for the `elasticindexer` service can be found [here](https://github.com/multiversx/mx-chain-es-indexer-go).
+The GitHub repository for the `elasticindexer` service can be found [here](https://github.com/multiversx/mx-chain-es-indexer-go/tree/rc/v1.6.0).
 
 [comment]: # (mx-context-auto)
 
@@ -39,19 +44,7 @@ On the observer side, there is a WebSocket host that will send messages to the e
 
 In the observer node's configuration directory, `external.toml` config file can be configured
 to enable host driver config. The config file can be found
-[here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/external.toml).
-
-The supported config variables are as follows:
-
-- `Enabled`: signals whether a driver should be attached when launching the node.
-- `Mode`: this flag will start the WebSocket connector as server or client (can be "client" or "server")
-- `URL`: this value represents the IP address and port number that the WebSocket client or server will use to establish a connection
-- `WithAcknowledge`: after a message will be sent it will wait for an ack message if this flag is enabled
-- `AcknowledgeTimeoutInSec`: the duration in seconds to wait for an acknowledgment message, after this time passes an error will be returned
-- `MarshallerType`: possible values: json, gogo protobuf, should be compatible with elasticindexer config
-- `RetryDurationInSec`: the number of seconds when the client will try again to send the data
-- `BlockingAckOnError`: sets if, in case of data payload processing error, we should block or not the advancement to the next processing event. Set this to true if you wish the node to stop processing blocks if the client/server encounters errors while processing requests
-- `DropMessagesIfNoConnection`: set to true to drop messages if there is no active WebSocket connection to send to.
+[here](https://github.com/multiversx/mx-chain-go/blob/rc/v1.6.0/cmd/node/config/external.toml).
 
 The corresponding config section for enabling the driver:
 
@@ -85,15 +78,6 @@ The corresponding config section for enabling the driver:
 In the `elasticindexer` configuration directory (`cmd/elasticindexer/config`), there is the `prefs.toml`
 file that can be used to configure the service.
 
-The supported config variables for web-socket section are:
-- `url`: URL for the WebSocket client/server connection
-  as the port in the `ProxyUrl` described above.
-- `mode`: this flag describes the mode to start the WebSocket connector. Can be "client" or "server"
-- `data-marshaller-type`: possible values: json, gogo protobuf, should be compatible with observer host driver config
-- `retry-duration-in-seconds`: retry duration (receive/send ack signal) in seconds
-- `with-acknowledge`:  after a message will be sent it will wait for an ack message if this flag is enabled
-- `blocking-ack-on-error`: signals if in case of data payload processing error, we should send the ack signal or not
-- `acknowledge-timeout-in-seconds`: the duration in seconds to wait for an acknowledgment message, after this time passes an error will be returned
 
 The `config.web-socket` section has to be aligned with the one from observer node:
 
@@ -117,12 +101,6 @@ The `config.web-socket` section has to be aligned with the one from observer nod
         # The duration in seconds to wait for an acknowledgment message, after this time passes an error will be returned
         acknowledge-timeout-in-seconds = 50
 ```
-
-The supported config variables for the `elastic-cluster` section:
-- `url`: the url of the Elasticsearch cluster
-- `username`: username for authentication (leave empty if not required)
-- `password`: password associated with the username (leave empty if not required)
-- `bulk-request-max-size-in-bytes`: maximum size of a bulk request in bytes
 
 The corresponding config section for the Elasticsearch section:
 
