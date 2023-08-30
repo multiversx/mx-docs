@@ -257,6 +257,8 @@ The Guardians feature allows you to change your guardian in situations where you
 
 This can be achieved by clicking th *Change Guardian* button from the Guardian's main dashboard. Afterwards you will be faced with two options:
 
+[comment]: # (mx-context-auto)
+
 #### **Changing guardian with 20 epochs pre-registration time**
 
 1. **If you have lost access to the authenticator app**, you can address this issue by selecting the option *"I cannot access my guardian"* from the window mentioned below.
@@ -287,7 +289,6 @@ Showcasing the details of the request:
 
 ![img](/wallet/web-wallet/guardian_change6.png)
 
-
 If you were the one who initiated the request to change the guardian and you still have access to the currently active guardian, you will encounter two additional options:
 
 - Skip the cooldown period by clicking the **Confirm Change** button: By selecting this option, you can proceed with the change of the guardian without waiting for the cooldown period to elapse.
@@ -303,6 +304,8 @@ If it was not you the one triggering the change of the guardian, it may be the c
 
 We recommend the first solution. Even though you have your funds staked, the unbound period (10 epochs) is shorther than the guardian activation period so that you have enough time to unstake and safely move them to a safe account.
 :::
+
+[comment]: # (mx-context-auto)
 
 #### **Instantly changing guardian**
 
