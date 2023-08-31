@@ -304,7 +304,7 @@ output
 └── multisig.wasm
 ```
 
-Several arguments can be added to the `build` command, both in mxpy and directly:
+Arguments:
 
 - `--locked` Uses the version from `Cargo.lock`, without updating. Required for reproducible builds.
 - `--wasm-name` followed by name: Replaces the main contract's name with this one. Does nothing for secondary contracts.
@@ -312,14 +312,20 @@ Several arguments can be added to the `build` command, both in mxpy and directly
 - `--wasm-symbols` Does not optimize away symbols at compile time, retains function names, good for investigating the WAT.
 - `--no-wasm-opt` Does not apply `wasm-opt` after the build, this retains function names, good for investigating the WAT.
 - `--wat` Also generates a WAT file for each of the contract outputs. It does so by calling `wasm2wat`.
-- `--mir` Also emit MIR files when building. 
+- `--mir` Also emit MIR files when building.
+- `--llvm-ir` Also emit LL (LLVM) files when building.
 - `--no-abi-git-version` Skips loading the Git version into the ABI.
 - `--no-imports` Does not generate an EI imports JSON file for each contract, as is the default.
-- `--target-dir` Allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
+- `--target-dir-wasm` Allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
+- `--target-dir` Synonym of `--wasm-target-dir`, used for backwards compatibility.
 - `--twiggy-top` Generate a twiggy top report after building.
 - `--twiggy-paths` Generate a twiggy paths report after building.
 - `--twiggy-monos` Generate a twiggy monos report after building.
 - `--twiggy-dominators` Generate a twiggy dominators report after building.
+
+Additional parameters are inherited from `all`, when running out of the standalone tool:
+- `--target-dir-meta` For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files.
+- `--target-dir-all` Overrides both the `--target-dir-meta` and the `--target-dir-wasm` args.
 
 [comment]: # (mx-context-auto)
 
