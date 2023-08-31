@@ -53,7 +53,7 @@ Yes, the Invisible Guardian can be changed, and there are two ways in which this
 
 - If the user has access to the current Guardian the change can be done immediately by signing a transaction;
 - If the user doesn’t have access to the current Guardian the process implies a 20-day cooldown period before the change of Guardian takes place.
- 
+
 [comment]: # (mx-context-auto)
 
 ## Why do I have to wait 20 days to activate or change an Invisible Guardian?
@@ -75,6 +75,7 @@ Aside from the extra security and the peace of mind that goes hand in hand with 
 ## What if something happens to my device or I change it?
 
 The Invisible Guardian is stored locally on your device, but the first step of setting it up is creating an encrypted backup containing the Guardian. This makes importing it on a different device as easy as it gets, all you need to do is to provide the password associated with the guarded backup.
+
 [comment]: # (mx-context-auto)
 
 ## What happens if my secret phrase is compromised?
