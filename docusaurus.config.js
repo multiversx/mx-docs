@@ -247,6 +247,10 @@ const config = {
             to: "/developers/meta/sc-build-reference",
           },
           {
+            from: "/developers/developer-reference/sc-build-reference",
+            to: "/developers/meta/sc-build-reference",
+          },
+          {
             from: "/developers/developer-reference/serialization-format",
             to: "/developers/data/serialization-overview",
           },
