@@ -41,6 +41,10 @@ For instance, for all numeric types, zero is the default value, because we repre
 | `DayOfWeek` (see example above)           | `DayOfWeek::Monday`            |
 | `EnumWithEverything` (see example above)  | `EnumWithEverything::Default`  |
 
+
+
+[comment]: # (mx-context-auto)
+
 ### Types that have no defaults 
 
 Certain types have no values that can be represented as an empty buffer, and therefore they have no default value.

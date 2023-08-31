@@ -21,6 +21,8 @@ In order not to overburden the build CLI, the bulk of the build configuration re
 
 ## Single contract configuration
 
+[comment]: # (mx-context-auto)
+
 ### Specification
 
 Assume we want to build a single contract from the project, encompassing all of the available functionality. Let's look at all the ways in which we can configure it:
