@@ -5,10 +5,10 @@ title: Configuration
 
 [comment]: # (mx-abstract)
 
-We like to say that developers don't write smart contracts directly, rather they write _specification_ for smart contracts, from which an automated process creates the smart contracts themselves.
+We like to say that developers don't write smart contracts directly, rather they write _specifications_ for smart contracts, from which an automated process creates the smart contracts themselves.
 
 This philosophy has two practical implications:
-1. The smart contract code itself has no direct knowledge of the underlying technology or of blockchain, and can therefore be used to build other products too, like tests, interactors, services, etc.
+1. The smart contract code itself has no direct knowledge of the underlying technology or of the blockchain, and can therefore be used to build other products too, such as tests, interactors, services, etc.
 2. The build process is its own separate thing, which needs to be configured.
 
 It is also possible to build different variants of smart contracts from the same code base. These variants can contain only subsets of the endpoints available in code, or they might have different build settings and underlying API. We call this system "multi-contract", and it is explained in greater depth further on.
