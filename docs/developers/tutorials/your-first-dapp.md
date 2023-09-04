@@ -94,7 +94,7 @@ sudo apt install libncurses5 build-essential python3-pip nodejs npm python3.8-ve
 ```
 
 We'll also need `mxpy`, the MultiversX command line tool, which is helpful for signing transactions, deploying smart contracts, managing wallets, accounts and validators. We'll use it to deploy our smart contract.
-mxpy can be installed using the MultiversX documentation page [https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy](https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy)
+mxpy can be installed using the MultiversX [documentation page](/sdk-and-tools/sdk-py/installing-mxpy).
 
 We'll download the `mxpy` installer and we run it
 

@@ -13,7 +13,7 @@ This is a mere example. We **do not offer support for writing contracts in C**. 
 
 ## **Prerequisites**
 
-You need to have [mxpy](/sdk-and-tools/sdk-py/installing-mxpy) installed.
+You need to have `mxpy` installed. Follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy).
 
 [comment]: # (mx-context-auto)
 
@@ -34,7 +34,7 @@ The file `counter.c` is the implementation of the Smart Contract, which defines 
 In order to build the contract to WASM, run the following command:
 
 ```
-mxpy --verbose contract build mycounter
+mxpy --verbose contract build --path mycounter
 ```
 
 Above, `mycounter` refers to the folder that holds the source code. After executing the command, you can inspect the generated files in `mycounter/output`.
