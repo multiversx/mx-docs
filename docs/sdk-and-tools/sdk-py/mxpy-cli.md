@@ -97,7 +97,7 @@ Let's create a keystore wallet:
 ```sh
 mxpy wallet new --format keystore-mnemonic --outfile test_wallet.json
 ```
-The wallet's mnemonic will appear, followed by a prompt to set a password for the file. Once you input the password and press Enter, the file will be generated at the location specified by the `--outfile` argument.
+The wallet's mnemonic will appear, followed by a prompt to set a password for the file. Once you input the password and press "Enter", the file will be generated at the location specified by the `--outfile` argument.
 
 [comment]: # (mx-context-auto)
 
@@ -192,7 +192,7 @@ mxpy contract deploy --bytecode ~/contracts/adder/output/adder.wasm \
     --send
 ```
 
-The `--proxy` is used to specify the url of the proxy and the `--chain` is used to select on which network the contract will be deployed. The chain ID and the proxy need to match for our transaction to be executed. We can't prepare a transaction for the Devnet (using `--chain D`) and send it using the mainnet proxy (https://gateway.multiversx.com).
+The `--proxy` is used to specify the url of the proxy and the `--chain` is used to select the network the contract will be deployed to. The chain ID and the proxy need to match for our transaction to be executed. We can't prepare a transaction for the Devnet (using `--chain D`) and send it using the mainnet proxy (https://gateway.multiversx.com).
 
 The `--recall-nonce` is used to get the nonce of the address so we don't search it manually. It simply makes an API request to get the nonce of the account. The `--arguments` is used in case our contract needs any arguments for the initialization. We know our `adder` needs a value to start adding from, so we set that to `0`.
 
@@ -326,6 +326,6 @@ mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-n
     --send
 ```
 
-That's it! As easy as that. We sent a transaction from Alice to Bob. We choose the receiver of our transaction using the `--receiver` argument and setted the gas limit to `50000` because that is the gas cost of a simple move balance transaction. Notice we used the `--value` argument to pass the value that we want to transfer but we passed in the denomintated value. We transferred 1 eGLD (1 * 10^18). We then specify the proxy and the chain ID for the network we want to send our transaction to and use the `--send` argument to broadcast it.
+That's it! As easy as that. We sent a transaction from Alice to Bob. We choose the receiver of our transaction using the `--receiver` argument and set the gas limit to `50000` because that is the gas cost of a simple move balance transaction. Notice we used the `--value` argument to pass the value that we want to transfer but we passed in the denomintated value. We transferred 1 eGLD (1 * 10^18). We then specify the proxy and the chain ID for the network we want to send our transaction to and use the `--send` argument to broadcast it.
 
-In case you want to save the transaction you can also provide the `--outfile` argument and a `json` file containing the transaction will be saved at the specified location.
+In case you want to save the transaction you can also provide the `--outfile` argument and a `json` file containing the transaction will be saved at the specified location. If you just want to prepare the transaction without broadcasting it simply remove the `--send` argument.
