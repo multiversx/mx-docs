@@ -101,13 +101,105 @@ These storage mappers are, in no particular order:
 
 [comment]: # (mx-context-auto)
 
+## Multi-values in action
+
+[comment]: # (mx-context-auto)
+
+To clarify the way multi-values work in real life, let's provide some examples of how one would go avout calling an endpoint with variadic arguments.
+
+[comment]: # (mx-context-auto)
+
+### Option vs. OptionalValue
+
+Assume we want to have an endpoint that takes a token identifier, and, optionally, a token nonce. There are two ways of doing this:
+
+```rust
+#[endpoint(myOptArgEndpoint1)]
+fn my_opt_arg_endpoint_1(&self, token_id: TokenIdentifier, opt_nonce: Option<u64>) {}
+```
+
+```rust
+#[endpoint(myOptArgEndpoint2)]
+fn my_opt_arg_endpoint_2(&self, token_id: TokenIdentifier, opt_nonce: OptionalValue<u64>) {}
+```
+
+We want to call these endpoints with arguments: `TOKEN-123456` (`0x544f4b454e2d313233343536`) and `5`. To contrast for the two endpoints:
+- Endpoint 1: `myOptArgEndpoint1@544f4b454e2d313233343536@010000000000000005`
+- Endpoint 2: `myOptArgEndpoint2@544f4b454e2d313233343536@05`
+
+
+:::info Note
+In the first case, we are dealing with an [Option](/developers/data/composite-values#options), whose first encoded byte needs to be `0x01`, to signal `Some`. In the second case there is no need for `Option`, `Some` is signalled simply by the fact that the argument was provided.
+
+Also note that the nonce itself is nested-encoded in the first case (being _nested_ in an `Option`), whereas in the second case it can be top-encoded directly.
+:::
+
+Now let's do the same exercise for the case where we want to omit the nonce altogether:
+- Endpoint 1: 
+    - `myOptArgEndpoint1@544f4b454e2d313233343536@`, or
+    - `myOptArgEndpoint1@544f4b454e2d313233343536@00` - also accepted
+- Endpoint 2: 
+    - `myOptArgEndpoint2@544f4b454e2d313233343536`
+
+:::info Note
+The difference is less striking in this case.
+
+In the first case, we encoded `None` as an empty byte array (encoding it as `0x00` is also accepted). In any case, we do need to pass it as an explicit argument.
+
+In the second case, the last argument is omitted altogether.
+:::
+
+We also want to point out that the multi-value implementation is more efficient in terms of gas. It is more easier for the smart contract to count the number of arguments and top-decode, than parse a composite type, like `Option`.
+
+[comment]: # (mx-context-auto)
+
+### ManagedVec vs. MultiValueEncoded
+
+In this example, let's assume we want to receive any number of triples of the form (token ID, nonce, amount). This can be implemented in two ways:
+
+```rust
+#[endpoint(myVarArgsEndpoint1)]
+fn my_var_args_endpoint_1(&self, args: ManagedVec<(TokenIdentifier, u64, BigUint)>) {}
+```
+
+```rust
+#[endpoint(myVarArgsEndpoint2)]
+fn my_var_args_endpoint_2(&self, args: MultiValueManagedVec<TokenIdentifier, u64, BigUint>) {}
+```
+
+The first approach seems a little simpler from the perspective of the smart contract implementation, since we only have a `ManagedVec` of tuples. But when we try to encode this argument, to call the endpoint, we are struck with a format that is quite devastating, both for performance and usability.
+
+Let's call these endpoints with triples: `(TOKEN-123456, 5, 100)` and `(TOKEN-123456, 10, 500)`. The call data would have to look like this:
+`myVarArgsEndpoint1@0000000c_544f4b454e2d313233343536_0000000000000005_00000001_64_0000000c_544f4b454e2d313233343536_000000000000000a_00000002_01f4`.
+
+:::info Note
+Above, we've separated the parts with `_` for readability purposes only. On the real blockchain, there would be no underscores, everything would be concatenated.
+
+Every single value in this call data needs to be nested-encoded. We need to lay out the length or each token identifier, nonces are spelled out in full 8 bytes, and we also need the length of each `BigUint` value.
+:::
+
+As you can see, that endpoint is very hard to work with. All arguments are concatenated into one big chunk, and every single value needs to be nested-encoded. This is why we need to lay out the length for each `TokenIdentifier` (e.g. the 0000000c in front, which is length 12) as well as for each `BigUint` (e.g. the `00000001` before `64`). The nonces are spelled out in their full 8 bytes.
+
+The second endpoint is a lot easier to use. For the same arguments, the call data looks like this:
+`myVarArgsEndpoint2@544f4b454e2d313233343536@05@64@544f4b454e2d313233343536@0a@01f4`.
+
+It is a lot more readable, for several reasons:
+- We have 6 arguments instead of 1;
+- The argument separator makes it much easier for both us and the smart contract to distinguish where each value ends and where the next one begins;
+- All values are top-encoded, so there is no more need for lengths; the nonces can be expressed in a more compact form.
+
+Once again, the multi-value implementation is more efficient in terms of gas. All the contract needs to do is to make sure that the number of arguments is a multiple of 3, and then top-decode each value. Conversely, in the first example, a lot more memory needs to be moved around when splitting the large argument into pieces.
+
+
+[comment]: # (mx-context-auto)
+
 ## Implementation details
 
 All serializable types will implement traits `TopEncodeMulti` and `TopDecodeMulti`.
 
 The components that do argument parsing, returning results, or handling of event logs all work with these two traits.
 
-All serializable types (the ones that implement `TopEncode`) are explicitly decalred to also be multi-value in this declaration:
+All serializable types (the ones that implement `TopEncode`) are explicitly declared to also be multi-value in this declaration:
 
 ```rust
 /// All single top encode types also work as multi-value encode types.

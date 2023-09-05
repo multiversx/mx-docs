@@ -98,7 +98,6 @@ const sidebars = {
               "developers/best-practices/best-practices-basics",
               "developers/best-practices/biguint-operations",
               "developers/best-practices/the-dynamic-allocation-problem",
-              "developers/best-practices/multi-values",
             ],
           },
           {

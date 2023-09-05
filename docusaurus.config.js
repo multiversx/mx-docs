@@ -271,6 +271,10 @@ const config = {
             to: "/developers/data/code-metadata",
           },
           {
+            from: "/developers/best-practices/multi-values",
+            to: "/developers/data/multi-values",
+          },
+          {
             from: "/sdk-and-tools/erdjs",
             to: "/sdk-and-tools/sdk-js",
           },
