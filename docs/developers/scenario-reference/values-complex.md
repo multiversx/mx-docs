@@ -21,7 +21,7 @@ This is ideal for short lists or small structs.
 - a `SimpleStruct { a: u8, b: BoxedBytes }` can be expressed as `"u8:4|nested:str:value-b"`
   :::
 
-Please note that the pipe operator only takes care of the concatenation itself. You are responsible for making sure that [nested encoding](/developers/developer-reference/serialization-format/#the-concept-of-top-level-vs-nested-objects) is used where appropriate.
+Please note that the pipe operator only takes care of the concatenation itself. You are responsible for making sure that [nested encoding](/developers/data/serialization-overview/#the-concept-of-top-level-vs-nested-objects) is used where appropriate.
 
 [comment]: # (mx-context-auto)
 
@@ -148,7 +148,7 @@ pub struct LotteryInfo<M: ManagedTypeApi> {
 
 :::tip
 
-Once again, note that all contained values are in [nested encoding format](/developers/developer-reference/serialization-format/#the-concept-of-top-level-vs-nested-objects):
+Once again, note that all contained values are in [nested encoding format](/developers/data/serialization-overview/#the-concept-of-top-level-vs-nested-objects):
 
 - the token identifier has its length automatically prepended by the `nested:` prefix,
 - big ints are given with the `biguint:` syntax, which prepends their byte length,

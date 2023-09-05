@@ -179,7 +179,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ["rust", "tsx", "jsonp"],
+        additionalLanguages: ["rust", "tsx", "jsonp", "toml"],
       },
       algolia: {
         // The application ID provided by Algolia
@@ -244,11 +244,35 @@ const config = {
           },
           {
             from: "/developers/developer-reference/smart-contract-build-reference",
-            to: "/developers/developer-reference/sc-build-reference",
+            to: "/developers/meta/sc-build-reference",
+          },
+          {
+            from: "/developers/developer-reference/sc-build-reference",
+            to: "/developers/meta/sc-build-reference",
+          },
+          {
+            from: "/developers/developer-reference/serialization-format",
+            to: "/developers/data/serialization-overview",
           },
           {
             from: "/developers/developer-reference/random-numbers-in-smart-contracts",
             to: "/developers/developer-reference/sc-random-numbers",
+          },
+          {
+            from: "/developers/developer-reference/sc-meta",
+            to: "/developers/meta/sc-meta",
+          },
+          {
+            from: "/developers/developer-reference/sc-build-reference",
+            to: "/developers/meta/sc-build-reference",
+          },
+          {
+            from: "/developers/developer-reference/code-metadata",
+            to: "/developers/data/code-metadata",
+          },
+          {
+            from: "/developers/best-practices/multi-values",
+            to: "/developers/data/multi-values",
           },
           {
             from: "/sdk-and-tools/erdjs",
