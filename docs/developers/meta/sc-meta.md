@@ -21,6 +21,10 @@ cargo install multiversx-sc-meta
 
 After that, try calling `sc-meta help` or `sc-meta -h` to see the CLI docs.
 
+:::note endure dependencies
+Ubuntu users have to ensure the existence of the `build_essential` package installed in their system.
+:::
+
 [comment]: # (mx-context-auto)
 
 ## Standalone tool vs. contract tool
