@@ -11,7 +11,7 @@ This page will guide you through the process of handling common tasks using **sd
 This cookbook makes use of `sdk-js 12`. In order to migrate from `sdk-js 11.x` to `sdk-js 12`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
 :::
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/basic.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/basic.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -223,7 +223,7 @@ For a different awaiting strategy, also see [extending sdk-js](https://docs.mult
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/transfers.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/transfers.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -305,7 +305,7 @@ const tx4 = factory.createMultiESDTNFTTransfer({
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_01_deployments.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_01_deployments.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -415,8 +415,7 @@ console.log("Return code:", returnCode);
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_02_abi.md" } -->
-
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_02_abi.md" } -->
 [comment]: # (mx-context-auto)
 
 ## ABI
@@ -450,7 +449,7 @@ existingContract = new SmartContract({ address: existingContractAddress, abi: ab
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_03_queries.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_03_queries.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -566,7 +565,7 @@ let firstValueAsStruct = <Struct>firstValue;
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/contracts_04_interactions.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_04_interactions.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -623,7 +622,7 @@ Then, sign, broadcast `tx` and wait for its completion.
 ```
 import { AbiRegistry } from "@multiversx/sdk-core";
 
-const abiRegistry = AbiRegistry.create({
+let abiRegistry = AbiRegistry.create({
     "endpoints": [
         {
             "name": "foobar",
@@ -652,6 +651,47 @@ let tx3 = contract.methods.doSomethingWithValue([1, 2, 3])
     .withSender(addressOfAlice)
     .withNonce(44)
     .withValue(TokenTransfer.egldFromAmount(1))
+    .withGasLimit(20000000)
+    .withChainID("D")
+    .buildTransaction();
+```
+
+Now let's see an example using variadic arguments, as well:
+
+```
+import { StringValue, VariadicValue } from "@multiversx/sdk-core";
+
+abiRegistry = AbiRegistry.create({
+    "endpoints": [
+        {
+            "name": "foobar",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "doSomething",
+            "inputs": [{
+                "type": "counted-variadic<utf-8 string>"
+            },
+            {
+                "type": "variadic<u64>"
+            }],
+            "outputs": []
+        }
+    ]
+});
+
+contract = new SmartContract({ address: contractAddress, abi: abiRegistry });
+
+let tx4 = contract.methods.doSomething(
+    [
+        // Counted variadic must be explicitly typed 
+        VariadicValue.fromItemsCounted(StringValue.fromUTF8("foo"), StringValue.fromUTF8("bar")),
+        // Regular variadic can be implicitly typed 
+        1, 2, 3
+    ])
+    .withSender(addressOfAlice)
+    .withNonce(45)
     .withGasLimit(20000000)
     .withChainID("D")
     .buildTransaction();
@@ -748,7 +788,7 @@ For customizing the default parser, also see [extending sdk-js](/sdk-and-tools/s
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/2a9ddac3f13b2bf6060ad36420054d79c9a62204/cookbook/generated/signing.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/signing.md" } -->
 
 [comment]: # (mx-context-auto)
 

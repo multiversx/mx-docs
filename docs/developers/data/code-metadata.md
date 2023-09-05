@@ -65,4 +65,4 @@ For example, if we wish to deploy a contract that is payable and upgradeable our
 
 We hope these flags will make it a lot easier to create and upgrade smart contracts.  
 
-If you want to take a look at some more examples of how Code Metadata is used, take a look here: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples
+If you want to take a look at some more examples of how Code Metadata is used, take a look [here](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples).
