@@ -207,5 +207,9 @@ They are top-encoded as is, the exact bytes and nothing else.
 
 Because of their variable length, they need to be serialized like variable length byte slices when nested, so the length is explicitly encoded at the start.
 
+ Type            | Value                       | Top-level encoding | Nested encoding    |
+| --------------- | --------------------------- | ------------------ | ------------------ |
+| `TokenIdentifier` | `ABC-123456`                    | `0x4142432d313233343536`         | `0x0000000A4142432d313233343536` |
+
 ---
 
