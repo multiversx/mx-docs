@@ -51,8 +51,8 @@ The settings are as follows:
     - Configures the post-processor that checks the environment interface (EI) used by the built smart contract.
     - The post-processor currently only emits a warning, but this might become a hard error in the future.
     - _values_:
-        - `"1.3"` - the EI version that comes with VM 1.5, coming to mainnet in September 2023
-        - `"1.2"` - the EI version that comes with VM 1.4, currently available on mainnet 
+        - `"1.3"` - the EI version that comes with VM 1.5; check [release notes](https://multiversx.com/releases) for currently running VM version
+        - `"1.2"` - the EI version that comes with VM 1.4; check [release notes](https://multiversx.com/releases) for currently running VM version 
         - `"1.1"` - older version of the EI, here for historical reasons
         - `"1.0"` - older version of the EI, here for historical reasons
     - _default_: `"1.2"`
