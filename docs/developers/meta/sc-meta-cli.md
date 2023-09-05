@@ -90,7 +90,7 @@ Paramameters:
 
 ### Calling `upgrade`
 
-Calling `sc-meta upgrade` will try to automatically upgrade a contract or group of contracts to the latest version.
+Calling `sc-meta upgrade` will try to automatically alter the code of a contract or group of contracts to make it/them compatible with the latest rust framework version.
 
 The oldest version currently supported is `0.28.0`. Any older than that, and the developer will need to manually upgrade it to `0.28.0`.
 
