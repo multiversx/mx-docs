@@ -175,7 +175,7 @@ The tool will replace all necessary names in the project, based on the the proje
 
 Paramameters:
 - `--template`
-    - The contract template to clone.
+    - The contract template to clone. Available options can be retrieve by using [this](/developers/meta/sc-meta-cli#calling-templates)
     - Required.
 - `--name`
     - The new name the contract is to receive.
