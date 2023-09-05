@@ -17,11 +17,6 @@ sc-meta all build
 The traditional way to trigger a build in console is to call `mxpy contract build --path <project>`, which works as well. However, mxpy currently just forwards commands to the [MultiversX Metaprogramming standalone tool](/developers/meta/sc-meta#introduction), so you might as well call it directly.
 :::
 
-Alternatively you can go to your installed `MultiversX Workspace Explorer` VS Code extension and right click your Smart Contract followed by `Build Contract`
-
-![build contract screenshot](/developers/sc-meta/ide-build-screenshot.png "Build Contract from the MultiversX Workspace Explorer extension")
-
-
 ---
 
 [comment]: # (mx-exclude-context)
