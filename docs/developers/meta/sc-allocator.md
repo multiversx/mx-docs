@@ -22,4 +22,6 @@ Then, we added the following allocators to our framework:
 - `LeakingAllocator` uses memory.grow to get hold of memory pages. It also never deallocates. This is because contracts do not generally fill up so much memory and all memory is erased at the end of execution anyway. Suitable for contracts with a little more data.
 - `wee_alloc` is still supported. It is, however, not included in the framework. Contracts need to import it explicitly.
 
-I must reiterate: while these allocators are functional, they should be avoided by all contracts. Only consider this functionality when all else fails, in extremely niche situations, or for dealing very old code.
+:::caution
+While these allocators are functional, they should be avoided by all contracts. Only consider this functionality when all else fails, in extremely niche situations, or for dealing with very old code.
+:::
