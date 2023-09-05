@@ -92,7 +92,7 @@ Paramameters:
 
 Calling `sc-meta upgrade` will try to automatically upgrade a contract or group of contracts to the latest version.
 
-The oldest version currently supported is `0.28.0`. Any older than that, and the developer will need to upgrade it by hand to `0.28.0`.
+The oldest version currently supported is `0.28.0`. Any older than that, and the developer will need to manually upgrade it to `0.28.0`.
 
 It is especially important when upgrading from `0.38` to `0.39.0`, since a lot of changes happened at that point.
 

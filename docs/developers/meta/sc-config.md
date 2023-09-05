@@ -66,7 +66,7 @@ The settings are as follows:
         - `"wee_alloc"` - the `wee_alloc` allocator is used, which must be imported separately to the wasm crate.
     - _default_: `"fail"`
 - `stack-size`
-    - Allows adjusting the amount of memory set aside for the stack, in a WebAssembly contract.
+    - Allows adjusting the amount of memory allocated for the stack, in a WebAssembly contract.
     - _values_:
         - either number of bytes, e.g. `655360`;
         - or the same number expressed as kilobytes with the suffix `k`, e.g. `"64k"`, `"128k"`, etc.;

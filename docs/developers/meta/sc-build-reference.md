@@ -66,7 +66,7 @@ Note: The ABI generator comes as an implementation of trait [ContractAbiProvider
 
 The next question is how will this function be called. Whenever we compile the WASM contracts, we also produce the ABIs in JSON format. Rust has something called build scripts, which get called _after_ compiling a project, but for reasons that will become apparent later, they are not powerful enough for our usecase.
 
-Therefore, we have decided to include an extra crate in each smart contract project. It is always found in the `meta` folder in a contract, and it handles the entire build. To minimize boilerplate, it always only contains one line, that simply defers execution to the framework:
+Therefore, we have decided to include an extra crate in each smart contract project. It is always found in the `meta` folder in a contract, and it handles the entire build. To minimize boilerplate, it always only contains one line that simply defers execution to the framework:
 
 ```rust
 fn main() {

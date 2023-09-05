@@ -10,11 +10,11 @@ To recap, we have discussed about data being represented either in a:
 - nested encoding, as part of the byte representation of a larger object;
 - top encoding, the full byte represention of an object.
 
-But even the top encoding only refers to a _single_ object, being represented as a _single_ array of bytes. This encoding, no matter how simple of complex, is the representation for a _single_ argument, result, log topic, log event, NFT attribute, etc.
+But even the top encoding only refers to a _single_ object, being represented as a _single_ array of bytes. This encoding, no matter how simple or complex, is the representation for a _single_ argument, result, log topic, log event, NFT attribute, etc.
 
-However, we sometimes want to work with _multiple_, variadic arguments, or an arbitrary number of results. An elegant solution is modelling them as special collections of top-encodable objects that each represent an individual item. For instance, a we could have a list of separate arguments, of arbitrary length.
+However, we sometimes want to work with _multiple_, variadic arguments, or an arbitrary number of results. An elegant solution is modelling them as special collections of top-encodable objects that each represent an individual item. For instance, we could have a list of separate arguments, of arbitrary length.
 
-Multi-values work similarly to varargs in other languages, such as C, where you can write `void f(int arg, ...) { ... }`. In the smart contract framework they do not need specialized syntax, we use the type system to define theit behavior.
+Multi-values work similarly to varargs in other languages, such as C, where you can write `void f(int arg, ...) { ... }`. In the smart contract framework they do not need specialized syntax, we use the type system to define their behavior.
 
 :::info Note
 In the framework, single values are treated as a special case of multi-value, one that consumes exactly one argument, or returns exactly one value.
@@ -217,4 +217,4 @@ where
 }
 ```
 
-To create a custom multi-value type, one needs to implement these two traits for the type, by hand. Unlike for single values, there is no [equivalent derive syntax](/developers/data/custom-types).
+To create a custom multi-value type, one needs to manually implement these two traits for the type. Unlike for single values, there is no [equivalent derive syntax](/developers/data/custom-types).
