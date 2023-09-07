@@ -79,7 +79,7 @@ When we run the **upgrade** function, we once again call the **init** function o
 Here we have 2 new different elements that we need to observe. First, we changed the **deploy** function with the **upgrade** function, which in turn requires the address of the previously deployed SC address, in order to be able to identify what SC to upgrade. Is important to note that this function can only be called by the SC's owner. The second element we need to observe is the **payable** keyword, which represents a code metadata flag that allows the SC to receive payments.
 
 :::tip
-More information about Code Metadata can be found [here](/developers/developer-reference/code-metadata).
+More information about Code Metadata can be found [here](/developers/data/code-metadata).
 :::
 
 [comment]: # (mx-context-auto)
