@@ -131,12 +131,12 @@ the execution of smart contract, information about ESDT transfers or built-in fu
 
 #### Event structure
 
-| Field       | Type     | Description                                       |
-|-------------|----------|---------------------------------------------------|
-| Identifier  | string   | The identifier for the event.                     |
-| Address     | string   | The associated address.                           |
-| Topics      | []string | An array containing information about the event.  |
-| Data        | string   | Additional data related to the event.             |
+| Field      | Type     | Description                                       |
+|------------|----------|---------------------------------------------------|
+| identifier | string   | The identifier for the event.                     |
+| address    | string   | The associated address.                           |
+| topics     | []string | An array containing information about the event.  |
+| data       | string   | Additional data related to the event.             |
 
 
 #### Log events can be categorized into the following types:
