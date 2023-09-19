@@ -13,8 +13,7 @@ These events help keep track of actions like creating new tokens, transferring t
 
 ### Fungible token transfer
 
-The `ESDTTransfer` event is generated when a fungible token is transferred.
-
+The `ESDTTransfer` event is emitted when a fungible token undergoes a transfer operation via the `ESDTTransfer` built-in function.
 <Tabs
     defaultValue="Structure"
     values={[
@@ -52,7 +51,9 @@ The `ESDTTransfer` event is generated when a fungible token is transferred.
 </Tabs>
 
 
-### Semi-fungible or non-fungible or meta-esdt token transfer
+### Semi-fungible or non-fungible or meta-esdt token creation
+
+The `ESDTNFTCreate` event is generated when a new token is created using the built-in function `ESDTNFTCreate`.
 
 <Tabs
     defaultValue="Structure"
@@ -63,12 +64,53 @@ The `ESDTTransfer` event is generated when a fungible token is transferred.
 >
 <TabItem value="Structure">
 
-| Field      | Value                                                                                                                        | 
+| Field      | Value                                                                                                                        |
+|------------|------------------------------------------------------------------------------------------------------------------------------|
+| identifier | ESDTNFTCreate                                                                                                              |
+| address    | the creator of the token                                                                                                     |
+| topics     | `topics[0]` - token identifier base64 encoded <br/>`topics[1]` - token nonce bytes base64 encoded <br/> `topics[2]` - value bytes base64 encoded <br/> `topics[3]` - ESDigitalToken structure marshalled with gogo proto   |
+| data       | empty                                                                                                                        |
+
+</TabItem>
+<TabItem  value="Example">
+
+```json
+{
+    "identifier": "ESDTNFTCreate",
+    "address": "erd1qqqqqqqqqqqqqpgq0tajepcazernwt74820t8ef7t28vjfgukp2sw239f3",
+    "data": null,
+    "topics": [
+        "TFlaLTBmM2MxMQ==",
+        "AQ==",
+        "AQ==",
+        "CAESAgABIvwBCAESBWx5cmFaGiAJ7NX5x1oDr20FnI7bUkyNRhecngUl6Jlvjjzlcu0BuSD0Ayo7YmFma3JlaWNqbXVwMndna21qaXR0a2dpbzZydXlpb3h6cHpraHZ6b3Jvand5eHU0Y2RiNnQycHRhaGkyQmlwZnM6Ly9iYWZrcmVpY2ptdXAyd2drbWppdHRrZ2lvNnJ1eWlveHpwemtodnpvcm9qd3l4dTRjZGI2dDJwdGFoaTpLbWV0YWRhdGE6YmFma3JlaWNqbXVwMndna21qaXR0a2dpbzZydXlpb3h6cHpraHZ6b3Jvand5eHU0Y2RiNnQycHRhaGkvbHlyYVp9"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Semi-fungible or non-fungible or meta-esdt token transfer
+
+The `ESDTNFTTransfer` event is generated when a token, which can be semi-fungible, non-fungible, or meta-esdt,
+is moved through the `ESDTNFTTransfer` built-in function.
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                        |
 |------------|------------------------------------------------------------------------------------------------------------------------------|
 | identifier | ESDTNFTTransfer                                                                                                              |
 | address    | the sender  of the token                                                                                                     |
 | topics     | `topics[0]` - token identifier base64 encoded <br/>`topics[1]` - token nonce bytes base64 encoded <br/> `topics[2]` - value bytes base64 encoded <br/> `topics[3]` - receiver address bytes base64 encoded |
-| data       | empty                                                                                                                        |
+| data       | empty                                                                                                                     |
 
 </TabItem>
 <TabItem  value="Example">
@@ -92,6 +134,10 @@ The `ESDTTransfer` event is generated when a fungible token is transferred.
 
 
 ### Multi token transfer
+
+The `MultiESDTNFTTransfer` event is generated when one or multiple tokens are transferred using the built-in
+function `MultiESDTNFTTransfer`.
+
 
 <Tabs
     defaultValue="Structure"
