@@ -37,13 +37,13 @@ The `ESDTTransfer` event is emitted when a fungible token undergoes a transfer o
 {
     "identifier": "ESDTTransfer",
     "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-    "data": null,
     "topics": [
         "VVRLLWI5NzQ4MA==",
         "",
         "AzsuPJ/QgDzoAAAA",
         "0+diI4/UjUcgbmchGtML1QwheMY68dnsww9vhRPJUWg="
-    ]
+    ],
+    "data": null
 }
 ```
 
@@ -51,7 +51,7 @@ The `ESDTTransfer` event is emitted when a fungible token undergoes a transfer o
 </Tabs>
 
 
-### Semi-fungible or non-fungible or meta-esdt token creation
+### Semi-fungible, non-fungible or meta-esdt token creation
 
 The `ESDTNFTCreate` event is generated when a new token is created using the built-in function `ESDTNFTCreate`.
 
@@ -68,7 +68,7 @@ The `ESDTNFTCreate` event is generated when a new token is created using the bui
 |------------|------------------------------------------------------------------------------------------------------------------------------|
 | identifier | ESDTNFTCreate                                                                                                              |
 | address    | the creator of the token                                                                                                     |
-| topics     | `topics[0]` - token identifier base64 encoded <br/>`topics[1]` - token nonce bytes base64 encoded <br/> `topics[2]` - value bytes base64 encoded <br/> `topics[3]` - ESDigitalToken structure marshalled with gogo proto   |
+| topics     | `topics[0]` - token identifier base64 encoded <br/>`topics[1]` - token nonce bytes base64 encoded <br/> `topics[2]` - value bytes base64 encoded <br/> `topics[3]` - ESDigitalToken structure marshalled with gogo proto serializer   |
 | data       | empty                                                                                                                        |
 
 </TabItem>
@@ -78,20 +78,20 @@ The `ESDTNFTCreate` event is generated when a new token is created using the bui
 {
     "identifier": "ESDTNFTCreate",
     "address": "erd1qqqqqqqqqqqqqpgq0tajepcazernwt74820t8ef7t28vjfgukp2sw239f3",
-    "data": null,
     "topics": [
         "TFlaLTBmM2MxMQ==",
         "AQ==",
         "AQ==",
         "CAESAgABIvwBCAESBWx5cmFaGiAJ7NX5x1oDr20FnI7bUkyNRhecngUl6Jlvjjzlcu0BuSD0Ayo7YmFma3JlaWNqbXVwMndna21qaXR0a2dpbzZydXlpb3h6cHpraHZ6b3Jvand5eHU0Y2RiNnQycHRhaGkyQmlwZnM6Ly9iYWZrcmVpY2ptdXAyd2drbWppdHRrZ2lvNnJ1eWlveHpwemtodnpvcm9qd3l4dTRjZGI2dDJwdGFoaTpLbWV0YWRhdGE6YmFma3JlaWNqbXVwMndna21qaXR0a2dpbzZydXlpb3h6cHpraHZ6b3Jvand5eHU0Y2RiNnQycHRhaGkvbHlyYVp9"
-    ]
+    ],
+    "data": null
 }
 ```
 
 </TabItem>
 </Tabs>
 
-### Semi-fungible or non-fungible or meta-esdt token transfer
+### Semi-fungible, non-fungible or meta-esdt token transfer
 
 The `ESDTNFTTransfer` event is generated when a token, which can be semi-fungible, non-fungible, or meta-esdt,
 is moved through the `ESDTNFTTransfer` built-in function.
@@ -119,13 +119,13 @@ is moved through the `ESDTNFTTransfer` built-in function.
 {
     "identifier": "ESDTNFTTransfer",
     "address": "erd1qqqqqqqqqqqqqpgq0tajepcazernwt74820t8ef7t28vjfgukp2sw239f3",
-    "data": null,
     "topics": [
         "WE1FWC1mZGEzNTU=",
         "Aw==",
         "LUrGxb4/2VjTAA==",
         "0+diI4/UjUcgbmchGtML1QwheMY68dnsww9vhRPJUWg="
-    ]
+    ],
+    "data": null
 }
 ```
 
@@ -162,13 +162,13 @@ function `MultiESDTNFTTransfer`.
 {
     "identifier": "MultiESDTNFTTransfer",
     "address": "erd1qqqqqqqqqqqqqpgq0tajepcazernwt74820t8ef7t28vjfgukp2sw239f3",
-    "data": null,
     "topics": [
         "WE1FWC1mZGEzNTU=",
         "Aw==",
         "LUrGxb4/2VjTAA==",
         "0+diI4/UjUcgbmchGtML1QwheMY68dnsww9vhRPJUWg="
-    ]
+    ],
+    "data": null
 }
 ```
 
@@ -208,7 +208,6 @@ The event will follow the new format outlined below:
 {
     "identifier": "MultiESDTNFTTransfer",
     "address": "erd1j467tvyyr2dtxdz3lsgqaeez5umjsdn8fajexqlu7eum5wx2u0aqkca23a",
-    "data": null,
     "topics": [
         "MzlINk8tNDc5NmI4",
         "Aw==",
@@ -217,7 +216,8 @@ The event will follow the new format outlined below:
         "",
         "AQ==",
         "StPRLp5kwnctf4If2CUhKr6Vux8WN3k3i5chL/y93UQ="
-    ]
+    ],
+    "data": null
 }
 ```
 

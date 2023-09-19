@@ -126,13 +126,13 @@ const sidebars = {
       },
       {
         type: "category",
-        label: "Log Events",
+        label: "Event logs",
         items: [
-          "developers/log-events/contract-call-events",
-          "developers/log-events/contract-deploy-events",
-          "developers/log-events/esdt-events",
-          "developers/log-events/execution-events",
-          "developers/log-events/system-delegation-events",
+          "developers/event-logs/contract-call-events",
+          "developers/event-logs/contract-deploy-events",
+          "developers/event-logs/esdt-events",
+          "developers/event-logs/execution-events",
+          "developers/event-logs/system-delegation-events",
         ],
       },
       {
