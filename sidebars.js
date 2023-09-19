@@ -126,6 +126,17 @@ const sidebars = {
       },
       {
         type: "category",
+        label: "Log Events",
+        items: [
+          "developers/log-events/contract-call-events",
+          "developers/log-events/contract-deploy-events",
+          "developers/log-events/esdt-events",
+          "developers/log-events/execution-events",
+          "developers/log-events/system-delegation-events",
+        ],
+      },
+      {
+        type: "category",
         label: "Blockchain Operations",
         items: [
           "developers/account-storage",
