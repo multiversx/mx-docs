@@ -1,0 +1,185 @@
+---
+id: esdt-events
+title: ESDT Operations Events
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+ESDT Operations Events are generated in response to interactions with an ESDT token.
+These events help keep track of actions like creating new tokens, transferring tokens between addresses, burning tokens, etc.
+
+
+### Fungible token transfer
+
+The `ESDTTransfer` event is generated when a fungible token is transferred.
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  | 
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | ESDTTransfer                                                                                                           |
+| address    | the sender  of the token                                                                                               |
+| topics     | `topics[0]` - token identifier base64 encoded <br/>`topics[1]` - empty <br/> `topics[2]` - value bytes base64 encoded <br/> `topics[3]` - receiver address address bytes base64 encoded |
+| data       | empty                                                                                                                  |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "identifier": "ESDTTransfer",
+    "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+    "data": null,
+    "topics": [
+        "VVRLLWI5NzQ4MA==",
+        "",
+        "AzsuPJ/QgDzoAAAA",
+        "0+diI4/UjUcgbmchGtML1QwheMY68dnsww9vhRPJUWg="
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### Semi-fungible or non-fungible or meta-esdt token transfer
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                        | 
+|------------|------------------------------------------------------------------------------------------------------------------------------|
+| identifier | ESDTNFTTransfer                                                                                                              |
+| address    | the sender  of the token                                                                                                     |
+| topics     | `topics[0]` - token identifier base64 encoded <br/>`topics[1]` - token nonce bytes base64 encoded <br/> `topics[2]` - value bytes base64 encoded <br/> `topics[3]` - receiver address bytes base64 encoded |
+| data       | empty                                                                                                                        |
+
+</TabItem>
+<TabItem  value="Example">
+
+```json
+{
+    "identifier": "ESDTNFTTransfer",
+    "address": "erd1qqqqqqqqqqqqqpgq0tajepcazernwt74820t8ef7t28vjfgukp2sw239f3",
+    "data": null,
+    "topics": [
+        "WE1FWC1mZGEzNTU=",
+        "Aw==",
+        "LUrGxb4/2VjTAA==",
+        "0+diI4/UjUcgbmchGtML1QwheMY68dnsww9vhRPJUWg="
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### Multi token transfer
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                           | 
+|------------|---------------------------------------------------------------------------------------------------------------------------------|
+| identifier | MultiESDTNFTTransfer                                                                                                            |
+| address    | the sender  of the token                                                                                                        |
+| topics     | `topics[0]` - token identifier <br/>`topics[1]` - token nonce base64 encoded (can be empty in case of fungible token) <br/> `topics[2]` - value bytes base64 encoded <br/> `topics[3]` - receiver address bytes base64 encoded    |
+| data       | empty                                                                                                                           |
+
+</TabItem>
+<TabItem  value="Example">
+
+```json
+{
+    "identifier": "MultiESDTNFTTransfer",
+    "address": "erd1qqqqqqqqqqqqqpgq0tajepcazernwt74820t8ef7t28vjfgukp2sw239f3",
+    "data": null,
+    "topics": [
+        "WE1FWC1mZGEzNTU=",
+        "Aw==",
+        "LUrGxb4/2VjTAA==",
+        "0+diI4/UjUcgbmchGtML1QwheMY68dnsww9vhRPJUWg="
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::note
+For a multi-token transfer operation, multiple `MultiESDTNFTTransfer` events will be generated, one for each token being transferred.
+:::
+
+:::important Important
+Starting from release `rc/v1.6.0`, the `MultiESDTNFTTransfer` will be changed when the flag `ScToScLogEventEnableEpoch` will be enabled.
+
+Instead of generating multiple events with the same identifier, only one event will be generated for the entire multi-token transfer operation. 
+The event will follow the new format outlined below:
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                 | 
+|------------|---------------------------------------------------------------------------------------|
+| identifier | MultiESDTNFTTransfer                                                                  |
+| address    | the sender  of the token                                                              |
+| topics     | `PAIRS OF` <br/> < <br/>`topics[i]` - token identifier <br/>`topics[i+1]` - token nonce base64 encoded (can be empty in case of fungible token)<br/> `topics[i+2]` - value bytes base64 <br/>> <br/>  `topics[n-1]` - receiver address  |
+| data       | empty                                                                                 |
+
+</TabItem>
+<TabItem  value="Example">
+
+```json
+{
+    "identifier": "MultiESDTNFTTransfer",
+    "address": "erd1j467tvyyr2dtxdz3lsgqaeez5umjsdn8fajexqlu7eum5wx2u0aqkca23a",
+    "data": null,
+    "topics": [
+        "MzlINk8tNDc5NmI4",
+        "Aw==",
+        "AQ==",
+        "UFFTMFItZDlmOTlk",
+        "",
+        "AQ==",
+        "StPRLp5kwnctf4If2CUhKr6Vux8WN3k3i5chL/y93UQ="
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+:::
+
+
+
