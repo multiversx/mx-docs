@@ -37,7 +37,7 @@ In the figure above:
     - `finalized events` -> when the block has been finalized, the events
       will be pushed on this route
 - Notifier checks locker service (via Redis) and applies deduplication
-- Notifier will push events to RabbitMQ if enabled, or via Websockets. If Websockets will be enabled an additional endpoint will be available:
+- Notifier will push events to RabbitMQ if enabled, or via Websocket. If Websocket will be enabled an additional endpoint will be available:
     - `/hub/ws` (GET) - this route can be used to manage the websocket connection subscription
 
 [comment]: # (mx-context-auto)
@@ -59,7 +59,7 @@ to enable events notifier connector via WebSocket or via HTTP integrations. The 
 
 #### WebSocket Integration
 
-This WebSocket integration is a generic one, and can be used for multiple outport driver integrations.
+The WebSocket integration is a generic one, and can be used for multiple outport driver integrations.
 In case Elasticsearch integration is already being used with WebSocket connector, a separate config
 section `HostDriversConfig` has to be set for event notifier.
 
@@ -83,8 +83,8 @@ The corresponding config section for enabling the driver:
     # The duration in seconds to wait for an acknowledgment message, after this time passes an error will be returned
     AcknowledgeTimeoutInSec = 60
 
-    # Currently, only "json" is supported. In the future, "gogo protobuf" could also be supported
-    MarshallerType = "gogo protobug"
+    # This flag defines the marshaller type. Currently supported: "json", "gogo protobuf"
+    MarshallerType = "gogo protobuf"
 
     # The number of seconds when the client will try again to send the data
     RetryDurationInSec = 5
@@ -310,7 +310,7 @@ There are multiple event types:
 - Finalized Block event: when the block is finalized
 
 In RabbitMQ there is a separate exchange for each event type.
-In Websockets setup, there is a event type field in each message.
+In Websocket setup, there is a event type field in each message.
 
 The WS event is defined as follows:
 
