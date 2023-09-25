@@ -11,6 +11,21 @@ One can (programatically) interact with the MultiversX Network by leveraging the
 
 [comment]: # (mx-context-auto)
 
+### sdk-rs - Rust SDK
+
+:::important
+Note that Rust is also the recommended programming language for writing Smart Contracts on MultiversX. That is, Rust can be used to write both _on-chain software_ (Smart Contracts) and _off-chain software_ (e.g. desktop applications, web applications, microservices). For the on-chain part, please follow [Smart Contracts](/developers/smart-contracts). Here, we refer to the off-chain part.
+:::
+
+| Name                            | Description                                                |
+|---------------------------------|------------------------------------------------------------|
+| [sdk-rs](https://github.com/multiversx/mx-sdk-rs) | Rust SDK used to interact with the MultiversX Blockchain. <br /> This is the parent repository, also home to the Rust Framework for Smart Contracts.      |
+| [sdk-rs/core](https://github.com/multiversx/mx-sdk-rs/tree/master/sdk/core) |  Core components, accompanied by a set of usage examples. |
+| [sdk-rs/snippets](https://github.com/multiversx/mx-sdk-rs/tree/master/framework/snippets) |  Smart Contract interaction snippets - base components. Examples of usage: [adder](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/adder/interact), [multisig](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/multisig/interact). |
+
+
+[comment]: # (mx-context-auto)
+
 ### sdk-js - Javascript SDK
 
 | Name                                                                                                     | Description                                         |
@@ -34,7 +49,7 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                                | Description                                                                                                                                                                                                                                                                                    |
 |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [sdk-dapp](/sdk-and-tools/sdk-dapp) | React library aimed to help developers create dApps based on MultiversX Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
+| [sdk-dapp](/sdk-and-tools/sdk-dapp) | React library aimed to help developers create dApps based on MultiversX Network. <br/> <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages, and also offers helper functions for common tasks. |
 
 [comment]: # (mx-context-auto)
 
@@ -63,7 +78,7 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                          | Description                                                |
 |-------------------------------|------------------------------------------------------------|
-| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with MultiversX Blockchain. |
+| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
@@ -71,7 +86,7 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                              | Description                                           |
 |-----------------------------------|-------------------------------------------------------|
-| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with MultiversX Blockchain. |
+| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
@@ -79,7 +94,7 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                            | Description                                          |
 |---------------------------------|------------------------------------------------------|
-| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with MultiversX Blockchain. |
+| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
@@ -87,7 +102,7 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                                  | Description                                             |
 |---------------------------------------|---------------------------------------------------------|
-| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with MultiversX Blockchain. |
+| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
