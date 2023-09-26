@@ -7,19 +7,24 @@ title: Smart contract calls
 
 ## Introduction
 
-As programmers, we are used to calling functions all the time. Smart contract calls, however, are slightly trickier. Beside code execution, there can also be transfers of EGLD and ESDT tokens involved, gas needs to be specificed, and, finally, there different flavors of calls.
+As programmers, we are used to calling functions all the time. Smart contract calls, however, are slightly trickier. Beside code execution, there can also be transfers of EGLD and ESDT tokens involved, gas needs to be specificed, and, finally, there are different flavors of calls.
 
-Any system for composing and sending these calls needs to be very versatile, to cater to the programmers' various needs.
+Any system for composing and sending these calls needs to be very versatile, to cater to all of the programmers' various needs.
 
 It is not so important _where_ that call comes from. Very often we need to call smart contracts from other smart contracts. However, testing systems and blockchain interactors also greatly benefit from such a system.
 
 The system we present below works just as well on- and off-chain. Think of it as a general Rust framework for specifying and sending calls in any context.
 
+:::note
+The more primitive way to perform these calls is to just use the API methods directly, to serialize arguments in code and to specify endpoints as strings. But this does not give the compiler a chance to verify the correctness of the calls, and is very limited in how much we configure the call. It also normally leads to a lot of code duplication. For this reason we recommend always using contract call syntax when formatting transactions.
+:::
+
+
 ---
 
 [comment]: # (mx-context-auto)
 
-## The base call
+## Contract calls: base
 
 Smart contract calls are not typed at the blockchain level. It is the contract that keeps track of the number of arguments, and deserializes them. The blockchain only sees a series of unspecified arguments, given as raw bytes. If a transaction has the wrong number of type of arguments, it is only the contract itself that will be able to complain.
 
@@ -59,7 +64,7 @@ This means that if you have access to the crate of the target contract, you can 
 path = "relative-path-to-contract-crate"
 ```
 
-:::info Note
+:::info important
 Contract and module crates can be imported just like any other Rust crates either by:
 - relative path;
 - crate version, if it is released;
@@ -144,7 +149,7 @@ The syntax is almost the same as for contracts, except the endpoints have no imp
 :::caution
 Just like with smart contracts and modules, proxy declarations need to reside in their own module. This can either be a separate file, or an explicit declaration, like `mod callee_proxy {}` above.
 
-This is because of there is quite a lot of code generated in the background that would interfere otherwise.
+This is because there is quite a lot of code generated in the background that would interfere otherwise.
 :::
 
 Manually declared proxies are no different from the auto-generated ones, so calling them looks the same.
@@ -201,7 +206,7 @@ graph LR
 
 [comment]: # (mx-context-auto)
 
-## Specifying payments
+## Contract calls: payments
 
 Now that we specified the recipient address, the function, and the arguments, it is time to add more configurations: token transfers and gas.
 
@@ -322,7 +327,7 @@ graph LR
 
 [comment]: # (mx-context-auto)
 
-## Specifying gas
+## Contract calls: gas
 
 Specifying gas is fairly straightforward. All contract call objects have a `with_gas_limit` method, so gas can be specified at any point.
 
@@ -337,7 +342,7 @@ On the other hand,promises and transfer-execute calls do require gas to be expli
 
 [comment]: # (mx-context-auto)
 
-## Executing contract calls
+## Contract calls: execution
 
 There are several ways in which contract calls are launched from another contract. Currently they are:
 - asynchronous calls:
@@ -648,7 +653,7 @@ flowchart TB
 
 [comment]: # (mx-context-auto)
 
-## The complete contract call diagram
+## Contract calls: complete diagram
 
 To sum it all up, to properly set up a contract call from a contract, one needs to:
 1. Get hold of a proxy.
@@ -686,3 +691,128 @@ flowchart TB
               .execute_on_same_context()"| exec-dest["⚙️ Synchronous call"]
     exec-dest --> result[Requested Result]
 ```
+
+---
+
+[comment]: # (mx-context-auto)
+
+## Contract deploy: base
+
+A close relative of the contract call is the contract deploy call. It models the deployment or the upgrade of a smart contract.
+
+It shares a lot in common with the contract calls, with these notable differences:
+- The endpoint name is always `init`.
+- No ESDT transfers are allowed in `init`.
+- They get executed slightly differently.
+
+
+
+```mermaid
+flowchart TB
+    gen-proxy[Generated Proxy] --> cc
+    man-proxy[Manual Proxy] --> cc
+    ccnp-new["ContractDeploy::new"] --> cc
+    cc[ContractDeploy]
+    cc ---->|".deploy_contract()
+              .deploy_from_source()"| exec-deploy["⚙️ Deploy contract"]
+    exec-deploy --> result[Requested Result]
+    cc ---->|".deploy_contract()
+              .deploy_from_source()"| exec-upg["⚙️ Upgrade contract"]
+```
+
+The object encoding these calls is called `ContractDeploy`. Unlike the contract calls, there is a single such object.
+
+Creating this object is done in a similar fashion: either via proxies, or by hand. Constructors in proxies naturally produce `ContractDeploy` objects:
+
+```rust
+mod callee_proxy {
+    multiversx_sc::imports!();
+
+    #[multiversx_sc::proxy]
+    pub trait CalleeContract {
+		#[init]
+		fn init(&self, arg: BigUint) -> BigUint;
+    }
+}
+```
+
+```rust
+self.contract_proxy()
+	.init(my_biguint_arg)
+```
+
+---
+
+[comment]: # (mx-context-auto)
+
+## Contract deploy: configuration
+
+Just like with regular contract calls, we can specify the gas limit and perform EGLD transfers as part of the deploy as follows:
+
+```rust
+self.contract_proxy(callee_sc_address)
+	.init(my_biguint_arg)
+
+```
+
+```rust
+self.contract_proxy()
+	.init(my_biguint_arg)
+	.with_egld_transfer(egld_amount)
+    .with_gas_limit(gas_limit)
+```
+
+---
+
+[comment]: # (mx-context-auto)
+
+## Contract deploy: execution
+
+
+[comment]: # (mx-context-auto)
+
+### Deploy
+
+
+There are several ways to launch a contract deploy, different from a regular contract call.
+
+The simplest deploy operation we can perform is simply calling `deploy_contract`:
+
+
+```rust
+let (new_address, result)  = self.contract_proxy()
+	.init(my_biguint_arg)
+	.deploy_contract::<ResultType>(code, code_metadata);
+```
+
+:::important
+Contract deploys always happen in the same shard as the deployer. They are therefore always [synchronous calls](#synchronous-calls) and we get the result right away. Just like for `execute_on_dest_context` we need to either write a result with an explicit result type, or give the result type as type argument.
+
+Contract upgrades, on the other hand, can be sent to a different shard, and are therefore in essence asynchronous calls.
+:::
+
+The methods for executing contract deploys are as follows:
+- `.deploy_contract(code, code_metadata)` - deploys a new contract with the code given by the contract.
+- `.deploy_from_source(source_address, code_metadata)` - deploys a new contract with the same code as the code of the contract at `source_address`. The advantage is that the contract doesn't need to handle the new contract code, which could be quite a large data blob. This saves gas. It requires that we have the code already deployed somewhere else.
+
+
+[comment]: # (mx-context-auto)
+
+### Upgrade
+
+To upgrade the contract we also need to specify the recipient address when setting up the `ContractDeploy` object, like so:
+
+```rust
+self.contract_proxy()
+	.contract(other_contract)
+	.init(123, 456)
+	.with_egld_transfer(payment)
+	.upgrade_contract(code, code_metadata);
+```
+
+Note the `.contract(...)` method call.
+
+Just like deploy, upgrade also comes in two flavors:
+- `.upgrade_contract(code, code_metadata)` - upgrades the target contract to the new code and sets the new code metadata.
+- `.upgrade_from_source(source_address, code_metadata)` - updates the target contract with the same code as the code of the contract at `source_address`.
+
