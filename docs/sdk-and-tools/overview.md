@@ -151,3 +151,9 @@ Events notifier is an external service that can be used to fetch block events an
 | Name                                       | Description                          |
 |--------------------------------------------|--------------------------------------|
 | [Events notifier](/sdk-and-tools/notifier) | A notifier service for block events. |
+
+### Devcontainers (for VSCode or GitHub Codespaces)
+
+| Name                                          | Description                          |
+|-----------------------------------------------|--------------------------------------|
+| [Devcontainers](/sdk-and-tools/devcontainers) | Overview of MultiversX devcontainers (for VSCode or GitHub Codespaces). |

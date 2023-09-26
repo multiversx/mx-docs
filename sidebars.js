@@ -232,6 +232,7 @@ const sidebars = {
         ],
       },
       "sdk-and-tools/notifier",
+      "sdk-and-tools/devcontainers",
       {
         type: "category",
         label: "SDKs",
