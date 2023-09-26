@@ -67,6 +67,7 @@ const sidebars = {
             items: [
               "developers/developer-reference/sc-annotations",
               "developers/developer-reference/sc-modules",
+              "developers/developer-reference/sc-payments",
               "developers/developer-reference/sc-contract-calls",
               "developers/developer-reference/upgrading-smart-contracts",
               "developers/developer-reference/sc-api-functions",
