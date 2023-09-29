@@ -195,16 +195,12 @@ contract_call.push_raw_argument(arg2_encoded);
 
 Up to here we have created a contract call without payment, so an object of type `ContractCallNoPayment`, in the following ways:
 
-<div style={{textAlign: 'center'}}>
-
 ```mermaid
 graph LR
     gen-proxy[Generated Proxy] --> ccnp[ContractCallNoPayment]
     man-proxy[Manual Proxy] --> ccnp
     ccnp-new["ContractCallNoPayment::new(to, function)"] --> ccnp
 ```
-
-</div>
 
 ---
 
@@ -318,8 +314,6 @@ self.callee_contract_proxy(callee_sc_address)
 
 To recap, these are all the various ways in which we can specify value transfers for a contract call:
 
-<div style={{textAlign: 'center'}}>
-
 ```mermaid
 graph LR
     ccnp[ContractCallNoPayment]
@@ -330,8 +324,6 @@ graph LR
 	ccnp -->|".with_any_payment"| cc-any[ContractCallWithAnyPayment]
 	ccnp -->|".with_egld_or_single_esdt_transfer"| cc-egld-single[ContractCallWithEgldOrSingleEsdt]
 ```
-
-</div>
 
 ---
 
@@ -725,9 +717,6 @@ It shares a lot in common with the contract calls, with these notable difference
 - No ESDT transfers are allowed in `init`.
 - They get executed slightly differently.
 
-
-<div style={{textAlign: 'center'}}>
-
 ```mermaid
 flowchart TB
     gen-proxy[Generated Proxy] --> cc
@@ -740,8 +729,6 @@ flowchart TB
     cc ---->|".deploy_contract()
               .deploy_from_source()"| exec-upg["⚙️ Upgrade contract"]
 ```
-
-</div>
 
 The object encoding these calls is called `ContractDeploy`. Unlike the contract calls, there is a single such object.
 
