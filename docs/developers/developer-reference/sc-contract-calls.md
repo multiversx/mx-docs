@@ -26,11 +26,11 @@ The more primitive way to perform these calls is to just use the API methods dir
 
 ## Contract calls: base
 
-Smart contract calls are not typed at the blockchain level. It is the contract that keeps track of the number of arguments, and deserializes them. The blockchain only sees a series of unspecified arguments, given as raw bytes. If a transaction has the wrong number of type of arguments, it is only the contract itself that will be able to complain.
+Smart contract calls at the blockchain level have no notion of arity, or data types. That is, the blockchain itself does not validate the number of arguments (or results), and each of these only appear as raw binary data fields.
 
-The description of a smart contract's inputs is known as the [ABI](/developers/data/abi), and lives off-chain. To be able to effectively call a smart contract, it is useful to know its ABI.
+It is the contract that keeps track of the number of arguments, and deserializes them. If a transaction has the wrong number of arguments, it is only the contract itself that will be able to complain. If the types are off, it is only during deserialization that the contract will know.
 
-Smart contracts are regularly written in Rust, and the framework makes sure to always also generate an ABI alongside the contract binary. However, since we also want to write the contract call in Rust, we don't usually need the ABI (which is a JSON file), it is much more useful to have some code generated for us to help us call the contract in Rust directly.
+The description of a smart contract's inputs is known as the [ABI](/developers/data/abi), and lives off-chain. In short, the ABI is a collection of endpoint names, with argument names and type descriptions. To be able to effectively call a smart contract, it is useful to know its ABI.
 
 We call this contract call helper a __proxy__. All it does is that it provides a typed interface to any Rust program, it takes the typed arguments and it serializes them according to the [MultiversX serialization format](/developers/data/serialization-overview).
 
