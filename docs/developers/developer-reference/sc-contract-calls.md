@@ -32,7 +32,7 @@ The description of a smart contract's inputs is known as the [ABI](/developers/d
 
 Smart contracts are regularly written in Rust, and the framework makes sure to always also generate an ABI alongside the contract binary. However, since we also want to write the contract call in Rust, we don't usually need the ABI (which is a JSON file), it is much more useful to have some code generated for us to help us call the contract in Rust directly.
 
-We call this contract call helper a __proxy__. All it does is that it provides a typed interface to any Rust program, it takes the typed arguments, and it serializes them according to the [MultiversX serialization format](/developers/data/serialization-overview).
+We call this contract call helper a __proxy__. All it does is that it provides a typed interface to any Rust program, it takes the typed arguments and it serializes them according to the [MultiversX serialization format](/developers/data/serialization-overview).
 
 Let's take this very simple example:
 
@@ -77,7 +77,7 @@ If the contract has modules that have functionality that you may want to call, y
 
 If the modules are in different crates than the target contract (and if the target contract doesn't somehow re-export them), you'll also have to add the module to the dependencies, the same way you added the target contract.
 
-These proxies are traits, just like the contracts themselves. The implementation is produces automatically, but nonetheless, this means that in order to call them, the proxy trait must be in scope. This is why you will see such imports everywhere that proxies are called:
+These proxies are traits, just like the contracts themselves. The implementation is produced automatically, but nonetheless, this means that in order to call them, the proxy trait must be in scope. This is why you will see such imports everywhere these proxies are called:
 
 ```rust
 use module_namespace::ProxyTrait as _;
@@ -118,7 +118,7 @@ We'll talk about `async_call` and `call_and_exit` later on.
 :::caution
 Importing a smart contract crate only works if both contracts use the exact framework version. Otherwise, the compiler will (rightfully) complain that the interfaces do not perfectly match.
 
-In case the target contract is not under our control, it is often wiser to just write the proxy of interest by hand.
+In case the target contract is not under our control, it is often wiser to just manually compose the proxy of interest.
 :::
 
 
@@ -127,7 +127,7 @@ In case the target contract is not under our control, it is often wiser to just 
 
 ### Manually specified proxies
 
-If we don't want to have a dependency to the target contract crate, or there is no access to this crate altogether, it is always possible for us to create such a proxy by hand. This might also be desirable if the framework versions of the two contracts are different, or not under our control.
+If we don't want to have a dependency to the target contract crate, or there is no access to this crate altogether, it is always possible for us to create such a proxy manually. This might also be desirable if the framework versions of the two contracts are different, or not under our control.
 
 Below we have an example of such a proxy:
 
@@ -165,7 +165,7 @@ fn contract_proxy(&self, sc_address: ManagedAddress) -> callee_proxy::Proxy<Self
 
 ### No proxy
 
-The point of the proxies is to help us build contract calls in a type-safe manner. But this is by no means compulsory. Sometimes we specifically want to build contract calls by hand and serialize the arguments ourselves.
+The point of the proxies is to help us build contract calls in a type-safe manner. But this is by no means compulsory. Sometimes we specifically want to build contract calls manually and serialize the arguments ourselves.
 
 The point is to create a `ContractCallNoPayment` object. We'll discuss how to add the payments later.
 
@@ -208,7 +208,7 @@ graph LR
 
 ## Contract calls: payments
 
-Now that we specified the recipient address, the function, and the arguments, it is time to add more configurations: token transfers and gas.
+Now that we specified the recipient address, the function and the arguments, it is time to add more configurations: token transfers and gas.
 
 Let's assume we want to call a `#[payable]` endpoint, with this definition:
 
@@ -236,23 +236,23 @@ self.contract_proxy(callee_sc_address)
 
 Note that this method returns a new type of object, `ContractCallWithEgld`, instead of `ContractCallNoPayment`. Having multiple contract call types has multiple advantages:
 - We can restrict at compile time what methods are available in the builder. For instance, it is possible to add ESDT transfers to `ContractCallNoPayment`, but not to `ContractCallWithEgld`. We thus no longer need to enforce at runtime the restriction that EGLD and ESDT cannot coexist. This restriction is also more immediately obvious to developers.
-- The contracts end up being smaller, because the compiler knows which kinds of transfers occur in the contract, and which do not. For instance, if a contract only ever transfers EGLD, there is not need for the code that prepares ESDT transfers in the contract. If the check had been doneonly at runtime, this optimisation would not have been possible.
+- The contracts end up being smaller, because the compiler knows which kinds of transfers occur in the contract, and which do not. For instance, if a contract only ever transfers EGLD, there is not need for the code that prepares ESDT transfers in the contract. If the check had been done only at runtime, this optimisation would not have been possible.
 
 
 [comment]: # (mx-context-auto)
 
 ### ESDT transfers
 
-On the MultiversX blockchain, you can transfer multiple ESDT tokens at once. We creates a single ESDT transfer type, which works for both single- and multi-transfers. It is called `ContractCallWithMultiEsdt`.
+On the MultiversX blockchain, you can transfer multiple ESDT tokens at once. We create a single ESDT transfer type which works for both single- and multi-transfers. It is called `ContractCallWithMultiEsdt`.
 
-We can obtain such and object, by starting with a `ContractCallNoPayment`, and calling `with_esdt_transfer` once, or several times. The first such call will yield the `ContractCallWithMultiEsdt`, subsequent calls simply add more ESDT transfers.
+We can obtain such and object by starting with a `ContractCallNoPayment` and calling `with_esdt_transfer` once, or several times. The first such call will yield the `ContractCallWithMultiEsdt`, while subsequent calls simply add more ESDT transfers.
 
 :::info A note on arguments
 There is more than one way to provide the arguments to `with_esdt_transfer`:
 - as a tuple of the form `(token_identifier, nonce, amount)`;
 - as a `EsdtTokenPayment` object.
 
-They contain the same data, sometimes it is more convenient to use one, sometimes the other.
+They contain the same data, but sometimes it is more convenient to use one, sometimes the other.
 :::
 
 Example:
@@ -335,7 +335,7 @@ Not all contract calls require explicit specification of the gas limit, leaving 
 - async calls will halt execution and consume all the remaining gas, so specifying the gas limit is not necessary for them;
 - synchronous calls will by default simply use all the available gas as the upper limit, since unspent gas is returned to the caller anyway.
 
-On the other hand,promises and transfer-execute calls do require gas to be explicitly specified.
+On the other hand, promises and transfer-execute calls do require gas to be explicitly specified.
 
 
 ---
@@ -579,11 +579,11 @@ The differences are:
 
 ### Transfer-execute
 
-Transfer-execute calls are similar to asynchronous calls, but they can have no callback, and thus the caller cannot react in any way to what happens with the callee.
+Transfer-execute calls are similar to asynchronous calls, but they can have no callback, thus the caller cannot react in any way to what happens with the callee.
 
-Just like promises, there can be multiple such calls launched from a transaction, but unlike promises, they are alreay available on mainnet.
+Just like promises, there can be multiple such calls launched from a transaction, but unlike promises, these are already available on mainnet.
 
-Transfer-execute calls do not need any further configuration (other than explicit an explicit gas limit), and therefore there is no specific object type associated with them. They can be launched immediately:
+Transfer-execute calls do not need any further configuration (other than an explicit gas limit), therefore there is no specific object type associated with them. They can be launched immediately:
 
 ```rust
 self.contract_proxy(callee_sc_address)
@@ -598,9 +598,11 @@ self.contract_proxy(callee_sc_address)
 
 ### Synchronous calls
 
-Synchronous calls are executed inline: this means execution is interrupted while they are executed, and resumed afterwards. We also get the result of the execution right away and we can use it immediately in the transaction.
+Synchronous calls are executed inline: this means execution is interrupted while they are executed and resumed afterwards. We also get the result of the execution right away and we can use it immediately in the transaction.
 
-The catch is that synchronous calls can only be sent to contracts in the __same shard__ as the caller. They will fail otherwise.
+:::caution
+Synchronous calls can only be sent to contracts in the __same shard__ as the caller. They will fail otherwise.
+:::
 
 Synchronous calls also do not need any further configuration, the call is straightforward:
 
@@ -722,7 +724,7 @@ flowchart TB
 
 The object encoding these calls is called `ContractDeploy`. Unlike the contract calls, there is a single such object.
 
-Creating this object is done in a similar fashion: either via proxies, or by hand. Constructors in proxies naturally produce `ContractDeploy` objects:
+Creating this object is done in a similar fashion: either via proxies, or manually. Constructors in proxies naturally produce `ContractDeploy` objects:
 
 ```rust
 mod callee_proxy {

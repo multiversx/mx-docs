@@ -94,7 +94,7 @@ Additional restrictions on the incoming tokens can be imposed in the body of the
 ## Sending payments
 
 
-We have seen how how contracts can accomodate receiving tokens. Sending them is, in principle, even more straightforward, as it only involves calling methods from the `self.send()` component.
+We have seen how contracts can accomodate receiving tokens. Sending them is, in principle, even more straightforward, as it only involves calling methods from the `self.send()` component.
 
 
 [comment]: # (mx-context-auto)
@@ -105,13 +105,13 @@ Contracts can send tokens directly, without calling any endpoint at the destinat
 
 The following methods will perform a transfer-execute call. This is a type of asynchronous call that does not provide a callback, or any other feedback from the receiver. For direct transferring of funds, this call type is ideal. 
 
-- `self.send().direct_egld(to, amount)` sends EGLD directly to an address.
+- `self.send().direct_egld(to, amount)` sends EGLD directly to an address. If the amount is zero, execution will fail.
 - `self.send().direct_non_zero_egld(to, amount)` sends EGLD directly to an address, if the amount is non-zero. Does nothing otherwise.
-- `self.send().direct(to, token, nonce, amount)` sends EGLD or a single ESDT token directly to an address. The `token` argument is of type `EgldOrEsdtTokenIdentifier`.
+- `self.send().direct(to, token, nonce, amount)` sends EGLD or a single ESDT token directly to an address. The `token` argument is of type `EgldOrEsdtTokenIdentifier`. If the amount is zero, execution will fail.
 - `self.send().direct_non_zero(to, token, nonce, amount)` sends EGLD or a single ESDT token directly to an address, if the amount is non-zero. Does nothing otherwise.
-- `self.send().direct_esdt(to, token, nonce, amount)` sends a single ESDT token directly to an address.
+- `self.send().direct_esdt(to, token, nonce, amount)` sends a single ESDT token directly to an address. If the amount is zero, execution will fail.
 - `self.send().direct_non_zero_esdt_payment(to, payment)` sends a single ESDT token directly to an address, if the amount is non-zero. Does nothing otherwise.
-- `self.send().direct_multi(to, payments)` sends one or more ESDT tokens to destination. The `payments` argument is a list of such payments.
+- `self.send().direct_multi(to, payments)` sends one or more ESDT tokens to destination. The `payments` argument is a list of such payments. If at least one of the amounts is zero, execution will fail.
 
 It is also possible to transfer tokens via an async call:
 - `self.send().transfer_esdt_via_async_call(to, token, nonce, amount)`
@@ -127,7 +127,7 @@ Sending tokens to a contract endpoint is a contract call, and we have a [type-sa
 
 Even if you do not know what the endpoint or the arguments will be at compile time, we still recommend creating a `ContractCall` first, and then decorating and sending it, as in [these examples](/developers/developer-reference/sc-contract-calls#no-proxy).
 
-There are, howver, a few direct API methods. Just to mention them:
+However, a few direct API methods exist. Just to mention them:
 - `self.send().direct_esdt_with_gas_limit(to, token_identifier, nonce, amount, gas, endpoint_name, arguments)`
 - `self.send().direct_non_zero_esdt_with_gas_limit(to, token_identifier, nonce, amount, gas, endpoint_name, arguments)`
 - `self.send().direct_with_gas_limit(to, token, nonce, amount, gas, endpoint_name, arguments)`
