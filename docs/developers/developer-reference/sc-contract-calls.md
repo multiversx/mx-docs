@@ -88,7 +88,7 @@ If you use the [rust-analyser VSCode extension](https://marketplace.visualstudio
 Once you've imported the contract and any external modules it might use, you have to declare a proxy creator function in the contract:
 ```rust
 #[proxy]
-fn contract_proxy(&self, sc_address: ManagedAddress) -> contract_namespace::Proxy<Self::Api>;
+fn callee_contract_proxy(&self, sc_address: ManagedAddress) -> contract_namespace::Proxy<Self::Api>;
 ```
 
 This function doesn't do much, it just tries to sort out the proxy trait imports, and neatly initializes the proxy for you.
@@ -99,7 +99,7 @@ Let's say you have the following endpoint in the contract you wish to call:
 
 ```rust
 #[endpoint(myEndpoint)]
-fn my_endpoint(&self, arg: BigUint) -> BigUint {
+fn callee_endpoint(&self, arg: BigUint) -> BigUint {
 	// implementation
 }
 ```
@@ -107,8 +107,8 @@ fn my_endpoint(&self, arg: BigUint) -> BigUint {
 To call this endpoint, you would write something like:
 
 ```rust
-self.contract_proxy(callee_sc_address)
-	.my_endpoint(my_biguint_arg)
+self.callee_contract_proxy(callee_sc_address)
+	.callee_endpoint(my_biguint_arg)
 	.async_call()
 	.call_and_exit();
 ```
@@ -156,7 +156,7 @@ Manually declared proxies are no different from the auto-generated ones, so call
 
 ```rust
 #[proxy]
-fn contract_proxy(&self, sc_address: ManagedAddress) -> callee_proxy::Proxy<Self::Api>;
+fn callee_contract_proxy(&self, sc_address: ManagedAddress) -> callee_proxy::Proxy<Self::Api>;
 ```
 
 
@@ -229,7 +229,7 @@ fn my_payable_endpoint(&self, arg: BigUint) -> BigUint {
 To add EGLD transfer to a contract call, simply append `.with_egld_transfer` to the builder pattern.
 
 ```rust
-self.contract_proxy(callee_sc_address)
+self.callee_contract_proxy(callee_sc_address)
 	.my_payable_endpoint(my_biguint_arg)
 	.with_egld_transfer(egld_amount)
 ```
@@ -260,7 +260,7 @@ Example:
 ```rust
 let esdt_token_payment = self.call_value().single_esdt();
 
-self.contract_proxy(callee_sc_address)
+self.callee_contract_proxy(callee_sc_address)
 	.my_payable_endpoint(my_biguint_arg)
 	.with_esdt_transfer((token_identifier_1, 0, 100_000u32.into()))
 	.with_esdt_transfer((token_identifier_2, 1, 1u32.into()))
@@ -272,7 +272,7 @@ In this example we passed the arguments both as a tuple and as an `EsdtTokenPaym
 It is also possible to pass multiple ESDT transfers in one go, as follows:
 
 ```rust
-self.contract_proxy(callee_sc_address)
+self.callee_contract_proxy(callee_sc_address)
 	.my_payable_endpoint(my_biguint_arg)
 	.with_multi_token_transfer(payments)
 ```
@@ -291,7 +291,7 @@ First, we have the single transfer `ContractCallWithEgldOrSingleEsdt`, which can
 
 ```rust
 let payment = self.call_value().egld_or_single_esdt();
-self.contract_proxy(callee_sc_address)
+self.callee_contract_proxy(callee_sc_address)
 	.my_payable_endpoint(my_biguint_arg)
     .with_egld_or_single_esdt_transfer(payment)
 ```
@@ -301,7 +301,7 @@ The most general such object is `ContractCallWithAnyPayment`, which can take any
 
 ```rust
 let payments = self.call_value().any_payment();
-self.contract_proxy(callee_sc_address)
+self.callee_contract_proxy(callee_sc_address)
 	.my_payable_endpoint(my_biguint_arg)
     .with_any_payment(payments)
 ```
@@ -372,8 +372,8 @@ A minimal asynchronous call could look like this:
 fn caller_endpoint(&self) {
 	// other code here
 
-	self.contract_proxy(callee_sc_address)
-		.my_endpoint(my_biguint_arg)
+	self.callee_contract_proxy(callee_sc_address)
+		.callee_endpoint(my_biguint_arg)
 		.async_call()
 		.call_and_exit();
 }
@@ -385,11 +385,11 @@ fn caller_endpoint(&self) {
 
 But before sending the asynchronous call, we most likely will want to also configure a callback for it. This is the only way that our contract will be able to react to the outcome of its execution.
 
-Let's imagine that `my_endpoint` returns a `BigUint`, and we want to do something if the result is even, and something else if the result is odd. We also want to do some cleanup in case of error. Our callback function would look something like this:
+Let's imagine that `callee_endpoint` returns a `BigUint`, and we want to do something if the result is even, and something else if the result is odd. We also want to do some cleanup in case of error. Our callback function would look something like this:
 
 ```rust
 #[callback]
-fn my_endpoint_callback(
+fn callee_endpoint_callback(
 	&self,
 	#[call_result] result: ManagedAsyncCallResult<BigUint>
 ) {
@@ -418,10 +418,10 @@ To assign this callback to the aforementioned async call, we hook it after `asyn
 fn caller_endpoint(&self) {
 	// previous code here
 
-	self.contract_proxy(callee_sc_address)
-		.my_endpoint(my_biguint_arg)
+	self.callee_contract_proxy(callee_sc_address)
+		.callee_endpoint(my_biguint_arg)
 		.async_call()
-		.with_callback(self.callbacks().my_endpoint_callback())
+		.with_callback(self.callbacks().callee_endpoint_callback())
 		.call_and_exit();
 }
 ```
@@ -437,7 +437,7 @@ Callbacks can also receive payments, both EGLD and ESDT. They are always payable
 
 ```rust
 #[callback]
-fn my_endpoint_callback(&self, #[call_result] result: ManagedAsyncCallResult<BigUint>) {
+fn callee_endpoint_callback(&self, #[call_result] result: ManagedAsyncCallResult<BigUint>) {
 	let payment = self.call_value().any_payment();
 
 	// ...
@@ -463,7 +463,7 @@ Example:
 
 ```rust
 #[callback]
-fn my_endpoint_callback(
+fn callee_endpoint_callback(
 	&self,
 	original_caller: ManagedAddress,
 	#[call_result] result: ManagedAsyncCallResult<BigUint>
@@ -491,10 +491,10 @@ fn caller_endpoint(&self) {
 	// other code here
 	let caller = self.blockchain().get_caller();
 
-	self.contract_proxy(callee_sc_address)
-		.my_endpoint(my_biguint_arg)
+	self.callee_contract_proxy(callee_sc_address)
+		.callee_endpoint(my_biguint_arg)
 		.async_call()
-		.with_callback(self.callbacks().my_endpoint_callback(caller))
+		.with_callback(self.callbacks().callee_endpoint_callback(caller))
 		.call_and_exit();
 }
 ```
@@ -502,7 +502,7 @@ fn caller_endpoint(&self) {
 Notice how the callback now has an argument:
 
 ```rust
-self.callbacks().my_endpoint_callback(caller)
+self.callbacks().callee_endpoint_callback(caller)
 ```
 
 You can then use `original_caller` in the callback like any other function argument.
@@ -535,17 +535,17 @@ fn caller_endpoint(&self) {
 	// other code here
 	let caller = self.blockchain().get_caller();
 
-	self.contract_proxy(callee_sc_address)
-		.my_endpoint(my_biguint_arg)
+	self.callee_contract_proxy(callee_sc_address)
+		.callee_endpoint(my_biguint_arg)
         .with_gas_limit(gas_limit)
 		.async_call_promise()
-		.with_callback(self.callbacks().my_endpoint_callback(caller))
+		.with_callback(self.callbacks().callee_endpoint_callback(caller))
         .with_extra_gas_for_callback(10_000_000)
 		.register_promise();
 }
 
 #[promises_callback]
-fn my_endpoint_callback(
+fn callee_endpoint_callback(
 	&self,
 	original_caller: ManagedAddress,
 	#[call_result] result: ManagedAsyncCallResult<BigUint>
@@ -586,8 +586,8 @@ Just like promises, there can be multiple such calls launched from a transaction
 Transfer-execute calls do not need any further configuration (other than an explicit gas limit), therefore there is no specific object type associated with them. They can be launched immediately:
 
 ```rust
-self.contract_proxy(callee_sc_address)
-	.my_endpoint(my_biguint_arg)
+self.callee_contract_proxy(callee_sc_address)
+	.callee_endpoint(my_biguint_arg)
 	.with_gas_limit(gas_limit)
 	.transfer_execute();
 ```
@@ -607,8 +607,8 @@ Synchronous calls can only be sent to contracts in the __same shard__ as the cal
 Synchronous calls also do not need any further configuration, the call is straightforward:
 
 ```rust
-let result: BigUint = self.contract_proxy(callee_sc_address)
-	.my_endpoint(my_biguint_arg)
+let result: BigUint = self.callee_contract_proxy(callee_sc_address)
+	.callee_endpoint(my_biguint_arg)
 	.with_gas_limit(gas_limit)
 	.execute_on_dest_context();
 ```
@@ -616,8 +616,8 @@ let result: BigUint = self.contract_proxy(callee_sc_address)
 or 
 
 ```rust
-let result = self.contract_proxy(callee_sc_address)
-	.my_endpoint(my_biguint_arg)
+let result = self.callee_contract_proxy(callee_sc_address)
+	.callee_endpoint(my_biguint_arg)
 	.with_gas_limit(gas_limit)
 	.execute_on_dest_context::<BigUint>();
 ```
@@ -739,7 +739,7 @@ mod callee_proxy {
 ```
 
 ```rust
-self.contract_proxy()
+self.callee_contract_proxy()
 	.init(my_biguint_arg)
 ```
 
@@ -752,13 +752,13 @@ self.contract_proxy()
 Just like with regular contract calls, we can specify the gas limit and perform EGLD transfers as part of the deploy as follows:
 
 ```rust
-self.contract_proxy(callee_sc_address)
+self.callee_contract_proxy(callee_sc_address)
 	.init(my_biguint_arg)
 
 ```
 
 ```rust
-self.contract_proxy()
+self.callee_contract_proxy()
 	.init(my_biguint_arg)
 	.with_egld_transfer(egld_amount)
     .with_gas_limit(gas_limit)
@@ -782,7 +782,7 @@ The simplest deploy operation we can perform is simply calling `deploy_contract`
 
 
 ```rust
-let (new_address, result)  = self.contract_proxy()
+let (new_address, result)  = self.callee_contract_proxy()
 	.init(my_biguint_arg)
 	.deploy_contract::<ResultType>(code, code_metadata);
 ```
@@ -805,8 +805,8 @@ The methods for executing contract deploys are as follows:
 To upgrade the contract we also need to specify the recipient address when setting up the `ContractDeploy` object, like so:
 
 ```rust
-self.contract_proxy()
-	.contract(other_contract)
+self.callee_contract_proxy()
+	.contract(calee_contract_address)
 	.init(123, 456)
 	.with_egld_transfer(payment)
 	.upgrade_contract(code, code_metadata);
