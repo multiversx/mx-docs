@@ -167,7 +167,7 @@ fn callee_contract_proxy(&self, sc_address: ManagedAddress) -> callee_proxy::Pro
 
 The point of the proxies is to help us build contract calls in a type-safe manner. But this is by no means compulsory. Sometimes we specifically want to build contract calls manually and serialize the arguments ourselves.
 
-The point is to create a `ContractCallNoPayment` object. We'll discuss how to add the payments later.
+We are looking to create a `ContractCallNoPayment` object. We'll discuss how to add the payments later.
 
 The `ContractCallNoPayment` has two type arguments: the API and the expected return type. If we are in a contract, the API will always be the same as for the entire contract. To avoid having to explicitly specify it, we can use the following syntax:
 
@@ -178,7 +178,7 @@ contract_call.push_raw_argument(arg1_encoded);
 contract_call.push_raw_argument(arg2_encoded);
 ```
 
-If we are not in a smart contract we might do the same thing using the same, equivalent syntax:
+If we are trying to create the same object outside of a smart contract, we do not have the `self.send()` API available, but we can always use the equivalent syntax:
 
 ```rust
 let mut contract_call = ContractCallNoPayment::<StaticApi, ResultType>::new(to, endpoint_name);
@@ -195,12 +195,16 @@ contract_call.push_raw_argument(arg2_encoded);
 
 Up to here we have created a contract call without payment, so an object of type `ContractCallNoPayment`, in the following ways:
 
+<div style={{textAlign: 'center'}}>
+
 ```mermaid
 graph LR
     gen-proxy[Generated Proxy] --> ccnp[ContractCallNoPayment]
     man-proxy[Manual Proxy] --> ccnp
     ccnp-new["ContractCallNoPayment::new(to, function)"] --> ccnp
 ```
+
+</div>
 
 ---
 
@@ -220,6 +224,8 @@ fn my_payable_endpoint(&self, arg: BigUint) -> BigUint {
 	// ...
 }
 ```
+
+More on payable endpoints and simple transfers [here](/developers/developer-reference/sc-payments). This section refers to transfers during contract calls only.
 
 
 [comment]: # (mx-context-auto)
@@ -312,6 +318,8 @@ self.callee_contract_proxy(callee_sc_address)
 
 To recap, these are all the various ways in which we can specify value transfers for a contract call:
 
+<div style={{textAlign: 'center'}}>
+
 ```mermaid
 graph LR
     ccnp[ContractCallNoPayment]
@@ -322,6 +330,8 @@ graph LR
 	ccnp -->|".with_any_payment"| cc-any[ContractCallWithAnyPayment]
 	ccnp -->|".with_egld_or_single_esdt_transfer"| cc-egld-single[ContractCallWithEgldOrSingleEsdt]
 ```
+
+</div>
 
 ---
 
@@ -337,6 +347,12 @@ Not all contract calls require explicit specification of the gas limit, leaving 
 
 On the other hand, promises and transfer-execute calls do require gas to be explicitly specified.
 
+```rust
+self.callee_contract_proxy(callee_sc_address)
+	.callee_endpoint(my_biguint_arg)
+	.with_gas_limit(gas_limit)
+}
+```
 
 ---
 
@@ -347,7 +363,7 @@ On the other hand, promises and transfer-execute calls do require gas to be expl
 There are several ways in which contract calls are launched from another contract. Currently they are:
 - asynchronous calls:
 	- single asynchronous calls:
-	- promises (multi ple asynchronous calls),
+	- promises (multiple asynchronous calls),
 	- transfer-execute calls,
 - synchronous calls:
 	- executed on destination context,
@@ -409,7 +425,7 @@ fn callee_endpoint_callback(
 }
 ```
 
-The `#[call_result]` argument interprets the output of the called endpoint, and must almost always be of type `ManagedAsyncCallResult`. This type decodes the error status from the VM, more about it [here](/developers/data/multi-values#standard-multi-values). Its type argument must match the return type of the called endpoint.
+The `#[call_result]` argument interprets the output of the called endpoint and must almost always be of type `ManagedAsyncCallResult`. This type decodes the error status from the VM, more about it [here](/developers/data/multi-values#standard-multi-values). Its type argument must match the return type of the called endpoint.
 
 To assign this callback to the aforementioned async call, we hook it after `async_call`, but before `call_and_exit`:
 
@@ -457,7 +473,7 @@ Assume there is some additional context that we want to pass from our contract d
 
 This context forms the contents of our callback closure.
 
-More specifically, all callback arguments other than the `#[call_result]` will be passed to it before launching the call, they will be saved by the framework somewhere in the contract storage, then given to the callback and deleted.
+More specifically, all callback arguments other than the `#[call_result]` will be passed to it before launching the call, they will be saved by the framework in the contract storage automatically, then given to the callback and deleted.
 
 Example:
 
@@ -513,7 +529,9 @@ You can then use `original_caller` in the callback like any other function argum
 
 ### Promises
 
-Promises (or multi-async calls) are a new feature that will be introduced in mainnet release 1.6. They are very similar to the old asynchronous calls, with the difference that launching them does not terminate current execution, and there can be several launched from the same transaction.
+Promises (or multi-async calls) are a new feature that will be introduced in mainnet release 1.6. They are very similar to the old asynchronous calls, with the following differences:
+- launching them does not terminate current execution;
+- there can be several launched from the same transaction.
 
 :::caution
 Because this feature is currently not available on mainnet, contracts need to enable the "promises" feature flag in `Cargo.toml` to use the functionality:
@@ -708,6 +726,7 @@ It shares a lot in common with the contract calls, with these notable difference
 - They get executed slightly differently.
 
 
+<div style={{textAlign: 'center'}}>
 
 ```mermaid
 flowchart TB
@@ -721,6 +740,8 @@ flowchart TB
     cc ---->|".deploy_contract()
               .deploy_from_source()"| exec-upg["⚙️ Upgrade contract"]
 ```
+
+</div>
 
 The object encoding these calls is called `ContractDeploy`. Unlike the contract calls, there is a single such object.
 
