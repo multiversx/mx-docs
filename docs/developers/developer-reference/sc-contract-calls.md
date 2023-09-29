@@ -73,7 +73,7 @@ Contract and module crates can be imported just like any other Rust crates eithe
 Relative paths are the most common for contracts in the same workspace.
 :::
 
-If the contract has modules that have functionality that you may want to call, you will also need to import those.
+If the contract has modules with functionality that you may want to call, you will also need to import those.
 
 If the modules are in different crates than the target contract (and if the target contract doesn't somehow re-export them), you'll also have to add the module to the dependencies, the same way you added the target contract.
 
@@ -83,7 +83,7 @@ These proxies are traits, just like the contracts themselves. The implementation
 use module_namespace::ProxyTrait as _;
 ```
 
-If you use the rust-analyser VSCode extension, it might complain that it can't find this, but if you actually build the contract, the compiler can find it just fine.
+If you use the [rust-analyser VSCode extension](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer), it might complain that it can't find this, but if you actually build the contract, the compiler can find it just fine.
 
 Once you've imported the contract and any external modules it might use, you have to declare a proxy creator function in the contract:
 ```rust
