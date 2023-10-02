@@ -88,7 +88,7 @@ If you use the [rust-analyser VSCode extension](https://marketplace.visualstudio
 Once you've imported the contract and any external modules it might use, you have to declare a proxy creator function in the contract:
 ```rust
 #[proxy]
-fn callee_contract_proxy(&self, sc_address: ManagedAddress) -> contract_namespace::Proxy<Self::Api>;
+fn callee_contract_proxy(&self, callee_sc_address: ManagedAddress) -> contract_namespace::Proxy<Self::Api>;
 ```
 
 This function doesn't do much, it just tries to sort out the proxy trait imports, and neatly initializes the proxy for you.
@@ -98,7 +98,7 @@ This function creates an object that contains all the endpoints of the callee co
 Let's say you have the following endpoint in the contract you wish to call:
 
 ```rust
-#[endpoint(myEndpoint)]
+#[endpoint(caleeEndpoint)]
 fn callee_endpoint(&self, arg: BigUint) -> BigUint {
 	// implementation
 }
@@ -138,7 +138,7 @@ mod callee_proxy {
     #[multiversx_sc::proxy]
     pub trait CalleeContract {
         #[payable("*")]
-		#[endpoint(myEndpoint)]
+		#[endpoint(myPayableEndpoint)]
 		fn my_payable_endpoint(&self, arg: BigUint) -> BigUint;
     }
 }
@@ -214,7 +214,7 @@ Let's assume we want to call a `#[payable]` endpoint, with this definition:
 
 ```rust
 #[payable("*")]
-#[endpoint(myEndpoint)]
+#[endpoint(myPayableEndpoint)]
 fn my_payable_endpoint(&self, arg: BigUint) -> BigUint {
 	let payment = self.call_value().any_payment();
 	// ...
