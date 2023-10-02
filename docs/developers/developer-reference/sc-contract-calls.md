@@ -32,7 +32,7 @@ It is the contract that keeps track of the number of arguments, and deserializes
 
 The description of a smart contract's inputs is known as the [ABI](/developers/data/abi), and lives off-chain. In short, the ABI is a collection of endpoint names, with argument names and type descriptions. To be able to effectively call a smart contract, it is useful to know its ABI.
 
-We call this contract call helper a __proxy__. All it does is that it provides a typed interface to any Rust program, it takes the typed arguments and it serializes them according to the [MultiversX serialization format](/developers/data/serialization-overview).
+The equivalent of the ABI in the Rust world is a a helper trait, called a __proxy__. All it does is that it provides a typed interface to any smart contract, it takes the typed arguments and it serializes them according to the [MultiversX serialization format](/developers/data/serialization-overview).
 
 Let's take this very simple example:
 
