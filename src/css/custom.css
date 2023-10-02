@@ -290,3 +290,11 @@ h2.anchor code {
 }
 
 /* -------------------- End Markdown ------------------- */
+
+/* ------------------- Start Mermaid ------------------- */
+
+.docusaurus-mermaid-container {
+  text-align: center;
+}
+
+/* -------------------- End Mermaid ------------------- */
