@@ -45,6 +45,12 @@ The official instance of the MultiversX Proxy is located at [https://gateway.mul
 
 [comment]: # (mx-context-auto)
 
+## **Swagger docs**
+
+The Swagger docs of the proxy can be found at the root of the gateway. For example: [https://gateway.multiversx.com](https://gateway.multiversx.com/).
+
+[comment]: # (mx-context-auto)
+
 ## **Set up a Proxy Instance**
 
 :::caution
@@ -69,6 +75,41 @@ The Proxy holds its configuration within the `config` folder:
 - `external.toml` - this file holds configuration necessary to Proxy components that interact with external systems. An example of such an external system is **Elasticsearch** - currently, MultiversX Proxy requires an Elasticsearch instance to implement some of its functionality.
 - `apiConfig/credentials.toml` - this file holds the configuration needed for enabling secured endpoints - only accessible by using BasicAuth.
 - `apiConfig/v1_0.toml` - this file contains all the endpoints with their settings (open, secured and rate limit).
+
+[comment]: # (mx-context-auto)
+
+## **Snaphotless observers support**
+
+Instead of nodes that perform regular trie operations, such as snapshots and so on, one could use snapshotless nodes, which are, as the name suggests, nodes that have a different configuration which allows them to "bypass" certain costly trie operations, with the downside of losing access to anything but real-time.
+
+A proxy that only needs real-time data (that is, they are not interested in historical data such as "give me block with nonce X from last month") are a very good use-case for snapshotless observers
+
+[comment]: # (mx-context-auto)
+
+### **Proxy snapshotless endpoints**
+
+Although there are more endpoints that can be used exclusively with snapshotless observers, here's a list with the most common ones:
+- `/address/{address}` : returns data about an address (balance, nonce, username, root hash and so on)
+- `/address/{address}/balance` : returns the balance of an address
+- `/address/{address}/nonce` : returns the nonce of an address
+- `/address/{address}/username` : returns the username of an address
+- `/address/{address}/esdt` : returns all the ESDT tokens managed by an address
+- `/address/{address}/esdt/{tokenIdentifier}` : returns the token data of an address with a specific token identifier
+- `/address/{address}/nft/{tokenIdentifier}/nonce/{nonce}` : returns the NFT/SFT/MetaESDT data of an address for a specific token identifier and nonce
+- `/address/{address}/guardian-data` : returns guardian data of an address
+- `/address/{address}/keys` : returns the storage key-value pairs of an address
+- `/address/{address}/key/{key}` : returns the value of a specific key under an address
+- `/network/config` : returns the network configuration
+- `/network/status/{shard}` : returns the status of the specific shard
+- `/node/heartbeatstatus` : return the heartbeat status of the entire network's nodes
+- `/transaction/send` : broadcasts a transaction to the network
+- `/vm-values/int` : performing SC Queries (gas-free queries) expecting the result as int
+- `/vm-values/hex` : performing SC Queries (gas-free queries) expecting the result as hex
+- `/vm-values/string` : performing SC Queries (gas-free queries) expecting the result as string
+- `/vm-values/query` : performing SC Queries (gas-free queries) expecting the result as raw
+- and so on
+
+Basically, every endpoint that doesn't require historical data access can be used with snapshotless observers
 
 [comment]: # (mx-context-auto)
 
