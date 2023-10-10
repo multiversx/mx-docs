@@ -19,7 +19,7 @@ The following signing providers are available:
 
 - Web Wallet Provider
 - Extension Provider (MultiversX DeFi Wallet)
-- Wallet Connect Provider (xPortal App)
+- WalletConnect Provider (xPortal App)
 - Hardware Wallet (Ledger) Provider
 
 [comment]: # (mx-context-auto)
@@ -225,11 +225,11 @@ console.log(message.toJSON());
 
 [comment]: # (mx-context-auto)
 
-## The Wallet Connect provider
+## The WalletConnect provider
 
 [`@multiversx/sdk-js-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) allows the users of a dApp to login and sign transactions using [xPortal](https://xportal.com/) (the mobile application).
 
-For this example we will use the WalletConnect 2.0 provider since 1.0 is no longer mantained and it will be [deprecated soon](https://medium.com/walletconnect/weve-reset-the-clock-on-the-walletconnect-v1-0-shutdown-now-scheduled-for-june-28-2023-ead2d953b595)
+For this example we will use the WalletConnect 2.0 provider since 1.0 is no longer mantained and it is [deprecated](https://medium.com/walletconnect/weve-reset-the-clock-on-the-walletconnect-v1-0-shutdown-now-scheduled-for-june-28-2023-ead2d953b595)
 
 First, let's see a (simple) way to build a QR dialog using [`qrcode`](https://www.npmjs.com/package/qrcode) (and bootstrap):
 
