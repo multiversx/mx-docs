@@ -164,3 +164,86 @@ been executed but encountered an error in the process.
 
 </TabItem>
 </Tabs>
+
+### Transfer value only event
+
+The `transferValueOnly` event is generated when a transaction involving multiple smart contract calls has been executed,
+and during the execution, some EGLD tokens were transferred from one smart contract to another.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | transferValueOnly                                                                                                           |
+| address    | the destination address                                                                                          |
+| topics     | `topics[0]` - sender address bytes base64 encoded <br/> `topics[1]` - destination address bytes base64 encoded  <br/> `topics[2]` - transferred value bytes base64 encoded   |
+| data       | empty                                                                                                           |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "identifier": "transferValueOnly",
+    "address": "erd1qqqqqqqqqqqqqpgqd77fnev2sthnczp2lnfx0y5jdycynjfhzzgq6p3rax",
+    "topics": [
+        "AAAAAAAAAAAFADz3VNyYTcz4h9Y/rLRPPr0jIp5kL5w=",
+        "AAAAAAAAAAAFAG+8meWKgu88CCr80meSkmkwSck3EJA=",
+        "9DzAfFqMRw=="
+    ]
+    "data": "",
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+:::important Important
+From the `rc/v1.6.0` release onward, the `transferValueOnly` will undergo a modification once the `ScToScLogEventEnableEpoch` flag is activated as follows:
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                 |
+|------------|---------------------------------------------------------------------------------------|
+| identifier | transferValueOnly                                                                  |
+| address    | the sender address                                                           |
+| topics     | `topics[0]` - transferred value bytes base64 encoded <br/> `topics[1]` - destination address bytes base64 encoded  |
+| data       | empty                                                                                 |
+
+</TabItem>
+<TabItem  value="Example">
+
+```json
+{
+    "identifier": "transferValueOnly",
+    "address": "erd1qqqqqqqqqqqqqpgqd77fnev2sthnczp2lnfx0y5jdycynjfhzzgq6p3rax",
+    "topics": [
+        "AQ==",
+        "rwBuzoNHMQTqkff/VgXEwXQvchSh9GvimeMO4uhwcWk="
+    ],
+    "data": null
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::
+
