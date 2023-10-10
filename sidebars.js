@@ -390,7 +390,7 @@ const sidebars = {
           "integrators/accounts-management",
           "integrators/creating-transactions",
           "integrators/querying-the-blockchain",
-        ],        
+        ],
       },
       "integrators/walletconnect-json-rpc-methods",
     ],
