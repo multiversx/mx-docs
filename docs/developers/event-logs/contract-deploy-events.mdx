@@ -28,7 +28,7 @@ the deployment of a smart contract, without encountering any errors.
 | Field      | Value                                                                                                                  |
 |------------|------------------------------------------------------------------------------------------------------------------------|
 | identifier | SCDeploy                                                                                                           |
-| address    | the address of the deploy contract                                                                                              |
+| address    | the address of the deployed contract                                                                                              |
 | topics     | `topics[0]` - the address bytes of the deployed contract base64 encoded <br/>`topics[1]` - the address bytes of the deployer of the smart contract base64 encoded <br/> `topics[2]` - the code hash bytes of the deployer smart contract base64 encoded |
 | data       | empty                                                                                                                  |
 
@@ -71,7 +71,7 @@ The contract upgrade event is generated when a transaction, involving an upgrade
 | Field      | Value                                                                                                                  |
 |------------|------------------------------------------------------------------------------------------------------------------------|
 | identifier | SCUpgrade                                                                                                           |
-| address    | the address of the deploy contract                                                                                              |
+| address    | the address of the deployed contract                                                                                              |
 | topics     | `topics[0]` - the address bytes of the upgraded contract base64 encoded <br/>`topics[1]` - the address bytes of the upgrader of the smart contract base64 encoded <br/> `topics[2]` - the code hash bytes of the upgraded smart contract base64 encoded |
 | data       | empty                                                                                                                  |
 
