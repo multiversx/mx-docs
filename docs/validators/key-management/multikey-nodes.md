@@ -80,6 +80,14 @@ will want to consider when deciding to switch the operation towards the multikey
 operator when the number of managed keys is greater than the number of shards. So, for the time being, when we have 
 at least 5 keys that are either *eligible* or *waiting*, the switch to multikey mode becomes feasible.
 
+:::caution
+Although there are no hard limits in the source code to impose a maximum number of keys for a multikey group, the MultiversX team 
+strongly recommends the node operators to not use more than 50 keys per group. The reason behind this recommendation is that a single node
+controlling enough keys could cause damage to the chain as, in extreme cases, it could propose consecutive bad blocks, disrupting the
+possibility of blocks synchronization or blocks cross-notarization. 
+:::
+
+
 [comment]: # (mx-context-auto)
 
 ## Usage
