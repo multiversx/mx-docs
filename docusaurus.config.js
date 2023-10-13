@@ -275,6 +275,26 @@ const config = {
             to: "/developers/data/multi-values",
           },
           {
+            from: "/developers/scenario-reference/overview",
+            to: "/developers/testing/scenario/concept",
+          },
+          {
+            from: "/developers/scenario-reference/structure",
+            to: "/developers/testing/scenario/structure-json",
+          },
+          {
+            from: "/developers/scenario-reference/values-simple",
+            to: "/developers/testing/scenario/values-simple",
+          },
+          {
+            from: "/developers/scenario-reference/values-complex",
+            to: "/developers/testing/scenario/values-complex",
+          },
+          {
+            from: "/developers/scenario-reference/embed",
+            to: "/developers/testing/testing-in-go",
+          },
+          {
             from: "/sdk-and-tools/erdjs",
             to: "/sdk-and-tools/sdk-js",
           },

@@ -116,7 +116,7 @@ const sidebars = {
             type: "category",
             label: "Testing",
             items: [
-              "developers/testing/sc-testing-overview",
+              "developers/testing/testing-overview",
               {
                 type: "category",
                 label: "Scenarios",
@@ -129,7 +129,7 @@ const sidebars = {
                   "developers/testing/scenario/generating-scenarios",
                 ],
               },
-              "developers/testing/embed-go",
+              "developers/testing/testing-in-go",
             ],
           },
         ],

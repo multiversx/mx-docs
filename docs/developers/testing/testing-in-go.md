@@ -1,7 +1,13 @@
 ---
-id: embed-go
+id: testing-in-go
 title: Testing in Go
 ---
+
+[comment]: # (mx-abstract)
+
+At some point in the past we built some testing solutions in Go. They were never very popular, but are worth mentioning.
+
+This page is currently a stub. If there is interest in this type of testing, we will expand it further.
 
 [comment]: # (mx-context-auto)
 

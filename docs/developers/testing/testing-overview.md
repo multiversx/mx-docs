@@ -1,14 +1,18 @@
 ---
-id: sc-testing-overview
+id: testing-overview
 title: Testing Overview
 ---
-[comment]: # (mx-abstract)
 
-## Types of tests
+[comment]: # (mx-abstract)
 
 What does it mean to test a smart contract?
 
 Well, smart contracts are little programs that run on the blockchain, so the first step is to find an environment for them to run.
+
+
+[comment]: # (mx-context-auto)
+
+## Types of tests
 
 The simplest answer would be to test them directly on a blockchain. We advise against testing them on mainnet, but we have the public devnet and testnet especially made for this purpose. It is even possible to run a blockchain on your local machine, this way there is no interference with anyone.
 
@@ -36,6 +40,8 @@ So, to recap, the ways to test a smart contract are as follows:
 - Unit tests.
 
 
+[comment]: # (mx-context-auto)
+
 ## What language should I use for my tests?
 
 Since smart contracts are written in **Rust**, it is most convenient to have the tests also written in Rust. The Rust framework currently supports all types of testing mentioned above.
@@ -48,18 +54,19 @@ Let's, however, quickly go through all options avialable on MultiversX:
 - Integration tests:
     - Black-box tests:
         - Rust,
-        - JSON, via the JSON scenarios,
-        - Go, using the Go VM tool;
+        - JSON, via the [JSON scenarios](/developers/testing/scenario/structure-json),
+        - Go, by building [around the Go VM tool](/developers/testing/testing-in-go);
     - White-box tests:
         - Rust only (since direct access to the contract code is needed);
 - Unit tests:
     - Rust only (since direct access to the contract code is needed).
 
 
+[comment]: # (mx-context-auto)
+
 ## Testing backends
 
 A smart contract needs an environment to run. Any smart contract test needs to set up this environment. All these environments are modelled after the same blockchain, so their behavior is necessarily similar. This also means that in general, with some proper engineering, the same test should be able to run on any compatible infrastructure.
-
 
 ```mermaid
 graph TD
