@@ -392,6 +392,7 @@ const sidebars = {
           "integrators/querying-the-blockchain",
         ],
       },
+      "integrators/walletconnect-json-rpc-methods",
     ],
     "Ad-Astra Bridge": [
       "bridge/architecture",
