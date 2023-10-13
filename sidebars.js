@@ -114,13 +114,22 @@ const sidebars = {
           },
           {
             type: "category",
-            label: "Testing Scenarios",
+            label: "Testing",
             items: [
-              "developers/scenario-reference/overview",
-              "developers/scenario-reference/structure",
-              "developers/scenario-reference/values-simple",
-              "developers/scenario-reference/values-complex",
-              "developers/scenario-reference/embed",
+              "developers/testing/sc-testing-overview",
+              {
+                type: "category",
+                label: "Scenarios",
+                items: [
+                  "developers/testing/scenario/concept",
+                  "developers/testing/scenario/structure-json",
+                  "developers/testing/scenario/values-simple",
+                  "developers/testing/scenario/values-complex",
+                  "developers/testing/scenario/running-scenarios",
+                  "developers/testing/scenario/generating-scenarios",
+                ],
+              },
+              "developers/testing/embed-go",
             ],
           },
         ],

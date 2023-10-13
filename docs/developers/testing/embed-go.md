@@ -1,6 +1,6 @@
 ---
-id: embed
-title: Embedding scenario code in Go
+id: embed-go
+title: Testing in Go
 ---
 
 [comment]: # (mx-context-auto)
