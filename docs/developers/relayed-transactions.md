@@ -183,7 +183,7 @@ RelayedV2Transaction {
 ```
 
 :::note
-Noticing the arguments needed, there are some limitations for the inner transaction: it cannot have call value, a custom gas price or a guardian
+Noticing the arguments needed, there are some limitations for the inner transaction: it cannot have call value, a custom gas price or a guardian.
 :::
 
 Therefore, when one wants to build such a transaction, the steps would be:
