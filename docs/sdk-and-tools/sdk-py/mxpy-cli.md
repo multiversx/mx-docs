@@ -336,7 +336,7 @@ You can sign any transaction (regular transfers, smart contract deployments and 
 
 First, connect your device to the computer, unlock it and open the MultiversX Ledger app.
 
-Then, you can perform a trivial connectivty check by running:
+Then, you can perform a trivial connectivity check by running:
 
 ```sh
 mxpy ledger version
@@ -366,7 +366,7 @@ account index = 0 | address index = 2 | address: erd1...
 Now let's sign and broadcast a transaction (EGLD transfer):
 
 ```sh
-mxpy tx new --proxy https://devnet2-gateway.multiversx.com --recall-nonce \
+mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
     --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
     --gas-limit 50000 --value 1000000000000000000 \
     --ledger \
@@ -376,7 +376,7 @@ mxpy tx new --proxy https://devnet2-gateway.multiversx.com --recall-nonce \
 By default, the first MultiversX address managed by the device is used as the sender (signer) of the transaction. In order to select a different address, you can use the `--ledger-address-index` CLI parameter:
 
 ```sh
-mxpy tx new --proxy https://devnet2-gateway.multiversx.com --recall-nonce \
+mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
     --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
     --gas-limit 50000 --value 1000000000000000000 \
     --ledger --ledger-address-index=42 \
@@ -390,7 +390,7 @@ For MultiversX, **the account index should always be `0`**, while the address in
 Now let's deploy a smart contract using the Ledger:
 
 ```sh
-mxpy contract deploy --proxy=https://devnet2-gateway.multiversx.com --recall-nonce \
+mxpy contract deploy --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
     --bytecode=counter.wasm --gas-limit=5000000 \
     --ledger --ledger-address-index=42 \
     --send
@@ -400,7 +400,7 @@ Then, perform a contract call:
 
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgqwwef37kmegph97egvvrxh3nccx7xuygez8ns682zz0 \
-    --proxy=https://devnet2-gateway.multiversx.com --recall-nonce \
+    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
     --function increment --gas-limit 5000000 \
     --ledger --ledger-address-index=42 \
     --send

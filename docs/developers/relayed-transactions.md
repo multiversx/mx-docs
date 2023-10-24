@@ -31,7 +31,7 @@ A relayed transaction version 1 relies on having the inner transaction JSON seri
 
 It would look like:
 
-```
+```rust
 RelayedV1Transaction {
     Sender: <Relayer address>
     Receiver: <Address that signed the inner transaction>
@@ -44,7 +44,7 @@ RelayedV1Transaction {
 
 The inner transaction can have a format like this:
 
-```
+```rust
 RelayedV1InnerTransaction {
     Sender: <Receiver of the relayed transaction>
     Receiver: <Smart Contract address>
@@ -168,7 +168,7 @@ the matching gas limit values between the relayed and inner transactions.
 
 It would look like:
 
-```
+```rust
 RelayedV2Transaction {
     Sender: <Relayer address>
     Receiver: <Address that signed the inner transaction>
