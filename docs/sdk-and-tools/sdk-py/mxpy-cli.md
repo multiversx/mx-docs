@@ -329,3 +329,83 @@ mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-n
 That's it! As easy as that. We sent a transaction from Alice to Bob. We choose the receiver of our transaction using the `--receiver` argument and set the gas limit to `50000` because that is the gas cost of a simple move balance transaction. Notice we used the `--value` argument to pass the value that we want to transfer but we passed in the denomintated value. We transferred 1 eGLD (1 * 10^18). We then specify the proxy and the chain ID for the network we want to send our transaction to and use the `--send` argument to broadcast it.
 
 In case you want to save the transaction you can also provide the `--outfile` argument and a `json` file containing the transaction will be saved at the specified location. If you just want to prepare the transaction without broadcasting it simply remove the `--send` argument.
+
+## Using the Ledger hardware wallet
+
+You can sign any transaction (regular transfers, smart contract deployments and calls) using a Ledger hardware wallet by leveraging the `--ledger` command-line argument.
+
+First, connect your device to the computer, unlock it and open the MultiversX Ledger app.
+
+Then, you can perform a trivial connectivity check by running:
+
+```sh
+mxpy ledger version
+```
+
+The output should look like this:
+
+```sh
+MultiversX App version: ...
+```
+
+Another trivial check is to ask the device for the (first 10) MultiversX addresses it manages:
+
+```sh
+mxpy ledger addresses
+```
+
+The output should look like this:
+
+```sh
+account index = 0 | address index = 0 | address: erd1...
+account index = 0 | address index = 1 | address: erd1...
+account index = 0 | address index = 2 | address: erd1...
+...
+```
+
+Now let's sign and broadcast a transaction (EGLD transfer):
+
+```sh
+mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
+    --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
+    --gas-limit 50000 --value 1000000000000000000 \
+    --ledger \
+    --send
+```
+
+By default, the first MultiversX address managed by the device is used as the sender (signer) of the transaction. In order to select a different address, you can use the `--ledger-address-index` CLI parameter:
+
+```sh
+mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
+    --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
+    --gas-limit 50000 --value 1000000000000000000 \
+    --ledger --ledger-address-index=42 \
+    --send
+```
+
+:::info
+For MultiversX, **the account index should always be `0`**, while the address index is allowed to vary. Therefore, you should not use the `--ledger-account-index` CLI parameter (it will be removed in a future release).
+:::
+
+Now let's deploy a smart contract using the Ledger:
+
+```sh
+mxpy contract deploy --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --bytecode=counter.wasm --gas-limit=5000000 \
+    --ledger --ledger-address-index=42 \
+    --send
+```
+
+Then, perform a contract call:
+
+```sh
+mxpy contract call erd1qqqqqqqqqqqqqpgqwwef37kmegph97egvvrxh3nccx7xuygez8ns682zz0 \
+    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --function increment --gas-limit 5000000 \
+    --ledger --ledger-address-index=42 \
+    --send
+```
+
+:::note
+As of October 2023, on Windows (or WSL), you might encounter some issues when trying to use Ledger in `mxpy`.
+:::
