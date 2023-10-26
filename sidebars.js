@@ -128,6 +128,7 @@ const sidebars = {
             label: "Architecture",
             items: [
               "developers/architecture/architecture-overview",
+              "developers/architecture/architecture-api",
             ],
           },
         ],
