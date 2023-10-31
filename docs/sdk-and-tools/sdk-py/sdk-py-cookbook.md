@@ -3,7 +3,8 @@ id: sdk-py-cookbook
 title: Cookbook
 ---
 
-[comment]: # "mx-abstract"
+[comment]: # (mx-abstract)
+
 [comment]: # (mx-context-auto)
 
 ## Overview
@@ -573,7 +574,6 @@ signer = UserSigner.from_pem_file(Path("./testwallets/alice.pem"))
 ```
 
 Signable objects (messages, transactions) must adhere to the following interface:
-
 ```
 class ISignable(Protocol):
     def serialize_for_signing(self) -> bytes: ...
@@ -607,7 +607,7 @@ Signing an arbitrary message:
 from multiversx_sdk_core import MessageV1
 
 message = MessageV1.from_string("hello")
-message.signature = signer.sign(message.data)
+message.signature = signer.sign(message.serialize_for_signing())
 
 print("Signature", message.signature.hex())
 ```
@@ -642,9 +642,9 @@ Verifying a signature:
 
 ```
 print(f"Is signature of Alice?", alice_verifier.verify(tx.serialize_for_signing(), tx.signature))
-print(f"Is signature of Alice?", alice_verifier.verify(message.data, message.signature))
+print(f"Is signature of Alice?", alice_verifier.verify(message.serialize_for_signing(), message.signature))
 print(f"Is signature of Bob?", bob_verifier.verify(tx.serialize_for_signing(), tx.signature))
-print(f"Is signature of Bob?", bob_verifier.verify(message.data, message.signature))
+print(f"Is signature of Bob?", bob_verifier.verify(message.serialize_for_signing(), message.signature))
 ```
 
 [comment]: # (mx-context-auto)
@@ -779,5 +779,4 @@ tx_on_network = provider.get_transaction("09e3b68d39f3759913239b927c7feb9ac871c8
 print("Status:", tx_on_network.status)
 print("Is completed:", tx_on_network.is_completed)
 ```
-
 <!-- END_NOTEBOOK -->
