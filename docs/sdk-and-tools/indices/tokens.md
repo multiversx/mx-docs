@@ -17,6 +17,8 @@ The `_id` field of this index is represented by token identifier of an ESDT toke
 
 ## Fields
 
+[comment]: # (table:tokens)
+
 | Field         | Description                                                                                                                       |
 |---------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | name          | The name field holds the name of the token. It contains alphanumeric characters only.                                             |

@@ -17,6 +17,8 @@ The `_id` field of this index is represented by epoch.
 
 ## Fields
 
+[comment]: # (table:epochinfo)
+
 | Field            | Description                                                                                |
 |------------------|--------------------------------------------------------------------------------------------|
 | accumulatedFees  | The accumulatedFees field represents the accumulated fees that were payed in the epoch.    |
