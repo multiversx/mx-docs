@@ -416,6 +416,7 @@ console.log("Return code:", returnCode);
 <!-- END_INCLUDE_FILE -->
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_02_abi.md" } -->
+
 [comment]: # (mx-context-auto)
 
 ## ABI
