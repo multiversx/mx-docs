@@ -3,7 +3,7 @@ id: sdk-py-cookbook
 title: Cookbook
 ---
 
-[comment]: # (mx-abstract)
+[comment]: # "mx-abstract"
 
 ## Overview
 
@@ -13,7 +13,7 @@ This page will guide you through the process of handling common tasks using the 
 All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py-examples)**.
 :::
 
-We are going to make use of the packages [multiversx-sdk-core](https://github.com/multiversx/mx-sdk-py-core), [multiversx-sdk-wallet](https://github.com/multiversx/mx-sdk-py-wallet) and [multiversx-sdk-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) (available as of January 2023), which were previously nicknamed _erdpy-eggs_. These packages can be installed directly from GitHub or from [**PyPI**](https://pypi.org/user/MultiversX). 
+We are going to make use of the packages [multiversx-sdk-core](https://github.com/multiversx/mx-sdk-py-core), [multiversx-sdk-wallet](https://github.com/multiversx/mx-sdk-py-wallet) and [multiversx-sdk-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) (available as of January 2023), which were previously nicknamed _erdpy-eggs_. These packages can be installed directly from GitHub or from [**PyPI**](https://pypi.org/user/MultiversX).
 
 Example for installing the packages directly from GitHub, using a `requirements.txt` file:
 
@@ -31,7 +31,7 @@ Documentation is preliminary and subject to change (the packages might suffer a 
 
 <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py-examples/main/Cookbook.ipynb" } -->
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Addresses
 
@@ -50,7 +50,7 @@ print("Public key (hex-encoded):", address.pubkey.hex())
 ... or from a _hex-encoded_ string - note that you have to provide the address prefix, also known as the **HRP** (_human-readable part_ of the address):
 
 ```
-address = Address.from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1", "erd");
+address = Address.from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1", "erd")
 ```
 
 ... or from a raw public key:
@@ -104,7 +104,7 @@ address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07g
 print("Is contract:", address.is_smart_contract())
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## EGLD / ESDT transfers
 
@@ -126,6 +126,8 @@ tx = Transaction(
 
 print(tx.to_dictionary())
 ```
+
+In case you are using a **guarded** account you should also provide the _guardian_ argument when creating the transaction.
 
 We'll see later how to [sign](#signing-objects) and [broadcast](#broadcasting-transactions) a transaction.
 
@@ -259,7 +261,84 @@ print("Transaction:", tx.to_dictionary())
 print("Transaction data:", tx.data)
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
+
+## Relayed Transactions
+
+First, we get the newtwork configuration using the network providers.
+
+```
+from multiversx_sdk_network_providers import ProxyNetworkProvider
+
+provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+network_config = provider.get_network_config()
+```
+
+[comment]: # "mx-context-auto"
+
+### Relayed V1
+
+```
+from pathlib import Path
+from multiversx_sdk_core.transaction_builders.relayed_v1_builder import RelayedTransactionV1Builder
+from multiversx_sdk_core import Transaction, Address, TransactionPayload
+from multiversx_sdk_wallet.user_signer import UserSigner
+
+signer = UserSigner.from_pem_file(Path("./testwallets/bob.pem"))
+
+inner_tx = Transaction(
+    chain_id=network_config.chain_id,
+    sender=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
+    receiver=Address.from_bech32("erd1qqqqqqqqqqqqqpgqqczn0ccd2gh8eqdswln7w9vzctv0dwq7d8ssm4y34z"),
+    gas_limit=60000000,
+    nonce=198,
+    data=TransactionPayload.from_str("add@05")
+)
+inner_tx.signature = signer.sign(inner_tx.serialize_for_signing())
+
+relayed_builder = RelayedTransactionV1Builder()
+relayed_builder.set_inner_transaction(inner_tx)
+relayed_builder.set_relayer_nonce(2627)
+relayed_builder.set_network_config(network_config)
+relayed_builder.set_relayer_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+
+relayed_tx = relayed_builder.build()
+print(relayed_tx.to_dictionary())
+```
+
+[comment]: # "mx-context-auto"
+
+### Relayed V2
+
+```
+from multiversx_sdk_core.transaction_builders.relayed_v2_builder import RelayedTransactionV2Builder
+from multiversx_sdk_core import Transaction, Address, TransactionPayload
+from multiversx_sdk_wallet.user_signer import UserSigner
+
+signer = UserSigner.from_pem_file(Path("./testwallets/bob.pem"))
+
+inner_tx = Transaction(
+            chain_id=network_config.chain_id,
+            sender=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
+            receiver=Address.from_bech32("erd1qqqqqqqqqqqqqpgqqczn0ccd2gh8eqdswln7w9vzctv0dwq7d8ssm4y34z"),
+            gas_limit=0,
+            nonce=15,
+            data=TransactionPayload.from_str("add@05")
+        )
+inner_tx.signature = signer.sign(inner_tx.serialize_for_signing())
+
+builder = RelayedTransactionV2Builder()
+builder.set_inner_transaction(inner_tx)
+builder.set_inner_transaction_gas_limit(60_000_000)
+builder.set_relayer_nonce(37)
+builder.set_network_config(network_config)
+builder.set_relayer_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+
+relayed_tx = builder.build()
+print(relayed_tx.to_dictionary())
+```
+
+[comment]: # "mx-context-auto"
 
 ## Contract deployments and interactions
 
@@ -278,7 +357,7 @@ builder = ContractDeploymentBuilder(
     owner=alice,
     deploy_arguments=[42, "test"],
     code_metadata=metadata,
-    code=Path("./contracts/contract.wasm").read_bytes(),
+    code=Path("./contracts/counter.wasm").read_bytes(),
     gas_limit=10000000
 )
 
@@ -302,7 +381,7 @@ builder = ContractUpgradeBuilder(
     owner=owner,
     upgrade_arguments=[42, "test"],
     code_metadata=metadata,
-    code=Path("./contracts/contract.wasm").read_bytes(),
+    code=Path("./contracts/counter.wasm").read_bytes(),
     gas_limit=10000000
 )
 
@@ -355,7 +434,7 @@ print("Transaction:", tx.to_dictionary())
 print("Transaction data:", tx.data)
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Contract queries
 
@@ -384,7 +463,7 @@ print("Return code:", response.return_code)
 print("Return data:", response.return_data)
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Creating wallets
 
@@ -435,7 +514,7 @@ pem = UserPEM(label=label, secret_key=secret_key)
 pem.save(Path("./output/wallet.pem"))
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Loading wallets
 
@@ -474,7 +553,7 @@ print("Secret key", pem.secret_key.hex())
 print("Public key", pem.public_key.hex())
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Signing objects
 
@@ -517,7 +596,7 @@ tx = Transaction(
     version=1
 )
 
-tx.signature = signer.sign(tx)
+tx.signature = signer.sign(tx.serialize_for_signing())
 print("Signature", tx.signature.hex())
 ```
 
@@ -527,12 +606,12 @@ Signing an arbitrary message:
 from multiversx_sdk_core import MessageV1
 
 message = MessageV1.from_string("hello")
-message.signature = signer.sign(message)
+message.signature = signer.sign(message.data)
 
 print("Signature", message.signature.hex())
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Verifying signatures
 
@@ -561,13 +640,13 @@ Both `Transaction` and `Message` - defined in `multiversx_sdk_core` - implement 
 Verifying a signature:
 
 ```
-print(f"Is signature of Alice?", alice_verifier.verify(tx))
-print(f"Is signature of Alice?", alice_verifier.verify(message))
-print(f"Is signature of Bob?", bob_verifier.verify(tx))
-print(f"Is signature of Bob?", bob_verifier.verify(message))
+print(f"Is signature of Alice?", alice_verifier.verify(tx.serialize_for_signing(), tx.signature))
+print(f"Is signature of Alice?", alice_verifier.verify(message.data, message.signature))
+print(f"Is signature of Bob?", bob_verifier.verify(tx.serialize_for_signing(), tx.signature))
+print(f"Is signature of Bob?", bob_verifier.verify(message.data, message.signature))
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Creating network providers
 
@@ -578,7 +657,7 @@ Creating an API provider:
 ```
 from multiversx_sdk_network_providers import ApiNetworkProvider
 
-provider = ApiNetworkProvider("https://devnet-api.multiversx.com");
+provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
 ```
 
 Creating a Proxy provider:
@@ -586,23 +665,23 @@ Creating a Proxy provider:
 ```
 from multiversx_sdk_network_providers import ProxyNetworkProvider
 
-provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
+provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Fetching network parameters
 
 In order to fetch network parameters, do as follows:
 
 ```
-config = provider.get_network_config();
+config = provider.get_network_config()
 
-print("Chain ID", config.chain_id);
-print("Min gas price:", config.min_gas_price);
+print("Chain ID", config.chain_id)
+print("Min gas price:", config.min_gas_price)
 ```
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Fetching account state
 
@@ -628,7 +707,7 @@ tx.nonce = nonce_holder.get_nonce_then_increment()
 
 For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
 
-[comment]: # (mx-context-auto)
+[comment]: # "mx-context-auto"
 
 ## Broadcasting transactions
 
@@ -647,7 +726,7 @@ tx = Transaction(
 alice_on_network = provider.get_account(alice)
 
 tx.nonce = alice_on_network.nonce
-tx.signature = signer.sign(tx)
+tx.signature = signer.sign(tx.serialize_for_signing())
 
 hash = provider.send_transaction(tx)
 print("Transaction hash:", hash)
@@ -684,9 +763,9 @@ tx_1.nonce = nonce_holder.get_nonce_then_increment()
 tx_2.nonce = nonce_holder.get_nonce_then_increment()
 tx_3.nonce = nonce_holder.get_nonce_then_increment()
 
-tx_1.signature = signer.sign(tx_1)
-tx_2.signature = signer.sign(tx_2)
-tx_3.signature = signer.sign(tx_3)
+tx_1.signature = signer.sign(tx_1.serialize_for_signing())
+tx_2.signature = signer.sign(tx_2.serialize_for_signing())
+tx_3.signature = signer.sign(tx_3.serialize_for_signing())
 
 hashes = provider.send_transactions([tx_1, tx_2, tx_3])
 print("Transactions hashes:", hashes)
@@ -695,8 +774,9 @@ print("Transactions hashes:", hashes)
 Now let's fetch a previously-broadcasted transaction:
 
 ```
-tx_on_network = provider.get_transaction("09e3b68d39f3759913239b927c7feb9ac871c8877e76bc56e1be45a2a597eb53")
+tx_on_network = provider.get_transaction("09e3b68d39f3759913239b927c7feb9ac871c8877e76bc56e1be45a2a597eb53", with_process_status=True)
 print("Status:", tx_on_network.status)
 print("Is completed:", tx_on_network.is_completed)
 ```
+
 <!-- END_NOTEBOOK -->
