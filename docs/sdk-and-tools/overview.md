@@ -43,6 +43,8 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 |-------------------------------------------------------|--------------------------------------------------------------|
 | [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli) | Lightweight CLI wrapper used to perform wallet interactions. |
 
+You might also want to have a look over [**xSuite**](https://xsuite.dev), a toolkit to init, build, test, deploy contracts using JavaScript, made by the [Arda team](https://arda.run).
+
 [comment]: # (mx-context-auto)
 
 ### sdk-dapp - core functional logic of a dApp
