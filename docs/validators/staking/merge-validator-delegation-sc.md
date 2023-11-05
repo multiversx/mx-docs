@@ -47,3 +47,27 @@ Whitelist Wallet For Merging
 :::warning
 We advise against using this method to buy or sell validator slots - it requires the transfer of private keys (validatorKey.pem) which can't be changed. This puts the buyer at risk of slashing, should the seller deploy a node with the same key, either intentionally or by mistake.
 :::
+
+## **Merging own node(s)**
+
+If the owner address of the node(s) and Delegation SC is the same use, whitelisting is not needed.
+Send the following transaction :
+
+```rust
+To: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
+Value: 0
+Gas limit: 510000000
+Data: mergeValidatorToDelegationSameOwner@<the Delegation SC address in HEX format>
+```
+
+```rust
+Merge Own Nodes
+    Sender: <account address>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
+    Value: 0
+    Gas Limit: 510000000
+    Data: "mergeValidatorToDelegationSameOwner" +
+    "@" "<the Delegation SC address in HEX format>"
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
