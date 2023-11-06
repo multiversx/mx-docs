@@ -279,3 +279,576 @@ Similarly, [enums](/developers/data/custom-types#custom-enums) are defined by:
         - Struct-like variants, with named fields.
 
 You can read more about Rust enums [here](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html).
+
+---
+
+[comment]: # (mx-context-auto)
+
+## Custom ABI exports
+
+### Overview
+
+Even though the `#[derive(TypeAbi)]` annotation exports all the data types used in the contract along with the type descriptions, we have implemented a manual way to export any kind of data type (used inside the contract or not) in the ABI file in order to fetch it easier from other services (e.g. use-case: the developer can define the type of the attributes expected for a specific ESDT, fetch it from abi and use it easily in the frontend for a more specific result).
+
+Starting with the framework version `0.44`, developers can use the new trait annotation `#[esdt_attribute("name", Type)]` in order to export any data types in the ABI file. 
+
+:::important Important
+Please note that it is a `trait annotation`, meaning that it can only be used at trait level along with other `#[multiversx_sc]` annotation. Using it at endpoint level or at trait level outside `multiversx_sc` environment will not work.
+:::
+
+A new field called `esdtAttributes` was added to the ABI file, where developers can find the structs (name, type) exported using the `esdt_attribute` trait annotation. Additionally, each `esdt_attribute` will create a new json file with the name given by the developer (followed by `.esdt-abi`) and containing its exported structs (names, types and descriptions). 
+
+### Basic types
+
+Let's take the `Adder` contract as an example and try out the new annotation.
+
+__adder.rs:__
+```rust
+#[multiversx_sc::contract]
+#[esdt_attribute("testBasic", BigUint)]
+pub trait Adder {
+    #[view(getSum)]
+    #[storage_mapper("sum")]
+    fn sum(&self) -> SingleValueMapper<BigUint>;
+
+    #[init]
+    fn init(&self, initial_value: BigUint) {
+        self.sum().set(initial_value);
+    }
+
+    /// Add desired amount to the storage variable.
+    #[endpoint]
+    fn add(&self, value: BigUint) {
+        self.sum().update(|sum| *sum += value);
+    }
+}
+```
+
+Adding the `#[esdt_attribute("testBasic", BigUint)]` at trait level along with `#[multiversx_sc::contract]` should export a new structure named `testBasic` with a `BigUint` field type. The abi can be generated calling `sc-meta all abi` in the contract folder, or by building the contract using `sc-meta all build` (this command also adds the wasm file to the `output` folder).
+
+Building the contract using `sc-meta all build` will generate the following folder structure:
+```
+adder
+├── output
+│   ├── adder.abi.json
+│   ├── adder.imports.json
+|   ├── adder.mxsc.json
+|   ├── adder.wasm
+│   ├── testBasic.esdt-abi.json
+```
+
+Let's check out the `adder.abi.json` file first. Here we discover the new `esdtAttributes` field, containing the value mentioned in the annotation.
+
+```json
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.71.0-nightly",
+            "commitHash": "a2b1646c597329d0a25efa3889b66650f65de1de",
+            "commitDate": "2023-05-25",
+            "channel": "Nightly",
+            "short": "rustc 1.71.0-nightly (a2b1646c5 2023-05-25)"
+        },
+        "contractCrate": {
+            "name": "adder",
+            "version": "0.0.0",
+            "gitVersion": "v0.44.0"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.44.0"
+        }
+    },
+    "docs": [
+        "One of the simplest smart contracts possible,",
+        "it holds a single variable in storage, which anyone can increment."
+    ],
+    "name": "Adder",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getSum",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Add desired amount to the storage variable."
+            ],
+            "name": "add",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "events": [],
+    "esdtAttributes": [
+        {
+            "ticker": "testBasic",
+            "type": "BigUint"
+        }
+    ],
+    "hasCallback": false,
+    "types": {}
+}
+```
+We can also check the specific json file exported for the newly defined type where we can find information about the type separated from the main abi file.
+
+__testBasic.esdt-abi.json__
+```json
+{
+    "esdtAttribute": {
+        "ticker": "testBasic",
+        "type": "BigUint"
+    }
+}
+```
+
+## Composite types
+
+Now, let's see what happens when we use other types than basic ones. Let's add a `Vec`, an `Enum` and an `Option` to our esdt attributes.
+
+__adder.rs:__
+```rust
+#![no_std]
+
+use multiversx_sc::derive::TypeAbi;
+
+multiversx_sc::imports!();
+
+/// One of the simplest smart contracts possible,
+/// it holds a single variable in storage, which anyone can increment.
+#[multiversx_sc::contract]
+#[esdt_attribute("testBasic", BigUint)]
+#[esdt_attribute("testVec", ManagedVec<u64>)]
+#[esdt_attribute("testEnum", MyEnum)]
+#[esdt_attribute("testOption", Option<TokenIdentifier>)]
+pub trait Adder: module::ModuleExample {
+    #[view(getSum)]
+    #[storage_mapper("sum")]
+    fn sum(&self) -> SingleValueMapper<BigUint>;
+
+    #[init]
+    fn init(&self, initial_value: BigUint) {
+        self.sum().set(initial_value);
+    }
+
+    /// Add desired amount to the storage variable.
+    #[endpoint]
+    fn add(&self, value: BigUint) {
+        self.sum().update(|sum| *sum += value);
+    }
+}
+
+#[derive(TypeAbi)]
+pub enum MyEnum {
+    First,
+    Second,
+    Third,
+}
+
+```
+
+If we call `sc-meta all abi` (or `sc-meta all build` if we also wish to build the contract), the new attributes will be added to our __adder.abi.json__ file and new separate json files will be created for each attribute.
+
+__adder.abi.json:__
+```json
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.71.0-nightly",
+            "commitHash": "a2b1646c597329d0a25efa3889b66650f65de1de",
+            "commitDate": "2023-05-25",
+            "channel": "Nightly",
+            "short": "rustc 1.71.0-nightly (a2b1646c5 2023-05-25)"
+        },
+        "contractCrate": {
+            "name": "adder",
+            "version": "0.0.0",
+            "gitVersion": "v0.44.0"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.44.0"
+        }
+    },
+    "docs": [
+        "One of the simplest smart contracts possible,",
+        "it holds a single variable in storage, which anyone can increment."
+    ],
+    "name": "Adder",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getSum",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Add desired amount to the storage variable."
+            ],
+            "name": "add",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "events": [],
+    "esdtAttributes": [
+        {
+            "ticker": "testBasic",
+            "type": "BigUint"
+        },
+        {
+            "ticker": "testVec",
+            "type": "List<u64>"
+        },
+        {
+            "ticker": "testEnum",
+            "type": "MyEnum"
+        },
+        {
+            "ticker": "testOption",
+            "type": "Option<TokenIdentifier>"
+        }
+    ],
+    "hasCallback": false,
+    "types": {
+        "MyEnum": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "First",
+                    "discriminant": 0
+                },
+                {
+                    "name": "Second",
+                    "discriminant": 1
+                },
+                {
+                    "name": "Third",
+                    "discriminant": 2
+                }
+            ]
+        },
+    }
+}
+
+```
+
+Now, if we take a look into the folder structure of the contract, we should see the following updated folder structure containing the newly generated files in `output`:
+
+```
+adder
+├── output
+│   ├── adder.abi.json
+│   ├── adder.imports.json
+|   ├── adder.mxsc.json
+|   ├── adder.wasm
+│   ├── testBasic.esdt-abi.json
+│   ├── testEnum.esdt-abi.json
+│   ├── testOption.esdt-abi.json
+│   ├── testVec.esdt-abi.json
+```
+
+Each file contains the new struct with its name and the type field's description.
+
+__testEnum.esdt-abi.json:__
+```json
+{
+    "esdtAttribute": {
+        "ticker": "testEnum",
+        "type": "MyEnum"
+    },
+    "types": {
+        "MyEnum": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "First",
+                    "discriminant": 0
+                },
+                {
+                    "name": "Second",
+                    "discriminant": 1
+                },
+                {
+                    "name": "Third",
+                    "discriminant": 2
+                }
+            ]
+        }
+    }
+}
+```
+
+__testOption.esdt-abi.json:__
+```json
+{
+    "esdtAttribute": {
+        "ticker": "testOption",
+        "type": "Option<TokenIdentifier>"
+    }
+}
+```
+
+__testVec.esdt-abi.json:__
+```json
+{
+    "esdtAttribute": {
+        "ticker": "testVec",
+        "type": "List<u64>"
+    }
+}
+```
+
+## Custom types
+
+Let's also add a custom `Struct` into the mix. Here is the updated code for __adder.rs:__
+
+```rust
+#![no_std]
+
+use multiversx_sc::derive::TypeAbi;
+
+multiversx_sc::imports!();
+
+/// One of the simplest smart contracts possible,
+/// it holds a single variable in storage, which anyone can increment.
+#[multiversx_sc::contract]
+#[esdt_attribute("testBasic", BigUint)]
+#[esdt_attribute("testVec", ManagedVec<u64>)]
+#[esdt_attribute("testEnum", MyEnum)]
+#[esdt_attribute("testOption", Option<TokenIdentifier>)]
+#[esdt_attribute("testStruct", MyStruct<Self::Api>)]
+pub trait Adder: module::ModuleExample {
+    #[view(getSum)]
+    #[storage_mapper("sum")]
+    fn sum(&self) -> SingleValueMapper<BigUint>;
+
+    #[init]
+    fn init(&self, initial_value: BigUint) {
+        self.sum().set(initial_value);
+    }
+
+    /// Add desired amount to the storage variable.
+    #[endpoint]
+    fn add(&self, value: BigUint) {
+        self.sum().update(|sum| *sum += value);
+    }
+}
+
+#[derive(TypeAbi)]
+pub struct MyStruct<M: ManagedTypeApi> {
+    pub field1: BigUint<M>,
+    pub field2: ManagedVec<M, ManagedBuffer<M>>,
+}
+
+#[derive(TypeAbi)]
+pub enum MyEnum {
+    First,
+    Second,
+    Third,
+}
+
+```
+
+Same as before, we use `sc-meta all abi` and a new file named `testStruct.esdt-abi.json` shows up in our folder structure:
+
+```
+adder
+├── output
+│   ├── adder.abi.json
+│   ├── adder.imports.json
+|   ├── adder.mxsc.json
+|   ├── adder.wasm
+│   ├── testBasic.esdt-abi.json
+│   ├── testEnum.esdt-abi.json
+│   ├── testOption.esdt-abi.json
+│   ├── testStruct.esdt-abi.json
+│   ├── testVec.esdt-abi.json
+```
+
+__testStruct.esdt-abi.json:__
+```json
+{
+    "esdtAttribute": {
+        "ticker": "testStruct",
+        "type": "MyStruct"
+    },
+    "types": {
+        "MyStruct": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "field1",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "field2",
+                    "type": "List<bytes>"
+                }
+            ]
+        }
+    }
+}
+```
+
+As a final check, let's take a look at the main abi file, `adder.abi.json`, after adding multiple new attributes.
+
+__adder.abi.json:__
+```json
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.71.0-nightly",
+            "commitHash": "a2b1646c597329d0a25efa3889b66650f65de1de",
+            "commitDate": "2023-05-25",
+            "channel": "Nightly",
+            "short": "rustc 1.71.0-nightly (a2b1646c5 2023-05-25)"
+        },
+        "contractCrate": {
+            "name": "adder",
+            "version": "0.0.0",
+            "gitVersion": "v0.44.0"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.44.0"
+        }
+    },
+    "docs": [
+        "One of the simplest smart contracts possible,",
+        "it holds a single variable in storage, which anyone can increment."
+    ],
+    "name": "Adder",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getSum",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Add desired amount to the storage variable."
+            ],
+            "name": "add",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "events": [],
+    "esdtAttributes": [
+        {
+            "ticker": "testBasic",
+            "type": "BigUint"
+        },
+        {
+            "ticker": "testVec",
+            "type": "List<u64>"
+        },
+        {
+            "ticker": "testEnum",
+            "type": "MyEnum"
+        },
+        {
+            "ticker": "testOption",
+            "type": "Option<TokenIdentifier>"
+        },
+        {
+            "ticker": "testStruct",
+            "type": "MyStruct"
+        }
+    ],
+    "hasCallback": false,
+    "types": {
+        "MyEnum": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "First",
+                    "discriminant": 0
+                },
+                {
+                    "name": "Second",
+                    "discriminant": 1
+                },
+                {
+                    "name": "Third",
+                    "discriminant": 2
+                }
+            ]
+        },
+        "MyStruct": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "field1",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "field2",
+                    "type": "List<bytes>"
+                }
+            ]
+        }
+    }
+}
+```
