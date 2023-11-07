@@ -241,3 +241,9 @@ cat logs/mx-chain-.......log
 ```
 
 More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/multiversx/mx-chain-observing-squad.git). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/multiversx).
+
+[comment]: # (mx-context-auto)
+
+## **One click instances in AWS**
+
+AWS instances for [Snapshotless](/sdk-and-tools/proxy/#proxy-snapshotless-endpoints) Observer Squads can be easily deployed via our Amazon Machine Image available in the [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-pbwpmtdtwmkgs).
