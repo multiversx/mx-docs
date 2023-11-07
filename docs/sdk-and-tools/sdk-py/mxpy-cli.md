@@ -330,6 +330,8 @@ That's it! As easy as that. We sent a transaction from Alice to Bob. We choose t
 
 In case you want to save the transaction you can also provide the `--outfile` argument and a `json` file containing the transaction will be saved at the specified location. If you just want to prepare the transaction without broadcasting it simply remove the `--send` argument.
 
+[comment]: # (mx-context-auto)
+
 ## Using the Ledger hardware wallet
 
 You can sign any transaction (regular transfers, smart contract deployments and calls) using a Ledger hardware wallet by leveraging the `--ledger` command-line argument.
