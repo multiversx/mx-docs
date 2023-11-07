@@ -4,7 +4,7 @@ title: Cookbook
 ---
 
 [comment]: # "mx-abstract"
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Overview
 
@@ -32,7 +32,7 @@ Documentation is preliminary and subject to change (the packages might suffer a 
 
 <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py-examples/main/Cookbook.ipynb" } -->
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Addresses
 
@@ -97,7 +97,7 @@ address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3l
 print("Is contract:", address.is_smart_contract())
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## EGLD / ESDT transfers
 
@@ -239,7 +239,7 @@ print("Transaction:", transaction.__dict__)
 print("Transaction data:", transaction.data)
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Relayed Transactions
 
@@ -252,7 +252,7 @@ provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 network_config = provider.get_network_config()
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Relayed V1
 
@@ -285,7 +285,7 @@ relayed_tx = relayed_builder.build()
 print(relayed_tx.__dict__)
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Relayed V2
 
@@ -316,7 +316,7 @@ relayed_tx = builder.build()
 print(relayed_tx.__dict__)
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Contract deployments and interactions
 
@@ -407,7 +407,7 @@ print("Transaction:", call_transaction.__dict__)
 print("Transaction data:", call_transaction.data)
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Contract queries
 
@@ -436,7 +436,7 @@ print("Return code:", response.return_code)
 print("Return data:", response.return_data)
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Creating wallets
 
@@ -487,7 +487,7 @@ pem = UserPEM(label=label, secret_key=secret_key)
 pem.save(Path("./output/wallet.pem"))
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Loading wallets
 
@@ -526,7 +526,7 @@ print("Secret key:", pem.secret_key.hex())
 print("Public key:", pem.public_key.hex())
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Signing objects
 
@@ -577,7 +577,7 @@ message.signature = signer.sign(message_computer.compute_bytes_for_signing(messa
 print("Signature:", message.signature.hex())
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Verifying signatures
 
@@ -608,7 +608,7 @@ print(f"Is signature of Bob?", bob_verifier.verify(transaction_computer.compute_
 print(f"Is signature of Bob?", bob_verifier.verify(message_computer.compute_bytes_for_signing(message), message.signature))
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Creating network providers
 
@@ -630,7 +630,7 @@ from multiversx_sdk_network_providers import ProxyNetworkProvider
 provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Fetching network parameters
 
@@ -643,7 +643,7 @@ print("Chain ID:", config.chain_id)
 print("Min gas price:", config.min_gas_price)
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Fetching account state
 
@@ -669,7 +669,7 @@ tx.nonce = nonce_holder.get_nonce_then_increment()
 
 For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Broadcasting transactions
 
