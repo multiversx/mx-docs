@@ -356,7 +356,7 @@ const sidebars = {
       {
         type: "category",
         label: "FAQs and tools",
-        items: ["validators/faq", "validators/useful-links"],
+        items: ["validators/faq"],
       },
     ],
     Economics: [
