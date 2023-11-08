@@ -26,7 +26,42 @@ In effect, all serializable types implement the multi-value traits.
 
 ## Parsing and limitations
 
-It is important to understand that arguments get read one by one from left to right, so there are some limitations as to how var-args can be positioned. Argument types also define how the arguments are consumed, so, for instance, if a type specifies that all remaining arguments will be consumed, it doesn't really make sense to have any other argument after that.
+It is important to understand that arguments get read one by one from left to right, so there are some limitations as to how var-args can be positioned. Argument types also define how the arguments are consumed, so, for instance, if a type specifies that all remaining arguments will be consumed, it doesn't really make sense to have any other argument after that. 
+
+For instance, let's consider the behavior of `MultiValueEncoded`, which consumes all subsequent arguments. Hence, it's advisable to place it as the last argument in the function, like so:
+
+```rust
+#[endpoint(myEndpoint)]
+fn my_endpoint(&self, first_arg: ManagedBuffer, second_arg: TokenIdentifier, last_arg: MultiValueEncoded<u64>)
+```
+Placing any argument after `MultiValueEncoded` will not initialize that argument, because `MultiValueEncoded` will consume all arguments following it. An important rule to remember is that an endpoint can have only one `MultiValueEncoded` argument, and it should always occupy the last position in order to achieve the desired outcome.
+
+Another scenario to consider involves the use of multiple `Option` arguments. Take, for instance, the following endpoint:
+
+```rust
+#[endpoint(myOptionalEndpoint)]
+fn my_optional_endpoint(&self, first_arg: Option<TokenIdentifier>, second_arg: Option<ManagedBuffer>)
+```
+In this context, both arguments (or none) should be provided at the same time in order to get the desired effect. Since arguments are processed sequentially from left to right, supplying a single value will automatically assign it to the first argument, making it impossible to determine which argument should receive that value.
+
+The same rule applies when any regular argument is placed after a var-arg, so we have enforced a strong restriction regarding arguments' order. Regular arguments `must not` be placed after var-args.
+
+To further enhance clarity and minimize potential errors related to var-args, starting from framework version `v0.44.0`, we have introduced a new annotation called `#[allow_multiple_var_args]`. 
+
+:::info Note
+`#[allow_multiple_var_args]` is required when using more than one var-arg in an endpoint and is placed at the endpoint level, alongside the `#[endpoint]` annotation. Utilizing `#[allow_multiple_var_args]` in any other manner will not work.
+
+Considering this, our optional endpoint from the example before becomes:
+```rust
+#[allow_multiple_var_args]
+#[endpoint(myOptionalEndpoint)]
+fn my_optional_endpoint(&self, first_arg: Option<TokenIdentifier>, second_arg: Option<ManagedBuffer>)
+``` 
+:::
+
+The only parsing validations are taking into account the number of var-args and their position. Not having `#[allow_multiple_var_args]` as an endpoint attribute if the endpoint is using more than one var-arg and/or placing regular arguments after var-args will fail the build. 
+
+However, when `#[allow_multiple_var_args]` is used, there is no other parsing validation (except the ones from above) to enforce the var-args rules mentioned before. In simpler terms, using the annotation implies that the developer is assuming responsibility for handling multiple var-args and anticipating the outcomes, effectively placing trust in their ability to manage the situation.
 
 
 [comment]: # (mx-context-auto)
@@ -218,3 +253,6 @@ where
 ```
 
 To create a custom multi-value type, one needs to manually implement these two traits for the type. Unlike for single values, there is no [equivalent derive syntax](/developers/data/custom-types).
+
+
+
