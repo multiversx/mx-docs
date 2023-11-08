@@ -41,7 +41,7 @@ Also note that BigUint logic does not reside in the contract, but is built into 
 
 Let's test that initialization works.
 
-```json,file=crowdfunding-init.scen.json
+```json title=crowdfunding-init.scen.json
 {
     "name": "crowdfunding deployment test",
     "steps": [
@@ -151,7 +151,7 @@ To test the function, we'll add a new test file, in the same `scenarios` folder.
 
 To avoid duplicating the deployment code, we import it from `crowdfunding-init.scen.json` .
 
-```json,file=crowdfunding-fund.scen.json
+```json title=crowdfunding-fund.scen.json
 {
     "name": "crowdfunding funding",
     "steps": [
@@ -268,7 +268,7 @@ It doesn't make sense to fund after the deadline has passed, so fund transaction
 
 We'll create another test file to verify that the validation works: `test-fund-too-late.scen.json` .
 
-```json,file=crowdfunding-fund-too-late.scen.json
+```json title=crowdfunding-fund-too-late.scen.json
 {
     "name": "trying to fund one block too late",
     "steps": [
@@ -468,7 +468,7 @@ The only new function here is `self.send().direct_egld()`, which simply forwards
 
 If you followed all the steps presented until now, you should have ended up with a contract that looks something like:
 
-```rust,file=final.rs
+```rust title=final.rs
 #![no_std]
 
 multiversx_sc::imports!();

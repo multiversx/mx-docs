@@ -327,7 +327,7 @@ The name/ticker is just a way to identify the idea of the token because we do no
 
 Let's take a simple contract `SomeContract` as an example and try out the new annotation.
 
-```rust,file=lib.rs
+```rust title=lib.rs
 #![no_std]
 
 multiversx_sc::imports!();
@@ -372,8 +372,7 @@ Let's check out the `some_contract.abi.json` file first. Here we discover the ne
 ```
 We can also check the specific json file exported for the newly defined type where we can find information about the type separated from the main abi file.
 
-__testBasic.esdt-abi.json__
-```json
+```json title=testBasic.esdt-abi.json
 {
     "esdtAttribute": {
         "ticker": "testBasic",
@@ -387,7 +386,7 @@ __testBasic.esdt-abi.json__
 Now, let's see what happens when we use other types than basic ones. Let's add a `Vec`, an `Enum (MyAbiEnum)` and an `Option` to our esdt attributes.
 
 
-```rust,file=lib.rs
+```rust title=lib.rs
 #![no_std]
 
 multiversx_sc::imports!();
@@ -406,8 +405,7 @@ pub trait SomeContract {
 
 If we call `sc-meta all abi` (or `sc-meta all build` if we also wish to build the contract), the new attributes will be added to our __some_contract.abi.json__ file and new separate json files will be created for each attribute. Now, our `esdtAttributes` section from our abi file should look like this:
 
-__some_contract.abi.json__
-```json
+```json title=some_contract.abi.json
 {
     "esdtAttributes": [
         {
@@ -447,8 +445,7 @@ some_contract
 
 Each file contains the new struct with its name and the type field's description such as:
 
-__testOption.esdt-abi.json:__
-```json
+```json title=testOption.esdt-abi.json
 {
     "esdtAttribute": {
         "ticker": "testOption",
@@ -461,7 +458,7 @@ Let's also add a custom `struct` into the mix. For this example we are going to 
 
 Here is the updated code for __lib.rs:__
 
-```rust,file=lib.rs
+```rust title=lib.rs
 #![no_std]
 
 multiversx_sc::imports!();
@@ -498,8 +495,7 @@ some_contract
 
 As a final check, let's take a look at what changed in the main abi file, `some_contract.abi.json`, after adding multiple new attributes.
 
-__some_contract.abi.json:__
-```json
+```json title=some_contract.abi.json
 {
     "esdtAttributes": [
         {
