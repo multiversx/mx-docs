@@ -244,6 +244,6 @@ More detailed commands for installing, building and running an Observing Squad u
 
 [comment]: # (mx-context-auto)
 
-## **One click instances in AWS**
+## **One click deploy in AWS**
 
 AWS instances for [Snapshotless](/sdk-and-tools/proxy/#proxy-snapshotless-endpoints) Observer Squads can be easily deployed via our Amazon Machine Image available in the [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-pbwpmtdtwmkgs).
