@@ -308,7 +308,7 @@ The produced files are:
 ```text
 output
 ├── myTicker.esdt-abi.json
-├── some_contract.abi.json
+└── some_contract.abi.json
 ```
 
 Arguments:
