@@ -5,7 +5,7 @@ title: accountsesdt
 
 ## _id
 
-The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}` (example: `erd.._abcd-0123-01`).
+The `_id` field of this index is composed in this way: `{bech32address}-{tokenIdentifier}-{nonce}` (example: `erd..-abcd-0123-01`).
 
 ## Fields
 
@@ -44,9 +44,8 @@ curl --request GET \
   --data '{
     "query": {
         "match": {
-         "identifier": {
-           "query": "MY-TOKEN-aaabbb",
-           "operator": "AND"
+         "token": {
+           "query": "MY-TOKEN-aaabbb"
          }
        }
      }
