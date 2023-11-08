@@ -381,7 +381,7 @@ We can also check the specific json file exported for the newly defined type whe
 }
 ```
 
-## Using more complex types
+### Using more complex types
 
 Now, let's see what happens when we use other types than basic ones. Let's add a `Vec`, an `Enum (MyAbiEnum)` and an `Option` to our esdt attributes.
 
