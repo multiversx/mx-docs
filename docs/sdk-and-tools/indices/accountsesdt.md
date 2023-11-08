@@ -56,11 +56,10 @@ curl --request GET \
     "query": {
         "match": {
          "identifier": {
-           "query": "MY-TOKEN-aaabbb",
-           "operator": "AND"
+           "query": "MY-TOKEN-aaabbb"
          }
        }
-     }
+     },
     "sort": [
         {
             "balanceNum": {
