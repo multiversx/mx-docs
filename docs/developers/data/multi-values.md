@@ -40,13 +40,13 @@ Another scenario to consider involves the use of multiple `Option` arguments. Ta
 
 ```rust
 #[endpoint(myOptionalEndpoint)]
-fn my_optional_endpoint(&self, first_arg: Option<TokenIdentifier>, second_arg: Option<ManagedBuffer>)
+fn my_optional_endpoint(&self, first_arg: OptionalValue<TokenIdentifier>, second_arg: OptionalValue<ManagedBuffer>)
 ```
 In this context, both arguments (or none) should be provided at the same time in order to get the desired effect. Since arguments are processed sequentially from left to right, supplying a single value will automatically assign it to the first argument, making it impossible to determine which argument should receive that value.
 
-The same rule applies when any regular argument is placed after a var-arg, so we have enforced a strong restriction regarding arguments' order. Regular arguments `must not` be placed after var-args.
+The same rule applies when any regular argument is placed after a var-arg, thus, a strong restriction regarding arguments' order has been enforced. Regular arguments `must not` be placed after var-args.
 
-To further enhance clarity and minimize potential errors related to var-args, starting from framework version `v0.44.0`, we have introduced a new annotation called `#[allow_multiple_var_args]`. 
+To further enhance clarity and minimize potential errors related to var-args, starting from framework version `v0.44.0`, it is no longer allowed by default to have multiple var-args. This restriction can be lifted by using the #[allow_multiple_var_args] annotation.
 
 :::info Note
 `#[allow_multiple_var_args]` is required when using more than one var-arg in an endpoint and is placed at the endpoint level, alongside the `#[endpoint]` annotation. Utilizing `#[allow_multiple_var_args]` in any other manner will not work.
@@ -55,11 +55,11 @@ Considering this, our optional endpoint from the example before becomes:
 ```rust
 #[allow_multiple_var_args]
 #[endpoint(myOptionalEndpoint)]
-fn my_optional_endpoint(&self, first_arg: Option<TokenIdentifier>, second_arg: Option<ManagedBuffer>)
+fn my_optional_endpoint(&self, first_arg: OptionalValue<TokenIdentifier>, second_arg: OptionalValue<ManagedBuffer>)
 ``` 
 :::
 
-The only parsing validations are taking into account the number of var-args and their position. Not having `#[allow_multiple_var_args]` as an endpoint attribute if the endpoint is using more than one var-arg and/or placing regular arguments after var-args will fail the build. 
+The absence of #[allow_multiple_var_args] as an endpoint attribute, along with the use of multiple var-args and/or the placement of regular arguments after var-args, leads to build failure, as the parsing validations now consider the count and positions of var-args.
 
 However, when `#[allow_multiple_var_args]` is used, there is no other parsing validation (except the ones from above) to enforce the var-args rules mentioned before. In simpler terms, using the annotation implies that the developer is assuming responsibility for handling multiple var-args and anticipating the outcomes, effectively placing trust in their ability to manage the situation.
 
