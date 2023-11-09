@@ -292,6 +292,8 @@ Paramameters:
 
 ABI generation can be triggered by calling `sc-meta all abi` or `cargo run abi` in the contract root folder. This command generates the main ABI file of the contract (`<contract>.abi.json`) along with all the other json files created if `#[esdt_attribute("name", type)]` was used (`<name>.esdt-abi.json`). You can read more about ESDT Attribute ABI [here](/developers/data/abi#esdt-attribute-abi).
 
+ABI generation will also be triggered for all the other contract commands, such as `build`, `build-dbg`, `update`, etc. The `abi` command is for when we just want to generate the ABI and do nothing else.
+
 For a simple contract such as:
 
 ```rust title=lib.rs

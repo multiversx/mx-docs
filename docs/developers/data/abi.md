@@ -309,13 +309,22 @@ You can read more about Rust enums [here](https://doc.rust-lang.org/book/ch06-01
 ## ESDT Attribute ABI
 
 ### Overview
-Even though the `#[derive(TypeAbi)]` annotation exports all the data types used in the contract along with the type descriptions, we have also implemented a manual way to export data about an ESDT. The structure resembles an ESDT ticker and its attributes' type and gets exported in the main ABI file (and also in separate json files) in order to fetch it easier from other services (e.g. the developer can define the type of the attributes expected for a specific ESDT, fetch it from abi and use it easily in the frontend for a more specific result).
+The framework will export all data types found in arguments, results, and events, but it doesn't intrinsically know abut the data that we use in SFT and NFT attributes. This is why there is a special annotation to specify this explicitly.
 
 Starting with the framework version `0.44`, developers can use the new trait annotation `#[esdt_attribute("name", Type)]` in order to export ESDT attributes types in the ABI file. 
 
+The name field is an arbitrary name provided by the developer, to identify the token. Token identifiers are not hard-coded in contracts, but it can make sense to use the ticker here, if known.
+
+The type field is simply the name of the type, as it would show up in regular smart contract code.
+
 :::important Important
-Please note that it is a `trait annotation`, meaning that it can only be used at trait level along with `#[multiversx_sc::contract]` or `#[multiversx_sc::module]` annotations. Using it at endpoint level or at trait level outside `multiversx_sc` annotations will not work.
+The annotation can only be used at trait level along with `#[multiversx_sc::contract]` or `#[multiversx_sc::module]` annotations. Using it anywhere else will not work.
 :::
+
+The exported data will end up in 2 places:
+1. In the contract ABI, in a special `"esdt_attributes"` section;
+2. In a special ESDT ABI file (`name.esdt-abi.json`), one for each such declared ESDT.
+More examples of this below.
 
 ### Details
 
