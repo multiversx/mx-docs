@@ -78,7 +78,7 @@ The Proxy holds its configuration within the `config` folder:
 
 [comment]: # (mx-context-auto)
 
-## **Snaphotless observers support**
+## **Snapshotless observers support**
 
 Instead of nodes that perform regular trie operations, such as snapshots and so on, one could use snapshotless nodes, which are, as the name suggests, nodes that have a different configuration which allows them to "bypass" certain costly trie operations, with the downside of losing access to anything but real-time.
 
