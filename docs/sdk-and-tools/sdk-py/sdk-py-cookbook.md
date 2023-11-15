@@ -3,7 +3,8 @@ id: sdk-py-cookbook
 title: Cookbook
 ---
 
-[comment]: # "mx-abstract"
+[comment]: # (mx-abstract)
+
 [comment]: # (mx-context-auto)
 
 ## Overview
