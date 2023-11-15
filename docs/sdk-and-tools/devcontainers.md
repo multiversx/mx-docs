@@ -29,6 +29,8 @@ mxpy --version
 sc-meta --version
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Using the Docker images without VSCode
 
 If you'd like to use the development Docker image(s) without VSCode's devcontainers feature, this is entirely possible. For example, let's try the following (in any terminal):
