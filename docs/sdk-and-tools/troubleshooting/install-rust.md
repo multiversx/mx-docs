@@ -52,7 +52,7 @@ rustup self uninstall
 note, prior v9.
 
 ```
-mxpy config get "dependencies.rust.resolution" "host"
+mxpy config set "dependencies.rust.resolution" "host"
 ```
 
 [comment]: # (mx-context-auto)
