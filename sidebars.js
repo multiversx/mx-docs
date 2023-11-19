@@ -282,6 +282,14 @@ const sidebars = {
           "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
           "sdk-and-tools/sdk-js-wallet-cli",
+          {
+            type: "category",
+            label: "Troubleshooting",
+            items: [
+              "sdk-and-tools/troubleshooting/troubleshooting",
+              "sdk-and-tools/troubleshooting/install-rust"
+            ],
+          },
         ],
       },
     ],
