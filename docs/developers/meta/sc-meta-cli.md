@@ -280,12 +280,46 @@ Paramameters:
     - Creates test files if they don't exist.
 
 
-
 ---
 
 [comment]: # (mx-exclude-context)
 
 ## Individual contract CLI
+
+[comment]: # (mx-context-auto)
+
+### Calling `abi`
+
+ABI generation can be triggered by calling `sc-meta all abi` or `cargo run abi` in the contract root folder. This command generates the main ABI file of the contract (`<contract>.abi.json`) along with all the other json files created if `#[esdt_attribute("name", type)]` was used (`<name>.esdt-abi.json`). You can read more about ESDT Attribute ABI [here](/developers/data/abi#esdt-attribute-abi).
+
+ABI generation will also be triggered for all the other contract commands, such as `build`, `build-dbg`, `update`, etc. The `abi` command is for when we just want to generate the ABI and do nothing else.
+
+For a simple contract such as:
+
+```rust title=lib.rs
+#[multiversx_sc::contract]
+#[esdt_attribute("myTicker", u64)]
+pub trait SomeContract {
+    #[init]
+    fn init(&self) {}
+}
+```
+
+The produced files are:
+
+```text
+output
+├── myTicker.esdt-abi.json
+└── some_contract.abi.json
+```
+
+Arguments:
+
+- `--path` Used to specify a target directory where to call all contract meta crates. Will be current directory if not specified.
+- `--ignore` Followed by a name is used to ignore all directories with these names [default: `target`].
+- `--no-abi-git-version` Skips loading the Git version into the ABI
+- `--target-dir-meta` For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
+- `--target-dir-all` Overrides both the `--target-dir-meta` and the `--target-dir-wasm` args.
 
 [comment]: # (mx-context-auto)
 
