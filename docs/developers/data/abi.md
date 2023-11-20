@@ -324,6 +324,7 @@ The annotation can only be used at trait level along with `#[multiversx_sc::cont
 The exported data will end up in 2 places:
 1. In the contract ABI, in a special `"esdt_attributes"` section;
 2. In a special ESDT ABI file (`name.esdt-abi.json`), one for each such declared ESDT.
+
 More examples of this below.
 
 ### Details
