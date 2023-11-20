@@ -85,7 +85,6 @@ The settings are as follows:
     - _values_: `true` | `false
     - _default_: `false`
 
-
 ---
 
 [comment]: # (mx-context-auto)
@@ -119,7 +118,6 @@ stack-size = "2 pages"
 features = []
 kill-legacy-callback = false
 ```
-
 
 ---
 
@@ -431,7 +429,6 @@ add-unlabelled = true
 [contracts.example2-alt-impl]
 add-labels = ["alt-impl"]
 ```
-
 
 ---
 

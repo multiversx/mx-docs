@@ -87,7 +87,6 @@ controlling enough keys could cause damage to the chain as, in extreme cases, it
 possibility of blocks synchronization or blocks cross-notarization. 
 :::
 
-
 [comment]: # (mx-context-auto)
 
 ## Usage

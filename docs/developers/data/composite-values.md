@@ -8,7 +8,6 @@ We often need to group simple values into more complex ones, without splitting t
 
 Here too we opted for an encoding that is, above all, very easy to read.
 
-
 [comment]: # (mx-context-auto)
 
 ### Lists of items

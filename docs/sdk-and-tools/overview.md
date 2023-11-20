@@ -23,7 +23,6 @@ Note that Rust is also the recommended programming language for writing Smart Co
 | [sdk-rs/core](https://github.com/multiversx/mx-sdk-rs/tree/master/sdk/core) |  Core components, accompanied by a set of usage examples. |
 | [sdk-rs/snippets](https://github.com/multiversx/mx-sdk-rs/tree/master/framework/snippets) |  Smart Contract interaction snippets - base components. Examples of usage: [adder](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/adder/interact), [multisig](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/multisig/interact). |
 
-
 [comment]: # (mx-context-auto)
 
 ### sdk-js - Javascript SDK
@@ -70,23 +69,23 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                                     | Description                                                        |
 |------------------------------------------|--------------------------------------------------------------------|
-| [nesdtjs sdk](/sdk-and-tools/sdk-nestjs) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
+| [sdk-nestjs](/sdk-and-tools/sdk-nestjs) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
 
 [comment]: # (mx-context-auto)
 
-### erdgo - Golang SDK
+### mx-sdk-go - Golang SDK
 
 | Name                          | Description                                                |
 |-------------------------------|------------------------------------------------------------|
-| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with the MultiversX Blockchain. |
+| [sdk-go](/sdk-and-tools/sdk-go) | Go/Golang SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
-### erdjava - Java SDK
+### mxjava - Java SDK
 
 | Name                              | Description                                           |
 |-----------------------------------|-------------------------------------------------------|
-| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with the MultiversX Blockchain. |
+| [mxjava](/sdk-and-tools/mxjava) | Java SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
@@ -103,6 +102,14 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 | Name                                  | Description                                             |
 |---------------------------------------|---------------------------------------------------------|
 | [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with the MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
+
+### nesdtjs-sdk - NestJS SDK
+
+| Name                                    | Description                                             |
+|-----------------------------------------|---------------------------------------------------------|
+| [sdk-nestjs](/sdk-and-tools/sdk-nestjs) | NestJS SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
@@ -151,6 +158,8 @@ Events notifier is an external service that can be used to fetch block events an
 | Name                                       | Description                          |
 |--------------------------------------------|--------------------------------------|
 | [Events notifier](/sdk-and-tools/notifier) | A notifier service for block events. |
+
+[comment]: # (mx-context-auto)
 
 ### Devcontainers (for VSCode or GitHub Codespaces)
 

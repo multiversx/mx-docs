@@ -11,11 +11,9 @@ As mentioned [before](/developers/meta/sc-meta#standalone-tool-vs-contract-tool)
 
 We will go through the CLI of both of these flavors.
 
-
 [comment]: # (mx-exclude-context)
 
 ## Standalone tool CLI
-
 
 [comment]: # (mx-context-auto)
 
@@ -66,7 +64,6 @@ Paramameters:
 - `--target-dir-all`
     - Overrides both the `--target-dir-meta` and the `--target-dir-wasm` args.
 
-
 [comment]: # (mx-context-auto)
 
 ### Calling `info`
@@ -84,7 +81,6 @@ Paramameters:
 - `--ignore`
     - Ignore all directories with these names.
     - _default_: `target`.
-
 
 [comment]: # (mx-context-auto)
 
@@ -187,8 +183,6 @@ Paramameters:
     - Target directory where to create the new contract directory.
     - _default_: current directory.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Calling `templates`
@@ -205,7 +199,6 @@ Paramameter:
 - `--tag`
     -  The framework version on which the contracts should be created.
     - _default_: The latest released version.
-
 
 [comment]: # (mx-context-auto)
 
@@ -278,7 +271,6 @@ Paramameters:
     - _default_: `target`.
 - `--create`
     - Creates test files if they don't exist.
-
 
 ---
 
@@ -407,5 +399,4 @@ Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate w
 Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
 
 An interactor is a small tool, meant for developers to interact with the contract on-chain. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. There will be more documentation in the works on this topic.
-
 

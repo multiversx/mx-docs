@@ -264,8 +264,17 @@ const sidebars = {
               "sdk-and-tools/sdk-js/sdk-js-signing-providers",
             ],
           },
-          "sdk-and-tools/erdgo",
-          "sdk-and-tools/erdjava",
+          {
+            type: "category",
+            label: "NestJS SDK",
+            items: [
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-cache",
+            ],
+          },
+          "sdk-and-tools/sdk-go",
+          "sdk-and-tools/mxjava",
           {
             type: "category",
             label: "dApp SDK",
@@ -279,7 +288,6 @@ const sidebars = {
             ],
           },
           "sdk-and-tools/erdcpp",
-          "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
           "sdk-and-tools/sdk-js-wallet-cli",
         ],
