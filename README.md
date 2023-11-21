@@ -1,5 +1,5 @@
 # MultiversX docs
-# DELETE_ME
+# DELETE_ME BONUS
 The repository contains the [documentation](https://docs.multiversx.com) for the MultiversX Network protocol.
 
 ## About
