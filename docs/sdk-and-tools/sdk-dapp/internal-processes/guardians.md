@@ -46,7 +46,7 @@ After formatting the transaction and applying the signature provided by the Ledg
 ```js
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 
-const walletProvider = new WalletProvider('https://www.wallet.multiversx.com/dapp/init');
+const walletProvider = new WalletProvider('https://wallet.multiversx.com/dapp/init');
 walletProvider.guardTransactions(transactions, {
     callbackUrl: encodeURIComponent('https://my-dapp.com'),
 });
@@ -54,6 +54,6 @@ walletProvider.guardTransactions(transactions, {
 Once transactions are back from the web wallet, they can be retrieved as follows:
 
 ```js
-const signedTransactions = new WalletProvider('https://www.wallet.multiversx.com/dapp/init').getTransactionsFromWalletUrl();
+const signedTransactions = new WalletProvider('https://wallet.multiversx.com/dapp/init').getTransactionsFromWalletUrl();
 ```
 
