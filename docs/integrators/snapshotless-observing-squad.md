@@ -25,7 +25,7 @@ If you choose to install a snapshotless observing squad from scratch, you should
 NODE_EXTRA_FLAGS="-log-save -operation-mode snapshotless-observer"
 ```
 
-After that, you can resume the normal Observer Squad installation steps.
+After that, you can resume the normal Observing Squad installation steps.
 
 ### Converting a normal Observing Squad to a Snapshotless Observing Squad
 
@@ -59,10 +59,12 @@ After units reload, you can restart the nodes.
 
 :::caution
 Even if the nodes are synced, after changing the operation mode, they will start to re-sync their state in 
-"snapshotless" format.
+"snapshotless" format. The nodes should be temporarily started with the extra node flag `--force-start-from-network` that will force the node to start from network. 
+Let the node sync completely and then remove this extra flag and restart the node. 
+Failure to do so will make the node error with a message like `consensusComponentsFactory create failed: epoch nodes configuration does not exist epoch=0`.
 :::
 
 [comment]: # (mx-context-auto)
 ### One click deploy in AWS
-AWS instances for Snapshotless Observer Squads can be easily deployed via our Amazon Machine Image available in the [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-pbwpmtdtwmkgs).
+AWS instances for Snapshotless Observing Squads can be easily deployed via our Amazon Machine Image available in the [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-pbwpmtdtwmkgs).
 
