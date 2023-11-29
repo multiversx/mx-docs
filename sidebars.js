@@ -381,6 +381,7 @@ const sidebars = {
         items: [
           "integrators/observing-squad",
           "integrators/deep-history-squad",
+          "integrators/snapshotless-observing-squad",
         ],
       },
       {
