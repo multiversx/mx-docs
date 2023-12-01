@@ -274,7 +274,10 @@ const sidebars = {
               {
                 type: "category",
                 label: "Internal Processes",
-                items: ["sdk-and-tools/sdk-dapp/internal-processes/guardians"],
+                items: [
+                  "sdk-and-tools/sdk-dapp/internal-processes/guardians",
+                  "sdk-and-tools/sdk-dapp/internal-processes/react-guidelines",
+                ],
               },
             ],
           },
