@@ -427,24 +427,6 @@ The manager of an ESDT token has a number of operations at their disposal, which
 On Mainnet, starting with epoch 432, global mint is disabled so one has to use local mint instead.  
 :::
 
-The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
-
-```rust
-MintTransaction {
-    Sender: <account address of the token manager>
-    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 0
-    GasLimit: 60000000
-    Data: "mint" +
-          "@" + <token identifier in hexadecimal encoding> +
-          "@" + <supply to mint in hexadecimal encoding>
-}
-```
-
-_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
-
-Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the manager receives that amount of tokens into their balance.
-
 An account with the `ESDTRoleLocalMint` role set can perform a local mint:
 
 ```rust
@@ -469,23 +451,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 On Mainnet, starting with epoch 432, global burn is disabled so one has to use local burn instead.
 :::
 
-Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
-
-```rust
-BurnTransaction {
-    Sender: <account address of a token holder>
-    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 0
-    GasLimit: 60000000
-    Data: "ESDTBurn" +
-          "@" + <token identifier in hexadecimal encoding> +
-          "@" + <supply to burn in hexadecimal encoding>
-}
-```
-
-_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
-
-Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
+Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens.
 
 An account with the `ESDTRoleLocalBurn` role set can perform a local burn:
 
@@ -500,6 +466,8 @@ LocalBurnTransaction {
           "@" + <supply to burn in hexadecimal encoding>
 }
 ```
+
+Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
