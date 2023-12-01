@@ -1,6 +1,6 @@
 ---
-id: react-guidelines
-title: React code style
+id: react-development-guidelines
+title: React Development Guidelines
 ---
 
 [comment]: # (mx-abstract)

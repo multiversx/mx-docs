@@ -172,6 +172,7 @@ const sidebars = {
           },
         ],
       },
+      "developers/react-development-guidelines",
     ],
     "SDK and Tools": [
       "sdk-and-tools/overview",
@@ -274,10 +275,7 @@ const sidebars = {
               {
                 type: "category",
                 label: "Internal Processes",
-                items: [
-                  "sdk-and-tools/sdk-dapp/internal-processes/guardians",
-                  "sdk-and-tools/sdk-dapp/internal-processes/react-guidelines",
-                ],
+                items: ["sdk-and-tools/sdk-dapp/internal-processes/guardians"],
               },
             ],
           },
