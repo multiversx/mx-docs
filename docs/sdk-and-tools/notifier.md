@@ -338,7 +338,7 @@ Event structure
 | Field       | Description                                                                                                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | identifier  | This field represents the identifier of the event.                                                                                                                                        |
-| address     | The address field holds the address in a bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction. |
+| address     | The address field holds the address in bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction.   |
 | topics      | The topics field holds a list with extra information. They don't have a specific order because the smart contract is free to log anything that could be helpful.                          |
 | data        | The data field can contain information added by the smart contract that generated the event.                                                                                              |
 | order       | The order field represents the index of the event indicating the execution order.                                                                                                         |
