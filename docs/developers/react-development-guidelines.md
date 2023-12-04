@@ -377,6 +377,7 @@ When creating new functions and hooks, the new entity must have:
 * A props interface, if it accepts any arguments, declared in the function's file;
 * A return interface, it the function or hook returns more than a simple primitive, declared in the function's file;
 * A test function that tests the function and covers all test cases; As far as possible try to adhere to the ZOMBIES testing technique. The test should be created in the \_\_tests\_ folder;
+* At most 50 lines of code, ideally 20 lines.
 
 ```jsx
 interface UseKYCModalStatePropsType { 
