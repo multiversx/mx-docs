@@ -43,7 +43,7 @@ curl --request GET \
         "match": {
             "shardId": 1
         }
-    }
+    },
     "sort": [
         {
             "timestamp": {

@@ -79,6 +79,6 @@ curl --request GET \
 				}
 			]
 		}
-	},
+	}
 }'
 ```

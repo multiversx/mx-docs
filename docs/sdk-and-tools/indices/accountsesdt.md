@@ -55,12 +55,12 @@ curl --request GET \
   --data '{
     "query": {
         "match": {
-         "identifier": {
+         "token": {
            "query": "MY-TOKEN-aaabbb",
            "operator": "AND"
          }
        }
-     }
+    },
     "sort": [
         {
             "balanceNum": {
