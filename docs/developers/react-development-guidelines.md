@@ -168,6 +168,15 @@ const handlePress = () => {
 <TouchableOpacity onPress={handlePress}/>
 ```
 
+* Use implicit `true` for **boolean** props
+
+```jsx
+// 🚫 DON'T 
+<Card isFullscreen={true}/> 
+// ✅ DO 
+<Card isFullscreen /> 
+```
+
 * No **`useCallback` or `useMemo` or `React.memo` unless really necessary**. Since the release of hooks, over-optimization has become a big problem.
 
 ```jsx
