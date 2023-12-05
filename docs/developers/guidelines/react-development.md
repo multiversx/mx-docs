@@ -130,7 +130,7 @@ Also, for components' and containers' subcomponents, we create separate folders,
 Each folder that has an exportable component will have an **`index.tsx`** file for ease of import. <br/>
 Each folder that has an exportable file will have an **`index.ts`** file for ease of import.
 
-###File length convetions:
+### File length convetions:
 - < 100 lines of code - ✅ OK
 - 100 - 200 lines of code - try to split the file into smaller files
 - 200 - 300 lines of code - should be split the file into smaller files
