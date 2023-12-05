@@ -1,6 +1,6 @@
 ---
-id: react-development-guidelines
-title: React Development Guidelines
+id: react-development
+title: React Development
 ---
 
 [comment]: # (mx-abstract)
@@ -13,37 +13,25 @@ However, in a big team and in a big project, small quirks and personal preferenc
 
 Given this, we have established some basic principles and a code style we would like to follow. These are, of course, not set in stone, and can be changed, given a valid reason.
 
+## Using Git
+
 :::important
 * We use **yarn** as a package manager.
 :::
 
-* We're using **"handle" prefix** for handlers defined in the function and **"on"** prefix for handlers passed via props. `handleTouchStart` vs `props.onTouchStart`, to distinguish between own handlers and parent handlers.
-
-```jsx
-function handleClick(e) { 
-    props.onClickClick(); 
-} 
-
-<div onClick={handleClick}/> 
-
-//destructured before, instantly known to be from parent 
-<div onClick={onClick}/>`
-```
-
-* We use a system for **branch naming**: \[your initials\]/-[feature || fix || redesign\]/-\[2-3 words describing the branch\]  
+### Branch naming
+We use a system for **branch naming**: \[your initials\]/-[feature || fix || redesign\]/-\[2-3 words describing the branch\]  
 > e.g. John Doe creates `jd/feature/fix-thing-called-twice`
 
 :::note
 All branch names are lowercase
 :::
 
-* We're using **functional components** for almost all new components, no classes, except when strictly necessary (e.g. error boundaries);
 
-* We use `useSelector` and `useDispatch` hooks to connect to redux store via react-redux. 🚫 **No** `mapStateToProps` in functional components.
+## Basic principles
 
-* We use **reselect** for memoizing complex state variables and composing those into optimized selectors that don't rerender the whole tree when the values don't change. This package needs to be added only when there is a performance bottleneck, either existing or expected.
-
-* We import **lodash-specific functions** instead of the whole library for the tree shaking to take effect.
+### Imports and exports
+We import **lodash-specific functions** instead of the whole library for the tree shaking to take effect.
 
 ```jsx
 // DON'T import _ from 'lodash'; 
@@ -56,7 +44,11 @@ import uniqBy from 'lodash/uniqBy';
 import get from 'lodash/get';`
 ```
 
-* Avoid using nested conditionals. **Use early returns** instead.
+Do not use `default` exports. **Use named exports** instead.
+
+
+### Using conditionals
+Avoid using nested conditionals. **Use early returns** instead.
 
 ```jsx
 // 🚫 DON'T
@@ -75,7 +67,8 @@ if (!anotherCondition) {
 // do stuff
 ```
 
-* If a function has more than 2 arguments and the second argument is not optional, **use an object** instead.
+### Defining function arguments
+If a function has more than 2 arguments and the second argument is not optional, **use an object** instead.
 
 ```jsx
 // 🚫 DON'T 
@@ -93,9 +86,9 @@ const myFunction = ({arg1, arg2, arg3}) => {
   // do stuff 
 }
 ```
-* Do not use `default` exports. **Use named exports** instead.
 
-* We use **`!=` or `== null` verifications** for all variables, and `!myBool` for booleans only.
+### Validity checks
+We use **`!=` or `== null` verifications** for all variables, and `!myBool` for booleans only.
 
 ```jsx
 // 🚫 DON'T 
@@ -117,21 +110,7 @@ if (user == null) {
 } 
 ```
 
-* For folder and file naming we're using the following convention:  
-**camelCase for all folders and files, except when it's a React Component or a Module Root Folder**, in which case we're using PascalCase.  
-Also, for components' and containers' subcomponents, we create separate folders, even if there is no style file present.  
-Each folder that has an exportable component will have an **`index.tsx`** file for ease of import. <br/>
-Each folder that has an exportable file will have an **`index.ts`** file for ease of import.
-
-* File length convetions:
- - < 100 lines of code - ✅ OK
-- 100 - 200 lines of code - try to split the file into smaller files
-- 200 - 300 lines of code - should be split the file into smaller files
-- > 300 lines of code 🚫 DON'T
-
-* When naming types, use the suffix **`Type`**. This helps us differentiate between types and components. When naming component props types, use MyComponentPropsType. When naming a type that is not a component, use MyFunctionType. When naming return values, use MyFunctionReturnType.
-
-* When using a property from an object inside a condition, check for null with **optional chaining operator**;
+When using a property from an object inside a condition, check for null with **optional chaining operator**;
 
 ```jsx
 // 🚫 DON'T 
@@ -143,7 +122,25 @@ if (array?.length > 0){
   //do stuff 
 }
 ```
-* **Try to extract at the top of the function all constants** such as strings, numbers, objects, instead of declaring this ad hoc inside the code.
+
+### Folder structure
+For folder and file naming we're using the following convention:  
+**camelCase for all folders and files, except when it's a React Component or a Module Root Folder**, in which case we're using PascalCase.  
+Also, for components' and containers' subcomponents, we create separate folders, even if there is no style file present. 
+Each folder that has an exportable component will have an **`index.tsx`** file for ease of import. <br/>
+Each folder that has an exportable file will have an **`index.ts`** file for ease of import.
+
+###File length convetions:
+- < 100 lines of code - ✅ OK
+- 100 - 200 lines of code - try to split the file into smaller files
+- 200 - 300 lines of code - should be split the file into smaller files
+- > 300 lines of code 🚫 DON'T
+
+### Naming conventions
+* When naming types, use the suffix **`Type`**. This helps us differentiate between types and components. When naming component props types, use MyComponentPropsType. When naming a type that is not a component, use MyFunctionType. When naming return values, use MyFunctionReturnType.
+
+
+**Try to extract at the top of the function all constants** such as strings, numbers, objects, instead of declaring this ad hoc inside the code.
 
 ```jsx
 // 🚫 DON'T 
@@ -161,7 +158,35 @@ if (x === PermissionsEnum.rejected && y === ACCESS_LEVEL)
 }
 ```
 
-* No **inline functions** in TSX.
+
+
+## React guidelines
+
+### Using functional components
+We're using **functional components** for almost all new components, no classes, except when strictly necessary (e.g. error boundaries);
+
+### Using selectors
+We use `useSelector` and `useDispatch` hooks to connect to redux store via react-redux. 🚫 **No** `mapStateToProps` in functional components.
+
+We use **reselect** for memoizing complex state variables and composing those into optimized selectors that don't rerender the whole tree when the values don't change. This package needs to be added only when there is a performance bottleneck, either existing or expected.
+
+### Defining handlers
+
+We're using **"handle" prefix** for handlers defined in the function and **"on"** prefix for handlers passed via props. `handleTouchStart` vs `props.onTouchStart`, to distinguish between own handlers and parent handlers.
+
+```jsx
+function handleClick(e) { 
+    props.onClickClick(); 
+} 
+
+<div onClick={handleClick}/> 
+
+//destructured before, instantly known to be from parent 
+<div onClick={onClick}/>`
+```
+
+### Inline functions
+No **inline functions** in TSX.
 
 ```jsx
 // 🚫 DON'T 
@@ -173,7 +198,8 @@ const handlePress = () => {
 <TouchableOpacity onPress={handlePress}/>
 ```
 
-* Use implicit `true` for **boolean** props
+### Implicit values
+Use implicit `true` for **boolean** props
 
 ```jsx
 // 🚫 DON'T 
@@ -182,7 +208,8 @@ const handlePress = () => {
 <Card isFullscreen /> 
 ```
 
-* No **`useCallback` or `useMemo` or `React.memo` unless really necessary**. Since the release of hooks, over-optimization has become a big problem.
+### Over-optimization 
+No **`useCallback` or `useMemo` or `React.memo` unless really necessary**. Since the release of hooks, over-optimization has become a big problem.
 
 ```jsx
 // 🚫 DON'T 
@@ -198,7 +225,21 @@ const handlePress = useCallback(() => setPressed(true), []);
 </Context.Provider>
 ```
 
-_**Rules of hooks:**_
+### Conditionally rendered JSX
+
+In React, conditionally rendered JSX is very common. Given the ability to render it inline, it's very easy to include it inside normal JSX:
+
+```jsx
+<Container> 
+  {hasAchievements ? <ProfileAchievementsCard/> : <EmptyAchievements/>} 
+  <View> 
+    <Text> {title} </Text> 
+    {mysteryBoxEnabled && <ProfileMysteryBoxesCard isCurrentUser={isCurrentUser}/>} 
+  </View> 
+</Container>
+```
+
+## Rules for hooks
 
 1. **Fake modularization**:
   * Custom hooks may give the impression of modularization, but their logic runs inline in the parent component.
@@ -224,7 +265,7 @@ _**Rules of hooks:**_
     ```
 5. If a hook exports > 4 values, it should draw a red flag and be refactored. If it exports >= 7 values, it should be refactored immediately.
 
-# **Modularisation **
+## Modularisation
 
 Given the size of the project, we have agreed on a couple of modularisation techniques that will help us to:
 
@@ -236,7 +277,7 @@ There are a couple of rules that we agreed upon and will be enforced in all PRs,
 
 Therefore, we agreed on the certain principles: 
 
-### **Abstracting the logic away into hooks and function**
+### Abstracting the logic away into hooks and functions
 
 If there is a piece of code in a component or container that holds a certain amount of logic and can be converted to a testable hook or utils function, we should move it to a separate function/hook and add props interface, return type interface and a test file.
 
@@ -305,7 +346,7 @@ If a piece of logic is a bit complex, works like an entity that could have an in
 
 > input → **function** → output
 
-### **Abstracting complex calculations into constants**
+###Abstracting complex calculations into constants
 
 Certain inline calculations are not worth moving into a hook/function, but a constant will help remove some complexity and will attach a "name" to the calculation, making it easier to understand what's inside:
 
@@ -341,20 +382,6 @@ if (myClaimableAuctions != null && myClaimableAuctions.length > 0) {
 
 Here, it's not worth moving the if logic inside a local variable, it would be redundant, as it's very easy to read through it.
 
-### Conditionally rendered JSX
-
-In React, conditionally rendered JSX is very common. Given the ability to render it inline, it's very easy to include it inside normal JSX:
-
-```jsx
-<Container> 
-  {hasAchievements ? <ProfileAchievementsCard/> : <EmptyAchievements/>} 
-  <View> 
-    <Text> {title} </Text> 
-    {mysteryBoxEnabled && <ProfileMysteryBoxesCard isCurrentUser={isCurrentUser}/>} 
-  </View> 
-</Container>
-```
-
 However, JSX sometimes tends to grow very big and it requires a certain amount of mental load to stop at these conditionals and understand what's rendered inside.
 
 One could argue that there's an "organism" inside, a certain piece of logic that results in a component being rendered after some calculations and state changes. We try to give names to these operations that result in a JSX, so the developer knows what's in that JSX.
@@ -374,8 +401,7 @@ const mysteryBoxesContainer = mysteryBoxEnabled && <ProfileMysteryBoxesCard isCu
 </Container>
 ```
 
-###   
-**New functions/hooks**
+### New functions/hooks
 
 When creating new functions and hooks, the new entity must have:
 
