@@ -172,6 +172,11 @@ const sidebars = {
           },
         ],
       },
+      {
+        type: "category",
+        label: "Guidelines",
+        items: ["developers/guidelines/react-development"],
+      },
     ],
     "SDK and Tools": [
       "sdk-and-tools/overview",
