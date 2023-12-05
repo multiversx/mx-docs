@@ -18,13 +18,15 @@ The `_id` field of this index is composed of hex encoded receipt hash.
 
 ## Fields
 
+[comment]: # (table:receipts)
+
 | Field     | Description                                                                                         |
 |-----------|-----------------------------------------------------------------------------------------------------|
 | value     | The value field represents the amount of EGLD that was refunded/penalized from the transaction fee. |
 | sender    | The sender field represents the sender of the transaction that generated the receipt.               |
 | data      | The data field holds a message with the reason why the receipt was generated.                       |
 | txHash    | The txHash field represents the hash of the transaction that generated the receipt.                 |
-| timestamp | The timestamp field represents the timestamp of the block in which the transaction was generated.   |
+| timestamp | The timestamp field represents the timestamp of the block in which the receipt was generated.       |
 
 [comment]: # (mx-context-auto)
 
