@@ -11,7 +11,7 @@ Every developer has his/her own code style that has been developed along the way
 
 However, in a big team and in a big project, small quirks and personal preferences can add up and turn the codebase into a big lasagna. 
 
-Given this, we have established some basic principles and a code style we would like to follow in this project. These are, of course, not set in stone, and can be changed, given a valid reason.
+Given this, we have established some basic principles and a code style we would like to follow. These are, of course, not set in stone, and can be changed, given a valid reason.
 
 :::important
 * We use **yarn** as a package manager.
@@ -30,7 +30,12 @@ function handleClick(e) {
 <div onClick={onClick}/>`
 ```
 
-* We use a system for **branch naming**: \[feature || fix || redesign\]/-\[2-3 words describing the branch\] e.g. `feature/fix-Thing-called-twice`
+* We use a system for **branch naming**: \[your initials\]/-[feature || fix || redesign\]/-\[2-3 words describing the branch\]  
+> e.g. John Doe creates `jd/feature/fix-thing-called-twice`
+
+:::note
+All branch names are lowercase
+:::
 
 * We're using **functional components** for almost all new components, no classes, except when strictly necessary (e.g. error boundaries);
 
@@ -181,13 +186,13 @@ const handlePress = () => {
 
 ```jsx
 // 🚫 DON'T 
-const handlePress = useCallback(() => setPressed(true)); 
+const handlePress = useCallback(() => setPressed(true), []); 
 <TouchableOpacity onPress={handlePress}/> 
 // 🚫 DON'T 
 const value = useMemo(() => user.level * multiplicator); 
 
 // ✅ DO 
-const handlePress = useCallback(() => setPressed(true)); 
+const handlePress = useCallback(() => setPressed(true), []); 
 <Context.Provider value={{onPress: handlePress}}> 
   {children} 
 </Context.Provider>
@@ -324,9 +329,9 @@ if (isMysteryBoxMissionStautsChanged && isMIssionCountdownDataReady )
 }
 ```
 
-If we assign complex or even simple but long operations to constants, we give them a name that can be used to infer what's inside, instead of calculating it ourselves. Sort of like a memoization. By naming a piece of logic, we memoize it and avoid recomputing it inside our heads, unless necessary.
+If we assign complex or even simple but long operations to local variables, we give them a name that can be used to infer what's inside, instead of calculating it ourselves. Sort of like a memoization. By naming a piece of logic, we memoize it and avoid recomputing it inside our heads, unless necessary.
 
-Again, as with hooks and functions, **don't overdo it. **There are certain calculations that, like in JavaScript, are easy for the brain to parse and understand, so it's not worth moving them to a constant:
+Again, as with hooks and functions, **don't overdo it. **There are certain calculations that, like in JavaScript, are easy for the brain to parse and understand, so it's not worth moving them to a local variable:
 
 ```jsx
 if (myClaimableAuctions != null && myClaimableAuctions.length > 0) {
@@ -334,7 +339,7 @@ if (myClaimableAuctions != null && myClaimableAuctions.length > 0) {
 }
 ```
 
-Here, it's not worth moving the if logic inside a constant, it would be redundant, as it's very easy to read through it.
+Here, it's not worth moving the if logic inside a local variable, it would be redundant, as it's very easy to read through it.
 
 ### Conditionally rendered JSX
 
