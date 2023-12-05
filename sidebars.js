@@ -363,6 +363,10 @@ const sidebars = {
       "economics/economics-overview",
       "economics/staking-providers-apr",
     ],
+    Governance: [
+      "governance/overview",
+      "governance/governance-interaction",
+    ],
     Integrators: [
       "integrators/overview",
       {
