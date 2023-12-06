@@ -192,7 +192,7 @@ If a component has more than 7 props, it should draw a red flag and be refactore
 
 ```jsx
 // ⚠️ AVOID
-<MySelect 
+<MyComplicatedComponent
   aspect1={1}
   aspect2={2}
   prop1={3}
@@ -200,9 +200,10 @@ If a component has more than 7 props, it should draw a red flag and be refactore
   prop3={5}
   argument1={6}
   argument2={7}
-/> 
+/>
+
 // ✅ DO group props into logical components
-<MySelect 
+<MyComplicatedComponent 
   aspect={
     <AspectComponent 
       aspect1={1}
@@ -221,7 +222,7 @@ If a component has more than 7 props, it should draw a red flag and be refactore
     argument1={6}
     argument2={7}
   />
-<MySelect/> 
+<MyComplicatedComponent/> 
 ```
 
 ### Inline functions
