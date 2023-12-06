@@ -127,14 +127,15 @@ if (array?.length > 0){
 For folder and file naming we're using the following convention:  
 **camelCase for all folders and files, except when it's a React Component or a Module Root Folder**, in which case we're using PascalCase.  
 Also, for components' and containers' subcomponents, we create separate folders, even if there is no style file present. 
+
 Each folder that has an exportable component will have an **`index.tsx`** file for ease of import. <br/>
 Each folder that has an exportable file will have an **`index.ts`** file for ease of import.
 
-### File length convetions:
+### File length convetions
 - < 100 lines of code - ✅ OK
 - 100 - 200 lines of code - try to split the file into smaller files
 - 200 - 300 lines of code - should be split the file into smaller files
-- > 300 lines of code 🚫 DON'T
+- \> 300 lines of code 🚫 DON'T
 
 ### Naming conventions
 * When naming types, use the suffix **`Type`**. This helps us differentiate between types and components. When naming component props types, use MyComponentPropsType. When naming a type that is not a component, use MyFunctionType. When naming return values, use MyFunctionReturnType.
@@ -225,9 +226,9 @@ const handlePress = useCallback(() => setPressed(true), []);
 </Context.Provider>
 ```
 
-### Conditionally rendered JSX
+### Conditionally rendered TSX
 
-In React, conditionally rendered JSX is very common. Given the ability to render it inline, it's very easy to include it inside normal JSX:
+In React, conditionally rendered TSX is very common. Given the ability to render it inline, it's very easy to include it inside normal TSX:
 
 ```jsx
 <Container> 
@@ -235,6 +236,25 @@ In React, conditionally rendered JSX is very common. Given the ability to render
   <View> 
     <Text> {title} </Text> 
     {mysteryBoxEnabled && <ProfileMysteryBoxesCard isCurrentUser={isCurrentUser}/>} 
+  </View> 
+</Container>
+```
+
+However, TSX sometimes tends to grow very big and it requires a certain amount of mental load to stop at these conditionals and understand what's rendered inside.
+
+One could argue that there's an "organism" inside, a certain piece of logic that results in a component being rendered after some calculations and state changes. We try to give names to these operations that result in a TSX, so the developer knows what's in that TSX.
+
+**Thus, all conditionally rendered TSX** **goes into a constant**. We don't render conditional TSX inline
+
+```jsx
+const achievementsContainer = hasAchievements? <ProfileAchievementsCard/> : <EmptyAchievements/>;
+const mysteryBoxesContainer = mysteryBoxEnabled && <ProfileMysteryBoxesCard isCurrentUser={isCurrentUser} />;
+ 
+ <Container> 
+  {achievementsContainer} 
+  <View> 
+    <Text> {title} </Text> 
+    {mysteryBoxesContainer} 
   </View> 
 </Container>
 ```
@@ -380,26 +400,7 @@ if (myClaimableAuctions != null && myClaimableAuctions.length > 0) {
 }
 ```
 
-Here, it's not worth moving the if logic inside a local variable, it would be redundant, as it's very easy to read through it.
-
-However, JSX sometimes tends to grow very big and it requires a certain amount of mental load to stop at these conditionals and understand what's rendered inside.
-
-One could argue that there's an "organism" inside, a certain piece of logic that results in a component being rendered after some calculations and state changes. We try to give names to these operations that result in a JSX, so the developer knows what's in that JSX.
-
-**Thus, all conditionally rendered JSX** **goes into a constant**. We don't render conditional JSX inline
-
-```jsx
-const achievementsContainer = hasAchievements? <ProfileAchievementsCard/> : <EmptyAchievements/>;
-const mysteryBoxesContainer = mysteryBoxEnabled && <ProfileMysteryBoxesCard isCurrentUser={isCurrentUser} />;
- 
- <Container> 
-  {achievementsContainer} 
-  <View> 
-    <Text> {title} </Text> 
-    {mysteryBoxesContainer} 
-  </View> 
-</Container>
-```
+👆 Here, it's not worth moving the if logic inside a local variable, it would be redundant, as it's very easy to read through it.
 
 ### New functions/hooks
 
