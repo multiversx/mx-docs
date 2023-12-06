@@ -188,7 +188,9 @@ function handleClick(e) {
 
 ### Number of props per component
 
-If a component has more than 7 props, it should draw a red flag and be refactored. If it has >= 10 props, it should be refactored immediately.
+If a component has more than 7 props, it should draw a red flag and be refactored. If it has >= 10 props, it should be refactored immediately. Strategies for refactoring:
+- split into smaller components and pass them as props
+- use a local context provider
 
 ```jsx
 // ⚠️ AVOID
