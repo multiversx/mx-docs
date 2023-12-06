@@ -186,6 +186,44 @@ function handleClick(e) {
 <div onClick={onClick}/>`
 ```
 
+### Number of props per component
+
+If a component has more than 7 props, it should draw a red flag and be refactored. If it has >= 10 props, it should be refactored immediately.
+
+```jsx
+// ⚠️ AVOID
+<MySelect 
+  aspect1={1}
+  aspect2={2}
+  prop1={3}
+  prop2={4}
+  prop3={5}
+  argument1={6}
+  argument2={7}
+/> 
+// ✅ DO group props into logical components
+<MySelect 
+  aspect={
+    <AspectComponent 
+      aspect1={1}
+      aspect2={2}
+    />
+  }
+  prop={
+    <PropComponent 
+      prop1={3}
+      prop2={4}
+      prop3={5}
+    />
+  }
+>
+  <ArgumentComponent 
+    argument1={6}
+    argument2={7}
+  />
+<MySelect/> 
+```
+
 ### Inline functions
 No **inline functions** in TSX.
 
