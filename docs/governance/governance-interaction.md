@@ -191,21 +191,41 @@ the `address` represents the address in hex format. The response will contain th
 ```json
 {
   "returnData": [
-    "<json_marshalled_data>"
+    "<the number of delegated nonces>",
+    "<delegated nonce 0>",
+    "<delegated nonce 1>",
+    ...
+    "<delegated nonce n>",
+    "<the number of direct nonces>",
+    "<direct nonce 0>",
+    "<direct nonce 1>",
+    ...
+    "<direct nonce m>"
   ]
 }
 ```
 
-The `json_marhsalled_data`, after the base64 conversion will contain a definition like:
-
-```json 
-{"Direct":[<list of proposal nonces>],"Delegated":[<list of proposal nonces>]}
-```
-
-Example:
+Example for an address that cast votes on 5 proposals:
 ```json
 {
-  "Direct": [1, 2],
-  "Delegated": [3, 5, 6]
+  "returnData": [
+    "Aw==", (number of delegated nonces: 3)
+    "AQ==", (nonce: 1)
+    "Ag==", (nonce: 2)
+    "Aw==", (nonce: 3)
+    "Ag==", (number of direct nonces: 2)
+    "BA==", (nonce: 4)
+    "BQ==", (nonce: 5)
+  ]
+}
+```
+
+Example for an address that did not cast votes on any proposals:
+```json
+{
+  "returnData": [
+    "AA==", (number of delegated nonces: 0)
+    "AA==", (number of direct nonces: 0)
+  ]
 }
 ```
