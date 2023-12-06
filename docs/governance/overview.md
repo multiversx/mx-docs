@@ -23,7 +23,7 @@ The MultiversX network is able to handle on-chain governance proposes by issuing
 
 Anyone can create a proposal using their wallet and issuing a special type of transaction specifying an identifier, a starting epoch and an end epoch.
 
-Users that staked EGLD will be able to cast votes upon opened proposals. The voting power is proportional with the staked value and is computed as `sqrt(staked_value)` (quadratic voting).
+Users that staked EGLD will be able to cast votes upon opened proposals. The voting power is proportional with the staked value and is computed as `voting_power = staked_value` (linear voting).
 
 [comment]: # (mx-context-auto)
 
@@ -37,7 +37,7 @@ A user can create any number of proposals as long as it pays the locking fee & t
 
 The quorum is computed as the sum of the staked EGLD for all addresses that cast votes.
 
-The votes will be added for each category (**Yes**, **No**, **Abstain** and **Veto**). The vote is computed as `sqrt(total_staked_value)` for each address that cast a vote.
+The votes will be added for each category (**Yes**, **No**, **Abstain** and **Veto**). The vote is computed as `vote = total_staked_value` for each address that cast a vote.
 
 A proposal can pass only if all conditions are met:
 - the quorum value is at least the minimumQuorumThresholdPercentage * total staked value held by the staking contracts;
@@ -54,17 +54,17 @@ Let's suppose we have the following addresses that cast the following votes:
 
 The quorum in this case will be a value `(2000+3000+4000+1500) * 10^18 = 10500 * 10^18`.
 
-The **Yes** category will hold the value `sqrt(2000 * 10^18) + sqrt(3000 * 10^18) + sqrt(4000 * 10^18) = 44721359549 + 54772255750 + 63245553203 = 162739168502`  
-The **No** category will hold the value `sqrt(1500 * 10^18) = 38729833462`
+The **Yes** category will hold the value `2000 * 10^18 + 3000 * 10^18 + 4000 * 10^18 = 9000 * 10 ^ 18`  
+The **No** category will hold the value `1500 * 10^18`
 The **Abstain** and **Veto** categories will both hold 0.
-The total voted value is `162739168502 + 38729833462 + 0 + 0 = 201469001964`
+The total voted value is `9000 * 10^18 + 1500 * 10^18 + 0 + 0 = 10500 * 10^18`
 
-Supposing the total staked value in the system is `20000 EGLD` and the minimum quorum threshold percentage is `20%`, then the minimum quorum value is `20% * 20000 = 4000EGLD`. 
+Supposing the total staked value in the system is `20000 EGLD` and the minimum quorum threshold percentage is `20%`, then the minimum quorum value is `20% * 20000 = 4000 EGLD`. 
 
 The following list contains true sentences:
 - the quorum value (`10500 EGLD`) is larger than the minimum quorum (`4000 EGLD`);
-- **Yes** value (`162739168502`) is larger than the **No** value (`38729833462`) 
-- the pass threshold (`50%`) * total voted value (`201469001964`) is `100734500982` and is smaller than the **Yes** value (`162739168502`) 
-- the **Veto** did not reach `33%` of the total vote value (`201469001964`) because it was `0`
+- **Yes** value (`9000 * 10^18`) is larger than the **No** value (`1500 * 10^18`) 
+- the pass threshold (`50%`) * total voted value (`10500 * 10^18`) is `5250 * 10^18` and is smaller than the **Yes** value (`9000 * 10^18`) 
+- the **Veto** did not reach `33%` of the total vote value because it was `0`
 
 To sum it all, **the proposal passed**.

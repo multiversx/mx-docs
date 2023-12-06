@@ -64,7 +64,7 @@ The vote value for the account that will vote a proposal is the sum of all stake
 
 Whenever we deal with a smart contract that delegated through the delegation sub-system or owns staked nodes it is the out of scope of the metachain's governance contract to track each address that sent EGLD how much is really staked (if any EGLD is staked).
 That is why we offered an endpoint to the governance smart contact that can be called **only by a shard smart contract** and the governance contract will record the address provided, the vote type and vote value.
-This is very useful whenever implementing liquid-staking-like smart contracts. The liquid-staking contract knows the balance for each user so it will delegate the call to the governance contract providing the value.
+This is very useful whenever implementing liquid-staking-like smart contracts. The liquid-staking contract knows the balance for each user, so it will delegate the call to the governance contract providing the value.
 
 :::important
 The maximum value for the staked value & the voting power for the liquid-staking contract is known by the governance contract, so it can not counterfeit the voting. If, due to a bug the liquid-staking contract allows, for example, for a user to vote with a larger quota, the liquid-staking contract will deplete its maximum allowance making other voting transactions (on his behalf) to fail.
@@ -161,7 +161,7 @@ Example:
     "ntGU2xmyOMAAAA==", (quorum: 750000 EGLD = 7500000 * 10^18)
     "", (yes value: 0)
     "", (no value: 0)
-    "yaMi9Yg=", (veto value: 866025403784)
+    "ntGU2xmyOMAAAA==", (veto value: 7500000 * 10^18)
     "", (abstain value: 0)
     "dHJ1ZQ==", (proposal closed: true)
     "ZmFsc2U=" (proposal passed: false)
