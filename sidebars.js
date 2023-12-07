@@ -382,6 +382,7 @@ const sidebars = {
           "integrators/observing-squad",
           "integrators/deep-history-squad",
           "integrators/snapshotless-observing-squad",
+          "integrators/advanced-observer-settings"
         ],
       },
       {
