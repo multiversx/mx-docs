@@ -7,7 +7,7 @@ title: Advanced Observer Settings
 
 This page describes some of the settings an integrator might want to apply on the observers in order to better make use of the nodes.
 
-For the settings from the `config.toml` file that are needed to be altered, we recommend using the `OverridableConfigTomlValues` section found in the `prefs.toml` file. 
+For the settings from the `config.toml` file that are needed to be altered, we recommend using the `OverridableConfigTomlValues` section found in the `prefs.toml` file. More info can be found [here](/validators/node-configuration#overriding-configtoml-values)
 
 [comment]: # (mx-context-auto)
 
