@@ -5,7 +5,7 @@ title: Governance interaction
 
 [comment]: # (mx-context-auto)
 
-## Introduction
+### Introduction
 
 The interaction with the governance system smartcontract is done through correctly formatted transactions to submit actions and through the usage of the vm-query REST API calls for reading the proposal(s) status.
 
