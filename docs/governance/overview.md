@@ -5,7 +5,7 @@ title: Governance - Overview
 
 [comment]: # (mx-abstract)
 
-This page provides an overview of the On-chain Governance module.
+This page provides an overview of the On-chain Governance module that will be available on the `v1.6.x` release.
 
 ## Table of contents
 
@@ -62,9 +62,9 @@ The total voted value is `9000 * 10^18 + 1500 * 10^18 + 0 + 0 = 10500 * 10^18`
 Supposing the total staked value in the system is `20000 EGLD` and the minimum quorum threshold percentage is `20%`, then the minimum quorum value is `20% * 20000 = 4000 EGLD`. 
 
 The following list contains true sentences:
-- the quorum value (`10500 EGLD`) is larger than the minimum quorum (`4000 EGLD`);
-- **Yes** value (`9000 * 10^18`) is larger than the **No** value (`1500 * 10^18`) 
-- the pass threshold (`50%`) * total voted value (`10500 * 10^18`) is `5250 * 10^18` and is smaller than the **Yes** value (`9000 * 10^18`) 
+- the quorum value (`10500 EGLD`) is larger than the minimum quorum (`4000 EGLD`)
+- **Yes** value (`9000 * 10^18`) is larger than the **No** value (`1500 * 10^18`)
+- **Yes** value (`9000 * 10^18`) is larger than the pass threshold (`50%`) * total voted value (`10500 * 10^18`) which is `5250 * 10^18` 
 - the **Veto** did not reach `33%` of the total vote value because it was `0`
 
 To sum it all, **the proposal passed**.

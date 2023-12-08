@@ -90,7 +90,7 @@ The `nonce` is the hex encoded value of the proposal's unique nonce and the `vot
 - for **Abstain**: `6162737461696e`;
 - for **Veto**: `7665746f`.
 
-The `account address handled by the smart contract` is the address is handled by the smart contract that will delegate the vote towards the governance smart contract. This address will be recorded that cast the vote.
+The `account address handled by the smart contract` is the address handled by the smart contract that will delegate the vote towards the governance smart contract. This address will be recorded for casting the vote.
 The `vote_balance` is the amount of stake the address has in the smart contract. The governance contract will "believe" that this is the right amount as it impossible to verify the information. The balance will diminish the total voting power the smart contract has. 
 
 ### Closing a proposal
@@ -108,7 +108,7 @@ CloseProposalTransaction {
 }
 ```
 
-Only the address that created the proposal can call the `closeProposal` function that will also trigger the funds unlocking. As stated in the overview page, if the proposal do not pass, the amount returned will be less with 10 EGLD.
+Only the address that created the proposal can call the `closeProposal` function that will also trigger the funds unlocking. As stated in the overview page, if the proposal does not pass, the amount returned will be less with 10 EGLD.
 
 ### Querying the status of a proposal
 
