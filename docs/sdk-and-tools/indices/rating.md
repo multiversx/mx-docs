@@ -17,6 +17,8 @@ The `_id` field of this index is composed in this way: `{validator_bls_key}_{epo
 
 ## Fields
 
+[comment]: # (table:rating)
+
 | Field     | Description                                                      |
 |-----------|------------------------------------------------------------------|
 | rating    | The rating of the validator, which can be in the [0, 100] range. |

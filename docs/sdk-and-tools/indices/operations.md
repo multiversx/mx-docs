@@ -21,6 +21,8 @@ This index contains both transactions and smart contract results. This is useful
 
 The unified structure will contain an extra field in order to be able to differentiate between them.
 
+[comment]: # (table:operations)
+
 | Field | Description                                                                                    |
 |-------|------------------------------------------------------------------------------------------------|
 | type  | It can be `normal` in case of a transaction and `unsigned` in case of a smart contract result. |

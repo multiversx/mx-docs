@@ -170,18 +170,6 @@ Given the request above, extract and save the fields `erd_chain_id` and `erd_min
 
 [comment]: # (mx-context-auto)
 
-## **Configuring mxpy**
-
-You can configure mxpy to point to your local Testnet by default:
-
-```bash
-$ mxpy config set chainID 15...
-$ mxpy config set txVersion 123
-$ mxpy config set proxy http://localhost:7950
-```
-
-[comment]: # (mx-context-auto)
-
 ## **Sending transactions**
 
 Let's send a simple transaction using **mxpy:**
@@ -190,6 +178,7 @@ Let's send a simple transaction using **mxpy:**
 $ mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1... \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
+ --proxy=http://localhost:7950 \
  --send
 ```
 
@@ -211,6 +200,7 @@ mxpy --verbose contract deploy --bytecode=./mycontract/output/contract.wasm \
  --recall-nonce --gas-limit=5000000 \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
  --outfile=contract.json \
+ --proxy=http://localhost:7950 \
  --send
 ```
 
@@ -228,11 +218,14 @@ Call
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgql... \
  --recall-nonce --gas-limit=1000000 --function=increment \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 --outfile=myCall.json \
+ --proxy=http://localhost:7950 \
  --send
 
 ```
 
 ```bash
 Query
-mxpy --verbose contract query erd1qqqqqqqqqqqqqpgqlq... --function=get
+mxpy --verbose contract query erd1qqqqqqqqqqqqqpgqlq... \ 
+ --function=get \
+ --proxy=http://localhost:7950 
 ```

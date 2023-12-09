@@ -86,7 +86,7 @@ Let's have a quick look around the project.
 
 Open `Cargo.toml` in the text editor of your choice, and add the following content:
 
-```toml,file=Cargo.toml
+```toml title=Cargo.toml
 [package]
 name = "crowdfunding"
 version = "0.0.0"
@@ -117,7 +117,7 @@ Let's see what this means:
 
 With the structure in place, you can now write the code and build it. Open `src/crowdfunding.rs` , remove the existing `Empty` code and insert the following:
 
-```rust,file=hello-world.rs
+```rust title=hello-world.rs
 #![no_std]
 
 multiversx_sc::imports!();
