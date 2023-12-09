@@ -30,18 +30,24 @@ wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/ma
 python3 mxpy-up.py
 ```
 
-This will create a Python virtual environment in `~/multiversx-sdk/mxpy-venv`. 
+Running the above will create a Python virtual environment in `~/multiversx-sdk/mxpy-venv`, it will install the package [`multiversx-sdk-cli`](https://pypi.org/project/multiversx-sdk-cli) into this environment, and it will create the shortcut `~/multiversx-sdk/mxpy`. 
+
+The `mxpy` shortcut is not automatically added to your **`$PATH`** environment variable, so **you'll need to configure that manually** (see below).
+
+[comment]: # (mx-context-auto)
 
 ## Make mxpy available in your shell
 
-In order to have the command **mxpy** available in your shell after install, you'll need to manually include `~/multiversx-sdk` in your **`$PATH`** environment variable by editing the appropriate shell profile file: `~/.bashrc` (for Bash) or `~/.zshrc` (for Zsh). For example:
+In order to have the **mxpy** shortcut available in the shell after installation, you'll need to manually include `~/multiversx-sdk` in your **`$PATH`** environment variable by editing the appropriate shell profile file: `~/.bashrc` (for Bash) or `~/.zshrc` (for Zsh).
+
+For example:
 
 ```
 echo "export PATH="\$HOME/multiversx-sdk:\$PATH"" >> ~/.bashrc
 echo "export PATH="\$HOME/multiversx-sdk:\$PATH"" >> ~/.zshrc
 ```
 
-Then, open a new shell and run the following command to verify that **mxpy** is installed correctly:
+Then, open a new shell and run the following to verify that **mxpy** is installed correctly:
 
 ```
 mxpy --version
