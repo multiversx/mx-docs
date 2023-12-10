@@ -43,46 +43,54 @@ rustup self uninstall
 
 [comment]: # (mx-context-auto)
 
-## Installing Rust and `sc-meta`
+## Installing Rust and sc-meta
 
 [comment]: # (mx-context-auto)
 
-### With `mxpy`
+:::note
+`sc-meta` is universal smart contract management tool. Please follow [this](/developers/meta/sc-meta) for more information.
+:::
 
-note, prior v9.
+### With mxpy
 
+```bash
+mxpy deps install rust --overwrite
 ```
-mxpy config set "dependencies.rust.resolution" "host"
-```
+
+For more information, go to [managing dependencies using `mxpy`](/sdk-and-tools/sdk-py/mxpy-cli/#managing-dependencies).
 
 [comment]: # (mx-context-auto)
 
-### Without `mxpy`
+### Without mxpy
 
 As recommended on [rust-lang.org](https://www.rust-lang.org/tools/install):
 
-```
+```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-Then,
+Then, choose **Proceed with installation (default)**. 
 
-```
-source "$HOME/.cargo/env"
+Once Rust is installed, switch to a nightly version and install the `wasm32-unknown-unknown` target:
 
+```bash
 rustup default nightly-2023-05-26
 rustup target add wasm32-unknown-unknown
+```
 
+Afterwards, install `sc-meta`:
+
+```bash
 cargo install multiversx-sc-meta
 ```
 
 [comment]: # (mx-context-auto)
 
-### Without `mxpy` (CI / CD)
+### Without mxpy (CI / CD)
 
 For CI / CD, use the following:
 
-```
+```bash
 wget -O rustup.sh https://sh.rustup.rs && \
     chmod +x rustup.sh && \
     ./rustup.sh --verbose --default-toolchain nightly-2023-05-26 --target wasm32-unknown-unknown -y
@@ -92,8 +100,52 @@ cargo install multiversx-sc-meta
 
 [comment]: # (mx-context-auto)
 
-### Missing `sc-meta` dependencies
+### Missing sc-meta dependencies
 
-https://github.com/multiversx/mx-sdk-py-cli/issues/338
+`sc-meta` requires a few dependencies that are not installed by default on some systems. In this case, installation of `sc-meta` fails.
 
-Workaround: run sudo apt-get install pkg-config libssl-dev (on Ubuntu).
+For a workaround, please follow this [GitHub issue](https://github.com/multiversx/mx-sdk-py-cli/issues/338).
+
+## Check your Rust installation
+
+You can check your Rust installation by invoking `rustup show`:
+
+```
+$ rustup show
+
+Default host: x86_64-unknown-linux-gnu
+rustup home:  /home/ubuntu/.rustup
+
+installed toolchains
+--------------------
+
+[...]
+nightly-2023-05-26-x86_64-unknown-linux-gnu (default)
+
+installed targets for active toolchain
+--------------------------------------
+
+[...]
+wasm32-unknown-unknown
+
+
+active toolchain
+----------------
+
+[...]
+nightly-2023-05-26-x86_64-unknown-linux-gnu (default)
+```
+
+You can also check the status of your Rust installation using `mxpy`:
+
+```
+$ mxpy deps check rust
+
+INFO     cli.deps: Checking dependency: module = rust, tag = nightly-2023-05-26
+INFO     modules: which rustc: /home/ubuntu/.cargo/bin/rustc
+INFO     modules: which cargo: /home/ubuntu/.cargo/bin/cargo
+INFO     modules: which sc-meta: /home/ubuntu/.cargo/bin/sc-meta  
+INFO     modules: which wasm-opt: /home/ubuntu/.cargo/bin/wasm-opt
+INFO     modules: which twiggy: /home/ubuntu/.cargo/bin/twiggy
+INFO     cli.deps: [rust nightly-2023-05-26] is installed.
+```
