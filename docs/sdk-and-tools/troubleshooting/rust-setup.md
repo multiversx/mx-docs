@@ -1,6 +1,6 @@
 ---
-id: install-rust
-title: How to install Rust
+id: rust-setup
+title: Fix Rust installation
 ---
 
 [comment]: # (mx-abstract)
@@ -84,6 +84,13 @@ Afterwards, install `sc-meta`:
 cargo install multiversx-sc-meta
 ```
 
+Optionally, you may also want to install `wasm-opt` and `twiggy`:
+
+```bash
+cargo install wasm-opt
+cargo install twiggy
+```
+
 [comment]: # (mx-context-auto)
 
 ### Without mxpy (CI / CD)
@@ -100,7 +107,7 @@ cargo install multiversx-sc-meta
 
 [comment]: # (mx-context-auto)
 
-### Missing sc-meta dependencies
+### Handle missing dependencies of sc-meta
 
 `sc-meta` requires a few dependencies that are not installed by default on some systems. In this case, installation of `sc-meta` fails.
 
