@@ -57,6 +57,10 @@ rustup self uninstall
 mxpy deps install rust --overwrite
 ```
 
+:::note
+In addition to Rust and `sc-meta`, the above command also installs `twiggy` and `wasm-opt`.
+:::
+
 For more information, go to [managing dependencies using `mxpy`](/sdk-and-tools/sdk-py/mxpy-cli/#managing-dependencies).
 
 [comment]: # (mx-context-auto)
