@@ -63,7 +63,7 @@ For example, in order to check if `rust` is installed you would type:
 mxpy deps check rust
 ```
 
-When installing dependecies the `--overwrite` argument can be used to overwrite an existing version. Also the `--tag` argument can be used to specify the exact version you want to install.
+When installing dependecies the `--overwrite` argument can be used to overwrite an existing version.
 
 For example, to install `rust`, you can simply type the command:
 ```sh
@@ -78,7 +78,7 @@ Generally speaking, the default `rust` version installed by `mxpy` is the one re
 
 Here's how to install a specific version of `rust` (example):
 ```sh
-mxpy deps install rust --tag nightly-2023-04-24 --overwrite
+mxpy deps install rust --overwrite
 ```
 
 [comment]: # (mx-context-auto)
