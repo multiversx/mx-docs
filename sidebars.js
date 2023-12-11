@@ -281,9 +281,18 @@ const sidebars = {
           "sdk-and-tools/erdcpp",
           "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
-          "sdk-and-tools/sdk-js-wallet-cli",
+          "sdk-and-tools/sdk-js-wallet-cli"
         ],
       },
+      {
+        type: "category",
+        label: "Troubleshooting",
+        items: [
+          "sdk-and-tools/troubleshooting/troubleshooting",
+          "sdk-and-tools/troubleshooting/rust-setup",
+          "sdk-and-tools/troubleshooting/ide-setup"
+        ],
+      }
     ],
     Wallet: [
       "wallet/overview",

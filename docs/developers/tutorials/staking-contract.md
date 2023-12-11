@@ -69,7 +69,7 @@ Both can be easily installed from the "Extensions" menu in VSCode.
 Run the following command in the folder in which you want your smart contract to be created:
 
 ```
-mxpy contract new staking-contract --template empty
+mxpy contract new --name staking-contract --template empty
 ```
 
 Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
