@@ -114,6 +114,26 @@ Avoid recalling the nonce in between **rapidly sequenced transactions from the s
 
 [comment]: # (mx-context-auto)
 
+### **Issue: sending large batches of transactions cause nonce gaps**
+
+Whenever sending a large batch of transactions, even if the node/gateway returned transaction hashes for each transaction in the batch and no error, there is no strict guarantee that those transactions will end up being executed.
+The reason is that the node will not immediately send each transaction or transaction batch but rather accumulate them in packages to be efficiently send through the p2p network.
+At this moment, the node might decide to drop one or more packet because it detected a possible p2p flooding condition. This can happen independent of the transaction sender, the number of transactions sent and so on.
+
+To handle this behavior, special care should be carried by the integrators. One possible way to handle this efficiently is to temporarily store all transactions that need to be sent on the network and continuously monitor the senders accounts involved if their nonces increased.
+If not, a resend of the required transaction is needed, otherwise the transaction might be discarded from the temporary storage as it was executed.
+
+We have implemented several components written in GO language that solve the transaction send issues along with the correct nonce management. 
+The source code can be found [here](https://github.com/multiversx/mx-sdk-go/tree/main/interactors/nonceHandlerV2)
+The main component is the `nonceTransactionsHandlerV2` that will create an address-nonce handler for each involved address. This address nonce handler will be specialized in the nonce and transactions sending mechanism for a single address and will be independent of the other addresses involved. 
+The main component has a few exported functionalities:
+- `ApplyNonceAndGasPrice` method that is able to apply the current handled nonce of the sender and the network's gas price on a provided transaction instance
+- `SendTransaction` method that will forward the provided transaction towards the proxy but also stores it internally in case it will need to be resent.
+- `DropTransactions` method that will clean all the stored transactions for a provided address.
+- `Close` cleanup method for the component.
+
+[comment]: # (mx-context-auto)
+
 ## **Gas limit computation**
 
 Please follow [Gas and Fees](/developers/gas-and-fees/overview/).
