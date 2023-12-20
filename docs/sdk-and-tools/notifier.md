@@ -129,7 +129,7 @@ The corresponding config section for enabling the driver on observer node:
 ```toml
 [EventNotifierConnector]
     # Enabled will turn on or off the event notifier connector
-    Enabled = false
+    Enabled = true
 
     # UseAuthorization signals the proxy to use authorization
     # Never run a production setup without authorization
