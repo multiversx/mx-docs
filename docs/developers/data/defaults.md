@@ -26,7 +26,7 @@ For instance, for all numeric types, zero is the default value, because we repre
 | `u32`                                     | `0`                            |
 | `u64`                                     | `0`                            |
 | `usize`                                   | `0`                            |
-| `BigUnt`                                  | `0`                            |
+| `BigUint`                                 | `0`                            |
 | `i8`                                      | `0`                            |
 | `i16`                                     | `0`                            |
 | `i32`                                     | `0`                            |

@@ -315,7 +315,7 @@ Simply prints the entire state of the blockchain mock to the console.
                         "nonce": "24",
                         "value": "1"
                     }
-                ]
+                ],
                 "function": "contractEndpoint",
                 "arguments": [
                     "str:argument-1",

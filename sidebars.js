@@ -290,9 +290,18 @@ const sidebars = {
           "sdk-and-tools/erdcpp",
           "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
-          "sdk-and-tools/sdk-js-wallet-cli",
+          "sdk-and-tools/sdk-js-wallet-cli"
         ],
       },
+      {
+        type: "category",
+        label: "Troubleshooting",
+        items: [
+          "sdk-and-tools/troubleshooting/troubleshooting",
+          "sdk-and-tools/troubleshooting/rust-setup",
+          "sdk-and-tools/troubleshooting/ide-setup"
+        ],
+      }
     ],
     Wallet: [
       "wallet/overview",
@@ -372,6 +381,10 @@ const sidebars = {
       "economics/economics-overview",
       "economics/staking-providers-apr",
     ],
+    Governance: [
+      "governance/overview",
+      "governance/governance-interaction",
+    ],
     Integrators: [
       "integrators/overview",
       {
@@ -390,6 +403,8 @@ const sidebars = {
         items: [
           "integrators/observing-squad",
           "integrators/deep-history-squad",
+          "integrators/snapshotless-observing-squad",
+          "integrators/advanced-observer-settings"
         ],
       },
       {
@@ -401,6 +416,7 @@ const sidebars = {
           "integrators/querying-the-blockchain",
         ],
       },
+      "integrators/walletconnect-json-rpc-methods",
     ],
     "Ad-Astra Bridge": [
       "bridge/architecture",
