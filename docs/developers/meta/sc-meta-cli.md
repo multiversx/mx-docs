@@ -115,7 +115,7 @@ Paramameters:
     - Overrides the version to upgrade to.
     - _default_: the last released version.
 - `--no-check`
-    - Skips `cargo check` after upgrade.
+    - By default `upgrade` compile checks the project after each major version upgrade. This is to allow developers that upgrade multiple versions to address issues with the upgrade before too many such issues get to accumulate. This feature can be turned off by the `--no-check` flag.
     - _default_: project is compiled.
 
 [comment]: # (mx-context-auto)

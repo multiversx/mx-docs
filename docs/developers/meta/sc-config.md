@@ -40,6 +40,8 @@ allocator = "leaking"
 stack-size = "3 pages"
 features = ["example_feature_1", "example_feature_2"]
 kill-legacy-callback = true
+
+[contracts.main.profile]
 codegen-units = 1
 opt-level = "z"
 lto = true
@@ -91,10 +93,13 @@ The settings are as follows:
     - _values_: `true` | `false`
     - _default_: `false`
 - `codegen-units`
-    -  Controls the number of "code generation units" a crate will be split into. Splitting a crate into multiple code generation units can have a significant impact on the compile time and code optimization of the crate.
+    - Controls the number of "code generation units" a crate will be split into. Splitting a crate into multiple code generation units can have a significant impact on the compile time and code optimization of the crate.
+    - From our experience it is of no particular impact to smart contract compilation.
     - _default_: `1`
 - `opt-level`
     - Controls the level of optimization that Rust will apply to the code during compilation.
+    - By default we run with `s` or `z`, since for smart contracts bytecode size optimization is of the essence.
+    - We also run `wasm-opt` after this optimization phase, so this only refers to part of the optimization.
     - _values_:
         - `0`: no optimizations;
         - `1`: basic optimizations;
@@ -109,16 +114,19 @@ The settings are as follows:
     - _default_: `true`
 - `debug`
     - Controls the amount of debug information included in the compiled binary.
+    - This setting is not normally used, since wasm-opt erases any debug information anyway. Use the `build-dbg` to get debug information for the compiled contracts.
     - _values_: `true` | `false`
     - _default_: `false`
 - `panic`
     - Controls how smart contracts handles panics, which are unexpected errors that occur at runtime.
+    - Using `"unwind"` is not tested as it makes little sense in a smart contract.
     - _values_:
         - `"unwind"`: unwind the stack in case of a panic;
         - `"abort"`: terminate the execution in case of a panic.
     - _default_: `"abort"`
 - `overflow_checks`
     - Controls whether it performs runtime checks for integer overflow. When enabled, it will insert additional checks into the generated code to detect and prevent integer overflow errors.
+    - Note that overflow checks are normally turned off in production, but are useful when testing. The overflow checks are enabled by default when testing smart contracts using the debugger.
     - _values_: `true` | `false`
     - _default_: `false`
 
