@@ -36,7 +36,7 @@ Historically, they started out as JSON tests. But writing a lot of JSON by hand 
 :::info important
 Nowadays, we think that the JSON scenario format is best used for interoperability and replays, not for writing tests.
 
-There are several ways to generte a scenario JSON file automatically, and we encourage developers to move away from writing them by hand.
+There are several ways to generate a scenario JSON file automatically, and we encourage developers to move away from writing them by hand.
 :::
 
 The greatest benefit of the JSON format is that it is language-agnostic, and so it can be used with any of our backends.

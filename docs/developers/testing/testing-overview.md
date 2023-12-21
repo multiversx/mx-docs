@@ -19,7 +19,7 @@ The simplest answer would be to test them directly on a blockchain. We advise ag
 But testing on a blockchain can be cumbersome. It's a great way to test a final product, but until our product reaches maturity, we want something else. Our testing solution should be:
 - fast,
 - local,
-- something that can we can automate (continuous integration is important1),
+- something that can we can automate (continuous integration is important),
 - something that we might also debug.
 
 This is what integration tests are for. Conveniently, the MultiversX framework offers the possibility to run and debug smart contracts in a sandboxed environment that immitates a real blockchain. 
@@ -50,7 +50,7 @@ Let's, however, quickly go through all options avialable on MultiversX:
 - On a blockchain:
     - Rust interactor framework;
     - [Any other SDK that can interact with the MultiversX blockchains](/sdk-and-tools/overview);
-    - Launching transactions from the wallet diretly.
+    - Launching transactions from the wallet directly.
 - Integration tests:
     - Black-box tests:
         - Rust,

@@ -6,7 +6,7 @@ title: Generating scenarios
 
 There are currently several ways to generate scenarios.
 
-The combination of generating and running scenarios is very powerful, since it means tests writtend originally for one system can be run of different systems too.
+The combination of generating and running scenarios is very powerful, since it means tests written originally for one system can be run of different systems too.
 
 This diagram shows all the currently possible paths.
 

@@ -58,7 +58,7 @@ Paramameters:
 - `--ignore`
     - Ignore all directories with these names.
     - _default_: `target`.
-- `--no-abi-git-version
+- `--no-abi-git-version`
     - Skips loading the Git version into the ABI
 - `--target-dir-meta`
     - For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
@@ -114,6 +114,9 @@ Paramameters:
 - `--to`
     - Overrides the version to upgrade to.
     - _default_: the last released version.
+- `--no-check`
+    - By default `upgrade` compile checks the project after each major version upgrade. This is to allow developers that upgrade multiple versions to address issues with the upgrade before too many such issues get to accumulate. This feature can be turned off by the `--no-check` flag.
+    - _default_: project is compiled.
 
 [comment]: # (mx-context-auto)
 
