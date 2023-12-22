@@ -175,6 +175,10 @@ file that can be used to configure the service.
 There are some general configuration options, which should be fine with their default values:
 ```toml
 [General]
+    # CheckDuplicates signals if the events received from observers have been already pushed to clients
+    # Requires a redis instance/cluster and should be used when multiple observers push from the same shard
+    CheckDuplicates = true
+
     # ExternalMarshaller is used for handling incoming/outcoming api requests 
     [General.ExternalMarshaller]
         Type = "json"
@@ -188,15 +192,12 @@ There are some general configuration options, which should be fine with their de
         Type = "bech32"
         Prefix = "erd"
         Length = 32
-
-    # CheckDuplicates signals if the events received from observers have been already pushed to clients
-    # Requires a redis instance/cluster and should be used when multiple observers push from the same shard
-    CheckDuplicates = true
 ```
 
 :::info
 Starting with release `v1.2.0`, `CheckDuplicates` field has been moved from `ConnectorApi` section to
-the newly added `General` section.
+the newly added `General` section. Please make sure to put `CheckDuplicates` field before other inner
+struct fields in `General` section.
 :::
 
 There are 2 ways to connect observer node with events notifier service:
@@ -230,6 +231,9 @@ There is a separate config section `WebSocketConnector` that has to be aligned w
 
     # Signals if in case of data payload processing error, we should send the ack signal or not
     BlockingAckOnError = false
+
+    # Set to true to drop messages if there is no active WebSocket connection to send to.
+    DropMessagesIfNoConnection = false
 
     # After a message will be sent it will wait for an ack message if this flag is enabled
     WithAcknowledge = true
