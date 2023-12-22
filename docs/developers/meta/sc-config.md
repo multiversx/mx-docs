@@ -40,12 +40,20 @@ allocator = "leaking"
 stack-size = "3 pages"
 features = ["example_feature_1", "example_feature_2"]
 kill-legacy-callback = true
+
+[contracts.main.profile]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = false
 ```
 
 The settings are as follows:
 - `panic-message`
     - “Panic with message” is a feature very useful for debugging. It displays messages from regular Rust panics in a contract, at the cost of ~1.5kB of additional contract size. It is disabled by default, we advise against using it in production.
-    - _values_: `true` | `false
+    - _values_: `true` | `false`
     - _default_: `false`
 - `ei`
     - Configures the post-processor that checks the environment interface (EI) used by the built smart contract.
@@ -82,7 +90,44 @@ The settings are as follows:
     - _default_: `[]`
 - `kill-legacy-callback`
     - The framework has no way of knowing whether or not a certain smart contract variant actually needs the async callback code or not, so in rare situations it is necessary to forcefully remove it.
-    - _values_: `true` | `false
+    - _values_: `true` | `false`
+    - _default_: `false`
+- `codegen-units`
+    - Controls the number of "code generation units" a crate will be split into. Splitting a crate into multiple code generation units can have a significant impact on the compile time and code optimization of the crate.
+    - From our experience it is of no particular impact to smart contract compilation.
+    - _default_: `1`
+- `opt-level`
+    - Controls the level of optimization that Rust will apply to the code during compilation.
+    - By default we run with `s` or `z`, since for smart contracts bytecode size optimization is of the essence.
+    - We also run `wasm-opt` after this optimization phase, so this only refers to part of the optimization.
+    - _values_:
+        - `0`: no optimizations;
+        - `1`: basic optimizations;
+        - `2`: some optimizations;
+        - `3`: all optimizations;
+        - `s`: optimize for binary size;
+        - `z`: optimize for binary size, but also turn off loop vectorization.
+    - _default_: `z`
+- `lto`
+    - Enables link-time optimization for the release profile.
+    - _values_: `true` | `false`
+    - _default_: `true`
+- `debug`
+    - Controls the amount of debug information included in the compiled binary.
+    - This setting is not normally used, since wasm-opt erases any debug information anyway. Use the `build-dbg` to get debug information for the compiled contracts.
+    - _values_: `true` | `false`
+    - _default_: `false`
+- `panic`
+    - Controls how smart contracts handles panics, which are unexpected errors that occur at runtime.
+    - Using `"unwind"` is not tested as it makes little sense in a smart contract.
+    - _values_:
+        - `"unwind"`: unwind the stack in case of a panic;
+        - `"abort"`: terminate the execution in case of a panic.
+    - _default_: `"abort"`
+- `overflow_checks`
+    - Controls whether it performs runtime checks for integer overflow. When enabled, it will insert additional checks into the generated code to detect and prevent integer overflow errors.
+    - Note that overflow checks are normally turned off in production, but are useful when testing. The overflow checks are enabled by default when testing smart contracts using the debugger.
+    - _values_: `true` | `false`
     - _default_: `false`
 
 
@@ -272,7 +317,7 @@ An _external view contract_ has a behavior different from that of a regular cont
     - A list of endpoint names to be added directly to this contract.
     - It bypasses the label system.
     - Can be useful if for some reason labels are missing in code or deemed too cumbersome.
-    - Use the public endpoin names, not the rust function names.
+    - Use the public endpoint names, not the Rust function names.
     - _values_: a list of endpoint names, e.g. `add-labels = ["myEndpoint1", "myEndpoint1"]`
     - _default_: `[]`
 - `labels-for-contracts`
