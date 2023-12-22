@@ -50,6 +50,7 @@ const config = {
           remarkPlugins: [math],
           rehypePlugins: [katex],
           editUrl: "https://github.com/multiversx/mx-docs/edit/development",
+          showLastUpdateTime: true,
         },
         blog: false, // Optional: disable the blog plugin
         theme: {
