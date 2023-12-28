@@ -152,3 +152,21 @@ example-0 e296e97524483e6b59...
 example-1 585ddceb6b7bf0d308...
 random-0  791c7e2bd6a5fb1371...
 ```
+
+### Security notes for the multikey nodes
+
+As stated above, the multikey feature is able to use any number of keys with just 4 nodes. 
+At the first sight, this can be seen as a security degradation in terms of means of attacking a large staking provider but there are ways to mitigate these concerns as explained in the following list:
+1. use the recommendation found in this page regarding the maximum number of keys per multikey group;
+2. for each main multikey group use at least one backup multikey group in case something bad happens with the main group;
+3. use the NamedIdentity configuration explained above to hide the BLS keys and their declared identity from the actual nodes that manages the keys.
+
+Regarding point 3, each managed BLS key will create a virtual p2p identity that no node from the network can connect to since it does not advertise the connection info but is only used to sign p2p messages.
+Associated with a separate named identity, the system will make that BLS key virtually unreachable, and it's origin hidden from the multikey nodes. For this to work properly, the node operators will need to apply the following changes on the `prefs.toml` file:
+* in the `[Preference]` section, the 2 options called `NodeDisplayName` and `Identity` will be changed to something relevant for the nodes that are running the multikey group;
+* in the `[[NamedIdentity]]` section, the 2 options called `NodeName` and `Identity` will be changed to the real identities of the BLS keys: such as the staking provider brand names. **They should be different from the ones defined in the `[Preference]` section.**
+
+In this way, the operation will be somewhat similar to the *sentinel nodes* seen elsewhere. 
+The difference in our case is that the setup is greatly simplified as there is no separate network for the protected nodes that will need to be maintained.
+The security of our setup (if points 1, 2 and 3 are applied) should be the same with a *sentinel setup*.
+
