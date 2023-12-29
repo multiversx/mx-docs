@@ -155,7 +155,7 @@ random-0  791c7e2bd6a5fb1371...
 
 ### Security notes for the multikey nodes
 
-As stated above, the multikey feature is able to use any number of keys with just 4 nodes. 
+As stated above, the multikey feature is able to use any number of keys on a small group of nodes. 
 At the first sight, this can be seen as a security degradation in terms of means of attacking a large staking provider but there are ways to mitigate these concerns as explained in the following list:
 1. use the recommendation found in this page regarding the maximum number of keys per multikey group;
 2. for each main multikey group use at least one backup multikey group in case something bad happens with the main group;
