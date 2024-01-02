@@ -158,5 +158,5 @@ INFO     modules: which cargo: /home/ubuntu/.cargo/bin/cargo
 INFO     modules: which sc-meta: /home/ubuntu/.cargo/bin/sc-meta  
 INFO     modules: which wasm-opt: /home/ubuntu/.cargo/bin/wasm-opt
 INFO     modules: which twiggy: /home/ubuntu/.cargo/bin/twiggy
-INFO     cli.deps: [rustnightly-2023-12-11] is installed.
+INFO     cli.deps: [rust nightly-2023-12-11] is installed.
 ```
