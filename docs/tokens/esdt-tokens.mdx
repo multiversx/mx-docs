@@ -330,6 +330,8 @@ Sending a transaction containing both an ESDT transfer _and a method call_ allow
 There is also the possibility to perform multiple tokens transfers in a single bulk. This way, one can send (to a single receiver) multiple
 fungible, semi-fungible or non-fungible tokens via a single transaction.
 
+It is also possible to send ESDT tokens to a contract as part of a method call.
+
 A multi-token transfer transaction has the following form:
 
 ```rust
@@ -347,6 +349,9 @@ MultiTokensTransferTransaction {
           "@" + <token 1 identifier in hexadecimal encoding> +
           "@" + <token 1 nonce in hexadecimal encoding> +
           "@" + <token 1 quantity to transfer in hexadecimal encoding> +
+          "@" + <optionally, the name of a method to call in hexadecimal encoding> +
+          "@" + <optionally, the first argument of the method in hexadecimal encoding> +
+          "@" + <optionally, the second argument of the method in hexadecimal encoding> +
           ...
 }
 ```
