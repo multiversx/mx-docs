@@ -163,8 +163,8 @@ At the first sight, this can be seen as a security degradation in terms of means
 
 Regarding point 3, each managed BLS key will create a virtual p2p identity that no node from the network can connect to since it does not advertise the connection info but is only used to sign p2p messages.
 Associated with a separate named identity, the system will make that BLS key virtually unreachable, and its origin hidden from the multikey nodes. Therefore, the node operators will need to apply the following changes on the `prefs.toml` file:
-* in the `[Preference]` section, the 2 options called `NodeDisplayName` and `Identity` will be changed to something different used in the BLS' definitions to prevent easy matching. Generic names like `gateway` or `observer` are suitable for this section. 
-The `Identity` can be left empty;
+* in the `[Preference]` section, the 2 options called `NodeDisplayName` and `Identity` should be changed to something different used in the BLS' definitions to prevent easy matching. Generic names like `gateway` or `observer` are suitable for this section. 
+Also, completely random strings can be used as to be easier to identify the nodes in explorer. The `Identity` can be left empty;
 * in the `[[NamedIdentity]]` section, the 2 options called `NodeName` and `Identity` will be changed to the real identities of the BLS keys: such as the staking provider brand names. **They should be different from the ones defined in the `[Preference]` section.**
 
 In this way, the operation will be somewhat similar to the *sentinel nodes* seen elsewhere. 
@@ -212,9 +212,9 @@ For the `prefs.toml` file, we can have definitions like:
 
    # NodeDisplayName represents the friendly name a user can pick for his node in the status monitor when the node does not run in multikey mode
    # In multikey mode, all bls keys not mentioned in NamedIdentity section will use this one as default
-   NodeDisplayName = "observer"
+   NodeDisplayName = "s14"
 
-   # Identity represents the keybase/GitHub identity when the node does not run in multikey mode
+   # Identity represents the GitHub identity when the node does not run in multikey mode
    # In multikey mode, all bls keys not mentioned in NamedIdentity section will use this one as default
    Identity = ""
 
@@ -234,7 +234,7 @@ For the `prefs.toml` file, we can have definitions like:
    # ]
    PreferredConnections = []
 
-   # ConnectionWatcherType represents the type of a connection watcher needed.
+   # ConnectionWatcherType represents the type of the connection watcher needed.
    # possible options:
    #  - "disabled" - no connection watching should be made
    #  - "print" - new connection found will be printed in the log file
@@ -277,7 +277,7 @@ For the `prefs.toml` file, we can have definitions like:
 # NamedIdentity represents an identity that runs nodes on the multikey
 # There can be multiple identities set on the same node, each one of them having different bls keys, just by duplicating the NamedIdentity
 [[NamedIdentity]]
-   # Identity represents the keybase/GitHub identity for the current NamedIdentity
+   # Identity represents the GitHub identity for the current NamedIdentity
    Identity = "testing-staking-provider"
    # NodeName represents the name that will be given to the names of the current identity
    NodeName = "tsp"
@@ -297,7 +297,7 @@ These 2 configuration files `allValidatorsKeys.pem` and `prefs.toml` should be c
 **Do not forget to change the `DestinationShardAsObserver` accordingly for each node.**
 :::
 
-After starting the multikey nodes, in ~10 minutes, the explorer will reflect the changes. All n nodes that run the multikey group will broadcast their identity as an empty string and their names will be `observer`.
+After starting the multikey nodes, in ~10 minutes, the explorer will reflect the changes. All n nodes that run the multikey group will broadcast their identity as an empty string and their names will be `s14`.
 The BLS keys' identities, on the other hand will have the following names & identities:
 
 
