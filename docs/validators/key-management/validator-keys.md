@@ -63,7 +63,7 @@ $ go build
 $ ./keygenerator --key-type validator
 ```
 
-Alternatively, if you already installed a node on the host, you can issue the following command:
+Alternatively, if you've already installed a node on the host, you can issue the following command:
 
 ```shell
 $ cd ~/elrond-utils/
