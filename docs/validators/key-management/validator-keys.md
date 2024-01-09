@@ -54,11 +54,18 @@ The easiest way to generate a new validator key is by using the `keygenerator` t
 
 - [https://github.com/multiversx/mx-chain-go/tree/master/cmd/keygenerator](https://github.com/multiversx/mx-chain-go/tree/master/cmd/keygenerator)
 
-How to generate a new validator key:
+How to generate a new validator key if golang is already set on the host:
 
 ```shell
 $ git clone https://github.com/multiversx/mx-chain-go.git
 $ cd mx-chain-go/cmd/keygenerator
 $ go build
+$ ./keygenerator --key-type validator
+```
+
+Alternatively, if you already installed a node on the host, you can issue the following command:
+
+```shell
+$ cd ~/elrond-utils/
 $ ./keygenerator --key-type validator
 ```
