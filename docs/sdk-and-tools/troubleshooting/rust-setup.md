@@ -25,6 +25,16 @@ If you've installed Rust using `rustup`:
 rustup self uninstall
 ```
 
+If you've installed Rust using `brew`:
+
+```bash
+brew uninstall rust
+```
+
+:::note
+We never recommend installing Rust using `brew`, especially because it makes it non-trivial to switch between different Rust versions.
+:::
+
 If you've installed Rust using `mxpy` with a version older than `v9`:
 
 ```bash
