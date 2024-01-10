@@ -3,9 +3,13 @@ id: webhooks
 title: Webhooks
 ---
 
+[comment]: # (mx-abstract)
+
 The web wallet webhooks allow you to build or setup integrations for dapps or payment flows.
 
 The web wallet webhooks are links that point the user of the wallet to either login or populate a "send transaction" form with the provided arguments. Once the action is performed, the user is redirected to the provided callback URL along with a success or error status.
+
+[comment]: # (mx-context-auto)
 
 ## **Login hook**
 
@@ -13,7 +17,7 @@ This is useful when you need to find the user's wallet address. A common use cas
 
 __URL Parameters__
 
-`https://wallet.elrond.com/hook/login?callbackUrl=https://example.com/`
+`https://wallet.multiversx.com/hook/login?callbackUrl=https://example.com/`
 
 | Param           | Required                                  | Description                                           |
 | -------------   | ----------------------------------------- | ----------------------------------------------------- |
@@ -29,13 +33,15 @@ __Callback URL Parameters__
 | -------------   | ------------------------------- |
 | address         | The users's Address (bech32).   |
 
+[comment]: # (mx-context-auto)
+
 ## **Send transaction hook**
 
 This is useful when you need to prepopulate a transaction required to send an EGLD amount or pre-populate the transaction's data field with a smart contract function invocation.
 
 __URL Parameters__
 
-`https://wallet.elrond.com/hook/transaction?receiver=erd1qqqqqqqqqqqqqpgqxwakt2g7u9atsnr03gqcgmhcv38pt7mkd94q6shuwt&value=0&gasLimit=250000000&data=claimRewards&callbackUrl=https://example.com/`
+`https://wallet.multiversx.com/hook/transaction?receiver=erd1qqqqqqqqqqqqqpgqxwakt2g7u9atsnr03gqcgmhcv38pt7mkd94q6shuwt&value=0&gasLimit=250000000&data=claimRewards&callbackUrl=https://example.com/`
 
 | Param         | Required                                  | Description                                           |
 | ------------- | ----------------------------------------- | ----------------------------------------------------- |

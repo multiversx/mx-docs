@@ -3,17 +3,27 @@ id: useful-links
 title: Useful Links & Tools
 ---
 
+[comment]: # (mx-abstract)
+
+This page offer useful links and resources that can be used by validators and nodes operators.
+
+[comment]: # (mx-context-auto)
+
+## Resources
+
 Official resources:
 
-- Blockchain Explorer: [https://explorer.elrond.com/](https://explorer.elrond.com/)
-- Wallet: [https://wallet.elrond.com](https://wallet.elrond.com/)
-- GitHub: https://github.com/ElrondNetwork
-- Docker: https://hub.docker.com/repository/docker/elrondnetwork/elrond-go-node
-- Telegram Validators Chat: https://t.me/ElrondValidators
+- Blockchain Explorer: [https://explorer.multiversx.com/](https://explorer.multiversx.com/)
+- Wallet: [https://wallet.multiversx.com](https://wallet.multiversx.com/)
+- GitHub: https://github.com/multiversx
+- Dockerhub: https://hub.docker.com/u/multiversx
+- Telegram Validators Chat: https://t.me/MultiversXValidators
 - Telegram Bot for Staking & Validators: https://t.me/ElrondNetwork_Bot
+
+[comment]: # (mx-context)
 
 Community resources:
 
 - Zabbix monitoring guide: https://thepalmtree.network/zabbix-elrond-guide
-- Elrond Zabbix plugin: https://github.com/arcsoft-ro/zabbix-elrond-plugin
+- Zabbix plugin: https://github.com/arcsoft-ro/zabbix-elrond-plugin
 - Configure Validator API & NetData https access: https://gist.github.com/hiddentao/e6283952b9fffe3f6b42dfeec87c684e

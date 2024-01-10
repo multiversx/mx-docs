@@ -3,33 +3,43 @@ id: system-requirements
 title: System Requirements
 ---
 
-# **Elrond Nodes explained**
+[comment]: # (mx-abstract)
 
-Nodes are computers running the Elrond software, so they contribute to the Elrond network by relaying information and validating it. Each node needs to stake 2500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
+This page provides the system requirements for running a MultiversX node.
 
-# **Minimum System Requirements for running 1 Elrond Node**
+[comment]: # (mx-context-auto)
+
+## **MultiversX Nodes explained**
+
+Nodes are computers running the MultiversX software, so they contribute to the MultiversX network by relaying information and validating it. Each node needs to stake 2500 EGLD to become a **Validator** and is rewarded for its service. Nodes without a stake are called **Observers** - they are connected to the network and relay information, but they have no role in processing transactions and thus do not earn rewards.
+
+[comment]: # (mx-context-auto)
+
+## **Minimum System Requirements for running 1 MultiversX Node**
 
 - 4 x dedicated/physical CPUs, either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 8 GB RAM
 - 200 GB SSD
 - 100 Mbit/s always-on internet connection, at least 4 TB/month data plan
-- Linux OS (Ubuntu 20.04 recommended) / MacOS
+- Linux OS (Ubuntu 22.04 recommended) / MacOS
 
 :::tip
 Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pending third-party issues.
 :::
 
-:::warning
+:::caution
 If the system chosen to host the node is a VPS, the host should have dedicated CPUs. This is mandatory. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
 :::
 
 :::tip
-We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw` 
+We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw`
 :::
 
-:::warning
-In case a decision to run multiple Elrond Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
+:::caution
+In case a decision to run multiple MultiversX Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### **Networking**
 
@@ -46,9 +56,9 @@ sudo ufw allow 37373:38383/tcp
 ```
 
 :::note
-The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/ElrondNetwork/elrond-go/blob/master/cmd/node/config/p2p.toml#L7). 
+The above ports need to be open in order to allow the node to communicate with other nodes via p2p. The configuration for the port range is set [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/p2p.toml#L7).
 :::
 
-:::warning
+:::caution
 In case a firewall for outgoing traffic is used please make sure traffic to ports 10000 (p2p seeder) as well as 123 (NTP) is explicitly allowed.
 :::

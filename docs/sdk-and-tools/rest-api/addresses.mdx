@@ -1,0 +1,460 @@
+---
+id: addresses
+title: Addresses
+---
+
+```mdx-code-block
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+```
+
+[comment]: # (mx-abstract)
+
+This component of the REST API allows one to query information about Addresses (Accounts).
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Address** {#get-address}
+
+`https://gateway.multiversx.com/address/:bech32Address`
+
+This endpoint allows one to retrieve basic information about an Address (Account).
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param | Required                                  | Type     | Description               |
+| ----- | ----------------------------------------- | -------- | ------------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Address details retrieved successfully.
+
+```json
+{
+  "data": {
+    "account": {
+      "address": "erd1...",
+      "nonce": 11,
+      "balance": "100000000000000000000",
+      "username": "",
+      "code": "",
+      "codeHash": null,
+      "rootHash": "qBFvpFeF6...",
+      "codeMetadata": null,
+      "developerReward": "0",
+      "ownerAddress": "",
+    }
+  },
+  "blockInfo":{
+    "nonce": 555,
+    "hash": "f55fe00...",
+    "rootHash": "294360..."
+  }
+  "error": "",
+  "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::important
+If an account (that is not a smart contract, smart contracts cannot be guarded) has an ```activeGuardian``` and is ```guarded```, the ```codeMetadata``` of the account should be [Guarded](https://github.com/multiversx/mx-chain-vm-common-go/blob/master/codeMetadata.go).
+:::
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Address Guardian Data** {#get-address-guardian-data}
+
+`https://gateway.multiversx.com/address/:bech32Address/guardian-data`
+
+This endpoint allows one to retrieve the guardian data of an Address.
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Guardian Data successfully retrieved.
+
+```json
+{
+  "data": {
+    "blockInfo": {
+      "hash":"a11aa...",
+      "nonce":197,
+      "rootHash":"a6d70..."
+    },
+    "guardianData": {
+      "activeGuardian": {
+        "activationEpoch": 15,
+        "address": "erd1...",
+        "serviceUID": "uuid"
+      },
+      "guarded": true,
+      "pendingGuardian": {
+        "activationEpoch": 35,
+        "address": "erd1...",
+        "serviceUID": "uuid"
+      },
+    },  
+  },
+    "error": "",
+    "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::caution
+In the response example mentioned above, the account has already set the ```activeGuardian``` (using a ```SetGuardian``` transaction), guarded the account (with a ```GuardAccount``` transaction), and also set the ```pendingGuardian``` (using an unguarded ```SetGuardian``` transaction). We intentionally chose this scenario to display all the fields for ```blockInfo``` and ```guardianData```.
+:::
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Address Nonce** {#get-address-nonce}
+
+`https://gateway.multiversx.com/address/:bech32Address/nonce`
+
+This endpoint allows one to retrieve the nonce of an Address.
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Nonce successfully retrieved.
+
+```json
+{
+  "data": {
+    "nonce": 5
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Address Balance** {#get-address-balance}
+
+`https://gateway.multiversx.com/address/:bech32Address/balance`
+
+This endpoint allows one to retrieve the balance of an Address.
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Balance successfully retrieved.
+
+```json
+{
+  "data": {
+    "balance": "100000000000000000000"
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Address Username (herotag)** {#get-address-username-herotag}
+
+`https://gateway.multiversx.com/address/:bech32Address/username`
+
+This endpoint allows one to retrieve the username / herotag of an Address (if any).
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Balance successfully retrieved.
+
+```json
+{
+  "data": {
+    "username": "docs.elrond"
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Address Transactions (deprecated)** {#get-address-transactions}
+
+`https://gateway.multiversx.com/address/:bech32Address/transactions`
+
+:::caution
+This endpoint is deprecated. In order to fetch the Transactions involving an Address, use the [transactions](https://api.multiversx.com/#/accounts/AccountController_getAccountTransactions) endpoint of MultiversX API, instead.
+:::
+
+This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Transactions successfully retrieved.
+
+```json
+{
+  "data": {
+    "transactions": [
+      {
+        "hash": "1a3e...",
+        "fee": "10000000000000000",
+        "miniBlockHash": "9673...",
+        "nonce": 68,
+        "round": 33688,
+        "value": "1000000000000000000",
+        "receiver": "erd1...",
+        "sender": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
+        "receiverShard": 0,
+        "senderShard": 0,
+        "gasPrice": 200000000000,
+        "gasLimit": 50000,
+        "gasUsed": 50000,
+        "data": "",
+        "signature": "ed75...",
+        "timestamp": 1591258128,
+        "status": "Success",
+        "scResults": null
+      },
+      {
+        "hash": "d72d...",
+        "fee": "10000000000000000",
+        "miniBlockHash": "fd45...",
+        "nonce": 67,
+        "round": 27353,
+        "value": "100000000000000000000000000",
+        "receiver": "erd1...",
+        "sender": "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz",
+        "receiverShard": 1,
+        "senderShard": 0,
+        "gasPrice": 200000000000,
+        "gasLimit": 50000,
+        "gasUsed": 50000,
+        "data": "",
+        "signature": "bb98...",
+        "timestamp": 1591220142,
+        "status": "Success",
+        "scResults": null
+      },
+      ...
+    ]
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::caution
+This endpoint is not available on Observer Nodes. It is only available on MultiversX Proxy.
+
+**Currently, this endpoint is only available on the Official MultiversX Proxy instance.**
+
+This endpoint requires the presence of an Elasticsearch instance (populated through Observers) as well.
+:::
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Storage Value for Address** {#get-storage-value-for-address}
+
+`https://gateway.multiversx.com/address/:bech32Address/key/:key`
+
+This endpoint allows one to retrieve a value stored within the Blockchain for a given Address.
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description             |
+| ------------- | ----------------------------------------- | -------- | ----------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query.   |
+| key           | <span class="text-danger">REQUIRED</span> | `string` | The key entry to fetch. |
+
+The key must be hex-encoded.
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Value (hex-encoded) successfully retrieved.
+
+```json
+{
+  "data": {
+    "value": "abba"
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get all storage for Address** {#get-all-storage-for-address}
+
+`https://gateway.multiversx.com/address/:bech32Address/keys`
+
+This endpoint allows one to retrieve all the key-value pairs stored under a given account.
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Key-value pairs (both hex-encoded) successfully retrieved.
+
+```json
+{
+    "data": {
+        "pairs": {
+            "abba": "6f6b"
+            ...
+        }
+    },
+    "error": "",
+    "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+[comment]: # (mx-context-auto)
+
+## **ESDT tokens endpoints**
+
+There are a number of ESDT tokens endpoints that one can use to check all tokens of an address, balance for
+specific fungible or non-fungible tokens or so on.
+
+Fungible tokens endpoints can be found [here](/developers/esdt-tokens/#rest-api) and non-fungible tokens
+endpoints can be found [here](/developers/nft-tokens/#rest-api).

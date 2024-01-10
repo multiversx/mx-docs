@@ -13,6 +13,8 @@ The block’s structure is represented by a block Header that contains informati
 
 There is no limitation on the number of miniblocks with the same sender and receiver in one block. Meaning multiple miniblocks with the same sender and receiver can appear in the same block.
 
+[comment]: # (mx-context-auto)
+
 ## **Processing**
 
 Currently, the atomic unit of processing in cross-shard execution is a miniblock: either all the transactions of the miniblock are processed at once or none and the miniblock’s execution will be retried in the next round.
@@ -25,4 +27,4 @@ Shard 1 fetches the hash of miniblock 1 from metablock, requests the miniblock f
 
 The next diagram shows the number of rounds required for a transaction to be finalized. The rounds are considered between the first inclusion in a miniblock until the last miniblock is notarised.
 
-![img](https://lh6.googleusercontent.com/E5NlcQ3IW13oztKJciCMq9SlHweB_b2DC6p4h5g66ipPCyMpphBUjJQN9ak0NR59cxE92tC8J7XCom-lHM9AFkgB5znBBehSWrjKYyUJ3ZbMDqPMh2-9POubKr2nCgC1PdgzJfPC)
+![img](/technology/cross-shard-txs.png)

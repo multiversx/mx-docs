@@ -2,10 +2,13 @@
 id: signing-transactions
 title: Signing Transactions
 ---
+[comment]: # (mx-abstract)
 
-How to serialize and sign the Transaction payload
+By reading this page you will find out how to serialize and sign the Transaction payload.
 
-Transactions must be **signed** with the Sender's Private Key before submitting them to the Elrond Network. Signing is performed with the [Ed25519](https://ed25519.cr.yp.to/) algorithm.
+Transactions must be **signed** with the Sender's Private Key before submitting them to the MultiversX Network. Signing is performed with the [Ed25519](https://ed25519.cr.yp.to/) algorithm.
+
+[comment]: # (mx-context-auto)
 
 ## **General structure**
 
@@ -29,6 +32,8 @@ A signed transaction has the additional **`signature`** field:
 | --------- | ------ | ---------------------------------------------------------------------------------------------- |
 | signature | string | The digital signature consisting of 128 hex-characters (thus 64 bytes in a raw representation) |
 
+[comment]: # (mx-context-auto)
+
 ## **Serialization for signing**
 
 Before signing a transaction, one has to **serialize** it, that is, to obtain its raw binary representation - as a sequence of bytes. This is achieved through the following steps:
@@ -41,7 +46,7 @@ Before signing a transaction, one has to **serialize** it, that is, to obtain it
 
 For example, given the transaction:
 
-```
+```js
 nonce = 7
 value = "10000000000000000000"  # 10 EGLD
 receiver = "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r"
@@ -55,13 +60,13 @@ version = 1
 
 By applying steps 1-3 (step 4 is omitted in this example), one obtains:
 
-```
+```js
 {"nonce":7,"value":"10000000000000000000","receiver":"erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r","sender":"erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz","gasPrice":1000000000,"gasLimit":70000,"data":"Zm9yIHRoZSBib29r","chainID":"1","version":1}
 ```
 
 If the transaction has an empty **no data field**:
 
-```
+```js
 nonce = 8
 value = "10000000000000000000"  # 10 ERD
 receiver = "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r"
@@ -75,21 +80,25 @@ version = 1
 
 Then it's serialized form (step 5 is omitted in this example) is as follows:
 
-```
+```js
 {"nonce":8,"value":"10000000000000000000","receiver":"erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r","sender":"erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz","gasPrice":1000000000,"gasLimit":50000,"chainID":"1","version":1}
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Ed25519 signature**
 
-Elrond uses the [Ed25519](https://ed25519.cr.yp.to/) algorithm to sign transactions. In order to obtain the signature, one can use generic software libraries such as [PyNaCl](https://pynacl.readthedocs.io/en/stable/signing/), [tweetnacl-js](https://github.com/dchest/tweetnacl-js#signatures) or components of Elrond SDK such as [elrond-core-js](https://www.npmjs.com/package/@elrondnetwork/elrond-core-js), [erdpy](https://github.com/ElrondNetwork/elrond-sdk), [erdjs](https://github.com/ElrondNetwork/elrond-sdk) or [erdwalletjs-cli](https://github.com/ElrondNetwork/elrond-sdk).
+MultiversX uses the [Ed25519](https://ed25519.cr.yp.to/) algorithm to sign transactions. In order to obtain the signature, one can use generic software libraries such as [PyNaCl](https://pynacl.readthedocs.io/en/stable/signing/), [tweetnacl-js](https://github.com/dchest/tweetnacl-js#signatures) or components of MultiversX SDK such as [mx-sdk-js-wallet](https://github.com/multiversx/mx-sdk-js-wallet), [mx-sdk-py-wallet](https://github.com/multiversx/mx-sdk-py-wallet), [erdgo](https://github.com/multiversx/mx-sdk-erdgo), [erdjava](https://github.com/multiversx/mx-sdk-erdjava), [mx-sdk-js-wallet-cli](https://github.com/multiversx/mx-sdk-js-wallet-cli) etc.
 
 The raw signature consisting of 64 bytes has to be **hex-encoded** afterwards and placed in the transaction object.
+
+[comment]: # (mx-context-auto)
 
 ## **Ready to broadcast**
 
 Once the `signature` field is set as well, the transaction is ready to be broadcasted. Following the examples above, their ready-to-broadcast form is as follows:
 
-```
+```js
 # With data field
 nonce = 7
 value = "10000000000000000000"  # 10 EGLD
@@ -103,7 +112,7 @@ version = 1
 signature = "1702bb7696f992525fb77597956dd74059b5b01e88c813066ad1f6053c6afca97d6eaf7039b2a21cccc7d73b3e5959be4f4c16f862438c7d61a30c91e3d16c01"
 ```
 
-```
+```js
 # Without data field
 nonce = 8
 value = "10000000000000000000"  # 10 EGLD

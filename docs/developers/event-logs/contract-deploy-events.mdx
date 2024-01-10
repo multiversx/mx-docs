@@ -1,0 +1,134 @@
+---
+id: contract-deploy-events
+title: Smart Contract Deploy Events
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+Contract deploy events are generated when a transaction involves either the deployment of a
+smart contract or an upgrade to an existing contract.
+
+### Contract deploy event
+
+The contract deploy event is generated upon the successful execution of a transaction that includes
+the deployment of a smart contract, without encountering any errors.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | SCDeploy                                                                                                           |
+| address    | the address of the deployed contract                                                                                              |
+| topics     | `topics[0]` - the address bytes of the deployed contract base64 encoded <br/>`topics[1]` - the address bytes of the deployer of the smart contract base64 encoded <br/> `topics[2]` - the code hash bytes of the deployer smart contract base64 encoded |
+| data       | empty                                                                                                                  |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    {
+        "address": "erd1qqqqqqqqqqqqqpgqnnl9nn0kuuckhg24g02hq2745n4jk2hp327qcay4nm",
+        "identifier": "SCDeploy",
+        "topics": [
+            "AAAAAAAAAAAFAJz+Wc325zFroVVD1XAr1aTrKyrhirw=",
+            "NRl7AwoM3hEPC0t9RTDy7gdJUSJvKC5dpJwLYaHLirw=",
+            "bJtNdzjeaYecInf/NpHzSjHJEZ2l6hR/uJh0NkLIe+k="
+        ],
+        "data": null
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### Contract upgrade event
+
+The contract upgrade event is generated when a transaction, involving an upgrade, is successfully executed without any errors.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | SCUpgrade                                                                                                           |
+| address    | the address of the deployed contract                                                                                              |
+| topics     | `topics[0]` - the address bytes of the upgraded contract base64 encoded <br/>`topics[1]` - the address bytes of the upgrader of the smart contract base64 encoded <br/> `topics[2]` - the code hash bytes of the upgraded smart contract base64 encoded |
+| data       | empty                                                                                                                  |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "address": "erd1qqqqqqqqqqqqqpgqnnl9nn0kuuckhg24g02hq2745n4jk2hp327qcay4nm",
+    "identifier": "SCUpgrade",
+    "topics": [
+        "AAAAAAAAAAAFAJz+Wc325zFroVVD1XAr1aTrKyrhirw=",
+        "NRl7AwoM3hEPC0t9RTDy7gdJUSJvKC5dpJwLYaHLirw=",
+        "kUVJtdwvHG2sCTi9l2uneSONUVonWfgHCK69gdB+52o="
+    ],
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### Change owner event
+
+The `ChangeOwnerAddress` event is generated upon the successful execution of a transaction that specifically involves
+a `ChangeOwnerAddress` built-in function call, and this execution must occur without encountering any errors.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | ChangeOwnerAddress                                                                                                           |
+| address    | the address of the contract                                                                                              |
+| topics     | `topics[0]` - the address bytes of the new contract owner base64 encoded |
+| data       | empty                                                                                                                  |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "address": "erd1qqqqqqqqqqqqqpgqnnl9nn0kuuckhg24g02hq2745n4jk2hp327qcay4nm",
+    "identifier": "ChangeOwnerAddress",
+    "topics": [
+        "UKAg0hORMjk0oT6RalZp1w0Xulvvj0Wa/SSYstBepao="
+    ],
+    "data": null
+}
+```
+
+</TabItem>
+</Tabs>

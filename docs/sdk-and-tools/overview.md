@@ -3,85 +3,117 @@ id: overview
 title: SDKs and Tools - Overview
 ---
 
+[comment]: # (mx-abstract)
+
 ## Introduction
 
-Follow the following table to guide you towards the action you are interested in
+One can (programatically) interact with the MultiversX Network by leveraging the following SDKs, tools and APIs:
 
-## Table of contents
+[comment]: # (mx-context-auto)
 
-### erdjs - Javascript SDK
+### sdk-rs - Rust SDK
 
-| Name                                                                                                  | Description                                        |
-|-------------------------------------------------------------------------------------------------------|----------------------------------------------------|
-| [erdjs](/sdk-and-tools/erdjs/erdjs)                                                                   | High level overview about erdjs.                   |
-| [erdjs cookbook](/sdk-and-tools/erdjs/erdjs-cookbook)                                                 | Learn how to handle common tasks by using erdjs.   |
-| [Extending erdjs](/sdk-and-tools/erdjs/extending-erdjs)                                               | How to extend and tailor certain modules of erdjs. |
-| [Writing and testing erdjs interactions](/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions) | Write erdjs interactions for Visual Studio Code    |
-| [erdjs migration guides](/sdk-and-tools/erdjs/erdjs-migration-guides)                                 | Migrate from erdjs v9.x to v10+                    |
-| [erdjs signing providers](/sdk-and-tools/erdjs/erdjs-signing-providers)                               | Integrate erdjs signing providers.                 |
+:::important
+Note that Rust is also the recommended programming language for writing Smart Contracts on MultiversX. That is, Rust can be used to write both _on-chain software_ (Smart Contracts) and _off-chain software_ (e.g. desktop applications, web applications, microservices). For the on-chain part, please follow [Smart Contracts](/developers/smart-contracts). Here, we refer to the off-chain part.
+:::
+
+| Name                            | Description                                                |
+|---------------------------------|------------------------------------------------------------|
+| [sdk-rs](https://github.com/multiversx/mx-sdk-rs) | Rust SDK used to interact with the MultiversX Blockchain. <br /> This is the parent repository, also home to the Rust Framework for Smart Contracts.      |
+| [sdk-rs/core](https://github.com/multiversx/mx-sdk-rs/tree/master/sdk/core) |  Core components, accompanied by a set of usage examples. |
+| [sdk-rs/snippets](https://github.com/multiversx/mx-sdk-rs/tree/master/framework/snippets) |  Smart Contract interaction snippets - base components. Examples of usage: [adder](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/adder/interact), [multisig](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/multisig/interact). |
 
 
-In addition to erdjs, one could use the following Javascript library for performing wallet operations via CLI:
+[comment]: # (mx-context-auto)
 
-| Name                                                                                               | Description                                                  |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli)                                                  | Lightweight CLI wrapper used to perform wallet interactions. |
+### sdk-js - Javascript SDK
 
-### dapp-core - core functional logic of a dApp
+| Name                                                                                                     | Description                                         |
+|----------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
+| [sdk-js](/sdk-and-tools/sdk-js)                                                                          | High level overview about sdk-js.                   |
+| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook)                                                 | Learn how to handle common tasks by using sdk-js.   |
+| [Extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js)                                               | How to extend and tailor certain modules of sdk-js. |
+| [Writing and testing sdk-js interactions](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions) | Write sdk-js interactions for Visual Studio Code    |
+| [sdk-js migration guides](/sdk-and-tools/sdk-js/sdk-js-migration-guides)                                 | Migrate from sdk-js v9.x to v10+                    |
+| [sdk-js signing providers](/sdk-and-tools/sdk-js/sdk-js-signing-providers)                               | Integrate sdk-js signing providers.                 |
 
-| Name                                   | Description                                                                                                                                                                                                                                                                                |
-|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [dapp-core](/sdk-and-tools/dapp-core)  | React library aimed to help developers create dApps based on Elrond Network. <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages + it offers basic helper functions for most common operations (formatAmount, parseAmount, parseSignedTransaction |
+In addition to sdk-js, one could use the following Javascript library for performing wallet operations via CLI:
 
-### erdpy - Python SDK
+| Name                                                  | Description                                                  |
+|-------------------------------------------------------|--------------------------------------------------------------|
+| [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli) | Lightweight CLI wrapper used to perform wallet interactions. |
 
-| Name                                                                                        | Description                                              |
-|---------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| [erdpy](/sdk-and-tools/erdpy/erdpy)                                                         | High level overview about erdpy.                         |
-| [Installing erdpy](/sdk-and-tools/erdpy/installing-erdpy)                                   | How to install and get started with erdpy.               |
-| [Configuring erdpy](/sdk-and-tools/erdpy/configuring-erdpy)                                 | Change erdpy's basic configurations.                     |
-| [erdpy cli](/sdk-and-tools/erdpy/erdpy-cli)                                                 | How to use the Command Line Interface.                   |
-| [Deriving the wallet pem file](/sdk-and-tools/erdpy/deriving-the-wallet-pem-file)           | How to use a wallet PEM file.                            |
-| [Sending bulk transactions](/sdk-and-tools/erdpy/sending-bulk-transactions)                 | Practical example on how to send a bulk of transactions. |
-| [Writing and running erdpy scripts](/sdk-and-tools/erdpy/writing-and-running-erdpy-scripts) | Write and run scripts made with erdpy.                   |
-| [Smart contract interactions](/sdk-and-tools/erdpy/smart-contract-interactions)             | Interact with Smart Contract.                            |
+You might also want to have a look over [**xSuite**](https://xsuite.dev), a toolkit to init, build, test, deploy contracts using JavaScript, made by the [Arda team](https://arda.run).
 
-### erdnest - NestJS SDK
+[comment]: # (mx-context-auto)
 
-| Name                          | Description                                            |
-|-------------------------------|--------------------------------------------------------|
-| [erdnest](/sdk-and-tools/erdnest) | NestJS SDK commonly used in the Elrond Microservice ecosystem. |
+### sdk-dapp - core functional logic of a dApp
+
+| Name                                | Description                                                                                                                                                                                                                                                                                    |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [sdk-dapp](/sdk-and-tools/sdk-dapp) | React library aimed to help developers create dApps based on MultiversX Network. <br/> <br/> It abstracts away all the boilerplate for logging in, signing transactions or messages, and also offers helper functions for common tasks. |
+
+[comment]: # (mx-context-auto)
+
+### mxpy - Python SDK
+
+| Name                                                                                       | Description                                              |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| [mxpy](/sdk-and-tools/sdk-py/)                                                             | High level overview about mxpy.                          |
+| [Installing mxpy](/sdk-and-tools/sdk-py/installing-mxpy)                                   | How to install and get started with mxpy.                |
+| [Configuring mxpy](/sdk-and-tools/sdk-py/configuring-mxpy)                                 | Change mxpy's basic configurations.                      |
+| [mxpy cli](/sdk-and-tools/sdk-py/mxpy-cli)                                                 | How to use the Command Line Interface.                   |
+| [Deriving the wallet pem file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file)         | How to use a wallet PEM file.                            |
+| [Smart contract interactions](/sdk-and-tools/sdk-py/smart-contract-interactions)           | Interact with Smart Contract.                            |
+
+[comment]: # (mx-context-auto)
+
+### sdk-nestjs - NestJS SDK
+
+| Name                                     | Description                                                        |
+|------------------------------------------|--------------------------------------------------------------------|
+| [nesdtjs sdk](/sdk-and-tools/sdk-nestjs) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
+
+[comment]: # (mx-context-auto)
 
 ### erdgo - Golang SDK
 
-| Name                          | Description                                            |
-|-------------------------------|--------------------------------------------------------|
-| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with Elrond Blockchain. |
+| Name                          | Description                                                |
+|-------------------------------|------------------------------------------------------------|
+| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with the MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
 
 ### erdjava - Java SDK
 
-| Name                              | Description                                       |
-|-----------------------------------|---------------------------------------------------|
-| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with Elrond Blockchain. |
+| Name                              | Description                                           |
+|-----------------------------------|-------------------------------------------------------|
+| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with the MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
 
 ### erdcpp - C++ SDK
 
-| Name                            | Description                                      |
-|---------------------------------|--------------------------------------------------|
-| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with Elrond Blockchain. |
+| Name                            | Description                                          |
+|---------------------------------|------------------------------------------------------|
+| [erdcpp](/sdk-and-tools/erdcpp) | C++ SDK used to interact with the MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
 
 ### erdkotlin - Kotlin SDK
 
-| Name                                  | Description                                         |
-|---------------------------------------|-----------------------------------------------------|
-| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with Elrond Blockchain. |
+| Name                                  | Description                                             |
+|---------------------------------------|---------------------------------------------------------|
+| [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with the MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
 
 ### Node Rest API
 
 | Name                                                                     | Description                                                       |
 |--------------------------------------------------------------------------|-------------------------------------------------------------------|
-| [Rest API](/sdk-and-tools/rest-api/rest-api)                             | High level overview over the Elrond's Rest API.                   |
-| [api.elrond.com](/sdk-and-tools/rest-api/api-elrond-com)                 | Elrond's main API instance.                                       |
+| [Rest API](/sdk-and-tools/rest-api/)                                     | High level overview over the MultiversX's Rest API.               |
+| [api.multiversx.com](/sdk-and-tools/rest-api/multiversx-api)             | MultiversX's main API instance.                                   |
 | [Gateway overview](/sdk-and-tools/rest-api/gateway-overview)             | Gateway overview - public proxy instance.                         |
 | [Addresses](/sdk-and-tools/rest-api/addresses)                           | Rest API endpoints dedicated to addresses.                        |
 | [Transactions](/sdk-and-tools/rest-api/transactions)                     | Rest API endpoints dedicated to transactions.                     |
@@ -91,19 +123,39 @@ In addition to erdjs, one could use the following Javascript library for perform
 | [Virtual machine](/sdk-and-tools/rest-api/virtual-machine)               | Rest API endpoints dedicated to the SC execution VM.              |
 | [Versions and changelog](/sdk-and-tools/rest-api/versions-and-changelog) | What's new in different versions.                                 |
 
-### Proxy 
+[comment]: # (mx-context-auto)
 
-Proxy is an abstraction layer over the Elrond Network's sharding. It routes the API request to the desired shard and 
+### Proxy
+
+Proxy is an abstraction layer over the MultiversX Network's sharding. It routes the API request to the desired shard and
 merges results when needed.
 
-| Name                                 | Description                                          |
-|--------------------------------------|------------------------------------------------------|
-| [Elrond Proxy](/sdk-and-tools/proxy) | A Rest API requests handler that abstracts sharding. |
+| Name                                     | Description                                          |
+|------------------------------------------|------------------------------------------------------|
+| [MultiversX Proxy](/sdk-and-tools/proxy) | A Rest API requests handler that abstracts sharding. |
+
+[comment]: # (mx-context-auto)
 
 ### Elasticsearch
 
-Elrond Network uses Elasticsearch to index historical data. Find out more about how it can be configured.
+MultiversX Network uses Elasticsearch to index historical data. Find out more about how it can be configured.
 
-| Name                                           | Description                                                                  |
-|------------------------------------------------|------------------------------------------------------------------------------|
-| [Elasticsearch](/sdk-and-tools/elastic-search) | Make use of Elasticsearch near your nodes in order to keep historical data.  |
+| Name                                           | Description                                                                 |
+|------------------------------------------------|-----------------------------------------------------------------------------|
+| [Elasticsearch](/sdk-and-tools/elastic-search) | Make use of Elasticsearch near your nodes in order to keep historical data. |
+
+[comment]: # (mx-context-auto)
+
+### Events notifier
+
+Events notifier is an external service that can be used to fetch block events and push them to subscribers.
+
+| Name                                       | Description                          |
+|--------------------------------------------|--------------------------------------|
+| [Events notifier](/sdk-and-tools/notifier) | A notifier service for block events. |
+
+### Devcontainers (for VSCode or GitHub Codespaces)
+
+| Name                                          | Description                          |
+|-----------------------------------------------|--------------------------------------|
+| [Devcontainers](/sdk-and-tools/devcontainers) | Overview of MultiversX devcontainers (for VSCode or GitHub Codespaces). |

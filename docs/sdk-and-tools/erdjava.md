@@ -1,13 +1,10 @@
 ---
 id: erdjava
-title: erdjava
+title: Java SDK
 ---
 
-Elrond SDK for Java
+[comment]: # (mx-abstract)
 
-**erdjava** can be found here: [elrond-sdk-erdjava](https://github.com/ElrondNetwork/elrond-sdk-erdjava/).
-It consists of Java helpers and utilities for interacting with the Blockchain.
+MultiversX SDK for Java
 
-:::tip
-The **partial & preliminary** JavaDoc can be found [here](https://elrondnetwork.github.io/elrond-sdk-docs/erdjava).
-:::
+**erdjava** consists of Java helpers and utilities for interacting with the Blockchain. The source code can be found here: [mx-sdk-erdjava](https://github.com/multiversx/mx-sdk-erdjava/).

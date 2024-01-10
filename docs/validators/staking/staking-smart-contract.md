@@ -3,7 +3,13 @@ id: staking-smart-contract
 title: The Staking Smart Contract
 ---
 
-# **Staking**
+[comment]: # (mx-abstract)
+
+This page will guide you through the the operations of the Staking System Smart Contract.
+
+[comment]: # (mx-context-auto)
+
+## **Staking**
 
 Nodes are _promoted_ to the role of **validator** when their operator sends a _staking transaction_ to the Staking smart contract. Through this transaction, the operator locks ("stakes") an amount of their own EGLD for each node that becomes a validator. A single staking transaction contains the EGLD and the information needed to stake for one or more nodes. Such a transaction contains the following:
 
@@ -15,7 +21,7 @@ Nodes are _promoted_ to the role of **validator** when their operator sends a _s
 
 For example, if an operator manages two individual nodes with the 96-byte-long BLS keys `45e7131ba....294812f004` and `ecf6fdbf5....70f1d251f7`, then the staking transaction would be built as follows:
 
-```
+```rust
 StakingTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -30,7 +36,8 @@ StakingTransaction {
           "@optional_reward_address_HEX_ENCODED"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Because this transaction is a call to the Staking smart contract, it passes information via the `Data` field:
 
@@ -42,7 +49,9 @@ Because this transaction is a call to the Staking smart contract, it passes info
 - `67656e65736973` is the aforementioned reserved placeholder, repeated;
 - `optional_reward_address_HEX_ENCODED` is the address of the account which will receive the rewards for the staked nodes (decoded from its usual Bech32 representation into binary, then re-encoded to a hexadecimal string).
 
-# **Changing the reward address**
+[comment]: # (mx-context-auto)
+
+## **Changing the reward address**
 
 Validator nodes produce rewards, which are then transferred to an account. By default, this account is the same one from which the staking transaction was submitted (see the section above). In the staking transaction, the node operator has the option to select a different reward address.
 
@@ -54,7 +63,7 @@ The reward address can also be changed at a later time, with a special transacti
 
 For example, changing the reward address for two nodes requires the following transaction:
 
-```
+```rust
 ChangeRewardAddressTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -63,9 +72,12 @@ ChangeRewardAddressTransaction {
     GasLimit: 12000000
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
 
-# **Unstaking**
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+## **Unstaking**
 
 A node operator may _demote_ their validator nodes back to **observer** status by sending an _unstaking transaction_ to the Staking smart contract, containing the following:
 
@@ -79,7 +91,7 @@ Moreover, the amount of EGLD which was previously locked as stake will not retur
 
 Continuing the example in the previous section, an unstaking transaction for the two nodes contains the following:
 
-```
+```rust
 UnstakingTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -90,7 +102,8 @@ UnstakingTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Note that:
 
@@ -98,7 +111,9 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
-# **Unbonding**
+[comment]: # (mx-context-auto)
+
+## **Unbonding**
 
 A node operator may reclaim the stake which was previously locked for their validator nodes using an _unbonding transaction_ to the Staking smart contract. Before unbonding, the node operator must have already sent an unstaking transaction for some of their validators, and a predetermined amount of rounds must have passed after the unstaking transaction was processed.
 
@@ -110,7 +125,7 @@ The unbonding transaction is almost identical to the unstaking transaction, and 
 
 Following the example in the previous sections, an unbonding transaction for the two nodes contains the following information:
 
-```
+```rust
 UnbondingTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -121,7 +136,8 @@ UnbondingTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Note that:
 
@@ -129,7 +145,9 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
-# **Unjailing**
+[comment]: # (mx-context-auto)
+
+## **Unjailing**
 
 If a node operator notices that some of their validator nodes have been jailed due to low rating, they can restore the nodes back to being active validators by paying a small fine. This is done using an _unjailing transaction_, sent to the Staking smart contract, which contains the following:
 
@@ -139,7 +157,7 @@ If a node operator notices that some of their validator nodes have been jailed d
 
 Continuing the example in the previous section, if the nodes `45e7131ba....294812f004` and `ecf6fdbf5....70f1d251f7` were placed in jail due to low rating, they can be unjailed with the following transaction:
 
-```
+```rust
 UnjailTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -150,7 +168,8 @@ UnjailTransaction {
           "@ecf6fdbf5....70f1d251f7"
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 Note that:
 
@@ -158,7 +177,9 @@ Note that:
 - `ecf6fdbf5....70f1d251f7` is the BLS key of the second node, represented as a 192-character-long hexadecimal string;
 - no reserved placeholder is needed, as opposed to the staking transaction (see above)
 
-# **Claiming unused tokens from Staking**
+[comment]: # (mx-context-auto)
+
+## **Claiming unused tokens from Staking**
 
 If a node operator has sent a staking transaction containing an amount of EGLD higher than the requirement for the nodes listed in the transaction, they can claim back the remainder of the sum with a simple _claim transaction_, containing:
 
@@ -167,7 +188,7 @@ If a node operator has sent a staking transaction containing an amount of EGLD h
 
 An example of a claim transaction is:
 
-```
+```rust
 ClaimTransaction {
     Sender: <account address of the node operator>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l
@@ -176,6 +197,7 @@ ClaimTransaction {
     GasLimit: 6000000
 }
 ```
-*For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format).*
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
 After this transaction is processed, the Staking smart contract will produce a transaction _back_ to the sender account, but only if the sender account has previously staked for nodes, using a staking transaction.

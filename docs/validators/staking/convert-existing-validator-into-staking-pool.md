@@ -24,7 +24,7 @@ Generate Contract for Validator transaction
 Where:
 Max cap = total delegation cap in EGLD, fully denominated, in hexadecimal encoding
 
-For example, to obtain the fully denominated form of 7231.941 eGLD, the amount must be multiplied by 10^18, resulting in 7231941000000000000000. Do not encode the ASCII string "7231941000000000000000", but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
+For example, to obtain the fully denominated form of 7231.941 EGLD, the amount must be multiplied by 10^18, resulting in 7231941000000000000000. Do not encode the ASCII string "7231941000000000000000", but encode the integer 7231941000000000000000 itself. This would result in "01880b57b708cf408000".
 
 00 = uncapped
 

@@ -2,7 +2,7 @@ name: deploy-production
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   repository_dispatch:
     types: deploy-production
   workflow_dispatch:
@@ -13,22 +13,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
+          fetch-depth: 0
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: "12.x"
+          node-version: "16.x"
       - name: Install packages
-        working-directory: website
-        run: |
-          npm install
+        run: npm install
       - name: Build website
-        working-directory: website
-        run: |
-          npm run build
+        run: npm run build
         env:
           CI: false
           REACT_APP_ALGOLIA_SEARCH_KEY: ${{ secrets.ALGOLIA_SEARCH_KEY }}
+          REACT_APP_ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -36,12 +34,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
       - name: Deploy to S3 bucket
-        run: aws s3 sync ./website/build/docs/ s3://${{ secrets.AWS_S3_BUCKET_PRODUCTION }} --delete
+        run: aws s3 sync ./build/ s3://${{ secrets.AWS_S3_BUCKET_PRODUCTION }} --delete
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_ICON_EMOJI: ":page_with_curl:"
-          SLACK_USERNAME: docs.elrond.com
+          SLACK_USERNAME: docs.multiversx.com
           SLACK_MESSAGE: ${{ secrets.AWS_S3_BUCKET_PRODUCTION }}
           SLACK_FOOTER: ""
           MSG_MINIMAL: true

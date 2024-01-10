@@ -3,44 +3,52 @@ id: creating-transactions
 title: Creating Transactions
 ---
 
+[comment]: # (mx-abstract)
+
+This page describes how to create, sign and broadcast transactions to the MultiversX Network.
+
+[comment]: # (mx-context-auto)
+
 ## **Transaction structure**
 
-As described in section [Signing Transactions](/developers/signing-transactions/signing-transactions), a ready-to-broadcast transaction is structured as follows:
+As described in section [Signing Transactions](/developers/signing-transactions), a ready-to-broadcast transaction is structured as follows:
 
-```
+```json
 {
-    "nonce": 42,
-    "value": "100000000000000000",
-    "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
-    "sender": "erd1ylzm22ngxl2tspgvwm0yth2myr6dx9avtx83zpxpu7rhxw4qltzs9tmjm9",
-    "gasPrice": 1000000000,
-    "gasLimit": 70000,
-    "data": "Zm9vZCBmb3IgY2F0cw==",
-    "chainID": "1",
-    "version": 1,
-    "signature": "5845301de8ca3a8576166fb3b7dd25124868ce54b07eec7022ae3ffd8d4629540dbb7d0ceed9455a259695e2665db614828728d0f9b0fb1cc46c07dd669d2f0e"
+  "nonce": 42,
+  "value": "100000000000000000",
+  "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
+  "sender": "erd1ylzm22ngxl2tspgvwm0yth2myr6dx9avtx83zpxpu7rhxw4qltzs9tmjm9",
+  "gasPrice": 1000000000,
+  "gasLimit": 70000,
+  "data": "Zm9vZCBmb3IgY2F0cw==",
+  "chainID": "1",
+  "version": 1,
+  "signature": "5845301de8ca3a8576166fb3b7dd25124868ce54b07eec7022ae3ffd8d4629540dbb7d0ceed9455a259695e2665db614828728d0f9b0fb1cc46c07dd669d2f0e"
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **SDK and tools support for creating and signing transactions**
 
-There are SDKs or tools with support for interacting with the Elrond blockchain, so one can use one of the following SDKs to perform
+There are SDKs or tools with support for interacting with the MultiversX blockchain, so one can use one of the following SDKs to perform
 transactions creation and signing:
 
-- [erdjs - JavaScript SDK](/sdk-and-tools/erdjs)
-- [erdpy - Python SDK](/sdk-and-tools/erdpy/erdpy)
+- [sdk-js - JavaScript SDK](/sdk-and-tools/sdk-js)
+- [sdk-py - Python SDK](/sdk-and-tools/sdk-py)
 - [erdgo - Golang SDK](/sdk-and-tools/erdgo)
 - [erdjava - Java SDK](/sdk-and-tools/erdjava)
-- [elrond-core-js](https://github.com/ElrondNetwork/elrond-core-js) library
-- [lightweight JS CLI](https://www.npmjs.com/package/@elrondnetwork/erdwalletjs-cli) wrapper over our [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
-- [lightweight HTTP utility](https://github.com/ElrondNetwork/erdwalletjs-http), which wraps the [elrond-core-js library](https://github.com/ElrondNetwork/elrond-core-js)
+- [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
+- [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 
+[comment]: # (mx-context-auto)
 
 ## **General network parameters**
 
 General network parameters, such as the **chain ID**, **the minimum gas price**, **the minimum gas limit** and the **oldest acceptable transaction version** are available at the API endpoint [Get Network Configuration](/sdk-and-tools/rest-api/network#get-network-configuration).
 
-```
+```json
 {
     "config": {
         "erd_chain_id": "1",
@@ -53,6 +61,8 @@ General network parameters, such as the **chain ID**, **the minimum gas price**,
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ## **Nonce management**
 
 Each transaction broadcasted to the Network must have the **nonce** field set consistently with the **account nonce**. In the Network, transactions of a given sender address are processed in order, with respect to the transaction nonce.
@@ -60,6 +70,8 @@ Each transaction broadcasted to the Network must have the **nonce** field set co
 The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-nonce).
 
 **The nonce must be a strictly increasing number, scoped to a given sender.** The sections below describe common issues and possible solutions when managing the nonce for transaction construction.
+
+[comment]: # (mx-context-auto)
 
 ### **Issue: competing transactions**
 
@@ -71,6 +83,8 @@ Avoid competing transactions by maintaining a strictly increasing nonce sequence
 
 Although an explicit _transaction cancellation trigger_ is not yet available in the Network, cancellation of a transaction T1 with nonce 42 could be _possible_ if one broadcasts a second transaction T2 with same nonce 42, with higher gas price (and without a value to transfer) **immediately** (e.g. 1 second) after broadcasting T1.
 
+[comment]: # (mx-context-auto)
+
 ### **Issue: nonce gaps**
 
 If broadcasted transactions have their nonces higher than the current account nonce of the sender, this is considered a _nonce gap_, and the transactions will remain in the mempool unprocessed, until new transactions from the same sender arrive _to resolve the nonce gap -_ or until the transactions are swept from the mempool (sweeping takes place regularly).
@@ -78,6 +92,8 @@ If broadcasted transactions have their nonces higher than the current account no
 :::tip
 Avoid nonce gaps by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### **Issue: fetching a stale account nonce**
 
@@ -96,13 +112,39 @@ Avoid fetching stale account nonces by **periodically recalling the nonce.**
 Avoid recalling the nonce in between **rapidly sequenced transactions from the same sender** . For rapidly sequenced transactions, you have to programmatically manage, keep track of the account nonce using a **local mirror (copy) of the account nonce** and increment it appropriately.
 :::
 
+[comment]: # (mx-context-auto)
+
+### **Issue: sending large batches of transactions cause nonce gaps**
+
+Whenever sending a large batch of transactions, even if the node/gateway returned transaction hashes for each transaction in the batch and no error, there is no strict guarantee that those transactions will end up being executed.
+The reason is that the node will not immediately send each transaction or transaction batch but rather accumulate them in packages to be efficiently send through the p2p network.
+At this moment, the node might decide to drop one or more packet because it detected a possible p2p flooding condition. This can happen independent of the transaction sender, the number of transactions sent and so on.
+
+To handle this behavior, special care should be carried by the integrators. One possible way to handle this efficiently is to temporarily store all transactions that need to be sent on the network and continuously monitor the senders accounts involved if their nonces increased.
+If not, a resend of the required transaction is needed, otherwise the transaction might be discarded from the temporary storage as it was executed.
+
+We have implemented several components written in GO language that solve the transaction send issues along with the correct nonce management. 
+The source code can be found [here](https://github.com/multiversx/mx-sdk-go/tree/main/interactors/nonceHandlerV2)
+The main component is the `nonceTransactionsHandlerV2` that will create an address-nonce handler for each involved address. This address nonce handler will be specialized in the nonce and transactions sending mechanism for a single address and will be independent of the other addresses involved. 
+The main component has a few exported functionalities:
+- `ApplyNonceAndGasPrice` method that is able to apply the current handled nonce of the sender and the network's gas price on a provided transaction instance
+- `SendTransaction` method that will forward the provided transaction towards the proxy but also stores it internally in case it will need to be resent.
+- `DropTransactions` method that will clean all the stored transactions for a provided address.
+- `Close` cleanup method for the component.
+
+[comment]: # (mx-context-auto)
+
 ## **Gas limit computation**
 
 Please follow [Gas and Fees](/developers/gas-and-fees/overview/).
 
+[comment]: # (mx-context-auto)
+
 ## **Signing transactions**
 
-Please follow [Signing Transactions](/developers/signing-transactions/signing-transactions).
+Please follow [Signing Transactions](/developers/signing-transactions).
+
+[comment]: # (mx-context-auto)
 
 ## **Simulate transaction execution**
 

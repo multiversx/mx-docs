@@ -1,11 +1,12 @@
 ---
 id: erdgo
-title: erdgo
+title: Go SDK
 ---
 
-Elrond SDK for Golang
+[comment]: # (mx-abstract)
 
-**erdgo** can be found here: [elrond-sdk-erdgo](https://github.com/ElrondNetwork/elrond-sdk-erdgo/).
-It consists of Go helpers and utilities for interacting with the Blockchain.
+MultiversX SDK for Golang
 
-The SDK documentation can be found [here](https://pkg.go.dev/github.com/ElrondNetwork/elrond-sdk-erdgo).
+**erdgo** consists of Go helpers and utilities for interacting with the Blockchain. 
+
+The source code be found here: [mx-sdk-erdgo](https://github.com/multiversx/mx-sdk-erdgo).

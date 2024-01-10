@@ -2,8 +2,10 @@
 id: crowdfunding-p2
 title: The Crowdfunding Smart Contract (part 2)
 ---
-
+[comment]: # (mx-abstract)
 Define contract arguments, handle storage, process payments, define new types, write better tests
+
+[comment]: # (mx-context-auto)
 
 # **Configuring the contract**
 
@@ -35,11 +37,11 @@ The deadline being a block timestamp can be expressed as a regular 64-bits unsig
 
 Try to avoid the signed version as much as possible (unless negative values are really possible and needed). There are some caveats with BigInt argument serialization that can lead to subtle bugs.
 
-Also note that BigUint logic does not reside in the contract, but is built into the Elrond VM API, to not bloat the contract code.
+Also note that BigUint logic does not reside in the contract, but is built into the MultiversX VM API, to not bloat the contract code.
 
 Let's test that initialization works.
 
-```json,file=crowdfunding-init.scen.json
+```json title=crowdfunding-init.scen.json
 {
     "name": "crowdfunding deployment test",
     "steps": [
@@ -106,20 +108,22 @@ Note the added `"arguments"` field in `scDeploy` and the added fields in storage
 
 Run the following commands:
 
-```
-erdpy contract build
-erdpy contract test
+```python
+mxpy contract build
+mxpy contract test
 ```
 
 You should once again see this:
 
-```
+```python
 Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 1. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-# **Funding the contract**
+[comment]: # (mx-context-auto)
+
+## **Funding the contract**
 
 It is not enough to receive the funds, the contract also needs to keep track of who donated how much.
 
@@ -133,7 +137,7 @@ It is not enough to receive the funds, the contract also needs to keep track of 
     fn fund(&self) {
         let payment = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment);
+        self.deposit(&caller).update(|deposit| *deposit += &*payment);
     }
 ```
 
@@ -143,11 +147,11 @@ A few things to unpack:
 2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with #[payable].
 3. fund needs to also be explicitly declared as an endpoint. All `#[payable]`methods need to be marked `#[endpoint]`, but not the other way around.
 
-To test the function, we'll add a new test file, in the same `mandos` folder. Let's call it `crowdfunding-fund.scen.json` .
+To test the function, we'll add a new test file, in the same `scenarios` folder. Let's call it `crowdfunding-fund.scen.json` .
 
 To avoid duplicating the deployment code, we import it from `crowdfunding-init.scen.json` .
 
-```json,file=crowdfunding-fund.scen.json
+```json title=crowdfunding-fund.scen.json
 {
     "name": "crowdfunding funding",
     "steps": [
@@ -222,35 +226,37 @@ Explanation:
 
 Test it by running the commands again:
 
-```
-erdpy contract build
-erdpy contract test
+```python
+mxpy contract build
+mxpy contract test
 ```
 
 You should then see that both tests pass:
 
-```
+```python
 Scenario: crowdfunding-fund.scen.json ...   ok
 Scenario: crowdfunding-init.scen.json ...   ok
 Done. Passed: 2. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-# **Validation**
+[comment]: # (mx-context-auto)
+
+## **Validation**
 
 It doesn't make sense to fund after the deadline has passed, so fund transactions after a certain block timestamp must be rejected. The idiomatic way to do this is:
 
-```
+```rust
     #[endpoint]
     #[payable("EGLD")]
     fn fund(&self) {
         let payment = self.call_value().egld_value();
 
-        let current_time = self.blockchain().get_block_timstamp();
+        let current_time = self.blockchain().get_block_timestamp();
         require!(current_time < self.deadline().get(), "cannot fund after deadline");
 
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment);
+        self.deposit(&caller).update(|deposit| *deposit += &*payment);
     }
 ```
 
@@ -262,7 +268,7 @@ It doesn't make sense to fund after the deadline has passed, so fund transaction
 
 We'll create another test file to verify that the validation works: `test-fund-too-late.scen.json` .
 
-```json,file=crowdfunding-fund-too-late.scen.json
+```json title=crowdfunding-fund-too-late.scen.json
 {
     "name": "trying to fund one block too late",
     "steps": [
@@ -304,7 +310,7 @@ We branch this time from `crowdfunding-fund.scen.json`, where we already had a d
 
 By building and testing the contract again, you should see that all three tests pass:
 
-```
+```python
 Scenario: crowdfunding-fund-too-late.scen.json ...   ok
 Scenario: crowdfunding-fund.scen.json ...   ok
 Scenario: crowdfunding-init.scen.json ...   ok
@@ -312,7 +318,9 @@ Done. Passed: 3. Failed: 0. Skipped: 0.
 SUCCESS
 ```
 
-# **Querying for the contract status**
+[comment]: # (mx-context-auto)
+
+## **Querying for the contract status**
 
 The contract status can be known by anyone by looking into the storage and on the blockchain, but it is really inconvenient right now. Let's create an endpoint that gives this status directly. The status will be one of: `FundingPeriod`, `Successful` or `Failed`. We could use a number to represent it in code, but the nice way to do it is with an enum. We will take this opportunity to show how to create a serializable type that can be taken as argument, returned as result or saved in storage.
 
@@ -328,7 +336,11 @@ pub enum Status {
 ```
 
 Make sure to add it outside the contract trait.
+Don't forget to add the import for the derive types. This can be place on top off the file next to the other import.
 
+```rust
+multiversx_sc::derive_imports!();
+```
 The `#[derive]` keyword in Rust allows you to automatically implement certain traits for your type. `TopEncode` and `TopDecode` mean that objects of this type are serializable, which means they can be interpreted from/to a string of bytes.
 
 `TypeAbi` is needed to export the type when you want to interact with the already deployed contract. This is out of scope of this tutorial though.
@@ -351,7 +363,7 @@ We can now use the type Status just like we use the other types, so we can write
 
   #[view(getCurrentFunds)]
   fn get_current_funds(&self) -> BigUint {
-      self.blockchain().get_sc_balance(&TokenIdentifier::egld(), 0)
+      self.blockchain().get_sc_balance(&EgldOrEsdtTokenIdentifier::egld(), 0)
   }
 ```
 
@@ -359,54 +371,52 @@ To test this method, we append one more step to the last test we worked on, `tes
 
 ```json
 {
-    "name": "trying to fund one block too late",
-    "steps": [
-        {
-            "step": "externalSteps",
-            "path": "crowdfunding-fund.scen.json"
-        },
-        {
-            "step": "setState",
-            "currentBlockInfo": {
-                "blockTimestamp": "123,001"
-            }
-        },
-        {
-            "step": "scCall",
-            "txId": "fund-too-late",
-            "tx": {
-                "from": "address:donor1",
-                "to": "sc:crowdfunding",
-                "egldValue": "10,000,000,000",
-                "function": "fund",
-                "arguments": [],
-                "gasLimit": "100,000,000",
-                "gasPrice": "0"
-            },
-            "expect": {
-                "out": [],
-                "status": "4",
-                "message": "str:cannot fund after deadline",
-                "gas": "*",
-                "refund": "*"
-            }
-        },
-        {
-            "step": "scQuery",
-            "txId": "check-status",
-            "tx": {
-                "to": "sc:crowdfunding",
-                "function": "status",
-                "arguments": []
-            },
-            "expect": {
-                "out": [
-                    "2"
-                ],
-                "status": "0"
-            }
-        }
-    ]
+  "name": "trying to fund one block too late",
+  "steps": [
+    {
+      "step": "externalSteps",
+      "path": "crowdfunding-fund.scen.json"
+    },
+    {
+      "step": "setState",
+      "currentBlockInfo": {
+        "blockTimestamp": "123,001"
+      }
+    },
+    {
+      "step": "scCall",
+      "txId": "fund-too-late",
+      "tx": {
+        "from": "address:donor1",
+        "to": "sc:crowdfunding",
+        "egldValue": "10,000,000,000",
+        "function": "fund",
+        "arguments": [],
+        "gasLimit": "100,000,000",
+        "gasPrice": "0"
+      },
+      "expect": {
+        "out": [],
+        "status": "4",
+        "message": "str:cannot fund after deadline",
+        "gas": "*",
+        "refund": "*"
+      }
+    },
+    {
+      "step": "scQuery",
+      "txId": "check-status",
+      "tx": {
+        "to": "sc:crowdfunding",
+        "function": "status",
+        "arguments": []
+      },
+      "expect": {
+        "out": ["2"],
+        "status": "0"
+      }
+    }
+  ]
 }
 ```
 
@@ -416,7 +426,9 @@ Note the call to "status" at the end and the result `"out": [ "2" ]` , which is 
 
 Contract functions can return in principle any number of results, that is why `"out"` is a list.
 
-# **Claim functionality**
+[comment]: # (mx-context-auto)
+
+## **Claim functionality**
 
 Finally, let's add the `claim` method. The `status` method we just implemented helps us keep the code tidy:
 
@@ -448,18 +460,19 @@ Finally, let's add the `claim` method. The `status` method we just implemented h
     }
 ```
 
-The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.  
+The only new function here is `self.send().direct_egld()`, which simply forwards EGLD from the contract to the given address.
 
-# **The final contract code**
+[comment]: # (mx-context-auto)
+
+## **The final contract code**
 
 If you followed all the steps presented until now, you should have ended up with a contract that looks something like:
 
-
-```rust,file=final.rs
+```rust title=final.rs
 #![no_std]
 
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 #[derive(TopEncode, TopDecode, TypeAbi, PartialEq, Eq, Clone, Copy, Debug)]
 pub enum Status {
@@ -468,7 +481,7 @@ pub enum Status {
     Failed,
 }
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait Crowdfunding {
     #[init]
     fn init(&self, target: BigUint, deadline: u64) {
@@ -493,7 +506,7 @@ pub trait Crowdfunding {
         );
 
         let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += payment);
+        self.deposit(&caller).update(|deposit| *deposit +=  &*payment);
     }
 
     #[view]
@@ -562,14 +575,16 @@ pub trait Crowdfunding {
 
 As an exercise, try to add some more tests, especially ones involving the claim function.
 
-# **Next steps**
+[comment]: # (mx-context-auto)
 
-This concludes the first Rust elrond-wasm tutorial.
+## **Next steps**
 
-For more detailed documentation, visit [https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html](https://docs.rs/elrond-wasm/0.35.0/elrond_wasm/index.html)
+This concludes the first Rust multiversx-sc tutorial.
 
-If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/ElrondNetwork/elrond-wasm-rs/tree/v0.35.0/contracts/examples
+For more detailed documentation, visit [https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/](https://docs.rs/multiversx-sc/0.39.0/multiversx_sc/)
+
+If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check here: https://github.com/multiversx/mx-sdk-rs/tree/v0.39.0/contracts/examples
 
 :::tip
-When entering directly on the `elrond-wasm` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.
+When entering directly on the `multiversx-sc` repository on GitHub, you will first see the `master` branch. While this is at all times the latest version of the contracts, they might sometimes rely on unreleased features and therefore not compile outside of the repository. Getting the examples from the last released version is, however, always safe.
 :::

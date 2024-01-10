@@ -25,7 +25,7 @@ fn write_code_block<P: AsRef<Path>>(path: P, code_block: &CodeBlock) {
 }
 
 fn main() {
-    fs::create_dir_all("../crowdfunding-esdt/mandos").unwrap();
+    fs::create_dir_all("../crowdfunding-esdt/scenarios").unwrap();
     fs::create_dir_all("../crowdfunding-esdt/src").unwrap();
 
     let code_blocks = extract_crowdfunding_tutorial_code_blocks();
@@ -34,18 +34,18 @@ fn main() {
             match filename.as_str() {
                 "Cargo.toml" => write_code_block("../crowdfunding-esdt/Cargo.toml", code_block),
                 "final.rs" => {
-                    write_code_block("../crowdfunding-esdt/src/crowdfunding_main.rs", code_block)
+                    write_code_block("../crowdfunding-esdt/src/crowdfunding.rs", code_block)
                 }
                 "crowdfunding-init.scen.json" => write_code_block(
-                    "../crowdfunding-esdt/mandos/crowdfunding-init.scen.json",
+                    "../crowdfunding-esdt/scenarios/crowdfunding-init.scen.json",
                     code_block,
                 ),
                 "crowdfunding-fund.scen.json" => write_code_block(
-                    "../crowdfunding-esdt/mandos/crowdfunding-fund.scen.json",
+                    "../crowdfunding-esdt/scenarios/crowdfunding-fund.scen.json",
                     code_block,
                 ),
                 "crowdfunding-fund-too-late.scen.json" => write_code_block(
-                    "../crowdfunding-esdt/mandos/crowdfunding-fund-too-late.scen.json",
+                    "../crowdfunding-esdt/scenarios/crowdfunding-fund-too-late.scen.json",
                     code_block,
                 ),
                 _ => {}

@@ -1,11 +1,12 @@
 ---
 id: erdcpp
-title: erdcpp
+title: C++ SDK
 ---
 
-Elrond SDK for C++
+[comment]: # (mx-abstract)
 
-**erdcpp** can be found here: [elrond-sdk-erdcpp](https://github.com/ElrondNetwork/elrond-sdk-erdcpp/).
-It consists of C++ helpers and utilities for interacting with the Blockchain.
+MultiversX SDK for C++
 
-The SDK documentation can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdcpp/).
+**erdcpp** consists of C++ helpers and utilities for interacting with the Blockchain. 
+
+The source code be found here: [mx-sdk-erdcpp](https://github.com/multiversx/mx-sdk-erdcpp). For more details, follow [the documentation](https://github.com/multiversx/mx-sdk-erdcpp).

@@ -3,11 +3,15 @@ id: esdt-tokens-integration-guide
 title: ESDT tokens integration guide
 ---
 
+[comment]: # (mx-abstract)
+
 ## **Introduction**
 Integrating ESDT tokens support can be done alongside native EGLD integration, so one should refer to the [egld-integration-guide](/integrators/egld-integration-guide).
 
 The only differences are internal ways to store ESDT tokens alongside with their token identifier and number of decimals and different approaches
 for identifying and parsing ESDT transactions.
+
+[comment]: # (mx-context-auto)
 
 ## **ESDT transactions parsing**
 Considering that the platform which wants to support ESDT tokens already supports EGLD transfers, this section will
@@ -21,6 +25,8 @@ receiver can be further parsed.
 One has to follow these steps:
 - check if the transaction is an ESDT transfer (data field format is `ESDTTransfer@<tokenID hexadecimal>@<amount hexadecimal>`. More details [here](/developers/esdt-tokens#transfers))
 - parse the tokens transfer details from Logs&Events. More details [here](/developers/esdt-tokens#parse-fungible-tokens-transfer-logs)
+
+[comment]: # (mx-context-auto)
 
 ### Example
 Let's suppose we are watching these addresses:
@@ -51,27 +57,34 @@ When we find such a transaction, we will fetch the logs of the transaction, as d
 The logs will provide us information about the receiver, the token and the amount to be transferred. If the log is there, we are sure that 
 the transfer is successful, and we can start processing with the extracted data.
 
+[comment]: # (mx-context-auto)
+
 ## **Sending ESDT tokens**
 Sending ESDT tokens to a given recipient can be done via preparing and broadcasting to the network a transaction that 
 follows the format described [here](/developers/esdt-tokens#transfers).
 
 Also, there is support for building tokens transfer transaction on many SDKs. A few examples are:
-- [erdjs - ESDTTransferPayloadBuilder](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/tokenTransferBuilders.ts)
-- [erdjava - ESDTTransferBuilder](https://github.com/ElrondNetwork/elrond-sdk-erdjava/blob/main/src/main/java/elrond/esdt/builders/ESDTTransferBuilder.java)
+- [sdk-js - ESDTTransferPayloadBuilder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/tokenTransferBuilders.ts)
+- [erdjava - ESDTTransferBuilder](https://github.com/multiversx/mx-sdk-erdjava/blob/main/src/main/java/multiversx/esdt/builders/ESDTTransferBuilder.java)
+
+[comment]: # (mx-context-auto)
 
 ## **Balances check**
 From time to time, or for safety reasons before performing a transaction, an integrator would want to check the tokens balance of some
 addresses. This can be performed via [Get address token balance endpoint](/developers/esdt-tokens#get-balance-for-an-address-and-an-esdt-token).
 
+[comment]: # (mx-context-auto)
+
 ## **Getting tokens properties**
-Each tokens has some properties such as the name, the ticker, the token identifier or the number of decimals. 
-These properties can be fetch via an API call described [here](/developers/esdt-tokens#get-esdt-token-properties).
+Each token has some properties such as the name, the ticker, the token identifier or the number of decimals. 
+These properties can be fetched via an API call described [here](/developers/esdt-tokens#get-esdt-token-properties).
+
+[comment]: # (mx-context-auto)
 
 ## **Useful tools**
 - ESDT documentation can be found [here](/developers/esdt-tokens).
 - ESDT API docs can be found [here](/developers/esdt-tokens#rest-api).
-- erdjs helper functions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/release/v9/src/esdtHelpers.ts).
-- erdjs token transfer transactions builder can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/tokenTransferBuilders.ts).
-- erdjava helper functions can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjava/blob/esdt-support/src/main/java/elrond/esdt/ESDTFunctions.java).
-- erdjava token transfer transactions builder can be found [here](https://github.com/ElrondNetwork/elrond-sdk-erdjava/blob/main/src/main/java/elrond/esdt/builders/ESDTTransferBuilder.java).
-- [@elrondnetwork/transaction-decoder](https://www.npmjs.com/package/@elrondnetwork/transaction-decoder).
+- sdk-js helper functions can be found [here](https://github.com/multiversx/mx-sdk-js-core/blob/release/v9/src/esdtHelpers.ts).
+- sdk-js token transfer transactions builder can be found [here](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/tokenTransferBuilders.ts).
+- erdjava token transfer transactions builder can be found [here](https://github.com/multiversx/mx-sdk-erdjava/blob/main/src/main/java/multiversx/esdt/builders/ESDTNFTTransferBuilder.java).
+- [@multiversx/sdk-transaction-decoder](https://www.npmjs.com/package/@multiversx/sdk-transaction-decoder).

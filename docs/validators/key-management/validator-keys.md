@@ -3,6 +3,13 @@ id: validator-keys
 title: Validator Keys
 ---
 
+[comment]: # (mx-abstract)
+
+Each validator required a private key to be used for signing blocks. This key is called the **Validator Key**.
+The Validator Key is also used to sign the consensus messages that the validator sends to the other validators.
+
+[comment]: # (mx-context-auto)
+
 ## Validator key format
 
 A file containing the keys for your node.
@@ -39,17 +46,26 @@ Always save and protect **private keys**, they are like your username + password
 
 _Public keys_ are like your phone number - no harm in others knowing it, it actually is needed for some scenarios. Still, only share it on a need to basis, like you would do with your own phone number.
 
+[comment]: # (mx-context-auto)
+
 ## How to generate a new key
 
 The easiest way to generate a new validator key is by using the `keygenerator` tool that resides near the node. 
 
-- [https://github.com/ElrondNetwork/elrond-go/tree/master/cmd/keygenerator](https://github.com/ElrondNetwork/elrond-go/tree/master/cmd/keygenerator)
+- [https://github.com/multiversx/mx-chain-go/tree/master/cmd/keygenerator](https://github.com/multiversx/mx-chain-go/tree/master/cmd/keygenerator)
 
-How to generate a new validator key:
+How to generate a new validator key if golang is already set on the host:
 
 ```shell
-$ git clone https://github.com/ElrondNetwork/elrond-go.git
-$ cd elrond-go/cmd/keygenerator
+$ git clone https://github.com/multiversx/mx-chain-go.git
+$ cd mx-chain-go/cmd/keygenerator
 $ go build
+$ ./keygenerator --key-type validator
+```
+
+Alternatively, if you've already installed a node on the host, you can issue the following command:
+
+```shell
+$ cd ~/elrond-utils/
 $ ./keygenerator --key-type validator
 ```

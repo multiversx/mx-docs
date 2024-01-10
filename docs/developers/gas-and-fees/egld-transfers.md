@@ -3,6 +3,8 @@ id: egld-transfers
 title: EGLD transfers (move balance transactions)
 ---
 
+[comment]: # (mx-context-auto)
+
 ## Formula
 
 For EGLD transfers, the **actual gas cost** of processing is easy to determine precisely, since it only contains the **value movement and data handling** component. The **gas limit** should be set to the **actual gas cost**, according to the previously depicted formula:
@@ -12,6 +14,8 @@ tx.gasLimit =
     networkConfig.erd_min_gas_limit + 
     networkConfig.erd_gas_per_data_byte * lengthOf(tx.data)
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Examples
 

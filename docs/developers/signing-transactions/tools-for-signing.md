@@ -2,15 +2,18 @@
 id: tools-for-signing
 title: Tools for signing
 ---
+[comment]: # (mx-abstract)
 
-In order to sign a transaction without actually dispatching it, one can use [erdpy](/sdk-and-tools/erdpy/erdpy) or [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli).
+In order to sign a transaction without actually dispatching it, several tools can be used. Two of the most popular ones are: [mxpy](/sdk-and-tools/sdk-py) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
 
-## **Sign using [erdpy](/sdk-and-tools/erdpy/erdpy) (Command Line Interface)**
+[comment]: # (mx-context-auto)
+
+## **Sign using [mxpy](/sdk-and-tools/sdk-py/) (Command Line Interface)**
 
 Using a **pem** file:
 
 ```
-$ erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
+$ mxpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz \
  --pem=aliceKey.pem --pem-index=0 --outfile=myTransaction.json
 
@@ -19,7 +22,7 @@ $ erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
 Using a JSON wallet key (and its password):
 
 ```
-erdpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
+mxpy tx new --nonce=41 --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz \
  --keyfile=walletKeyOfAlice.json --passfile=passwordOfAlice.txt \
  --outfile=myTransaction.json
@@ -47,7 +50,9 @@ In either case, the output file looks like this:
 }
 ```
 
-## **Sign using [erdwalletjs-cli](/sdk-and-tools/erdwalletjs-cli)**
+[comment]: # (mx-context-auto)
+
+## **Sign using [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli)**
 
 Given an unsigned transaction in a JSON file:
 
@@ -67,7 +72,7 @@ Given an unsigned transaction in a JSON file:
 You can sign it as follows:
 
 ```
-$ erdwalletjs sign -i ./aliceToBob.json -o ./aliceToBobSigned.json \
+$ mxjs-wallet sign -i ./aliceToBob.json -o ./aliceToBobSigned.json \
  -k walletKeyOfAlice.json -p passwordOfAlice.txt
 ```
 
@@ -88,6 +93,8 @@ The signed transaction looks like this:
 }
 
 ```
+
+[comment]: # (mx-context-auto)
 
 ## **Other signing tools**
 
