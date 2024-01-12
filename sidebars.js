@@ -316,6 +316,7 @@ const sidebars = {
     Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     Validators: [
       "validators/overview",
+      "validators/staking-v4",
       "validators/system-requirements",
       {
         type: "category",
