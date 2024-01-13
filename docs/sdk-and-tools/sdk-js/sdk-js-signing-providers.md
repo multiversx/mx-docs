@@ -11,27 +11,40 @@ This page will guide you through the process of integrating the **sdk-js signing
 Note that for most purposes, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
+[comment]: # (mx-context-auto)
+
+## Anatomy of a signing provider
+
+Generally speaking, a signing provider is a component that supports the following use-cases:
+
+ - **Login**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
+ - **Login using Native Authentication**: once the user decides to login, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and is asked to sign it in order to prove her MultiversX identity. The user reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
+  - **Logout**: ... 
+  - **Sign transactions**:
+  - **Sign messages**:
+
+## Implementations (available providers)
+
+For MultiversX dApps, the following signing providers are available:
+
+- [Web wallet provider](https://github.com/multiversx/mx-sdk-js-web-wallet-provider), compatible with the [Web Wallet](/wallet/web-wallet) and [xAlias](https://xalias.com)
+- [Browser extension provider](https://github.com/multiversx/mx-sdk-js-extension-provider), compatible with the [MultiversX DeFi Wallet](/wallet/wallet-extension)
+- [WalletConnect provider](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider), compatible with [xPortal App](/wallet/xportal)
+- [Hardware wallet provider](https://github.com/multiversx/mx-sdk-js-hw-provider), compatible with [Ledger](/wallet/ledger)
+
 :::important
-The code samples depicted on this page can also be found on the [**sdk-js examples repository**](https://github.com/multiversx/mx-sdk-js-examples).
+The code samples depicted on this page are written in JavaScript, and can also be found [on GitHub](https://github.com/multiversx/mx-sdk-js-examples/tree/main/signing-providers). There, the signing providers are integrated into a basic web page (for example purposes).
 :::
-
-The following signing providers are available:
-
-- Web Wallet Provider
-- xAlias Provider - from the perspective of a dApp, this one follows the interface of the Web Wallet provider (above)
-- Extension Provider (MultiversX DeFi Wallet)
-- WalletConnect Provider (xPortal App)
-- Hardware Wallet (Ledger) Provider
 
 [comment]: # (mx-context-auto)
 
-## The Web Wallet Provider
+## The web wallet provider
 
 :::note
 Make sure you have a look over the [webhooks](/wallet/webhooks), in advance.
 :::
 
-[`@multiversx/sdk-web-wallet-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-provider) allows the users of a dApp to login and sign transactions using the [Web Wallet](/wallet/web-wallet).
+[`@multiversx/sdk-web-wallet-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-provider) allows the users of a dApp to login and sign data using the [Web Wallet](/wallet/web-wallet).
 
 In order to create an instance of the provider, do as follows:
 
@@ -132,7 +145,7 @@ for (const plainTransaction of plainSignedTransactions) {
 
 [comment]: # (mx-context-auto)
 
-## The Extension Provider (MultiversX DeFi Wallet)
+## The browser extension provider
 
 :::note
 Make sure you have a look over [this page](/wallet/wallet-extension), in advance.
@@ -370,7 +383,7 @@ console.log(message.toJSON());
 
 [comment]: # (mx-context-auto)
 
-## The Hardware Wallet (Ledger) Provider
+## The hardware wallet provider
 
 :::note
 Make sure you have a look over [this page](/wallet/ledger), in advance.
