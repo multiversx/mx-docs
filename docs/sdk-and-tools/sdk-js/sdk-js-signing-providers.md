@@ -88,8 +88,8 @@ Once the user opens her wallet, the web wallet issues a redirected back to `call
 import qs from "qs";
 
 const queryString = window.location.search.slice(1);
-const params = qs.parse(queryString);
-console.log(params.address);
+const queryStringParams = qs.parse(queryString);
+console.log(queryStringParams.address);
 ```
 
 In order to log out, do as follows:
@@ -113,6 +113,15 @@ const nativeAuthInitialPart = await nativeAuthClient.initialize();
 
 const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
 await provider.login({ callbackUrl, token: nativeAuthInitialPart });
+```
+
+Once the flow returns to the dApp, the `address` and `signature` parameters are available. The actual **native authentication token** is obtained upon an additional processing step:
+
+```js
+const address = queryStringParams.address;
+const signature = queryStringParams.signature;
+
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
 ```
 
 [comment]: # (mx-context-auto)
@@ -223,8 +232,9 @@ The `login()` method supports the `token` parameter, for **the native authentica
 const nativeAuthInitialPart = await nativeAuthClient.initialize();
 await provider.login({ token: nativeAuthInitialPart });
 
-console.log("Address:", provider.account.address);
-console.log("Token signature:", provider.account.signature);
+const address = provider.account.address;
+const signature = provider.account.signature;
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
 ```
 
 [comment]: # (mx-context-auto)
@@ -355,8 +365,9 @@ The `login()` method supports the `token` parameter, for **the native authentica
 const nativeAuthInitialPart = await nativeAuthClient.initialize();
 await provider.login({ approval, token: nativeAuthInitialPart });
 
-console.log("Address:", provider.address);
-console.log("Token signature:", provider.signature);
+const address = await this.provider.getAddress();
+const signature = await this.provider.getSignature();
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
 ```
 
 :::important
@@ -468,8 +479,7 @@ const nativeAuthInitialPart = await nativeAuthClient.initialize();
 const nativeAuthInitialPartAsBuffer =  Buffer.from(nativeAuthInitialPart);
 const { address, signature } = await provider.tokenLogin({ addressIndex: 0, token: nativeAuthInitialPartAsBuffer });
 
-console.log("Address:", address);
-console.log("Signature:", signature.hex());
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature.toString("hex"));
 ```
 
 [comment]: # (mx-context-auto)
