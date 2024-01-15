@@ -55,13 +55,13 @@ Congratulations, you have successfully **created your xAlias account**!
 
 ## Sign In
 
-You can always sign-in to your xAlias account by navigating to **[xAlias.com](https://xalias.com)**, then clicking on **Sign In**. You will be asked to confirm the Google account, then you will reach the **xAlias Dashboard**.
+You can always sign-in to your xAlias account by navigating to **[xAlias.com](https://xalias.com)**, then clicking on **Sign In**. You will be asked to confirm the Google account, then reach the **xAlias Dashboard**.
 
 ## xAlias Dashboard
 
 Upon the initial sign-up, and each time you sign-in to xAlias, you will be presented the **xAlias Dashboard**.
 
-Here, you will be able to see your wallet address (the one starting with _erd1_) and share it with others, so they can send you EGLD or other tokens.‌ Additionally, you can click on **Open in Explorer** and see the all the blockchain transactions associated with your wallet address (blockchain address).
+Here, you will be able to see the wallet address (the one starting with _erd1_) and share it with others, so they can send you EGLD or other tokens.‌ Additionally, you can click on **Open in Explorer** and see the all the blockchain transactions associated with your wallet address (blockchain address).
 
 ![img](/wallet/xalias/xalias_dashboard.png)
 
@@ -83,7 +83,9 @@ Then, you will reach the following consent screen:
 
 ![img](/wallet/xalias/xalias_dapp_consent.png)
 
-Upon confirmation, you will be redirected to the dApp (which is informed about your blockchain address - **not your email address, of course**). Then, as a user of the dApp (of any dApp), you might reach a point where you need to **sign a transaction** - then, you will be redirected to xAlias:
+Upon confirmation, you will be redirected to the dApp (which is informed about your blockchain address - **not your email address, of course**).
+
+Then, as a user of the dApp (of any dApp), you might reach a point where you need to **sign a transaction** - then, you will be redirected to xAlias:
 
 ![img](/wallet/xalias/xalias_dapp_sign_transaction.png)
 

@@ -18,7 +18,7 @@ Note that for most purposes, **we recommend using [sdk-dapp](https://github.com/
 Generally speaking, a signing provider is a component that supports the following use-cases:
 
  - **Login (trivial flow, not recommended)**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
- - **Login using native authentication (recommended)**: once the user decides to login, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
+ - **Login using native authentication (recommended)**: once the user decides to login, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and she is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
   - **Logout**: once the user decides to log out from the dApp, the latter should ask the wallet to do so. Once the user is signed out, the flow continues back to the dApp.
   - **Sign transactions**: while interacting with the dApp, the user might be asked to sign one or more transactions. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed transactions, ready to be broadcasted to the Network.
   - **Sign messages**: while interacting with the dApp, the user might be asked to sign an arbitrary message. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed message.
@@ -99,7 +99,7 @@ const callbackUrl = window.location.href.split("?")[0];
 await provider.logout({ callbackUrl: callbackUrl });
 ```
 
-Though, most often, the dApps (or their server-side components) want to **reliably assign an off-chain user identity to a MultiversX address**. For this, the signing providers support an extra parameter to the `login()` method: **the initial part of the native authentication token**. That piece of data, generally crafted with the aid of [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client), is signed with the user's wallet, at login-time, then made available to the dApp.
+Though, most often, the dApps (or their server-side components) want to **reliably assign an off-chain user identity to a MultiversX address**. For this, the signing providers support an extra parameter to the `login()` method: **the initial part of the native authentication token**. That piece of data, generally crafted with the aid of [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client), is signed with the user's wallet at login-time, and the signature is made available to the dApp, which, in turn, packs it into the actual **native authentication token**.
 
 :::important
 We always recommend using the **native authentication** flow, instead of the trivial one. That is, always pass the `token` parameter to the `login()` method. This is applicable to all signing providers.
@@ -115,12 +115,11 @@ const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
 await provider.login({ callbackUrl, token: nativeAuthInitialPart });
 ```
 
-Once the flow returns to the dApp, the `address` and `signature` parameters are available. The actual **native authentication token** is obtained upon an additional processing step:
+Once the flow returns to the dApp, the `address` and `signature` parameters are available. The actual **native authentication token** is obtained upon an additional processing step - a re-packing, by means of `NativeAuthClient.getToken()`:
 
 ```js
 const address = queryStringParams.address;
 const signature = queryStringParams.signature;
-
 const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
 ```
 
@@ -174,13 +173,13 @@ Messages can be signed as follows:
 import { SignableMessage } from "@multiversx/sdk-core";
 
 const message = new SignableMessage({ message: "hello" });
-await this.provider.signMessage(message, { callbackUrl });
+await provider.signMessage(message, { callbackUrl });
 ```
 
 Upon signing the transactions, the user is redirected back to `callbackUrl`, while the _query string_ includes the signature of the message. The signature can be retrieved as follows:
 
 ```js
-const signature = this.provider.getMessageSignatureFromWalletUrl();
+const signature = provider.getMessageSignatureFromWalletUrl();
 ```
 
 [comment]: # (mx-context-auto)
@@ -365,8 +364,8 @@ The `login()` method supports the `token` parameter, for **the native authentica
 const nativeAuthInitialPart = await nativeAuthClient.initialize();
 await provider.login({ approval, token: nativeAuthInitialPart });
 
-const address = await this.provider.getAddress();
-const signature = await this.provider.getSignature();
+const address = await provider.getAddress();
+const signature = await provider.getSignature();
 const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
 ```
 
