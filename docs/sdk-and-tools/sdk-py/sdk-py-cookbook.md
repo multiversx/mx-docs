@@ -113,7 +113,7 @@ transaction = Transaction(
     gas_limit=50000,
     chain_id="D",
     nonce=77,
-    amount=1000000000000000000
+    value=1000000000000000000
 )
 
 print(transaction.__dict__)
@@ -132,7 +132,7 @@ transaction = Transaction(
     gas_limit=50000,
     chain_id="D",
     nonce=77,
-    amount=1000000000000000000,
+    value=1000000000000000000,
     data=b"for the book"
 )
 
@@ -144,7 +144,7 @@ Alternatively, we can create an EGLD transfer using a **transaction factory** (a
 ```
 from multiversx_sdk_core.transaction_factories import TransactionsFactoryConfig
 
-config = TransactionsFactoryConfig(chain_id="D")
+config = TransactionsFactoryConfig("D")
 ```
 
 The **transaction factory** is parametrized at instantiation, and the transaction is obtained by invoking the `create_transaction...` method:
@@ -293,6 +293,7 @@ print(relayed_tx.__dict__)
 ```
 from multiversx_sdk_core.transaction_builders.relayed_v2_builder import RelayedTransactionV2Builder
 from multiversx_sdk_wallet.user_signer import UserSigner
+
 
 signer = UserSigner.from_pem_file(Path("./testwallets/bob.pem"))
 
@@ -548,13 +549,13 @@ signer = UserSigner.from_pem_file(Path("./testwallets/alice.pem"))
 Signing a transaction:
 
 ```
-from multiversx_sdk_core import Transaction
+from multiversx_sdk_core import Transaction, TransactionComputer
 
 tx = Transaction(
     nonce=90,
     sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
     receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
-    amount=1000000000000000000,
+    value=1000000000000000000,
     gas_limit=50000,
     chain_id="D"
 )
@@ -741,5 +742,4 @@ tx_on_network = provider.get_transaction("9270a6879b682a7b310c659f58b641ccdd5f08
 print("Status:", tx_on_network.status)
 print("Is completed:", tx_on_network.is_completed)
 ```
-
 <!-- END_NOTEBOOK -->
