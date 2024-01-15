@@ -170,21 +170,21 @@ Suppose we have the following auction list, and 3 available slots:
 +--------+------------------+------------------+-------------------+--------------+-----------------+-------------------------+
 | Owner  | Num staked nodes | Num active nodes | Num auction nodes | Total top up | Top up per node | Auction list nodes      |
 +--------+------------------+------------------+-------------------+--------------+-----------------+-------------------------+
-| owner1 | 3                | 2                | 1                 | 3666         | 1222            | pubKey1                 |
+| owner1 | 3                | 2                | 1                 | 3669         | 1223            | pubKey1                 |
 | owner2 | 3                | 1                | 2                 | 2555         | 851             | pubKey2, pubKey3        |
-| owner3 | 2                | 1                | 1                 | 2444         | 1222            | pubKey4                 |
-| owner4 | 4                | 1                | 3                 | 2666         | 666             | pubKey5, pubKe6, pubKe7 |
+| owner3 | 2                | 1                | 1                 | 2446         | 1223            | pubKey4                 |
+| owner4 | 4                | 1                | 3                 | 2668         | 667             | pubKey5, pubKe6, pubKe7 |
 +--------+------------------+------------------+-------------------+--------------+-----------------+-------------------------+  
 ```
 
 For the configuration above:
 
-- Minimum possible `topUp per node` = 666, considering `owner4` will have all of his **3 auction nodes selected**
-    - owner4's total top up/(1 active node + 3 auction nodes) = 2666 / 4 = 666
-- Maximum possible `topUp per node` = 1333, considering `owner4` will only have **one of his auction nodes selected**
-    - owner4's total top up/(1 active node + 1 auction node) = 2666 / 2 = 1333
+- Minimum possible `topUp per node` = 667, considering `owner4` will have all of his **3 auction nodes selected**
+    - owner4's total top up/(1 active node + 3 auction nodes) = 2668 / 4 = 667
+- Maximum possible `topUp per node` = 1334, considering `owner4` will only have **one of his auction nodes selected**
+    - owner4's total top up/(1 active node + 1 auction node) = 2668 / 2 = 1334
 
-Based on the above interval: `[666, 1333]`, we compute the `minimum required topUp per node` to be qualified from the
+Based on the above interval: `[667, 1334]`, we compute the `minimum required topUp per node` to be qualified from the
 auction list. We gradually increase from min to max possible topUp per node with a step, such that we can fill
 the `available slots`. At each step, we compute for each owner what's the maximum number of nodes that they could run by
 distributing their total topUp per fewer auction nodes, leaving their other nodes as unqualified in the auction list.
@@ -192,7 +192,7 @@ This is a soft auction selection mechanism, since it is dynamic at each step and
 unstake" their nodes so that their topUp per node would be redistributed (and higher). This threshold ensures that we
 maximize the number of owners that will be selected, as well as their number of auction nodes.
 
-In this example, if we use a step of 10 EGLD in the `[666, 1333]` interval, the `minimum required topUp per node` would
+In this example, if we use a step of 10 EGLD in the `[667, 1334]` interval, the `minimum required topUp per node` would
 be 1216, such that:
 
 ![](/validators/stakingV4/soft-auction2.png)
@@ -201,22 +201,22 @@ be 1216, such that:
 +--------+------------------+----------------+--------------+-------------------+-----------------------------+------------------+---------------------------+-----------------------------+
 | Owner  | Num staked nodes | TopUp per node | Total top up | Num auction nodes | Num qualified auction nodes | Num active nodes | Qualified top up per node | Selected auction list nodes |
 +--------+------------------+----------------+--------------+-------------------+-----------------------------+------------------+---------------------------+-----------------------------+
-| owner1 | 3                | 1222           | 3666         | 1                 | 1                           | 2                | 1222                      | pubKey1                     |
+| owner1 | 3                | 1223           | 3669         | 1                 | 1                           | 2                | 1223                      | pubKey1                     |
 | owner2 | 3                | 851            | 2555         | 2                 | 1                           | 1                | 1277                      | pubKey2                     |
-| owner3 | 2                | 1222           | 2444         | 1                 | 1                           | 1                | 1222                      | pubKey4                     |
-| owner4 | 4                | 666            | 2666         | 3                 | 1                           | 1                | 1333                      | pubKey5                     |
+| owner3 | 2                | 1223           | 2446         | 1                 | 1                           | 1                | 1223                      | pubKey4                     |
+| owner4 | 4                | 667            | 2668         | 3                 | 1                           | 1                | 1334                      | pubKey5                     |
 +--------+------------------+----------------+--------------+-------------------+-----------------------------+------------------+---------------------------+-----------------------------+
 ```
 
-- `owner1` possesses one auction node, `pubKey1`, with a qualified topUp per node of 1222, surpassing the threshold of
+- `owner1` possesses one auction node, `pubKey1`, with a qualified topUp per node of 1223, surpassing the threshold of
     1216.
 - `owner2` holds two auction nodes, `pubKey2` and `pubKey3`, with a topUp per node of 851. By leaving one
   node (`pubKey3`) in the auction while selecting only one (`pubKey2`), the topUp per node is rebalanced to 1277 (
   2555/2), exceeding the minimum threshold of 1216.
-- `owner3` has one auction node, `pubKey4`, with a qualified topUp per node of 1222, surpassing the threshold of 1216.
-- `owner4` possesses three auction nodes, `pubKey5`, `pubKey6`, and `pubKey7`, with a topUp per node of 666. By leaving
+- `owner3` has one auction node, `pubKey4`, with a qualified topUp per node of 1223, surpassing the threshold of 1216.
+- `owner4` possesses three auction nodes, `pubKey5`, `pubKey6`, and `pubKey7`, with a topUp per node of 667. By leaving
   two nodes (`pubKey6`, `pubKey7`) in the auction while selecting only one (`pubKey5`), the topUp per node is rebalanced
-  to 1333 (2666/2), exceeding the minimum threshold of 1216.
+  to 1334 (2668/2), exceeding the minimum threshold of 1216.
 
 If the threshold were increased by one more step from `1216` to `1226`, only two nodes, `pubKey2` and `pubKey5`, would
 qualify, which is insufficient to fill all slots.
@@ -245,11 +245,11 @@ selection, as the randomness is only revealed at the time of selection.
  +--------+----------------+--------------------------+
  | Owner  | Registered key | Qualified TopUp per node |
  +--------+----------------+--------------------------+
- | owner4 | pubKey5        | 1333                     |
+ | owner4 | pubKey5        | 1334                     |
  | owner2 | pubKey2        | 1277                     |
- | owner1 | pubKey1        | 1222                     |
+ | owner1 | pubKey1        | 1223                     |
  +--------+----------------+--------------------------+
- | owner3 | pubKey4        | 1222                     |
+ | owner3 | pubKey4        | 1223                     |
  +--------+----------------+--------------------------+
 ```
 
