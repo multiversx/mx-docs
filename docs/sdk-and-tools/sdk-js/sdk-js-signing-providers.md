@@ -17,17 +17,17 @@ Note that for most purposes, **we recommend using [sdk-dapp](https://github.com/
 
 Generally speaking, a signing provider is a component that supports the following use-cases:
 
- - **Login**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
- - **Login using Native Authentication**: once the user decides to login, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
-  - **Logout**: ... 
-  - **Sign transactions**:
-  - **Sign messages**:
+ - **Login (trivial flow, not recommended)**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
+ - **Login using native authentication (recommended)**: once the user decides to login, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
+  - **Logout**: once the user decides to log out from the dApp, the latter should ask the wallet to do so. Once the user is signed out, the flow continues back to the dApp.
+  - **Sign transactions**: while interacting with the dApp, the user might be asked to sign one or more transactions. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed transactions, ready to be broadcasted to the Network.
+  - **Sign messages**: while interacting with the dApp, the user might be asked to sign an arbitrary message. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed message.
 
 ## Implementations (available providers)
 
 For MultiversX dApps, the following signing providers are available:
 
-- [Web wallet provider](https://github.com/multiversx/mx-sdk-js-web-wallet-provider), compatible with the [Web Wallet](/wallet/web-wallet) and [xAlias](https://xalias.com)
+- [Web wallet provider](https://github.com/multiversx/mx-sdk-js-web-wallet-provider), compatible with the [Web Wallet](/wallet/web-wallet) and [xAlias](/wallet/xalias)
 - [Browser extension provider](https://github.com/multiversx/mx-sdk-js-extension-provider), compatible with the [MultiversX DeFi Wallet](/wallet/wallet-extension)
 - [WalletConnect provider](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider), compatible with [xPortal App](/wallet/xportal)
 - [Hardware wallet provider](https://github.com/multiversx/mx-sdk-js-hw-provider), compatible with [Ledger](/wallet/ledger)
@@ -38,15 +38,19 @@ The code samples depicted on this page are written in JavaScript, and can also b
 
 [comment]: # (mx-context-auto)
 
-## The web wallet provider
+## The web wallet & xAlias provider
 
 :::note
 Make sure you have a look over the [webhooks](/wallet/webhooks), in advance.
 :::
 
-[`@multiversx/sdk-web-wallet-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-provider) allows the users of a dApp to login and sign data using the [Web Wallet](/wallet/web-wallet).
+[`@multiversx/sdk-web-wallet-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-provider) allows the users of a dApp to login and sign data using the [Web Wallet](/wallet/web-wallet) or [xAlias](/wallet/xalias).
 
-In order to create an instance of the provider, do as follows:
+:::important
+Remember that [xAlias](/wallet/xalias) exposes **the same [URL hooks and callbacks](/wallet/webhooks)** as the [Web Wallet](/wallet/web-wallet). Therefore, integrating xAlias is **identical to integrating the Web Wallet** - with one trivial exception: the configuration of the URL base (see below).
+:::
+
+In order to create an instance of the provider that talks to the **Web Wallet**, do as follows:
 
 ```js
 import { WalletProvider, WALLET_PROVIDER_DEVNET } from "@multiversx/sdk-web-wallet-provider";
@@ -54,7 +58,18 @@ import { WalletProvider, WALLET_PROVIDER_DEVNET } from "@multiversx/sdk-web-wall
 const provider = new WalletProvider(WALLET_PROVIDER_DEVNET);
 ```
 
-The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-js-web-wallet-provider/blob/main/src/constants.ts) by the package: `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`.
+Or, for **xAlias**:
+
+```js
+import { WalletProvider, XALIAS_PROVIDER_DEVNET } from "@multiversx/sdk-web-wallet-provider";
+
+const provider = new WalletProvider(XALIAS_PROVIDER_DEVNET);
+```
+
+The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-js-web-wallet-provider/blob/main/src/constants.ts) by the package:  
+
+- `WALLET_PROVIDER_TESTNET`, `WALLET_PROVIDER_DEVNET`, `WALLET_PROVIDER_MAINNET`
+- `XALIAS_PROVIDER_MAINNET`, `XALIAS_PROVIDER_DEVNET`, `XALIAS_PROVIDER_TESTNET`
 
 [comment]: # (mx-context-auto)
 
@@ -84,17 +99,20 @@ const callbackUrl = window.location.href.split("?")[0];
 await provider.logout({ callbackUrl: callbackUrl });
 ```
 
-Sometimes, a dApp (and its backend) might want to reliably assign an off-chain user identity to a MultiversX address. In this context, the web wallet provider supports an extra parameter to the `login()` method: a custom authentication token, called a **native authentication token**, to be signed with the user's wallet, at login-time:
+Though, most often, the dApps (or their server-side components) want to **reliably assign an off-chain user identity to a MultiversX address**. For this, the signing providers support an extra parameter to the `login()` method: **the initial part of the native authentication token**. That piece of data, generally crafted with the aid of [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client), is signed with the user's wallet, at login-time, then made available to the dApp.
+
+:::important
+We always recommend using the **native authentication** flow, instead of the trivial one. That is, always pass the `token` parameter to the `login()` method. This is applicable to all signing providers.
+:::
 
 ```js
-// An identity token, provided by an identity provider (server-side)
-// (e.g. Google ID, a custom identity token)
-const authToken = "TBD";
+import { NativeAuthClient } from "@multiversx/sdk-native-auth-client";
 
-// A server-side handler used to acknowledge, validate and honour
-// the relationship between "authToken" and the MultiversX address of the user
+const nativeAuthClient = new NativeAuthClient({ ... });
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+
 const callbackUrl = encodeURIComponent("https://my-dapp/on-wallet-login");
-await provider.login({ callbackUrl, token: authToken });
+await provider.login({ callbackUrl, token: nativeAuthInitialPart });
 ```
 
 [comment]: # (mx-context-auto)
@@ -115,7 +133,7 @@ await provider.signTransactions(
 );
 ```
 
-Upon signing the transactions using the web wallet, the user is redirected back to `callbackUrl`, while the _query string_ contains information about the transactions, including their signatures. The information can be used to reconstruct `Transaction` objects using `getTransactionsFromWalletUrl()`:
+Upon signing the transactions, the user is redirected back to `callbackUrl`, while the _query string_ contains information about the transactions, including their signatures. The information can be used to reconstruct `Transaction` objects using `getTransactionsFromWalletUrl()`:
 
 ```js
 const plainSignedTransactions = provider.getTransactionsFromWalletUrl();
@@ -125,7 +143,7 @@ const plainSignedTransactions = provider.getTransactionsFromWalletUrl();
 The following workaround is subject to change.
 :::
 
-As of July 2022, the Web Wallet provider returns the data field as a plain string. However, sdk-js' `Transaction.fromPlainObject()` expects it to be base64-encoded. Therefore, we need to apply a workaround (an additional conversion) on the results of `getTransactionsFromWalletUrl()`.
+As of January 2024, this signing provider returns the data field as a plain string. However, sdk-js' `Transaction.fromPlainObject()` expects it to be base64-encoded. Therefore, we need to apply a workaround (an additional conversion) on the results of `getTransactionsFromWalletUrl()`.
 
 ```js
 for (const plainTransaction of plainSignedTransactions) {
@@ -141,7 +159,20 @@ for (const plainTransaction of plainSignedTransactions) {
 
 ### Signing messages
 
-... TBD ...
+Messages can be signed as follows:
+
+```js
+import { SignableMessage } from "@multiversx/sdk-core";
+
+const message = new SignableMessage({ message: "hello" });
+await this.provider.signMessage(message, { callbackUrl });
+```
+
+Upon signing the transactions, the user is redirected back to `callbackUrl`, while the _query string_ includes the signature of the message. The signature can be retrieved as follows:
+
+```js
+const signature = this.provider.getMessageSignatureFromWalletUrl();
+```
 
 [comment]: # (mx-context-auto)
 
@@ -186,13 +217,11 @@ In order to log out, do as follows:
 await provider.logout();
 ```
 
-The `login()` method supports the `token` parameter (similar to the web wallet provider):
+The `login()` method supports the `token` parameter, for **the native authentication flow** (always recommended, see above):
 
 ```js
-// A custom identity token ... 
-const authToken = "TBD";
-
-await provider.login({ token: authToken });
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+await provider.login({ token: nativeAuthInitialPart });
 
 console.log("Address:", provider.account.address);
 console.log("Token signature:", provider.account.signature);
@@ -320,13 +349,11 @@ openModal(uri);
 await provider.login({ approval });
 ```
 
-The `login()` method supports the `token` parameter (similar to other providers):
+The `login()` method supports the `token` parameter, for **the native authentication flow** (always recommended, see above):
 
 ```js
-// A custom identity token ...
-const authToken = "TBD";
-
-await provider.login({ approval, token: authToken });
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+await provider.login({ approval, token: nativeAuthInitialPart });
 
 console.log("Address:", provider.address);
 console.log("Token signature:", provider.signature);
@@ -434,15 +461,12 @@ console.log(`Address has been set: ${await provider.getAddress()}.`);
 
 The Ledger provider does not support a _logout_ operation per se (not applicable in this context).
 
-The login flow supports the `token` parameter (similar to other providers), using the method `tokenLogin()`:
+The **the native authentication flow** (always recommended, see above) is supported using the `tokenLogin()` method:
 
 ```js
-// A custom identity token ...
-const authToken = "TBD";
-
-// Note the additional suffix (required as of July 2022):
-const payloadToSign = Buffer.from(`${authToken}{}`);
-const { address, signature } = await provider.tokenLogin({ addressIndex: 0, token: payloadToSign });
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+const nativeAuthInitialPartAsBuffer =  Buffer.from(nativeAuthInitialPart);
+const { address, signature } = await provider.tokenLogin({ addressIndex: 0, token: nativeAuthInitialPartAsBuffer });
 
 console.log("Address:", address);
 console.log("Signature:", signature.hex());
@@ -490,7 +514,7 @@ console.log(message.toJSON());
 ## Verifying the signature of a login token
 
 :::note
-Make sure to use [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client) and [`sdk-native-auth-server`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-server) to handle the **native authentication** flow.
+It's recommended to use the libraries [`sdk-native-auth-client`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client) and [`sdk-native-auth-server`](https://www.npmjs.com/package/@multiversx/sdk-native-auth-server) to handle the **native authentication** flow.
 :::
 
-As previously mentioned, a dApp (and its backend) might want to reliably assign an off-chain user identity to a MultiversX address. On this purpose, the signing providers allow a _login token_ (TBD) to be used within the login flow - this token is (... TBD ...) signed using the wallet of the user. Afterwards, a backend application would normally verify the signature of the token, using ... TBD.
+Please follow [this](https://github.com/multiversx/mx-sdk-js-native-auth-server) for more details about verifying the signature of a login token (i.e. within a server-side component of the dApp).
