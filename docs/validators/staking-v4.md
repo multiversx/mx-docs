@@ -141,7 +141,7 @@ Starting with this epoch:
 
 - Maximum number of nodes in the network will be changed from 3200 to 2880 (3200 - 320), consisting of:
     - a global number of 1600 active/eligible validators, split into 400 nodes/shard
-    - a global number of 1320 waiting validators to join the active list, split into 320 nodes/shard
+    - a global number of 1280 waiting validators to join the active list, split into 320 nodes/shard
 - All **shuffled out** nodes from the eligible list will be sent to the auction list to take part in the auction
   selection. The more topUp an owner has, the higher the chances of having their auction nodes selected will be.
 - Based on the _soft auction selection_ (see the next section), all **qualified** nodes from the **auction** will be
