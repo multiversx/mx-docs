@@ -253,7 +253,7 @@ selection, as the randomness is only revealed at the time of selection.
  +--------+----------------+--------------------------+
 ```
 
-Following the example above, there are two nodes with a qualified top-up of 1222 per node:
+Following the example above, there are two nodes with a qualified top-up of 1223 per node:
 
 - `owner1` with 1 BLS key = `pubKey1`
 - `owner3` with 1 BLS key = `pubKey4`
