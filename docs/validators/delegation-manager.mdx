@@ -140,7 +140,12 @@ Setting the identity of the staking pool in the metadata is the **first step** i
 
 :::caution
 As of January 2024, the only accepted way to customize the information of a delegation contract is via MultiversX Assets.
-Provisioning of information from keybase or your Github repository is no longer accepted and you should migrate to the new approach is you still use those.
+
+Provisioning of information from `keybase` or your `GitHub` repository is no longer accepted.
+
+The only accepted changes are on `mx-assets` identities.
+
+You can safely delete the `keybase` profile and also the `multiversx` repository inside your organization's `GitHub`.
 :::
 
 To customize the information for your delegation contract, which will be available inside the MultiversX ecosystem (such as Explorer, Web Wallet, xPortal, and so on),
@@ -148,15 +153,18 @@ some additional information has to be added to the MultiversX assets repository.
 
 In order to do so, the owner of the nodes/staking provider must open a Pull Request against https://github.com/multiversx/mx-assets (`master` branch).
 
-_Step 1: choose the environment_
+**Step 1: choose the environment**
+
 - for mainnet go to `mx-assets/identities`
 - for testnet go to `mx-assets/testnet/identities`
 - for devnet go to `mx-assets/devnet/identities`
 
-_Step 2: create a directory with an unique name_
+**Step 2: create a directory with an unique name**
+
 Must be lowercase, alphanumeric, with no spaces. For example, `my-new-identity`
 
-_Step 3: add a `info.json` file_
+**Step 3: add a `info.json` file and a logo.png**
+
 Create a `info.json` file where you specify the owned address(es), the name, the description and social links.
 Example:
 ```json
@@ -165,9 +173,9 @@ Example:
   "name": "New identity",
   "website": "http://newidentity.com",
   "twitter": "https://twitter.com/newidentity",
-  "location": "France",
+  "location": "<City>, <Country>",
   "owners": [
-    "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqz8llllsh6u4jp", // staking provider address
+    "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxgeryqxzqjkh", // staking provider address
     "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"  // the address of regular validator nodes owner
   ]
 }
@@ -178,10 +186,14 @@ Inside the owners array:
 - if you want to define an identity of simple nodes, add the owner address (all the keys owned by that address will have that identity)
 - if you want to define the same identity for both a Staking Provider and simple nodes, set both the address of the Staking Provider and of the owner of the nodes
 
-_Step 4: Open PR and validate the ownership_
-After opening the PR, you also have to validate the ownership. Refer to the --- section
+Also, upload a `logo.png` that will be displayed near the identity.
 
-_Done_
+**Step 4: Open PR and validate the ownership**
+
+After opening the PR, you also have to validate the ownership. Please refer to the [this](#assets-ownership-validation) section.
+
+**Done**
+
 After the PR is merged, the specified information together with the **service fee, percentage filled** and **APR** (for Staking Providers) will be displayed across the ecosystem.
 If this information cannot be found a generic logo and the address is displayed.
 
@@ -190,14 +202,15 @@ An example of how the delegation contract will be displayed based on the informa
 ![stakingpool](/img/stakingpool.png)
 
 :::note
-Before MultiversX Assets, nodes owners needed to update the `Identity` field inside the `prefs.toml` file of each node. This is not required anymore now.
+Before MultiversX Assets, nodes owners needed to update the `Identity` field inside the `prefs.toml` file of each node. This is not required anymore now and you can safely leave the identity empty on your node configuration.
 :::
 
 ### Assets ownership validation
 
 This applies for both adding of updating an identity over the MultiversX assets.
 
-In order to validate the ownership of a staking provider or validator nodes, one will need to sign a message by using the owner wallet and then submit a comment on that PR.
+In order to validate the ownership of a staking provider or validator nodes, one will need to sign a message by using
+the owner wallet and then submit a comment on the PR with the branding of a validator node or a staking provider.
 In case of a staking provider, its owner must perform this message signing.
 
 Message signing can be performed either via [Web Wallet](https://wallet.multiversx.com), either via [MultiversX Utils](https://utils.multiversx.com/sign-message).
