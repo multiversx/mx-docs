@@ -17,9 +17,9 @@ Note that for most purposes, **we recommend using [sdk-dapp](https://github.com/
 
 Generally speaking, a signing provider is a component that supports the following use-cases:
 
- - **Login (trivial flow, not recommended)**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
- - **Login using native authentication (recommended)**: once the user decides to login, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and she is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
-  - **Logout**: once the user decides to log out from the dApp, the latter should ask the wallet to do so. Once the user is signed out, the flow continues back to the dApp.
+ - **Log in (trivial flow, not recommended)**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
+ - **Log in using native authentication (recommended)**: once the user decides to log in, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and she is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
+  - **Log out**: once the user decides to log out from the dApp, the latter should ask the wallet to do so. Once the user is signed out, the flow continues back to the dApp.
   - **Sign transactions**: while interacting with the dApp, the user might be asked to sign one or more transactions. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed transactions, ready to be broadcasted to the Network.
   - **Sign messages**: while interacting with the dApp, the user might be asked to sign an arbitrary message. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed message.
 
@@ -38,13 +38,13 @@ The code samples depicted on this page are written in JavaScript, and can also b
 
 [comment]: # (mx-context-auto)
 
-## The web wallet & xAlias provider
+## The Web Wallet Provider
 
 :::note
 Make sure you have a look over the [webhooks](/wallet/webhooks), in advance.
 :::
 
-[`@multiversx/sdk-web-wallet-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-provider) allows the users of a dApp to login and sign data using the [Web Wallet](/wallet/web-wallet) or [xAlias](/wallet/xalias).
+[`@multiversx/sdk-web-wallet-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-provider) allows the users of a dApp to log in and sign data using the [Web Wallet](/wallet/web-wallet) or [xAlias](/wallet/xalias).
 
 :::important
 Remember that [xAlias](/wallet/xalias) exposes **the same [URL hooks and callbacks](/wallet/webhooks)** as the [Web Wallet](/wallet/web-wallet). Therefore, integrating xAlias is **identical to integrating the Web Wallet** - with one trivial exception: the configuration of the URL base (see below).
@@ -190,7 +190,7 @@ const signature = provider.getMessageSignatureFromWalletUrl();
 Make sure you have a look over [this page](/wallet/wallet-extension), in advance.
 :::
 
-[`@multiversx/sdk-js-extension-provider`](https://github.com/multiversx/mx-sdk-sdk-js-extension-provider) allows the users of a dApp to login and sign transactions using the [MultiversX DeFi Wallet](/wallet/wallet-extension).
+[`@multiversx/sdk-js-extension-provider`](https://github.com/multiversx/mx-sdk-sdk-js-extension-provider) allows the users of a dApp to log in and sign transactions using the [MultiversX DeFi Wallet](/wallet/wallet-extension).
 
 In order to aquire the instance (singleton) of the provider, do as follows:
 
@@ -210,7 +210,7 @@ await provider.init();
 
 ### Login and logout
 
-Then, ask the user to login:
+Then, ask the user to log in:
 
 ```js
 const address = await provider.login();
@@ -275,7 +275,7 @@ console.log(message.toJSON());
 
 ## The WalletConnect provider
 
-[`@multiversx/sdk-js-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) allows the users of a dApp to login and sign transactions using [xPortal](https://xportal.com/) (the mobile application).
+[`@multiversx/sdk-js-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) allows the users of a dApp to log in and sign transactions using [xPortal](https://xportal.com/) (the mobile application).
 
 For this example we will use the WalletConnect 2.0 provider since 1.0 is no longer mantained and it is [deprecated](https://medium.com/walletconnect/weve-reset-the-clock-on-the-walletconnect-v1-0-shutdown-now-scheduled-for-june-28-2023-ead2d953b595)
 
@@ -343,7 +343,7 @@ await provider.init();
 
 ### Login and logout
 
-Then, ask the user to login using xPortal on her phone:
+Then, ask the user to log in using xPortal on her phone:
 
 ```js
 const { uri, approval } = await provider.connect();
@@ -426,7 +426,7 @@ console.log(message.toJSON());
 Make sure you have a look over [this page](/wallet/ledger), in advance.
 :::
 
-[`@multiversx/sdk-hw-provider`](https://github.com/multiversx/mx-sdk-js-hw-provider) allows the users of a dApp to login and sign transactions using a [Ledger device](/wallet/ledger).
+[`@multiversx/sdk-hw-provider`](https://github.com/multiversx/mx-sdk-js-hw-provider) allows the users of a dApp to log in and sign transactions using a [Ledger device](/wallet/ledger).
 
 In order to create an instance of the provider, do as follows:
 
