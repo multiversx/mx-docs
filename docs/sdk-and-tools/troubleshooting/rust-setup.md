@@ -16,6 +16,7 @@ If you've installed Rust using your OS package manager:
 ```bash
 # Ubuntu
 sudo apt remove cargo
+sudo apt remove rustc
 sudo apt autoremove
 ```
 
@@ -34,6 +35,12 @@ brew uninstall rust
 :::note
 We never recommend installing Rust using `brew`, especially because it makes it non-trivial to switch between different Rust versions.
 :::
+
+If you've installed Rust using `snap`:
+    
+```bash
+snap remove rustup
+```
 
 If you've installed Rust using `mxpy` with a version older than `v9`:
 
@@ -85,7 +92,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Then, choose **Proceed with installation (default)**. 
 
-Once Rust is installed, switch to a nightly version and install the `wasm32-unknown-unknown` target:
+Once Rust is installed, open a new terminal (shell), then switch to a nightly version and install the `wasm32-unknown-unknown` target:
 
 ```bash
 rustup default nightly-2023-12-11
@@ -126,6 +133,14 @@ cargo install multiversx-sc-meta --locked
 `sc-meta` requires a few dependencies that are not installed by default on some systems. In this case, installation of `sc-meta` fails.
 
 For a workaround, please follow this [GitHub issue](https://github.com/multiversx/mx-sdk-py-cli/issues/338).
+
+### Handle missing dependencies: build-essential
+
+On Ubuntu, you might also need to install `build-essential`:
+    
+```bash
+sudo apt-get install build-essential
+```
 
 ## Check your Rust installation
 
