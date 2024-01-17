@@ -136,43 +136,97 @@ Setting the identity of the staking pool in the metadata is the **first step** i
 
 [comment]: # (mx-context-auto)
 
-:::caution
-As of March 2023, keybase.pub is no longer available. As a consequence, the identity verification mechanism has been switched to GitHub, including the profile information fetched from keybase.io.
-:::
-
 ### Display information
 
-To customize the information for your delegation contract, which will be available in the lists displayed on the delegation pages both in xPortal and the web wallet, some additional information has to be added on a GitHub account with the same identifier as the identity. If a GitHub username matching the node identity is already taken, you will need to change the identity in the node provider to a GitHub username that you control.
+:::caution
+As of January 2024, the only accepted way to customize the information of a delegation contract is via MultiversX Assets.
 
-Please fill in the **avatar picture** and edit the profile providing the **name**, **bio**, **website** and **twitter** (if applicable). This information together with the **service fee, percentage filled** and **APR** will be displayed for every delegation contract on the delegation pages in the web wallet and xPortal. If this information cannot be found a generic logo and the delegation contract's address is displayed.
+Provisioning of information from `keybase` or your `GitHub` repository is no longer accepted.
 
-In order to complete the matching between the delegation contract and GitHub identity of the staking pool, a repository needs to be created with the name "multiversx" which contains one single file: "keys.json". This file contains a json array with the provider's smart contract address, just like it was on Keybase. For devnet/testnet, you need to have a folder called devnet/testnet in the same repository, with the "keys.json" file underneath.
+The only accepted changes are on `mx-assets` identities.
 
-An example for the contents of the `keys.json` file for the `"testmxprovider"` GitHub identity would be:
+You can safely delete the `keybase` profile and also the `multiversx` repository inside your organization's `GitHub`.
+:::
 
+To customize the information for your delegation contract, which will be available inside the MultiversX ecosystem (such as Explorer, Web Wallet, xPortal, and so on),
+some additional information has to be added to the MultiversX assets repository.
+
+In order to do so, the owner of the nodes/staking provider must open a Pull Request against https://github.com/multiversx/mx-assets (`master` branch).
+
+**Step 1: choose the environment**
+
+- for mainnet go to `mx-assets/identities`
+- for testnet go to `mx-assets/testnet/identities`
+- for devnet go to `mx-assets/devnet/identities`
+
+**Step 2: create a directory with an unique name**
+
+Must be lowercase, alphanumeric, with no spaces. For example, `my-new-identity`
+
+**Step 3: add a `info.json` file and a logo.png**
+
+Create a `info.json` file where you specify the owned address(es), the name, the description and social links.
+Example:
 ```json
- [
-  "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py"
- ]
+{
+  "description": "This is my new identity",
+  "name": "New identity",
+  "website": "http://newidentity.com",
+  "twitter": "https://twitter.com/newidentity",
+  "location": "<City>, <Country>",
+  "owners": [
+    "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxgeryqxzqjkh", // staking provider address
+    "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"  // the address of regular validator nodes owner
+  ]
+}
 ```
+
+Inside the owners array:
+- if you want to define an identity of a Staking Provider, add its SC address
+- if you want to define an identity of simple nodes, add the owner address (all the keys owned by that address will have that identity)
+- if you want to define the same identity for both a Staking Provider and simple nodes, set both the address of the Staking Provider and of the owner of the nodes
+
+Also, upload a `logo.png` that will be displayed near the identity.
+
+**Step 4: Open PR and validate the ownership**
+
+After opening the PR, you also have to validate the ownership. Please refer to the [this](#assets-ownership-validation) section.
+
+**Done**
+
+After the PR is merged, the specified information together with the **service fee, percentage filled** and **APR** (for Staking Providers) will be displayed across the ecosystem.
+If this information cannot be found a generic logo and the address is displayed.
 
 An example of how the delegation contract will be displayed based on the information provided in the GitHub is provided below.
 
 ![stakingpool](/img/stakingpool.png)
 
-:::important
-To also connect the validators themselves to a specific GitHub staking pool identity, two additional steps have to be completed:
-
-1. In the `keys.json` file, add the BLS key to the JSON array.
-2. Set the `Identity` of each validator in the `config/prefs.toml` file to the GitHub staking pool identity.
-
-```rust
-[Preferences]
-   # Identity represents the GitHub identity
-   Identity = "<GitHub identity>"    // e.g.  Identity = "testmxprovider"
-```
-
+:::note
+Before MultiversX Assets, nodes owners needed to update the `Identity` field inside the `prefs.toml` file of each node. This is not required anymore now and you can safely leave the identity empty on your node configuration.
 :::
+
+### Assets ownership validation
+
+This applies for both adding of updating an identity over the MultiversX assets.
+
+In order to validate the ownership of a staking provider or validator nodes, one will need to sign a message by using
+the owner wallet and then submit a comment on the PR with the branding of a validator node or a staking provider.
+In case of a staking provider, its owner must perform this message signing.
+
+Message signing can be performed either via [Web Wallet](https://wallet.multiversx.com), either via [MultiversX Utils](https://utils.multiversx.com/sign-message).
+The message to be signed is the commit hash of the latest commit in the PR. Inside the PR, go to the `Commits` tab and copy the latest commit hash (the bottom one is the latest commit).
+
+![commit-hash](/img/commit-hash.png)
+
+Then, by using a message signer (Web Wallet of MultiversX Utils), sign that commit hash (make sure you don't have additional spaces or other characters) by using the owner wallet.
+
+![commit-hash-sign](/img/commit-hash-sign.png)
+
+After that, leave a comment on that PR with the resulted signature.
+
+![commit-hash-sig-comm](/img/commit-hash-sig-comm.png)
+
+That's it. A GitHub workflow will validate the signature and if everything is ok, the PR will merged by a MultiversX responsible and the identity will be live anytime soon.
 
 [comment]: # (mx-context-auto)
 
