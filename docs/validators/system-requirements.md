@@ -25,8 +25,8 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 
 :::caution
 1. The CPUs must be `SSE4.1` and `SSE4.2` capable, otherwise the node won't be able to use the Wasmer 2 VM available through the VM 1.5 (and above) and the node will not be able to sync blocks from the network.
-2. If the system chosen to host the node is a VPS, the host should have dedicated CPUs. This is mandatory. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
-3. In case a decision to run multiple MultiversX Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
+2. If the system chosen to host the node is a VPS, the host must have dedicated CPUs. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
+3. If you run multiple MultiversX Nodes on the same machine, the host running those nodes should have the specs at least equal to the minimum system requirements multiplied by the number of nodes running on that host.
 :::
 
 :::tip
