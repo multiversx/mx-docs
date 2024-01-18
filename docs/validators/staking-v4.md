@@ -265,6 +265,37 @@ Assuming the result of the XOR operation between their BLS keys and randomness i
 
 Since `XOR1` > `XOR2`, `pubKey1` will be selected, while `pubKey4` remains in the auction list.
 
+## Introducing Node Limitations for Enhanced Decentralization
+
+In tandem with the upcoming staking v4 feature, we are implementing a crucial change aimed at fostering
+decentralization, increasing the Nakamoto coefficient, and reinforcing the principles of a decentralized network.
+
+### Dynamic Node Limitation
+
+To achieve our decentralization goals, a cap on the number of nodes an owner can have will be introduced. This
+limitation is dynamic, recalculated at each epoch, ensuring adaptability to the evolving network conditions.
+
+### Impact and Considerations
+
+This restriction primarily affects scenarios where users wish to stake new nodes. If an individual already possesses
+more nodes than the specified threshold, their existing nodes will not be affected. However, they won't be able to stake
+additional nodes beyond the limit; only unstaking will be allowed.
+
+### Decentralization in Action
+
+This initiative encourages staking providers to critically evaluate their node count. For larger providers, having an
+excessive number of nodes may lead to a decrease in overall APR. Achieving enough top-up to select numerous nodes from
+the auction could become challenging.
+
+### Proactive Measures
+
+Staking providers are encouraged to strategize accordingly. For instance, they might choose to unstake some nodes
+themselves or explore collaboration with other small providers. Merging resources can enhance their chances of being
+selected in the auction, especially for those with limited top-up.
+
+No immediate action is required from users; however, thoughtful consideration of their node portfolio and strategic
+decisions will play a pivotal role in navigating this shift toward a more decentralized network.
+
 # **FAQ**
 
 ## How much topUp should I have as a validator?
@@ -296,4 +327,12 @@ participating in consensus) for 5 epochs. During this time, the node would not g
 During stakingV4 phase2, no node from the waiting list is moved to active. If we were to keep the same configuration, a
 shuffled out node from this phase would have to wait 6 epochs until eligible (if selected from the auction) and
 therefore decreasing the overall APR:
+
+## How does the dynamic node limitation work?
+
+The dynamic node limitation is determined by the `NodeLimitPercentage`, which defines a percentage of
+the `TotalNumOfEligibleNodes` from the current epoch. For example, if `NodeLimitPercentage` is set to 0.005 (0.5%) and
+the `TotalNumOfEligibleNodes` for a given epoch is 1600 nodes, this means owners cannot exceed having more than 8 nodes.
+The specific parameters, including the initial limit and `NodeLimitPercentage`, can be decided through a governance
+vote. This ensures community involvement in determining the rules governing node ownership.
 
