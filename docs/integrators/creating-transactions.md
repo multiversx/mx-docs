@@ -90,8 +90,18 @@ Although an explicit _transaction cancellation trigger_ is not yet available in 
 If broadcasted transactions have their nonces higher than the current account nonce of the sender, this is considered a _nonce gap_, and the transactions will remain in the mempool unprocessed, until new transactions from the same sender arrive _to resolve the nonce gap -_ or until the transactions are swept from the mempool (sweeping takes place regularly).
 
 :::tip
-Avoid nonce gaps by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
+**Avoid nonce gaps** by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
 :::
+
+[comment]: # (mx-context-auto)
+
+### **Issue: too many transactions from the same account**
+
+Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius.md), the transaction pool allows a maximum of **100** transactions from the same sender to exist, at a given moment.
+
+For example, if an address broadcasts `120` transactions with nonces from `1` to `120`, then the transactions with nonces `1 - 100` will be accepted for processing, while the remaining `20` transactions will be dropped.
+
+The solution is to use chunks of **maximum of `100` transactions** and a place a generous delay between sending the chunks. For example, if one address wants to send `120` transactions from an address, it should send the first chunk, that is, the transactions with nonces `1 - 100`, wait until all of them are processed (the account nonce of the sender increments on each processed transaction), then send the second chunk, the transactions with nonces `101-120`.
 
 [comment]: # (mx-context-auto)
 
