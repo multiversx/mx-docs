@@ -101,7 +101,7 @@ Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-spec
 
 For example, if an address broadcasts `120` transactions with nonces from `1` to `120`, then the transactions with nonces `1 - 100` will be accepted for processing, while the remaining `20` transactions will be dropped.
 
-The solution is to use chunks of **maximum of `100` transactions** and a place a generous delay between sending the chunks. For example, if one address wants to send `120` transactions from an address, it should send the first chunk, that is, the transactions with nonces `1 - 100`, wait until all of them are processed (the account nonce of the sender increments on each processed transaction), then send the second chunk, the transactions with nonces `101 - 120`.
+The solution is to use chunks holding a **maximum of `100` transactions** and a place a generous **delay between sending the chunks**. Let's suppose an account has the nonce `1000` and it wants to send `120` transactions. It should send the first chunk, that is, the transactions with nonces `1000 - 1099`, wait until all of them are processed (the account nonce increments on each processed transaction), then send the second chunk, the transactions with nonces `1100 - 1019`.
 
 [comment]: # (mx-context-auto)
 
