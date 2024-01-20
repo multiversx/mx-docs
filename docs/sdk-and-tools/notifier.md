@@ -30,15 +30,20 @@ Set up at least one observer for each shard in order to handle all the events in
 ![img](/technology/notifier-overview.png)
 
 In the figure above:
-- The observer nodes will push block events to Notifier instance, via HTTP POST requests. There are several endpoints for this:
-    - `/events/push` (POST) -> it will handle all events for each round
-    - `/events/revert` (POST) -> if there is a reverted block, the event will be
+- The observer nodes will push block events to Notifier instance, via WebSocket or HTTP requests. There are several endpoints/topics for this:
+    - `block events` -> it will handle all events for each round
+    - `revert events` -> if there is a reverted block, the event will be
       pushed on this route
-    - `/events/finalized` (POST) -> when the block has been finalized, the events
+    - `finalized events` -> when the block has been finalized, the events
       will be pushed on this route
 - Notifier checks locker service (via Redis) and applies deduplication
-- Notifier will push events to RabbitMQ if enabled, or via Websockets. If Websockets will be enabled an additional endpoint will be available:
+- Notifier will push events to RabbitMQ if enabled, or via Websocket. If Websocket will be enabled an additional endpoint will be available:
     - `/hub/ws` (GET) - this route can be used to manage the websocket connection subscription
+
+:::info
+Please make the distinction between `observer node` -> `notifier` communication (which can be via HTTP or WebSocket) and
+`notifier` -> `subscriber` (which can be via RabbitMQ and WebSocket).
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -48,13 +53,70 @@ In the figure above:
 
 ### Observer Client
 
-On the observer side, there is a http client that will push block events to notifier service.
+On the observer side, there is a WebSocket client that will push block events to notifier service.
+There is also the HTTP Integration, which will be deprecated in the future.
 
-In the observer node's configuration directory, `external.toml` config file can be configured
-to enable notifier connector. The config file can be found 
+In the observer node's configuration directory, the `external.toml` config file can be configured
+to enable events notifier connector via WebSocket or via HTTP integrations. The config file can be found 
 [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/external.toml).
 
-The supported config variables are as follows:
+[comment]: # (mx-context-auto)
+
+#### WebSocket Integration
+
+The WebSocket integration is a generic one, and can be used for multiple outport driver integrations.
+In case Elasticsearch integration is already being used with WebSocket connector, a separate config
+section `HostDriversConfig` has to be set for event notifier.
+
+The corresponding config section for enabling the WebSocket driver on observer node:
+
+```toml
+[[HostDriversConfig]]
+    # This flag shall only be used for observer nodes
+    Enabled = true
+
+    # This flag will start the WebSocket connector as server or client (can be "client" or "server")
+    Mode = "client"
+
+    # URL for the WebSocket client/server connection
+    # This value represents the IP address and port number that the WebSocket client or server will use to establish a connection.
+    URL = "127.0.0.1:22111"
+
+    # After a message will be sent it will wait for an ack message if this flag is enabled
+    WithAcknowledge = true
+
+    # The duration in seconds to wait for an acknowledgment message, after this time passes an error will be returned
+    AcknowledgeTimeoutInSec = 60
+
+    # This flag defines the marshaller type. Currently supported: "json", "gogo protobuf"
+    MarshallerType = "gogo protobuf"
+
+    # The number of seconds when the client will try again to send the data
+    RetryDurationInSec = 5
+
+    # Sets if, in case of data payload processing error, we should block or not the advancement to the next processing event. Set this to true if you wish the node to stop processing blocks if the client/server encounters errors while processing requests.
+    BlockingAckOnError = true
+
+    # Set to true to drop messages if there is no active WebSocket connection to send to.
+    DropMessagesIfNoConnection = false
+
+    # Defines the payload version. Version will be changed when there are breaking
+    # changes on payload data. The receiver/consumer will have to know how to handle different
+    # versions. The version will be sent as metadata in the websocket message.
+    Version = 1
+```
+
+In this case, observer node will act as client and events notifier service will act as a server.
+`Mode` option should be set to `client`. It is important to have `WithAcknowledge` set to `true`
+since observer node should continue only if there is an acknowledge that the event was processed
+successfully. `MarshallerType` field has to be aligned with `DataMarshallerType` on events notifier
+configuration file.
+
+[comment]: # (mx-context-auto)
+
+#### HTTP Integration
+
+For http integration, the supported config variables are as follows:
 
 - `Enabled`: signals whether a driver should be attached when launching the node.
 - `UseAuthorization`: signals whether to use authorization. For testing purposes it can be set to `false`.
@@ -62,7 +124,7 @@ The supported config variables are as follows:
 - `Username`: the username used for authorization, if enabled.
 - `Password`: the password used for authorization, if enabled.
 
-The corresponding config section for enabling the driver:
+The corresponding config section for enabling the driver on observer node:
 
 ```toml
 [EventNotifierConnector]
@@ -82,7 +144,18 @@ The corresponding config section for enabling the driver:
 
     # Password is used to authorize an observer to push event data
     Password = ""
+
+    # RequestTimeoutSec defines the timeout in seconds for the http client
+    RequestTimeoutSec = 60
+
+    # MarshallerType is used to define the marshaller type to be used for inner
+    # marshalled structures in block events data
+    MarshallerType = "json"
 ```
+
+:::info
+HTTP Integration will be deprecated in the future.
+:::
 
 :::tip
 Due to the possible high data volume, it's not recommended to use validators as nodes
@@ -99,9 +172,83 @@ delays due to outport driver.
 In the notifier configuration directory (`cmd/notifier/config`), there is the `config.toml`
 file that can be used to configure the service.
 
+There are some general configuration options, which should be fine with their default values:
+```toml
+[General]
+    # CheckDuplicates signals if the events received from observers have been already pushed to clients
+    # Requires a redis instance/cluster and should be used when multiple observers push from the same shard
+    CheckDuplicates = true
+
+    # ExternalMarshaller is used for handling incoming/outcoming api requests 
+    [General.ExternalMarshaller]
+        Type = "json"
+    # InternalMarshaller is used for handling internal structs
+    # This has to be mapped with the internal marshalling used for notifier outport driver
+    [General.InternalMarshaller]
+        Type = "json"
+
+    # Address pubkey converter config options
+    [General.AddressConverter]
+        Type = "bech32"
+        Prefix = "erd"
+        Length = 32
+```
+
+:::info
+Starting with release `v1.2.0`, `CheckDuplicates` field has been moved from `ConnectorApi` section to
+the newly added `General` section. Please make sure to put `CheckDuplicates` field before other inner
+struct fields in `General` section.
+:::
+
+There are 2 ways to connect observer node with events notifier service:
+- via WebSocket integration
+- via HTTP integration (which will be deprecated in the future)
+
+[comment]: # (mx-context-auto)
+
+#### WebSocket Integration
+
+There is a separate config section `WebSocketConnector` that has to be aligned with
+`HostDriversConfig` from observer node.
+
+```toml
+[WebSocketConnector]
+    # Enabled will determine if websocket connector will be enabled or not
+    Enabled = false
+
+    # URL for the WebSocket client/server connection
+    # This value represents the IP address and port number that the WebSocket client or server will use to establish a connection.
+    URL = "localhost:22111"
+
+    # This flag describes the mode to start the WebSocket connector. Can be "client" or "server"
+    Mode = "server"
+
+    # Possible values: json, gogo protobuf. Should be compatible with mx-chain-node outport driver config
+    DataMarshallerType = "gogo protobuf"
+
+    # Retry duration (receive/send ack signal) in seconds
+    RetryDurationInSec = 5
+
+    # Signals if in case of data payload processing error, we should send the ack signal or not
+    BlockingAckOnError = false
+
+    # Set to true to drop messages if there is no active WebSocket connection to send to.
+    DropMessagesIfNoConnection = false
+
+    # After a message will be sent it will wait for an ack message if this flag is enabled
+    WithAcknowledge = true
+
+    # The duration in seconds to wait for an acknowledgment message, after this time passes an error will be returned
+    AcknowledgeTimeoutInSec = 60
+```
+
+[comment]: # (mx-context-auto)
+
+#### HTTP Integration
+
 The supported config variables are:
-- `Port`: the port on which the http server listens on. Should be the same 
-  as the port in the `ProxyUrl` described above.
+- `Host`: the address and/or port on which the http server listens on. Should be the same 
+  port in the `ProxyUrl` described above, for observer node.
 - `Username`: the username used to authorize an observer. Can be left empty for `UseAuthorization = false`.
 - `Password`: the password used to authorize an observer. Can be left empty for `UseAuthorization = false`.
 - `CheckDuplicates`: if true, it will check (based on a locker service using redis) if the event have been already pushed to clients
@@ -109,19 +256,27 @@ The supported config variables are:
 The `ConnectorApi` section has to be aligned with the one from observer node:
 ```toml
 [ConnectorApi]
-    # The port on which the Hub listens for subscriptions
-    Port = "5000"
+    # Enabled will determine if http connector will be enabled or not
+    Enabled = true
 
-    # Username is the username needed to authorize an observer to push data
+    # The address on which the events notifier listens for subscriptions
+    # It can be specified as "localhost:5000" or only as "5000"
+    Host = "5000"
+
+    # Username and Password needed to authorize the connector
+    # BasicAuth is enabled only for the endpoints with "Auth" flag enabled
+    # in api.toml config file 
     Username = ""
-    
-    # Password is the password needed to authorize an observer to push event data
     Password = ""
-
-    # CheckDuplicates signals if the events received from observers have been already pushed to clients
-    # Requires a redis instance/cluster and should be used when multiple observers push from the same shard
-    CheckDuplicates = true
 ```
+
+:::info
+Starting with release `v1.2.0`, an additional field `Enabled = true` has been added.
+:::
+
+[comment]: # (mx-context-auto)
+
+#### Deduplication
 
 If `CheckDuplicates` will be set to true, notifier service will try to connect to a redis 
 instance. In this context, redis will be used as a locker service mechanism for deduplication.
@@ -134,9 +289,6 @@ The `Redis` section includes the following parameters as described below:
 [Redis]
     # The url used to connect to a pubsub server
     Url = "redis://localhost:6379/0"
-
-    # The pubsub channel used for publishing/subscribing
-    Channel = "pub-sub"
 
     # The master name for failover client
     MasterName = "mymaster"
@@ -205,7 +357,7 @@ There are multiple event types:
 - Finalized Block event: when the block is finalized
 
 In RabbitMQ there is a separate exchange for each event type.
-In Websockets setup, there is a event type field in each message.
+In Websocket setup, there is a event type field in each message.
 
 The WS event is defined as follows:
 
@@ -233,7 +385,7 @@ Event structure
 | Field       | Description                                                                                                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | identifier  | This field represents the identifier of the event.                                                                                                                                        |
-| address     | The address field holds the address in a bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction. |
+| address     | The address field holds the address in bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction.   |
 | topics      | The topics field holds a list with extra information. They don't have a specific order because the smart contract is free to log anything that could be helpful.                          |
 | data        | The data field can contain information added by the smart contract that generated the event.                                                                                              |
 | order       | The order field represents the index of the event indicating the execution order.                                                                                                         |

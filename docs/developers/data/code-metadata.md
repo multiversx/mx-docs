@@ -23,7 +23,7 @@ Once a contract is marked as _**not** upgradeable_, its code and code metadata b
 
 [comment]: # (mx-context-auto)
 
-## Usability
+## Usage
 
 When deploying (or upgrading) a smart contract using **mxpy**, its default _code metadata flags_ are: `upgradeable`, `readable` and **non-**`payable`. The default values can be overwritten by decorating the command `mxpy contract deploy` (or `mxpy contract upgrade`) as follows:
 - `--metadata-not-upgradeable` - mark the contract as **non-** `upgradeable`
@@ -35,7 +35,7 @@ For more information, please follow [mxpy CLI](/sdk-and-tools/sdk-py/mxpy-cli).
 
 [comment]: # (mx-context-auto)
 
-## Converting Metadata to bytes
+## Bit-flag layout
 
 Internally, the metadata is stored as a 2-byte wide bit-flag. For easier visualization, let's define the flags like this:
 ```rust
@@ -65,4 +65,4 @@ For example, if we wish to deploy a contract that is payable and upgradeable our
 
 We hope these flags will make it a lot easier to create and upgrade smart contracts.  
 
-If you want to take a look at some more examples of how Code Metadata is used, take a look here: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples
+If you want to take a look at some more examples of how Code Metadata is used, take a look [here](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples).

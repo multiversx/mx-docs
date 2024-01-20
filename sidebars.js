@@ -65,20 +65,31 @@ const sidebars = {
             type: "category",
             label: "Rust Developer reference",
             items: [
-              "developers/developer-reference/sc-meta",
-              "developers/developer-reference/serialization-format",
               "developers/developer-reference/sc-annotations",
               "developers/developer-reference/sc-modules",
+              "developers/developer-reference/sc-payments",
               "developers/developer-reference/sc-contract-calls",
               "developers/developer-reference/upgrading-smart-contracts",
-              "developers/developer-reference/code-metadata",
               "developers/developer-reference/sc-api-functions",
               "developers/developer-reference/storage-mappers",
               "developers/developer-reference/rust-testing-framework",
               "developers/developer-reference/rust-testing-framework-functions-reference",
               "developers/developer-reference/sc-debugging",
-              "developers/developer-reference/sc-build-reference",
               "developers/developer-reference/sc-random-numbers",
+            ],
+          },
+          {
+            type: "category",
+            label: "Data",
+            items: [
+              "developers/data/serialization-overview",
+              "developers/data/simple-values",
+              "developers/data/composite-values",
+              "developers/data/custom-types",
+              "developers/data/defaults",
+              "developers/data/multi-values",
+              "developers/data/code-metadata",
+              "developers/data/abi",
             ],
           },
           {
@@ -88,20 +99,50 @@ const sidebars = {
               "developers/best-practices/best-practices-basics",
               "developers/best-practices/biguint-operations",
               "developers/best-practices/the-dynamic-allocation-problem",
-              "developers/best-practices/multi-values",
             ],
           },
           {
             type: "category",
-            label: "Testing Scenarios",
+            label: "Configuration & Tooling",
             items: [
-              "developers/scenario-reference/overview",
-              "developers/scenario-reference/structure",
-              "developers/scenario-reference/values-simple",
-              "developers/scenario-reference/values-complex",
-              "developers/scenario-reference/embed",
+              "developers/meta/sc-meta",
+              "developers/meta/sc-build-reference",
+              "developers/meta/sc-config",
+              "developers/meta/sc-meta-cli",
+              "developers/meta/sc-allocator",
             ],
           },
+          {
+            type: "category",
+            label: "Testing",
+            items: [
+              "developers/testing/testing-overview",
+              {
+                type: "category",
+                label: "Scenarios",
+                items: [
+                  "developers/testing/scenario/concept",
+                  "developers/testing/scenario/structure-json",
+                  "developers/testing/scenario/values-simple",
+                  "developers/testing/scenario/values-complex",
+                  "developers/testing/scenario/running-scenarios",
+                  "developers/testing/scenario/generating-scenarios",
+                ],
+              },
+              "developers/testing/testing-in-go",
+            ],
+          },
+        ],
+      },
+      {
+        type: "category",
+        label: "Event logs",
+        items: [
+          "developers/event-logs/contract-call-events",
+          "developers/event-logs/contract-deploy-events",
+          "developers/event-logs/esdt-events",
+          "developers/event-logs/execution-events",
+          "developers/event-logs/system-delegation-events",
         ],
       },
       {
@@ -201,6 +242,7 @@ const sidebars = {
         ],
       },
       "sdk-and-tools/notifier",
+      "sdk-and-tools/devcontainers",
       {
         type: "category",
         label: "SDKs",
@@ -248,9 +290,18 @@ const sidebars = {
           "sdk-and-tools/erdcpp",
           "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
-          "sdk-and-tools/sdk-js-wallet-cli",
+          "sdk-and-tools/sdk-js-wallet-cli"
         ],
       },
+      {
+        type: "category",
+        label: "Troubleshooting",
+        items: [
+          "sdk-and-tools/troubleshooting/troubleshooting",
+          "sdk-and-tools/troubleshooting/rust-setup",
+          "sdk-and-tools/troubleshooting/ide-setup"
+        ],
+      }
     ],
     Wallet: [
       "wallet/overview",
@@ -330,6 +381,10 @@ const sidebars = {
       "economics/economics-overview",
       "economics/staking-providers-apr",
     ],
+    Governance: [
+      "governance/overview",
+      "governance/governance-interaction",
+    ],
     Integrators: [
       "integrators/overview",
       {
@@ -348,6 +403,8 @@ const sidebars = {
         items: [
           "integrators/observing-squad",
           "integrators/deep-history-squad",
+          "integrators/snapshotless-observing-squad",
+          "integrators/advanced-observer-settings"
         ],
       },
       {
@@ -359,6 +416,7 @@ const sidebars = {
           "integrators/querying-the-blockchain",
         ],
       },
+      "integrators/walletconnect-json-rpc-methods",
     ],
     "Ad-Astra Bridge": [
       "bridge/architecture",

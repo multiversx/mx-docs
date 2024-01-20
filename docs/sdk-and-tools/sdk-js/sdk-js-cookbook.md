@@ -11,7 +11,7 @@ This page will guide you through the process of handling common tasks using **sd
 This cookbook makes use of `sdk-js 12`. In order to migrate from `sdk-js 11.x` to `sdk-js 12`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
 :::
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/basic.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/basic.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -223,7 +223,7 @@ For a different awaiting strategy, also see [extending sdk-js](https://docs.mult
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/transfers.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/transfers.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -305,7 +305,7 @@ const tx4 = factory.createMultiESDTNFTTransfer({
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_01_deployments.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_01_deployments.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -415,7 +415,7 @@ console.log("Return code:", returnCode);
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_02_abi.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_02_abi.md" } -->
 [comment]: # (mx-context-auto)
 
 ## ABI
@@ -449,7 +449,7 @@ existingContract = new SmartContract({ address: existingContractAddress, abi: ab
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_03_queries.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_03_queries.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -565,7 +565,7 @@ let firstValueAsStruct = <Struct>firstValue;
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/contracts_04_interactions.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_04_interactions.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -788,7 +788,76 @@ For customizing the default parser, also see [extending sdk-js](/sdk-and-tools/s
 
 <!-- END_INCLUDE_FILE -->
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.5.1/cookbook/generated/signing.md" } -->
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_05_events.md" } -->
+
+[comment]: # (mx-context-auto)
+
+## Contract events
+
+[comment]: # (mx-context-auto)
+
+### Decode transaction events
+
+Example of decoding a transaction event having the identifier `deposit`:
+
+```
+const abiContent = await promises.readFile("../contracts/example.abi.json", { encoding: "utf8" });
+const abiObj = JSON.parse(abiContent);
+const abiRegistry = AbiRegistry.create(abiObj);
+const resultsParser = new ResultsParser();
+
+const eventIdentifier = "deposit";
+const eventDefinition = abiRegistry.getEvent(eventIdentifier);
+const transaction = await networkProvider.getTransaction("532087e5021c9ab8be8a4db5ad843cfe0610761f6334d9693b3765992fd05f67");
+const event = transaction.contractResults.items[0].logs.findFirstOrNoneEvent(eventIdentifier);
+const outcome = resultsParser.parseEvent(event, eventDefinition);
+console.log(JSON.stringify(outcome, null, 4));
+```
+
+<!-- END_INCLUDE_FILE -->
+
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/codec.md" } -->
+
+[comment]: # (mx-context-auto)
+
+## Explicit decoding / encoding of values
+
+[comment]: # (mx-context-auto)
+
+### Decoding a custom type
+
+Example of decoding a custom type (a structure) called `DepositEvent` from binary data:
+
+```
+import { AbiRegistry, BinaryCodec } from "@multiversx/sdk-core";
+import { promises } from "fs";
+
+const abiJson = await promises.readFile("../contracts/example.abi.json", { encoding: "utf8" });
+const abiObj = JSON.parse(abiJson);
+const abiRegistry = AbiRegistry.create(abiObj);
+const depositCustomType = abiRegistry.getCustomType("DepositEvent");
+const codec = new BinaryCodec();
+let data = Buffer.from("00000000000003db000000", "hex");
+let decoded = codec.decodeTopLevel(data, depositCustomType);
+let decodedValue = decoded.valueOf();
+
+console.log(JSON.stringify(decodedValue, null, 4));
+```
+
+Example of decoding a custom type (a structure) called `Reward` from binary data:
+
+```
+const rewardStructType = abiRegistry.getStruct("Reward");
+data = Buffer.from("010000000445474c440000000201f400000000000003e80000000000000000", "hex");
+
+[decoded] = codec.decodeNested(data, rewardStructType);
+decodedValue = decoded.valueOf();
+console.log(JSON.stringify(decodedValue, null, 4));
+```
+
+<!-- END_INCLUDE_FILE -->
+
+<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/signing.md" } -->
 
 [comment]: # (mx-context-auto)
 

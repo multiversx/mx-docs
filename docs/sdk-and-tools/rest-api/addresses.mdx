@@ -265,9 +265,13 @@ Balance successfully retrieved.
 
 [comment]: # (mx-context-auto)
 
-## <span class="badge badge--primary">GET</span> **Get Address Transactions** {#get-address-transactions}
+## <span class="badge badge--primary">GET</span> **Get Address Transactions (deprecated)** {#get-address-transactions}
 
 `https://gateway.multiversx.com/address/:bech32Address/transactions`
+
+:::caution
+This endpoint is deprecated. In order to fetch the Transactions involving an Address, use the [transactions](https://api.multiversx.com/#/accounts/AccountController_getAccountTransactions) endpoint of MultiversX API, instead.
+:::
 
 This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
 
