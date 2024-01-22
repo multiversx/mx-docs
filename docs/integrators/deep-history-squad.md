@@ -35,32 +35,59 @@ In the example above, the key `726573657276650000000a55544b2d326638306539` is de
 
 [comment]: # (mx-context-auto)
 
-## On-premises instance
+## MultiversX squad
 
-Deep-history squads can be set up on-premises, just as regular observing squads. However, the storage requirements is significantly higher. For example, a deep-history squad for _mainnet_, configured for the interval April 2022 - September 2023, requires about 5TB of storage:
+The observing squads backing the public Gateways, in addition to being full history squads (serving past blocks, transaction and events up until the Genesis), also act as 3-epochs deep-history squads. That is, for Mainnet, one can use `https://gateway.multiversx.com` to resolve historical account (state) queries, for the last 3 days. This interval is driven by the configuration parameter `[StoragePruning.NumEpochsToKeep]`, which is set to `4`, by default.
+
+In general:
 
 ```
-326G    ./node-metachain
-864G    ./node-0
-1.4T    ./node-2
-2.6T    ./node-1
+...                                  deep history not available
+CurrentEpoch - NumEpochsToKeep - 1:  deep history not available
+CurrentEpoch - NumEpochsToKeep:      deep history not available
+CurrentEpoch - NumEpochsToKeep + 1:  deep history parially available
+CurrentEpoch - NumEpochsToKeep + 2:  deep history available
+CurrentEpoch - NumEpochsToKeep + 3:  deep history available 
+...                                  deep history available
+CurrentEpoch:                        deep history available
+```
+
+In particular, for the public Gateway:
+
+```
+...                 deep history not available
+CurrentEpoch - 5:   deep history not available
+CurrentEpoch - 4    deep history not available
+CurrentEpoch - 3:   deep history parially available
+CurrentEpoch - 2:   deep history available
+CurrentEpoch - 1:   deep history available
+CurrentEpoch:       deep history available
+```
+
+[comment]: # (mx-context-auto)
+
+## On-premises squad
+
+Deep-history squads can be set up on-premises, just as regular observing squads. However, the storage requirements is significantly higher. For example, a deep-history squad for _mainnet_, configured for the interval July 2020 (Genesis) - January 2024 (Sirius), requires about 7.5 TB of storage:
+
+```
+307G    ./node-metachain
+1.4T    ./node-0
+3.9T    ./node-1
+2.0T    ./node-2
 ```
 
 Since each observer of a deep-history squad must have a non-pruned history, their (non-ordinary) databases have to be either **downloaded** or **reconstructed**, in advance.
 
 [comment]: # (mx-context-auto)
 
-### Downloading non-pruned database
+## Downloading non-pruned database
 
 An archive supporting historical lookup is available to download [on request](https://discord.gg/multiversxbuilders), from a cloud-based, _S3-compatible storage_.
 
 The archive consists of:
  - Individual files per epoch: `Epoch_*.tar`
  - A file for the static database: `Static.tar`
-
-:::info
-Only data after **epoch 605** (end of March 2022) is available on the cloud-based storage. For earlier data, reconstruction is necessary - see section below.
-:::
 
 [comment]: # (mx-context-auto)
 
@@ -86,7 +113,7 @@ The reconstruction (which uses _import-db_ under the hood, as previously stated)
 
 [comment]: # (mx-context-auto)
 
-### Starting the squad
+## Starting a squad
 
 The squad can be started using docker-compose, as follows (the example is for _devnet_):
 
