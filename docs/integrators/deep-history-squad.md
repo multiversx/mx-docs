@@ -13,6 +13,10 @@ This page describes the Deep History Squad, which holds the entire trie data, so
 
 A variant of the standard [**observing squad**](/integrators/observing-squad) is one that retains a non-pruned history of the blockchain and allows one to query the state of an account at an arbitrary block in the past. Such a setup is called a [**deep-history observing squad**](https://github.com/multiversx/mx-chain-deep-history).
 
+:::tip
+The standard observing squad is sufficient for most use-cases. It is able to resolve past blocks, miniblocks, transactions, transaction events etc. Most often, you do not need a deep-history squad, but a [**regular observing squad**](/integrators/observing-squad), instead.
+:::
+
 A deep-history setup is able to resolve historical account (state) queries, that is, to answer questions such as:
 
 > What was Alice's balance on [May the 4th](https://explorer.multiversx.com/blocks/5f6a02d6a5d2a851fd6dc1fb53435083830c2a13121e003958d97c2389711f06)?
@@ -37,7 +41,7 @@ In the example above, the key `726573657276650000000a55544b2d326638306539` is de
 
 ## MultiversX squad
 
-The observing squads backing the public Gateways, in addition to being full history squads (serving past blocks, transaction and events up until the Genesis), also act as 3-epochs deep-history squads. That is, for Mainnet, one can use `https://gateway.multiversx.com` to resolve historical account (state) queries, for the last 3 days. This interval is driven by the configuration parameter `[StoragePruning.NumEpochsToKeep]`, which is set to `4`, by default.
+The observing squads backing the public Gateways, in addition to being full history squads (serving past blocks, transaction and events up until the Genesis), also act as 3-epochs deep-history squads. That is, for **mainnet**, one can use https://gateway.multiversx.com to resolve historical account (state) queries, for the last 3 days. This interval is driven by the configuration parameter `[StoragePruning.NumEpochsToKeep]`, which is set to `4`, by default.
 
 In general:
 
@@ -68,7 +72,7 @@ CurrentEpoch:       deep history available
 
 ## On-premises squad
 
-Deep-history squads can be set up on-premises, just as regular observing squads. However, the storage requirements is significantly higher. For example, a deep-history squad for _mainnet_, configured for the interval July 2020 (Genesis) - January 2024 (Sirius), requires about 7.5 TB of storage:
+Deep-history squads can be set up on-premises, just as regular observing squads. However, the storage requirements is significantly higher. For example, a deep-history squad for **mainnet**, configured for the interval July 2020 (Genesis) - January 2024 (Sirius), requires about 7.5 TB of storage:
 
 ```
 307G    ./node-metachain
@@ -77,31 +81,71 @@ Deep-history squads can be set up on-premises, just as regular observing squads.
 2.0T    ./node-2
 ```
 
-Since each observer of a deep-history squad must have a non-pruned history, their (non-ordinary) databases have to be either **downloaded** or **reconstructed**, in advance.
+Since each observer of a deep-history squad must have a non-pruned history, their (non-ordinary) databases have to be either **downloaded** or **reconstructed**, in advance (covered later, in detail).
+
+[comment]: # (mx-context-auto)
+
+## Observer configuration
+
+A deep history squad has it's observers configured to retain the whole, non-pruned history of the blockchain. That is, the observers must have the following settings in their `prefs.toml`:
+
+```
+[Preferences]
+    FullArchive = true
+
+    OverridableConfigTomlValues = [
+        { File = "config.toml", Path = "DbLookupExtensions.Enabled", Value = "true" },
+        { File = "config.toml", Path = "StateTriesConfig.AccountsStatePruningEnabled", Value = "false" },
+        { File = "config.toml", Path = "StateTriesConfig.SnapshotsEnabled", Value = "true" },
+        { File = "config.toml", Path = "StoragePruning.ObserverCleanOldEpochsData", Value = "false" },
+        { File = "config.toml", Path = "StoragePruning.AccountsTrieCleanOldEpochsData", Value = "false" },
+        { File = "config.toml", Path = "StateTriesConfig.PeerStatePruningEnabled", Value = "true" },
+        { File = "config.toml", Path = "GeneralSettings.StartInEpochEnabled", Value = "false" }
+    ]
+```
+
+Above, the most important settings for retaining the non-pruned history are:
+
+```
+StateTriesConfig.AccountsStatePruningEnabled = false
+StoragePruning.AccountsTrieCleanOldEpochsData = false
+```
+
+:::tip
+Apart from the configuration above, the setup of a deep-history observer is identical to a regular full-history observer.
+:::
+
+:::warning
+Never attach a non-pruned database to a regular observer (i.e. that does not have the above settings) - unless you are not interested into the deep-history features. The regular observer irremediably removes, trucates and prunes the data (as configured, for storage efficiency).
+:::
 
 [comment]: # (mx-context-auto)
 
 ## Downloading non-pruned database
 
-An archive supporting historical lookup is available to download [on request](https://discord.gg/multiversxbuilders), from a cloud-based, _S3-compatible storage_.
+An archive supporting historical lookup is available to download.
 
-The archive consists of:
- - Individual files per epoch: `Epoch_*.tar`
- - A file for the static database: `Static.tar`
+TBD
 
 [comment]: # (mx-context-auto)
 
 ## Reconstructing non-pruned databases
 
-An alternative to downloading the non-pruned history is to reconstruct it locally (on your own infrastructure). The reconstruction process is based on the **[import-db](/validators/import-db/)** feature, which re-processes past blocks - and, while doing so, retain the whole, non-pruned accounts history.
+An alternative to downloading the non-pruned history is to reconstruct it locally (on your own infrastructure). The reconstruction process is based on the **[import-db](/validators/import-db/)** feature, which re-processes past blocks - and, while doing so, retains the whole, non-pruned accounts history.
 
-First, you need to decide whether to reconstruct a **complete** or a **partial** history. A _complete_ history provides the deep-history squad the ability to resolve historical account (state) queries up until the Genesis. A _partial_ history, instead, allows it to resolve state queries up until a chosen epoch.
+First, you need to decide whether to reconstruct a **complete** or a **partial** history. A _complete_ history provides the deep-history squad the ability to resolve historical account (state) queries **up until the Genesis**. A _partial_ history, instead, allows it to resolve state queries up until **a chosen past epoch** or **between two chosen epochs**.
 
+:::note
 The reconstruction flow has to be performed **for each shard, separately**.
+:::
 
 ### Reconstruct a complete history
 
-First, set up the reconstruction workspace in a folder of your choice (for a chosen shard), as follows:
+:::note
+Below, the reconstruction is exemplified for **mainnet, shard 0**. The same applies to other networks (devnet, testnet) and shards (including the metachain). Furthermore, the example refers to the latest Protocol release as of January 2024 (Sirius). When reconstructing the history, use the latest release available.
+:::
+
+First, set up the reconstruction workspace in a folder of your choice (for the chosen shard), as follows:
 
 ```
 # In most cases, this should be the latest tag:
@@ -119,76 +163,76 @@ git clone https://github.com/multiversx/mx-chain-go.git --branch=$BINARY_TAG --s
 go build -C mx-chain-go/cmd/node -o $(pwd)/node
 ```
 
-Afterwards, apply the following configuration in `config/prefs.toml`:
+Afterwards, open the configuration file `config/prefs.toml` and apply the configuration depicted above, in the section [**Observer configuration**](#observer-configuration).
 
-```
-[Preferences]
-    FullArchive = true
-
-    OverridableConfigTomlValues = [
-        { File = "config.toml", Path = "DbLookupExtensions.Enabled", Value = "true" },
-        { File = "config.toml", Path = "StateTriesConfig.AccountsStatePruningEnabled", Value = "false" },
-        { File = "config.toml", Path = "StateTriesConfig.SnapshotsEnabled", Value = "true" },
-        { File = "config.toml", Path = "StoragePruning.ObserverCleanOldEpochsData", Value = "false" },
-        { File = "config.toml", Path = "StoragePruning.AccountsTrieCleanOldEpochsData", Value = "false" },
-        { File = "config.toml", Path = "StateTriesConfig.PeerStatePruningEnabled", Value = "true" },
-    ]
-```
-
-Above, the most important settings for reconstructing and retaining the non-pruned history are:
-
-```
-StateTriesConfig.AccountsStatePruningEnabled = false
-StoragePruning.AccountsTrieCleanOldEpochsData = false
-```
-
-Then, get (download) and extract a recent daily archive (snapshot) for the shard in question (e.g. shard 0). The daily archives are available to download on request ([Discord](https://discord.gg/multiversxbuilders) or [Telegram](https://t.me/MultiversXValidators)), from a cloud-based, _S3-compatible storage_ (Digital Ocean Spaces):
-
-:::note
-Downloading the archives and extracting them might take a while.
+:::warning
+Editing the configuration is crucial for reconstructing and retaining the non-pruned history. Skipping this will result in a pruned database.
 :::
 
-```
-wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz
-tar -xf Full-History-DB-Shard-0.tar.gz
-```
+Then, get (download) and extract **a recent daily archive (snapshot)** for the shard in question (e.g. shard 0). The daily archives are available to download **on request** ([Discord](https://discord.gg/multiversxbuilders) or [Telegram](https://t.me/MultiversXValidators)), from a cloud-based, _S3-compatible storage_ (Digital Ocean Spaces) - or you could fetch them from an existing regular full-history observer that you own. 
 
-Upon extraction, you'll have a new folder in your workspace: `db`. Prepare the import database as follows:
+Upon extracting the downloaded archive, you'll have a new folder in your workspace: `db`, which contains the blockchain data for the shard in question. This data should be moved to a new folder, named `import-db`. All in all, the steps are as follows:
 
 ```
-# "import-db" will contain the whole blockchain to be re-processed
+# Ask for the full download link on Discord or Telegram:
+wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz || exit 1
+# This produces a new folder: "db"
+tar -xf Full-History-DB-Shard-0.tar.gz || exit 1
+
+# "import-db" should contain the whole blockchain to be re-processed
 mkdir -p ./import-db && mv db ./import-db
 # "db" will contain the reconstructed database (empty at first)
 mkdir -p ./db
 ```
 
-After this, the workspace should look as follows:
+:::note
+Downloading the archives and extracting them might take a while.
+:::
+
+Now, the reconstruction workspace should look as follows (irrelevant files omitted):
 
 ```
 .
-├── config
+├── config          # network configuration files
 ├── import-db
 │   └── db          # blockchain data
 ├── db              # empty
-├── mx-chain-go
-└── node
+└── node            # binary file, the Node itself
 ```
 
-Now, you are ready to start the reconstruction process (e.g. for shard 0):
+We are ready to start the reconstruction process :rocket:
 
 ```
 ./node --import-db=./import-db --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
 ```
 
 :::note
-The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives.
+The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time (e.g. days) - depending on the machine's resources (CPU, storage capabilities and memory).
 :::
 
-Once the **import-db** is over, the `db` folder contains the reconstructed database for the shard in question, ready to be attached to an observer of the deep-history squad.
+Once the **import-db** is over, the `db` folder contains the reconstructed database for the shard in question. You can smoke test it by launching (in-place) an ephemeral observer:
+
+```
+./node --use-log-view --log-save --destination-shard-as-observer 0
+```
+
+Then, in another terminal, do a historical (state) query against the ephemeral observer:
+
+```
+curl http://localhost:8080/address/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx?blockNonce=42 | jq
+```
+
+The `db` folder is ready to be attached to a deep-history observer (observer with the configuration described above).
+
+Now, do the same for the other shards, as needed.
+
+:::tip
+The configuration files used within the reconstruction flow (**import-db**) are identical to the ones that should be applied to on-line deep-history observers.
+:::
 
 ### Reconstruct a partial history
 
-TBD
+Instead of reconstructing the whole history since Genesis, you may want to reconstruct a partial history, starting from a chosen epoch up until the latest epoch, or a history between two chosen epochs.
 
 ## Starting a squad
 
