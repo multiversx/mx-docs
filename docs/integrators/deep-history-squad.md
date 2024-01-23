@@ -91,27 +91,104 @@ The archive consists of:
 
 [comment]: # (mx-context-auto)
 
-### Reconstructing non-pruned databases
+## Reconstructing non-pruned databases
 
-An alternative to downloading a non-pruned history is to reconstruct it locally (on your own infrastructure).
+An alternative to downloading the non-pruned history is to reconstruct it locally (on your own infrastructure). The reconstruction process is based on the **[import-db](/validators/import-db/)** feature, which re-processes past blocks - and, while doing so, retain the whole, non-pruned accounts history.
 
-Under the hood, the reconstruction process relies on the **[import-db](https://docs.multiversx.com/validators/import-db/)** feature, which allows us to reprocess previously processed blocks - and, while doing so, retain the whole, non-pruned accounts history. 
+First, you need to decide whether to reconstruct a **complete** or a **partial** history. A _complete_ history provides the deep-history squad the ability to resolve historical account (state) queries up until the Genesis. A _partial_ history, instead, allows it to resolve state queries up until a chosen epoch.
 
-!TBD!
+The reconstruction flow has to be performed **for each shard, separately**.
 
-_Downloading_ the necessary archives and _unarchiving_ them is encapsulated in a step called **reconstruction bootstrapping**.
+### Reconstruct a complete history
 
-!TBD!
+First, set up the reconstruction workspace in a folder of your choice (for a chosen shard), as follows:
 
-:::tip
+```
+# In most cases, this should be the latest tag:
+# https://github.com/multiversx/mx-chain-mainnet-config/releases/latest
+export CONFIG_TAG=v1.6.13.0
+
+# Clone mainnet config into a folder named "config"
+git clone https://github.com/multiversx/mx-chain-mainnet-config --branch=$CONFIG_TAG --single-branch --depth=1 config
+
+# In most cases, this should be the tag found in the file "config/binaryVersion":
+export BINARY_TAG=v1.6.13
+
+# Clone and build the node binary
+git clone https://github.com/multiversx/mx-chain-go.git --branch=$BINARY_TAG --single-branch --depth=1
+go build -C mx-chain-go/cmd/node -o $(pwd)/node
+```
+
+Afterwards, apply the following configuration in `config/prefs.toml`:
+
+```
+[Preferences]
+    FullArchive = true
+
+    OverridableConfigTomlValues = [
+        { File = "config.toml", Path = "DbLookupExtensions.Enabled", Value = "true" },
+        { File = "config.toml", Path = "StateTriesConfig.AccountsStatePruningEnabled", Value = "false" },
+        { File = "config.toml", Path = "StateTriesConfig.SnapshotsEnabled", Value = "true" },
+        { File = "config.toml", Path = "StoragePruning.ObserverCleanOldEpochsData", Value = "false" },
+        { File = "config.toml", Path = "StoragePruning.AccountsTrieCleanOldEpochsData", Value = "false" },
+        { File = "config.toml", Path = "StateTriesConfig.PeerStatePruningEnabled", Value = "true" },
+    ]
+```
+
+Above, the most important settings for reconstructing and retaining the non-pruned history are:
+
+```
+StateTriesConfig.AccountsStatePruningEnabled = false
+StoragePruning.AccountsTrieCleanOldEpochsData = false
+```
+
+Then, get (download) and extract a recent daily archive (snapshot) for the shard in question (e.g. shard 0). The daily archives are available to download on request ([Discord](https://discord.gg/multiversxbuilders) or [Telegram](https://t.me/MultiversXValidators)), from a cloud-based, _S3-compatible storage_ (Digital Ocean Spaces):
+
+:::note
 Downloading the archives and extracting them might take a while.
 :::
 
-:::tip
+```
+wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz
+tar -xf Full-History-DB-Shard-0.tar.gz
+```
+
+Upon extraction, you'll have a new folder in your workspace: `db`. Prepare the import database as follows:
+
+```
+# "import-db" will contain the whole blockchain to be re-processed
+mkdir -p ./import-db && mv db ./import-db
+# "db" will contain the reconstructed database (empty at first)
+mkdir -p ./db
+```
+
+After this, the workspace should look as follows:
+
+```
+.
+├── config
+├── import-db
+│   └── db          # blockchain data
+├── db              # empty
+├── mx-chain-go
+└── node
+```
+
+Now, you are ready to start the reconstruction process (e.g. for shard 0):
+
+```
+./node --import-db=./import-db --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
+```
+
+:::note
 The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time - depending on machine's resources (CPU & memory), and on the distance between the chosen archives.
 :::
 
-[comment]: # (mx-context-auto)
+Once the **import-db** is over, the `db` folder contains the reconstructed database for the shard in question, ready to be attached to an observer of the deep-history squad.
+
+### Reconstruct a partial history
+
+TBD
 
 ## Starting a squad
 
