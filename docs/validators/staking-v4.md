@@ -8,7 +8,7 @@ title: Staking v4
 Staking and delegation are processes that evolve over time. No system has to remain static. Our assumptions about how
 the market works and reacts can change, just as user behavior and market dynamics may evolve. Currently, we have
 approximately 400 validators, with some acting as staking providers and others as individual validator operators. While
-most nodes have a comfortable top-up on the base stake of 2.5k eGLD, some do not contribute to the network's security by
+most nodes have a comfortable top-up on the base stake of 2.500 eGLD, some do not contribute to the network's security by
 adding more top-up.
 
 # **Problems with the Current Implementation**
@@ -22,7 +22,7 @@ The issues with the current implementation include:
 One of our primary objectives is to eliminate the additional queue and leverage the top-up value per node to determine
 the best nodes. This ensures that we do not restrict the entry of new validators, as the current system requires an old
 validator to leave for a new one to enter. The market will determine the actual node price, operating as a soft auction
-where anyone paying the node price (2.5k eGLD) can register, but the node becomes a validator only if it has sufficient
+where anyone paying the node price (2.500 eGLD) can register, but the node becomes a validator only if it has sufficient
 top-up. The shuffling from the waiting list to the eligible list remains unaffected, focusing solely on selecting nodes
 from the auction list to the waiting list.
 
@@ -35,11 +35,11 @@ in two ways.
 topUp, and only the first ones are selected.
 
 This approach is strict, requiring validators to manage their number of nodes if their topUp is close to the selection
-threshold. The topUp is computed as TotalStake/NumberOfNodes - 2.5k eGLD. If a validator registers more nodes, their
+threshold. The topUp is computed as TotalStake/NumberOfNodes - 2.500 eGLD. If a validator registers more nodes, their
 topUp per node decreases. For example:
 
-- 10 nodes, 50k eGLD = 2.5k topUp per node
-- 20 nodes, 50k eGLD = 0 topUp
+- 10 nodes, 50.000 eGLD = 2.500 eGLD topUp per node
+- 20 nodes, 50.000 eGLD = 0 eGLD topUp per node
 
 In this scenario, if a staking provider registers all 20 nodes, they will be at the end of the list in case of an
 auction selection. If only 320 nodes out of 340 can be selected, and every other node has at least 1 eGLD topUp on each
@@ -308,12 +308,12 @@ topUp per node is available in the explorer, allowing validators to strategize e
 
 ## What happens if there are fewer nodes in the auction than available slots?
 
-In this case, all nodes will be selected, regardless of their topUP.
+In this case, all nodes will be selected, regardless of their topUp.
 
 ## One of my nodes was sent to auction during stakingV4 step 2. Will I lose rewards?
 
 If one of your nodes is shuffled out into the auction list during step2, it will enter into competition with the other
-existing nodes. If you have enough topUP, nothing changes, and no rewards will be lost. For owners contributing to the
+existing nodes. If you have enough topUp, nothing changes, and no rewards will be lost. For owners contributing to the
 ecosystem and maintaining a sufficient topUp, this change will not have any negative impact. However, if you have low
 topUp or close to zero, your nodes might be unqualified and remain in the auction list.
 
