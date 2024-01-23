@@ -17,10 +17,7 @@ The issues with the current implementation include:
 
 - Limiting the number of nodes to 3200, creating an additional queue. New validators can join the network only if
   someone leaves the system.
-- Concentration of power among large providers, hindering decentralization. MultiversX Foundation together with the top
-  11 staking agencies control 33%.
-- Large providers strategically place nodes in the waiting list, taking advantage of their position when a slot becomes
-  available.
+- Concentration of power among large providers, hindering decentralization. Top 11 staking agencies control 33%.
 
 One of our primary objectives is to eliminate the additional queue and leverage the top-up value per node to determine
 the best nodes. This ensures that we do not restrict the entry of new validators, as the current system requires an old
@@ -86,19 +83,22 @@ Nodes are distributed in the following steps:
    shard's waiting list.
 
 In the current implementation, each node, regardless of its top-up, has equal chances of participating in the consensus.
-However, starting with staking phase 4, validators with higher staked top-up will have higher chances of participation.
+Starting with staking phase 4, the probability of validators entering the validation process will be significantly
+influenced by the amount of their staked top-up. Validators with a higher staked top-up will have considerably greater
+chances of participation, while those with little or no top-up will find their chances of entering into validation
+markedly reduced.
 
 # **Staking V4**
 
 Staking phase 4 will unfold in three consecutive steps, each corresponding to a specific epoch.
 
-## Staking v4. Phase 1.
+## Staking v4. Step 1.
 
 In the first step, we will completely **remove the staking queue** and place all nodes in an **auction list**. This
 process will occur automatically at the end of the epoch and requires no interaction from validators. Nodes'
 distribution remains unchanged.
 
-![Staking V4 Phase 1](/validators/stakingV4/stakingV4-phase1.png)
+![Staking V4 Step 1](/validators/stakingV4/stakingV4-step1.png)
 
 :::important Important notes
 
@@ -126,16 +126,16 @@ Assuming a minimum price of 2500 EGLD per staked node, the owner should have a m
 2500 EGLD). If, during the epoch, the owner unstakes 4000 EGLD, resulting in a base stake of 6000 EGLD, only two staked
 nodes can be covered. At the end of the epoch, the nodes `node4` and `node3` will be unstaked in the specified order.
 
-## Staking v4. Phase 2.
+## Staking v4. Step 2.
 
 In the second step, all **shuffled-out** nodes from the **eligible list** will be sent to the **auction list**. Waiting
 lists will not be filled by any shuffled-out nodes.
 
 Using the example above, this will resize each waiting list per shard from 400 nodes to 320 nodes.
 
-![Staking V4 Phase 2](/validators/stakingV4/stakingV4-phase2.png)
+![Staking V4 Step 2](/validators/stakingV4/stakingV4-step2.png)
 
-## Staking v4. Phase 3.
+## Staking v4. Step 3.
 
 Starting with this epoch:
 
@@ -151,7 +151,7 @@ Starting with this epoch:
   waiting list is filled, and the nodes' configuration is maintained.
 - Distribution from the `waiting` to the `eligible` list will remain unchanged.
 
-![](/validators/stakingV4/stakingV4-phase3.png)
+![](/validators/stakingV4/stakingV4-step3.png)
 
 ## Staking v4. Soft Auction Selection Mechanism
 
@@ -230,7 +230,7 @@ selection will be based on sorting the BLS keys.
 
 :::note
 
-The minimum required topUp per node, along with the real-time auction list, will be accessible in the explorer at all
+The minimum required topUp per node, along with the real-time auction list, is accessible in the explorer at all
 times. This allows owners to determine the optimal strategy for maximizing the number of selected auction nodes.
 
 :::
@@ -304,15 +304,15 @@ The required topUp for validators depends on various factors, including the numb
 auction selection mechanism. The soft auction selection dynamically computes the minimum required topUp per node to
 qualify for distribution from the auction to the waiting list. To maximize the chances of having auction nodes selected,
 validators are encouraged to maintain a competitive topUp. Real-time auction list information and the minimum required
-topUp per node will be available in the explorer, allowing validators to strategize effectively.
+topUp per node is available in the explorer, allowing validators to strategize effectively.
 
 ## What happens if there are fewer nodes in the auction than available slots?
 
 In this case, all nodes will be selected, regardless of their topUP.
 
-## One of my nodes was sent to auction during stakingV4 phase2. Will I lose rewards?
+## One of my nodes was sent to auction during stakingV4 step 2. Will I lose rewards?
 
-If one of your nodes is shuffled out into the auction list during phase2, it will enter into competition with the other
+If one of your nodes is shuffled out into the auction list during step2, it will enter into competition with the other
 existing nodes. If you have enough topUP, nothing changes, and no rewards will be lost. For owners contributing to the
 ecosystem and maintaining a sufficient topUp, this change will not have any negative impact. However, if you have low
 topUp or close to zero, your nodes might be unqualified and remain in the auction list.
@@ -324,8 +324,8 @@ Short answer: _to keep the APR unchanged_.
 Before stakingV4, if a node was shuffled out and moved to the waiting list, it was guaranteed to be "idle" (not
 participating in consensus) for 5 epochs. During this time, the node would not gain any rewards.
 
-During stakingV4 phase2, no node from the waiting list is moved to active. If we were to keep the same configuration, a
-shuffled out node from this phase would have to wait 6 epochs until eligible (if selected from the auction) and
+During stakingV4 step2, no node from the waiting list is moved to active. If we were to keep the same configuration, a
+shuffled out node from this step would have to wait 6 epochs until eligible (if selected from the auction) and
 therefore decreasing the overall APR:
 
 ## How does the dynamic node limitation work?
