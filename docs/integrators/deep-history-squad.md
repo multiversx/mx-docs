@@ -210,7 +210,12 @@ We are ready to start the reconstruction process :rocket:
 The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time (e.g. days) - depending on the machine's resources (CPU, storage capabilities and memory).
 :::
 
-Once the **import-db** is over, the `db` folder contains the reconstructed database for the shard in question. You can smoke test it by launching (in-place) an ephemeral observer:
+Once the **import-db** is over, the `db` folder contains the reconstructed database for the shard in question, ready to be attached to a deep-history observer (observer with the configuration described above).
+
+Now, do the same for the other shards, as needed.
+
+:::tip
+You can smoke test the data by launching an (in-place) ephemeral observer:
 
 ```
 ./node --use-log-view --log-save --destination-shard-as-observer 0
@@ -221,10 +226,7 @@ Then, in another terminal, do a historical (state) query against the ephemeral o
 ```
 curl http://localhost:8080/address/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx?blockNonce=42 | jq
 ```
-
-The `db` folder is ready to be attached to a deep-history observer (observer with the configuration described above).
-
-Now, do the same for the other shards, as needed.
+:::
 
 :::tip
 The configuration files used within the reconstruction flow (**import-db**) are identical to the ones that should be applied to on-line deep-history observers.
