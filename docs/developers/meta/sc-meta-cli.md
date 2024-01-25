@@ -209,6 +209,30 @@ Paramameter:
     -  The framework version on which the contracts should be created.
     - _default_: The latest released version.
 
+[comment]: # (mx-context-auto)
+
+### Calling `test`
+
+This command runs `cargo test`, which builds the project and runs the tests.
+
+Parameters:
+- `--path`  
+    - Target directory where to generate contract integration tests.
+    - _default_: current directory.
+- `--go`            
+    - This arg runs rust and go tests.
+    - _default_: `false`
+- `--scen`          
+    - This arg runs scenarios.
+    - _default_: `false`
+    - If scen and go are both specified, scen overrides the go argument.
+- `--nocapture`    
+    - This arg prints the entire output of the vm.
+    - _default_: `false`
+- `--help`        
+    - Print help
+- `--version`      
+    - Print version
 
 [comment]: # (mx-context-auto)
 
