@@ -254,7 +254,7 @@ go build -C mx-chain-go/cmd/node -o $(pwd)/node
 
 Afterwards, open the configuration file `config/prefs.toml` and apply the configuration depicted in the section [**Observer configuration**](#observer-configuration).
 
-If you want the reconstruction to end at a chosen epoch, enable the `BlockProcessingCutoff` feature in `config/prefs.toml`:
+Then, since we'd like to stop upon reconstruction of epoch `1260` (our example), we enable the `BlockProcessingCutoff` feature in `config/prefs.toml`:
 
 ```
 [BlockProcessingCutoff]
@@ -310,7 +310,7 @@ Once the **import-db** is over, the `db` folder can be attached to a deep-histor
 Documentation in this section is preliminary and subject to change.
 :::
 
-Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius.md), deep-history observers can resolve VM queries up to `[StoragePruning.NumActivePersisters]` (by default, 3) epochs in the past.
+Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius.md), deep-history observers can resolve VM queries up to `[StoragePruning.NumActivePersisters]` (by default, 3) epochs in the past. Such a query specifies the `blockNonce` parameter:
 
 ```
 POST http://localhost:8080/vm-values/query?blockNonce={...} HTTP/1.1
@@ -344,7 +344,7 @@ Suppose you have prepared the data for a deep-history squad beforehand, whether 
     ├── ...
 ```
 
-The squad can be started using docker-compose, as follows (the example is for **mainnet**):
+The squad can be started using docker-compose (the example is for **mainnet**):
 
 ```
 # Download the docker-compose configuration (skip this step if performed before)
