@@ -123,9 +123,11 @@ Never attach a non-pruned database to a regular observer (i.e. that does not hav
 
 ## Downloading non-pruned database
 
-An archive supporting historical lookup is available to download.
+Archives supporting historical lookup are available to download from a Google Cloud Storage bucket.
 
-TBD
+:::important
+Documentation in this section is preliminary and subject to change.
+:::
 
 [comment]: # (mx-context-auto)
 
