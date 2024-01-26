@@ -234,7 +234,62 @@ The configuration files used within the reconstruction flow (**import-db**) are 
 
 ### Reconstruct a partial history
 
+:::tip
+Make sure to read the section [**Reconstruct a complete history**](#reconstruct-a-complete-history) first, to understand the basics.
+:::
+
 Instead of reconstructing the whole history since Genesis, you may want to reconstruct a partial history, starting from a chosen epoch up until the latest epoch, or a history between two chosen epochs.
+
+First, set up the reconstruction workspace in a folder of your choice, the same as for reconstructing a complete history (see above). That is:
+
+```
+git clone https://github.com/multiversx/mx-chain-mainnet-config --branch=$CONFIG_TAG --single-branch --depth=1 config
+git clone https://github.com/multiversx/mx-chain-go.git --branch=$BINARY_TAG --single-branch --depth=1
+go build -C mx-chain-go/cmd/node -o $(pwd)/node
+```
+
+Afterwards, open the configuration file `config/prefs.toml` and apply the configuration depicted in the section [**Observer configuration**](#observer-configuration).
+
+If you want the reconstruction to end at a chosen epoch, enable the `BlockProcessingCutoff` feature in `config/prefs.toml`:
+
+```
+[BlockProcessingCutoff]
+   Enabled = true
+   Mode = "pause"
+   CutoffTrigger = "epoch"
+   # A chosen epoch
+   Value = 123
+```
+
+Now, get (download) and extract **a daily archive (snapshot)** for the shard in question (e.g. shard 0), archive which includes the end epoch, if one is chosen. Alternatively, simply download a recent daily archive (snapshot). Then, extract the downloaded archive and **use it's payload as both `db` and `import-db`**.
+
+```
+wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz || exit 1
+# This produces a new folder: "db"
+tar -xf Full-History-DB-Shard-0.tar.gz || exit 1
+# Use the payload as both "db" and "import-db"
+mkdir -p ./import-db && cp db ./import-db
+```
+
+The reconstruction workspace should look as follows (irrelevant files omitted):
+
+```
+.
+├── config          # network configuration files
+├── import-db
+│   └── db          # blockchain data
+├── db              # blockchain data
+└── node            # binary file, the Node itself
+```
+
+Now, in order to pick an actual starting epoch for the `import-db` process, find the closest epoch older than the chosen one, whose `AccountsTrie` is available in the downloaded archive. For the official daily archives (snapshots taken from regular full history observers), the `AccountsTrie` is available for every 50 epochs - this is dictated by the `AccountsTrieSkipRemovalCustomPattern` configuration parameter of the observer that produced the daily archive. For example, if the chosen epoch for reconstruction is `107`, then the actual starting epoch for `import-db` should be `100` .
+
+We are ready to start the reconstruction process from epoch 100 to epoch 123 (example) :rocket:
+
+```
+./node --import-db=./import-db --import-db-start-epoch=100 --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
+```
+
 
 ## Starting a squad
 
