@@ -302,6 +302,27 @@ We are now ready to start the reconstruction process :rocket:
 
 Once the **import-db** is over, the `db` folder can be attached to a deep-history observer to support historical account (state) queries for the epochs `1255 - 1260` (actually, even more, for `1251 - 1260`).
 
+## Historical VM queries
+
+:::important
+Documentation in this section is preliminary and subject to change.
+:::
+
+Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius.md), deep-history observers can resolve VM queries up to `[StoragePruning.NumActivePersisters]` (by default, 3) epochs in the past.
+
+```
+POST http://localhost:8080/vm-values/query?blockNonce={...} HTTP/1.1
+Content-Type: application/json
+
+{
+  "scAddress": "...",
+  "funcName": "...",
+  "args": [ ... ]
+}
+```
+
+VM queries that refer older data aren't supported as of January 2024 (Sirius). This will be fixed in a future release.
+
 ## Starting a squad
 
 The squad can be started using docker-compose, as follows (the example is for _devnet_):
