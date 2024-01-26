@@ -355,5 +355,8 @@ DEEP_HISTORY_DATA=${HOME}/deep-history-data DOCKER_USER=$(id -u):$(id -g) docker
     --project-name deep-history-squad-mainnet up --detach
 ```
 
-**Congratulations, you've set up a deep-history observing squad!** The gateway should be ready to resolve historical account (state) queries.
+Alternatively, you can set up a squad using any other known approach, **but make sure to apply the necessary configuration changes** described in the section [**Observer configuration**](#observer-configuration).
+
+
+**Congratulations!** You've set up a deep-history observing squad; the gateway should be ready to resolve historical account (state) queries :rocket:
 
