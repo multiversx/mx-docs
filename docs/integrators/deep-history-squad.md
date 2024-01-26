@@ -325,17 +325,34 @@ VM queries that refer older data aren't supported as of January 2024 (Sirius). T
 
 ## Starting a squad
 
-The squad can be started using docker-compose, as follows (the example is for _devnet_):
+Suppose you have prepared the data for a deep-history squad beforehand, whether by downloading it or by reconstructing it locally. Then, the deep-history data root folder should look as follows:
+
+```
+.
+├── mainnet
+│   ├── node-0
+│   │   └── db
+│   ├── node-1
+│   │   └── db
+│   ├── node-2
+│   │   └── db
+│   └── node-metachain
+│       └── db
+└── devnet
+    ├── ...
+```
+
+The squad can be started using docker-compose, as follows (the example is for **mainnet**):
 
 ```
 # Download the docker-compose configuration (skip this step if performed before)
 wget https://github.com/multiversx/mx-chain-deep-history/blob/main/docker-compose.yml
 
-# Possible profiles: squad-devnet, squad-devnet-0, squad-devnet-1, squad-devnet-2, squad-devnet-metachain, squad-devnet-proxy
-DEEP_HISTORY_WORKSPACE=${HOME}/deep-history-workspace DOCKER_USER=$(id -u):$(id -g) docker compose \
+# Possible profiles: squad-mainnet, squad-mainnet-0, squad-mainnet-1, squad-mainnet-2, squad-mainnet-metachain, squad-mainnet-proxy
+DEEP_HISTORY_DATA=${HOME}/deep-history-data DOCKER_USER=$(id -u):$(id -g) docker compose \
     --file ./docker-compose.yml \
-    --profile squad-devnet \
-    --project-name deep-history-squad-devnet up --detach
+    --profile squad-mainnet \
+    --project-name deep-history-squad-mainnet up --detach
 ```
 
 **Congratulations, you've set up a deep-history observing squad!** The gateway should be ready to resolve historical account (state) queries.
