@@ -240,6 +240,8 @@ Make sure to read the section [**Reconstruct a complete history**](#reconstruct-
 
 Instead of reconstructing the whole history since Genesis, you may want to reconstruct a partial history, starting from a chosen epoch up until the latest epoch, or a history between two chosen epochs.
 
+Below, we'll take the example of reconstructing the history for epochs `1255 - 1260` (inclusive), for **mainnet, shard 0**. 
+
 First, set up the reconstruction workspace in a folder of your choice, the same as for reconstructing a complete history (see above). That is:
 
 ```
@@ -257,8 +259,8 @@ If you want the reconstruction to end at a chosen epoch, enable the `BlockProces
    Enabled = true
    Mode = "pause"
    CutoffTrigger = "epoch"
-   # A chosen epoch
-   Value = 123
+   # The chosen end epoch, plus 1.
+   Value = 1261
 ```
 
 Now, get (download) and extract **a daily archive (snapshot)** for the shard in question (e.g. shard 0), archive which includes the end epoch, if one is chosen. Alternatively, simply download a recent daily archive (snapshot). Then, extract the downloaded archive and **use it's payload as both `db` and `import-db`**.
@@ -268,7 +270,7 @@ wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz || exit 1
 # This produces a new folder: "db"
 tar -xf Full-History-DB-Shard-0.tar.gz || exit 1
 # Use the payload as both "db" and "import-db"
-mkdir -p ./import-db && cp db ./import-db
+mkdir -p ./import-db && cp -r db ./import-db
 ```
 
 The reconstruction workspace should look as follows (irrelevant files omitted):
@@ -282,14 +284,23 @@ The reconstruction workspace should look as follows (irrelevant files omitted):
 └── node            # binary file, the Node itself
 ```
 
-Now, in order to pick an actual starting epoch for the `import-db` process, find the closest epoch older than the chosen one, whose `AccountsTrie` is available in the downloaded archive. For the official daily archives (snapshots taken from regular full history observers), the `AccountsTrie` is available for every 50 epochs - this is dictated by the `AccountsTrieSkipRemovalCustomPattern` configuration parameter of the observer that produced the daily archive. For example, if the chosen epoch for reconstruction is `107`, then the actual starting epoch for `import-db` should be `100` .
+Now, in order to pick an actual starting epoch for the `import-db` process, find the closest epoch older than the chosen one, **whose `AccountsTrie` is available in the downloaded archive**.
 
-We are ready to start the reconstruction process from epoch 100 to epoch 123 (example) :rocket:
+For the official daily archives (snapshots taken from regular full history observers), the `AccountsTrie` is available for every 50 epochs - this is dictated by the `AccountsTrieSkipRemovalCustomPattern` configuration parameter of the observer that produced the daily archive. In our example, the chosen epoch for reconstruction is `1255`, therefore the actual starting epoch for `import-db` should be `1250`.
+
+Then, from the `db` folder, **remove all epoch folders newer than `Epoch_1250`** (as they will be reconstructed).
+
+:::danger
+Make sure to not remove the `Static` folder.
+:::
+
+We are now ready to start the reconstruction process :rocket:
 
 ```
-./node --import-db=./import-db --import-db-start-epoch=100 --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
+./node --import-db=./import-db --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
 ```
 
+Once the **import-db** is over, the `db` folder can be attached to a deep-history observer to support historical account (state) queries for the epochs `1255 - 1260` (actually, even more, for `1251 - 1260`).
 
 ## Starting a squad
 
