@@ -108,7 +108,7 @@ Learn about transaction's gas and how a fee is calculated:
 | [Best practices basics](/developers/best-practices/best-practices-basics)                   | How to better structure your Smart Contract code.  |
 | [Biguint operations](/developers/best-practices/biguint-operations)                         | Handle Biguint operations in a more efficient way. |
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
-| [Multi values](/developers/best-practices/multi-values)                                     | Take advantage of the variadic input and output.   |
+| [Multi values](/developers/data/multi-values)                                               | Take advantage of the variadic input and output.   |
 
 [comment]: # (mx-context-auto)
 
