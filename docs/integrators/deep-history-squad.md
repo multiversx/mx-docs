@@ -177,9 +177,9 @@ Upon extracting the downloaded archive, you'll have a new folder in your workspa
 
 ```
 # Ask for the full download link on Discord or Telegram:
-wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz || exit 1
+wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz
 # This produces a new folder: "db"
-tar -xf Full-History-DB-Shard-0.tar.gz || exit 1
+tar -xf Full-History-DB-Shard-0.tar.gz
 
 # "import-db" should contain the whole blockchain to be re-processed
 mkdir -p ./import-db && mv db ./import-db
@@ -265,14 +265,37 @@ Then, since we'd like to stop upon reconstruction of epoch `1260` (our example),
    Value = 1261
 ```
 
-Now, get (download) and extract **a daily archive (snapshot)** for the shard in question (e.g. shard 0), archive which includes the end epoch, if one is chosen. Alternatively, simply download a recent daily archive (snapshot). Then, extract the downloaded archive and **use it's payload as both `db` and `import-db`**.
+Now, get (download) and extract **two daily archives (snapshots)** for the shard in question (e.g. shard 0): one archive that was created on the epoch preceding the **chosen start epoch** (e.g. the archive created during epoch `1255 - 1 = 1254`); and one archive that was created on the epoch following the **chosen end epoch** (e.g. the archive created during epoch `1260 + 1 = 1261`). You can compute the correct URLs for the two archives manually, given the [**mainnet** Genesis time](https://gateway.multiversx.com/network/config) and the chosen epochs, or you can use the following Python snippet:
 
 ```
-wget https://.../23-Jan-2024/Full-History-DB-Shard-0.tar.gz || exit 1
-# This produces a new folder: "db"
-tar -xf Full-History-DB-Shard-0.tar.gz || exit 1
-# Use the payload as both "db" and "import-db"
-mkdir -p ./import-db && cp -r db ./import-db
+import datetime
+
+# Available on request (Discord or Telegram)
+url_base = "https://..."
+shard = 0
+chosen_start_epoch = 1255
+chosen_end_epoch = 1260
+genesis_timestamp = 1596117600
+
+genesis_datetime = datetime.datetime.fromtimestamp(genesis_timestamp, tz=datetime.timezone.utc)
+first_archive_day = (genesis_datetime + datetime.timedelta(days=chosen_start_epoch - 1)).strftime("%d-%b-%Y")
+second_archive_day = (genesis_datetime + datetime.timedelta(days=chosen_end_epoch + 1)).strftime("%d-%b-%Y")
+
+print("First daily archive:", f"{url_base}/{first_archive_day}/Full-History-DB-Shard-{shard}.tar.gz")
+print("Second daily archive:", f"{url_base}/{second_archive_day}/Full-History-DB-Shard-{shard}.tar.gz")
+```
+
+The first archive should be used as `db` and the second archive should be used as `import-db/db`.
+
+```
+# Download & extract first archive to "db":
+wget https://.../05-Jan-2024/Full-History-DB-Shard-0.tar.gz
+tar -xf Full-History-DB-Shard-0.tar.gz
+
+# Download & extract second archive to "import-db/db":
+wget https://.../12-Jan-2024/Full-History-DB-Shard-0.tar.gz
+mkdir -p ./import-db
+tar -xf Full-History-DB-Shard-0.tar.gz --directory ./import-db
 ```
 
 The reconstruction workspace should look as follows (irrelevant files omitted):
@@ -281,20 +304,10 @@ The reconstruction workspace should look as follows (irrelevant files omitted):
 .
 ├── config          # network configuration files
 ├── import-db
-│   └── db          # blockchain data
-├── db              # blockchain data
+│   └── db          # blockchain data (second archive)
+├── db              # blockchain data (first archive)
 └── node            # binary file, the Node itself
 ```
-
-Now, in order to pick an actual starting epoch for the `import-db` process, find the closest epoch older than the chosen one, **whose `AccountsTrie` is available in the downloaded archive**.
-
-For the official daily archives (snapshots taken from regular full history observers), the `AccountsTrie` is available for every 50 epochs - this is dictated by the `AccountsTrieSkipRemovalCustomPattern` configuration parameter of the observer that produced the daily archive. In our example, the chosen epoch for reconstruction is `1255`, therefore the actual starting epoch for `import-db` should be `1250`.
-
-Then, from the `db` folder, **remove all epoch folders newer than `Epoch_1250`** (as they will be reconstructed).
-
-:::danger
-Make sure to not remove the `Static` folder.
-:::
 
 We are now ready to start the reconstruction process :rocket:
 
@@ -302,7 +315,7 @@ We are now ready to start the reconstruction process :rocket:
 ./node --import-db=./import-db --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
 ```
 
-Once the **import-db** is over, the `db` folder can be attached to a deep-history observer to support historical account (state) queries for the epochs `1255 - 1260` (actually, even more, for `1251 - 1260`).
+Once the **import-db** is over, the `db` folder can be attached to a deep-history observer to support historical account (state) queries for the epochs `1255 - 1260`.
 
 ## Historical VM queries
 
