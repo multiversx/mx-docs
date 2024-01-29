@@ -41,7 +41,7 @@ In the example above, the key `726573657276650000000a55544b2d326638306539` is de
 
 ## MultiversX squad
 
-The observing squads backing the public Gateways, in addition to being full history squads (serving past blocks, transaction and events up until the Genesis), also act as 3-epochs deep-history squads. That is, for **mainnet**, one can use https://gateway.multiversx.com to resolve historical account (state) queries, for the last 3 days. This interval is driven by the configuration parameter `[StoragePruning.NumEpochsToKeep]`, which is set to `4`, by default.
+The observing squads backing the public Gateways, in addition to being full history squads (serving past blocks, transactions and events up until the Genesis), also act as 3-epochs deep-history squads. That is, for **mainnet**, one can use https://gateway.multiversx.com to resolve historical account (state) queries, for the last 3 days. This interval is driven by the configuration parameter `[StoragePruning.NumEpochsToKeep]`, which is set to `4`, by default.
 
 In general:
 
@@ -87,7 +87,7 @@ Since each observer of a deep-history squad must have a non-pruned history, thei
 
 ## Observer configuration
 
-A deep history squad has it's observers configured to retain the whole, non-pruned history of the blockchain. That is, the observers must have the following settings in their `prefs.toml`:
+A deep history squad has its observers configured to retain the whole, non-pruned history of the blockchain. That is, the observers must have the following settings in their `prefs.toml`:
 
 ```
 [Preferences]
