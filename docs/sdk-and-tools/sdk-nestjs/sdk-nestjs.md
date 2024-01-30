@@ -25,14 +25,14 @@ When developing microservices, we recommend starting from the **microservice-tem
 
 The following table contains the NPM packages that are included inside the NestJS SDK:
 
-| Package               | NPM                                                                                                  | Description  + additional docs                                                            |
-|-----------------------|------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| sdk-nestjs-common     | [@multiversx/sdk-nestjs-common](https://www.npmjs.com/package/@multiversx/sdk-nestjs-common)         | Common functionalities to be used in MultiversX microsevices.                             |
-| sdk-nestjs-auth       | [@multiversx/sdk-nestjs-auth](https://www.npmjs.com/package/@multiversx/sdk-nestjs-auth)             | Native Auth functionalities to be used for securily handle sessions.                      |
-| sdk-nestjs-http       | [@multiversx/sdk-nestjs-http](https://www.npmjs.com/package/@multiversx/sdk-nestjs-http)             | HTTP requests handling utilities                                                          |
-| sdk-nestjs-monitoring | [@multiversx/sdk-nestjs-monitoring](https://www.npmjs.com/package/@multiversx/sdk-nestjs-monitoring) | Microservices monitoring helpers. [docs](/sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring) |
-| sdk-nestjs-elastic    | [@multiversx/sdk-nestjs-elastic](https://www.npmjs.com/package/@multiversx/sdk-nestjs-elastic)       | Elasticsearch interactions helpers.                                                       |
-| sdk-nestjs-redis      | [@multiversx/sdk-nestjs-redis](https://www.npmjs.com/package/@multiversx/sdk-nestjs-redis)           | Redis interactions helpers.                                                               |
-| sdk-nestjs-rabbitmq   | [@multiversx/sdk-nestjs-rabbitmq](https://www.npmjs.com/package/@multiversx/sdk-nestjs-rabbitmq)     | RabbitMQ interactions helpers.                                                            |
-| sdk-nestjs-cache      | [@multiversx/sdk-nestjs-cache](https://www.npmjs.com/package/@multiversx/sdk-nestjs-cache)           | Common cache operations utilites. [docs](/sdk-and-tools/sdk-nestjs/sdk-nestjs-cache)      |
+| Package               | NPM                                                                                                  | Description  + additional docs                                                       |
+|-----------------------|------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| sdk-nestjs-common     | [@multiversx/sdk-nestjs-common](https://www.npmjs.com/package/@multiversx/sdk-nestjs-common)         | Common functionalities to be used in MultiversX microsevices.                        |
+| sdk-nestjs-auth       | [@multiversx/sdk-nestjs-auth](https://www.npmjs.com/package/@multiversx/sdk-nestjs-auth)             | Native Auth functionalities to be used for securily handle sessions.                 |
+| sdk-nestjs-http       | [@multiversx/sdk-nestjs-http](https://www.npmjs.com/package/@multiversx/sdk-nestjs-http)             | HTTP requests handling utilities                                                     |
+| sdk-nestjs-monitoring | [@multiversx/sdk-nestjs-monitoring](https://www.npmjs.com/package/@multiversx/sdk-nestjs-monitoring) | Microservices monitoring helpers.                                                    |
+| sdk-nestjs-elastic    | [@multiversx/sdk-nestjs-elastic](https://www.npmjs.com/package/@multiversx/sdk-nestjs-elastic)       | Elasticsearch interactions helpers.                                                  |
+| sdk-nestjs-redis      | [@multiversx/sdk-nestjs-redis](https://www.npmjs.com/package/@multiversx/sdk-nestjs-redis)           | Redis interactions helpers.                                                          |
+| sdk-nestjs-rabbitmq   | [@multiversx/sdk-nestjs-rabbitmq](https://www.npmjs.com/package/@multiversx/sdk-nestjs-rabbitmq)     | RabbitMQ interactions helpers.                                                       |
+| sdk-nestjs-cache      | [@multiversx/sdk-nestjs-cache](https://www.npmjs.com/package/@multiversx/sdk-nestjs-cache)           | Common cache operations utilites. [docs](/sdk-and-tools/sdk-nestjs/sdk-nestjs-cache) |
 
