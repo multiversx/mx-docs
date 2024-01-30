@@ -87,36 +87,15 @@ Since each observer of a deep-history squad must have a non-pruned history, thei
 
 ## Observer configuration
 
-A deep history squad has its observers configured to retain the whole, non-pruned history of the blockchain. That is, the observers must have the following settings in their `prefs.toml`:
+A deep history squad has its observers set up to retain the whole, non-pruned history of the blockchain. That is, the observers must be started with the flag `--operation-mode=historical-balances`.
 
-```
-[Preferences]
-    FullArchive = true
-
-    OverridableConfigTomlValues = [
-        { File = "config.toml", Path = "DbLookupExtensions.Enabled", Value = "true" },
-        { File = "config.toml", Path = "StateTriesConfig.AccountsStatePruningEnabled", Value = "false" },
-        { File = "config.toml", Path = "StateTriesConfig.SnapshotsEnabled", Value = "true" },
-        { File = "config.toml", Path = "StoragePruning.ObserverCleanOldEpochsData", Value = "false" },
-        { File = "config.toml", Path = "StoragePruning.AccountsTrieCleanOldEpochsData", Value = "false" },
-        { File = "config.toml", Path = "StateTriesConfig.PeerStatePruningEnabled", Value = "true" },
-        { File = "config.toml", Path = "GeneralSettings.StartInEpochEnabled", Value = "false" }
-    ]
-```
-
-Above, the most important settings for retaining the non-pruned history are:
-
-```
-StateTriesConfig.AccountsStatePruningEnabled = false
-StoragePruning.AccountsTrieCleanOldEpochsData = false
-```
 
 :::tip
-Apart from the configuration above, the setup of a deep-history observer is identical to a regular full-history observer.
+Apart from the flag mentioned above, the setup of a deep-history observer is identical to a regular full-history observer.
 :::
 
 :::warning
-Never attach a non-pruned database to a regular observer (i.e. that does not have the above settings) - unless you are not interested into the deep-history features. The regular observer irremediably removes, trucates and prunes the data (as configured, for storage efficiency).
+Never attach a non-pruned database to a regular observer (i.e. that does not have the above **operation-mode**) - unless you are not interested into the deep-history features. The regular observer irremediably removes, trucates and prunes the data (as configured, for storage efficiency).
 :::
 
 [comment]: # (mx-context-auto)
@@ -133,7 +112,7 @@ Documentation in this section is preliminary and subject to change.
 
 ## Reconstructing non-pruned databases
 
-An alternative to downloading the non-pruned history is to reconstruct it locally (on your own infrastructure). The reconstruction process is based on the **[import-db](/validators/import-db/)** feature, which re-processes past blocks - and, while doing so, retains the whole, non-pruned accounts history.
+An alternative to downloading the non-pruned history is to reconstruct it locally (on your own infrastructure). The reconstruction process is, generally speaking, based on the **[import-db](/validators/import-db/)** feature, which re-processes past blocks - and, while doing so, retains the whole, non-pruned accounts history. However, it's also possible to reconstruct the history by performing a regular sync (e.g. from Genesis) using a properly configured deep-history observer.
 
 First, you need to decide whether to reconstruct a **complete** or a **partial** history. A _complete_ history provides the deep-history squad the ability to resolve historical account (state) queries **up until the Genesis**. A _partial_ history, instead, allows it to resolve state queries up until **a chosen past epoch** or **between two chosen epochs**.
 
@@ -158,18 +137,12 @@ export CONFIG_TAG=v1.6.13.0
 git clone https://github.com/multiversx/mx-chain-mainnet-config --branch=$CONFIG_TAG --single-branch --depth=1 config
 
 # In most cases, this should be the tag found in the file "config/binaryVersion":
-export BINARY_TAG=v1.6.13
+export BINARY_TAG=$(cat ./config/binaryVersion | sed 's/tags\///')
 
 # Clone and build the node binary
 git clone https://github.com/multiversx/mx-chain-go.git --branch=$BINARY_TAG --single-branch --depth=1
 go build -C mx-chain-go/cmd/node -o $(pwd)/node
 ```
-
-Afterwards, open the configuration file `config/prefs.toml` and apply the configuration depicted above, in the section [**Observer configuration**](#observer-configuration).
-
-:::warning
-Editing the configuration is crucial for reconstructing and retaining the non-pruned history. Skipping this will result in a pruned database.
-:::
 
 Then, get (download) and extract **a recent daily archive (snapshot)** for the shard in question (e.g. shard 0). The daily archives are available to download **on request** ([Discord](https://discord.gg/multiversxbuilders) or [Telegram](https://t.me/MultiversXValidators)), from a cloud-based, _S3-compatible storage_ (Digital Ocean Spaces) - or you could fetch them from an existing regular full-history observer that you own. 
 
@@ -205,14 +178,14 @@ Now, the reconstruction workspace should look as follows (irrelevant files omitt
 We are ready to start the reconstruction process :rocket:
 
 ```
-./node --import-db=./import-db --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
+./node --import-db=./import-db --operation-mode=historical-balances --import-db-no-sig-check --log-level=*:INFO --log-save --destination-shard-as-observer 0
 ```
 
 :::note
 The reconstruction (which uses _import-db_ under the hood, as previously stated) takes a long time (e.g. days) - depending on the machine's resources (CPU, storage capabilities and memory).
 :::
 
-Once the **import-db** is over, the `db` folder contains the reconstructed database for the shard in question, ready to be attached to a deep-history observer (observer with the configuration described above).
+Once the **import-db** is over, the `db` folder contains the reconstructed database for the shard in question, ready to be attached to a deep-history observer (observer with the **operation-mode** mentioned above).
 
 Now, do the same for the other shards, as needed.
 
@@ -220,7 +193,7 @@ Now, do the same for the other shards, as needed.
 You can smoke test the data by launching an (in-place) ephemeral observer:
 
 ```
-./node --use-log-view --log-save --destination-shard-as-observer 0
+./node --operation-mode=historical-balances --log-save --destination-shard-as-observer 0
 ```
 
 Then, in another terminal, do a historical (state) query against the ephemeral observer:
@@ -230,9 +203,6 @@ curl http://localhost:8080/address/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7
 ```
 :::
 
-:::tip
-The configuration files used within the reconstruction flow (**import-db**) are identical to the ones that should be applied to on-line deep-history observers.
-:::
 
 ### Reconstruct a partial history
 
@@ -251,8 +221,6 @@ git clone https://github.com/multiversx/mx-chain-mainnet-config --branch=$CONFIG
 git clone https://github.com/multiversx/mx-chain-go.git --branch=$BINARY_TAG --single-branch --depth=1
 go build -C mx-chain-go/cmd/node -o $(pwd)/node
 ```
-
-Afterwards, open the configuration file `config/prefs.toml` and apply the configuration depicted in the section [**Observer configuration**](#observer-configuration).
 
 Then, since we'd like to stop upon reconstruction of epoch `1260` (our example), we enable the `BlockProcessingCutoff` feature in `config/prefs.toml`:
 
@@ -312,7 +280,7 @@ The reconstruction workspace should look as follows (irrelevant files omitted):
 We are now ready to start the reconstruction process :rocket:
 
 ```
-./node --import-db=./import-db --import-db-no-sig-check --log-level=*:INFO --use-log-view --log-save --destination-shard-as-observer 0
+./node --import-db=./import-db --operation-mode=historical-balances --import-db-no-sig-check --log-level=*:INFO --log-save --destination-shard-as-observer 0
 ```
 
 Once the **import-db** is over, the `db` folder can be attached to a deep-history observer to support historical account (state) queries for the epochs `1255 - 1260`.
@@ -370,7 +338,7 @@ DEEP_HISTORY_DATA=${HOME}/deep-history-data DOCKER_USER=$(id -u):$(id -g) docker
     --project-name deep-history-squad-mainnet up --detach
 ```
 
-Alternatively, you can set up a squad using any other known approach, **but make sure to apply the necessary configuration changes** described in the section [**Observer configuration**](#observer-configuration).
+Alternatively, you can set up a squad using any other known approach, **but make sure to apply the proper `operation-mode`** described in the section [**Observer configuration**](#observer-configuration).
 
 
 **Congratulations!** You've set up a deep-history observing squad; the gateway should be ready to resolve historical account (state) queries :rocket:
