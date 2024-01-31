@@ -19,7 +19,7 @@ Accounts creation can be achieved through different approaches:
 - programmatically, using the [sdk-js - JavaScript SDK](/sdk-and-tools/sdk-js)
 - programmatically, using the [mxpy - Python SDK](/sdk-and-tools/sdk-py/)
 - programmatically, using the [sdk-go - Golang SDK](/sdk-and-tools/sdk-go)
-- programmatically, using the [mxjava - Java SDK](/sdk-and-tools/mxjava)
+- programmatically, using the [sdk-java - Java SDK](/sdk-and-tools/mxjava)
 - using the [lightweight CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
 - using our [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 - programmatically, using the [TrustWalletCore extension](https://github.com/trustwallet/wallet-core/tree/master/src/MultiversX) for MultiversX

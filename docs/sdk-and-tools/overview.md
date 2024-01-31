@@ -81,7 +81,7 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 [comment]: # (mx-context-auto)
 
-### mxjava - Java SDK
+### mx-sdk-java - Java SDK
 
 | Name                              | Description                                           |
 |-----------------------------------|-------------------------------------------------------|

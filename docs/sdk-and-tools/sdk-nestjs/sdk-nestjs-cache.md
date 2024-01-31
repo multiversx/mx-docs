@@ -24,12 +24,12 @@ npm install @multiversx/sdk-nestjs-cache
 [comment]: # (mx-context-auto)
 
 ## Utility
-The package exports **in memory cache service** and **remote cache service**.
+The package exports two services: an **in-memory cache service** and **remote cache service**.
 
 [comment]: # (mx-context-auto)
 
 ## Table of contents
-- [In Memory Cache](#in-memory-cache) - super fast in memory caching system based on [LRU cache](https://www.npmjs.com/package/lru-cache)
+- [In Memory Cache](#in-memory-cache) - super fast in-memory caching system based on [LRU cache](https://www.npmjs.com/package/lru-cache)
 - [Redis Cache](#redis-cache) - Caching system based on [Redis](https://www.npmjs.com/package/@multiversx/sdk-nestjs-redis)
 - [Cache Service](#cache-service) - MultiversX caching system which combines in-memory and Redis cache, forming a two-layer caching system
 
@@ -38,9 +38,9 @@ The package exports **in memory cache service** and **remote cache service**.
 ## In memory cache
 In memory cache, available through `InMemoryCacheService`, is used to read and write data from and into the memory storage of your Node.js instance.
 
-*Note that if you have multiple instances of your application you must sync local cache across all your instances.*
+*Note that if you have multiple instances of your application you must sync the local cache across all your instances.*
 
-Let's take as an example a ConfigService that loads some non-crucial configuration from the database and can be cached for 10 seconds.
+Let's take as an example a `ConfigService` that loads some non-crucial configuration from the database and can be cached for 10 seconds.
 
 Usage example:
 ```typescript
@@ -141,7 +141,7 @@ When the `.loadConfiguration()` method is called for the first time, the `.getCo
 [comment]: # (mx-context-auto)
 
 ## Redis Cache
-Redis cache, available through `RedisCacheService`, is a caching system build ontop of Redis. It is used to share cache related information among multiple microservices.
+Redis cache, available through `RedisCacheService`, is a caching system build on top of Redis. It is used as a shared cache among multiple microservices.
 
 Let's build the same config loader class but with data shared across multiple clusters using Redis. The implementation is almost identical since both `InMemoryCache` and `RedisCache` have similar class structure.
 

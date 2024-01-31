@@ -98,7 +98,7 @@ The output of the code above will be <br/>
 [comment]: # (mx-context-auto)
 
 ## Interceptors
-The package provides a series of [Nestjs Interceptors](https://docs.nestjs.com/interceptors) which will automatically log and set the CPU and overall duration for each request in a prom histogram ready to be scrapped by Prometheus.
+The package provides a series of [Nestjs Interceptors](https://docs.nestjs.com/interceptors) which will automatically log and set the CPU and overall duration for each request in a [Prometheus](https://prometheus.io) histogram ready to be scrapped by Prometheus.
 
 `LoggingInterceptor` interceptor will set the execution time of each request in a Prometheus histogram using [performance profilers](#performance-profiler).
 
@@ -126,7 +126,7 @@ async function bootstrap() {
 
 ## MetricsModule and MetricsService
 
-`MetricsModule` is a [Nestjs Module](https://docs.nestjs.com/modules) responsible for aggregating metrics data through `MetricsService` and exposing them to be consumed by Prometheus. `MetricsService` is extensible, you can define and aggregate your own metrics and expose them. By default it exposes a set of metrics created by the interceptors specified [here](#interceptors). Most of the Multiversx packages expose metrics by default through this service. For example [@multiversx/sdk-nestjs-redis](https://www.npmjs.com/package/@multiversx/sdk-nestjs-redis) automatically tracks the execution time of each redis query, overall redis health and much more, by leveraging the `MetricsService`.
+`MetricsModule` is a [Nestjs Module](https://docs.nestjs.com/modules) responsible for aggregating metrics data through `MetricsService` and exposing them to be consumed by Prometheus. `MetricsService` is extensible, you can define and aggregate your own metrics and expose them. By default it exposes a set of metrics created by the interceptors specified [here](#interceptors). Most of the MultiversX packages expose metrics by default through this service. For example [@multiversx/sdk-nestjs-redis](https://www.npmjs.com/package/@multiversx/sdk-nestjs-redis) automatically tracks the execution time of each redis query, overall redis health and much more, by leveraging the `MetricsService`.
 
 [comment]: # (mx-context-auto)
 
