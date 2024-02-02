@@ -269,7 +269,7 @@ There are exceptions to this rule like:
 
 ```jsx
 const type = 'admin';
-function printUser(user) {
+function verifyUser(user) {
   console.log(user.type === type);
 }
 
