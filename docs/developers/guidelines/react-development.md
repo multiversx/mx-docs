@@ -186,6 +186,47 @@ function handleClick(e) {
 <div onClick={onClick}/>`
 ```
 
+### Number of props per component
+
+If a component has more than 7 props, it should draw a red flag and be refactored. If it has >= 10 props, it should be refactored immediately. Strategies for refactoring:
+- split into smaller components and pass them as props
+- use a local context provider
+
+```jsx
+// ⚠️ AVOID
+<MyComplicatedComponent
+  aspect1={1}
+  aspect2={2}
+  prop1={3}
+  prop2={4}
+  prop3={5}
+  argument1={6}
+  argument2={7}
+/>
+
+// ✅ DO group props into logical components
+<MyComplicatedComponent 
+  aspect={
+    <AspectComponent 
+      aspect1={1}
+      aspect2={2}
+    />
+  }
+  prop={
+    <PropComponent 
+      prop1={3}
+      prop2={4}
+      prop3={5}
+    />
+  }
+>
+  <ArgumentComponent 
+    argument1={6}
+    argument2={7}
+  />
+<MyComplicatedComponent/> 
+```
+
 ### Inline functions
 No **inline functions** in TSX.
 
@@ -208,6 +249,54 @@ Use implicit `true` for **boolean** props
 // ✅ DO 
 <Card isFullscreen /> 
 ```
+
+### Destructuring arguments
+Always destructure arguments, with minor exceptions.
+
+```jsx
+// 🚫 DON'T 
+function printUser(user) {
+  console.log(user.name, user.name);
+}
+// ✅ DO 
+function printUser({ name, age }) {
+  console.log(name, age);
+}
+```
+
+There are exceptions to this rule like:
+1. There is a name clash with variables defined above
+
+```jsx
+const type = 'admin';
+function verifyUser(user) {
+  console.log(user.type === type);
+}
+
+```
+2. Same props are passed below to a component, or are used for further processing
+
+
+```jsx
+// 🚫 DON'T 
+const DisplayUser = ({name, age}: UserType) {
+  return <User name={name} age={age} />;
+}
+// ✅ DO 
+const DisplayUser = (user: UserType) {
+  return <User {...user} />;
+}
+const UserList = (users: UserType[]) {
+  return users.map((user, index) => {
+    // destructuring avoids typechecking so always specify the type 
+    // before passing destructured props to a component
+    const userProps: UserType = processUser(user); 
+    return  <User key={`${user.name}+${index}`} {...userProps} />;
+  })
+  
+}
+```
+
 
 ### Over-optimization 
 No **`useCallback` or `useMemo` or `React.memo` unless really necessary**. Since the release of hooks, over-optimization has become a big problem.
