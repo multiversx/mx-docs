@@ -269,8 +269,9 @@ const sidebars = {
             label: "NestJS SDK",
             items: [
               "sdk-and-tools/sdk-nestjs/sdk-nestjs",
-              "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-auth",
               "sdk-and-tools/sdk-nestjs/sdk-nestjs-cache",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
             ],
           },
           "sdk-and-tools/sdk-go",
