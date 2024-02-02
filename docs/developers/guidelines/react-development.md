@@ -250,6 +250,54 @@ Use implicit `true` for **boolean** props
 <Card isFullscreen /> 
 ```
 
+### Destructuring arguments
+Always destructure arguments, with minor exceptions.
+
+```jsx
+// 🚫 DON'T 
+function printUser(user) {
+  console.log(user.name, user.name);
+}
+// ✅ DO 
+function printUser({ name, age }) {
+  console.log(name, age);
+}
+```
+
+There are exceptions to this rule like:
+1. There is a name clash with variables defined above
+
+```jsx
+const type = 'admin';
+function printUser(user) {
+  console.log(user.type === type);
+}
+
+```
+2. Same props are passed below to a component, or are used for further processing
+
+
+```jsx
+// 🚫 DON'T 
+const DisplayUser = ({name, age}: UserType) {
+  return <User name={name} age={age} />;
+}
+// ✅ DO 
+const DisplayUser = (user: UserType) {
+  return <User {...user} />;
+}
+const UserList = (users: UserType[]) {
+  return users.map((user, index) => {
+    // destructuring avoids typechecking so always specify the type 
+    // before passing destructured props to a component
+    const userProps: UserType = processUser(user); 
+    return  <User key={`${user.name}+${index}`} {...userProps} />;
+  })
+  
+}
+```
+
+
 ### Over-optimization 
 No **`useCallback` or `useMemo` or `React.memo` unless really necessary**. Since the release of hooks, over-optimization has become a big problem.
 
