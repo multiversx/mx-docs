@@ -120,7 +120,7 @@ Please note that the type names are not necessarily the ones from Rust, we are t
 First off, there are a number of [basic types](/developers/data/simple-values) that are known, and which have a universal representation:
 - Numerical types: `BigUint`, `BigInt`, `u64`, `i32`, etc.
 - Booleans: `bool`.
-- Raw byte arrays are all specified as `bytes`, irrespective of the underlying implementation in the contract. Someone who just interacts with the contract does not care whether the contracts works with `ManagedBuffer`, `Vec<u8>`, or something else, it's all the same to the exterior.
+- Raw byte arrays are all specified as `bytes`, irrespective of the underlying implementation in the contract. Someone who just interacts with the contract does not care whether the contracts work with `ManagedBuffer`, `Vec<u8>`, or something else, it's all the same to the exterior.
 - Text: `utf-8 string`.
 - 32 byte account address: `Address`.
 - ESDT token identifier: `TokenIdentifier`. Encoded the same as `bytes`, but with more specific semantics.
@@ -331,7 +331,7 @@ More examples of this below.
 
 A new field called `esdtAttributes` was added to the ABI file, where developers can find the structs (name, type) exported using the `esdt_attribute` trait annotation. Additionally, each `esdt_attribute` will create a new json file with the name given by the developer (followed by `.esdt-abi`) and containing its exported structs (names, types and descriptions).
 
-The name/ticker is just a way to identify the idea of the token because we do not have the exact identifier or the possibility to create it through this annotation. We only use this annotation as a mark up for a specific ESDT, in order to define its fields' attributes type. It is useful to define ESDT attributes' type beforehand in order to get more specific and overall better results fetching data from other services.
+The name/ticker is just a way to identify the idea of the token because we do not have the exact identifier or the possibility to create it through this annotation. We only use this annotation as a mark-up for a specific ESDT, in order to define its fields' attributes type. It is useful to define ESDT attributes' type beforehand in order to get more specific and overall better results fetching data from other services.
 
 ### Example using basic types
 

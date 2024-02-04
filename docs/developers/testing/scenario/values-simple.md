@@ -208,7 +208,7 @@ It is forbidden to have accounts with code but an address that doesn't obey the 
 - `"0x00000000000000006d795f616464726573735f5f5f5f5f5f5f5f5f5f5f5f5f5f"`.
 :::
 
-Sometimes the last byte of a a SC address is relevant, since it affects which shard the contract will end up in. It can be specified with a hash characher `#`, followed by the final byte as hex.
+Sometimes the last byte of a SC address is relevant, since it affects which shard the contract will end up in. It can be specified with a hash characher `#`, followed by the final byte as hex.
 
 :::note Example
 `"sc:my_address#a3"` is the same as:

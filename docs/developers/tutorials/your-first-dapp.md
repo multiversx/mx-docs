@@ -45,7 +45,7 @@ Maybe you noticed the default amount for a deposit is **1 xEGLD** and not 1 EGLD
 
 For the web app we'll have two pages:
 
-- The _Sign in_ page - here we can authenticate with ledger, web wallet or with Maiar Wallet
+- The _Sign in_ page - here we can authenticate with ledger, web wallet or xPortal
 - The _Dashboard_ page - here we can either ping or pong, if we already deposited, then we will see a countdown timer until the time interval clears out.
 
 [comment]: # (mx-context-auto)
@@ -53,7 +53,7 @@ For the web app we'll have two pages:
 ### **Blockchain Layer (The Backend)**
 
 We will create a smart contract that can handle the deposit (`ping`), claim (`pong`) and status actions (`did_user_ping`, `get_time_to_pong`).
-Let's say that, for now, this smart contract plays the role of an API in a dApp. Also this is where our business logic resides.
+Let's say that, for now, this smart contract plays the role of an API in a dApp. Also, this is where our business logic resides.
 
 The MultiversX _devnet_ is a public test network maintained by our community where any developer can test their smart contracts and dApps in a real world environment.
 
@@ -61,7 +61,7 @@ The MultiversX _devnet_ is a public test network maintained by our community whe
 
 ## **Set up the environment**
 
-Let's set up the evironment for getting your first dapp up and running.
+Let's set up the environment for getting your first dapp up and running.
 
 [comment]: # (mx-context-auto)
 
@@ -309,7 +309,7 @@ You can reuse the same owner's wallet if you want to, or create a new one, follo
 
 After signing in, we'll see the dashboard where we can see the **Ping** button.
 
-Click the Ping button and you'll be redirected to the authentication page on the web wallet, maiar wallet or your authentication device.
+Click the Ping button and you'll be redirected to the authentication page on the web wallet, xPortal or your authentication device.
 A new transaction will be created and you'll be asked to confirm it. This transaction transfers balance from your wallet to the smart contract address. Those funds will be locked for the specified period of time. Pay attention to the data field, where we call the smart contract function `ping`.
 After you confirm the transaction, a success message will appear and the funds are locked.
 
@@ -329,6 +329,6 @@ The transaction will trigger a success message and the funds will be returned to
 ## **Where to go next?**
 
 The purpose of this guide is to provide a starting point for you to discover the MultiversX technology capabilities and devkit. Keep reading the next docs to dive in deeper.
-We welcome your questions and inquiries on Stack Overflow: [https://stackoverflow.com/questions/tagged/elrond](https://stackoverflow.com/questions/tagged/elrond).
+We welcome your questions and inquiries on Stack Overflow: [https://stackoverflow.com/questions/tagged/multiversx](https://stackoverflow.com/questions/tagged/multiversx).
 
 Break down this guide and learn more about how to extend the smart contract, the wallet and the MultiversX tools. [https://docs.multiversx.com](/)

@@ -114,7 +114,7 @@ By inspecting the release notes, we see that [`v0.2.0`](https://github.com/multi
 
 ### Download the build wrapper
 
-The build process (via Docker) is wrapped in a easy-to-use, friendly Python script. Let's download it:
+The build process (via Docker) is wrapped in an easy-to-use, friendly Python script. Let's download it:
 
 ```bash
 wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py

@@ -5,7 +5,7 @@ title: The Staking Smart Contract
 
 [comment]: # (mx-abstract)
 
-This page will guide you through the the operations of the Staking System Smart Contract.
+This page will guide you through the operations of the Staking System Smart Contract.
 
 [comment]: # (mx-context-auto)
 

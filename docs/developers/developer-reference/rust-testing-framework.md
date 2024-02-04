@@ -17,7 +17,7 @@ The Rust testing framework was developed as an alternative to manually writing s
 
 The only disadvantage is that you need to learn something new! Jokes aside, keep in mind that this whole framework runs in a mocked environment. So while you get powerful testing and debugging tools, you are ultimately running a mock and have no guarantee that the contract will work identically with the current VM version deployed on the mainnet.
 
-This is where the scenario generation part comes into play. The Rust testing framework allows you to generate scenarios with minimal effort, and then run said scenarios with one click through our MultiversX VSCode extension (alteratively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
+This is where the scenario generation part comes into play. The Rust testing framework allows you to generate scenarios with minimal effort, and then run said scenarios with one click through our MultiversX VSCode extension (alternatively, simply run `erdpy contract test`). There will be a bit of manual effort required on the developer's part, but we'll get to that in its specific section.
 
 Please note that scenario generation is more of an experiment rather than a fully fledged implementation, which we might even remove in the future. Still, some examples are provided here if you still wish to attempt it.
 
@@ -151,7 +151,7 @@ Since this is a SC deploy, we call the `init` function. Since the contract works
 let target = BigUint::<DebugApi>::from(2_000u32);
 ```
 
-Keep in mind you can't create managed types outside of the `execute_tx` functions.
+Keep in mind you can't create managed types outside the `execute_tx` functions.
 
 Some observations for the `execute_tx` function:
 
@@ -391,7 +391,7 @@ You've already seen most of the code in this test before already. The only new t
 
 ## Testing a failed funding campaign
 
-This is simimlar to the previous one, but instead we have the users claim instead of the owner after deadline.
+This is similar to the previous one, but instead we have the users claim instead of the owner after deadline.
 
 ```rust
 #[test]

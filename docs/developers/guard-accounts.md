@@ -31,7 +31,7 @@ While this process appears feasible in theory, there may be practical challenges
 
 If you are a developer and you understand what a transaction is, what fields it contains and how a signing of a transaction happens you may be interested in the technical aspects of the implementation.  On top of a regular transaction, 2 new fields must be filled in:
 - [NEW] `guardian` - representing the address of the Guardian that has to co-sign the transaction
-- [NEW] `guardianSignature` - representing the the signature computed by the guardian
+- [NEW] `guardianSignature` - representing the signature computed by the guardian
 
 Also, some other fields have to be altered:
 - `version` needs to be at least `2`

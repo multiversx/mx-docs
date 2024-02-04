@@ -336,7 +336,7 @@ pub enum Status {
 ```
 
 Make sure to add it outside the contract trait.
-Don't forget to add the import for the derive types. This can be place on top off the file next to the other import.
+Don't forget to add the import for the derive types. This can be place on top of the file next to the other import.
 
 ```rust
 multiversx_sc::derive_imports!();
@@ -345,7 +345,7 @@ The `#[derive]` keyword in Rust allows you to automatically implement certain tr
 
 `TypeAbi` is needed to export the type when you want to interact with the already deployed contract. This is out of scope of this tutorial though.
 
-`PartialEq`, `Clone` and `Copy` are Rust traits that allow your type instances to be compared with the `==` operator, and the `Clone` and `Copy` traits allow your object instances to be clone/copied respectively.
+`PartialEq`, `Clone` and `Copy` are Rust traits that allow your type instances to be compared with the `==` operator, and the `Clone` and `Copy` traits allow your object instances to be cloned/copied respectively.
 
 We can now use the type Status just like we use the other types, so we can write the following method in the contract trait:
 

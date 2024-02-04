@@ -31,7 +31,7 @@ There are two ways in which a smart contract can receive payments:
 
 ### Receiving payments directly
 
-Sending EGLD and ESDT tokens directly to accounts works the same way for EOAs (extrernally owned accounts) as for smart contracts: the tokens are transferred from one account to the other without firing up the VM.
+Sending EGLD and ESDT tokens directly to accounts works the same way for EOAs (externally owned accounts) as for smart contracts: the tokens are transferred from one account to the other without firing up the VM.
 
 However, not all smart contracts are allowed to receive tokens directly. There is a flag that controls this, called "payable". This flag is part of the [code metadata](/developers/data/code-metadata), and is specified in the transaction that deploys or upgrades the smart contract.
 
@@ -45,7 +45,7 @@ The rationale for this is as follows: the MultiversX blockchain doesn't offer an
 The most common way for contracts to accept payments is by having endpoints annotated with the `#[payable(...)]` annotation.
 
 :::important important
-The "payable" flag in the code metadata only refers to direct transfers. Trasferring tokens via contract endpoint calls is not affected by it in any way.
+The "payable" flag in the code metadata only refers to direct transfers. Transferring tokens via contract endpoint calls is not affected by it in any way.
 :::
 
 
@@ -76,7 +76,7 @@ It is also possible to hard-code a token identifier in the `payable`, e.g. `#[pa
 :::
 
 Additional restrictions on the incoming tokens can be imposed in the body of the endpoint, by calling the call value API. Most of these functions retrieve data about the received payment, while also stopping execution if the payment is not of the expected type.
-- `self.call_value().egld_value()` retrieves the EGLD value transfered, or zero. Never stops execution.
+- `self.call_value().egld_value()` retrieves the EGLD value transferred, or zero. Never stops execution.
 - `self.call_value().all_esdt_transfers()` retrieves all the ESDT transfers received, or an empty list. Never stops execution.
 - `self.call_value().multi_esdt<N>()` is ideal when we know exactly how many ESDT transfers we expect. It returns an array of `EsdtTokenPayment`. It knows exactly how many transfers to expect based on the return type (it is polymorphic in the length of the array). Will fail execution if the number of ESDT transfers does not match.
 - `self.call_value().single_esdt()` expects a single ESDT transfer, fails otherwise. Will return the received `EsdtTokenPayment`. It is a special case of `multi_esdt`, where `N` is 1.

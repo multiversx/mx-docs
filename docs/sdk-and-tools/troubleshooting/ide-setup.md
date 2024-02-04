@@ -33,7 +33,7 @@ Basic `.vscode/settings.json` for Linux:
 }
 ```
 
-Basic `.vscode/settings.json` for MacOS:
+Basic `.vscode/settings.json` for macOS:
 
 ```json
 {

@@ -72,7 +72,7 @@ The screenshots below are from the [**MultiversX dApp Template**](https://devnet
 :::
 
 :::important
-**For dApp developers:** if your dApp doesn't yet support **xAlias** as a signing provider, **we recommend that you enable the integration, and reach a broader audicence** (wider user base for your dApp). Please follow [Signing Providers for dApps](/sdk-and-tools/sdk-js/sdk-js-signing-providers) for technical details.
+**For dApp developers:** if your dApp doesn't yet support **xAlias** as a signing provider, **we recommend that you enable the integration, and reach a broader audience** (wider user base for your dApp). Please follow [Signing Providers for dApps](/sdk-and-tools/sdk-js/sdk-js-signing-providers) for technical details.
 :::
 
 If you've stumbled upon a MultiversX dApp that you'd like to use and it supports xAlias, follow the **Login** or **Connect** flow of the dApp, then pick **xAlias** (as your Web3 wallet).

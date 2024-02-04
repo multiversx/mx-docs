@@ -30,7 +30,7 @@ The only standalone tool for running scenarios is `run-scenarios`, part of the V
 The binary is build from [here](https://github.com/multiversx/mx-chain-vm-go/blob/master/cmd/scenariostest/scenariosTest.go).
 Most of the code lies [here](https://github.com/multiversx/mx-chain-vm-go/tree/master/scenarioexec), if you're curious.
 
-To call, simply run `run-scenarios <path>`, where the path can be either a speciific scenario file, or a folder containing scenarios. In the case of a folder, the tool will run all files ending in `*.scen.json`. Results are printed to console.
+To call, simply run `run-scenarios <path>`, where the path can be either a specific scenario file, or a folder containing scenarios. In the case of a folder, the tool will run all files ending in `*.scen.json`. Results are printed to console.
 
 
 [comment]: # (mx-context-auto)
@@ -192,7 +192,7 @@ The tool works as follows:
 
 The test tool can handle multiple contract crates at once. In fact, it will try to update tests for all contracts it can find under a given folder.
 
-For reference, the tool paramters are:
+For reference, the tool parameters are:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.

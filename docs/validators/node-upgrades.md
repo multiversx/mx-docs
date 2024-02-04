@@ -61,7 +61,7 @@ As compared to other protocols that perform upgrades that start at a specific bl
 don't have a specific block height where the new updates become effective, but rather the first block in the
 activation epoch will make the nodes proceed with the updated versions of the components.
 
-Since the height of the first block in an epoch cannot be known in advance (due to possible roll-backs), the network height
+Since the height of the first block in an epoch cannot be known in advance (due to possible rollbacks), the network height
 where a feature becomes effective cannot be calculated.
 
 However, the time when a new feature of a bugfix becomes effective can be calculated, as epochs have fixed lengths in rounds.

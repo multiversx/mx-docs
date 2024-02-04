@@ -357,7 +357,7 @@ There are multiple event types:
 - Finalized Block event: when the block is finalized
 
 In RabbitMQ there is a separate exchange for each event type.
-In Websocket setup, there is a event type field in each message.
+In Websocket setup, there is an event type field in each message.
 
 The WS event is defined as follows:
 

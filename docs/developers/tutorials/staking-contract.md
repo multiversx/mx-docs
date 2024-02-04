@@ -1514,4 +1514,4 @@ As this is a fairly simple task compared to what we've done already, we'll leave
 
 Good luck!
 
-In part 2, which will come soon, we'll discuss about how to use custom ESDTs instead of just EGLD.
+In part 2, which will come soon, we'll discuss how to use custom ESDTs instead of just EGLD.

@@ -325,7 +325,7 @@ let code = Code.fromBuffer(buffer);
 
 [comment]: # (mx-context-auto)
 
-### Load the bytecode from an URL
+### Load the bytecode from a URL
 
 ```
 import axios from "axios";
@@ -437,7 +437,7 @@ let existingContract = new SmartContract({ address: existingContractAddress, abi
 
 [comment]: # (mx-context-auto)
 
-### Load the ABI from an URL
+### Load the ABI from a URL
 
 ```
 import axios from "axios";

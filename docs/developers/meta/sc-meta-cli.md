@@ -51,7 +51,7 @@ cargo run build
 ```
 :::
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -77,7 +77,7 @@ As an example, below is the output of calling it in the example contract folder 
 
 ![sc-meta info screenshot](/developers/sc-meta/sc-meta-info.png "Result of calling sc-meta info in the example contract folder in the framework")
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -97,14 +97,14 @@ The oldest version currently supported is `0.28.0`. Any older than that, and the
 It is especially important when upgrading from `0.38` to `0.39.0`, since a lot of changes happened at that point.
 
 :::tip
-For projects with multiple contract crates, we recommend upgrading all of them at once. The upgrade algorithm goes step by step, version after version. For some of the major versions, it also checks that the project compiles before moving on. This is to give developers the chance to fix issues manually, if necessary, and not have those issues pile up. If there are local depdencies between contracts, the upgrader will not be able to do the check unless all of them are upgraded together.
+For projects with multiple contract crates, we recommend upgrading all of them at once. The upgrade algorithm goes step by step, version after version. For some of the major versions, it also checks that the project compiles before moving on. This is to give developers the chance to fix issues manually, if necessary, and not have those issues pile up. If there are local dependencies between contracts, the upgrader will not be able to do the check unless all of them are upgraded together.
 :::
 
 :::caution
 Generally, we strongly recommend to ensure code versioning or at least a backup of the contract code to avoid the impossibility of reverting permanent changes. This automatic code altering process involved in using `sc-meta upgrade` highly raises this recommendation.
 :::
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -155,7 +155,7 @@ Example output (abridged):
 }
 ```
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -171,14 +171,14 @@ Paramameters:
 
 Creates a new smart contract project from a standard template.
 
-The tool will replace all necessary names in the project, based on the the project name given by the user. These include:
+The tool will replace all necessary names in the project, based on the project name given by the user. These include:
 - the crate name,
 - the contract trait name,
 - the file name of the main source file.
 
-Paramameters:
+Parameters:
 - `--template`
-    - The contract template to clone. Available options can be retrieve by using [this](/developers/meta/sc-meta-cli#calling-templates)
+    - The contract template to clone. Available options can be retrieved by using [this](/developers/meta/sc-meta-cli#calling-templates)
     - Required.
 - `--name`
     - The new name the contract is to receive.
@@ -204,7 +204,7 @@ empty
 adder
 ```
 
-Paramameter:
+Parameter:
 - `--tag`
     -  The framework version on which the contracts should be created.
     - _default_: The latest released version.
@@ -228,7 +228,7 @@ These integration tests come in two flavors:
 
 Read more about JSON scenarios in smart contract projects [here](/developers/testing/scenario/running-scenarios).
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.

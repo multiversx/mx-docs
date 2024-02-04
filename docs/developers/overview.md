@@ -5,7 +5,7 @@ title: Developers - Overview
 
 [comment]: # (mx-abstract)
 
-This page serves as the landing destination for builders seeking to construct on the Multiversx platform.
+This page serves as the landing destination for builders seeking to construct on the MultiversX platform.
 
 If anything is missing, or you want to get more support, please refer to Discord or Telegram developers chats: 
 - [Discord: MultiversX Builders](https://discord.gg/multiversxbuilders)
@@ -47,7 +47,7 @@ Below is a list of tutorials for building on MultiversX:
 
 ### SDKs and Tools
 
-One can (programatically) interact with the MultiversX Network by leveraging a set of **SDKs (TypeScript, Go, Python, C++ etc.), tools and APIs**. For more details, please follow:
+One can (programmatically) interact with the MultiversX Network by leveraging a set of **SDKs (TypeScript, Go, Python, C++ etc.), tools and APIs**. For more details, please follow:
 
 | Name                                                              | Description                                                                     |
 |-------------------------------------------------------------------|---------------------------------------------------------------------------------|
