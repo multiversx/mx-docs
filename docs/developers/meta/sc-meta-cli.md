@@ -213,21 +213,22 @@ Paramameter:
 
 ### Calling `test`
 
-This command runs `cargo test`, which builds the project and runs the tests.
+This command is a useful shorthand for running various types of tests.
 
 Parameters:
 - `--path`  
     - Target directory where to generate contract integration tests.
     - _default_: current directory.
 - `--go`            
-    - This arg runs rust and go tests.
+    - Use this argument to only run the mx-scenario-go tool, directly. It is equivalent to running `mx-scenario-go run`.
+    - You can find out how to install `mx-scenario-go` [here](/developers/meta/sc-meta-cli#calling-install).
     - _default_: `false`
 - `--scen`          
-    - This arg runs scenarios.
+    - This argument causes cargo test to be run with the `multiversx-sc-scenario/run-go-tests` feature, causing tests relying on the mx-scenairo-go tool to also be run.
     - _default_: `false`
-    - If scen and go are both specified, scen overrides the go argument.
+    - If `scen` and `go` are both specified, scen overrides the go argument.
 - `--nocapture`    
-    - This arg prints the entire output of the vm.
+    - This argument prints the entire output of the vm.
     - _default_: `false`
 - `--help`        
     - Print help
@@ -262,6 +263,18 @@ Paramameters:
 - `--create`
     - Creates test files if they don't exist.
 
+[comment]: # (mx-exclude-context)
+
+### Calling `install`
+
+This command can be used to quickly install other tools needed for smart contract development, interaction and testing.
+
+Paramameters:
+- `all`
+    - Installs all the known tools.
+- `mx-scenario-go`
+    - Installs the `mx-scenario-go` tool.
+    - Can further specify the framework version on which the contracts should be created by using `--tag`
 
 ---
 
