@@ -15,7 +15,7 @@ This page succinctly describes how to use Google BigQuery to analyze data from t
 
 [**MultiversX Blockchain data**](https://console.cloud.google.com/marketplace/product/bigquery-public-data/blockchain-analytics-multiversx-mainnet-eu) is published to Google BigQuery, and available (for free) through the [**Google Cloud Marketplace**](https://console.cloud.google.com/marketplace/product/bigquery-public-data/blockchain-analytics-multiversx-mainnet-eu). The dataset, namely [**`bigquery-public-data.crypto_multiversx_mainnet_eu`**](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=crypto_multiversx_mainnet_eu&page=dataset), is one of many crypto datasets that are available within [**Google Cloud Public Datasets**](https://cloud.google.com/bigquery/public-data). One can query these datasets for free: up to 1TB / month of free processing, every month.
 
-The MultiversX BigQuery dataset closely resembles the set of indices of the [**MultiversX Elasticsearch instance**](/sdk-and-tools/elastic-search#elasticsearch-indices). Their schema and data are **approximatly equivalent**, the data [being mirrored from the Elasticsearch instance to BigQuery](https://github.com/multiversx/multiversx-etl) at regular intervals (most tables are updated _hourly_, and a few are updated every _4 hours_).
+The MultiversX BigQuery dataset closely resembles the set of indices of the [**MultiversX Elasticsearch instance**](/sdk-and-tools/elastic-search#elasticsearch-indices). Their schema and data are **approximately equivalent**, the data [being mirrored from the Elasticsearch instance to BigQuery](https://github.com/multiversx/multiversx-etl) at regular intervals (most tables are updated _hourly_, and a few are updated every _4 hours_).
 
 :::note
 As of February 2024, the MultiversX BigQuery dataset **is not updated in real-time** (see above). For real-time data, [use the public APIs](/sdk-and-tools/rest-api).
@@ -119,14 +119,14 @@ ORDER BY `day` DESC
 :::note
 Even if BigQuery includes a generous free tier, it is important to be mindful of the costs associated with running queries. For more information, see [BigQuery pricing](https://cloud.google.com/bigquery/pricing).
 
-If you believe that specific optimizations can applied to the dataset (to improve query performance), please [let us know](https://github.com/multiversx/multiversx-etl/issues).
+If you believe that specific optimizations can be applied to the dataset (to improve query performance), please [let us know](https://github.com/multiversx/multiversx-etl/issues).
 :::
 
 ## Analyze using Looker Studio
 
-[**Google Looker Studio**](https://lookerstudio.google.com) is a powerful tool for analyzing data and create (shareable) reports. Out of the box, it connects to BigQuery (and many other data sources), thus it's a great way to explore the MultiversX dataset.
+[**Google Looker Studio**](https://lookerstudio.google.com) is a powerful tool for analyzing data and creating (shareable) reports. Out of the box, it connects to BigQuery (and many other data sources), thus it's a great way to explore the MultiversX dataset.
 
-Example of report created in Looker Studio (leveraging the MultiversX dataset on BigQuery):
+Example of report created in Looker Studio (leveraging the MultiversX dataset in BigQuery):
 
 ![img](/sdk-and-tools/looker_studio_1.png)
 
