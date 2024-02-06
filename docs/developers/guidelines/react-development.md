@@ -288,7 +288,6 @@ function verifyUser(user) {
 ```
 3. Same props are passed below to a component, or are used for further processing
 
-
 ```jsx
 // 🚫 DON'T 
 const DisplayUser = ({name, age}: UserType) {

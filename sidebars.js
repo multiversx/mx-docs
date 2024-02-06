@@ -110,17 +110,27 @@ const sidebars = {
               "developers/meta/sc-config",
               "developers/meta/sc-meta-cli",
               "developers/meta/sc-allocator",
+              "developers/meta/rust-nightly",
             ],
           },
           {
             type: "category",
-            label: "Testing Scenarios",
+            label: "Testing",
             items: [
-              "developers/scenario-reference/overview",
-              "developers/scenario-reference/structure",
-              "developers/scenario-reference/values-simple",
-              "developers/scenario-reference/values-complex",
-              "developers/scenario-reference/embed",
+              "developers/testing/testing-overview",
+              {
+                type: "category",
+                label: "Scenarios",
+                items: [
+                  "developers/testing/scenario/concept",
+                  "developers/testing/scenario/structure-json",
+                  "developers/testing/scenario/values-simple",
+                  "developers/testing/scenario/values-complex",
+                  "developers/testing/scenario/running-scenarios",
+                  "developers/testing/scenario/generating-scenarios",
+                ],
+              },
+              "developers/testing/testing-in-go",
             ],
           },
         ],
@@ -238,6 +248,7 @@ const sidebars = {
         ],
       },
       "sdk-and-tools/notifier",
+      "sdk-and-tools/google-bigquery",
       "sdk-and-tools/devcontainers",
       {
         type: "category",
@@ -286,13 +297,23 @@ const sidebars = {
           "sdk-and-tools/erdcpp",
           "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
-          "sdk-and-tools/sdk-js-wallet-cli",
+          "sdk-and-tools/sdk-js-wallet-cli"
         ],
       },
+      {
+        type: "category",
+        label: "Troubleshooting",
+        items: [
+          "sdk-and-tools/troubleshooting/troubleshooting",
+          "sdk-and-tools/troubleshooting/rust-setup",
+          "sdk-and-tools/troubleshooting/ide-setup"
+        ],
+      }
     ],
     Wallet: [
       "wallet/overview",
       "wallet/web-wallet",
+      "wallet/xalias",
       "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger",
@@ -368,6 +389,10 @@ const sidebars = {
       "economics/economics-overview",
       "economics/staking-providers-apr",
     ],
+    Governance: [
+      "governance/overview",
+      "governance/governance-interaction",
+    ],
     Integrators: [
       "integrators/overview",
       {
@@ -387,6 +412,7 @@ const sidebars = {
           "integrators/observing-squad",
           "integrators/deep-history-squad",
           "integrators/snapshotless-observing-squad",
+          "integrators/advanced-observer-settings"
         ],
       },
       {

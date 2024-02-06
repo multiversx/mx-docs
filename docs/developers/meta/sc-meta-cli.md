@@ -58,7 +58,7 @@ Paramameters:
 - `--ignore`
     - Ignore all directories with these names.
     - _default_: `target`.
-- `--no-abi-git-version
+- `--no-abi-git-version`
     - Skips loading the Git version into the ABI
 - `--target-dir-meta`
     - For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
@@ -114,6 +114,9 @@ Paramameters:
 - `--to`
     - Overrides the version to upgrade to.
     - _default_: the last released version.
+- `--no-check`
+    - By default `upgrade` compile checks the project after each major version upgrade. This is to allow developers that upgrade multiple versions to address issues with the upgrade before too many such issues get to accumulate. This feature can be turned off by the `--no-check` flag.
+    - _default_: project is compiled.
 
 [comment]: # (mx-context-auto)
 
@@ -211,7 +214,9 @@ Paramameter:
 
 ### Calling `test-gen`
 
-<!-- TODO: expand section and move to a separate page -->
+The `test-gen` tool is used to [generate boilerplate](/developers/testing/scenario/running-scenarios#auto-generating-the-boilerplate) code when [integrating JSON scenario files in a contract's Rust test suite](/developers/testing/scenario/running-scenarios#integration-in-rust).
+
+In short:
 
 Contracts often have JSON scenario tests associated with them, which normally reside in the `scenarios` folder, under the contract crate root.
 
@@ -221,53 +226,7 @@ These integration tests come in two flavors:
 - Rust tests, that exclusively use the Rust debugger infrastructure;
 - VM tests that use the Go infrastructure.
 
-An example:
-
-```rust title="adder/tests/adder_scenario_rs_test.rs"
-use multiversx_sc_scenario::*;
-
-fn world() -> ScenarioWorld {
-    let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/adder");
-
-    blockchain.register_contract("file:output/adder.wasm", adder::ContractBuilder);
-    blockchain
-}
-
-#[test]
-fn adder_rs() {
-    world().run("scenarios/adder.scen.json");
-}
-
-#[test]
-fn interactor_trace_rs() {
-    world().run("scenarios/interactor_trace.scen.json");
-}
-```
-
-```rust title="adder/tests/adder_scenario_go_test.rs"
-use multiversx_sc_scenario::*;
-
-fn world() -> ScenarioWorld {
-    ScenarioWorld::vm_go()
-}
-
-#[test]
-fn adder_go() {
-    world().run("scenarios/adder.scen.json");
-}
-
-#[test]
-fn interactor_trace_go() {
-    world().run("scenarios/interactor_trace.scen.json");
-}
-```
-
-The `world()` definition is expected form the developer, but the tests themselves are generated and updated automatically when calling `sc-meta test-gen`.
-
-:::caution
-The tool does not work well with code that is commented-out. In order to temporarily disable a test, annotate it with `#[ignore]`.
-:::
+Read more about JSON scenarios in smart contract projects [here](/developers/testing/scenario/running-scenarios).
 
 Paramameters:
 - `--path`

@@ -28,7 +28,7 @@ const config = {
   markdown: {
     mermaid: true,
   },
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: ["@docusaurus/theme-mermaid"],
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -50,6 +50,7 @@ const config = {
           remarkPlugins: [math],
           rehypePlugins: [katex],
           editUrl: "https://github.com/multiversx/mx-docs/edit/development",
+          showLastUpdateTime: true,
         },
         blog: false, // Optional: disable the blog plugin
         theme: {
@@ -212,7 +213,7 @@ const config = {
           },
           {
             from: "/sdk-and-tools/dapp-core",
-            to: "/sdk-and-tools/sdk-dapp"
+            to: "/sdk-and-tools/sdk-dapp",
           },
           {
             from: "/validators/staking-providers-apr",
@@ -263,16 +264,52 @@ const config = {
             to: "/developers/meta/sc-meta",
           },
           {
-            from: "/developers/developer-reference/sc-build-reference",
-            to: "/developers/meta/sc-build-reference",
-          },
-          {
             from: "/developers/developer-reference/code-metadata",
             to: "/developers/data/code-metadata",
           },
           {
             from: "/developers/best-practices/multi-values",
             to: "/developers/data/multi-values",
+          },
+          {
+            from: "/developers/scenario-reference/overview",
+            to: "/developers/testing/scenario/concept",
+          },
+          {
+            from: "/developers/scenario-reference/structure",
+            to: "/developers/testing/scenario/structure-json",
+          },
+          {
+            from: "/developers/scenario-reference/values-simple",
+            to: "/developers/testing/scenario/values-simple",
+          },
+          {
+            from: "/developers/scenario-reference/values-complex",
+            to: "/developers/testing/scenario/values-complex",
+          },
+          {
+            from: "/developers/scenario-reference/embed",
+            to: "/developers/testing/testing-in-go",
+          },
+          {
+            from: "/developers/mandos-reference/overview",
+            to: "/developers/testing/scenario/concept",
+          },
+          {
+            from: "/developers/mandos-reference/structure",
+            to: "/developers/testing/scenario/structure-json",
+          },
+          {
+            from: "/developers/mandos-reference/values-simple",
+            to: "/developers/testing/scenario/values-simple",
+          },
+          {
+            from: "/developers/mandos-reference/values-complex",
+            to: "/developers/testing/scenario/values-complex",
+          },
+          {
+            from: "/developers/mandos-reference/embed",
+            to: "/developers/testing/testing-in-go",
           },
           {
             from: "/sdk-and-tools/erdjs",
@@ -339,24 +376,24 @@ const config = {
             to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
           },
           {
-            from: "/developers/mandos-reference/overview",
-            to: "/developers/scenario-reference/overview",
+            from: "/developers/log-events/esdt-events",
+            to: "/developers/event-logs/esdt-events",
           },
           {
-            from: "/developers/mandos-reference/structure",
-            to: "/developers/scenario-reference/structure",
+            from: "/developers/log-events/execution-events",
+            to: "/developers/event-logs/execution-events",
           },
           {
-            from: "/developers/mandos-reference/values-simple",
-            to: "/developers/scenario-reference/values-simple",
+            from: "/developers/log-events/contract-call-events",
+            to: "/developers/event-logs/contract-call-events",
           },
           {
-            from: "/developers/mandos-reference/values-complex",
-            to: "/developers/scenario-reference/values-complex",
+            from: "/developers/log-events/contract-deploy-events",
+            to: "/developers/event-logs/contract-deploy-events",
           },
           {
-            from: "/developers/mandos-reference/embed",
-            to: "/developers/scenario-reference/embed",
+            from: "/developers/log-events/system-delegation-events",
+            to: "/developers/event-logs/system-delegation-events",
           },
         ],
         createRedirects(existingPath) {

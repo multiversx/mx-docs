@@ -72,7 +72,7 @@ The source code of each smart contract requires its own folder. You'll need to c
 ```bash
 mkdir -p ~/MultiversX/SmartContracts
 cd ~/MultiversX/SmartContracts
-mxpy contract new crowdfunding --template empty
+mxpy contract new --name crowdfunding --template empty
 code crowdfunding
 ```
 
