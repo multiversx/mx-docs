@@ -124,10 +124,12 @@ If you believe that specific optimizations can applied to the dataset (to improv
 
 ## Analyze using Looker Studio
 
-...
+[**Google Looker Studio**](https://lookerstudio.google.com) is a powerful tool for analyzing data and create (shareable) reports. Out of the box, it connects to BigQuery (and many other data sources), thus it's a great way to explore the MultiversX dataset.
+
+:::tip
+In the BigQuery Studio, you can save the results of a given query as your own BigQuery tables, then immediately import them in Looker Studio, to create visualizations and reports.
+:::
 
 ## Programatic access
 
 https://cloud.google.com/bigquery/docs#code-samples
-
-## Use cases
