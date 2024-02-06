@@ -84,7 +84,7 @@ Notice that there are some differences as compared to the regular _frontend_ [tr
 
 [comment]: # (mx-context-auto)
 
-### Preparing relayed v1 transaction using erdjs
+### Preparing relayed v1 transaction using mx-sdk-js-core
 
 `mx-sdk-js-core` has built-in support for relayed transactions version 1, by using a builder which allows one to prepare such
 a transaction.

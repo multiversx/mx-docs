@@ -182,6 +182,11 @@ const sidebars = {
           },
         ],
       },
+      {
+        type: "category",
+        label: "Guidelines",
+        items: ["developers/guidelines/react-development"],
+      },
     ],
     "SDK and Tools": [
       "sdk-and-tools/overview",
@@ -307,6 +312,7 @@ const sidebars = {
     Wallet: [
       "wallet/overview",
       "wallet/web-wallet",
+      "wallet/xalias",
       "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger",
