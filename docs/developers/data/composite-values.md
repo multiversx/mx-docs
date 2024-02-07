@@ -4,7 +4,7 @@ title: Composite Values
 ---
 [comment]: # (mx-abstract)
 
-We often need to group simple values into more complex ones, without splitting them into [several arguments](/developers/data/multi-value).
+We often need to group simple values into more complex ones, without splitting them into [several arguments](/developers/data/multi-values).
 
 Here too we opted for an encoding that is, above all, very easy to read.
 

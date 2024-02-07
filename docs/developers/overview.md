@@ -108,7 +108,7 @@ Learn about transaction's gas and how a fee is calculated:
 | [Best practices basics](/developers/best-practices/best-practices-basics)                   | How to better structure your Smart Contract code.  |
 | [Biguint operations](/developers/best-practices/biguint-operations)                         | Handle Biguint operations in a more efficient way. |
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
-| [Multi values](/developers/best-practices/multi-values)                                     | Take advantage of the variadic input and output.   |
+| [Multi values](/developers/data/multi-values)                                               | Take advantage of the variadic input and output.   |
 
 [comment]: # (mx-context-auto)
 
@@ -146,11 +146,11 @@ the execution of smart contract, information about ESDT transfers or built-in fu
 
 | Name                                                                          | Description                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [ESDT Operations Events](/developers/log-events/esdt-events)                  | ESDT operations, which encompass token creation, transfers, and other critical actions, generate log events. These events record sender and receiver addresses, token amounts, and operation types.                 |
-| [Execution Events](/developers/log-events/execution-events)                   | Execution events are dedicated to recording the status of transaction execution. They indicate whether a transaction was successfully executed or encountered an error.                                             |
-| [Smart Contract Call Events](/developers/log-events/contract-call-events)     | Smart contract calls often emit log events to report their execution status and results. These events typically include information such as the caller's address, the called function, and any other relevant data. |
-| [Smart Contract Deploy Events](/developers/log-events/contract-deploy-events) | Smart contract deployment and upgrade events are used to record when a smart contract is initially deployed or when it undergoes an upgrade.                                                                        |
-| [System Delegation Events](/developers/log-events/system-delegation-events)   | System delegation events are generated in response to interactions with the system delegation contract.                                                                                                             |
+| [ESDT Operations Events](/developers/event-logs/esdt-events)                  | ESDT operations, which encompass token creation, transfers, and other critical actions, generate log events. These events record sender and receiver addresses, token amounts, and operation types.                 |
+| [Execution Events](/developers/event-logs/execution-events)                   | Execution events are dedicated to recording the status of transaction execution. They indicate whether a transaction was successfully executed or encountered an error.                                             |
+| [Smart Contract Call Events](/developers/event-logs/contract-call-events)     | Smart contract calls often emit log events to report their execution status and results. These events typically include information such as the caller's address, the called function, and any other relevant data. |
+| [Smart Contract Deploy Events](/developers/event-logs/contract-deploy-events) | Smart contract deployment and upgrade events are used to record when a smart contract is initially deployed or when it undergoes an upgrade.                                                                        |
+| [System Delegation Events](/developers/event-logs/system-delegation-events)   | System delegation events are generated in response to interactions with the system delegation contract.                                                                                                             |
 
 [comment]: # (mx-context-auto)
 

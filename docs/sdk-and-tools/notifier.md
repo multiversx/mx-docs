@@ -40,6 +40,11 @@ In the figure above:
 - Notifier will push events to RabbitMQ if enabled, or via Websocket. If Websocket will be enabled an additional endpoint will be available:
     - `/hub/ws` (GET) - this route can be used to manage the websocket connection subscription
 
+:::info
+Please make the distinction between `observer node` -> `notifier` communication (which can be via HTTP or WebSocket) and
+`notifier` -> `subscriber` (which can be via RabbitMQ and WebSocket).
+:::
+
 [comment]: # (mx-context-auto)
 
 ## Set up observer and notifier
@@ -63,7 +68,7 @@ The WebSocket integration is a generic one, and can be used for multiple outport
 In case Elasticsearch integration is already being used with WebSocket connector, a separate config
 section `HostDriversConfig` has to be set for event notifier.
 
-The corresponding config section for enabling the driver:
+The corresponding config section for enabling the WebSocket driver on observer node:
 
 ```toml
 [[HostDriversConfig]]
@@ -119,7 +124,7 @@ For http integration, the supported config variables are as follows:
 - `Username`: the username used for authorization, if enabled.
 - `Password`: the password used for authorization, if enabled.
 
-The corresponding config section for enabling the driver:
+The corresponding config section for enabling the driver on observer node:
 
 ```toml
 [EventNotifierConnector]
@@ -139,6 +144,13 @@ The corresponding config section for enabling the driver:
 
     # Password is used to authorize an observer to push event data
     Password = ""
+
+    # RequestTimeoutSec defines the timeout in seconds for the http client
+    RequestTimeoutSec = 60
+
+    # MarshallerType is used to define the marshaller type to be used for inner
+    # marshalled structures in block events data
+    MarshallerType = "json"
 ```
 
 :::info
@@ -159,6 +171,34 @@ delays due to outport driver.
 
 In the notifier configuration directory (`cmd/notifier/config`), there is the `config.toml`
 file that can be used to configure the service.
+
+There are some general configuration options, which should be fine with their default values:
+```toml
+[General]
+    # CheckDuplicates signals if the events received from observers have been already pushed to clients
+    # Requires a redis instance/cluster and should be used when multiple observers push from the same shard
+    CheckDuplicates = true
+
+    # ExternalMarshaller is used for handling incoming/outcoming api requests 
+    [General.ExternalMarshaller]
+        Type = "json"
+    # InternalMarshaller is used for handling internal structs
+    # This has to be mapped with the internal marshalling used for notifier outport driver
+    [General.InternalMarshaller]
+        Type = "json"
+
+    # Address pubkey converter config options
+    [General.AddressConverter]
+        Type = "bech32"
+        Prefix = "erd"
+        Length = 32
+```
+
+:::info
+Starting with release `v1.2.0`, `CheckDuplicates` field has been moved from `ConnectorApi` section to
+the newly added `General` section. Please make sure to put `CheckDuplicates` field before other inner
+struct fields in `General` section.
+:::
 
 There are 2 ways to connect observer node with events notifier service:
 - via WebSocket integration
@@ -192,6 +232,9 @@ There is a separate config section `WebSocketConnector` that has to be aligned w
     # Signals if in case of data payload processing error, we should send the ack signal or not
     BlockingAckOnError = false
 
+    # Set to true to drop messages if there is no active WebSocket connection to send to.
+    DropMessagesIfNoConnection = false
+
     # After a message will be sent it will wait for an ack message if this flag is enabled
     WithAcknowledge = true
 
@@ -204,8 +247,8 @@ There is a separate config section `WebSocketConnector` that has to be aligned w
 #### HTTP Integration
 
 The supported config variables are:
-- `Port`: the port on which the http server listens on. Should be the same 
-  as the port in the `ProxyUrl` described above.
+- `Host`: the address and/or port on which the http server listens on. Should be the same 
+  port in the `ProxyUrl` described above, for observer node.
 - `Username`: the username used to authorize an observer. Can be left empty for `UseAuthorization = false`.
 - `Password`: the password used to authorize an observer. Can be left empty for `UseAuthorization = false`.
 - `CheckDuplicates`: if true, it will check (based on a locker service using redis) if the event have been already pushed to clients
@@ -213,19 +256,23 @@ The supported config variables are:
 The `ConnectorApi` section has to be aligned with the one from observer node:
 ```toml
 [ConnectorApi]
-    # The port on which the Hub listens for subscriptions
-    Port = "5000"
+    # Enabled will determine if http connector will be enabled or not
+    Enabled = true
 
-    # Username is the username needed to authorize an observer to push data
+    # The address on which the events notifier listens for subscriptions
+    # It can be specified as "localhost:5000" or only as "5000"
+    Host = "5000"
+
+    # Username and Password needed to authorize the connector
+    # BasicAuth is enabled only for the endpoints with "Auth" flag enabled
+    # in api.toml config file 
     Username = ""
-    
-    # Password is the password needed to authorize an observer to push event data
     Password = ""
-
-    # CheckDuplicates signals if the events received from observers have been already pushed to clients
-    # Requires a redis instance/cluster and should be used when multiple observers push from the same shard
-    CheckDuplicates = true
 ```
+
+:::info
+Starting with release `v1.2.0`, an additional field `Enabled = true` has been added.
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -338,7 +385,7 @@ Event structure
 | Field       | Description                                                                                                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | identifier  | This field represents the identifier of the event.                                                                                                                                        |
-| address     | The address field holds the address in a bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction. |
+| address     | The address field holds the address in bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction.   |
 | topics      | The topics field holds a list with extra information. They don't have a specific order because the smart contract is free to log anything that could be helpful.                          |
 | data        | The data field can contain information added by the smart contract that generated the event.                                                                                              |
 | order       | The order field represents the index of the event indicating the execution order.                                                                                                         |

@@ -16,7 +16,7 @@ You can find it on [crates.io](https://crates.io/crates/multiversx-sc-meta) [![c
 To install it, simply call
 
 ```
-cargo install multiversx-sc-meta
+cargo install multiversx-sc-meta --locked
 ```
 
 After that, try calling `sc-meta help` or `sc-meta -h` to see the CLI docs.

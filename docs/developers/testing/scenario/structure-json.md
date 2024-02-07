@@ -1,9 +1,19 @@
 ---
-id: structure
-title: Scenario Structure
+id: structure-json
+title: JSON Structure
 ---
 [comment]: # (mx-abstract)
-Good test scenarios ensure software reliability and functionality, that's why is important to follow the proposed structure for having them as robust as possible.
+
+Scenario JSON files are designed to be readable by humans too. This is why you will see 
+
+[comment]: # (mx-context-auto)
+
+## **File extension**
+
+Scenario files should end in `.scen.json`, where "scen" comes from "scenario". The framework uses the double extension to identify tests to attempt running. Any other extension will be ignored.
+
+On a side note, there is also an older format that is now deprecated, where test file names end in `.test.json`, but you shouldn't worry about it.
+
 
 [comment]: # (mx-context-auto)
 
@@ -273,7 +283,7 @@ Fields:
 
 Simply prints the entire state of the blockchain mock to the console.
 
-```
+```json
 {
     "step": "dumpState",
     "comment": "print everything to console"
@@ -284,7 +294,7 @@ Simply prints the entire state of the blockchain mock to the console.
 
 ## Step type: `scCall`
 
-```
+```json
 {
     "steps": [
         {
@@ -373,7 +383,7 @@ This step simulates a transaction to an existing smart contract. Fields:
 
 ## Step type: `scQuery`
 
-```
+```json
 {
     "steps": [
         {
@@ -430,7 +440,7 @@ Fields:
 
 It is very similar to `scCall`, but it is used specifically for simulating deployment of new smart contracts.
 
-```
+```json
 {
     "steps": [
         {
@@ -479,7 +489,7 @@ Please note: cannot transfer ESDT during contract deploy. If you need to feed ES
 
 Lesser used step type. Simulates a simple transfer of EGLD between two accounts, without involving the VM. Note that simple transfers are also allowed toward smart contracts. They will increase the smart contract balance, without calling any function from it.
 
-```
+```json
 {
     "steps": [
         {
@@ -523,7 +533,7 @@ The fields are:
 
 Lesser used step type. Simulates a validator reward being sent by the protocol. This transaction has no sender, and beside increasing the recipient balance, it also increments the `ELRONDrewards` field in the smart contract storage. Useful when building delegation or other staking contracts.
 
-```
+```json
 {
     "steps": [
         {
