@@ -49,7 +49,7 @@ cargo run build
 ```
 :::
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -74,7 +74,7 @@ As an example, below is the output of calling it in the example contract folder 
 
 ![sc-meta info screenshot](/developers/sc-meta/sc-meta-info.png "Result of calling sc-meta info in the example contract folder in the framework")
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -100,7 +100,7 @@ For projects with multiple contract crates, we recommend upgrading all of them a
 Generally, we strongly recommend to ensure code versioning or at least a backup of the contract code to avoid the impossibility of reverting permanent changes. This automatic code altering process involved in using `sc-meta upgrade` highly raises this recommendation.
 :::
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -151,7 +151,7 @@ Example output (abridged):
 }
 ```
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -172,7 +172,7 @@ The tool will replace all necessary names in the project, based on the the proje
 - the contract trait name,
 - the file name of the main source file.
 
-Paramameters:
+Parameters:
 - `--template`
     - The contract template to clone. Available options can be retrieve by using [this](/developers/meta/sc-meta-cli#calling-templates)
     - Required.
@@ -198,7 +198,7 @@ empty
 adder
 ```
 
-Paramameter:
+Parameter:
 - `--tag`
     -  The framework version on which the contracts should be created.
     - _default_: The latest released version.
