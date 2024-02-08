@@ -216,14 +216,6 @@ const config = {
             to: "/sdk-and-tools/sdk-dapp",
           },
           {
-            from: "/sdk-and-tools/sdk-nestjs",
-            to: "/sdk-and-tools/sdk-nestjs/sdk-nestjs"
-          },
-          {
-            from: "/sdk-and-tools/erdnest",
-            to: "/sdk-and-tools/sdk-nestjs/sdk-nestjs"
-          },
-          {
             from: "/validators/staking-providers-apr",
             to: "/economics/staking-providers-apr",
           },
