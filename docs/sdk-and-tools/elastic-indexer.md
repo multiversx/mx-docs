@@ -11,7 +11,6 @@ title: Elasticindexer service
 This feature will work starting from `rc/v1.6.0` version of the node
 :::
 
-
 A MultiversX observer node can send messages over `WebSocket` to an elastic indexer service, which will process and index the data in an Elasticsearch database.
 
 The GitHub repository for the `elasticindexer` service can be found [here](https://github.com/multiversx/mx-chain-es-indexer-go/tree/rc/v1.6.0).
@@ -77,7 +76,6 @@ The corresponding config section for enabling the driver:
 
 In the `elasticindexer` configuration directory (`cmd/elasticindexer/config`), there is the `prefs.toml`
 file that can be used to configure the service.
-
 
 The `config.web-socket` section has to be aligned with the one from observer node:
 

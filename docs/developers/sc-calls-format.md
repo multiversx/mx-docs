@@ -178,7 +178,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 ### Converting addresses using sdk-go
 
-Find more about `sdk-go` [here](/sdk-and-tools/erdgo/).
+Find more about `sdk-go` [here](/sdk-and-tools/sdk-go/).
 
 ```js
 import (

@@ -216,6 +216,14 @@ const config = {
             to: "/sdk-and-tools/sdk-dapp",
           },
           {
+            from: "/sdk-and-tools/sdk-nestjs",
+            to: "/sdk-and-tools/sdk-nestjs/sdk-nestjs"
+          },
+          {
+            from: "/sdk-and-tools/erdnest",
+            to: "/sdk-and-tools/sdk-nestjs/sdk-nestjs"
+          },
+          {
             from: "/validators/staking-providers-apr",
             to: "/economics/staking-providers-apr",
           },
@@ -314,6 +322,14 @@ const config = {
           {
             from: "/sdk-and-tools/erdjs",
             to: "/sdk-and-tools/sdk-js",
+          },
+          {
+            from: "/sdk-and-tools/erdjava",
+            to: "/sdk-and-tools/mxjava",
+          },
+          {
+            from: "/sdk-and-tools/erdgo",
+            to: "/sdk-and-tools/sdk-go",
           },
           {
             from: "/sdk-and-tools/erdjs/erdjs-cookbook",

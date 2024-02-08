@@ -27,8 +27,6 @@ The build process is mostly configured using the [build configuration file](/dev
 
 It is also possible for the build process to produce [more than one contract per project crate](/developers/meta/sc-config#multi-contract-configuration).
 
-
-
 ---
 
 [comment]: # (mx-context-auto)
