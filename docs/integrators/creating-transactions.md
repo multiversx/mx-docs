@@ -37,8 +37,8 @@ transactions creation and signing:
 
 - [sdk-js - JavaScript SDK](/sdk-and-tools/sdk-js)
 - [sdk-py - Python SDK](/sdk-and-tools/sdk-py)
-- [erdgo - Golang SDK](/sdk-and-tools/erdgo)
-- [erdjava - Java SDK](/sdk-and-tools/erdjava)
+- [sdk-go - Golang SDK](/sdk-and-tools/sdk-go)
+- [sdk-java - Java SDK](/sdk-and-tools/mxjava)
 - [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
 - [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 

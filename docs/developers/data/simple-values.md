@@ -9,7 +9,6 @@ We will start by going through the basic types used in smart contracts:
 - Arbitrary width (big) numbers
 - Boolean values
 
-
 [comment]: # (mx-context-auto)
 
 ### Fixed-width numbers
@@ -181,7 +180,6 @@ We consider best practice to use Unicode on the frontend, but keep all messages 
 | `Vec<u8>`       | `b"abc".to_vec()`           | `0x616263`         | `0x00000003616263` | Use `Vec` for a buffer that can grow.                             |
 | `&'static str`  | `"abc"`                     | `0x616263`         | `0x00000003616263` | Unicode string (slice).                                           |
 | `String`        | `"abc".to_string()`         | `0x616263`         | `0x00000003616263` | Unicode string (owned).                                           |
-
 
 :::info Note
 Inside contracts, `ManagedBuffer` is [the only recommended type for generic bytes](developers/best-practices/the-dynamic-allocation-problem).
