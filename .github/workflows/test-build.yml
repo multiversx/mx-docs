@@ -1,7 +1,7 @@
 name: test-build
 
 on:
-  push:
+  pull_request:
     branches: [main, development]
   workflow_dispatch:
 
