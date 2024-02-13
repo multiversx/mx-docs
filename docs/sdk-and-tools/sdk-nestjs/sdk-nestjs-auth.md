@@ -5,10 +5,14 @@ title: NestJS SDK Auth utilities
 
 <a href="https://www.npmjs.com/package/@multiversx/sdk-nestjs-auth" target="_blank"><img src="https://img.shields.io/npm/v/@multiversx/sdk-nestjs-auth.svg" alt="NPM Version" /></a>
 
+[comment]: # (mx-context-auto)
+
 ## MultiversX NestJS Microservice Native Authentication Utilities
 
 This package contains a set of utilities commonly used for authentication purposes in the MultiversX Microservice ecosystem.
   The package relies on [@multiversx/sdk-native-auth-server](https://www.npmjs.com/package/@multiversx/sdk-native-auth-server) for validating access tokens signed by MultiversX wallets.
+
+[comment]: # (mx-context-auto)
 
 ## Installation
 
@@ -46,7 +50,6 @@ The package provides a series of [NestJS Guards](https://docs.nestjs.com/guards)
 The authentication guards need 2 parameters on instantiation.
   The fist parameter needs to be an instance of a class implementing the `ErdnestConfigService` interface.
 The second one, needs to be an instance of a [Caching service](https://www.npmjs.com/package/@multiversx/sdk-nestjs-cache)
-
 
 ```typescript
  import { Injectable } from "@nestjs/common";
@@ -117,7 +120,6 @@ NestJS guards can be controller-scoped, method-scoped, or global-scoped. Setting
  ```
 In the example above the `NativeAuthGuard` is controller-scoped. This means that all of the methods from `ProjectsController` will be protected by the guard.
 
-
 ```typescript
  import { NativeAuthGuard } from "@multiversx/sdk-nestjs-auth";
 
@@ -168,6 +170,8 @@ In this case, the guard is method-scoped. Only `createProject` benefits from the
  }
  ```
 
+[comment]: # (mx-context-auto)
+
 ### JWT Admin Guard
 
   `JwtAdminGuard` relies on the same mechanism, only specific addresses can be authenticated. The addresses are defined in the [config](#configuration) file and are passed to the guard via the ErdnestConfigService.
@@ -195,7 +199,6 @@ In this case, the guard is method-scoped. Only `createProject` benefits from the
  app.useGlobalGuards(new NativeAuthGuard(new SdkNestjsConfigServiceImpl(apiConfigService), cachingService));
  ```
 
-
 ## Using the Auth Decorators
 
 The package exposes 3 decorators : `NativeAuth`, `Jwt` and `NoAuth`
@@ -208,7 +211,6 @@ The `NativeAuth` decorator accepts a single parameter. In can be one of the foll
 - `address` - address that signed the access token
 - `origin` - URL of the page that generated the token
 - `extraInfo` - optional arbitrary data
-
 
 Below is an example showing how to use the decorator to extract the signers address :
 

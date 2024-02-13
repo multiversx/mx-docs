@@ -16,7 +16,11 @@ Whenever a node is executing the trie snapshotting process, the accounts data fe
 This is caused by the fact that the snapshotting operation has a high CPU and disk I/O utilization.
 The nodes started with the flag `--operation-mode snapshotless-observer` will not create trie snapshots on every epoch and will also prune the trie storage in order to save space. 
 
+[comment]: # (mx-context-auto)
+
 ## Setup
+
+[comment]: # (mx-context-auto)
 
 ### Creating a Snapshotless Observing Squad from scratch
 
@@ -26,6 +30,8 @@ NODE_EXTRA_FLAGS="-log-save -operation-mode snapshotless-observer"
 ```
 
 After that, you can resume the normal Observing Squad installation steps.
+
+[comment]: # (mx-context-auto)
 
 ### Converting a normal Observing Squad to a Snapshotless Observing Squad
 
@@ -65,6 +71,7 @@ Failure to do so will make the node error with a message like `consensusComponen
 :::
 
 [comment]: # (mx-context-auto)
+
 ### One click deploy in AWS
 AWS instances for Snapshotless Observing Squads can be easily deployed via our Amazon Machine Image available in the [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-pbwpmtdtwmkgs).
 

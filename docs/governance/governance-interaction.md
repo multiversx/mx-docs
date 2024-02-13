@@ -9,6 +9,8 @@ title: Governance interaction
 
 The interaction with the governance system smartcontract is done through correctly formatted transactions to submit actions and through the usage of the vm-query REST API calls for reading the proposal(s) status.
 
+[comment]: # (mx-context-auto)
+
 ### Creating a proposal
 
 The proposal creation transaction has the following parameters:
@@ -37,6 +39,8 @@ After issuing the proposal, there is a log event generated having the `proposal`
 - `start epoch` as encoded integer for the starting epoch
 - `end epoch` as encoded integer for the ending epoch
 
+[comment]: # (mx-context-auto)
+
 ### Voting a proposal using the direct staked or delegation-system amount
 
 Any wallet that has staked EGLD (either direct staked or through the delegation sub-system) can cast a vote for a proposal.
@@ -59,6 +63,8 @@ The `nonce` is the hex encoded value of the proposal's unique nonce and the `vot
 - for **Veto**: `7665746f`.
 
 The vote value for the account that will vote a proposal is the sum of all staked values along with the sum of all delegated values in the delegation sub-system. 
+
+[comment]: # (mx-context-auto)
 
 ### Voting a proposal through smart contracts (delegation voting)
 
@@ -93,6 +99,8 @@ The `nonce` is the hex encoded value of the proposal's unique nonce and the `vot
 The `account address handled by the smart contract` is the address handled by the smart contract that will delegate the vote towards the governance smart contract. This address will be recorded for casting the vote.
 The `vote_balance` is the amount of stake the address has in the smart contract. The governance contract will "believe" that this is the right amount as it impossible to verify the information. The balance will diminish the total voting power the smart contract has. 
 
+[comment]: # (mx-context-auto)
+
 ### Closing a proposal
 
 A proposal can be closed only in an epoch that is strictly higher than the end epoch value provided when the proposal was open.
@@ -109,6 +117,8 @@ CloseProposalTransaction {
 ```
 
 Only the address that created the proposal can call the `closeProposal` function that will also trigger the funds unlocking. As stated in the overview page, if the proposal does not pass, the amount returned will be less with 10 EGLD.
+
+[comment]: # (mx-context-auto)
 
 ### Querying the status of a proposal
 
@@ -169,6 +179,7 @@ Example:
 }
 ```
 
+[comment]: # (mx-context-auto)
 
 ### Querying an address voting status (direct staking or system delegation)
 

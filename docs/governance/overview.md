@@ -7,9 +7,9 @@ title: Governance - Overview
 
 This page provides an overview of the On-chain Governance module that will be available on the `v1.6.x` release.
 
-## Table of contents
-
 [comment]: # (mx-context-auto)
+
+## Table of contents
 
 | Name                                                                              | Description                                                              |
 |-----------------------------------------------------------------------------------|--------------------------------------------------------------------------|
@@ -44,6 +44,8 @@ A proposal can pass only if all conditions are met:
 - the **Yes** value > **No** value (simple majority);
 - the **Yes** value is at least the minimumPassThresholdPercentage * sum of votes on all 4 categories.
 - the **Veto** value did not reach the minimumVetoThresholdPercentage * sum of votes on all 4 categories;
+
+[comment]: # (mx-context-auto)
 
 ### Example
 Let's suppose we have the following addresses that cast the following votes:
