@@ -62,11 +62,11 @@ rustup self uninstall
 
 ## Installing Rust and sc-meta
 
-[comment]: # (mx-context-auto)
-
 :::note
 `sc-meta` is universal smart contract management tool. Please follow [this](/developers/meta/sc-meta) for more information.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### With mxpy
 
@@ -134,6 +134,8 @@ cargo install multiversx-sc-meta --locked
 
 For a workaround, please follow this [GitHub issue](https://github.com/multiversx/mx-sdk-py-cli/issues/338).
 
+[comment]: # (mx-context-auto)
+
 ### Handle missing dependencies: build-essential
 
 On Ubuntu, you might also need to install `build-essential`:
@@ -141,6 +143,8 @@ On Ubuntu, you might also need to install `build-essential`:
 ```bash
 sudo apt-get install build-essential
 ```
+
+[comment]: # (mx-context-auto)
 
 ## Check your Rust installation
 
@@ -163,7 +167,6 @@ installed targets for active toolchain
 
 [...]
 wasm32-unknown-unknown
-
 
 active toolchain
 ----------------

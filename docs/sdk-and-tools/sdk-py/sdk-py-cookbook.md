@@ -294,7 +294,6 @@ print(relayed_tx.__dict__)
 from multiversx_sdk_core.transaction_builders.relayed_v2_builder import RelayedTransactionV2Builder
 from multiversx_sdk_wallet.user_signer import UserSigner
 
-
 signer = UserSigner.from_pem_file(Path("./testwallets/bob.pem"))
 
 inner_tx = Transaction(

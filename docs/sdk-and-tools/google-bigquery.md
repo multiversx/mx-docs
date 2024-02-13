@@ -9,6 +9,8 @@ This page succinctly describes how to use Google BigQuery to analyze data from t
 
 [comment]: # "mx-context-auto"
 
+[comment]: # (mx-context-auto)
+
 ## Overview
 
 [**BigQuery**](https://cloud.google.com/bigquery/docs/introduction) is Google's fully managed, serverless data warehouse that enables analysis of extremely large datasets using [SQL queries](https://cloud.google.com/bigquery/docs/introduction-sql) and / or visual tools (such as [Google Looker Studio](https://lookerstudio.google.com)); it also has built-in [machine learning capabilities](https://cloud.google.com/bigquery/docs/bqml-introduction).
@@ -25,6 +27,8 @@ As of February 2024, the MultiversX BigQuery dataset **is not updated in real-ti
 If you experience any issue with the published dataset, please [let us know](https://github.com/multiversx/multiversx-etl/issues).
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Query from BigQuery Studio
 
 [**Google BigQuery Studio**](https://cloud.google.com/bigquery/docs/query-overview#bigquery-studio) is a unified workspace for Google Cloud's data analytics suite which incorporates, among others, an SQL editor (optionally [assisted by AI](https://cloud.google.com/bigquery/docs/write-sql-duet-ai)) and Python notebooks. It is a great way to explore the MultiversX dataset, and to run queries. Below, we'll explore a few example queries.
@@ -32,6 +36,8 @@ If you experience any issue with the published dataset, please [let us know](htt
 :::tip
 Make sure to explore the dataset, the tables and their schema before running queries. Both the schema and a data preview are available in BigQuery Studio.
 :::
+
+[comment]: # (mx-context-auto)
 
 #### How many transactions were processed on MultiversX, in the last couple of days?
 
@@ -44,6 +50,8 @@ WHERE DATE(`timestamp`) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
 GROUP BY `day`
 ORDER BY `day` DESC
 ```
+
+[comment]: # (mx-context-auto)
 
 #### Which were the top used Smart Contracts, in the last couple of days?
 
@@ -59,6 +67,8 @@ HAVING `day` >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) AND `num_users` > 1000
 ORDER BY `day` DESC, `num_users` DESC
 ```
 
+[comment]: # (mx-context-auto)
+
 #### What ESDT tokens have the most holders?
 
 ```sql
@@ -72,6 +82,8 @@ GROUP BY `token`, `type`
 HAVING `num_holders` > 5000
 ORDER BY `num_holders` DESC
 ```
+
+[comment]: # (mx-context-auto)
 
 #### What are the transactions with the largest transferred EGLD amounts, in the last couple of days?
 
@@ -101,6 +113,8 @@ ORDER BY `day` DESC
 LIMIT 7;
 ```
 
+[comment]: # (mx-context-auto)
+
 #### What is the (global) network hitrate, per day, in the last month?
 
 ```sql
@@ -122,6 +136,8 @@ Even if BigQuery includes a generous free tier, it is important to be mindful of
 If you believe that specific optimizations can be applied to the dataset (to improve query performance), please [let us know](https://github.com/multiversx/multiversx-etl/issues).
 :::
 
+[comment]: # (mx-context-auto)
+
 ## Analyze using Looker Studio
 
 [**Google Looker Studio**](https://lookerstudio.google.com) is a powerful tool for analyzing data and creating (shareable) reports. Out of the box, it connects to BigQuery (and many other data sources), thus it's a great way to explore the MultiversX dataset.
@@ -133,6 +149,8 @@ Example of report created in Looker Studio (leveraging the MultiversX dataset in
 :::tip
 In the BigQuery Studio, you can save the results of a given query as your own BigQuery tables, then immediately import them in Looker Studio, to create visualizations and reports.
 :::
+
+[comment]: # (mx-context-auto)
 
 ## Programmatic access
 
