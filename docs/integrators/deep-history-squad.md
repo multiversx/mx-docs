@@ -89,7 +89,6 @@ Since each observer of a deep-history squad must have a non-pruned history, thei
 
 A deep history squad has its observers set up to retain the whole, non-pruned history of the blockchain. That is, the observers must be started with the flag `--operation-mode=historical-balances`.
 
-
 :::tip
 Apart from the flag mentioned above, the setup of a deep-history observer is identical to a regular full-history observer.
 :::
@@ -119,6 +118,8 @@ First, you need to decide whether to reconstruct a **complete** or a **partial**
 :::note
 The reconstruction flow has to be performed **for each shard, separately**.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### Reconstruct a complete history
 
@@ -203,6 +204,7 @@ curl http://localhost:8080/address/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7
 ```
 :::
 
+[comment]: # (mx-context-auto)
 
 ### Reconstruct a partial history
 
@@ -285,6 +287,8 @@ We are now ready to start the reconstruction process :rocket:
 
 Once the **import-db** is over, the `db` folder can be attached to a deep-history observer to support historical account (state) queries for the epochs `1255 - 1260`.
 
+[comment]: # (mx-context-auto)
+
 ## Historical VM queries
 
 :::important
@@ -305,6 +309,8 @@ Content-Type: application/json
 ```
 
 VM queries that refer older data aren't supported as of January 2024 (Sirius). This will be fixed in a future release.
+
+[comment]: # (mx-context-auto)
 
 ## Starting a squad
 
@@ -339,7 +345,6 @@ DEEP_HISTORY_DATA=${HOME}/deep-history-data DOCKER_USER=$(id -u):$(id -g) docker
 ```
 
 Alternatively, you can set up a squad using any other known approach, **but make sure to apply the proper `operation-mode`** described in the section [**Observer configuration**](#observer-configuration).
-
 
 **Congratulations!** You've set up a deep-history observing squad; the gateway should be ready to resolve historical account (state) queries :rocket:
 

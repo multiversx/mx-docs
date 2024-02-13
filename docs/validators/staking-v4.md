@@ -3,6 +3,8 @@ id: staking-v4
 title: Staking v4
 ---
 
+[comment]: # (mx-context-auto)
+
 # **Introduction**
 
 Staking and delegation are processes that evolve over time. No system has to remain static. Our assumptions about how
@@ -11,9 +13,9 @@ approximately 400 validators, with some acting as staking providers and others a
 most nodes have a comfortable top-up on the base stake of 2.500 eGLD, some do not contribute to the network's security by
 adding more top-up.
 
-# **Problems with the Current Implementation**
+[comment]: # (mx-context-auto)
 
-The issues with the current implementation include:
+# **Limitations of the Current Implementation**
 
 - Limiting the number of nodes to 3200, creating an additional queue. New validators can join the network only if
   someone leaves the system.
@@ -52,6 +54,8 @@ on topUp does not provide adequate protection for staking providers, requiring c
 **The second version**, currently implemented and explained in the following chapters, addresses the shortcomings of the
 first version.
 
+[comment]: # (mx-context-auto)
+
 # **Current Implementation**
 
 :::note
@@ -88,9 +92,13 @@ influenced by the amount of their staked top-up. Validators with a higher staked
 chances of participation, while those with little or no top-up will find their chances of entering into validation
 markedly reduced.
 
+[comment]: # (mx-context-auto)
+
 # **Staking V4**
 
 Staking phase 4 will unfold in three consecutive steps, each corresponding to a specific epoch.
+
+[comment]: # (mx-context-auto)
 
 ## Staking v4. Step 1.
 
@@ -126,6 +134,8 @@ Assuming a minimum price of 2500 EGLD per staked node, the owner should have a m
 2500 EGLD). If, during the epoch, the owner unstakes 4000 EGLD, resulting in a base stake of 6000 EGLD, only two staked
 nodes can be covered. At the end of the epoch, the nodes `node4` and `node3` will be unstaked in the specified order.
 
+[comment]: # (mx-context-auto)
+
 ## Staking v4. Step 2.
 
 In the second step, all **shuffled-out** nodes from the **eligible list** will be sent to the **auction list**. Waiting
@@ -134,6 +144,8 @@ lists will not be filled by any shuffled-out nodes.
 Using the example above, this will resize each waiting list per shard from 400 nodes to 320 nodes.
 
 ![Staking V4 Step 2](/validators/stakingV4/stakingV4-step2.png)
+
+[comment]: # (mx-context-auto)
 
 ## Staking v4. Step 3.
 
@@ -152,6 +164,8 @@ Starting with this epoch:
 - Distribution from the `waiting` to the `eligible` list will remain unchanged.
 
 ![](/validators/stakingV4/stakingV4-step3.png)
+
+[comment]: # (mx-context-auto)
 
 ## Staking v4. Soft Auction Selection Mechanism
 
@@ -265,15 +279,21 @@ Assuming the result of the XOR operation between their BLS keys and randomness i
 
 Since `XOR1` > `XOR2`, `pubKey1` will be selected, while `pubKey4` remains in the auction list.
 
+[comment]: # (mx-context-auto)
+
 ## Introducing Node Limitations for Enhanced Decentralization
 
 In tandem with the upcoming staking v4 feature, we are implementing a crucial change aimed at fostering
 decentralization, increasing the Nakamoto coefficient, and reinforcing the principles of a decentralized network.
 
+[comment]: # (mx-context-auto)
+
 ### Dynamic Node Limitation
 
 To achieve our decentralization goals, a cap on the number of nodes an owner can have will be introduced. This
 limitation is dynamic, recalculated at each epoch, ensuring adaptability to the evolving network conditions.
+
+[comment]: # (mx-context-auto)
 
 ### Impact and Considerations
 
@@ -281,11 +301,15 @@ This restriction primarily affects scenarios where users wish to stake new nodes
 more nodes than the specified threshold, their existing nodes will not be affected. However, they won't be able to stake
 additional nodes beyond the limit; only unstaking will be allowed.
 
+[comment]: # (mx-context-auto)
+
 ### Decentralization in Action
 
 This initiative encourages staking providers to critically evaluate their node count. For larger providers, having an
 excessive number of nodes may lead to a decrease in overall APR. Achieving enough top-up to select numerous nodes from
 the auction could become challenging.
+
+[comment]: # (mx-context-auto)
 
 ### Proactive Measures
 
@@ -296,7 +320,11 @@ selected in the auction, especially for those with limited top-up.
 No immediate action is required from users; however, thoughtful consideration of their node portfolio and strategic
 decisions will play a pivotal role in navigating this shift toward a more decentralized network.
 
+[comment]: # (mx-context-auto)
+
 # **FAQ**
+
+[comment]: # (mx-context-auto)
 
 ## How much topUp should I have as a validator?
 
@@ -306,9 +334,13 @@ qualify for distribution from the auction to the waiting list. To maximize the c
 validators are encouraged to maintain a competitive topUp. Real-time auction list information and the minimum required
 topUp per node is available in the explorer, allowing validators to strategize effectively.
 
+[comment]: # (mx-context-auto)
+
 ## What happens if there are fewer nodes in the auction than available slots?
 
 In this case, all nodes will be selected, regardless of their topUp.
+
+[comment]: # (mx-context-auto)
 
 ## One of my nodes was sent to auction during stakingV4 step 2. Will I lose rewards?
 
@@ -316,6 +348,8 @@ If one of your nodes is shuffled out into the auction list during step2, it will
 existing nodes. If you have enough topUp, nothing changes, and no rewards will be lost. For owners contributing to the
 ecosystem and maintaining a sufficient topUp, this change will not have any negative impact. However, if you have low
 topUp or close to zero, your nodes might be unqualified and remain in the auction list.
+
+[comment]: # (mx-context-auto)
 
 ## Why downsize the waiting list?
 
@@ -327,6 +361,8 @@ participating in consensus) for 5 epochs. During this time, the node would not g
 During stakingV4 step2, no node from the waiting list is moved to active. If we were to keep the same configuration, a
 shuffled out node from this step would have to wait 6 epochs until eligible (if selected from the auction) and
 therefore decreasing the overall APR:
+
+[comment]: # (mx-context-auto)
 
 ## How does the dynamic node limitation work?
 
