@@ -73,7 +73,7 @@ In the end, we'll have three subfolders: wallet, contract and dapp. For convenie
 
 ### **Create the owner wallet**
 
-The smart contract can only be deployed on the blockchain by an owner, so let's create an owner's wallet **PEM file**. The owner can also update the contract, later on, if needed. Keep in mind we only use PEM wallets for testing and playing around with non-production code. For real applications please follow best practices, use secure wallets that can be generated [here](https://wallet.multiversx.com)
+The smart contract can only be deployed on the blockchain by an owner, so let's create an owner's wallet **PEM file**. The owner can also update the contract, later on, if needed. Keep in mind we only use PEM wallets for testing and playing around with non-production code. For real applications please follow best practices, use secure wallets that can be generated [here](https://wallet.multiversx.com).
 
 First, make sure you are in the `ping-pong` folder.
 
@@ -184,7 +184,7 @@ All right, let's move on to the application layer.
 
 ### **Clone the Sample App**
 
-First make sure to go back to the root `ping-pong` folder
+First make sure to go back to the root `ping-pong` folder.
 
 We will clone a very simple dApp template that implements the calls to our newly deployed smart contract.
 
@@ -197,7 +197,7 @@ cd dapp
 
 ### **Configure the app**
 
-Use the prefered editor and customize the Smart Contract Address located in `src/config/config-devnet.tsx`
+Use the preferred editor and customize the Smart Contract Address located in `src/config/config-devnet.tsx`
 
 ```sh
 code .
@@ -213,7 +213,7 @@ Then edit this instruction, and change it to the contract address that was shown
 ### **Build the dApp**
 
 :::important
-[Please make sure you have **yarn installed**](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) on your machine.
+[Please make sure you have **yarn installed**](https://classic.yarnpkg.com/lang/en/docs/install) on your machine.
 :::
 
 We'll first install the dependencies:
