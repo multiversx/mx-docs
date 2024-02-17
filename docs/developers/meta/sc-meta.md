@@ -72,7 +72,7 @@ The standalone functionality is:
   - `new`         Creates a new smart contract from a template.
   - `templates`   Lists the available templates.
   - `upgrade`     Upgrades a contract to the latest version. Multiple contract crates are allowed.
-  - `local-deps`  Generates a report on the local depedencies of contract crates. Will explore indirect depdencies too.
+  - `local-deps`  Generates a report on the local dependencies of contract crates. Will explore indirect dependencies too.
 
 All the standalone tools take an optional `--path` argument. if not provided, it will be the current directory.
 

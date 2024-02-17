@@ -302,7 +302,7 @@ If it was not you the one triggering the change of the guardian, it may be the c
  - move the funds to a different account, that you control, by using the still active guardian. In this case never **Confirm Change.**
  - instantly cancel the pending guardian by using the **Cancel Change**, and play the "owning" game with the scammer. **Not recommended.**
 
-We recommend the first solution. Even though you have your funds staked, the unbound period (10 epochs) is shorther than the guardian activation period so that you have enough time to unstake and safely move them to a safe account.
+We recommend the first solution. Even though you have your funds staked, the unbound period (10 epochs) is shorter than the guardian activation period so that you have enough time to unstake and safely move them to a safe account.
 :::
 
 [comment]: # (mx-context-auto)

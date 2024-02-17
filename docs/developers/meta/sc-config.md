@@ -83,7 +83,7 @@ The settings are as follows:
         - there are some restrictions on this number, it can't be arbitrarily small. We advise against anything less than a page.
     - _default_: `131072` or `"128k"`, the size of 2 pages of memory in WebAssembly.
 - `features`
-    - Smart contract crates can have feature flags for conditional compilation. These feature flags allow the possiblity of having differences between variants of the smart contract and the usage of the code in tools and off-chain projects.
+    - Smart contract crates can have feature flags for conditional compilation. These feature flags allow the possibility of having differences between variants of the smart contract and the usage of the code in tools and off-chain projects.
     - How it works: the contract will be built with these feature flags activated.
     - _values_:
         - a list of feature flags, similar to `Cargo.toml`, e.g. `features = ["example_feature_1", "example_feature_2"]`

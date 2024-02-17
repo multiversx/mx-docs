@@ -759,7 +759,7 @@ removeAllSignedTransactions();
 
 ## Unit testing with Jest
 
-The sdk-dapp library exposes bundles for both CommonJS and ESModules, however, in some enviornments, Jest might require manual mapping of the CommonJS output. To implement it, add the following snippet inside your jest config file.
+The sdk-dapp library exposes bundles for both CommonJS and ESModules, however, in some environments, Jest might require manual mapping of the CommonJS output. To implement it, add the following snippet inside your jest config file.
 
 ```typescript
 moduleNameMapper: {

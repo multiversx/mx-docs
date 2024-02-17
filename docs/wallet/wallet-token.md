@@ -59,7 +59,7 @@ The token identifier of a token is unique. It is composed by the token ticker, a
 Because the token identifier isn't deterministic, it can be found only after issuing it. There are 2 ways of finding it:
 
 1. On the Explorer page of the issue transaction, you will see a Smart Contract Result which has a data field similar to: `@4d544b4e2d373065323338@152d02c7e14af6800000`.
-   On the right side, choose `Smart` and you will able to see the decoded parameters. In this example, the token identifier is `MTKN-c66c30`.
+   On the right side, choose `Smart` and you will be able to see the decoded parameters. In this example, the token identifier is `MTKN-c66c30`.
 
 ![Token issue SCR](/wallet/wallet-tokens/scr-issue-token.png)
 

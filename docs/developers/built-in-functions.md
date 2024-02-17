@@ -89,7 +89,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ## **SetUserName**
 
-`SetUserName` is used to set an username for a given address. The receiver's address has to be the DNS smart contract
+`SetUserName` is used to set a username for a given address. The receiver's address has to be the DNS smart contract
 address of the address.
 
 ```rust

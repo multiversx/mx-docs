@@ -7,7 +7,7 @@ title: Scripts & User config
 
 MultiversX provides scripts designed to streamline the process of installing a MultiversX node. This validator script is a general script for accessing the Mainnet, Devnet and Testnet networks.
 
-To get started, you will begin by getting a copy of the latest version of the scripts from Github and configure it to match your local setup.
+To get started, you will begin by getting a copy of the latest version of the scripts from GitHub and configure it to match your local setup.
 
 :::caution
 Nodes scripts should not be run as a root user. Such usage is not supported and may result in unexpected behavior.

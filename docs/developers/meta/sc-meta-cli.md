@@ -93,7 +93,7 @@ The oldest version currently supported is `0.28.0`. Any older than that, and the
 It is especially important when upgrading from `0.38` to `0.39.0`, since a lot of changes happened at that point.
 
 :::tip
-For projects with multiple contract crates, we recommend upgrading all of them at once. The upgrade algorithm goes step by step, version after version. For some of the major versions, it also checks that the project compiles before moving on. This is to give developers the chance to fix issues manually, if necessary, and not have those issues pile up. If there are local depdencies between contracts, the upgrader will not be able to do the check unless all of them are upgraded together.
+For projects with multiple contract crates, we recommend upgrading all of them at once. The upgrade algorithm goes step by step, version after version. For some of the major versions, it also checks that the project compiles before moving on. This is to give developers the chance to fix issues manually, if necessary, and not have those issues pile up. If there are local dependencies between contracts, the upgrader will not be able to do the check unless all of them are upgraded together.
 :::
 
 :::caution
@@ -167,14 +167,14 @@ Parameters:
 
 Creates a new smart contract project from a standard template.
 
-The tool will replace all necessary names in the project, based on the the project name given by the user. These include:
+The tool will replace all necessary names in the project, based on the project name given by the user. These include:
 - the crate name,
 - the contract trait name,
 - the file name of the main source file.
 
 Parameters:
 - `--template`
-    - The contract template to clone. Available options can be retrieve by using [this](/developers/meta/sc-meta-cli#calling-templates)
+    - The contract template to clone. Available options can be retrieved by using [this](/developers/meta/sc-meta-cli#calling-templates)
     - Required.
 - `--name`
     - The new name the contract is to receive.

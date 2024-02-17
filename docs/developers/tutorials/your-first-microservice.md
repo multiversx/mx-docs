@@ -300,6 +300,6 @@ Now we provide you a starting point in order to build your ideas and projects.
 Break down this guide and learn more about how to extend the microservice, the dapp and the smart contract. Learn more on the MultiversX official documentation site here: [https://docs.multiversx.com](/).
 
 If you have any questions, feel free to ask them using stackoverflow here:
-[https://stackoverflow.com/questions/tagged/elrond](https://stackoverflow.com/questions/tagged/elrond).
+[https://stackoverflow.com/questions/tagged/multiversx](https://stackoverflow.com/questions/tagged/multiversx).
 
 Share this guide if you found it useful.

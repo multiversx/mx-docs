@@ -8,7 +8,7 @@ title: Multi-Values
 
 To recap, we have discussed about data being represented either in a:
 - nested encoding, as part of the byte representation of a larger object;
-- top encoding, the full byte represention of an object.
+- top encoding, the full byte representation of an object.
 
 But even the top encoding only refers to a _single_ object, being represented as a _single_ array of bytes. This encoding, no matter how simple or complex, is the representation for a _single_ argument, result, log topic, log event, NFT attribute, etc.
 
@@ -79,7 +79,7 @@ These are the common multi-values provided by the framework:
     - Defined as `MultiValueN<T1, T2, ..., TN>`, where N is a number between 2 and 16, and `T1`, `T2`, ..., `TN` can be any serializable types, either single or multi-value; e.g. `MultiValue3<BigUint, ManagedBuffer, u32>`.
     - It doesn't make much sense to use them as arguments on their own (it is easier and equivalent to just have separate named arguments), but they do have the following uses:
         - They can be embedded in a regular var-arg to obtain groups of arguments. For example `MultiValueVec<MultiValue3<BigUint, BigUint>>` defines pairs of numbers. There is no more need to check in code that an even number of arguments was passed, the deserializer resolves this on its own.
-        - Rust does not allow returing more than one result, but by returning a multi-value tuple we can have an endpoint return several values, of different types.
+        - Rust does not allow returning more than one result, but by returning a multi-value tuple we can have an endpoint return several values, of different types.
 - Optional arguments.
     - Defined as `OptionalValue<T>`, where `T` can be any serializable type, either single or multi-value.
     - At most one argument will be consumed. For this reason it sometimes makes sense to have several optional arguments one after the other, or optional arguments followed by var-args.
@@ -90,7 +90,7 @@ These are the common multi-values provided by the framework:
     - Always takes a number argument first, which represents how many arguments follow. Then it consumes exactly that many arguments.
     - Can be followed by other arguments, single or multi-value.
 - Async call result.
-    - Asynchronous call callbacks also need to know whether or not the call failed, so they have a special format for trasmitting arguments. The first argument is always the error code. If the error code is `0`, then the call result follows. Otherwise, we get one additional argument, which is the error message. To easily deserialize this, we use a special type.
+    - Asynchronous call callbacks also need to know whether or not the call failed, so they have a special format for transmitting arguments. The first argument is always the error code. If the error code is `0`, then the call result follows. Otherwise, we get one additional argument, which is the error message. To easily deserialize this, we use a special type.
     - Defined as `ManagedAsyncCallResult<T>`.
     - There is also an unmanaged version, `AsyncCallResult<T>`, but it is no longer used nowadays.
     - They are both enums, the managed part only refers to the error message.
@@ -177,7 +177,7 @@ In the first case, we encoded `None` as an empty byte array (encoding it as `0x0
 In the second case, the last argument is omitted altogether.
 :::
 
-We also want to point out that the multi-value implementation is more efficient in terms of gas. It is more easier for the smart contract to count the number of arguments and top-decode, than parse a composite type, like `Option`.
+We also want to point out that the multi-value implementation is more efficient in terms of gas. It is easier for the smart contract to count the number of arguments and top-decode, than parse a composite type, like `Option`.
 
 [comment]: # (mx-context-auto)
 
