@@ -11,11 +11,9 @@ As mentioned [before](/developers/meta/sc-meta#standalone-tool-vs-contract-tool)
 
 We will go through the CLI of both of these flavors.
 
-
 [comment]: # (mx-exclude-context)
 
 ## Standalone tool CLI
-
 
 [comment]: # (mx-context-auto)
 
@@ -66,7 +64,6 @@ Parameters:
 - `--target-dir-all`
     - Overrides both the `--target-dir-meta` and the `--target-dir-wasm` args.
 
-
 [comment]: # (mx-context-auto)
 
 ### Calling `info`
@@ -84,7 +81,6 @@ Parameters:
 - `--ignore`
     - Ignore all directories with these names.
     - _default_: `target`.
-
 
 [comment]: # (mx-context-auto)
 
@@ -190,8 +186,6 @@ Parameters:
     - Target directory where to create the new contract directory.
     - _default_: current directory.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Calling `templates`
@@ -209,6 +203,31 @@ Parameter:
     -  The framework version on which the contracts should be created.
     - _default_: The latest released version.
 
+[comment]: # (mx-context-auto)
+
+### Calling `test`
+
+This command is a useful shorthand for running various types of tests.
+
+Parameters:
+- `--path`  
+    - Target directory where to generate contract integration tests.
+    - _default_: current directory.
+- `--go`            
+    - Use this argument to only run the mx-scenario-go tool, directly. It is equivalent to running `mx-scenario-go run`.
+    - You can find out how to install `mx-scenario-go` [here](/developers/meta/sc-meta-cli#calling-install).
+    - _default_: `false`
+- `--scen`          
+    - This argument causes cargo test to be run with the `multiversx-sc-scenario/run-go-tests` feature, causing tests relying on the mx-scenairo-go tool to also be run.
+    - _default_: `false`
+    - If `scen` and `go` are both specified, scen overrides the go argument.
+- `--nocapture`    
+    - This argument prints the entire output of the vm.
+    - _default_: `false`
+- `--help`        
+    - Print help
+- `--version`      
+    - Print version
 
 [comment]: # (mx-context-auto)
 
@@ -238,6 +257,18 @@ Parameters:
 - `--create`
     - Creates test files if they don't exist.
 
+[comment]: # (mx-exclude-context)
+
+### Calling `install`
+
+This command can be used to quickly install other tools needed for smart contract development, interaction and testing.
+
+Parameters:
+- `all`
+    - Installs all the known tools.
+- `mx-scenario-go`
+    - Installs the `mx-scenario-go` tool.
+    - Can further specify the framework version on which the contracts should be created by using `--tag`
 
 ---
 
@@ -366,5 +397,4 @@ Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate w
 Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
 
 An interactor is a small tool, meant for developers to interact with the contract on-chain. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. There will be more documentation in the works on this topic.
-
 

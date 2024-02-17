@@ -145,7 +145,6 @@ But here it gets interesting: the ABI also needs to describe types that are defi
 
 There is simply not enough room to do it inline with the arguments, so a separate section is necessary, which contains all these descriptions. This section is called `"types"`, and it can describe `struct` and `enum` types.
 
-
 Have a look at this example with custom types. 
 
 Let's take the following `enum` and `struct`:
@@ -264,7 +263,6 @@ And this is their json representation:
 }
 ```
 
-
 [comment]: # (mx-context-auto)
 
 ### Custom types: struct
@@ -282,7 +280,6 @@ ABI [structures](/developers/data/custom-types#custom-structures) are defined by
         - even the type itself (if you manage to pull that off).
 
 In the example above, we are declaring a structure called `MyAbiStruct`, with 3 fields, called `field1`, `field2`, and `field3`.
-
 
 [comment]: # (mx-context-auto)
 
@@ -308,6 +305,8 @@ You can read more about Rust enums [here](https://doc.rust-lang.org/book/ch06-01
 
 ## ESDT Attribute ABI
 
+[comment]: # (mx-context-auto)
+
 ### Overview
 The framework will export all data types found in arguments, results, and events, but it doesn't intrinsically know abut the data that we use in SFT and NFT attributes. This is why there is a special annotation to specify this explicitly.
 
@@ -327,11 +326,15 @@ The exported data will end up in 2 places:
 
 More examples of this below.
 
+[comment]: # (mx-context-auto)
+
 ### Details
 
 A new field called `esdtAttributes` was added to the ABI file, where developers can find the structs (name, type) exported using the `esdt_attribute` trait annotation. Additionally, each `esdt_attribute` will create a new json file with the name given by the developer (followed by `.esdt-abi`) and containing its exported structs (names, types and descriptions).
 
 The name/ticker is just a way to identify the idea of the token because we do not have the exact identifier or the possibility to create it through this annotation. We only use this annotation as a mark-up for a specific ESDT, in order to define its fields' attributes type. It is useful to define ESDT attributes' type beforehand in order to get more specific and overall better results fetching data from other services.
+
+[comment]: # (mx-context-auto)
 
 ### Example using basic types
 
@@ -391,10 +394,11 @@ We can also check the specific json file exported for the newly defined type whe
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Using more complex types
 
 Now, let's see what happens when we use other types than basic ones. Let's add a `Vec`, an `Enum (MyAbiEnum)` and an `Option` to our esdt attributes.
-
 
 ```rust title=lib.rs
 #![no_std]
@@ -501,7 +505,6 @@ some_contract
 │   ├── testStruct.esdt-abi.json
 │   ├── testVec.esdt-abi.json
 ```
-
 
 As a final check, let's take a look at what changed in the main abi file, `some_contract.abi.json`, after adding multiple new attributes.
 

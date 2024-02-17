@@ -19,6 +19,8 @@ It's a _self-custody_ wallet, and it's _convertible_ to a conventional Web3 wall
 
 If you don't already have a Google account, [set up one](https://accounts.google.com/signup).
 
+[comment]: # (mx-context-auto)
+
 ## Sign Up with xAlias
 
 Navigate to **[xAlias.com](https://xalias.com)**, then click on **Get Started** to reach the **Sign Up** screen:
@@ -57,6 +59,8 @@ Congratulations, you have successfully **created your xAlias account**!
 
 You can always sign-in to your xAlias account by navigating to **[xAlias.com](https://xalias.com)**, then clicking on **Sign In**. You will be asked to confirm the Google account, then reach the **xAlias Dashboard**.
 
+[comment]: # (mx-context-auto)
+
 ## xAlias Dashboard
 
 Upon the initial sign-up, and each time you sign-in to xAlias, you will be presented the **xAlias Dashboard**.
@@ -64,6 +68,8 @@ Upon the initial sign-up, and each time you sign-in to xAlias, you will be prese
 Here, you will be able to see the wallet address (the one starting with _erd1_) and share it with others, so they can send you EGLD or other tokens.‌ Additionally, you can click on **Open in Explorer** and see the all the blockchain transactions associated with your wallet address (blockchain address).
 
 ![img](/wallet/xalias/xalias_dashboard.png)
+
+[comment]: # (mx-context-auto)
 
 ## Use a MultiversX dApp with xAlias
 
@@ -92,6 +98,8 @@ Then, as a user of the dApp (of any dApp), you might reach a point where you nee
 ... or you might need to sign a message:
 
 ![img](/wallet/xalias/xalias_dapp_sign_message.png)
+
+[comment]: # (mx-context-auto)
 
 ## Sign Out
 

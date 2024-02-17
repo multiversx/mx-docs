@@ -63,7 +63,6 @@ The absence of #[allow_multiple_var_args] as an endpoint attribute, along with t
 
 However, when `#[allow_multiple_var_args]` is used, there is no other parsing validation (except the ones from above) to enforce the var-args rules mentioned before. In simpler terms, using the annotation implies that the developer is assuming responsibility for handling multiple var-args and anticipating the outcomes, effectively placing trust in their ability to manage the situation.
 
-
 [comment]: # (mx-context-auto)
 
 ## Standard multi-values
@@ -99,7 +98,6 @@ These are the common multi-values provided by the framework:
     - Sometimes, for backwards compatibility or other reasons it can happen to have (optional) arguments that are never used and not of interest. To avoid any useless deserialization, it is possible to define an argument of type `IgnoreValue` at the end.
     - By doing so, any number of arguments are allowed at the end, all of which will be completely ignored.
 
-
 So, to recap:
 
 | Managed Version                    | Unmanaged version    | What it represents              | Similar single value           |
@@ -111,8 +109,6 @@ So, to recap:
 | `MultiValueManagedVecCounted<T>`   |                      | Counted number of arguments     | `(usize, Vec<T>)`              |
 | `ManagedAsyncCallResult<T>`        | `AsyncCallResult<T>` | Async call result in callback   | `Result<T, String>`            |
 | `IgnoreValue`                      |                      | Any number of ignored arguments | Unit `()`                      |
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -138,8 +134,6 @@ These storage mappers are, in no particular order:
 
 ## Multi-values in action
 
-[comment]: # (mx-context-auto)
-
 To clarify the way multi-values work in real life, let's provide some examples of how one would go avout calling an endpoint with variadic arguments.
 
 [comment]: # (mx-context-auto)
@@ -161,7 +155,6 @@ fn my_opt_arg_endpoint_2(&self, token_id: TokenIdentifier, opt_nonce: OptionalVa
 We want to call these endpoints with arguments: `TOKEN-123456` (`0x544f4b454e2d313233343536`) and `5`. To contrast for the two endpoints:
 - Endpoint 1: `myOptArgEndpoint1@544f4b454e2d313233343536@010000000000000005`
 - Endpoint 2: `myOptArgEndpoint2@544f4b454e2d313233343536@05`
-
 
 :::info Note
 In the first case, we are dealing with an [Option](/developers/data/composite-values#options), whose first encoded byte needs to be `0x01`, to signal `Some`. In the second case there is no need for `Option`, `Some` is signalled simply by the fact that the argument was provided.
@@ -225,7 +218,6 @@ It is a lot more readable, for several reasons:
 
 Once again, the multi-value implementation is more efficient in terms of gas. All the contract needs to do is to make sure that the number of arguments is a multiple of 3, and then top-decode each value. Conversely, in the first example, a lot more memory needs to be moved around when splitting the large argument into pieces.
 
-
 [comment]: # (mx-context-auto)
 
 ## Implementation details
@@ -253,6 +245,4 @@ where
 ```
 
 To create a custom multi-value type, one needs to manually implement these two traits for the type. Unlike for single values, there is no [equivalent derive syntax](/developers/data/custom-types).
-
-
 

@@ -32,7 +32,6 @@ Most of the code lies [here](https://github.com/multiversx/mx-chain-vm-go/tree/m
 
 To call, simply run `run-scenarios <path>`, where the path can be either a specific scenario file, or a folder containing scenarios. In the case of a folder, the tool will run all files ending in `*.scen.json`. Results are printed to console.
 
-
 [comment]: # (mx-context-auto)
 
 ## Integration in Rust
@@ -114,8 +113,6 @@ It also helps that ignored tests will also show up in console, unlike the ones t
 
 It is customary to add a `_go` suffix to the test functions, to distinguish them from the ones with the Rust backend. The test-gen tool does the same.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Rust backend
@@ -149,8 +146,6 @@ Note that we can have different tests ignored on the different backends.
 
 Here it is also customary to add a `_rs` suffix to the test functions, to distinguish them from the ones on the Go backend. The test-gen tool does the same.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Rust backend environment minimal setup
@@ -169,7 +164,6 @@ The example above is a great example of a minimal setup. Other than creating the
         - it should run the code, a prepared by `<contract_crate>::ContractBuilder`.
     - The path to binary is given as a scenario value expression. [The file syntax](/developers/testing/scenario/values-simple#file-contents) in the example is simply the most common way of loading a large value from file. It is also possible to provide the compiled contract as bytes, (e.g. `"0x0061736d0100000001661160000060017..."`), but hard-coding that is weird.
     - The `ContractBuilder` object is generated automatically for every contract, by the `#[multiversx_sc::contract]` procedural macro. That is why you won't see it in code, but it's always there.
-
 
 [comment]: # (mx-context-auto)
 

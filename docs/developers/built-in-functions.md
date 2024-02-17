@@ -98,7 +98,7 @@ SetUserNameTransaction {
     Receiver: <DNS address that corresponds to the sender>
     Value: 0
     GasLimit: 1_200_000
-    Data: "SetUserName@" +
+    Data: "SetUserName" +
           "@" + <username in hexadecimal encoding>
 }
 ```
