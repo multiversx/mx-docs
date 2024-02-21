@@ -185,7 +185,7 @@ For the configuration above:
     - owner4's total top up/(1 active node + 1 auction node) = 2668 / 2 = 1334
 
 Based on the above interval: `[667, 1334]`, we compute the `minimum required topUp per node` to be qualified from the
-auction list. Th protocol gradually increase from min to max possible topUp per node with a step, such that it can fill
+auction list. The protocol gradually increase from min to max possible topUp per node with a step, such that it can fill
 the `available slots`. At each step, a computing is done for each owner to get the maximum number of nodes that they could run by
 distributing their total topUp per fewer auction nodes, leaving their other nodes as unqualified in the auction list.
 This is a soft auction selection mechanism, since it is dynamic at each step and does not require owners to "manually
