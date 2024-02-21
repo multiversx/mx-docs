@@ -75,3 +75,8 @@ Failure to do so will make the node error with a message like `consensusComponen
 ### One click deploy in AWS
 AWS instances for Snapshotless Observing Squads can be easily deployed via our Amazon Machine Image available in the [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-pbwpmtdtwmkgs).
 
+[comment]: # (mx-context-auto)
+
+### One click deploy in Google Cloud
+Google Cloud instances for Snapshotless Observing Squads can be easily deployed via our virtual magine image available in the [Google Cloud Marketplace](https://console.cloud.google.com/marketplace/product/multiversx-gcp-markeplace/multiversx-snapshotless-observing-squad).
+
