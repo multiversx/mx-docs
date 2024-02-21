@@ -159,7 +159,7 @@ Nodes from the auction list will be selected to be distributed in the waiting li
 mechanism. For each owner, based on their topUp, we compute how many validators they would be able to run by
 distributing their total topUp per fewer nodes (considering we would not select all of their auction nodes, but only a
 part of them). This mechanism ensures that for each owner, we select as many nodes as possible, based on the **minimum
-required topUp** to fill the`available slots`. This is a global selection, not per shard. We preselect the best global
+required topUp** to fill the`available slots`. This is a global selection, not per shard. The protocol preselect the best global
 nodes at the end of the epoch.
 
 Suppose we have the following auction list, and 3 available slots:
@@ -185,8 +185,8 @@ For the configuration above:
     - owner4's total top up/(1 active node + 1 auction node) = 2668 / 2 = 1334
 
 Based on the above interval: `[667, 1334]`, we compute the `minimum required topUp per node` to be qualified from the
-auction list. We gradually increase from min to max possible topUp per node with a step, such that we can fill
-the `available slots`. At each step, we compute for each owner what's the maximum number of nodes that they could run by
+auction list. Th protocol gradually increase from min to max possible topUp per node with a step, such that it can fill
+the `available slots`. At each step, a computing is done for each owner to get the maximum number of nodes that they could run by
 distributing their total topUp per fewer auction nodes, leaving their other nodes as unqualified in the auction list.
 This is a soft auction selection mechanism, since it is dynamic at each step and does not require owners to "manually
 unstake" their nodes so that their topUp per node would be redistributed (and higher). This threshold ensures that we
