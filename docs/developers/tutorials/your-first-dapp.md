@@ -38,7 +38,7 @@ Other rules:
 
 For the web app we'll have two pages:
 
-- The _Sign in_ page - here we can authenticate with ledger, web wallet or with Maiar Wallet
+- The _Sign in_ page - here we can authenticate with ledger, web wallet or with xPortal app
 - The _Dashboard_ page - here we can either ping or pong, if we already deposited, then we will see a countdown timer until the time interval clears out.
 
 [comment]: # (mx-context-auto)
@@ -46,7 +46,7 @@ For the web app we'll have two pages:
 ### **Blockchain Layer (The Backend)**
 
 We will create a smart contract that can handle the deposit (`ping`), claim (`pong`) and status actions (`did_user_ping`, `get_time_to_pong`).
-Let's say that, for now, this smart contract plays the role of an API in a dApp. Also this is where our business logic resides.
+Let's say that, for now, this smart contract plays the role of an API in a dApp. Also, this is where our business logic resides.
 
 The MultiversX _devnet_ is a public test network maintained by our community where any developer can test their smart contracts and dApps in a real world environment.
 
@@ -54,7 +54,7 @@ The MultiversX _devnet_ is a public test network maintained by our community whe
 
 ## **Set up the environment**
 
-Let's set up the evironment for getting your first dapp up and running.
+Let's set up the environment for getting your first dapp up and running.
 
 [comment]: # (mx-context-auto)
 
@@ -111,8 +111,6 @@ git clone https://github.com/multiversx/mx-ping-pong-sc contract
 ### **Build the Smart Contract**
 
 We now have the source code for the smart contract, but we need to compile it into a _binary_ that the MultiversX Virtual Machine can run. The VM can run Web Assembly code, so we need to compile our Rust source code into Web Assembly (WASM).
-
-We now have the source code for the smart contract, but we need to compile it into a _binary_ that the MultiversX (previously Elrond) Virtual Machine can run. The VM can run Web Assembly code, so we need to compile our Rust source code into Web Assembly (WASM).
 
 Run the following command in order to build the rust smart contract into a _wasm file_.
 
