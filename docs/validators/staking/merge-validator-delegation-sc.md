@@ -9,6 +9,8 @@ There are two steps required for this action: The owner of the Delegation SC has
 
 1. Merging a Validator into an Existing Delegation Smart Contract
 
+_if the Merging Validator and Delegation Smart Contract are owned by the same walllet, no need to whitelist. Go directly to Merging step._
+
 From the Delegation Smart Contract owner's wallet, send a transaction with the following parameters:
 
 ```rust
@@ -27,8 +29,9 @@ _For more details about how arguments have to be encoded, check [here](/develope
 You can obtain the HEX format of an address by first converting its bech32 (erd1...) form into binary, and then converting the resulting binary into HEX.
 :::
 
-2. The Merging Validator sends the merge transaction from the whitelisted wallet:
+2.1. From The Merging Validator wallet, sends the merge transaction:
 
+if the wallet merging is previously whitelisted
 ```rust
 To: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
 Value: 0
@@ -43,6 +46,23 @@ Whitelist Wallet For Merging
     Value: 0
     Gas Limit: 510000000
     Data: "mergeValidatorToDelegationWithWhitelist" +
+    "@" "<the Delegation SC address in HEX format>"
+```
+
+if the merging Wallet is the same as the Delegation SmartContract owner _(no need for the previous whitelisting step)_
+```rust
+To: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
+Value: 0
+Gas limit: 510000000
+Data: mergeValidatorToDelegationSameOwner@<the Delegation SC address in HEX format>
+```
+
+```rust
+    Sender: <account address of the node operator>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
+    Value: 0
+    Gas Limit: 510000000
+    Data: "mergeValidatorToDelegationSameOwner" +
     "@" "<the Delegation SC address in HEX format>"
 ```
 
