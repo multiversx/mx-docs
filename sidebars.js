@@ -248,6 +248,7 @@ const sidebars = {
         ],
       },
       "sdk-and-tools/notifier",
+      "sdk-and-tools/chain-simulator",
       "sdk-and-tools/google-bigquery",
       "sdk-and-tools/devcontainers",
       {

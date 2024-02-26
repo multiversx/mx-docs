@@ -163,6 +163,14 @@ Events notifier is an external service that can be used to fetch block events an
 
 [comment]: # (mx-context-auto)
 
+### Chain simulator
+
+Chain simulator is designed to replicate the behavior of a local testnet.
+
+| Name                                              | Description                  |
+|---------------------------------------------------|------------------------------|
+| [Chain simulator](/sdk-and-tools/chain-simulator) | A service for local testing. |
+
 ### Devcontainers (for VSCode or GitHub Codespaces)
 
 | Name                                          | Description                          |
