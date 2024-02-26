@@ -171,6 +171,8 @@ Chain simulator is designed to replicate the behavior of a local testnet.
 |---------------------------------------------------|------------------------------|
 | [Chain simulator](/sdk-and-tools/chain-simulator) | A service for local testing. |
 
+[comment]: # (mx-context-auto)
+
 ### Devcontainers (for VSCode or GitHub Codespaces)
 
 | Name                                          | Description                          |

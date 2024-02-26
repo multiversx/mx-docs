@@ -71,6 +71,8 @@ In the end, we'll have three subfolders: wallet, contract and dapp. For convenie
 
 ![img](/developers/tutorial/folder-structure.png)
 
+[comment]: # (mx-context-auto)
+
 ### **Create the owner wallet**
 
 The smart contract can only be deployed on the blockchain by an owner, so let's create an owner's wallet **PEM file**. The owner can also update the contract, later on, if needed. Keep in mind we only use PEM wallets for testing and playing around with non-production code. For real applications please follow best practices, use secure wallets that can be generated [here](https://wallet.multiversx.com).
@@ -204,7 +206,6 @@ code .
 Then edit this instruction, and change it to the contract address that was shown after mxpy contract deploy:
 
 ![img](/developers/tutorial/config-screenshot.png)
-
 
 [comment]: # (mx-context-auto)
 

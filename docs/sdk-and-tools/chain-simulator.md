@@ -3,12 +3,14 @@ id: chain-simulator
 title: Chain simulator
 ---
 
+[comment]: # (mx-context-auto)
 
 ## Overview
 
 Chain simulator is a binary that provides all the `mx-chain-proxy-go` endpoints and includes additional endpoints 
 for specific operations.
 
+[comment]: # (mx-context-auto)
 
 ## Architectural Overview
 
@@ -17,6 +19,8 @@ operates without a consensus group, allowing for isolated testing and developmen
 
 This simulator is designed to replicate the behavior of a local testnet. Unlike a traditional testnet, this simulator
 operates without a consensus group, allowing for isolated testing and development.
+
+[comment]: # (mx-context-auto)
 
 ## Features
 
