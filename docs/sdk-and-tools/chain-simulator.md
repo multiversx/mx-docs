@@ -17,12 +17,12 @@ for specific operations.
 This simulator is designed to replicate the behavior of a local testnet. Unlike a traditional testnet, this simulator
 operates without a consensus group, allowing for isolated testing and development.
 
-This simulator is designed to replicate the behavior of a local testnet. Unlike a traditional testnet, this simulator
-operates without a consensus group, allowing for isolated testing and development.
 
 [comment]: # (mx-context-auto)
 
 ## Features
+
+paragraf
 
 - Implements all `mx-chain-proxy-go` endpoints.
 - Extra endpoints for specific operations.
