@@ -165,7 +165,8 @@ Events notifier is an external service that can be used to fetch block events an
 
 ### Chain simulator
 
-Chain simulator is designed to replicate the behavior of a local testnet.
+Chain simulator is designed to replicate the behavior of a local testnet. 
+It can also be pre-initialized / initialized with blockchain state from other networks, such as mainnet or something similar.
 
 | Name                                              | Description                  |
 |---------------------------------------------------|------------------------------|
