@@ -14,6 +14,8 @@ for specific operations.
 
 ## Architectural Overview
 
+![img](/technology/chainsimulator.png)
+
 This simulator is designed to replicate the behavior of a local testnet. Unlike a traditional testnet, this simulator
 operates without a consensus group, allowing for isolated testing and development.
 
