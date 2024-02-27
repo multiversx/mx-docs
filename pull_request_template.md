@@ -1,5 +1,3 @@
-<!-- For external contributors: Make sure that you are on a new branch that started from the `external` branch. -->
-
 #### Description of the pull request (what is new / what has changed)
 
 #### Did you test the changes locally ?
