@@ -8,7 +8,7 @@ title: Installing mxpy
 This page describes how to install **mxpy** (the CLI tool). The recommended way to install **mxpy** is by using **pipx**. If you want to learn more about **pipx** you can check out [this page](https://pipx.pypa.io/stable/#overview-what-is-pipx).
 
 :::note
-If you'd like to use **mxpy** on Windows, we recommend installing it within the [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install).
+If you'd like to use **mxpy** on Windows, we recommend installing it within the [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install). If you experience an issue, please follow the [troubleshooter](/sdk-and-tools/troubleshooting/multiplatform).
 :::
 
 [comment]: # (mx-context-auto)
