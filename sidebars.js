@@ -316,7 +316,8 @@ const sidebars = {
         items: [
           "sdk-and-tools/troubleshooting/troubleshooting",
           "sdk-and-tools/troubleshooting/rust-setup",
-          "sdk-and-tools/troubleshooting/ide-setup"
+          "sdk-and-tools/troubleshooting/ide-setup",
+          "sdk-and-tools/troubleshooting/multiplatform",
         ],
       }
     ],

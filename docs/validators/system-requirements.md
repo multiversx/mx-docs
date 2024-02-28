@@ -17,7 +17,7 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 
 ## **Minimum System Requirements for running 1 MultiversX Node**
 
-- 4 x dedicated/physical CPUs, either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
+- 4 x dedicated cores (or vCPUs), either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 8 GB RAM
 - 200 GB SSD
 - 100 Mbit/s always-on internet connection, at least 4 TB/month data plan
@@ -28,7 +28,7 @@ Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pend
 :::
 
 :::caution
-If the system chosen to host the node is a VPS, the host should have dedicated CPUs. This is mandatory. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
+If the system chosen to host the node is a VPS, the host should have dedicated vCPUs. This is mandatory. Using shared vCPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
 :::
 
 :::tip
