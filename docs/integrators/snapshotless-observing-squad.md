@@ -29,7 +29,7 @@ If you choose to install a snapshotless observing squad from scratch, you should
 ```
 NODE_EXTRA_FLAGS="-log-save -operation-mode snapshotless-observer"
 ```
-* update the proxy config created by the scripts(found at `$CUSTOM_HOME/elrond-proxy/config/config.toml`). `IsSnapshotless = true` should be added to each observer, as follows:
+* update the proxy config created by the scripts (found at `$CUSTOM_HOME/elrond-proxy/config/config.toml`). `IsSnapshotless = true` should be added to each observer started with this flag, as follows. Please note that this step is optional.
 ```toml
 [[Observers]]
     ShardId = 0
