@@ -260,6 +260,9 @@ const tx1 = factory.createESDTTransfer({
 ### Single NFT transfer
 
 ```
+// first arg - collection
+// second arg - nonce used to mint the NFT
+
 const transfer2 = TokenTransfer.nonFungible("TEST-38f249", 1);
 
 const tx2 = factory.createESDTNFTTransfer({
