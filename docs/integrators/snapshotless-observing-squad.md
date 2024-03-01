@@ -24,35 +24,23 @@ The nodes started with the flag `--operation-mode snapshotless-observer` will no
 
 ### Creating a Snapshotless Observing Squad from scratch
 
-If you choose to install a snapshotless observing squad from scratch, you should follow the instruction from the [observing squad section](/integrators/observing-squad) and remember to do the following updates:
-* add in the `variables.cfg` file the operation mode in the node's extra flags definition:
+If you choose to install a snapshotless Observing Squad from scratch, you should follow the instruction from the [observing squad section](/integrators/observing-squad) and remember to add in the `variables.cfg` file the operation mode in the node's extra flags definition:
 ```
 NODE_EXTRA_FLAGS="-log-save -operation-mode snapshotless-observer"
 ```
-* update the proxy config created by the scripts (found at `$CUSTOM_HOME/elrond-proxy/config/config.toml`). `IsSnapshotless = true` should be added to each observer started with this flag, as follows. Please note that this step is optional.
+After that, you can resume the normal Observing Squad installation steps.
+
+Then, based on the needs there are multiple options concerning the proxy:
+* if only a snapshotless squad is needed, nothing else should be done
+* if both regular and snapshotless squads are needed:
+  * with two different proxies: one started with regular observers and one started with snapshotless observers, nothing else should be done
+  * with only one proxy (being served by all 8 observers), `IsSnapshotless = true` should be added to each observer started with this flag, in the proxy config (found at `$CUSTOM_HOME/elrond-proxy/config/config.toml`), as follows. Please note that this step is optional, although it would help the proxy to forward the requests in an efficient manner.
 ```toml
 [[Observers]]
     ShardId = 0
     Address = "http://127.0.0.1:8080"
     IsSnapshotless = true
-
-[[Observers]]
-    ShardId = 1
-    Address = "http://127.0.0.1:8081"
-    IsSnapshotless = true
-
-[[Observers]]
-    ShardId = 2
-    Address = "http://127.0.0.1:8082"
-    IsSnapshotless = true
-
-[[Observers]]
-    ShardId = 4294967295
-    Address = "http://127.0.0.1:8083"
-    IsSnapshotless = true
 ```
-
-After that, you can resume the normal Observing Squad installation steps.
 
 [comment]: # (mx-context-auto)
 
