@@ -33,7 +33,7 @@ After that, you can resume the normal Observing Squad installation steps.
 Then, based on the needs there are multiple options concerning the proxy:
 * if only a snapshotless squad is needed, nothing else should be done
 * if both regular and snapshotless squads are needed:
-  * with two different proxies, nothing else should be done, proxies should have been started separately
+  * with two different proxies: one started with regular observers and one started with snapshotless observers, nothing else should be done
   * with only one proxy (being served by all 8 observers), `IsSnapshotless = true` should be added to each observer started with this flag, in the proxy config (found at `$CUSTOM_HOME/elrond-proxy/config/config.toml`), as follows. Please note that this step is optional, although it would help the proxy to forward the requests in an efficient manner.
 ```toml
 [[Observers]]
