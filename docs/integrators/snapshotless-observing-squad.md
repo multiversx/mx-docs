@@ -24,7 +24,7 @@ The nodes started with the flag `--operation-mode snapshotless-observer` will no
 
 ### Creating a Snapshotless Observing Squad from scratch
 
-If you choose to install a snapshotless observing squad from scratch, you should follow the instruction from the [observing squad section](/integrators/observing-squad) and remember to do add in the `variables.cfg` file the operation mode in the node's extra flags definition:
+If you choose to install a snapshotless Observing Squad from scratch, you should follow the instruction from the [observing squad section](/integrators/observing-squad) and remember to add in the `variables.cfg` file the operation mode in the node's extra flags definition:
 ```
 NODE_EXTRA_FLAGS="-log-save -operation-mode snapshotless-observer"
 ```
