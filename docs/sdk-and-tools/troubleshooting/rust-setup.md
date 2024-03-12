@@ -70,6 +70,14 @@ rustup self uninstall
 
 ### With mxpy
 
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
+    
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+
+Install Rust and `sc-meta` using `mxpy`:
+
 ```bash
 mxpy deps install rust --overwrite
 ```
@@ -84,7 +92,13 @@ For more information, go to [managing dependencies using `mxpy`](/sdk-and-tools/
 
 ### Without mxpy
 
-As recommended on [rust-lang.org](https://www.rust-lang.org/tools/install):
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
+    
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+
+Install Rust as recommended on [rust-lang.org](https://www.rust-lang.org/tools/install):
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -116,7 +130,13 @@ cargo install twiggy
 
 ### Without mxpy (CI / CD)
 
-For CI / CD, use the following:
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
+    
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+
+For CI / CD, install Rust as follows:
 
 ```bash
 wget -O rustup.sh https://sh.rustup.rs && \
@@ -128,21 +148,15 @@ cargo install multiversx-sc-meta --locked
 
 [comment]: # (mx-context-auto)
 
-### Handle missing dependencies of sc-meta
+### Handle missing dependencies
 
-`sc-meta` requires a few dependencies that are not installed by default on some systems. In this case, installation of `sc-meta` fails.
-
-For a workaround, please follow this [GitHub issue](https://github.com/multiversx/mx-sdk-py-cli/issues/338).
-
-[comment]: # (mx-context-auto)
-
-### Handle missing dependencies: build-essential
-
-On Ubuntu, you might also need to install `build-essential`:
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` before installing Rust:
     
 ```bash
-sudo apt-get install build-essential
+sudo apt-get install build-essential pkg-config libssl-dev
 ```
+
+Also see this [GitHub issue](https://github.com/multiversx/mx-sdk-py-cli/issues/338).
 
 [comment]: # (mx-context-auto)
 
