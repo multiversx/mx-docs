@@ -91,6 +91,14 @@ If no tag is provided **the default version** will be installed.
 Generally speaking, the default `rust` version installed by `mxpy` is the one referenced by [the latest Docker image](https://github.com/multiversx/mx-sdk-rust-contract-builder/blob/main/Dockerfile) used for reproducible builds.
 :::
 
+:::note
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` before running `mxpy deps install rust`:
+    
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+:::
+
 Here's how to install a specific version of `rust` (example):
 ```sh
 mxpy deps install rust --overwrite
