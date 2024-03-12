@@ -157,6 +157,7 @@ We'll take a look at the log output. We have 2 elements that need our attention:
 
 Devnet Explorer will be your best friend in developing dApps on the MultiversX Blockchain, as you'll first deploy and test your dApps on Devnet.
 
+```sh
 INFO:accounts:Account.sync_nonce()
 INFO:accounts:Account.sync_nonce() done: 32
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqqpgq0hmfvuygs34cgqsvgg6fpq9c5mffh4y04cysagr6cn
@@ -164,6 +165,7 @@ INFO:utils:View this contract address in the MultiversX Devnet Explorer: https:/
 INFO:transactions:Transaction.send: nonce=32
 INFO:transactions:Hash: ee84f3e833d439e159c9619fd76e26d2afcdad62c197d87e4940072f18558153
 INFO:utils:View this transaction in the MultiversX Devnet Explorer: https://devnet-explorer.multiversx.com/transactions/ee84f3e833d439e159c9619fd76e26d2afcdad62c197d87e4940072f18558153
+```
 
 The smart contract is now deployed on the blockchain. We can interact with it using blockchain transactions in order to invoke smart contract functions `ping` or `pong`.
 
