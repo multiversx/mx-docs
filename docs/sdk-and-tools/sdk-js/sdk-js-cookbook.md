@@ -1,6 +1,6 @@
 ---
 id: sdk-js-cookbook
-title: Cookbook
+title: Cookbook (current stable versions)
 ---
 
 [comment]: # (mx-abstract)
@@ -8,7 +8,7 @@ title: Cookbook
 This page will guide you through the process of handling common tasks using **sdk-js**.
 
 :::important
-This cookbook makes use of `sdk-js 12`. In order to migrate from `sdk-js 11.x` to `sdk-js 12`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
+This cookbook makes use of `sdk-js v12`. In order to migrate from `sdk-js v11.x` to `sdk-js v12`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
 :::
 
 <!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/basic.md" } -->
