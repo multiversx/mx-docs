@@ -1,6 +1,8 @@
 ---
-id: sdk-js-cookbook-previous
-title: Cookbook (previous)
+id: sdk-js-cookbook-v11
+title: Cookbook (v11)
+pagination_next: null
+pagination_prev: sdk-and-tools/sdk-js/sdk-js-cookbook-versions
 ---
 
 [comment]: # (mx-abstract)

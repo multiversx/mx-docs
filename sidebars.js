@@ -274,9 +274,24 @@ const sidebars = {
             label: "Javascript SDK",
             items: [
               "sdk-and-tools/sdk-js/sdk-js",
-              "sdk-and-tools/sdk-js/sdk-js-cookbook-previous",
-              "sdk-and-tools/sdk-js/sdk-js-cookbook",
-              "sdk-and-tools/sdk-js/sdk-js-cookbook-next",
+              {
+                label: "Cookbook",
+                type: "doc",
+                id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
+              },
+              {
+                type: "category",
+                label: "Cookbook (versioned)",
+                link: {
+                  type: "doc",
+                  id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
+                },
+                items: [
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v11",
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                ]
+              },
               "sdk-and-tools/sdk-js/extending-sdk-js",
               "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
               "sdk-and-tools/sdk-js/sdk-js-migration-guides",

@@ -1,6 +1,7 @@
 ---
-id: sdk-js-cookbook
-title: Cookbook (current)
+id: sdk-js-cookbook-v12
+title: Cookbook (v12)
+pagination_next: sdk-and-tools/sdk-js/extending-sdk-js
 ---
 
 [comment]: # (mx-abstract)
