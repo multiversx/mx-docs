@@ -1,6 +1,6 @@
 ---
 id: sdk-js-cookbook
-title: Cookbook (current stable versions)
+title: Cookbook (current)
 ---
 
 [comment]: # (mx-abstract)
