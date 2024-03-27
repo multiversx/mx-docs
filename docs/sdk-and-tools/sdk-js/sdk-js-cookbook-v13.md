@@ -10,7 +10,7 @@ pagination_prev: sdk-and-tools/sdk-js/sdk-js-cookbook-versions
 This page will guide you through the process of handling common tasks using **upcoming versions** of **sdk-js**.
 
 :::important
-This cookbook makes use of `sdk-js v13`. In order to migrate from `sdk-js v12.x` to `sdk-js v13`, please also follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
+This cookbook makes use of `sdk-js v13`. In order to migrate from `sdk-js v12.x` to `sdk-js v13`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-js-core/issues/392).
 :::
 
 :::important
@@ -97,12 +97,11 @@ Since `sdk-core v13`, the `Transaction` class exhibits its state as public read-
 :::
 
 ```
-import { Transaction, TransactionPayload } from "@multiversx/sdk-core";
+import { Transaction } from "@multiversx/sdk-core";
 
-// Recommended approach: 
 
 const tx = new Transaction({
-    data: new TextEncoder().encode("food for cats"),
+    data: Buffer.from("food for cats"),
     gasLimit: 70000n,
     sender: addressOfAlice.toBech32(),
     receiver: addressOfBob.toBech32(),
@@ -111,19 +110,6 @@ const tx = new Transaction({
 });
 
 tx.nonce = 42n;
-
-// Legacy approach: 
-
-const txLegacy = new Transaction({
-    data: new TransactionPayload("helloWorld"),
-    gasLimit: 70000,
-    sender: addressOfAlice,
-    receiver: addressOfBob,
-    value: "1000000000000000000",
-    chainID: "D"
-});
-
-txLegacy.setNonce(43);
 ```
 
 ### Broadcast using a network provider
@@ -177,7 +163,7 @@ For a different awaiting strategy, also see [extending sdk-js](https://docs.mult
 
 Generally speaking, in order to create transactions that transfer native tokens or ESDT tokens, one should use the `TransferTransactionsFactory` class.
 
-::note
+:::note
 In `sdk-core v13`, the `TransferTransactionsFactory` class was extended with new methods, 
 to be aligned with the [SDKs specs](https://github.com/multiversx/mx-sdk-specs/blob/main/core/transactions-factories/transfer_transactions_factory.md).
 The old, legacy methods are still available (see below), thus existing client code isn't affected.
@@ -198,14 +184,11 @@ For formatting or parsing token amounts, see [formatting and parsing amounts](#f
 First, let's create a `TransferTransactionsFactory`:
 
 ```
-import { GasEstimator, Token, TokenComputer, TokenTransfer, TransactionsFactoryConfig, TransferTransactionsFactory } from "@multiversx/sdk-core";
+import { Token, TokenComputer, TokenTransfer, TransactionsFactoryConfig, TransferTransactionsFactory } from "@multiversx/sdk-core";
 
-// The new approach of creating a "TransferTransactionsFactory":
+// The new approach of creating a "TransferTransactionsFactory": 
 const factoryConfig = new TransactionsFactoryConfig({ chainID: "D" });
 const factory = new TransferTransactionsFactory({ config: factoryConfig, tokenComputer: new TokenComputer() });
-
-// The legacy approach of creating a "TransferTransactionsFactory":
-const legacyFactory = new TransferTransactionsFactory(new GasEstimator());
 ```
 
 Now, we can use the factory to create transfer transactions.
@@ -226,7 +209,6 @@ tx1.nonce = 42n;
 ### Single ESDT transfer
 
 ```
-// New approach: 
 const tx2 = factory.createTransactionForESDTTokenTransfer({
     sender: addressOfAlice,
     receiver: addressOfBob,
@@ -239,23 +221,11 @@ const tx2 = factory.createTransactionForESDTTokenTransfer({
 });
 
 tx2.nonce = 43n;
-
-// Legacy approach: 
-const tx2Legacy = legacyFactory.createESDTTransfer({
-    tokenTransfer: TokenTransfer.fungibleFromAmount("TEST-8b028f", "100.00", 2),
-    nonce: 43,
-    sender: addressOfAlice,
-    receiver: addressOfBob,
-    chainID: "D"
-});
-
-assert.deepEqual(tx2, tx2Legacy);
 ```
 
 ### Single NFT transfer
 
 ```
-// New approach: 
 const tx3 = factory.createTransactionForESDTTokenTransfer({
     sender: addressOfAlice,
     receiver: addressOfBob,
@@ -268,23 +238,11 @@ const tx3 = factory.createTransactionForESDTTokenTransfer({
 });
 
 tx3.nonce = 44n;
-
-// Legacy approach: 
-const tx3Legacy = legacyFactory.createESDTNFTTransfer({
-    tokenTransfer: TokenTransfer.nonFungible("TEST-38f249", 1),
-    nonce: 44,
-    sender: addressOfAlice,
-    destination: addressOfBob,
-    chainID: "D"
-});
-
-assert.deepEqual(tx3, tx3Legacy);
 ```
 
 ### Single SFT transfer
 
 ```
-// New approach: 
 const tx4 = factory.createTransactionForESDTTokenTransfer({
     sender: addressOfAlice,
     receiver: addressOfBob,
@@ -297,23 +255,11 @@ const tx4 = factory.createTransactionForESDTTokenTransfer({
 });
 
 tx4.nonce = 45n;
-
-// Legacy approach: 
-const tx4Legacy = legacyFactory.createESDTNFTTransfer({
-    tokenTransfer: TokenTransfer.semiFungible("SEMI-9efd0f", 1, 5),
-    nonce: 45,
-    sender: addressOfAlice,
-    destination: addressOfBob,
-    chainID: "D"
-});
-
-assert.deepEqual(tx4, tx4Legacy);
 ```
 
 ### Multi ESDT / NFT transfer
 
 ```
-// New approach: 
 const tx5 = factory.createTransactionForESDTTokenTransfer({
     sender: addressOfAlice,
     receiver: addressOfBob,
@@ -334,20 +280,4 @@ const tx5 = factory.createTransactionForESDTTokenTransfer({
 });
 
 tx5.nonce = 46n;
-
-// Legacy approach: 
-const tx5Legacy = legacyFactory.createMultiESDTNFTTransfer({
-    tokenTransfers: [
-        TokenTransfer.fungibleFromAmount("TEST-8b028f", "100.00", 2),
-        TokenTransfer.nonFungible("TEST-38f249", 1),
-        TokenTransfer.semiFungible("SEMI-9efd0f", 1, 5)
-    ],
-    nonce: 46,
-    sender: addressOfAlice,
-    destination: addressOfBob,
-    gasLimit: 1712500,
-    chainID: "D"
-});
-
-assert.deepEqual(tx5, tx5Legacy);
 ```
