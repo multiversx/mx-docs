@@ -112,13 +112,35 @@ const tx = new Transaction({
 tx.nonce = 42n;
 ```
 
-### Broadcast using a network provider
+### Signing a transaction
 
 :::important
 Note that the transactions **must be signed before being broadcasted**. 
 On the front-end, signing can be achieved using a signing provider.
 On this purpose, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
 :::
+
+:::important
+For the sake of simplicity, in this section we'll use a private key to sign the transaction.
+In real-world dApps, transactions are signed by end-users using their wallet, through a signing provider.
+:::
+
+```
+import { TransactionComputer } from "@multiversx/sdk-core";
+import { UserSigner } from "@multiversx/sdk-wallet";
+import { promises } from "fs";
+
+const fileContent = await promises.readFile("../testwallets/alice.json", { encoding: "utf8" });
+const walletObject = JSON.parse(fileContent);
+const signer = UserSigner.fromWallet(walletObject, "password");
+
+const computer = new TransactionComputer();
+const serializedTx = computer.computeBytesForSigning(tx);
+
+tx.signature = await signer.sign(serializedTx);
+```
+
+### Broadcast using a network provider
 
 In order to broadcast a transaction, use a network provider:
 
