@@ -287,7 +287,6 @@ const sidebars = {
                   id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
                 },
                 items: [
-                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v11",
                   "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
                   "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
                 ]

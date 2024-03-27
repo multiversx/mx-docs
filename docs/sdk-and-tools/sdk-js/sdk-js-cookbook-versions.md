@@ -12,6 +12,5 @@ The cookbook version corresponds to the version of the [**sdk-js-core**](https:/
 
 Please follow the version you are interested in:
 
- - [Cookbook v11 **(legacy)**](/sdk-and-tools/sdk-js/sdk-js-cookbook-v11)
  - [Cookbook v12 **(stable, current version)**](/sdk-and-tools/sdk-js/sdk-js-cookbook-v12)
  - [Cookbook v13 **(unstable, upcoming version)**](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13)
