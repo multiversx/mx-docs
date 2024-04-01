@@ -350,7 +350,7 @@ console.log("Parse using bignumber.js:", new BigNumber("1.5").shiftedBy(18).deci
 ## Contract ABIs
 
 A contract's ABI describes the endpoints, data structure and events that a contract exposes.
-While contract interactions are possible without the ABI, they are easier to implement when the definitions is available.
+While contract interactions are possible without the ABI, they are easier to implement when the definitions are available.
 
 ### Load the ABI from a file
 
@@ -435,7 +435,7 @@ const deployTransaction = factory.createTransactionForDeploy({
 When creating transactions using `SmartContractTransactionsFactory`, even if the ABI is available and provided,
 you can still use `TypedValue` objects as arguments for deployments and interactions.
 
-Even further, you can use mix `TypedValue` objects with plain JavaScript values and objects. For example:
+Even further, you can use a mix of `TypedValue` objects and plain JavaScript values and objects. For example:
 
 ```
 let args = [new U32Value(42), "hello", { foo: "bar" }, new TokenIdentifierValue("TEST-abcdef")];
@@ -574,7 +574,7 @@ const transaction = factory.createTransactionForExecute({
 When creating transactions using `SmartContractTransactionsFactory`, even if the ABI is available and provided,
 you can still use `TypedValue` objects as arguments for deployments and interactions.
 
-Even further, you can use mix `TypedValue` objects with plain JavaScript values and objects. For example:
+Even further, you can use a mix of `TypedValue` objects and plain JavaScript values and objects. For example:
 
 ```
 let args = [new U32Value(42), "hello", { foo: "bar" }, new TokenIdentifierValue("TEST-abcdef")];
