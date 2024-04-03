@@ -123,9 +123,9 @@ gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_00
 ```
 Replace BILLING_PROJECT with the name of your billing project and ~/DOWNLOAD_LOCATION with the directory where the archives should be downloaded.
 
-The following example will download epochs starting with Epoch_00010 up to Epoch_00020, for a billing project called *multiversx*:
+The following example will download epochs starting with Epoch_01000 up to Epoch_01300, for a billing project called *multiversx*:
 ```
-gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_000{10..20}.tar ~/Downloads/ --billing-project=multiversx
+gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_0{1000..1300}.tar ~/Downloads/ --billing-project=multiversx
 ```
 
 [comment]: # (mx-context-auto)
