@@ -121,9 +121,9 @@ Here's an example command that downloads an archive from the `multiversx-deep-hi
 ```
 gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_00000.tar ~/DOWNLOAD_LOCATION --billing-project=BILLING_PROJECT
 ```
-Replace BILLING_PROJECT with the name of your billing project and ~/DOWNLOAD_LOCATION with the directory where the archives should be downloaded.
+Replace **BILLING_PROJECT** with the name of your billing project and **~/DOWNLOAD_LOCATION** with the directory where the archives should be downloaded.
 
-The following example will download epochs starting with Epoch_01000 up to Epoch_01300, for a billing project called *multiversx*:
+The following example will download epochs starting with Epoch_01000.tar up to Epoch_01300.tar, for a billing project called **multiversx**:
 ```
 gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_0{1000..1300}.tar ~/Downloads/ --billing-project=multiversx
 ```
