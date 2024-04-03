@@ -103,9 +103,29 @@ Never attach a non-pruned database to a regular observer (i.e. that does not hav
 
 Archives supporting historical lookup are available to download from a Google Cloud Storage bucket.
 
- In order to download archives, you must have [gcloud CLI](https://cloud.google.com/sdk/docs/install) installed and an account on Google Cloud Platform with [billing](https://cloud.google.com/billing/docs/) enabled.
+In order to avoid unintentional downloads and promote careful fetching of archives, we've enabled [requester pays](https://cloud.google.com/storage/docs/requester-pays).
+
+### Requirements
+
+1. **Google Cloud Platform Account**: An account on Google Cloud Platform with billing enabled is required. Find out how you can manage your billing account and modify your project here:
+- https://cloud.google.com/billing/docs/how-to/manage-billing-account
+- https://cloud.google.com/billing/docs/how-to/modify-project
+
+2. **Google Cloud SDK**: The Google Cloud SDK includes the `gcloud` command-line tool, which you'll use to interact with Google Cloud Storage. You can download it from the [Google Cloud SDK webpage](https://cloud.google.com/sdk/docs/install).
+
+### Downloading archives
+
+Once you have the Google Cloud SDK installed and you're [authenticated](https://cloud.google.com/docs/authentication/gcloud), you can download archives from the Google Cloud Storage bucket using the `gcloud storage cp` command.
+
+Here's an example command that downloads an archive from the `multiversx-deep-history-archives-mainnet/shard-0/` bucket:
 ```
-gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_00000.tar ~/Downloads [--billing-project=BILLING_PROJECT]
+gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_00000.tar ~/DOWNLOAD_LOCATION --billing-project=BILLING_PROJECT
+```
+Replace BILLING_PROJECT with the name of your billing project and ~/DOWNLOAD_LOCATION with the directory where the archives should be downloaded.
+
+The following example will download epochs starting with Epoch_00010 up to Epoch_00020, for a billing project called *multiversx*:
+```
+gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_000{10..20}.tar ~/Downloads/ --billing-project=multiversx
 ```
 
 [comment]: # (mx-context-auto)
