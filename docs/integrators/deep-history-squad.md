@@ -111,7 +111,7 @@ In order to avoid unintentional downloads and promote careful fetching of archiv
 - https://cloud.google.com/billing/docs/how-to/manage-billing-account
 - https://cloud.google.com/billing/docs/how-to/modify-project
 
-2. **Google Cloud SDK**: The Google Cloud SDK includes the `gcloud` command-line tool, which you'll use to interact with Google Cloud Storage. In order to install it, please follow the provided on the [Google Cloud SDK webpage](https://cloud.google.com/sdk/docs/install).
+2. **Google Cloud SDK**: The Google Cloud SDK includes the `gcloud` command-line tool, which you'll use to interact with Google Cloud Storage. In order to install it, please follow the instructions provided on the [Google Cloud SDK webpage](https://cloud.google.com/sdk/docs/install).
 
 ### Downloading archives
 
