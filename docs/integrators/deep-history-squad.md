@@ -103,9 +103,10 @@ Never attach a non-pruned database to a regular observer (i.e. that does not hav
 
 Archives supporting historical lookup are available to download from a Google Cloud Storage bucket.
 
-:::important
-Documentation in this section is preliminary and subject to change.
-:::
+ In order to download archives, you must have [gcloud CLI](https://cloud.google.com/sdk/docs/install) installed and an account on Google Cloud Platform with [billing](https://cloud.google.com/billing/docs/) enabled.
+```
+gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_00000.tar ~/Downloads [--billing-project=BILLING_PROJECT]
+```
 
 [comment]: # (mx-context-auto)
 
