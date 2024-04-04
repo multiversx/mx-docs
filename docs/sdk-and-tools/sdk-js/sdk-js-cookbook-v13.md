@@ -116,7 +116,7 @@ tx.nonce = 42n;
 :::important
 Note that the transactions **must be signed before being broadcasted**.
 On the front-end, signing can be achieved using a signing provider.
-On this purpose, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
+On this purpose, **we recommend using [sdk-dapp](/sdk-and-tools/sdk-dapp)** instead of integrating the signing providers on your own.
 :::
 
 :::important
@@ -928,11 +928,21 @@ const encoded = codec.encodeNested(paymentStruct);
 console.log(encoded.toString("hex"));
 ```
 
-## Signing objects
+## Signing objects and verifying signatures
 
 :::note
+Skip this section if you're building a **dApp**.
+This section is destined for developers of **wallet-like applications** or backend (server-side) components that are concerned with signing transactions and messages.
+
 For **dApps**, use the available **[signing providers](/sdk-and-tools/sdk-js/sdk-js-signing-providers)** instead.
+Note that we recommend using **[sdk-dapp](/sdk-and-tools/sdk-dapp)** instead of integrating the signing providers on your own.
 :::
+
+:::note
+You might also be interested into the language-agnostic overview on [signing transactions](/developers/signing-transactions).
+:::
+
+### Signing objects
 
 Creating a `UserSigner` from a JSON wallet:
 
@@ -952,7 +962,7 @@ const pemText = await promises.readFile("../testwallets/alice.pem", { encoding: 
 signer = UserSigner.fromPem(pemText);
 ```
 
-Signing a transaction (as we've seen [before](#signing-a-transaction)):
+Signing a transaction, as we've seen [before](#signing-a-transaction):
 
 ```
 import { Transaction, TransactionComputer } from "@multiversx/sdk-core";
@@ -989,7 +999,7 @@ message.signature = await signer.sign(serializedMessage);
 console.log("Signature", Buffer.from(message.signature).toString("hex"));
 ```
 
-## Verifying signatures
+### Verifying signatures
 
 Creating a `UserVerifier`:
 
@@ -1004,7 +1014,7 @@ Verifying a signature:
 
 ```
 serializedTransaction = transactionComputer.computeBytesForSigning(transaction);
-serializedMessage = messageComputer.computeBytesForSigning(message);
+serializedMessage = messageComputer.computeBytesForVerifying(message);
 
 console.log("Is signature of Alice?", aliceVerifier.verify(serializedTransaction, transaction.signature));
 console.log("Is signature of Alice?", aliceVerifier.verify(serializedMessage, message.signature));
@@ -1033,6 +1043,39 @@ const serializedUnpackedMessage = messageComputer.computeBytesForVerifying(unpac
 console.log("Unpacked message", unpackedMessage);
 console.log("Is signature of Alice?", aliceVerifier.verify(serializedUnpackedMessage, message.signature));
 ```
+
+### Signing hashes of objects
+
+Under the hood, [`MessageComputer.computeBytesForSigning()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/MessageComputer.html#computeBytesForSigning) does not compute a plain serialization of the message.
+Instead, it first decorates the message (with a special prefix, plus the message length), and computes a **`keccak256` hash** of this decorated variant.
+Ultimately, the signature is computed over the hash.
+
+However, for transactions, **by default**, the Network expects the signature to be computed over [the plain serialization](/developers/signing-transactions/#serialization-for-signing) of the transaction.
+The function [`TransactionComputer.computeBytesForSigning()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionComputer.html#computeBytesForSigning) adheres to this default policy.
+
+The behavior can be overridden by setting the _sign using hash_ flag of `transaction.options`:
+
+```
+transactionComputer.applyOptionsForHashSigning(transaction);
+```
+
+Then, the transaction should be serialzed and signed as follows:
+
+```
+const bytesToSign = transactionComputer.computeHashForSigning(transaction);
+transaction.signature = await signer.sign(bytesToSign);
+```
+
+If hash signing is used for transactions, make sure to handle the verification accordingly:
+
+```
+const bytesToVerify = transactionComputer.computeHashForSigning(transaction);
+console.log("Is signature of Alice?", aliceVerifier.verify(bytesToVerify, transaction.signature));
+```
+
+:::note
+If you'd like to learn more about hash signing, please refer to the overview on [signing transactions](/developers/signing-transactions).
+:::
 
 :::important
 This page is a work in progress. Please check back later for more content.
