@@ -775,6 +775,9 @@ Now, let's find and parse the event we are interested in:
 ```
 import { TransactionEventsParser, findEventsByFirstTopic } from "@multiversx/sdk-core";
 
+const abiJsonMultisig = await promises.readFile("../contracts/multisig-full.abi.json", { encoding: "utf8" });
+const abiMultisig = AbiRegistry.create(JSON.parse(abiJsonMultisig));
+
 const eventsParser = new TransactionEventsParser({
     abi: abiMultisig
 });
@@ -852,7 +855,20 @@ console.log(sum);
 
 ## Explicit decoding / encoding of values
 
-When needed, you can use the [`BinaryCodec`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/BinaryCodec.html) to [decode and encode values](/developers/data/serialization-overview/) manually.
+When needed, you can use the [`BinaryCodec`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/BinaryCodec.html) to [decode and encode values](/developers/data/serialization-overview/) manually,
+leveraging contract ABIs:
+
+```
+const abiJsonExample = await promises.readFile("../contracts/example.abi.json", { encoding: "utf8" });
+const abiExample = AbiRegistry.create(JSON.parse(abiJsonExample));
+
+const abiJsonMultisig = await promises.readFile("../contracts/multisig-full.abi.json", { encoding: "utf8" });
+const abiMultisig = AbiRegistry.create(JSON.parse(abiJsonMultisig));
+```
+
+:::note
+The ABI files used within this cookbook are available [here](https://github.com/multiversx/mx-sdk-js-examples).
+:::
 
 ### Decoding a custom type
 
@@ -861,7 +877,7 @@ Example of decoding a custom type (a structure) called `DepositEvent` from binar
 ```
 import { BinaryCodec } from "@multiversx/sdk-core";
 
-const depositCustomType = abi.getCustomType("DepositEvent");
+const depositCustomType = abiExample.getCustomType("DepositEvent");
 const codec = new BinaryCodec();
 let data = Buffer.from("00000000000003db000000", "hex");
 let decoded = codec.decodeTopLevel(data, depositCustomType);
@@ -873,7 +889,7 @@ console.log(JSON.stringify(decodedValue, null, 4));
 Example of decoding a custom type (a structure) called `Reward` from binary data:
 
 ```
-const rewardStructType = abi.getStruct("Reward");
+const rewardStructType = abiExample.getStruct("Reward");
 data = Buffer.from("010000000445474c440000000201f400000000000003e80000000000000000", "hex");
 
 [decoded] = codec.decodeNested(data, rewardStructType);
