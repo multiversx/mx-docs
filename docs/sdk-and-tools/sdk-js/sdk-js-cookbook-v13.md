@@ -39,7 +39,7 @@ Use the classes from `@multiversx/sdk-network-providers` **only as a starting po
 As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements
 (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
-On this topic, please see [extending sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/extending-sdk-js).
+On this topic, please see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 
 ## Fetching network parameters
 
@@ -86,7 +86,7 @@ For `sdk-core v12` or earlier, use the legacy `tx.setNonce()` to apply the nonce
 notYetSignedTx.nonce = alice.getNonceThenIncrement();
 ```
 
-For further reference, please see [nonce management](https://docs.multiversx.com/integrators/creating-transactions/#nonce-management).
+For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
 
 ## Broadcasting transactions
 
@@ -121,7 +121,7 @@ On this purpose, **we recommend using [sdk-dapp](https://github.com/multiversx/m
 
 :::important
 For the sake of simplicity, in this section we'll use a `UserSigner` object to sign the transaction.
-In real-world dApps, transactions are signed by end-users using their wallet, through a [signing provider](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-signing-providers).
+In real-world dApps, transactions are signed by end-users using their wallet, through a [signing provider](/sdk-and-tools/sdk-js/sdk-js-signing-providers).
 :::
 
 ```
@@ -193,7 +193,7 @@ const watcherWithPatience = new TransactionWatcher(apiNetworkProvider, { patienc
 
 Alternatively, use [`TransactionWatcher.awaitAnyEvent()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionWatcher.html#awaitAnyEvent) or [`TransactionWatcher.awaitOnCondition()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionWatcher.html#awaitOnCondition) to customize the waiting strategy.
 
-For a different awaiting strategy, also see [extending sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/extending-sdk-js).
+For a different awaiting strategy, also see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 
 ## Token transfers
 
@@ -506,7 +506,7 @@ Now, **sign the transaction** using a wallet / signing provider of your choice.
 
 :::important
 For the sake of simplicity, in this section we'll use a `UserSigner` object to sign the transaction.
-In real-world dApps, transactions are signed by end-users using their wallet, through a [signing provider](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-signing-providers).
+In real-world dApps, transactions are signed by end-users using their wallet, through a [signing provider](/sdk-and-tools/sdk-js/sdk-js-signing-providers).
 :::
 
 ```
@@ -552,7 +552,7 @@ we need to first convert our `TransactionOnNetwork` object to a [`TransactionOut
 
 :::important
 Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns. 
-The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](https://docs.multiversx.com/sdk-and-tools/rest-api).
+The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
 
 This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
 Currently, for the JavaScript / TypeScript SDKs, the _converters_ and _adapters_ are residents of the `sdk-core` package.
@@ -644,7 +644,7 @@ Now, **sign the transaction** using a wallet / signing provider of your choice.
 
 :::important
 For the sake of simplicity, in this section we'll use a `UserSigner` object to sign the transaction.
-In real-world dApps, transactions are signed by end-users using their wallet, through a [signing provider](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-signing-providers).
+In real-world dApps, transactions are signed by end-users using their wallet, through a [signing provider](/sdk-and-tools/sdk-js/sdk-js-signing-providers).
 :::
 
 ```
@@ -734,7 +734,7 @@ we need to first convert our `TransactionOnNetwork` object to a `TransactionOutc
 
 :::important
 Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns. 
-The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](https://docs.multiversx.com/sdk-and-tools/rest-api).
+The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
 
 This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
 Currently, for the JavaScript / TypeScript SDKs, the _converters_ and _adapters_ are residents of the `sdk-core` package.
@@ -775,6 +775,9 @@ Now, let's find and parse the event we are interested in:
 ```
 import { TransactionEventsParser, findEventsByFirstTopic } from "@multiversx/sdk-core";
 
+const abiJsonMultisig = await promises.readFile("../contracts/multisig-full.abi.json", { encoding: "utf8" });
+const abiMultisig = AbiRegistry.create(JSON.parse(abiJsonMultisig));
+
 const eventsParser = new TransactionEventsParser({
     abi: abiMultisig
 });
@@ -795,7 +798,7 @@ A `NetworkProvider`, slighly adapted, is used to satisfy this requirement.
 
 :::important
 Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns. 
-The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](https://docs.multiversx.com/sdk-and-tools/rest-api).
+The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
 
 This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
 Currently, for the JavaScript / TypeScript SDKs, the _converters_ and _adapters_ are residents of the `sdk-core` package.
@@ -848,6 +851,81 @@ The response object contains the raw output of the query, which can be parsed as
 ```
 const [sum] = controller.parseQueryResponse(response);
 console.log(sum);
+```
+
+## Explicit decoding / encoding of values
+
+When needed, you can use the [`BinaryCodec`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/BinaryCodec.html) to [decode and encode values](/developers/data/serialization-overview/) manually,
+leveraging contract ABIs:
+
+```
+const abiJsonExample = await promises.readFile("../contracts/example.abi.json", { encoding: "utf8" });
+const abiExample = AbiRegistry.create(JSON.parse(abiJsonExample));
+
+const abiJsonMultisig = await promises.readFile("../contracts/multisig-full.abi.json", { encoding: "utf8" });
+const abiMultisig = AbiRegistry.create(JSON.parse(abiJsonMultisig));
+```
+
+:::note
+The ABI files used within this cookbook are available [here](https://github.com/multiversx/mx-sdk-js-examples).
+:::
+
+### Decoding a custom type
+
+Example of decoding a custom type (a structure) called `DepositEvent` from binary data:
+
+```
+import { BinaryCodec } from "@multiversx/sdk-core";
+
+const depositCustomType = abiExample.getCustomType("DepositEvent");
+const codec = new BinaryCodec();
+let data = Buffer.from("00000000000003db000000", "hex");
+let decoded = codec.decodeTopLevel(data, depositCustomType);
+let decodedValue = decoded.valueOf();
+
+console.log(JSON.stringify(decodedValue, null, 4));
+```
+
+Example of decoding a custom type (a structure) called `Reward` from binary data:
+
+```
+const rewardStructType = abiExample.getStruct("Reward");
+data = Buffer.from("010000000445474c440000000201f400000000000003e80000000000000000", "hex");
+
+[decoded] = codec.decodeNested(data, rewardStructType);
+decodedValue = decoded.valueOf();
+console.log(JSON.stringify(decodedValue, null, 4));
+```
+
+Example of decoding a custom type (an enum) called `Action` (of [**multisig**](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig) contract) from binary data:
+
+```
+const actionStructType = abiMultisig.getEnum("Action");
+data = Buffer.from("0500000000000000000500d006f73c4221216fa679bc559005584c4f1160e569e1000000012a0000000003616464000000010000000107", "hex");
+
+[decoded] = codec.decodeNested(data, actionStructType);
+decodedValue = decoded.valueOf();
+console.log(JSON.stringify(decodedValue, null, 4));
+```
+
+### Encoding a custom type
+
+Example of encoding a custom type (a struct) called `EsdtTokenPayment` (of [**multisig**](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig) contract) into binary data:
+
+```
+import { BigUIntValue, Field, Struct, TokenIdentifierValue, U64Value } from "@multiversx/sdk-core";
+
+const paymentType = abiMultisig.getStruct("EsdtTokenPayment");
+
+const paymentStruct = new Struct(paymentType, [
+    new Field(new TokenIdentifierValue("TEST-8b028f"), "token_identifier"),
+    new Field(new U64Value(0n), "token_nonce"),
+    new Field(new BigUIntValue(10000n), "amount")
+]);
+
+const encoded = codec.encodeNested(paymentStruct);
+
+console.log(encoded.toString("hex"));
 ```
 
 :::important
