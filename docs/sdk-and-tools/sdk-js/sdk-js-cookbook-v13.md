@@ -180,6 +180,19 @@ await Promise.all([
 ]);
 ```
 
+In some circumstances, when awaiting for a transaction completion in order to retrieve its logs and events,
+it's possible that these pieces of information are missing at the very moment the transaction is marked as completed -
+they may not be immediately available.
+
+If that is an issue, you can configure the [`TransactionWatcher`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionWatcher.html) to have additional **patience**
+before returning the transaction object. Below, we're adding a patience of 8 seconds:
+
+```
+const watcherWithPatience = new TransactionWatcher(apiNetworkProvider, { patienceMilliseconds: 8000 });
+```
+
+Alternatively, use [`TransactionWatcher.awaitAnyEvent()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionWatcher.html#awaitAnyEvent) or [`TransactionWatcher.awaitOnCondition()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionWatcher.html#awaitOnCondition) to customize the waiting strategy.
+
 For a different awaiting strategy, also see [extending sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/extending-sdk-js).
 
 ## Token transfers
@@ -740,6 +753,36 @@ const transactionOutcome = converter.transactionOnNetworkToOutcome(transactionOn
 const parsedOutcome = parser.parseExecute({ transactionOutcome });
 
 console.log(parsedOutcome);
+```
+
+### Decode transaction events
+
+Additionally, you might be interested into decoding the events emitted by a contract.
+You can do so by means of the [`TransactionEventsParser`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionEventsParser.html).
+
+Suppose we'd like to decode a `startPerformAction` event emitted by the [**multisig**](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig) contract.
+
+Let's fetch [a previously-processed transaction](https://devnet-explorer.multiversx.com/transactions/05d445cdd145ecb20374844dcc67f0b1e370b9aa28a47492402bc1a150c2bab4),
+to serve as an example, and convert it to a [`TransactionOutcome`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionOutcome.html) (see above why):
+
+```
+const transactionOnNetworkMultisig = await apiNetworkProvider.getTransaction("05d445cdd145ecb20374844dcc67f0b1e370b9aa28a47492402bc1a150c2bab4");
+const transactionOutcomeMultisig = converter.transactionOnNetworkToOutcome(transactionOnNetworkMultisig);
+```
+
+Now, let's find and parse the event we are interested in:
+
+```
+import { TransactionEventsParser, findEventsByFirstTopic } from "@multiversx/sdk-core";
+
+const eventsParser = new TransactionEventsParser({
+    abi: abiMultisig
+});
+
+const [event] = findEventsByFirstTopic(transactionOutcomeMultisig, "startPerformAction");
+const parsedEvent = eventsParser.parseEvent({ event });
+
+console.log(parsedEvent);
 ```
 
 ## Contract queries
