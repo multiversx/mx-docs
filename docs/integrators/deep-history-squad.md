@@ -101,11 +101,32 @@ Never attach a non-pruned database to a regular observer (i.e. that does not hav
 
 ## Downloading non-pruned database
 
-Archives supporting historical lookup are available to download from a Google Cloud Storage bucket.
+Archives supporting historical lookup are available to download from a Google Cloud Storage [bucket](https://console.cloud.google.com/storage/browser/multiversx-deep-history-archives-mainnet).
 
-:::important
-Documentation in this section is preliminary and subject to change.
-:::
+In order to avoid unintentional downloads and promote careful fetching of archives, we've enabled the [requester pays](https://cloud.google.com/storage/docs/requester-pays) feature on the bucket that holds the deep-history archives for mainnet.
+
+### Requirements
+
+1. **Google Cloud Platform Account**: An account on Google Cloud Platform with billing enabled is required. Find out how you can manage your billing account and modify your project here:
+- https://cloud.google.com/billing/docs/how-to/manage-billing-account
+- https://cloud.google.com/billing/docs/how-to/modify-project
+
+2. **Google Cloud SDK**: The Google Cloud SDK includes the `gcloud` command-line tool, which you'll use to interact with Google Cloud Storage. In order to install it, please follow the instructions provided on the [Google Cloud SDK webpage](https://cloud.google.com/sdk/docs/install).
+
+### Downloading archives
+
+Once you have the Google Cloud SDK installed and you're [authenticated](https://cloud.google.com/docs/authentication/gcloud), you can download archives from the Google Cloud Storage bucket using the `gcloud storage cp` command.
+
+Here's an example command that downloads an archive from the `multiversx-deep-history-archives-mainnet` bucket:
+```
+gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_00000.tar ~/DOWNLOAD_LOCATION --billing-project=BILLING_PROJECT
+```
+Replace **BILLING_PROJECT** with the name of your billing project and **~/DOWNLOAD_LOCATION** with the directory where the archives should be downloaded.
+
+The following example will download epochs starting with Epoch_01000.tar up to Epoch_01300.tar, for a billing project called **multiversx**:
+```
+gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_0{1000..1300}.tar ~/Downloads/ --billing-project=multiversx
+```
 
 [comment]: # (mx-context-auto)
 
