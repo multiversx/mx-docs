@@ -2,6 +2,7 @@
 id: sdk-js-cookbook-versions
 title: Cookbook (other versions)
 pagination_next: null
+pagination_prev: sdk-and-tools/sdk-js/sdk-js
 ---
 
 [comment]: # (mx-abstract)
@@ -12,5 +13,5 @@ The cookbook version corresponds to the version of the [**sdk-js-core**](https:/
 
 Please follow the version you are interested in:
 
- - [Cookbook v12 **(stable, current version)**](/sdk-and-tools/sdk-js/sdk-js-cookbook-v12)
- - [Cookbook v13 **(unstable, upcoming version)**](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13)
+ - [Cookbook v13 **(stable, current version)**](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13)
+ - [Cookbook v12 **(legacy, previous version)**](/sdk-and-tools/sdk-js/sdk-js-cookbook-v12)
