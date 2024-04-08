@@ -277,7 +277,7 @@ const sidebars = {
               {
                 label: "Cookbook",
                 type: "doc",
-                id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
+                id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
               },
               {
                 type: "category",
