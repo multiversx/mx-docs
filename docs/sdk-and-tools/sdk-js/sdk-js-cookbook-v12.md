@@ -7,7 +7,7 @@ pagination_next: null
 
 [comment]: # (mx-abstract)
 
-This page will guide you through the process of handling common tasks using **sdk-js v12**.
+This page will guide you through the process of handling common tasks using **sdk-js v12 (legacy, previous version)**.
 
 :::important
 A newer variant of the **sdk-js** cookbook is available [here](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13).
