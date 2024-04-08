@@ -1,13 +1,13 @@
 ---
 id: sdk-js-cookbook-v13
 title: Cookbook (v13)
+pagination_prev: sdk-and-tools/sdk-js/sdk-js
 pagination_next: null
-pagination_prev: sdk-and-tools/sdk-js/sdk-js-cookbook-versions
 ---
 
 [comment]: # (mx-abstract)
 
-This page will guide you through the process of handling common tasks using **upcoming versions** of **sdk-js**.
+This page will guide you through the process of handling common tasks using **sdk-js v13 (latest, stable version)**.
 
 :::important
 This cookbook makes use of `sdk-js v13`. In order to migrate from `sdk-js v12.x` to `sdk-js v13`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-js-core/issues/392).

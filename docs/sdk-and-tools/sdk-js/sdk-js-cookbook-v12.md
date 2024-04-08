@@ -1,18 +1,21 @@
 ---
 id: sdk-js-cookbook-v12
 title: Cookbook (v12)
-pagination_next: sdk-and-tools/sdk-js/extending-sdk-js
+pagination_prev: sdk-and-tools/sdk-js/sdk-js-cookbook-versions
+pagination_next: null
 ---
 
 [comment]: # (mx-abstract)
 
-This page will guide you through the process of handling common tasks using **sdk-js**.
+This page will guide you through the process of handling common tasks using **sdk-js v12 (legacy, previous version)**.
 
 :::important
-This cookbook makes use of `sdk-js v12`. In order to migrate from `sdk-js v11.x` to `sdk-js v12`, please follow [the migration guide](/sdk-and-tools/sdk-js/sdk-js-migration-guides).
+A newer variant of the **sdk-js** cookbook is available [here](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13).
 :::
 
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/basic.md" } -->
+:::important
+In order to migrate to the newer `sdk-js v13`, please follow [the migration guide](https://github.com/multiversx/mx-sdk-js-core/issues/392).
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -222,10 +225,6 @@ await Promise.all([watcher.awaitCompleted(tx1), watcher.awaitCompleted(tx2), wat
 
 For a different awaiting strategy, also see [extending sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/extending-sdk-js).
 
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/transfers.md" } -->
-
 [comment]: # (mx-context-auto)
 
 ## Token transfers
@@ -303,10 +302,6 @@ const tx4 = factory.createMultiESDTNFTTransfer({
     chainID: "D"
 });
 ```
-
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_01_deployments.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -414,10 +409,6 @@ let { returnCode } = new ResultsParser().parseUntypedOutcome(transactionOnNetwor
 console.log("Return code:", returnCode);
 ```
 
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_02_abi.md" } -->
-
 [comment]: # (mx-context-auto)
 
 ## ABI
@@ -448,10 +439,6 @@ const response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/r
 abiRegistry = AbiRegistry.create(response.data);
 existingContract = new SmartContract({ address: existingContractAddress, abi: abiRegistry });
 ```
-
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_03_queries.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -564,10 +551,6 @@ Depending on the context, reinterpret (cast) the results:
 ```
 let firstValueAsStruct = <Struct>firstValue;
 ```
-
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_04_interactions.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -788,10 +771,6 @@ let endpointDefinition = smartContract.getEndpoint("myFunction");
 
 For customizing the default parser, also see [extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js).
 
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/contracts_05_events.md" } -->
-
 [comment]: # (mx-context-auto)
 
 ## Contract events
@@ -815,10 +794,6 @@ const event = transaction.contractResults.items[0].logs.findFirstOrNoneEvent(eve
 const outcome = resultsParser.parseEvent(event, eventDefinition);
 console.log(JSON.stringify(outcome, null, 4));
 ```
-
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/codec.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -856,10 +831,6 @@ data = Buffer.from("010000000445474c440000000201f400000000000003e800000000000000
 decodedValue = decoded.valueOf();
 console.log(JSON.stringify(decodedValue, null, 4));
 ```
-
-<!-- END_INCLUDE_FILE -->
-
-<!-- BEGIN_INCLUDE_FILE { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-js-examples/v0.6.0/cookbook/generated/signing.md" } -->
 
 [comment]: # (mx-context-auto)
 
@@ -973,8 +944,6 @@ console.log("Is signature of Alice?", aliceVerifier.verify(serializedMessage, me
 console.log("Is signature of Bob?", bobVerifier.verify(serializedTx, txSignature));
 console.log("Is signature of Bob?", bobVerifier.verify(serializedMessage, messageSignature));
 ```
-
-<!-- END_INCLUDE_FILE -->
 
 [comment]: # (mx-context-auto)
 
