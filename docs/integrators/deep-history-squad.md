@@ -104,8 +104,8 @@ Since each observer of a deep-history squad must have a non-pruned history, thei
 
 ## Observer installation and configuration
 
-The installation of a deep history squad is the same as that of a [regular observing squad](/integrators/observing-squad).
-The difference is that the deep history observers are set up to retain the whole, non-pruned history of the blockchain. Therefore, the following flag must be added in the `config/variables.cfg` file before installation:
+The installation of a deep history squad is almost the same as that of a [regular observing squad](/integrators/observing-squad).
+The difference is that the deep history observers are set up to retain the whole, non-pruned history of the blockchain. Therefore, the following flag must be added in the `config/variables.cfg` file before running the `observing_squad` command of the installation script:
 ```bash
 NODE_EXTRA_FLAGS="--operation-mode=historical-balances"
 ```
@@ -117,7 +117,7 @@ Apart from the flag mentioned above, the setup of a deep-history observer is ide
 Never attach a non-pruned database to a regular observer (i.e. that does not have the above **operation-mode**) - unless you are not interested into the deep-history features. The regular observer irremediably removes, trucates and prunes the data (as configured, for storage efficiency).
 :::
 
-Now that we have finished with the installation part, we can proceed to populate the archive with a non-pruned database. There are two options here:
+Now that we have finished with the installation part, we can proceed with populating the database from a non-pruned database archive. There are two options here:
 - Download non-pruned database
 - Reconstruct non-pruned database
 
@@ -158,7 +158,7 @@ gcloud storage cp gs://multiversx-deep-history-archives-mainnet/shard-0/Epoch_0{
 
 An alternative to downloading the non-pruned history is to reconstruct it locally (on your own infrastructure). 
 
-There are also two options for reconstructiong a non-pruned database:
+There are also two options for reconstructing a non-pruned database:
 - Based on the **[import-db](/validators/import-db/)** feature, which re-processes past blocks - and, while doing so, retains the whole, non-pruned accounts history.
 - By performing a regular sync from the network (e.g. from Genesis), using a properly configured deep-history observer.
 
@@ -175,11 +175,11 @@ First, you need to decide whether to reconstruct a **complete** or a **partial**
 #### Reconstruct a complete history
 
 :::note
-Below, the reconstruction is exemplified for **mainnet, shard 0**. The same applies to other networks (devnet, testnet) and shards (including the metachain). When reconstructing the history, use the latest release available.
+Below, the reconstruction is exemplified for **mainnet, shard 0**. The same applies to other networks (devnet, testnet) and shards (including the metachain).
 :::
 
 
-Next, we neet to obtain (download) and extract **a recent daily archive (snapshot)** for the shard in question (e.g. shard 0). The daily archives are available to download **on request** ([Discord](https://discord.gg/multiversxbuilders) or [Telegram](https://t.me/MultiversXValidators)), from a cloud-based, _S3-compatible storage_ (Digital Ocean Spaces) - or you could fetch them from an existing regular full-history observer that you own. 
+Next, we need to obtain (download) and extract **a recent daily archive (snapshot)** for the shard in question (e.g. shard 0). The daily archives are available to download **on request** ([Discord](https://discord.gg/multiversxbuilders) or [Telegram](https://t.me/MultiversXValidators)), from a cloud-based, _S3-compatible storage_ (Digital Ocean Spaces) - or you could fetch them from an existing regular full-history observer that you own. 
 
 Upon extracting the downloaded archive, you'll have a new folder in your workspace: `db`, which contains the blockchain data for the shard in question. This data should be moved to a new folder, named `import-db`. All in all, the steps are as follows:
 
@@ -199,7 +199,7 @@ mkdir -p ./db
 Downloading the archives and extracting them might take a while.
 :::
 
-The reconstruction workspace should look as follows (irrelevant files omitted):
+When reconstructing the whole history, the workspace should look as follows (irrelevant files omitted):
 
 ```
 .
@@ -307,7 +307,7 @@ mkdir -p ./import-db
 tar -xf Full-History-DB-Shard-0.tar.gz --directory ./import-db
 ```
 
-The reconstruction workspace should look as follows (irrelevant files omitted):
+When reconstructing a partial history, the workspace should look as follows (irrelevant files omitted):
 
 ```
 .
@@ -350,7 +350,7 @@ We are now ready to start the reconstruction process :rocket:
 Once the **import-db** is over, the `db` folder will contain the archive for the deep-history observer to support historical account (state) queries for the epochs `1255 - 1260`.
 
 :::warning
-Make sure to set the **BlockProcessingCutoff** back to false before starting an observer intended to continue processing blocks past the cutoff.
+Make sure to set the **BlockProcessingCutoff** back to `false` before starting an observer intended to continue processing blocks past the cutoff.
 ```
 [BlockProcessingCutoff]
    Enabled = false
@@ -359,7 +359,7 @@ Make sure to set the **BlockProcessingCutoff** back to false before starting an 
 
 ### Reconstructing by performing a regular sync
 
-This is  the simpler approach (even if it takes a bit more time, depending on the availability of peers, plus the network traffic).
+This is the simpler approach (even if it takes a bit more time, depending on the availability of peers, plus the network traffic).
 
 Basically, if the required [node flag configuration](#observer-installation-and-configuration) was set at installation, all that's left to be done is to start the node and it will begin building the database by synchronizing from the network since Genesis.
 
