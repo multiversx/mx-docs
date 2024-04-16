@@ -53,6 +53,7 @@ const sidebars = {
           "developers/tutorials/crowdfunding-p2",
           "developers/tutorials/counter",
           "developers/tutorials/staking-contract",
+          "developers/tutorials/energy-dao",
           "developers/tutorials/dex-walkthrough",
           "developers/tutorials/wallet-connect-v2-migration",
         ],
