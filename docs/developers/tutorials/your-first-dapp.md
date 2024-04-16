@@ -84,7 +84,7 @@ mxpy wallet new --format pem --outfile=./wallet/wallet-owner.pem
 ```
 
 In order to initiate transactions on the blockchain, we need some funds, every transaction costs a very small fee, on the blockchain this is called **gas**.
-On the devnet wallet we have a **faucet** that allows you to get free test funds for our applications. We can request 10 xEGLD every 24 hours, so let's request 10 xEGLD now. You can log in with your PEM using the newly generated PEM file [here](https://devnet-wallet.multiversx.com/unlock/pem). Use the faucet from the menu as you see below and you are all set.
+On the devnet wallet we have a **faucet** that allows you to get free test funds for our applications. We can request 5 xEGLD every 24 hours, so let's request 5 xEGLD now. You can log in with your PEM using the newly generated PEM file [here](https://devnet-wallet.multiversx.com/unlock/pem). Use the faucet from the menu as you see below and you are all set.
 
 ![img](/developers/tutorial/faucet-screenshot.png)
 
