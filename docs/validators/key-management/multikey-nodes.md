@@ -87,7 +87,6 @@ controlling enough keys could cause damage to the chain as, in extreme cases, it
 possibility of blocks synchronization or blocks cross-notarization. 
 :::
 
-
 [comment]: # (mx-context-auto)
 
 ## Usage
@@ -153,6 +152,8 @@ example-1 585ddceb6b7bf0d308...
 random-0  791c7e2bd6a5fb1371...
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Security notes for the multikey nodes
 
 As stated above, the multikey feature is able to use any number of keys on a small group of nodes. 
@@ -170,6 +171,8 @@ Also, completely random strings can be used as to be easier to identify the node
 In this way, the operation will be somewhat similar to the *sentinel nodes* seen elsewhere. 
 The difference in our case is that the setup is greatly simplified as there is no separate network for the protected nodes that will need to be maintained.
 The security of our setup (if points 1, 2 and 3 are applied) should be the same with a *sentinel setup*.
+
+[comment]: # (mx-context-auto)
 
 ### Configuration example
 
@@ -300,7 +303,6 @@ These 2 configuration files `allValidatorsKeys.pem` and `prefs.toml` should be c
 After starting the multikey nodes, in ~10 minutes, the explorer will reflect the changes. All n nodes that run the multikey group will broadcast their identity as an empty string and their names will be `s14`.
 The BLS keys' identities, on the other hand will have the following names & identities:
 
-
 | Key          | Name   | Identity                 |
 |--------------|--------|--------------------------|
 | 15eb03756... | tsp-00 | testing-staking-provider |
@@ -308,6 +310,4 @@ The BLS keys' identities, on the other hand will have the following names & iden
 | 3dec570c0... | tsp-02 | testing-staking-provider |
 | 38a93e3c0... | tsp-03 | testing-staking-provider |
 | 1fce426b6... | tsp-04 | testing-staking-provider |
-
-
 

@@ -316,12 +316,20 @@ const config = {
             to: "/sdk-and-tools/sdk-js",
           },
           {
-            from: "/sdk-and-tools/erdjs/erdjs-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+            from: "/sdk-and-tools/erdjava",
+            to: "/sdk-and-tools/mxjava",
           },
           {
-            from: "/sdk-and-tools/erdjs/extending-erdjs",
-            to: "/sdk-and-tools/sdk-js/extending-sdk-js",
+            from: "/sdk-and-tools/erdgo",
+            to: "/sdk-and-tools/sdk-go",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-cookbook",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-versions",
+          },
+          {
+            from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
           },
           {
             from: "/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",

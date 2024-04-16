@@ -26,11 +26,11 @@ Devnet: [https://devnet-api.multiversx.com](https://devnet-api.multiversx.com).
 
 **Blastapi**
 
-Mainnet: [https://elrond-api.public.blastapi.io](https://elrond-api.public.blastapi.io).
+Mainnet: [https://multiversx-api.public.blastapi.io](https://multiversx-api.public.blastapi.io).
 
-Devnet: [https://elrond-api-devnet.public.blastapi.io](https://elrond-api-devnet.public.blastapi.io).
+Devnet: [https://multiversx-api-devnet.public.blastapi.io](https://multiversx-api-devnet.public.blastapi.io).
 
-Checkout information about [pricing](https://blastapi.io/pricing) and API [limitations per plan](https://docs.blastapi.io/blast-documentation/apis-documentation/elrond).
+Checkout information about [pricing](https://blastapi.io/pricing) and API [limitations per plan](https://docs.blastapi.io/blast-documentation/apis-documentation/core-api/multiversx).
 
 More details on how to get your private endpoint can be found [here](https://docs.blastapi.io/blast-documentation/tutorials-and-guides/using-blast-to-get-a-blockchain-endpoint-1).
 

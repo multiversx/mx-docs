@@ -46,7 +46,6 @@ Native Authenticator libraries:
 | [sdk-native-auth-client](https://www.npmjs.com/package/@multiversx/sdk-native-auth-client) | [Github](https://github.com/multiversx/mx-sdk-js-native-auth-client) | Native Authenticator - client-side components.         |
 | [sdk-native-auth-server](https://www.npmjs.com/package/@multiversx/sdk-native-auth-server) | [Github](https://github.com/multiversx/mx-sdk-js-native-auth-server) | Native Authenticator - server-side components.         |
 
-
 Additional utility packages:
 
 | Package                                                                                  | Source code                                                        | Description                                            |

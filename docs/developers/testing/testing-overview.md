@@ -9,7 +9,6 @@ What does it mean to test a smart contract?
 
 Well, smart contracts are little programs that run on the blockchain, so the first step is to find an environment for them to run.
 
-
 [comment]: # (mx-context-auto)
 
 ## Types of tests
@@ -39,7 +38,6 @@ So, to recap, the ways to test a smart contract are as follows:
     - White-box tests;
 - Unit tests.
 
-
 [comment]: # (mx-context-auto)
 
 ## What language should I use for my tests?
@@ -60,7 +58,6 @@ Let's, however, quickly go through all options avialable on MultiversX:
         - Rust only (since direct access to the contract code is needed);
 - Unit tests:
     - Rust only (since direct access to the contract code is needed).
-
 
 [comment]: # (mx-context-auto)
 

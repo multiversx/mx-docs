@@ -1,5 +1,5 @@
 ---
-id: erdjava
+id: mxjava
 title: Java SDK
 ---
 

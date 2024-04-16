@@ -110,6 +110,7 @@ const sidebars = {
               "developers/meta/sc-config",
               "developers/meta/sc-meta-cli",
               "developers/meta/sc-allocator",
+              "developers/meta/rust-nightly",
             ],
           },
           {
@@ -181,6 +182,11 @@ const sidebars = {
           },
         ],
       },
+      {
+        type: "category",
+        label: "Guidelines",
+        items: ["developers/guidelines/react-development"],
+      },
     ],
     "SDK and Tools": [
       "sdk-and-tools/overview",
@@ -242,6 +248,8 @@ const sidebars = {
         ],
       },
       "sdk-and-tools/notifier",
+      "sdk-and-tools/chain-simulator",
+      "sdk-and-tools/google-bigquery",
       "sdk-and-tools/devcontainers",
       {
         type: "category",
@@ -266,15 +274,41 @@ const sidebars = {
             label: "Javascript SDK",
             items: [
               "sdk-and-tools/sdk-js/sdk-js",
-              "sdk-and-tools/sdk-js/sdk-js-cookbook",
+              {
+                label: "Cookbook",
+                type: "doc",
+                id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+              },
+              {
+                type: "category",
+                label: "Cookbook (versioned)",
+                link: {
+                  type: "doc",
+                  id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
+                },
+                items: [
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                ]
+              },
               "sdk-and-tools/sdk-js/extending-sdk-js",
               "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
               "sdk-and-tools/sdk-js/sdk-js-migration-guides",
               "sdk-and-tools/sdk-js/sdk-js-signing-providers",
             ],
           },
-          "sdk-and-tools/erdgo",
-          "sdk-and-tools/erdjava",
+          {
+            type: "category",
+            label: "NestJS SDK",
+            items: [
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-auth",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-cache",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
+            ],
+          },
+          "sdk-and-tools/sdk-go",
+          "sdk-and-tools/mxjava",
           {
             type: "category",
             label: "dApp SDK",
@@ -288,7 +322,6 @@ const sidebars = {
             ],
           },
           "sdk-and-tools/erdcpp",
-          "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
           "sdk-and-tools/sdk-js-wallet-cli"
         ],
@@ -299,13 +332,15 @@ const sidebars = {
         items: [
           "sdk-and-tools/troubleshooting/troubleshooting",
           "sdk-and-tools/troubleshooting/rust-setup",
-          "sdk-and-tools/troubleshooting/ide-setup"
+          "sdk-and-tools/troubleshooting/ide-setup",
+          "sdk-and-tools/troubleshooting/multiplatform",
         ],
       }
     ],
     Wallet: [
       "wallet/overview",
       "wallet/web-wallet",
+      "wallet/xalias",
       "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger",
@@ -316,6 +351,7 @@ const sidebars = {
     Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     Validators: [
       "validators/overview",
+      "validators/staking-v4",
       "validators/system-requirements",
       {
         type: "category",

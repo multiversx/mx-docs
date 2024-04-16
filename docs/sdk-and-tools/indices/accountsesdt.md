@@ -11,7 +11,7 @@ This page describes the structure of the `accounts-esdt` index (Elasticsearch), 
 
 ## _id
 
-The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}` (example: `erd.._abcd-0123-01`).
+The `_id` field of this index is composed in this way: `{bech32address}-{tokenIdentifier}-{nonce}` (example: `erd..-abcd-0123-01`).
 
 [comment]: # (mx-context-auto)
 

@@ -14,7 +14,6 @@ Scenario files should end in `.scen.json`, where "scen" comes from "scenario". T
 
 On a side note, there is also an older format that is now deprecated, where test file names end in `.test.json`, but you shouldn't worry about it.
 
-
 [comment]: # (mx-context-auto)
 
 ## **Top level**

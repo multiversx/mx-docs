@@ -19,7 +19,6 @@ The system we present below works just as well on- and off-chain. Think of it as
 The more primitive way to perform these calls is to just use the API methods directly, to serialize arguments in code and to specify endpoints as strings. But this does not give the compiler a chance to verify the correctness of the calls, and is very limited in how much we configure the call. It also normally leads to a lot of code duplication. For this reason we recommend always using contract call syntax when formatting transactions.
 :::
 
-
 ---
 
 [comment]: # (mx-context-auto)
@@ -48,8 +47,6 @@ There are three ways of doing these calls:
 - importing the callee contract's source code and using the auto-generated proxy (recommended)
 - writing the proxy manually
 - manually serializing the function name and arguments (not recommended)
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -121,8 +118,6 @@ Importing a smart contract crate only works if both contracts use the exact fram
 In case the target contract is not under our control, it is often wiser to just manually compose the proxy of interest.
 :::
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Manually specified proxies
@@ -159,8 +154,6 @@ Manually declared proxies are no different from the auto-generated ones, so call
 fn callee_contract_proxy(&self, sc_address: ManagedAddress) -> callee_proxy::Proxy<Self::Api>;
 ```
 
-
-
 [comment]: # (mx-context-auto)
 
 ### No proxy
@@ -187,7 +180,6 @@ contract_call.push_raw_argument(arg2_encoded);
 ```
 
 <!-- TODO: we need slightly better syntax for the arguments. Was overlooked because we never used them like this -->
-
 
 [comment]: # (mx-context-auto)
 
@@ -223,7 +215,6 @@ fn my_payable_endpoint(&self, arg: BigUint) -> BigUint {
 
 More on payable endpoints and simple transfers [here](/developers/developer-reference/sc-payments). This section refers to transfers during contract calls only.
 
-
 [comment]: # (mx-context-auto)
 
 ### EGLD transfer
@@ -239,7 +230,6 @@ self.callee_contract_proxy(callee_sc_address)
 Note that this method returns a new type of object, `ContractCallWithEgld`, instead of `ContractCallNoPayment`. Having multiple contract call types has multiple advantages:
 - We can restrict at compile time what methods are available in the builder. For instance, it is possible to add ESDT transfers to `ContractCallNoPayment`, but not to `ContractCallWithEgld`. We thus no longer need to enforce at runtime the restriction that EGLD and ESDT cannot coexist. This restriction is also more immediately obvious to developers.
 - The contracts end up being smaller, because the compiler knows which kinds of transfers occur in the contract, and which do not. For instance, if a contract only ever transfers EGLD, there is not need for the code that prepares ESDT transfers in the contract. If the check had been done only at runtime, this optimisation would not have been possible.
-
 
 [comment]: # (mx-context-auto)
 
@@ -281,8 +271,6 @@ self.callee_contract_proxy(callee_sc_address)
 
 where `payments` is a `ManagedVec` of `EsdtTokenPayment`.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Mixed transfers
@@ -299,7 +287,6 @@ self.callee_contract_proxy(callee_sc_address)
 ```
 
 The most general such object is `ContractCallWithAnyPayment`, which can take any payment possible on the blockchain: either EGLD, or one or more ESDTs.
-
 
 ```rust
 let payments = self.call_value().any_payment();
@@ -363,7 +350,6 @@ There are several ways in which contract calls are launched from another contrac
 	- executed on same context.
 
 Out of these, the asynchronous calls and the promises need some additional configuration, whereas the other can be launched right away.
-
 
 [comment]: # (mx-context-auto)
 
@@ -440,7 +426,6 @@ Callbacks should be prevented from failing, at all costs. Failed callbacks canno
 For this reason we recommend keeping callback code as simple as possible.
 :::
 
-
 Callbacks can also receive payments, both EGLD and ESDT. They are always payable, there is never any need to annotate them with ``#[payable]`. They will receive payments if the called contract sends back tokens to the caller. In this case, they can query the received payments, just like a regular payable endpoint would.
 
 ```rust
@@ -455,7 +440,6 @@ fn callee_endpoint_callback(&self, #[call_result] result: ManagedAsyncCallResult
 :::note Note on implementation
 Even though, in theory, smart contract can only have ONE callback function, the Rust framework handles this for you by saving an ID for the callback function in storage when you fire the async call, and it knows how to retrieve the ID and call the correct function once the call returns.
 :::
-
 
 [comment]: # (mx-context-auto)
 
@@ -514,8 +498,6 @@ self.callbacks().callee_endpoint_callback(caller)
 ```
 
 You can then use `original_caller` in the callback like any other function argument.
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -583,8 +565,6 @@ The differences are:
 - We need to specify the gas for the call, because the execution of our transaction will continue and it needs to know how much gas it can keep.
 - We need to specify the amount of gas for the callback. This is the exact amount of gas reserved for the callback, irrespective of how much the target contract consumes.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Transfer-execute
@@ -601,8 +581,6 @@ self.callee_contract_proxy(callee_sc_address)
 	.with_gas_limit(gas_limit)
 	.transfer_execute();
 ```
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -637,7 +615,6 @@ We always need to specify the type that we want for the result. The framework wi
 The method `execute_on_dest_context` is by far the more common when performing synchronous calls. The other alternatives are:
 - `execute_on_dest_context_readonly` - enforces that the target contract does not change state, at blockchain level;
 - `execute_on_same_context` - useful for library-like contracts, all changes are saved in the caller instead of the called contract. 
-
 
 [comment]: # (mx-context-auto)
 
@@ -778,16 +755,13 @@ self.callee_contract_proxy()
 
 ## Contract deploy: execution
 
-
 [comment]: # (mx-context-auto)
 
 ### Deploy
 
-
 There are several ways to launch a contract deploy, different from a regular contract call.
 
 The simplest deploy operation we can perform is simply calling `deploy_contract`:
-
 
 ```rust
 let (new_address, result)  = self.callee_contract_proxy()
@@ -804,7 +778,6 @@ Contract upgrades, on the other hand, can be sent to a different shard, and are 
 The methods for executing contract deploys are as follows:
 - `.deploy_contract(code, code_metadata)` - deploys a new contract with the code given by the contract.
 - `.deploy_from_source(source_address, code_metadata)` - deploys a new contract with the same code as the code of the contract at `source_address`. The advantage is that the contract doesn't need to handle the new contract code, which could be quite a large data blob. This saves gas. It requires that we have the code already deployed somewhere else.
-
 
 [comment]: # (mx-context-auto)
 
