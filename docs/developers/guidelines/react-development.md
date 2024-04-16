@@ -13,11 +13,15 @@ However, in a big team and in a big project, small quirks and personal preferenc
 
 Given this, we have established some basic principles and a code style we would like to follow. These are, of course, not set in stone, and can be changed, given a valid reason.
 
+[comment]: # (mx-context-auto)
+
 ## Using Git
 
 :::important
 * We use **yarn** as a package manager.
 :::
+
+[comment]: # (mx-context-auto)
 
 ### Branch naming
 We use a system for **branch naming**: \[your initials\]/-[feature || fix || redesign\]/-\[2-3 words describing the branch\]  
@@ -27,8 +31,11 @@ We use a system for **branch naming**: \[your initials\]/-[feature || fix || red
 All branch names are lowercase
 :::
 
+[comment]: # (mx-context-auto)
 
 ## Basic principles
+
+[comment]: # (mx-context-auto)
 
 ### Imports and exports
 We import **lodash-specific functions** instead of the whole library for the tree shaking to take effect.
@@ -46,6 +53,7 @@ import get from 'lodash/get';`
 
 Do not use `default` exports. **Use named exports** instead.
 
+[comment]: # (mx-context-auto)
 
 ### Using conditionals
 Avoid using nested conditionals. **Use early returns** instead.
@@ -67,6 +75,8 @@ if (!anotherCondition) {
 // do stuff
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Defining function arguments
 If a function has more than 2 arguments and the second argument is not optional, **use an object** instead.
 
@@ -86,6 +96,8 @@ const myFunction = ({arg1, arg2, arg3}) => {
   // do stuff 
 }
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Validity checks
 We use **`!=` or `== null` verifications** for all variables, and `!myBool` for booleans only.
@@ -123,6 +135,8 @@ if (array?.length > 0){
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Folder structure
 For folder and file naming we're using the following convention:  
 **camelCase for all folders and files, except when it's a React Component or a Module Root Folder**, in which case we're using PascalCase.  
@@ -131,15 +145,18 @@ Also, for components' and containers' subcomponents, we create separate folders,
 Each folder that has an exportable component will have an **`index.tsx`** file for ease of import. <br/>
 Each folder that has an exportable file will have an **`index.ts`** file for ease of import.
 
+[comment]: # (mx-context-auto)
+
 ### File length convetions
 - < 100 lines of code - ✅ OK
 - 100 - 200 lines of code - try to split the file into smaller files
 - 200 - 300 lines of code - should be split the file into smaller files
 - \> 300 lines of code 🚫 DON'T
 
+[comment]: # (mx-context-auto)
+
 ### Naming conventions
 * When naming types, use the suffix **`Type`**. This helps us differentiate between types and components. When naming component props types, use MyComponentPropsType. When naming a type that is not a component, use MyFunctionType. When naming return values, use MyFunctionReturnType.
-
 
 **Try to extract at the top of the function all constants** such as strings, numbers, objects, instead of declaring this ad hoc inside the code.
 
@@ -159,17 +176,23 @@ if (x === PermissionsEnum.rejected && y === ACCESS_LEVEL)
 }
 ```
 
-
+[comment]: # (mx-context-auto)
 
 ## React guidelines
 
+[comment]: # (mx-context-auto)
+
 ### Using functional components
 We're using **functional components** for almost all new components, no classes, except when strictly necessary (e.g. error boundaries);
+
+[comment]: # (mx-context-auto)
 
 ### Using selectors
 We use `useSelector` and `useDispatch` hooks to connect to redux store via react-redux. 🚫 **No** `mapStateToProps` in functional components.
 
 We use **reselect** for memoizing complex state variables and composing those into optimized selectors that don't rerender the whole tree when the values don't change. This package needs to be added only when there is a performance bottleneck, either existing or expected.
+
+[comment]: # (mx-context-auto)
 
 ### Defining handlers
 
@@ -185,6 +208,8 @@ function handleClick(e) {
 //destructured before, instantly known to be from parent 
 <div onClick={onClick}/>`
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Number of props per component
 
@@ -227,6 +252,8 @@ If a component has more than 7 props, it should draw a red flag and be refactore
 <MyComplicatedComponent/> 
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Inline functions
 No **inline functions** in TSX.
 
@@ -240,6 +267,8 @@ const handlePress = () => {
 <TouchableOpacity onPress={handlePress}/>
 ```
 
+[comment]: # (mx-context-auto)
+
 ### Implicit values
 Use implicit `true` for **boolean** props
 
@@ -249,6 +278,8 @@ Use implicit `true` for **boolean** props
 // ✅ DO 
 <Card isFullscreen /> 
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Destructuring arguments
 Always destructure arguments, with minor exceptions.
@@ -308,6 +339,7 @@ const UserList = (users: UserType[]) {
 }
 ```
 
+[comment]: # (mx-context-auto)
 
 ### Over-optimization 
 No **`useCallback` or `useMemo` or `React.memo` unless really necessary**. Since the release of hooks, over-optimization has become a big problem.
@@ -325,6 +357,8 @@ const handlePress = useCallback(() => setPressed(true), []);
   {children} 
 </Context.Provider>
 ```
+
+[comment]: # (mx-context-auto)
 
 ### Conditionally rendered TSX
 
@@ -359,6 +393,8 @@ const mysteryBoxesContainer = mysteryBoxEnabled && <ProfileMysteryBoxesCard isCu
 </Container>
 ```
 
+[comment]: # (mx-context-auto)
+
 ## Rules for hooks
 
 1. **Fake modularization**:
@@ -385,6 +421,8 @@ const mysteryBoxesContainer = mysteryBoxEnabled && <ProfileMysteryBoxesCard isCu
     ```
 5. If a hook exports > 4 values, it should draw a red flag and be refactored. If it exports >= 7 values, it should be refactored immediately.
 
+[comment]: # (mx-context-auto)
+
 ## Modularisation
 
 Given the size of the project, we have agreed on a couple of modularisation techniques that will help us to:
@@ -396,6 +434,8 @@ Given the size of the project, we have agreed on a couple of modularisation tech
 There are a couple of rules that we agreed upon and will be enforced in all PRs, to try and maintain the code in a state that is easy to navigate, read, debug and change. We try to move as much mental load as we can to the develop who is writing the code, instead of the developer who is reading the code.
 
 Therefore, we agreed on the certain principles: 
+
+[comment]: # (mx-context-auto)
 
 ### Abstracting the logic away into hooks and functions
 
@@ -501,6 +541,8 @@ if (myClaimableAuctions != null && myClaimableAuctions.length > 0) {
 ```
 
 👆 Here, it's not worth moving the if logic inside a local variable, it would be redundant, as it's very easy to read through it.
+
+[comment]: # (mx-context-auto)
 
 ### New functions/hooks
 

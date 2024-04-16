@@ -13,7 +13,6 @@ While it would be ideal to have our infrastructure running on stable Rust, there
 
 This page is intended to provide a list of all these features that we use, and explain what it would take to renounce them and move to stable.
 
-
 [comment]: # (mx-context-auto)
 
 ## Nightly features

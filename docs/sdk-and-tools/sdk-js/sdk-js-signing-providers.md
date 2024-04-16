@@ -23,6 +23,8 @@ Generally speaking, a signing provider is a component that supports the followin
   - **Sign transactions**: while interacting with the dApp, the user might be asked to sign one or more transactions. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed transactions, ready to be broadcasted to the Network.
   - **Sign messages**: while interacting with the dApp, the user might be asked to sign an arbitrary message. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed message.
 
+[comment]: # (mx-context-auto)
+
 ## Implementations (available providers)
 
 For MultiversX dApps, the following signing providers are available:
