@@ -60,3 +60,8 @@ Merge Own Nodes
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+:::caution
+Whenever merging or converting direct staked keys into a staking provider pool, please be aware that the BLS key's signature will be altered automatically and re-staking an unbonded node is no longer possible.
+In other words, if you attempt this flow of operations unStakeNodes->unBondNodes for a merged key, make sure you call also the removeNodes operation. Otherwise, the stakeNodes or reStakeUnStakedNodes will fail.
+:::

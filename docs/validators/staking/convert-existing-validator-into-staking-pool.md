@@ -33,3 +33,8 @@ Fee: service fee as hundredths of percents, in hexadecimal encoding
 For example, a service fee of 37.45% is expressed by the integer 3745. This integer must then be encoded hexadecimally (3745 becomes "0ea1").
 
 After successfully deploying your new delegation smart contract, make sure you manage it with the [Delegation Manager](/validators/delegation-manager).
+
+:::caution
+Whenever merging or converting direct staked keys into a staking provider pool, please be aware that the BLS key's signature will be altered automatically and re-staking an unbonded node is no longer possible.
+In other words, if you attempt this flow of operations unStakeNodes->unBondNodes for a merged key, make sure you call also the removeNodes operation. Otherwise, the stakeNodes or reStakeUnStakedNodes will fail. 
+:::
