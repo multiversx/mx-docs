@@ -1,0 +1,249 @@
+---
+id: execution-events
+title: Execution Events
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+The execution events are generated in case of transaction with smart contract call or ESDT transaction or built-in function calls.
+
+
+### Complete transaction event
+
+The `completedTxEvent` event is generated when the execution of a transaction is completed,
+indicating that the generated smart contract results have also been executed.
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | completedTxEvent                                                                                                           |
+| address    | the address that emitted the event                                                                                              |
+| topics     | empty |
+| data       | empty                                                                                                                  |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "identifier": "completedTxEvent",
+    "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+    "topics": [],
+    "data": null
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+### Informative event
+
+An informative event is generated after the execution of a  smart contract call transaction,
+which includes data about the execution.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | writeLog                                                                                                           |
+| address    | the address that emitted the event                                                                                              |
+| topics     | empty |
+| data       | returned code after execution base64 encoded                                                                                                           |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "identifier": "writeLog",
+    "address": "erd1272et87h3sa7hlg5keuswh50guz2ngmd6lhmjxkwwu0ah6gdds5qhka964",
+    "topics": [],
+    "data": "QDZmNmI="
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+
+### Signal error event
+
+The `signalError` event is generated when a transaction involving a smart contract call has
+been executed but encountered an error in the process.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | signalError                                                                                                           |
+| address    | the address that emitted the event                                                                                              |
+| topics     | `topics[0]` - caller address bytes base64 encoded <br/> `topics[1]` - the execution error message base64 encoded  |
+| data       | returned code after execution base64 encoded                                                                                                           |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "identifier": "signalError",
+    "address": "erd1qqqqqqqqqqqqqpgqhdj69t0f687rl85s5gd4x6r2f4vu6qwcs70qevwuqx",
+    "topics": [
+        "+s3dM1epYprNjMgbgJ2P80NvWk+jc3zddU+93t8oOow=",
+        "RW5kcG9pbnQgY2FuIG9ubHkgYmUgY2FsbGVkIGJ5IG93bmVy"
+    ],
+    "data": "QDc1NzM2NTcyMjA2NTcyNzI2Zjcy"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Internal errors event
+
+The `internalVMErrors` event is generated when a transaction involving multiple smart contract calls has
+been executed but encountered an error in the process.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | internalVMErrors                                                                                                           |
+| address    | the address that emitted the event                                                                                              |
+| topics     | `topics[0]` - caller address bytes base64 encoded <br/> `topics[1]` - the execution error message base64 encoded  |
+| data       | a message with more details about the encountered error base64 encoded                                                                                                           |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "identifier": "internalVMErrors",
+    "address": "erd1ltxa6v6h493f4nvveqdcp8v07dpk7kj05deheht4f77aaheg82xq680mlx",
+    "topics": [
+        "AAAAAAAAAAAFALtloq3p0fw/npCiG1Noak1ZzQHYh54=",
+        "YnV5Q2FyZHM="
+    ],
+    "data": "CglydW50aW1lLmdvOjExNzIgW2Vycm9yIHNpZ25hbGxlZCBieSBzbWFydGNvbnRyYWN0XSBbYnV5Q2FyZHNdCglydW50aW1lLmdvOjExNzIgW2Vycm9yIHNpZ25hbGxlZCBieSBzbWFydGNvbnRyYWN0XSBbYnV5Q2FyZHNdCglydW50aW1lLmdvOjExNjkgW0VuZHBvaW50IGNhbiBvbmx5IGJlIGNhbGxlZCBieSBvd25lcl0="
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Transfer value only event
+
+The `transferValueOnly` event is generated when a transaction involving multiple smart contract calls has been executed,
+and during the execution, some EGLD tokens were transferred from one smart contract to another.
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                                                  |
+|------------|------------------------------------------------------------------------------------------------------------------------|
+| identifier | transferValueOnly                                                                                                           |
+| address    | the destination address                                                                                          |
+| topics     | `topics[0]` - sender address bytes base64 encoded <br/> `topics[1]` - destination address bytes base64 encoded  <br/> `topics[2]` - transferred value bytes base64 encoded   |
+| data       | empty                                                                                                           |
+
+</TabItem>
+<TabItem value="Example">
+
+```json
+{
+    "identifier": "transferValueOnly",
+    "address": "erd1qqqqqqqqqqqqqpgqd77fnev2sthnczp2lnfx0y5jdycynjfhzzgq6p3rax",
+    "topics": [
+        "AAAAAAAAAAAFADz3VNyYTcz4h9Y/rLRPPr0jIp5kL5w=",
+        "AAAAAAAAAAAFAG+8meWKgu88CCr80meSkmkwSck3EJA=",
+        "9DzAfFqMRw=="
+    ]
+    "data": "",
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+:::important Important
+From the `rc/v1.6.0` release onward, the `transferValueOnly` will undergo a modification once the `ScToScLogEventEnableEpoch` flag is activated as follows:
+
+
+<Tabs
+    defaultValue="Structure"
+    values={[
+        {label: 'Structure', value: 'Structure'},
+        {label: 'Example', value: 'Example'},
+    ]}
+>
+<TabItem value="Structure">
+
+| Field      | Value                                                                                 |
+|------------|---------------------------------------------------------------------------------------|
+| identifier | transferValueOnly                                                                  |
+| address    | the sender address                                                           |
+| topics     | `topics[0]` - transferred value bytes base64 encoded <br/> `topics[1]` - destination address bytes base64 encoded  |
+| data       | empty                                                                                 |
+
+</TabItem>
+<TabItem  value="Example">
+
+```json
+{
+    "identifier": "transferValueOnly",
+    "address": "erd1qqqqqqqqqqqqqpgqd77fnev2sthnczp2lnfx0y5jdycynjfhzzgq6p3rax",
+    "topics": [
+        "AQ==",
+        "rwBuzoNHMQTqkff/VgXEwXQvchSh9GvimeMO4uhwcWk="
+    ],
+    "data": null
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::
+

@@ -55,12 +55,7 @@ Automated testing is exceptionally important for the development of smart contra
 
 The best way to build on MultiversX is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
 
-MultiversX IDE is an extension for Visual Studio Code that offers development support for MultiversX Smart Contracts.
-
-MultiversX IDE supports the following programming languages:
-
-- Rust - recommended. For Rust, the IDE also provides a step-by-step debugging experience, via multiversx-sc-scenario and CodeLLDB.
-- C / C++
+MultiversX IDE is an extension for Visual Studio Code that offers development support for MultiversX Smart Contracts written in Rust.
 
 Follow the video guide for a detailed explanation about how to get started.
 
@@ -77,13 +72,13 @@ The source code of each smart contract requires its own folder. You'll need to c
 ```bash
 mkdir -p ~/MultiversX/SmartContracts
 cd ~/MultiversX/SmartContracts
-mxpy contract new crowdfunding --template adder
+mxpy contract new --name crowdfunding --template empty
 code crowdfunding
 ```
 
 You may choose any location you want for your smart contract. The above is just an example. Either way, now that you are in the folder dedicated to the smart contract, we can begin.
 
-Straight away you get a project that works - `mxpy` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points. The `adder` template is pretty much the simplest contract you can imagine.
+Straight away you get a project that works - `mxpy` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points.
 
 The last line also opens the new project in a new VS Code instance.
 
@@ -91,21 +86,21 @@ Let's have a quick look around the project.
 
 Open `Cargo.toml` in the text editor of your choice, and add the following content:
 
-```toml,file=Cargo.toml
+```toml title=Cargo.toml
 [package]
 name = "crowdfunding"
-version = "0.0.1"
+version = "0.0.0"
 authors = [ "you",]
 edition = "2018"
 
 [lib]
-path = "src/crowdfunding_main.rs"
+path = "src/crowdfunding.rs"
 
 [dependencies.multiversx-sc]
-version = "0.39.0"
+version = "0.43.0"
 
 [dev-dependencies.multiversx-sc-scenario]
-version = "0.39.0"
+version = "0.43.0"
 
 ```
 
@@ -113,16 +108,16 @@ Let's see what this means:
 
 - The package is unsurprisingly named `crowdfunding`, and has the version `0.0.1`. You can set any version you like, just make sure it has 3 numbers separated by dots. It's a requirement.
 - This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the MultiversX Network, you'll need 3 special and very helpful packages, developed by MultiversX.
-- The file `src/crowdfunding_main.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
+- The file `src/crowdfunding.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
 - The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
 [comment]: # (mx-context-auto)
 
 ## **Step 2: write the code**
 
-With the structure in place, you can now write the code and build it. Open `src/lib.rs` , remove the existing `Adder` code and insert the following:
+With the structure in place, you can now write the code and build it. Open `src/crowdfunding.rs` , remove the existing `Empty` code and insert the following:
 
-```rust,file=hello-world.rs
+```rust title=hello-world.rs
 #![no_std]
 
 multiversx_sc::imports!();
@@ -175,7 +170,7 @@ The `init` method of the Crowdfunding smart contract is currently empty. We'll a
 
 ## **Step 3: the build**
 
-After creating the file `src/crowdfunding_main.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
+After creating the file `src/crowdfunding.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
 
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 
@@ -189,9 +184,7 @@ When the command completes, a new folder will appear: `output`. This folder now 
 
 The following can be safely deleted, as they are not important for this contract:
 
-- the `snippets.sh` file
 - the `tests` folder
-- the `interaction` folder
 
 The structure of your folder should be like this (output printed by the command `tree -L 3`):
 
@@ -208,7 +201,7 @@ The structure of your folder should be like this (output printed by the command 
 ├── scenarios
 │   └── crowdfunding.scen.json
 ├── src
-│   └── crowdfunding_main.rs
+│   └── crowdfunding.rs
 └── wasm
     ├── Cargo.toml
     └── src

@@ -47,7 +47,7 @@ Usage:
 The `db-lookup-extension` operation mode will change the node's configuration in order to support extended databases that are 
 able to store more data that is to be used in further Rest API requests, such as logs, links between blocks and epoch, and so on.
 
-For example, the proxy's `hyperblock` endpoint relies on the fact that it's observers have this setting enabled. Other examples 
+For example, the proxy's `hyperblock` endpoint relies on the fact that its observers have this setting enabled. Other examples 
 are `/network/esdt/supply/:tokenID` or `/transaction/:txhash?withResults=true`. 
 
 [comment]: # (mx-context-auto)
@@ -65,14 +65,14 @@ the ability to query the balance or the nonce of an address at blocks that were 
 
 [comment]: # (mx-context-auto)
 
-### Lite observers
+### Snapshotless observers
 
 Usage:
 ```
-./node --operation-mode lite-observer
+./node --operation-mode snapshotless-observer
 ```
 
-The `lite-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests 
+The `snapshotless-observer` operation mode will change the node's configuration in order to make it efficient for real-time requests 
 by disabling the trie snapshotting mechanism and making sure that older data is removed. 
 
 A use-case for such an observer would be serving live balances requests, or broadcasting transactions, eliminating the costly operations 

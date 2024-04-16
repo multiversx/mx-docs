@@ -15,13 +15,13 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-First and foremost, you need to have mxpy installed: https://docs.multiversx.com/sdk-and-tools/sdk-py/installing-mxpy/. If you already have mxpy installed, make sure to update it to the latest version, using the same instructions as for the installation.
+First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy/). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
 [comment]: # (mx-context-auto)
 
 ### mxpy
 
-We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check here for more detailed explanations regarding what each command does: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/
+We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check [here](/sdk-and-tools/sdk-py/smart-contract-interactions/) for more detailed explanations regarding what each command does.
 
 [comment]: # (mx-context-auto)
 
@@ -69,7 +69,7 @@ Both can be easily installed from the "Extensions" menu in VSCode.
 Run the following command in the folder in which you want your smart contract to be created:
 
 ```
-mxpy contract new staking-contract --template empty
+mxpy contract new --name staking-contract --template empty
 ```
 
 Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
@@ -141,7 +141,7 @@ pub trait StakingContract {
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
-        let payment_amount = self.call_value().egld_value();
+        let payment_amount = self.call_value().egld_value().clone_value();
         require!(payment_amount > 0, "Must pay more than 0");
 
         let caller = self.blockchain().get_caller();
@@ -161,7 +161,7 @@ pub trait StakingContract {
 
 `require!` is a macro that is a shortcut for `if !condition { signal_error(msg) }`. Signalling an error will terminate the execution and revert any changes made to the internal state, including token transfers from and to the SC. In this case, there is no reason to continue if the user did not pay anything.
 
-We've also added #[view] annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations here: https://docs.multiversx.com/developers/developer-reference/sc-annotations/
+We've also added `#[view]` annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations [here](/developers/developer-reference/sc-annotations/).
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
@@ -170,7 +170,7 @@ Also, if you're confused about some of the functions used or the storage mappers
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
 
-Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.multiversx.com/developers/best-practices/biguint-operations/
+Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.multiversx.com/developers/best-practices/biguint-operations/.
 
 Secondly, the `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
 
@@ -191,7 +191,7 @@ pub trait StakingContract {
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
-        let payment_amount = self.call_value().egld_value();
+        let payment_amount = self.call_value().egld_value().clone_value();
         require!(payment_amount > 0, "Must pay more than 0");
 
         let caller = self.blockchain().get_caller();
@@ -218,27 +218,21 @@ Every smart contract needs to have a function annotated with `#[init]`. This fun
 
 [comment]: # (mx-context-auto)
 
-## Trying it out on devnet
-
-To deploy and interact with the contract, we need to write some snippets. Create an `interactions` folder, and inside it, a `snippets.sh` file. This is the standard for using snippets, and this way, they're also recognized by the MultiversX IDE extension. More on this in a bit. Your new folder structure should look like this:  
-![img](/developers/staking-contract-tutorial-img/folder_structure_3.png)
-
-[comment]: # (mx-context-auto)
-
 ### Creating a devnet wallet
 
 :::note  
 You can skip this section if you already have a devnet wallet setup.
 :::
 
-Let's create a devnet wallet. Go to https://devnet-wallet.multiversx.com/, and select "create wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
+Let's create a devnet wallet. Access the [Web Wallet](https://devnet-wallet.multiversx.com/), and select "create new wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
 Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 
 ```
-mxpy --verbose wallet derive ./tutorialKey.pem --mnemonic
+mkdir -p ~/MyTestWallets
+mxpy wallet convert --in-format=raw-mnemonic --out-format=pem --outfile=~/MyTestWallets/tutorialKey.pem
 ```
 
 :::note  
@@ -247,22 +241,17 @@ You have to press "space" between the words, not "enter"!
 
 [comment]: # (mx-context-auto)
 
-### Deploying the contract
+### Deploying the contract on devnet
 
-Now that we've created a wallet, it's time to deploy our contract. Open your `snippets.sh` file, and add the following:
+Now that we've created a wallet, it's time to deploy our contract. **Make sure you build the contract before deploying it**. Open a command line and run the following command:
 
 ```bash
-USER_PEM="~/Downloads/tutorialKey.pem"
-PROXY="https://devnet-gateway.multiversx.com"
-CHAIN_ID="D"
 
-deploy() {
-    mxpy --verbose contract deploy --project=${PROJECT} \
-    --recall-nonce --pem=${USER_PEM} \
+    mxpy --verbose contract deploy --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
+    --recall-nonce --pem=~/Downloads/tutorialKey.pem \
     --gas-limit=10000000 \
-    --send --outfile="deploy-devnet.interaction.json" \
-    --proxy=${PROXY} --chain=${CHAIN_ID} || return
-}
+    --send --outfile="deploy-devnet.interaction.json" --wait-result \
+    --proxy=https://devnet-gateway.multiversx.com --chain=D
 ```
 
 :::note  
@@ -271,12 +260,7 @@ If you wanted to use testnet, the proxy would be "https://testnet-gateway.multiv
 More details can be found [here](/developers/constants/).
 :::
 
-The only thing you need to edit is the USER_PEM variable with the previously created PEM file's path.
-
-To run this snippet, we're going to use the MultiversX IDE extension again. Open the extension in VSCode from the left-hand menu, right-click on the contract name, and select the `Run Contract Snippet` option. This should open a menu in at the top:  
-![img](/developers/staking-contract-tutorial-img/snippet.png)
-
-For now, we only have one option, as we only have a single function in our file, but any bash function we write in the snippets.sh file will appear there. Now, select the deploy option and let's deploy the contract.
+The things you need to edit are the CLI parameters `--pem` and `--bytecode` with your local paths.
 
 [comment]: # (mx-context-auto)
 
@@ -332,7 +316,7 @@ Make sure you selected "devnet" and input your address! It might take a bit depe
 
 ### Deploying the contract, second try
 
-Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` snippet again and let's see the results. Make sure you save the contract address. mxpy will print it in the console for you:
+Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` command again and let's see the results. Make sure you save the contract address. mxpy will print it in the console for you:
 
 ```bash
 INFO:cli.contracts:Contract address: erd1qqqqqqqqqqqqq...
@@ -353,35 +337,18 @@ This is NOT an error. This simply means you provided way more gas than needed, s
 
 ## The first stake
 
-Let's add a snippet for the staking function:
+Let's call the stake function:
 
 ```bash
-USER_PEM="~/Downloads/tutorialKey.pem"
-PROXY="https://devnet-gateway.multiversx.com"
-CHAIN_ID="D"
-
-SC_ADDRESS=erd1qqqqqqqqqqqqq...
-STAKE_AMOUNT=1
-
-deploy() {
-    mxpy --verbose contract deploy --project=${PROJECT} \
-    --recall-nonce --pem=${USER_PEM} \
+mxpy --verbose contract call ${SC_ADDRESS}... \
+    --proxy=https://devnet-gateway.multiversx.com --chain=D \
+    --send --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=10000000 \
-    --send --outfile="deploy-devnet.interaction.json" \
-    --proxy=${PROXY} --chain=${CHAIN_ID} || return
-}
-
-stake() {
-    mxpy --verbose contract call ${SC_ADDRESS} \
-    --proxy=${PROXY} --chain=${CHAIN_ID} \
-    --send --recall-nonce --pem=${USER_PEM} \
-    --gas-limit=10000000 \
-    --value=${STAKE_AMOUNT} \
+    --value=1 \
     --function="stake"
-}
 ```
 
-To pay EGLD, the `--value` argument is used, and, as you can guess, the `--function` argument is used to select which endpoint we want to call.
+To pay EGLD, the `--value` argument is used, and, as you can guess, the `--function` argument is used to select which endpoint we want to call. Make sure to adjust the first argument of the contract call command, with respect to the address of your previously deployed contract.
 
 We've now successfully staked 1 EGLD... or have we? If we look at the transaction, that's not quite the case:  
 ![img](/developers/staking-contract-tutorial-img/first_stake.png)
@@ -402,8 +369,8 @@ Since we know EGLD has 18 decimals, we have to simply multiply 0.5 by 10^18, whi
 
 ## Actually staking 1 EGLD
 
-To do this, we simply have to update our `STAKE_AMOUNT` variable in the snippet. This should be:
-`STAKE_AMOUNT=1000000000000000000`.
+To do this, we simply have to update the value passed when we call the stake function. This should be:
+`value=1000000000000000000`.
 
 Now let's try staking again:  
 ![img](/developers/staking-contract-tutorial-img/second_stake.png)
@@ -412,17 +379,13 @@ Now let's try staking again:
 
 ## Querying the view functions
 
-To perform smart contract queries, we also use mxpy. Let's add the following to our snippet file:
+To perform smart contract queries, we also use mxpy. Run the next command in a terminal:
 
 ```bash
-USER_ADDRESS=erd1...
-
-getStakeForAddress() {
     mxpy --verbose contract query ${SC_ADDRESS} \
-    --proxy=${PROXY} \
+    --proxy=https://devnet-gateway.multiversx.com \
     --function="getStakingPosition" \
     --arguments ${USER_ADDRESS}
-}
 ```
 
 :::note
@@ -451,11 +414,9 @@ We get the expected amount, 1 EGLD, plus the initial 10^-18 EGLD we sent.
 Now let's also query the stakers list:
 
 ```bash
-getAllStakers() {
     mxpy --verbose contract query ${SC_ADDRESS} \
-    --proxy=${PROXY} \
+    --proxy=https://devnet-gateway.multiversx.com \
     --function="getStakedAddresses"
-}
 ```
 
 Running this function should yield a result like this:
@@ -477,17 +438,15 @@ getAllStakers
 
 ### Converting erd1 addresses to hex
 
-The smart contracts never work with the erd1 address format, but rather with the hex format. This is NOT an ASCII to hex conversion. This is a bech32 to ASCII conversion.
+The smart contracts never work with the `erd1...` address format, but rather with the hex format. This is NOT an ASCII to hex conversion. This is a bech32 to ASCII conversion.
 
 But then, why did the previous query work?
 
 ```bash
-getStakeForAddress() {
     mxpy --verbose contract query ${SC_ADDRESS} \
     --proxy=${PROXY} \
     --function="getStakingPosition" \
     --arguments ${USER_ADDRESS}
-}
 ```
 
 This is because mxpy automatically detected and converted the erd1 address to hex. To perform those conversions yourself, you can also use mxpy:
@@ -658,14 +617,12 @@ Now that we've added the unstake function, let's test it out on devnet. Build yo
 ```bash
 UNSTAKE_AMOUNT=500000000000000000
 
-unstake() {
-    mxpy --verbose contract call ${SC_ADDRESS} \
-    --proxy=${PROXY} --chain=${CHAIN_ID} \
-    --send --recall-nonce --pem=${USER_PEM} \
+mxpy --verbose contract call ${SC_ADDRESS} \
+    --proxy=https://devnet-gateway.multiversx.com --chain=D \
+    --send --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=10000000 \
     --function="unstake" \
     --arguments ${UNSTAKE_AMOUNT}
-}
 ```
 
 Now run this function, and you'll get this result:  
@@ -677,17 +634,15 @@ Now run this function, and you'll get this result:
 
 ## Upgrading smart contracts
 
-Since we've added some new functionality, we also want to update the currently deployed implementation. Add the upgrade snippet to your snippets.sh and run it:
+Since we've added some new functionality, we also want to update the currently deployed implementation. **Build the contract** and then run the following command:
 
 ```bash
-upgrade() {
     mxpy --verbose contract upgrade ${SC_ADDRESS} \
-    --project=${PROJECT} \
-    --recall-nonce --pem=${USER_PEM} \
+    --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
+    --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=20000000 \
     --send --outfile="upgrade-devnet.interaction.json" \
-    --proxy=${PROXY} --chain=${CHAIN_ID} || return
-}
+    --proxy=https://devnet-gateway.multiversx.com --chain=D
 ```
 
 :::note
@@ -726,8 +681,8 @@ Let's also test the optional argument functionality. Remove the `--arguments` li
 ```bash
 unstake() {
     mxpy --verbose contract call ${SC_ADDRESS} \
-    --proxy=${PROXY} --chain=${CHAIN_ID} \
-    --send --recall-nonce --pem=${USER_PEM} \
+    --proxy=https://devnet-gateway.multiversx.com --chain=D \
+    --send --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
     --gas-limit=10000000 \
     --function="unstake"
 }
@@ -920,9 +875,10 @@ Then, we've staked the user's entire balance, unstaked half, then unstaked fully
 ### Running the test
 
 To run a test, you can use click on the `Run Test` button from under the test name.
+
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
 
-There is also a `Debug` button, which can be used to debug smart contracts. More details on that here: https://docs.multiversx.com/developers/developer-reference/sc-debugging/
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that [here](/developers/developer-reference/sc-debugging/).
 
 Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
 
@@ -981,7 +937,7 @@ We've also added `TypeAbi`, since this is required for ABI generation. ABIs are 
 
 Additionally, we've added `PartialEq` and `Debug` derives, for easier use within tests. This will not affect performance in any way, as the code for these is only used during testing/debugging. `PartialEq` allows us to use `==` for comparing instances, while `Debug` will pretty-print the struct, field by field, in case of errors.
 
-If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/developer-reference/serialization-format):
+If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/data/serialization-overview):
 
 [comment]: # (mx-context-auto)
 
@@ -1076,7 +1032,7 @@ pub trait StakingContract {
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
-        let payment_amount = self.call_value().egld_value();
+        let payment_amount = self.call_value().egld_value().clone_value();
         require!(payment_amount > 0, "Must pay more than 0");
 
         let caller = self.blockchain().get_caller();
@@ -1354,7 +1310,7 @@ For this reason, we have to add some additional checks. The endpoint implementat
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
-        let payment_amount = self.call_value().egld_value();
+        let payment_amount = self.call_value().egld_value().clone_value();
         require!(payment_amount > 0, "Must pay more than 0");
 
         let caller = self.blockchain().get_caller();
@@ -1433,6 +1389,18 @@ Running the test after the suggested changes should work just fine now:
 ```
 running 1 test
 test stake_unstake_test ... ok
+```
+
+In order to apply these changes on devnet, you should build the contract and then upgrade it. Because we added the APY on init now for the upgrade we will have to pass it as an argument.
+
+```bash
+    mxpy --verbose contract upgrade ${SC_ADDRESS} \
+    --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
+    --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
+    --gas-limit=20000000 \
+    --send --outfile="upgrade-devnet.interaction.json" \
+    --proxy=https://devnet-gateway.multiversx.com --chain=D \
+    --arguments 100
 ```
 
 [comment]: # (mx-context-auto)

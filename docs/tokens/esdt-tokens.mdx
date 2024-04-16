@@ -64,8 +64,6 @@ IssuanceTransaction {
           "@" + <"canFreeze" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canWipe" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canPause" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
-          "@" + <"canMint" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
-          "@" + <"canBurn" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canChangeOwner" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canUpgrade" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded> +
           "@" + <"canAddSpecialRoles" hexadecimal encoded> + "@" + <"true" or "false" hexadecimal encoded>
@@ -218,7 +216,6 @@ Where the constants represent:
 
 - `MIN_GAS_LIMIT` - the minimum gas limit of a transaction. Each transaction will have at least this cost. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
 - `GAS_PER_DATA_BYTE` - the amount of gas to be used for each character of the data field. Can be fetched from [here](/sdk-and-tools/rest-api/network/#get-network-configuration).
-- `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.multiversx.com/network/gas-configs).
 - `ESDT_TRANSFER_FUNCTION_COST` - the cost of the `ESDTTransfer` function. Can be fetched from [here](https://gateway.multiversx.com/network/gas-configs).
 
 The current values of these constants are:
@@ -388,6 +385,72 @@ Using the transaction in the example above, the receiver should be credited `12 
 
 [comment]: # (mx-context-auto)
 
+## **Multiple tokens transfer to a smart contract**
+
+Smart contracts may hold ESDT tokens and perform any kind of transaction with them, just like any Account. However, there are a few extra ESDT features dedicated to smart contracts:
+
+**Payable versus non-payable contract**: upon deployment, a smart contract may be marked as _payable_, which means that it can receive either EGLD or ESDT tokens without calling any of its methods (i.e. a simple transfer). But by default, all contracts are _non-payable_, which means that simple transfers of EGLD or ESDT tokens will be rejected, unless they are method calls.
+
+**ESDT transfer with method invocation**: it is possible to send ESDT tokens to a contract _as part of a method call_, just like sending EGLD as part of a method call. A transaction that sends ESDT tokens to a contract while also calling one of its methods has the following form:
+
+```rust
+MultiTokensTransferWithCallTransaction {
+    Sender: <account address of the sender>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 1_100_000 * num tokens + <an appropriate amount for the method call>
+    Data: "MultiESDTNFTTransfer" +
+          "@" + <account address of the smart contract bytes in hexadecimal encoding> +
+          "@" + <number of tokens to transfer in hexadecimal encoding> +
+          "@" + <token 0 identifier in hexadecimal encoding> +
+          "@" + <token 0 nonce in hexadecimal encoding> +
+          "@" + <token 0 quantity to transfer in hexadecimal encoding> +
+          "@" + <token 1 identifier in hexadecimal encoding> +
+          "@" + <token 1 nonce in hexadecimal encoding> +
+          "@" + <token 1 quantity to transfer in hexadecimal encoding> +
+          "@" + <name of method to call in hexadecimal encoding> +
+          "@" + <first argument of the method in hexadecimal encoding> +
+          "@" + <second argument of the method in hexadecimal encoding> +
+          ...
+}
+```
+
+:::tip
+Each token requires the token identifier, the nonce and the quantity to transfer.
+
+For fungible tokens (regular ESDT) the nonce has to be 0 (`00` hex-encoded)
+:::
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+Example:
+
+We send tokens and call the 'transfer' method on the smart contract. We also define the receiver as the argument of the transfer method.
+
+```rust
+MultiTokensTransferWithCallTransaction {
+    Sender: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
+    Receiver: erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
+    Value: 0
+    GasLimit: 8_200_000
+    Data: "MultiESDTNFTTransfer" +
+          "@0000000000000000050032a3dc7511d6062c6a3b90ac02d8c3f474ef71c65008" + // smart contract address: erd1qqqqqqqqqqqqqpgqx23acag36crzc63mjzkq9kxr736w7uwx2qyqcmq7ar
+          "@02" +  // 2 tokens to transfer
+          "@414c432d363235386432" +   // ALC-6258d2
+          "@00" +  // 0 -> the nonce is 0 for regular ESDT tokens
+          "@0c" +  // 12 -> value to transfer
+          "@5346542d317134723869" +  // SFT-1q4r8i
+          "@01" +  // 1 -> the nonce of the SFT
+          "@03" +  // 3 -> the quantity to transfer
+          "@7472616e73666572" + // method name is 'transfer'
+          "@f69adc800dca9e3ba3328d17ded25f3a8f328aa1e0e8a347f34ce5ea3aac5008" // there is one argument, the address: 'erd176ddeqqde20rhgej35taa5jl828n9z4pur52x3lnfnj75w4v2qyqa230vx'
+}
+```
+
+Sending a transaction containing both an ESDT transfer _and a method call_ allows non-payable smart contracts to receive tokens as part of the call, as if it were EGLD. The smart contract may use dedicated API functions to inspect the name of the received ESDT tokens and their amount, and react accordingly.
+
+[comment]: # (mx-context-auto)
+
 ## **Transfers done programmatically**
 
 The [Rust framework](https://github.com/multiversx/mx-sdk-rs) exposes several ways in which you can transfer ESDT tokens. For example, in order to transfer _amount_ of _esdt_token_name_ to _address_, one would do the following:
@@ -408,8 +471,6 @@ The Account which submitted the issuance request for a custom token automaticall
 
 Every ESDT token has a set of properties which control what operations are possible with it. See [Management operations](/tokens/esdt-tokens#management-operations) below for the operations controlled by them. The properties are:
 
-- `canMint` - more units of this token can be minted by the token manager after initial issuance, increasing the supply
-- `canBurn` - users may "burn" some of their tokens, reducing the supply
 - `canPause` - the token manager may prevent all transactions of the token, apart from minting and burning
 - `canFreeze` - the token manager may freeze the token balance in a specific account, preventing transfers to and from that account
 - `canWipe` - the token manager may wipe out the tokens held by a frozen account, reducing the supply
@@ -432,27 +493,7 @@ The manager of an ESDT token has a number of operations at their disposal, which
 On Mainnet, starting with epoch 432, global mint is disabled so one has to use local mint instead.  
 :::
 
-The manager of an ESDT token can increase the total supply by sending to the Metachain a transaction of the following form:
-
-```rust
-MintTransaction {
-    Sender: <account address of the token manager>
-    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 0
-    GasLimit: 60000000
-    Data: "mint" +
-          "@" + <token identifier in hexadecimal encoding> +
-          "@" + <supply to mint in hexadecimal encoding>
-}
-```
-
-_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
-
-Following this transaction, the total supply of tokens is increased by the new supply specified in the Data field, and the manager receives that amount of tokens into their balance.
-
-This operation requires that the option `canMint` is set to `true` for the token.
-
-Alternatively, an account with the `ESDTRoleLocalMint` role set can perform a local mint:
+An account with the `ESDTRoleLocalMint` role set can perform a local mint:
 
 ```rust
 LocalMintTransaction {
@@ -476,27 +517,9 @@ _For more details about how arguments have to be encoded, check [here](/develope
 On Mainnet, starting with epoch 432, global burn is disabled so one has to use local burn instead.
 :::
 
-Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens. Burning is performed by sending a transaction to the Metachain, of the form:
+Anyone that holds an amount of ESDT tokens may burn it at their discretion, effectively losing them permanently. This operation reduces the total supply of tokens, and cannot be undone, unless the token manager mints more tokens.
 
-```rust
-BurnTransaction {
-    Sender: <account address of a token holder>
-    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
-    Value: 0
-    GasLimit: 60000000
-    Data: "ESDTBurn" +
-          "@" + <token identifier in hexadecimal encoding> +
-          "@" + <supply to burn in hexadecimal encoding>
-}
-```
-
-_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
-
-Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
-
-This operation requires that the option `canBurn` is set to `true` for the token.
-
-Alternatively, an account with the `ESDTRoleLocalBurn` role set can perform a local burn:
+An account with the `ESDTRoleLocalBurn` role set can perform a local burn:
 
 ```rust
 LocalBurnTransaction {
@@ -509,6 +532,8 @@ LocalBurnTransaction {
           "@" + <supply to burn in hexadecimal encoding>
 }
 ```
+
+Following this transaction, the token holder loses from the balance the amount of tokens specified by the Data.
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
@@ -754,7 +779,7 @@ UpgradingTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true` and the property `canBurn` set to `false`, but Alice, the token manager, wants to change these properties to `false` and `true`, respectively. The transaction that would achieve this change is:
+As an example, assume that the "AliceTokens" discussed in earlier sections has the property `canWipe` set to `true`, but Alice, the token manager, wants to change these properties to `false`. The transaction that would achieve this change is:
 
 ```rust
 UpgradingTransaction {
@@ -766,8 +791,6 @@ UpgradingTransaction {
           "@414c432d363235386432" + # ALC-6258d2
           "@63616e57697065" +       # canWipe
           "@66616c7365" +           # false
-          "@63616e4275726e" +       # canBurn
-          "@74727565"               # true
 }
 ```
 

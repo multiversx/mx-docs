@@ -32,62 +32,110 @@ Path Parameters
 
 | Param | Required                                  | Type     | Description               |
 | ----- | ----------------------------------------- | -------- | ------------------------- |
-| nonce | <span class="text-danger">REQUIRED</span> | `number` | The Block nonce (height). |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
 
 </TabItem>
 <TabItem value="Response">
 
 🟢 200: OK
 
-Block details retrieved successfully.
+Address details retrieved successfully.
 
 ```json
 {
-  "hyperblock": {
-    "nonce": 185833,
-    "round": 186582,
-    "hash": "6a33...",
-    "prevBlockHash": "aa7e...",
-    "epoch": 12,
-    "numTxs": 1,
-    "shardBlocks": [
-      {
-        "hash": "cba4...",
-        "nonce": 186556,
-        "shard": 0
-      },
-      {
-        "hash": "50a16...",
-        "nonce": 186535,
-        "shard": 1
-      },
-      {
-        "hash": "7981...",
-        "nonce": 186536,
-        "shard": 2
-      }
-    ],
-    "transactions": [
-      {
-        "type": "normal",
-        "hash": "b035...",
-        "nonce": 3,
-        "value": "1000000000000000000",
-        "receiver": "erd1...",
-        "sender": "erd1...",
-        "gasPrice": 1000000000,
-        "gasLimit": 70000,
-        "data": "Zm9yIHRlc3Rz",
-        "signature": "1047...",
-        "status": "executed"
-      }
-    ]
+  "data": {
+    "account": {
+      "address": "erd1...",
+      "nonce": 11,
+      "balance": "100000000000000000000",
+      "username": "",
+      "code": "",
+      "codeHash": null,
+      "rootHash": "qBFvpFeF6...",
+      "codeMetadata": null,
+      "developerReward": "0",
+      "ownerAddress": "",
+    }
+  },
+  "blockInfo":{
+    "nonce": 555,
+    "hash": "f55fe00...",
+    "rootHash": "294360..."
   }
+  "error": "",
+  "code": "successful"
 }
 ```
 
 </TabItem>
 </Tabs>
+
+:::important
+If an account (that is not a smart contract, smart contracts cannot be guarded) has an ```activeGuardian``` and is ```guarded```, the ```codeMetadata``` of the account should be [Guarded](https://github.com/multiversx/mx-chain-vm-common-go/blob/master/codeMetadata.go).
+:::
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Address Guardian Data** {#get-address-guardian-data}
+
+`https://gateway.multiversx.com/address/:bech32Address/guardian-data`
+
+This endpoint allows one to retrieve the guardian data of an Address.
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param         | Required                                  | Type     | Description           |
+| ------------- | ----------------------------------------- | -------- | --------------------- |
+| bech32Address | <span class="text-danger">REQUIRED</span> | `string` | The Address to query. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Guardian Data successfully retrieved.
+
+```json
+{
+  "data": {
+    "blockInfo": {
+      "hash":"a11aa...",
+      "nonce":197,
+      "rootHash":"a6d70..."
+    },
+    "guardianData": {
+      "activeGuardian": {
+        "activationEpoch": 15,
+        "address": "erd1...",
+        "serviceUID": "uuid"
+      },
+      "guarded": true,
+      "pendingGuardian": {
+        "activationEpoch": 35,
+        "address": "erd1...",
+        "serviceUID": "uuid"
+      },
+    },  
+  },
+    "error": "",
+    "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::caution
+In the response example mentioned above, the account has already set the ```activeGuardian``` (using a ```SetGuardian``` transaction), guarded the account (with a ```GuardAccount``` transaction), and also set the ```pendingGuardian``` (using an unguarded ```SetGuardian``` transaction). We intentionally chose this scenario to display all the fields for ```blockInfo``` and ```guardianData```.
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -217,9 +265,13 @@ Balance successfully retrieved.
 
 [comment]: # (mx-context-auto)
 
-## <span class="badge badge--primary">GET</span> **Get Address Transactions** {#get-address-transactions}
+## <span class="badge badge--primary">GET</span> **Get Address Transactions (deprecated)** {#get-address-transactions}
 
 `https://gateway.multiversx.com/address/:bech32Address/transactions`
+
+:::caution
+This endpoint is deprecated. In order to fetch the Transactions involving an Address, use the [transactions](https://api.multiversx.com/#/accounts/AccountController_getAccountTransactions) endpoint of MultiversX API, instead.
+:::
 
 This endpoint allows one to retrieve the latest 20 Transactions sent from an Address.
 

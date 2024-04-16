@@ -11,18 +11,18 @@ title: Welcome to MultiversX
 - **When:** Mainnet live, project started in 2018
 - **How:** Scales via Adaptive State Sharding, consensus via Secure Proof of Stake
 - **Highlights:**
-  - Performance: 15,000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100,000 (263,000 TPS in testnet)
-  - Maiar money app with progressive security, social recovery, embedded DeFi
+  - Performance: 30,000 current TPS, 6s block time, $0.001 tx cost, can scale beyond 100,000 (263,000 TPS in testnet)
+  - xPortal money app with progressive security, social recovery, embedded DeFi
   - Tokens (FT, SFT, NFT) embedded into the protocol
   - Developers: royalties - 30% SC gas returned to authors, full IDE, Rust framework with debugger
-  - Validators: ~13% APR for running nodes, low system requirements
+  - Validators: ~11% APR for running nodes, low system requirements
   - Network setup: 3,200 nodes, 3 shards + Metachain (adaptivity allows throughput to increase with demand)
 
 [comment]: # (mx-context-auto)
 
 ## **What is MultiversX?**
 
-MultiversX is a distributed transactional computation protocol which relies on a sharded state architecture and a secure Proof of Stake consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, MultiversX runs on average computers.
+MultiversX is a distributed transactional computation protocol that relies on a sharded state architecture and a secure Proof of Stake consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, MultiversX runs on average computers.
 
 By employing _sharding_, a method of parallelizing data & transactions processing, MultiversX’s performance will scale up with the number of computers joining the network, reaching more than 100.000 transactions per second while growing increasingly decentralized.
 
@@ -30,7 +30,7 @@ By employing _sharding_, a method of parallelizing data & transactions processin
 
 ## **How is MultiversX different?**
 
-The MultiversX network is the first to present a viable solution where all the three aspects of sharding - state, network and transactions - have been implemented at once. Combined with its “Adaptive” component, this novel architecture allows for dynamic network configuration to maintain a high level of security while scaling with demand.
+The MultiversX network is the first to present a viable solution where all three aspects of sharding - state, network, and transactions - have been implemented at once. Combined with its “Adaptive” component, this novel architecture allows for dynamic network configuration to maintain a high level of security while scaling with demand.
 
 In addition to scaling through sharding, MultiversX also approaches the consensus problem with a mechanism called Secure Proof of Stake, which mitigates potential attack vectors when compared to Proof of Work, while also enabling large throughput and fast execution.
 
@@ -44,7 +44,7 @@ By solving some of the hardest consensus and sharding problems in the blockchain
 
 - First live blockchain architecture with state sharding
 - 15,000 TPS(scales > 100kTPS), 6s latency, $0.001/tx
-- Maiar App: buy, store, earn, pay EGLD, BTC, ETH, BNB
+- xPortal App: buy, store, earn, pay EGLD, BTC, ETH, BNB
 - Smart Contracts, Staking & Delegation, Tokens
 - Validated through multiple audits from Trial of Bits & others
 

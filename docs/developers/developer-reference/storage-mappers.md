@@ -227,7 +227,7 @@ Provides an iterator over all the elements.
 
 ## SetMapper
 
-Stores a set of values, with no duplicates being allowed. It also provides methods for checking if a value already exists in the set.
+Stores a set of values, with no duplicates being allowed. It also provides methods for checking if a value already exists in the set. Values order is given by their order of insertion.
 
 Unless you need to maintain the order of the elements, consider using `UnorderedSetMapper` or `WhitelistMapper` instead, as they're more efficient.
 
@@ -333,7 +333,7 @@ Stores a whitelist of items. Does not provide any means of iterating over the el
 
 Examples:
 ```rust
-fn my_whitelist(&self) -> WhitelistMapper<Self::Api, Type>
+fn my_whitelist(&self) -> WhitelistMapper<Type>
 ```
 
 Available methods:
@@ -488,7 +488,7 @@ Removes and returns the first/last element from the list.
 
 [comment]: # (mx-context-auto)
 
-### push_after/pus_after
+### push_after/push_before
 ```rust
 pub fn push_after(node: &mut LinkedListNode<Type>, element: Type) -> Option<LinkedListNode<Type>>
 pub fn push_before(node: &mut LinkedListNode<Type>, element: Type) -> Option<LinkedListNode<Type>>
@@ -574,7 +574,7 @@ Returns an iterator starting from the given `node_id`. Useful when splitting ite
 
 ## MapMapper
 
-Stores (key, value) pairs, while also allowing iteration over keys. This is the most expensive mapper to use, so make sure you really need to use it.
+Stores (key, value) pairs, while also allowing iteration over keys. This is the most expensive mapper to use, so make sure you really need to use it. Keys order is given by their order of insertion (same as `SetMapper`).
 
 Examples:
 ```rust
@@ -660,7 +660,7 @@ Stores a token identifier (like a `SingleValueMapper<TokenIdentifier>`) and prov
 
 Examples:
 ```rust
-fn my_token_id(&self) -> FungibleTokenMapper<Self::Api>
+fn my_token_id(&self) -> FungibleTokenMapper
 ```
 
 Available methods:
@@ -704,7 +704,7 @@ Alternatively, if you want to issue and also have all roles set for the SC, you 
 
 ### mint
 ```rust
-fn mint(amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn mint(amount: BigUint) -> EsdtTokenPayment
 ```
 
 Mints `amount` tokens for the stored token ID, using the `ESDTLocalMint` built-in function. Returns a payment struct, containing the token ID and the given amount.
@@ -757,9 +757,9 @@ Same as the previous issue function, but also takes an `EsdtTokenType` enum as a
 
 ### nft_create/nft_create_named
 ```rust
-fn nft_create<T: TopEncode>(amount: BigUint, attributes: &T) -> EsdtTokenPayment<Self::Api>
+fn nft_create<T: TopEncode>(amount: BigUint, attributes: &T) -> EsdtTokenPayment
 
-fn nft_create_named<T: TopEncode>(amount: BigUint, name: &ManagedBuffer, attributes: &T) -> EsdtTokenPayment<Self::Api>
+fn nft_create_named<T: TopEncode>(amount: BigUint, name: &ManagedBuffer, attributes: &T) -> EsdtTokenPayment
 ```
 
 Creates an NFT (optionally with a display `name`) and returns the token ID, the created token's nonce, and the given amount in a payment struct.
@@ -768,9 +768,9 @@ Creates an NFT (optionally with a display `name`) and returns the token ID, the 
 
 ### nft_create_and_send/nft_create_and_send_named
 ```rust
-fn nft_create_and_send<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send<T: TopEncode>(to: &ManagedAddress, amount: BigUint, attributes: &T,) -> EsdtTokenPayment
 
-fn nft_create_and_send_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment<Self::Api>
+fn nft_create_and_send_named<T: TopEncode>(to: &ManagedAddress, amount: BigUint, name: &ManagedBuffer, attributes: &T,) -> EsdtTokenPayment
 ```
 
 Same as the methods above, but also sends the created token to the provided address.
@@ -779,7 +779,7 @@ Same as the methods above, but also sends the created token to the provided addr
 
 ### nft_add_quantity
 ```rust
-fn nft_add_quantity(token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn nft_add_quantity(token_nonce: u64, amount: BigUint) -> EsdtTokenPayment
 ```
 
 Adds quantity for the given token nonce. This can only be used if one of the `nft_create` functions was used before AND the SC holds at least 1 token for the given nonce.
@@ -788,7 +788,7 @@ Adds quantity for the given token nonce. This can only be used if one of the `nf
 
 ### nft_add_quantity_and_send
 ```rust
-fn nft_add_quantity_and_send(to: &ManagedAddress, token_nonce: u64, amount: BigUint) -> EsdtTokenPayment<Self::Api>
+fn nft_add_quantity_and_send(to: &ManagedAddress, token_nonce: u64, amount: BigUint) -> EsdtTokenPayment
 ```
 
 Same as the method above, but also sends the tokens to the provided address.
@@ -881,8 +881,8 @@ Manually sets the token ID for this mapper. This can only be used once, and can 
 
 ### require_same_token/require_all_same_token
 ```rust
-fn require_same_token(expected_token_id: &TokenIdentifier<SA>)
-fn require_all_same_token(payments: &ManagedVec<EsdtTokenPayment<Self::Api>>)
+fn require_same_token(expected_token_id: &TokenIdentifier)
+fn require_all_same_token(payments: &ManagedVec<EsdtTokenPayment>)
 ```
 
 Will signal an error if the provided token ID argument(s) differs from the stored token. Useful in `#[payable]` methods when you only want to this token as payment.
@@ -1008,10 +1008,10 @@ There is no difference between `SingleValueMapper` and the old-school setters/ge
 Storing a `ManagedVec<T>` can be done in two ways:
 
 ```rust
-#[storage_mapper("my_vec_single)]
+#[storage_mapper("my_vec_single")]
 fn my_vec_single(&self) -> SingleValueMapper<ManagedVec<T>>
 
-#[storage_mapper("my_vec_mapper)]
+#[storage_mapper("my_vec_mapper")]
 fn my_vec_mapper(&self) -> VecMapper<T>;
 ```
 
@@ -1032,10 +1032,10 @@ Use `VecMapper` when:
 The primary use for `SetMapper` is storing a whitelist of addresses, token ids, etc. A token ID whitelist can be stored in these two ways:
 
 ```rust
-#[storage_mapper("my_vec_whitelist)]
+#[storage_mapper("my_vec_whitelist")]
 fn my_vec_whitelist(&self) -> VecMapper<TokenIdentifier>
 
-#[storage_mapper("my_set_mapper)]
+#[storage_mapper("my_set_mapper")]
 fn my_set_mapper(&self) -> SetMapper<TokenIdentifier>;
 ```
 
@@ -1113,3 +1113,55 @@ fn list_per_user_pair(&self, first_addr: &ManagedAddress, second_addr: &ManagedA
 ```
 
 Using the correct mapper for your situation can greatly decrease gas costs and complexity, so always remember to carefully evaluate your use-case.
+
+[comment]: # (mx-context-auto)
+
+## Accessing a value at an address
+
+Because of the way the storage mappers are structured, it is very easy to access a "remote" value, meaning a value stored 
+under a key at a different address than the current one. 
+
+If a developer wanted, for example, to iterate over another contract's `SetMapper`, instead of retrieving the values through
+a call to an endpoint and then iterating, one could simply create a new `SetMapper` with a specific `address` parameter 
+(the address of the contract where the remote storage is located) and the `exact key` used by the storage they wish to access.
+Afterwards, it acts like a "local" storage mapper, so the `iter` function can be called easily to accomplish the task.
+
+:::important important
+This feature only works `intra-shard`. 
+
+Also note that a remote value found under a key at an address can only be `read`, not modified. 
+:::
+
+Let's take this example:
+```rust title=contract_to_be_called/lib.rs
+#[storage_mapper("my_remote_mapper")]
+fn my_set_mapper(&self) -> SetMapper<u32>
+```
+
+This is a simple `SetMapper` registered under the address of `contract_to_be_called`, and the value stored will be registered under the key provided, `my_remote_mapper`. If we wanted to iterate over the values of `my_set_mapper` intra-shard, we could write:
+
+```rust title=caller_contract/lib.rs
+// the address of the contract containing the storage (contract_to_be_called)
+#[storage_mapper("contract_address")]
+fn contract_address(&self) -> SingleValueMapper<ManagedAddress>; 
+
+#[endpoint]
+fn my_endpoint(&self) -> u32 {
+    let mut sum = 0u32;
+    let address = self.contract_address().get();
+
+    // by creating the mapper with the address of the sc and exact storage key 
+    // we get access to the value stored under that key
+    let mapper: SetMapper<u32, _> =
+        SetMapper::new_from_address(address, StorageKey::from("my_remote_mapper"));
+    for number in mapper.iter() {
+        sum += number
+    }
+
+    sum
+}
+```
+
+Calling `my_endpoint` will return the sum of the values stored in `contract_to_be_called`'s SetMapper.
+
+By specifying the expected type, storage key and address, the value can be read and used inside our logic.

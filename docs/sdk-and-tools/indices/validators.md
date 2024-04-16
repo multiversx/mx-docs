@@ -17,6 +17,8 @@ The `_id` field of this index is composed in this way: `{shardID}_{epoch}` (exam
 
 ## Fields
 
+[comment]: # (table:validators)
+
 | Field       | Description                                                                                     |
 |-------------|-------------------------------------------------------------------------------------------------|
 | publicKeys  | The publicKeys field contains a list of all validators' public keys from an epoch and a shard.  |

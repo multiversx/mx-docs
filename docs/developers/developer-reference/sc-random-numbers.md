@@ -31,7 +31,7 @@ For convenience, a wrapper over these methods was created, namely the `Randomnes
 For example, let's say you wanted to generate `n` random `u16`:
 
 ```rust
-let mut rand_source = RandomnessSource::<Self::Api>::new();
+let mut rand_source = RandomnessSource::new();
 for _ in 0..n {
     let my_rand_nr = rand_source.next_u16();
     // do something with the number
@@ -57,7 +57,7 @@ let mut my_vec = ManagedVec::new();
 // ...
 
 let vec_len = my_vec.len();
-let mut rand_source = RandomnessSource::<Self::Api>::new();
+let mut rand_source = RandomnessSource::new();
 for i in 0..vec_len {
     let rand_index = rand_source.next_usize_in_range(i, vec_len);
     let first_item = my_vec.get(i).unwrap();
@@ -77,7 +77,7 @@ This algorithm will shuffle each element at position `i`, with an element from p
 Let's say you want to create some NFTs in your contract, and want to give each of them a random hash of 32 bytes. To do that, you would use the `next_bytes(len: usize)` method of the `RandomnessSource` struct:
 
 ```rust
-let mut rand_source = RandomnessSource::<Self::Api>::new();
+let mut rand_source = RandomnessSource::new();
 let rand_hash = rand_source.next_bytes(32);
 // NFT create logic here
 ```

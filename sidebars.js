@@ -52,8 +52,8 @@ const sidebars = {
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
           "developers/tutorials/counter",
-          "developers/tutorials/custom-wallet-connect",
           "developers/tutorials/staking-contract",
+          "developers/tutorials/wallet-connect-v2-migration",
         ],
       },
       {
@@ -65,19 +65,31 @@ const sidebars = {
             type: "category",
             label: "Rust Developer reference",
             items: [
-              "developers/developer-reference/serialization-format",
               "developers/developer-reference/sc-annotations",
               "developers/developer-reference/sc-modules",
+              "developers/developer-reference/sc-payments",
               "developers/developer-reference/sc-contract-calls",
               "developers/developer-reference/upgrading-smart-contracts",
-              "developers/developer-reference/code-metadata",
               "developers/developer-reference/sc-api-functions",
               "developers/developer-reference/storage-mappers",
               "developers/developer-reference/rust-testing-framework",
               "developers/developer-reference/rust-testing-framework-functions-reference",
               "developers/developer-reference/sc-debugging",
-              "developers/developer-reference/sc-build-reference",
               "developers/developer-reference/sc-random-numbers",
+            ],
+          },
+          {
+            type: "category",
+            label: "Data",
+            items: [
+              "developers/data/serialization-overview",
+              "developers/data/simple-values",
+              "developers/data/composite-values",
+              "developers/data/custom-types",
+              "developers/data/defaults",
+              "developers/data/multi-values",
+              "developers/data/code-metadata",
+              "developers/data/abi",
             ],
           },
           {
@@ -87,35 +99,62 @@ const sidebars = {
               "developers/best-practices/best-practices-basics",
               "developers/best-practices/biguint-operations",
               "developers/best-practices/the-dynamic-allocation-problem",
-              "developers/best-practices/multi-values",
-            ]
+            ],
           },
           {
             type: "category",
-            label: "Testing Scenarios",
+            label: "Configuration & Tooling",
             items: [
-              "developers/scenario-reference/overview",
-              "developers/scenario-reference/structure",
-              "developers/scenario-reference/values-simple",
-              "developers/scenario-reference/values-complex",
-              "developers/scenario-reference/embed",
+              "developers/meta/sc-meta",
+              "developers/meta/sc-build-reference",
+              "developers/meta/sc-config",
+              "developers/meta/sc-meta-cli",
+              "developers/meta/sc-allocator",
+              "developers/meta/rust-nightly",
+            ],
+          },
+          {
+            type: "category",
+            label: "Testing",
+            items: [
+              "developers/testing/testing-overview",
+              {
+                type: "category",
+                label: "Scenarios",
+                items: [
+                  "developers/testing/scenario/concept",
+                  "developers/testing/scenario/structure-json",
+                  "developers/testing/scenario/values-simple",
+                  "developers/testing/scenario/values-complex",
+                  "developers/testing/scenario/running-scenarios",
+                  "developers/testing/scenario/generating-scenarios",
+                ],
+              },
+              "developers/testing/testing-in-go",
             ],
           },
         ],
       },
       {
         type: "category",
+        label: "Event logs",
+        items: [
+          "developers/event-logs/contract-call-events",
+          "developers/event-logs/contract-deploy-events",
+          "developers/event-logs/esdt-events",
+          "developers/event-logs/execution-events",
+          "developers/event-logs/system-delegation-events",
+        ],
+      },
+      {
+        type: "category",
         label: "Blockchain Operations",
         items: [
-          {
-            type: "category",
-            label: "Signing Transactions",
-            items: [
-              "developers/signing-transactions/signing-transactions",
-              "developers/signing-transactions/tools-for-signing",
-              "developers/signing-transactions/signing-programmatically",
-            ],
-          },
+          "developers/account-storage",
+          "developers/built-in-functions",
+          "developers/constants",
+          "developers/contract-api-limits",
+          "developers/creating-wallets",
           {
             type: "category",
             label: "Gas and Fees",
@@ -126,16 +165,27 @@ const sidebars = {
               "developers/gas-and-fees/user-defined-smart-contracts",
             ],
           },
-          "developers/constants",
-          "developers/sc-calls-format",
-          "developers/built-in-functions",
-          "developers/account-storage",
+          "developers/guard-accounts",
           "developers/relayed-transactions",
+          "developers/reproducible-contract-builds",
+          "developers/sc-calls-format",
           "developers/setup-local-testnet",
           "developers/setup-local-testnet-advanced",
-          "developers/creating-wallets",
-          "developers/reproducible-contract-builds",
-        ]
+          {
+            type: "category",
+            label: "Signing Transactions",
+            items: [
+              "developers/signing-transactions/signing-transactions",
+              "developers/signing-transactions/tools-for-signing",
+              "developers/signing-transactions/signing-programmatically",
+            ],
+          },
+        ],
+      },
+      {
+        type: "category",
+        label: "Guidelines",
+        items: ["developers/guidelines/react-development"],
       },
     ],
     "SDK and Tools": [
@@ -168,6 +218,8 @@ const sidebars = {
         label: "Elasticsearch",
         items: [
           "sdk-and-tools/elastic-search",
+          "sdk-and-tools/indexer",
+          "sdk-and-tools/es-index-wrong-mapping",
           {
             type: "category",
             label: "Elasticsearch indices",
@@ -192,10 +244,13 @@ const sidebars = {
               "sdk-and-tools/indices/es-index-transactions",
               "sdk-and-tools/indices/es-index-validators",
             ],
-          }
-        ]
+          },
+        ],
       },
       "sdk-and-tools/notifier",
+      "sdk-and-tools/chain-simulator",
+      "sdk-and-tools/google-bigquery",
+      "sdk-and-tools/devcontainers",
       {
         type: "category",
         label: "SDKs",
@@ -211,6 +266,7 @@ const sidebars = {
               "sdk-and-tools/sdk-py/mxpy-cli",
               "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
               "sdk-and-tools/sdk-py/smart-contract-interactions",
+              "sdk-and-tools/sdk-py/sdk-py-migration-guides",
             ],
           },
           {
@@ -218,34 +274,84 @@ const sidebars = {
             label: "Javascript SDK",
             items: [
               "sdk-and-tools/sdk-js/sdk-js",
-              "sdk-and-tools/sdk-js/sdk-js-cookbook",
+              {
+                label: "Cookbook",
+                type: "doc",
+                id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+              },
+              {
+                type: "category",
+                label: "Cookbook (versioned)",
+                link: {
+                  type: "doc",
+                  id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
+                },
+                items: [
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                ]
+              },
               "sdk-and-tools/sdk-js/extending-sdk-js",
               "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
               "sdk-and-tools/sdk-js/sdk-js-migration-guides",
               "sdk-and-tools/sdk-js/sdk-js-signing-providers",
             ],
           },
-          "sdk-and-tools/erdgo",
-          "sdk-and-tools/erdjava",
-          "sdk-and-tools/sdk-dapp",
+          {
+            type: "category",
+            label: "NestJS SDK",
+            items: [
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-auth",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-cache",
+              "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
+            ],
+          },
+          "sdk-and-tools/sdk-go",
+          "sdk-and-tools/mxjava",
+          {
+            type: "category",
+            label: "dApp SDK",
+            items: [
+              "sdk-and-tools/sdk-dapp/sdk-dapp",
+              {
+                type: "category",
+                label: "Internal Processes",
+                items: ["sdk-and-tools/sdk-dapp/internal-processes/guardians"],
+              },
+            ],
+          },
           "sdk-and-tools/erdcpp",
-          "sdk-and-tools/sdk-nestjs",
           "sdk-and-tools/erdkotlin",
-          "sdk-and-tools/sdk-js-wallet-cli",
-        ]
+          "sdk-and-tools/sdk-js-wallet-cli"
+        ],
       },
+      {
+        type: "category",
+        label: "Troubleshooting",
+        items: [
+          "sdk-and-tools/troubleshooting/troubleshooting",
+          "sdk-and-tools/troubleshooting/rust-setup",
+          "sdk-and-tools/troubleshooting/ide-setup",
+          "sdk-and-tools/troubleshooting/multiplatform",
+        ],
+      }
     ],
     Wallet: [
       "wallet/overview",
       "wallet/web-wallet",
+      "wallet/xalias",
       "wallet/wallet-extension",
       "wallet/webhooks",
       "wallet/ledger",
+      "wallet/xportal",
       "wallet/create-a-fungible-token",
+      "wallet/keystore",
     ],
     Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     Validators: [
       "validators/overview",
+      "validators/staking-v4",
       "validators/system-requirements",
       {
         type: "category",
@@ -264,6 +370,7 @@ const sidebars = {
           "validators/nodes-scripts/use-docker",
           "validators/rating",
           "validators/redundancy",
+          "validators/node-configuration",
           "validators/node-operation-modes",
           "validators/import-db",
           "validators/node-cli",
@@ -297,6 +404,7 @@ const sidebars = {
           "validators/key-management/validator-keys",
           "validators/key-management/wallet-keys",
           "validators/key-management/protect-keys",
+          "validators/key-management/multikey-nodes",
         ],
       },
       {
@@ -305,22 +413,25 @@ const sidebars = {
         items: ["validators/faq", "validators/useful-links"],
       },
     ],
-    Economics: ["economics/economics-overview", "economics/staking-providers-apr"],
+    Economics: [
+      "economics/economics-overview",
+      "economics/staking-providers-apr",
+    ],
+    Governance: [
+      "governance/overview",
+      "governance/governance-interaction",
+    ],
     Integrators: [
       "integrators/overview",
       {
         type: "category",
         label: "Integrate EGLD",
-        items: [
-          "integrators/egld-integration-guide",
-        ],
+        items: ["integrators/egld-integration-guide"],
       },
       {
         type: "category",
         label: "Integrate ESDT tokens",
-        items: [
-          "integrators/esdt-tokens-integration-guide",
-        ],
+        items: ["integrators/esdt-tokens-integration-guide"],
       },
       {
         type: "category",
@@ -328,7 +439,9 @@ const sidebars = {
         items: [
           "integrators/observing-squad",
           "integrators/deep-history-squad",
-        ]
+          "integrators/snapshotless-observing-squad",
+          "integrators/advanced-observer-settings"
+        ],
       },
       {
         type: "category",
@@ -337,8 +450,9 @@ const sidebars = {
           "integrators/accounts-management",
           "integrators/creating-transactions",
           "integrators/querying-the-blockchain",
-        ]
+        ],
       },
+      "integrators/walletconnect-json-rpc-methods",
     ],
     "Ad-Astra Bridge": [
       "bridge/architecture",

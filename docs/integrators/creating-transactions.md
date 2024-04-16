@@ -37,8 +37,8 @@ transactions creation and signing:
 
 - [sdk-js - JavaScript SDK](/sdk-and-tools/sdk-js)
 - [sdk-py - Python SDK](/sdk-and-tools/sdk-py)
-- [erdgo - Golang SDK](/sdk-and-tools/erdgo)
-- [erdjava - Java SDK](/sdk-and-tools/erdjava)
+- [sdk-go - Golang SDK](/sdk-and-tools/sdk-go)
+- [sdk-java - Java SDK](/sdk-and-tools/mxjava)
 - [lightweight JS CLI](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli)
 - [lightweight HTTP utility](https://github.com/multiversx/mx-sdk-js-wallet-http)
 
@@ -90,8 +90,18 @@ Although an explicit _transaction cancellation trigger_ is not yet available in 
 If broadcasted transactions have their nonces higher than the current account nonce of the sender, this is considered a _nonce gap_, and the transactions will remain in the mempool unprocessed, until new transactions from the same sender arrive _to resolve the nonce gap -_ or until the transactions are swept from the mempool (sweeping takes place regularly).
 
 :::tip
-Avoid nonce gaps by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
+**Avoid nonce gaps** by regularly fetching the current account nonce, in order to populate the nonce field correctly before broadcasting the transactions. This technique is also known as **periodically recalling the nonce**.
 :::
+
+[comment]: # (mx-context-auto)
+
+### **Issue: too many transactions from the same account**
+
+Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius.md), the transaction pool allows a maximum of **100** transactions from the same sender to exist, at a given moment.
+
+For example, if an address broadcasts `120` transactions with nonces from `1` to `120`, then the transactions with nonces `1 - 100` will be accepted for processing, while the remaining `20` transactions will be dropped.
+
+The solution is to use chunks holding a **maximum of `100` transactions** and a place a generous **delay between sending the chunks**. Let's suppose an account has the nonce `1000` and it wants to send `120` transactions. It should send the first chunk, that is, the transactions with nonces `1000 - 1099`, wait until all of them are processed (the account nonce increments on each processed transaction), then send the second chunk, the transactions with nonces `1100 - 1019`.
 
 [comment]: # (mx-context-auto)
 
@@ -111,6 +121,26 @@ Avoid fetching stale account nonces by **periodically recalling the nonce.**
 
 Avoid recalling the nonce in between **rapidly sequenced transactions from the same sender** . For rapidly sequenced transactions, you have to programmatically manage, keep track of the account nonce using a **local mirror (copy) of the account nonce** and increment it appropriately.
 :::
+
+[comment]: # (mx-context-auto)
+
+### **Issue: sending large batches of transactions cause nonce gaps**
+
+Whenever sending a large batch of transactions, even if the node/gateway returned transaction hashes for each transaction in the batch and no error, there is no strict guarantee that those transactions will end up being executed.
+The reason is that the node will not immediately send each transaction or transaction batch but rather accumulate them in packages to be efficiently send through the p2p network.
+At this moment, the node might decide to drop one or more packet because it detected a possible p2p flooding condition. This can happen independent of the transaction sender, the number of transactions sent and so on.
+
+To handle this behavior, special care should be carried by the integrators. One possible way to handle this efficiently is to temporarily store all transactions that need to be sent on the network and continuously monitor the senders accounts involved if their nonces increased.
+If not, a resend of the required transaction is needed, otherwise the transaction might be discarded from the temporary storage as it was executed.
+
+We have implemented several components written in GO language that solve the transaction send issues along with the correct nonce management. 
+The source code can be found [here](https://github.com/multiversx/mx-sdk-go/tree/main/interactors/nonceHandlerV2)
+The main component is the `nonceTransactionsHandlerV2` that will create an address-nonce handler for each involved address. This address nonce handler will be specialized in the nonce and transactions sending mechanism for a single address and will be independent of the other addresses involved. 
+The main component has a few exported functionalities:
+- `ApplyNonceAndGasPrice` method that is able to apply the current handled nonce of the sender and the network's gas price on a provided transaction instance
+- `SendTransaction` method that will forward the provided transaction towards the proxy but also stores it internally in case it will need to be resent.
+- `DropTransactions` method that will clean all the stored transactions for a provided address.
+- `Close` cleanup method for the component.
 
 [comment]: # (mx-context-auto)
 

@@ -9,7 +9,7 @@ title: Web Wallet Tokens
 
 **ESDT** stands for _eStandard Digital Token_.
 
-MultiversX network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use-cases.
+MultiversX network natively supports the issuance of custom tokens, without the need for contracts such as ERC20, but addressing the same use cases.
 You can create and issue an ESDT token from [MultiversX web wallet](https://wallet.multiversx.com/) in a few steps. Let's go over these steps.
 
 [comment]: # (mx-context-auto)
