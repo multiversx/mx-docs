@@ -178,7 +178,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 ### Converting addresses using sdk-go
 
-Find more about `sdk-go` [here](/sdk-and-tools/erdgo/).
+Find more about `sdk-go` [here](/sdk-and-tools/sdk-go/).
 
 ```js
 import (
@@ -349,7 +349,7 @@ numeric --> hex
 ```
 7  --> 07
 10 --> 0a
-35 --> 25
+35 --> 23
 ```
 
 [comment]: # (mx-context-auto)

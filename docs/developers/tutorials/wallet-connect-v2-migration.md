@@ -3,15 +3,19 @@ id: wallet-connect-v2-migration
 title: WalletConnect 2.0 Migration
 ---
 
+[comment]: # (mx-context-auto)
+
 ## Using `sdk-dapp`
 
 Using `@multiversx/sdk-dapp` >= `2.2.8` or `@elrondnetwork/dapp-core` >= `2.0.0`
 
 WalletConnect 2.0 is already integrated, only not enabled by default.
 
-Follow [these steps](/sdk-and-tools/sdk-dapp/#walletconnect-20-setup) to generate and add a `walletConnectV2ProjectId` and set the `isWalletConnectV2` flag
+Follow [these steps](/sdk-and-tools/sdk-dapp/#walletconnect-20-setup) to generate and add a `walletConnectV2ProjectId`
 
 --------------
+
+[comment]: # (mx-context-auto)
 
 ## Using `sdk-wallet-connect-provider`
 
@@ -19,7 +23,7 @@ Using `@multiversx/sdk-wallet-connect-provider` >= 3.0.1 or `@elrondnetwork/erdj
 
 Since the WalletConnect 2.0 implementation was complimentary to the existing 1.0 version, there should be no breaking changes to upgrade the library
 
-Check out some detailed examples [here](/sdk-and-tools/sdk-js/sdk-js-signing-providers/#the-wallet-connect-provider)
+Check out some detailed examples [here](/sdk-and-tools/sdk-js/sdk-js-signing-providers/#the-wallet-connect-provider).
 
 To Set up the 2.0 functionality you can check out the examples here: [https://github.com/multiversx/mx-sdk-js-examples](https://github.com/multiversx/mx-sdk-js-examples) or a more advanced implementation on sdk-dapp here: [https://github.com/multiversx/mx-sdk-dapp/blob/main/src/hooks/login/useWalletConnectV2Login.ts](https://github.com/multiversx/mx-sdk-dapp/blob/main/src/hooks/login/useWalletConnectV2Login.ts)
 

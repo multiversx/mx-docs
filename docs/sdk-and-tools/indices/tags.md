@@ -17,6 +17,8 @@ The `_id` field of this index is represented by the tag name in a base64 encodin
 
 ## Fields
 
+[comment]: # (table:tags)
+
 | Field | Description                                                         |
 |-------|---------------------------------------------------------------------|
 | count | The count field represents the number of NFTs with the current tag. |

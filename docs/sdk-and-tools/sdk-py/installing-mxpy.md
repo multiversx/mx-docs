@@ -5,117 +5,84 @@ title: Installing mxpy
 
 [comment]: # (mx-abstract)
 
-How to install mxpy
+This page describes how to install **mxpy** (the CLI tool). The recommended way to install **mxpy** is by using **pipx**. If you want to learn more about **pipx** you can check out [this page](https://pipx.pypa.io/stable/#overview-what-is-pipx).
 
-This page describes how to install **mxpy** (the CLI tool). The recommended way to install **mxpy** is by using the `mxpy-up` facility.
-
-**mxpy** is currently supported on Linux and MacOS. Some of its features might work on Windows as well, although using **mxpy** on Windows is neither recommended, nor supported at this time.
+:::note
+If you'd like to use **mxpy** on Windows, we recommend installing it within the [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install). If you experience an issue, please follow the [troubleshooter](/sdk-and-tools/troubleshooting/multiplatform).
+:::
 
 [comment]: # (mx-context-auto)
 
 ## **Prerequisites**
 
-Before installing **mxpy**, please make sure you have a working **Python 3** environment:
-
-- **3.8** or later on Linux and MacOS
-
-Smart contracts written in C require the ncurses library routines for compiling. Install them using the following:
-
-For Linux:
-```
-sudo apt install libncurses5
-```
-For MacOS:
-```
-brew install ncurses
-```
+Before installing **mxpy**, please make sure you have a working **Python 3** environment. You'll need **Python 3.8** or later on Linux or MacOS.
 
 [comment]: # (mx-context-auto)
 
-## **Install using mxpy-up (recommended)**
+## **Install using pipx**
 
-In order to install **mxpy** using the `mxpy-up` installation script, run the following commands in a terminal:
-
-```
-wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py
-python3 mxpy-up.py
-```
-
-This will create a light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv `and also include `~/multiversx-sdk`in your **`$PATH`** variable (by editing the appropriate `.profile` file).
-
-[comment]: # (mx-context-auto)
-
-### **Troubleshooting and other notes**
-
-On Ubuntu 20.04, if you receive the error: `invalid command 'bdist_wheel'` - run the following command, then retry mxpy-up:
-
-```
-pip3 install wheel
-python3 mxpy-up.py
-```
-
-On MacOS, you can switch to Python 3.8 as follows:
-
-```
-brew info python@3.8
-brew unlink python
-brew link --force python@3.8
-python3 --version
-```
-
-[comment]: # (mx-context-auto)
-
-## **Install without mxpy-up**
-
-If you'd like to install without relying on the easy installation script, please read this section. Otherwise, feel free to skip it.
-
-Make sure you also have **pip3** installed.
-
-[comment]: # (mx-context-auto)
-
-### **Prepare PATH**
-
-In order to have the command **mxpy** available in your shell after install, make sure you adjust the `PATH` environment variable as described below:
-
-On Linux in `~/.profile`:
-
-```
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-On MacOS in `~/.bash_profile` or `~/.zshrc` if you’re using `zsh`:
-
-```
-export PATH=$HOME/Library/Python/3.8/bin:${PATH}
-```
-
-:::note add the right version
-In the snippet above, replace `3.8` with your actual `MAJOR.MINOR` version of Python. This can be found by running:
-
-```
-python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"
-```
-
+:::info
+Keep in mind that installing using **pipx** is only available for **mxpy v9.2.0** or later.
 :::
 
-You may need to restart your user session for these changes to take effect.
+You'll need **pipx** installed on your machine. For more details on how to install **pipx** check out [**this page**](https://pipx.pypa.io/stable/#install-pipx).
+
+:::note
+If you've previously installed **mxpy** using **mxpy-up** and you'd like to switch to **pipx**, make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
+
+```sh
+rm ~/multiversx-sdk/mxpy
+rm -rf ~/multiversx-sdk/mxpy-venv
+```
+:::
+
+In order to install **mxpy** using `pipx`, run the following command:
+
+```sh
+pipx install multiversx-sdk-cli --force
+```
+
+This will simply install the latest version available.
+
+In case you want to install a specific version you should also specify the version.
+
+```sh
+pipx install multiversx-sdk-cli==9.5.1
+```
+
+You can also install **mxpy** directly from a GitHub branch. Replace `branch_name` with your desired branch and run the following command:
+
+```sh
+pipx install git+https://github.com/multiversx/mx-sdk-py-cli@branch_name
+```
+
+To check that **mxpy** installed successfully you can run the following command:
+
+```sh
+mxpy --version
+```
 
 [comment]: # (mx-context-auto)
 
-### **Install and smoke test**
+## **Upgrade mxpy using pipx**
 
-In order to install **mxpy**, issue the following command:
+To upgrade **mxpy** to a newer version you can simply run the following command:
 
-```
-pip3 install --user --upgrade --no-cache-dir multiversx-sdk-cli
+```sh
+pipx upgrade multiversx-sdk-cli
 ```
 
 [comment]: # (mx-context-auto)
 
-### **Troubleshooting**
+## **Install using mxpy-up**
 
-If you encounter encoding-related issues at installation time, such as: `UnicodeDecodeError: 'ascii' codec can't decode byte`, then please set `PYTHONIOENCODING` before running the installation command:
+Installing **mxpy** using **mxpy-up** is not recommended anymore. We recommend using **pipx** instead.
 
+If you've previously installed **mxpy** using **mxpy-up** and you'd like to switch to **pipx**, make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
+
+```sh
+rm ~/multiversx-sdk/mxpy
+rm -rf ~/multiversx-sdk/mxpy-venv
 ```
-PYTHONIOENCODING=utf8 pip3 install --user --upgrade --no-cache-dir mxpy
-```
+
+Additionally, you might want to cleanup the shell profile files, to not alter anymore the `PATH` variable with respect to `~/multiversx-sdk`: `~/.profile`, `~/.bashrc` and / or `~/.zshrc`.

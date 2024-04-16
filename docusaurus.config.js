@@ -24,6 +24,12 @@ const config = {
   organizationName: "multiversx", // Usually your GitHub org/user name.
   projectName: "mx-docs", // Usually your repo name.
 
+  // mermaid support
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
+
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
@@ -43,6 +49,8 @@ const config = {
           /* other docs plugin options */
           remarkPlugins: [math],
           rehypePlugins: [katex],
+          editUrl: "https://github.com/multiversx/mx-docs/edit/development",
+          showLastUpdateTime: true,
         },
         blog: false, // Optional: disable the blog plugin
         theme: {
@@ -172,7 +180,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ["rust", "tsx", "jsonp"],
+        additionalLanguages: ["rust", "tsx", "jsonp", "toml"],
       },
       algolia: {
         // The application ID provided by Algolia
@@ -237,23 +245,91 @@ const config = {
           },
           {
             from: "/developers/developer-reference/smart-contract-build-reference",
-            to: "/developers/developer-reference/sc-build-reference",
+            to: "/developers/meta/sc-build-reference",
+          },
+          {
+            from: "/developers/developer-reference/sc-build-reference",
+            to: "/developers/meta/sc-build-reference",
+          },
+          {
+            from: "/developers/developer-reference/serialization-format",
+            to: "/developers/data/serialization-overview",
           },
           {
             from: "/developers/developer-reference/random-numbers-in-smart-contracts",
             to: "/developers/developer-reference/sc-random-numbers",
           },
           {
+            from: "/developers/developer-reference/sc-meta",
+            to: "/developers/meta/sc-meta",
+          },
+          {
+            from: "/developers/developer-reference/code-metadata",
+            to: "/developers/data/code-metadata",
+          },
+          {
+            from: "/developers/best-practices/multi-values",
+            to: "/developers/data/multi-values",
+          },
+          {
+            from: "/developers/scenario-reference/overview",
+            to: "/developers/testing/scenario/concept",
+          },
+          {
+            from: "/developers/scenario-reference/structure",
+            to: "/developers/testing/scenario/structure-json",
+          },
+          {
+            from: "/developers/scenario-reference/values-simple",
+            to: "/developers/testing/scenario/values-simple",
+          },
+          {
+            from: "/developers/scenario-reference/values-complex",
+            to: "/developers/testing/scenario/values-complex",
+          },
+          {
+            from: "/developers/scenario-reference/embed",
+            to: "/developers/testing/testing-in-go",
+          },
+          {
+            from: "/developers/mandos-reference/overview",
+            to: "/developers/testing/scenario/concept",
+          },
+          {
+            from: "/developers/mandos-reference/structure",
+            to: "/developers/testing/scenario/structure-json",
+          },
+          {
+            from: "/developers/mandos-reference/values-simple",
+            to: "/developers/testing/scenario/values-simple",
+          },
+          {
+            from: "/developers/mandos-reference/values-complex",
+            to: "/developers/testing/scenario/values-complex",
+          },
+          {
+            from: "/developers/mandos-reference/embed",
+            to: "/developers/testing/testing-in-go",
+          },
+          {
             from: "/sdk-and-tools/erdjs",
             to: "/sdk-and-tools/sdk-js",
           },
           {
-            from: "/sdk-and-tools/erdjs/erdjs-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+            from: "/sdk-and-tools/erdjava",
+            to: "/sdk-and-tools/mxjava",
           },
           {
-            from: "/sdk-and-tools/erdjs/extending-erdjs",
-            to: "/sdk-and-tools/sdk-js/extending-sdk-js",
+            from: "/sdk-and-tools/erdgo",
+            to: "/sdk-and-tools/sdk-go",
+          },
+          {
+            from: "/sdk-and-tools/erdjs/erdjs-cookbook",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-versions",
+          },
+          {
+            from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
           },
           {
             from: "/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
@@ -308,24 +384,24 @@ const config = {
             to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
           },
           {
-            from: "/developers/mandos-reference/overview",
-            to: "/developers/scenario-reference/overview",
+            from: "/developers/log-events/esdt-events",
+            to: "/developers/event-logs/esdt-events",
           },
           {
-            from: "/developers/mandos-reference/structure",
-            to: "/developers/scenario-reference/structure",
+            from: "/developers/log-events/execution-events",
+            to: "/developers/event-logs/execution-events",
           },
           {
-            from: "/developers/mandos-reference/values-simple",
-            to: "/developers/scenario-reference/values-simple",
+            from: "/developers/log-events/contract-call-events",
+            to: "/developers/event-logs/contract-call-events",
           },
           {
-            from: "/developers/mandos-reference/values-complex",
-            to: "/developers/scenario-reference/values-complex",
+            from: "/developers/log-events/contract-deploy-events",
+            to: "/developers/event-logs/contract-deploy-events",
           },
           {
-            from: "/developers/mandos-reference/embed",
-            to: "/developers/scenario-reference/embed",
+            from: "/developers/log-events/system-delegation-events",
+            to: "/developers/event-logs/system-delegation-events",
           },
         ],
         createRedirects(existingPath) {

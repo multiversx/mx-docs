@@ -22,8 +22,10 @@ There are multiple ways you can store your funds. This page will present some of
 
 | Name                                                              | Description                                                                                                       |
 | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [xPortal App](https://xportal.com/)                                   | Digital wallet and global payments app that allows you to exchange and securely store money on your mobile phone. |
+| [xPortal App](https://xportal.com/)                               | Digital wallet and global payments app that allows you to exchange and securely store money on your mobile phone. |
 | [Web Wallet](/wallet/web-wallet)                                  | MultiversX Web Wallet                                                                                             |
-| [Web Wallet - tokens operations](/wallet/create-a-fungible-token) | Learn how to perform tokens operation inside Web Wallet                                                           |
-| [MultiversX DeFi Wallet](/wallet/wallet-extension/)           | MultiversX DeFi Wallet Extension                                                                                        |
+| [xAlias](/wallet/xalias)                                          | Single sign-on solution for Web3, powered by Web2 (Google Sign-In).                                               |
+| [Web Wallet - tokens operations](/wallet/create-a-fungible-token) | Learn how to perform tokens operation inside Web Wallet.                                                          |
+| [MultiversX DeFi Wallet](/wallet/wallet-extension/)               | MultiversX DeFi Wallet Extension                                                                                  |
 | [Ledger](/wallet/ledger)                                          | Ledger Hardware Wallet                                                                                            |
+| [Keystore](/wallet/keystore)                                      | Learn more about how to use the **keystore** file.                                                                |

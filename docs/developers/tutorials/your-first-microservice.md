@@ -77,12 +77,7 @@ then, we will have to see a log line like this one:
 Ok, let's get started with the microservice. First, we'll clone the template provided by the MultiversX team.
 
 ```sh
-git clone https://github.com/multiversx/mx-ping-pong-sc microservice
-```
-
-```sh
-cd microservice
-ls -l
+git clone https://github.com/multiversx/mx-ping-pong-service
 ```
 
 Let's take a look at the app structure:
@@ -305,6 +300,6 @@ Now we provide you a starting point in order to build your ideas and projects.
 Break down this guide and learn more about how to extend the microservice, the dapp and the smart contract. Learn more on the MultiversX official documentation site here: [https://docs.multiversx.com](/).
 
 If you have any questions, feel free to ask them using stackoverflow here:
-[https://stackoverflow.com/questions/tagged/elrond](https://stackoverflow.com/questions/tagged/elrond).
+[https://stackoverflow.com/questions/tagged/multiversx](https://stackoverflow.com/questions/tagged/multiversx).
 
 Share this guide if you found it useful.

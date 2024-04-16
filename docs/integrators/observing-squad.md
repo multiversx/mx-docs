@@ -131,6 +131,8 @@ For observing squad users that still use the old `elrond-go-scripts`: since the 
 In order to upgrade the squad, you first need to migrate to the new scripts, while still running the squad via the old scripts. After that,
 we'll use the new scripts to upgrade the squad.
 
+[comment]: # (mx-context-auto)
+
 ### **How to migrate to the new scripts**
 
 If you already migrated from `elrond-go-scripts` to `mx-chain-scripts`, you can skip this section.
@@ -145,6 +147,8 @@ $ ./script.sh migrate
 ```
 
 The above commands should clone the new scripts and migrate the old configuration files to the new ones. You may now proceed to the next section.
+
+[comment]: # (mx-context-auto)
 
 ### **How to upgrade to the newest version via the new scripts**
 
@@ -161,6 +165,7 @@ $ ./script.sh start
 
 After successfully migrating to the new scripts and upgrading the squad, you can now remove the old scripts. (example: `rm -rf ~/elrond-go-scripts`)
 
+[comment]: # (mx-context-auto)
 
 ## **Monitoring and trivial checks**
 

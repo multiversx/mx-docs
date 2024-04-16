@@ -14,7 +14,7 @@ In order to ensure that the newly added content is correctly aligned and every M
 ### Requirements:
 
 - a `git` client installed
-- `nodejs` and `npm` installed
+- `nodejs` (v16.14.2) and `npm` installed
 - optional, but useful: an IDE (Visual Code for example)
 
 ### Steps:
@@ -44,7 +44,11 @@ Anyone can contribute to the docs. Any help is appreciated. Here are some ways i
 
 ### Guidelines
 
-- external contributions will be made to the `external` branch.
+Each documentation page should include a `Edit this page` link that will redirect the user to the corresponding GitHub edit page. 
+
+Alternatively, contributions can be made manually by following the steps below:
+
+- external contributions will be made to the `development` branch.
 - you can contribute from GitHub directly (not recommended) or by working locally and pushing the changes (recommended).
 - the documentation pages are to be found inside the `docs` directory at the corresponding category.
 - please follow `docs/utils.md` for Markdown examples.
@@ -53,11 +57,11 @@ A web version of the Markdown examples is available [here](https://docs.multiver
 
 ### Opening a `pull request`
 
-- create a new branch starting from `external`.
+- create a new branch starting from `development`.
 - push the changes to the new branch.
-- open a `pull request` from your branch to `external` branch.
+- open a `pull request` from your branch to `development` branch.
 - wait for MultiversX members to review your pull request.
 
-Once approved, the pull request will be merged into the `external` branch. From time to time (and depending on the emergency of the changes) we will merge the `external` branch into `development` or `master` branches.
+Once approved, the pull request will be merged into the `development` branch. From time to time (and depending on the emergency of the changes) we will merge the `development` branch into `master` branch.
 
 ## **Thank you!**

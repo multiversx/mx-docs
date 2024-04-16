@@ -84,7 +84,7 @@ Notice that there are some differences as compared to the regular _frontend_ [tr
 
 [comment]: # (mx-context-auto)
 
-### Preparing relayed v1 transaction using erdjs
+### Preparing relayed v1 transaction using mx-sdk-js-core
 
 `mx-sdk-js-core` has built-in support for relayed transactions version 1, by using a builder which allows one to prepare such
 a transaction.
@@ -169,7 +169,7 @@ the matching gas limit values between the relayed and inner transactions.
 It would look like:
 
 ```rust
-RelayedV1Transaction {
+RelayedV2Transaction {
     Sender: <Relayer address>
     Receiver: <Address that signed the inner transaction>
     Value: 0
@@ -183,7 +183,7 @@ RelayedV1Transaction {
 ```
 
 :::note
-Noticing the arguments needed, there are some limitations for the inner transaction: it cannot have call value or a custom gas price.
+Noticing the arguments needed, there are some limitations for the inner transaction: it cannot have call value, a custom gas price or a guardian.
 :::
 
 Therefore, when one wants to build such a transaction, the steps would be:

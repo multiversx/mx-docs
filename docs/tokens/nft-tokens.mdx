@@ -289,7 +289,7 @@ The existing roles are:
 For NFT:
 
 - ESDTRoleNFTCreate : this role allows one to create a new NFT
-- ESDTRoleNFTBurn : this role allows one to burn quantity of a specific NFT
+- ESDTRoleNFTBurn : this role allows one to burn a specific NFT
 - ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 - ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
 - ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
@@ -556,7 +556,7 @@ ESDTNFTUpdateAttributesTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTUpdateAttributes" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <NFT or SFT nonce in hexadecimal encoding> +
           "@" + <Attributes in hexadecimal encoding>
 }
 ```
@@ -580,7 +580,7 @@ ESDTNFTAddURITransaction {
     GasLimit: 10000000
     Data: "ESDTNFTAddURI" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <NFT or SFT nonce in hexadecimal encoding> +
           "@" + <URI in hexadecimal encoding> +
           "@" + <URI in hexadecimal encoding> +
           ...
@@ -605,7 +605,7 @@ AddQuantityTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTAddQuantity" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <SFT nonce in hexadecimal encoding>
           "@" + <quantity to add in hexadecimal encoding>
 }
 ```
@@ -628,7 +628,7 @@ BurnQuantityTransaction {
     GasLimit: 10000000
     Data: "ESDTNFTBurn" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <SFT nonce in hexadecimal encoding>
           "@" + <quantity to burn in hexadecimal encoding>
 }
 ```
@@ -736,7 +736,7 @@ Here is an example of an NFT identifier: `ABC-1a9c7d-05dc`
 
 The collection identifier is `ABC-1a9c7d` and the NFT nonce is `05dc`. Note that the `05dc` is hexadecimal encoded, it represents decimal 1500.
 
-Also note that a MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of erdjs for address (all the methods for addresses can be found [here](https://github.com/multiversx/mx-sdk-erdjs/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
+Also note that a MultiversX address is in bech32, so you will need to convert the address from bech32 to hexadecimal. This can be done with the `hex()` method of mx-sdk-js-core for address (all the methods for addresses can be found [here](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/address.ts)) or manually with an external converter which you can find [here.](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 :::
 
 [comment]: # (mx-context-auto)
@@ -893,7 +893,6 @@ Returns the balance of an address for specific ESDT Tokens.
 
 ```bash
 https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
-https://gateway.multiversx.com/address/<bech32Address>/nft/<tokenIdentifier>/nonce/<creation-nonce>
 ```
 
 | Param           | Required                                  | Type      | Description                            |
@@ -945,7 +944,6 @@ Returns the identifiers of the tokens that have been registered by the provided 
 
 ```bash
 https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
-https://gateway.multiversx.com/address/<bech32Address>/registered-nfts
 ```
 
 | Param         | Required                                  | Type     | Description                            |
@@ -983,7 +981,6 @@ values={[
 Returns the identifiers of the tokens where the given address has the given role.
 
 ```bash
-https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 https://gateway.multiversx.com/address/<bech32Address>/esdts-with-role/<role>
 ```
 
@@ -1031,7 +1028,6 @@ values={[
 | txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash of the transaction |
 
 ```bash
-https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 ```
 

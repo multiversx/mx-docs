@@ -17,14 +17,18 @@ The `_id` field of this index is represented by a bech32 encoded smart contract 
 
 ## Fields
 
+[comment]: # (table:scdeploys)
+
 | Field         | Description                                                                                         |
 |---------------|-----------------------------------------------------------------------------------------------------|
 | deployTxHash  | The deployTxHash holds the hex encoded hash of the transaction that deployed the smart contract.    |
-| deployer      | The address field holds the address in a bech32 encoding of the smart contract deployer.            |
+| deployer      | The address field holds the address in bech32 encoding of the smart contract deployer.              |
 | timestamp     | The timestamp field represents the timestamp of the block in which the smart contract was deployed. |
 | upgrades      | The upgrades field holds a list with details about the upgrades of the smart contract.              |
 
 The `upgrades` field is populated with the fields below:
+
+[comment]: # (table:scdeploys.upgrades)
 
 | upgrades fields | Description                                                                                            |
 |-----------------|--------------------------------------------------------------------------------------------------------|
