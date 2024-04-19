@@ -58,7 +58,7 @@ to enable events notifier connector via WebSocket or via HTTP integrations. The 
 
 :::tip
 Please make sure to check also [README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
-instructions in events notifier main repo.
+instructions in events notifier main repo on how to set up observer client.
 :::
 
 [comment]: # (mx-context-auto)
@@ -175,7 +175,7 @@ file that can be used to configure the service.
 
 :::tip
 Please make sure to check also [README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
-instructions in events notifier main repo.
+instructions in events notifier main repo, on how to configure events notifier service.
 :::
 
 There are some general configuration options, which should be fine with their default values:
