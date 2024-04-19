@@ -8,8 +8,8 @@ title: Events notifier
 ## Overview
 
 A MultiversX observer node can push block events to a notifier service, which will process
-and forward the events to subscribers (via RabbitMQ). This way, one can subscribe to a RabbitMQ
-queue and receive block events, whenever a block is committed to the chain, instead of 
+and forward the events to subscribers (via RabbitMQ, WebSocket Client). This way, one can subscribe to a RabbitMQ
+queue (or WebSocket connection) and receive block events, whenever a block is committed to the chain, instead of 
 polling an API frequently.
 
 The GitHub repository for the notifier service can be found [here](https://github.com/multiversx/mx-chain-notifier-go).
@@ -21,7 +21,7 @@ The GitHub repository for the notifier service can be found [here](https://githu
 The observer node in the network will be connected to notifier service.
 The observer will send block events to notifier. The notifier service will
 receive and filter events, it will apply deduplication if enabled, and it will push the events
-to RabbitMQ instance, or push them to websocket subscribers.
+to RabbitMQ instance, or to WebSocket subscribers.
 
 :::important
 Set up at least one observer for each shard in order to handle all the events in the chain.
@@ -42,16 +42,12 @@ In the figure above:
 
 :::info
 Please make the distinction between `observer node` -> `notifier` communication (which can be via HTTP or WebSocket) and
-`notifier` -> `subscriber` (which can be via RabbitMQ and WebSocket).
+`notifier` -> `subscriber` (which can be via RabbitMQ or WebSocket).
 :::
 
 [comment]: # (mx-context-auto)
 
-## Set up observer and notifier
-
-[comment]: # (mx-context-auto)
-
-### Observer Client
+## Set up observer client
 
 On the observer side, there is a WebSocket client that will push block events to notifier service.
 There is also the HTTP Integration, which will be deprecated in the future.
@@ -60,9 +56,14 @@ In the observer node's configuration directory, the `external.toml` config file 
 to enable events notifier connector via WebSocket or via HTTP integrations. The config file can be found 
 [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/external.toml).
 
+:::tip
+Please make sure to check also [README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
+instructions in events notifier main repo.
+:::
+
 [comment]: # (mx-context-auto)
 
-#### WebSocket Integration
+### WebSocket Integration
 
 The WebSocket integration is a generic one, and can be used for multiple outport driver integrations.
 In case Elasticsearch integration is already being used with WebSocket connector, a separate config
@@ -114,7 +115,7 @@ configuration file.
 
 [comment]: # (mx-context-auto)
 
-#### HTTP Integration
+### HTTP Integration
 
 For http integration, the supported config variables are as follows:
 
@@ -167,10 +168,15 @@ delays due to outport driver.
 
 [comment]: # (mx-context-auto)
 
-### Notifier Service
+## Set up notifier service
 
 In the notifier configuration directory (`cmd/notifier/config`), there is the `config.toml`
 file that can be used to configure the service.
+
+:::tip
+Please make sure to check also [README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
+instructions in events notifier main repo.
+:::
 
 There are some general configuration options, which should be fine with their default values:
 ```toml
@@ -206,7 +212,7 @@ There are 2 ways to connect observer node with events notifier service:
 
 [comment]: # (mx-context-auto)
 
-#### WebSocket Integration
+### WebSocket Integration {#notifier-websocket-integration}
 
 There is a separate config section `WebSocketConnector` that has to be aligned with
 `HostDriversConfig` from observer node.
@@ -244,7 +250,7 @@ There is a separate config section `WebSocketConnector` that has to be aligned w
 
 [comment]: # (mx-context-auto)
 
-#### HTTP Integration
+### HTTP Integration
 
 The supported config variables are:
 - `Host`: the address and/or port on which the http server listens on. Should be the same 
@@ -276,10 +282,11 @@ Starting with release `v1.2.0`, an additional field `Enabled = true` has been ad
 
 [comment]: # (mx-context-auto)
 
-#### Deduplication
+### Deduplication
 
-If `CheckDuplicates` will be set to true, notifier service will try to connect to a redis 
-instance. In this context, redis will be used as a locker service mechanism for deduplication.
+If `CheckDuplicates` will be set to true in events notifier main config file,
+notifier service will try to connect to a redis instance.
+In this context, redis will be used as a locker service mechanism for deduplication.
 This is useful in scenarios when multiple observer nodes from same shard are used to send
 events to the same notifier instance.
 
@@ -305,20 +312,27 @@ The `Redis` section includes the following parameters as described below:
     TTL = 30
 ```
 
-For more details on notifier service setup, please follow the **Install** and **Launching**
+The `redis` service has to be configured separatelly.
+For more details on notifier service redis setup, please follow the **Install** and **Launching**
 sections from [README](https://github.com/multiversx/mx-chain-notifier-go) in the repository.
+There is also an [example](https://github.com/multiversx/mx-chain-notifier-go/blob/main/docker-compose.yml)
+on how to run a setup with redis locally (for development) with docker-compose.
 
 [comment]: # (mx-context-auto)
 
-### Subscribers
+## Subscribers
 
 Currently there are 2 supported subscribing solutions:
 * RabbitMQ
-* Websocket
+* WebSocket
 
 The subscribing solution is selected based on a CLI parameter, please check
 [README](https://github.com/multiversx/mx-chain-notifier-go) from
 github repository for more info on the CLI parameters.
+
+[comment]: # (mx-context-auto)
+
+### RabbitMQ
 
 In the notifier configuration directory (`cmd/notifier/config`), in `config.toml` there is
 a separate section `RabbitMQ`, which can be used to set up rabbitMQ connection url and
@@ -349,12 +363,30 @@ It is recommended to use the setup with RabbitMQ, if it is very important to avo
 
 [comment]: # (mx-context-auto)
 
+### WebSocket
+
+If WebSocket subscribing solution is selected via CLI parameter, an additional http
+endpoint `/hub/ws/` will be available for sending subscriptions.
+
+There are more notes
+on how to send subscriptions and how to consume events
+[here](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#websockets).
+
+Please check also events section [below](#events) on how WS event is constructed. 
+
+:::info
+Please make the distinction between `observer node` -> `notifier` communication which can be done via WebSocket and
+`WebSocket` subscribing solution which is a different setup from the one presented [above](#notifier-websocket-integration)
+:::
+
+[comment]: # (mx-context-auto)
+
 ## Events
 
 There are multiple event types:
-- Push Block event: when the block is committed, it contains logs and events
-- Revert Block event: when the block is reverted
-- Finalized Block event: when the block is finalized
+- `Push Block event`: when the block is committed, it contains logs and events
+- `Revert Block event`: when the block is reverted
+- `Finalized Block event`: when the block is finalized
 
 In RabbitMQ there is a separate exchange for each event type.
 In Websocket setup, there is a event type field in each message.
