@@ -377,7 +377,7 @@ on how to send subscriptions and how to consume events
 Please check also events section [below](#events) on how a WS event is constructed. 
 
 :::info
-Please make the distinction between `observer node` -> `notifier` communication which can be done via WebSocket and the
+Please make the distinction between `observer node` -> `notifier` communication which can be done via `WebSocket` and the
 `WebSocket` subscribing solution which is a different setup from the one presented [above](#notifier-websocket-integration)
 :::
 
