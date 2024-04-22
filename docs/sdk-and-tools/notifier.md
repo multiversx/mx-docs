@@ -8,7 +8,7 @@ title: Events notifier
 ## Overview
 
 A MultiversX observer node can push block events to a notifier service, which will process
-and forward the events to subscribers (via RabbitMQ, WebSocket Client). This way, one can subscribe to a RabbitMQ
+and forward the events to subscribers (via RabbitMQ or WebSocket Client). This way, one can subscribe to a RabbitMQ
 queue (or WebSocket connection) and receive block events, whenever a block is committed to the chain, instead of 
 polling an API frequently.
 
@@ -252,7 +252,7 @@ There is a separate config section `WebSocketConnector` that has to be aligned w
 
 [comment]: # (mx-context-auto)
 
-### HTTP Integration
+### HTTP Integration {#websocket-http-integration}
 
 The supported config variables are:
 - `Host`: the address and/or port on which the http server listens on. Should be the same 
