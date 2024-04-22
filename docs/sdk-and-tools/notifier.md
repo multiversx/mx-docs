@@ -287,7 +287,7 @@ Starting with release `v1.2.0`, an additional field `Enabled = true` has been ad
 ### Deduplication
 
 If `CheckDuplicates` is set to `true` in events notifier main config file,
-notifier service will try to connect to a **redis** instance.
+the notifier service will try to connect to a **redis** instance.
 In this context, redis will be used as a locker service mechanism for deduplication.
 This is useful in scenarios when multiple observer nodes from same shard are used to send
 events to the same notifier instance.
