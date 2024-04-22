@@ -473,7 +473,7 @@ Now, prepare the deploy transaction:
 ```
 import { U32Value } from "@multiversx/sdk-core";
 
-// For deploy arguments, use [`TypedValue`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TypedValue.html) objects if you haven't provided an ABI to the factory:
+// For deploy arguments, use "TypedValue" objects if you haven't provided an ABI to the factory:
 let args = [new U32Value(42)];
 // Or use simple, plain JavaScript values and objects if you have provided an ABI to the factory:
 args = [42];
@@ -551,7 +551,7 @@ However, since the `parseDeploy` method requires a [`TransactionOutcome`](https:
 we need to first convert our `TransactionOnNetwork` object to a [`TransactionOutcome`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionOutcome.html), by means of a [`TransactionsConverter`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionsConverter.html).
 
 :::important
-Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns. 
+Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns.
 The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
 
 This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
@@ -610,7 +610,7 @@ previously deployed smart contract:
 ```
 import { U32Value } from "@multiversx/sdk-core";
 
-// For arguments, use [`TypedValue`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TypedValue.html) objects if you haven't provided an ABI to the factory:
+// For arguments, use "TypedValue" objects if you haven't provided an ABI to the factory:
 let args = [new U32Value(42)];
 // Or use simple, plain JavaScript values and objects if you have provided an ABI to the factory:
 args = [42];
@@ -733,7 +733,7 @@ However, since the `parseExecute` method requires a [`TransactionOutcome`](https
 we need to first convert our `TransactionOnNetwork` object to a `TransactionOutcome`, by means of a [`TransactionsConverter`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionsConverter.html).
 
 :::important
-Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns. 
+Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns.
 The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
 
 This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
@@ -797,7 +797,7 @@ You will notice that the [`SmartContractQueriesController`](https://multiversx.g
 A `NetworkProvider`, slighly adapted, is used to satisfy this requirement.
 
 :::important
-Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns. 
+Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns.
 The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
 
 This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
