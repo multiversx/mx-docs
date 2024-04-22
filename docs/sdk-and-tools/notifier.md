@@ -57,8 +57,9 @@ to enable events notifier connector via WebSocket or via HTTP integrations. The 
 [here](https://github.com/multiversx/mx-chain-go/blob/master/cmd/node/config/external.toml).
 
 :::tip
-Please make sure to check also [README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
-instructions in events notifier main repo on how to set up observer client.
+For setting up an observer client, make sure to also check the
+[README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
+instructions within the events notifier source code repository.
 :::
 
 [comment]: # (mx-context-auto)
@@ -174,8 +175,9 @@ In the notifier configuration directory (`cmd/notifier/config`), there is the `c
 file that can be used to configure the service.
 
 :::tip
-Please make sure to check also [README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
-instructions in events notifier main repo, on how to configure events notifier service.
+For setting up an events notifier service, make sure to also check the
+[README](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#prerequisites)
+instructions within the events notifier source code repository.
 :::
 
 There are some general configuration options, which should be fine with their default values:
@@ -284,8 +286,8 @@ Starting with release `v1.2.0`, an additional field `Enabled = true` has been ad
 
 ### Deduplication
 
-If `CheckDuplicates` will be set to true in events notifier main config file,
-notifier service will try to connect to a redis instance.
+If `CheckDuplicates` is set to `true` in events notifier main config file,
+notifier service will try to connect to a **redis** instance.
 In this context, redis will be used as a locker service mechanism for deduplication.
 This is useful in scenarios when multiple observer nodes from same shard are used to send
 events to the same notifier instance.
@@ -312,7 +314,7 @@ The `Redis` section includes the following parameters as described below:
     TTL = 30
 ```
 
-The `redis` service has to be configured separatelly.
+The `redis` service has to be configured separately.
 For more details on notifier service redis setup, please follow the **Install** and **Launching**
 sections from [README](https://github.com/multiversx/mx-chain-notifier-go) in the repository.
 There is also an [example](https://github.com/multiversx/mx-chain-notifier-go/blob/main/docker-compose.yml)
@@ -365,17 +367,17 @@ It is recommended to use the setup with RabbitMQ, if it is very important to avo
 
 ### WebSocket
 
-If WebSocket subscribing solution is selected via CLI parameter, an additional http
+If WebSocket subscribing solution is selected via CLI parameter, an additional HTTP
 endpoint `/hub/ws/` will be available for sending subscriptions.
 
 There are more notes
 on how to send subscriptions and how to consume events
 [here](https://github.com/multiversx/mx-chain-notifier-go?tab=readme-ov-file#websockets).
 
-Please check also events section [below](#events) on how WS event is constructed. 
+Please check also events section [below](#events) on how a WS event is constructed. 
 
 :::info
-Please make the distinction between `observer node` -> `notifier` communication which can be done via WebSocket and
+Please make the distinction between `observer node` -> `notifier` communication which can be done via WebSocket and the
 `WebSocket` subscribing solution which is a different setup from the one presented [above](#notifier-websocket-integration)
 :::
 
