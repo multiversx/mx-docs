@@ -296,7 +296,19 @@ function printUser({ name, age }) {
 ```
 
 There are exceptions to this rule like:
-1. There is a name clash with variables defined above
+1. The arguments are optional
+
+```jsx
+function logWithOptions(options?: {green?: boolean}) {
+  if (options?.green) {
+    return console.log('\x1b[42m%s\x1b[0m', 'Some green text');
+  }
+  console.log('Some normal text');
+}
+
+```
+
+2. There is a name clash with variables defined above
 
 ```jsx
 const type = 'admin';
@@ -305,7 +317,7 @@ function verifyUser(user) {
 }
 
 ```
-2. Same props are passed below to a component, or are used for further processing
+3. Same props are passed below to a component, or are used for further processing
 
 ```jsx
 // 🚫 DON'T 
