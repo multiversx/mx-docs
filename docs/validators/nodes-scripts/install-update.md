@@ -27,18 +27,22 @@ After that, a menu will appear with the following options. Select the option `1`
 ```bash
  1) install
  2) observing_squad
- 3) upgrade
- 4) upgrade_squad
- 5) upgrade_proxy
- 6) remove_db
- 7) start
- 8) stop
- 9) cleanup
- 10) github_pull
- 11) add_nodes
- 12) get_logs
- 13) benchmark
- 14) quit
+ 3) multikey_group
+ 4) upgrade
+ 5) upgrade_multikey
+ 6) upgrade_squad
+ 7) upgrade_proxy
+ 8) remove_db
+ 9) start
+10) start_all
+11) stop
+12) stop_all
+13) cleanup
+14) github_pull
+15) add_nodes
+16) get_logs
+17) benchmark
+18) quit
  Please select an action:1
 ```
 
@@ -124,10 +128,10 @@ Your first node is called `node-0` and it is a REST API that will run on port `8
 
 Upgrade your node by running the script and selecting either of these options:
 
-- `10 - github_pull` downloads the latest version of the scripts
-- `3 - upgrade`
-- `7 - start`
-- `14 - quit`
+- `14 - github_pull` downloads the latest version of the scripts
+- `4 - upgrade`
+- `9 - start`
+- `18 - quit`
 
 ```bash
 ~/mx-chain-scripts/script.sh
@@ -203,3 +207,19 @@ Resetting the value to `""` will make the scripts to use the released version.
 :::caution
 The `OVERRIDE_CONFIGVER` is not backed up when calling `github_pull` operation.
 :::
+
+## **Troubleshooting**
+
+If the node fails to start and the termui window shows messages like:
+```
+termui websocket error, retrying in 10s...
+termui websocket error, retrying in 10s...
+termui websocket error, retrying in 10s...
+```
+
+a good method to check what the node is trying to do at startup (and fails) is to issue this command:
+
+```bash
+sudo journalctl -f -u elrond-node-XXX.service
+```
+ by replacing `XXX` with the actual node instance on the machine: 0, 1, 2, 3... 
