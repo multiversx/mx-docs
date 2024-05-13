@@ -62,7 +62,7 @@ A web version of the Markdown examples is available [here](https://docs.multiver
 - open a `pull request` from your branch to `development` branch.
 - wait for MultiversX members to review your pull request.
 
-Once approved, the pull request will be merged into the `development` branch. From time to time (and depending on the emergency of the changes) we will merge the `development` branch into `master` branch.
+Once approved, the pull request will be merged into the `development` branch. From time to time (and depending on the emergency of the changes) we will merge the `development` branch into `master` branch. test   
 
 ## **Thank you!**
 
