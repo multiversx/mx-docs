@@ -65,3 +65,4 @@ A web version of the Markdown examples is available [here](https://docs.multiver
 Once approved, the pull request will be merged into the `development` branch. From time to time (and depending on the emergency of the changes) we will merge the `development` branch into `master` branch.
 
 ## **Thank you!**
+
