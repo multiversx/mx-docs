@@ -233,7 +233,7 @@ const config = {
           },
           {
             from: "/developers/developer-reference/wasm-contract-calls",
-            to: "/developers/developer-reference/sc-contract-calls",
+            to: "/developers/transactions/tx-legacy-calls",
           },
           {
             from: "/developers/developer-reference/wasm-api-functions",
