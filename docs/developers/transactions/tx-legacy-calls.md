@@ -1,9 +1,16 @@
 ---
-id: sc-contract-calls
-title: Smart contract calls
+id: tx-legacy-calls
+title: Legacy SC calls
 ---
 
+
 [comment]: # (mx-abstract)
+
+## Deprecated, kept for backwards compatibility (Andrei)
+
+use new syntax
+
+[comment]: # (mx-context-auto)
 
 ## Introduction
 
