@@ -31,9 +31,13 @@ This SDK consists of a CLI tool, namely `mxpy`, and Python helpers and utilities
 
 ## `sdk-py`: the Python libraries
 
+:::note
+The `multiversx-sdk` package is a unification of the previous packages (multiversx-sdk-core, multiversx-sdk-wallet and multiversx-sdk-network-providers). This is the package that **should** be used from now on. All the upcoming updates will come only to this package. The older packages will no longer receiver updates and will soon be deprecated.
+:::
+
 | Package                                                                                     | Source code                                                               | Description                                                                                   |
 |---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| [multiversx-sdk](https://pypi.org/project/multiversx-sdk)                           | [mx-sdk-py](https://github.com/multiversx/mx-sdk-py)            | The all in one Python SDK for interacting with MultiversX. It's the unification of the previous packages (multiversx-sdk-core, multiversx-sdk-wallet and multiversx-sdk-network-providers). |
-| [multiversx-sdk-core](https://pypi.org/project/multiversx-sdk-core)                           | [mx-sdk-py-core](https://github.com/multiversx/mx-sdk-py-core)            | Basic components for interacting with the blockchain and with smart contracts. Will soon be deprecated. |
-| [multiversx-sdk-wallet](https://pypi.org/project/multiversx-sdk-wallet)                       | [mx-sdk-py-wallet](https://github.com/multiversx/mx-sdk-py-wallet)                       | Core wallet components (generation, signing). Will soon be deprecated. |
-| [multiversx-sdk-network-providers](https://pypi.org/project/multiversx-sdk-network-providers) | [mx-sdk-py-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) | Network providers (API, Gateway). Will soon be deprecated. |
+| [multiversx-sdk](https://pypi.org/project/multiversx-sdk)                           | [mx-sdk-py](https://github.com/multiversx/mx-sdk-py)            | The all in one Python SDK for interacting with MultiversX. |
+| [multiversx-sdk-core](https://pypi.org/project/multiversx-sdk-core)                           | [mx-sdk-py-core](https://github.com/multiversx/mx-sdk-py-core)            | Basic components for interacting with the blockchain and with smart contracts. **Will soon be deprecated.** |
+| [multiversx-sdk-wallet](https://pypi.org/project/multiversx-sdk-wallet)                       | [mx-sdk-py-wallet](https://github.com/multiversx/mx-sdk-py-wallet)                       | Core wallet components (generation, signing). **Will soon be deprecated.** |
+| [multiversx-sdk-network-providers](https://pypi.org/project/multiversx-sdk-network-providers) | [mx-sdk-py-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) | Network providers (API, Gateway). **Will soon be deprecated.** |

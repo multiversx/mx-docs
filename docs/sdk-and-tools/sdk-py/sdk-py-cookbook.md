@@ -31,7 +31,7 @@ git+https://git@github.com/multiversx/mx-sdk-py.git@v1.2.3#egg=multiversx_sdk
 Create an `Address` object from a _bech32-encoded_ string:
 
 ```py
-from multiversx_sdk.core import Address
+from multiversx_sdk import Address
 
 address = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
@@ -56,7 +56,7 @@ address = Address(pubkey, "erd")
 Alternatively, you can use an `AddressFactory` (initialized with a specific **HRP**) to create addresses:
 
 ```py
-from multiversx_sdk.core import AddressFactory
+from multiversx_sdk import AddressFactory
 
 factory = AddressFactory("erd")
 
@@ -75,7 +75,7 @@ print(address.to_hex())
 Getting the shard of an address:
 
 ```py
-from multiversx_sdk.core import AddressComputer
+from multiversx_sdk import AddressComputer
 
 address_computer = AddressComputer(number_of_shards=3)
 print("Shard:", address_computer.get_shard_of_address(address))
@@ -94,8 +94,7 @@ print("Is contract:", address.is_smart_contract())
 Create an EGLD transfer:
 
 ```py
-from multiversx_sdk.core import Transaction
-from multiversx_sdk.converters import TransactionsConverter
+from multiversx_sdk import Transaction, TransactionsConverter
 
 transaction = Transaction(
     sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
@@ -133,7 +132,7 @@ print(transaction_converter.transaction_to_dictionary(transaction))
 Alternatively, we can create an EGLD transfer using a **transaction factory** (as we will see below, transaction factories are more commonly used). But before that, we have to create a configuration object (for any factory that we might use):
 
 ```py
-from multiversx_sdk.core.transactions_factories import TransactionsFactoryConfig
+from multiversx_sdk import TransactionsFactoryConfig
 
 config = TransactionsFactoryConfig(chain_id="D")
 ```
@@ -141,8 +140,7 @@ config = TransactionsFactoryConfig(chain_id="D")
 The **transaction factory** is parametrized at instantiation, and the transaction is obtained by invoking the `create_transaction...` method:
 
 ```py
-from multiversx_sdk.core.transactions_factories import \
-    TransferTransactionsFactory
+from multiversx_sdk import TransferTransactionsFactory
 
 transfer_factory = TransferTransactionsFactory(config=config)
 alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -163,7 +161,7 @@ print("Transaction data:", transaction.data.decode())
 Create a single ESDT transfer:
 
 ```py
-from multiversx_sdk.core import Token, TokenTransfer
+from multiversx_sdk import Token, TokenTransfer
 
 token = Token("TEST-8b028f")
 transfer = TokenTransfer(token, 10000)
@@ -238,8 +236,7 @@ For example, when sending multiple ESDT and NFT tokens, the receiver field of th
 For decoding the data field we have a so called `TransactionDecoder`. We fetch the transaction from the network and then use the decoder.
 
 ```py
-from multiversx_sdk.network_providers import (ProxyNetworkProvider,
-                                              TransactionDecoder)
+from multiversx_sdk import ProxyNetworkProvider, TransactionDecoder
 
 proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
 transaction = proxy.get_transaction("3e7b39f33f37716186b6ffa8761d066f2139bff65a1075864f612ca05c05c05d")
@@ -255,7 +252,7 @@ print(decoded_transaction.to_dict())
 First, we get the newtwork configuration using the network providers.
 
 ```py
-from multiversx_sdk.network_providers import ProxyNetworkProvider
+from multiversx_sdk import ProxyNetworkProvider
 
 provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 network_config = provider.get_network_config()
@@ -266,12 +263,9 @@ network_config = provider.get_network_config()
 ```py
 from pathlib import Path
 
-from multiversx_sdk.core import Address, Transaction, TransactionComputer
-from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
-    RelayedTransactionsFactory
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.wallet.user_signer import UserSigner
+from multiversx_sdk import (Address, Transaction, TransactionComputer,
+                            RelayedTransactionsFactory, TransactionsFactoryConfig,
+                            UserSigner)
 
 signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/bob.pem"))
 transaction_computer = TransactionComputer()
@@ -304,12 +298,9 @@ print(transaction_converter.transaction_to_dictionary(relayed_tx))
 ```py
 from pathlib import Path
 
-from multiversx_sdk.core import Address, Transaction, TransactionComputer
-from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
-    RelayedTransactionsFactory
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.wallet.user_signer import UserSigner
+from multiversx_sdk import (Address, Transaction, TransactionComputer,
+                            RelayedTransactionsFactory, TransactionsFactoryConfig,
+                            UserSigner)
 
 signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/bob.pem"))
 transaction_computer = TransactionComputer()
@@ -346,8 +337,7 @@ Create a transaction to deploy a smart contract:
 ```py
 from pathlib import Path
 
-from multiversx_sdk.core.transactions_factories import \
-    SmartContractTransactionsFactory
+from multiversx_sdk import SmartContractTransactionsFactory
 
 sc_factory = SmartContractTransactionsFactory(config)
 bytecode = Path("./data/counter.wasm").read_bytes()
@@ -435,9 +425,8 @@ print("Transaction data:", call_transaction.data.decode())
 In order to create a contract query and run it (more details about **network providers** can be found below), do as follows:
 
 ```py
-from multiversx_sdk.core import SmartContractQueriesController
-from multiversx_sdk.network_providers import ProxyNetworkProvider
-from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
+from multiversx_sdk import (ProxyNetworkProvider, QueryRunnerAdapter,
+                            SmartContractQueriesController)
 
 contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4")
 query_runner = QueryRunnerAdapter(ProxyNetworkProvider("https://devnet-api.multiversx.com"))
@@ -460,7 +449,7 @@ print("Return data:", response.return_data_parts)
 Mnemonic generation is based on [`trezor/python-mnemonic`](https://github.com/trezor/python-mnemonic) and can be achieved as follows:
 
 ```py
-from multiversx_sdk.wallet import Mnemonic
+from multiversx_sdk import Mnemonic
 
 mnemonic = Mnemonic.generate()
 words = mnemonic.get_words()
@@ -471,7 +460,7 @@ print(words)
 The mnemonic can be saved to a keystore file:
 
 ```py
-from multiversx_sdk.wallet import UserWallet
+from multiversx_sdk import UserWallet
 
 wallet = UserWallet.from_mnemonic(mnemonic.get_text(), "password")
 wallet.save(Path("./output/walletWithMnemonic.json"))
@@ -497,7 +486,7 @@ wallet.save(Path("./output/wallet.json"), address_hrp="erd")
 ... or as a PEM wallet (usually not recommended):
 
 ```py
-from multiversx_sdk.wallet import UserPEM
+from multiversx_sdk import UserPEM
 
 label = Address(public_key.buffer, "erd").to_bech32()
 pem = UserPEM(label=label, secret_key=secret_key)
@@ -511,7 +500,7 @@ This is not a very common use-case - you might refer to [signing objects](#signi
 Load a keystore that holds an **encrypted mnemonic** (and perform wallet derivation at the same time):
 
 ```py
-from multiversx_sdk.wallet import UserWallet
+from multiversx_sdk import UserWallet
 
 secret_key = UserWallet.load_secret_key(Path("../multiversx_sdk/testutils/testwallets/withDummyMnemonic.json"), "password", address_index=0)
 address = secret_key.generate_public_key().to_address("erd")
@@ -533,7 +522,7 @@ print("Address:", address.to_bech32())
 Load the secret key from a PEM file:
 
 ```py
-from multiversx_sdk.wallet import UserPEM
+from multiversx_sdk import UserPEM
 
 pem = UserPEM.from_file(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
 
@@ -546,7 +535,7 @@ print("Public key:", pem.public_key.hex())
 Creating a `UserSigner` from a JSON wallet:
 
 ```py
-from multiversx_sdk.wallet import UserSigner
+from multiversx_sdk import UserSigner
 
 signer = UserSigner.from_wallet(Path("../multiversx_sdk/testutils/testwallets/alice.json"), "password")
 ```
@@ -560,7 +549,7 @@ signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/
 Signing a transaction:
 
 ```py
-from multiversx_sdk.core import Transaction, TransactionComputer
+from multiversx_sdk import Transaction, TransactionComputer
 
 tx = Transaction(
     nonce=90,
@@ -580,7 +569,7 @@ print("Signature:", tx.signature.hex())
 Signing an arbitrary message:
 
 ```py
-from multiversx_sdk.core import Message, MessageComputer
+from multiversx_sdk import Message, MessageComputer
 
 signer_address = signer.get_pubkey().to_address(hrp="erd")
 message = Message(b"hello")
@@ -596,8 +585,7 @@ print("Signature:", message.signature.hex())
 Creating a `UserVerifier`:
 
 ```py
-from multiversx_sdk.core import Address
-from multiversx_sdk.wallet import UserVerifier
+from multiversx_sdk import Address, UserVerifier
 
 alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
@@ -609,7 +597,7 @@ bob_verifier = UserVerifier.from_address(bob)
 Verifying a signature:
 
 ```py
-from multiversx_sdk.core import MessageComputer, TransactionComputer
+from multiversx_sdk import MessageComputer, TransactionComputer
 
 transaction_computer = TransactionComputer()
 message_computer = MessageComputer()
@@ -627,7 +615,7 @@ It's recommended to use the `multiversx_sdk_network_providers` components **as a
 Creating an API provider:
 
 ```py
-from multiversx_sdk.network_providers import ApiNetworkProvider
+from multiversx_sdk import ApiNetworkProvider
 
 provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
 ```
@@ -635,7 +623,7 @@ provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
 Creating a Proxy provider:
 
 ```py
-from multiversx_sdk.network_providers import ProxyNetworkProvider
+from multiversx_sdk import ProxyNetworkProvider
 
 provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 ```
@@ -665,7 +653,7 @@ print("Balance:", account_on_network.balance)
 When sending a number of transactions, you usually have to first fetch the account nonce from the network (see above), then manage it locally (e.g. increment upon signing & broadcasting a transaction):
 
 ```py
-from multiversx_sdk.core import AccountNonceHolder
+from multiversx_sdk import AccountNonceHolder
 
 nonce_holder = AccountNonceHolder(account_on_network.nonce)
 
