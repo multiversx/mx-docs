@@ -6,7 +6,7 @@ This documentation is not complete. More content will be added once it is accept
 
 :::
 
-This guide will help you with setting up, deploying and managing a sovereign chain. Various other educational topics are also covered.
+This guide provides detailed instructions on setting up, deploying, and managing a sovereign chain, along with covering various other educational topics.
 
 ## Table of Contents
 
