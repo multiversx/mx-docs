@@ -1,0 +1,56 @@
+# Overview
+
+:::note
+
+This documentation is not complete. More content will be added once it is accepted and discussed on Agora or once it is implemented and available for production.
+
+:::
+
+This guide will help you with setting up, deploying and managing a sovereign chain. Various other educational topics are also covered.
+
+## Table of Contents
+
+1. [Introduction](/sovereign/key-features)
+2. [Prerequisites](/sovereign/system-requirements)
+3. [Setup Guide](/sovereign/setup)
+4. [Deployment](/sovereign/deploy-sovereign)
+5. [Managing a Sovereign Chain](/sovereign/managing-sovereign)
+6. [Economics](/sovereign/token-economics)
+7. [Governance](sovereign/governance)
+8. [Testing and Validation](/sovereign/testing)
+9. [Security Considerations](/sovereign/security)
+10. [VMs](#vms)
+11. [Interoperability](#interoperability)
+12. [L2s](#l2s)
+13. [How to become a validator](/sovereign/validators)
+
+## Introduction
+
+The introduction chapter will provide an overview of what sovereign chains are and their significance in the blockchain ecosystem. It will answer questions such as:
+- What are sovereign chains?
+- How do they operate within the MultiversX blockchain network?
+- What are the benefits and use cases of sovereign chains?
+
+## Prerequisites
+
+The prerequisites chapter will detail the necessary preparations before setting up a sovereign chain. It will answer questions such as:
+- What are the system requirements?
+- What software dependencies need to be installed?
+
+## Setup Guide
+
+The setup guide will get you through the initial steps to get your sovereign chain up and running. It will answer questions such as:
+- How do you create a new wallet?
+- Where can you download the required files?
+- What repositories should you use and how to prepare your environment?
+
+## Deployment
+
+The deployment chapter will provide detailed instructions on how to deploy contracts on the network. It will answer questions such as:
+- How do you deploy contracts? Can you do it in an automated manner?
+- What are the step-by-step instructions for manual deployment?
+- How do you update sovereign configurations and manage Docker observers?
+
+## Managing a Sovereign Chain
+
+
