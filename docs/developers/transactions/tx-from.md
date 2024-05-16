@@ -1,6 +1,6 @@
 ---
 id: tx-from
-title: Sender (Bianca)
+title: Sender
 ---
 
 [comment]: # (mx-abstract)
@@ -35,13 +35,15 @@ In the following section, we will outline the various types of entities that can
 
 ### ManagedAddress
 
-The function below is a snippet from an interactor whose purpose is to deploy a contract. The `.from` call, which sets the sender, is the main focus of this example. The sender is a hardcoded ManagedAddres, which illustrates a wallet.
+The function below is a snippet from an interactor whose purpose is to deploy a contract. The `.from` call, which sets the sender, is the main focus of this example. The sender is a hardcoded ManagedAddress, which illustrates a wallet.
 
 ```rust title=interact.rs
 async fn deploy(&mut self) {
     let wallet: ManagedAddress<StaticApi> = ManagedAddress::new_from_bytes(&[7u8; 32]);
 
-    tx.from(wallet)
+    self.interactor
+        .tx()
+        .from(wallet)
         .typed(proxy::Proxy)
         .init(0u32)
         .code(&self.code)
