@@ -139,6 +139,64 @@ The allowed execution methods depend on the environment. More specifically:
 
 More on this in the [launch page](tx-run). 
 
+## Map of the fields types
+
+We're adding a graph of what the common types are that fit in each of the transaction fields.
+
+
+```mermaid
+graph LR
+    subgraph Tx
+        Env
+        From
+        To
+        Payment
+        Gas
+        Data
+        rh[Result Handler]
+    end
+    Env --> TxScEnv
+    Env --> ScenarioEnvExec
+    Env --> ScenarioEnvQuery
+    Env --> InteractorExecEnv
+    Env --> InteractorQueryEnv
+    From --> from-unit["()"]
+    From --> from-man-address[ManagedAddress]
+    From --> from-address[Address]
+    From --> from-bech32[Bech32Address]
+    From --> from-test-addr[TestAddress]
+    To --> to-unit["()"]
+    To --> to-man-address[ManagedAddress]
+    To --> to-address[Address]
+    To --> to-bech32[Bech32Address]
+    To --> to-test-addr[TestAddress]
+    To --> to-test-sc[TestSCAddress]
+    To --> to-caller[ToCaller]
+    To --> to-self[ToSelf]
+    Payment --> payment-unit["()"]
+    Payment --> egld-biguint["Egld(BigUint)"]
+    Payment --> egld-u64["Egld(u64)"]
+    Payment --> EsdtTokenPayment
+    Payment --> MultiEsdtPayment
+    Payment --> EgldOrEsdtTokenPaymentRefs
+    Payment --> EgldOrMultiEsdtPayment
+    Gas --> gas-unit["()"]
+    Gas --> gas-explicit["ExplicitGas(u64)"]
+    Gas --> GasLeft
+    Data --> data-unit["()"]
+    Data --> deploy["DeployCall&lt;()&gt;"]
+    deploy --> deploy-from-source["DeployCall&lt;FromSource&lt;ManagedAddress&gt;&gt;"]
+    deploy --> deploy-code["DeployCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+    Data --> upgrade["UpgradeCall<()>"]
+    upgrade --> upgrade-from-source["UpgradeCall&lt;CodeSource&lt;ManagedAddress&gt;&gt;"]
+    upgrade --> upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+    Data --> fc[FunctionCall]
+    rh --> rh-unit("()")
+    rh --> rh-ot("OriginalTypeMarker<T>")
+    rh --> CallbackClosure --> CallbackClosureWithGas
+    rh --> Decoder
+```
+
 
 ## Map of the setters
 
@@ -146,7 +204,7 @@ Constructing a transaction is similar to exploring a map, or running a finite st
 
 Choosing a path at one point closes off many other options. The compiler is always guiding us and preventing us from ending up with an invalid transaction.
 
-Here is a map of all the paths you can take when configuring a transaction. 
+Here is a map of all the paths you can take when configuring a transaction. The fields are mostly independent, so the map is split into 7 sections.
 
 ```mermaid
 graph LR
@@ -228,63 +286,4 @@ graph LR
         Decoder -->|returns| Decoder
         Decoder -->|with_result| Decoder
     end
-```
-
-```mermaid
-graph LR
-    subgraph Tx
-        Env
-        From
-        To
-        Payment
-        Gas
-        Data
-        rh[Result Handler]
-    end
-    From --- from-unit["()"]
-    from-unit -->|from| from-man-address[ManagedAddress]
-    from-unit -->|from| from-address[Address]
-    from-unit -->|from| from-bech32[Bech32Address]
-    To --- to-unit["()"]
-    to-unit -->|to| to-man-address[ManagedAddress]
-    to-unit -->|to| to-address[Address]
-    to-unit -->|to| to-bech32[Bech32Address]
-    to-unit -->|to| to-caller[ToCaller]
-    to-unit -->|to| to-self[ToSelf]
-    Payment --- payment-unit["()"]
-    payment-unit -->|egld| egld-biguint["Egld(BigUint)"]
-    payment-unit -->|egld| egld-u64["Egld(u64)"]
-    payment-unit -->|esdt| EsdtTokenPayment
-    EsdtTokenPayment -->|esdt| MultiEsdtPayment
-    MultiEsdtPayment -->|esdt| MultiEsdtPayment
-    payment-unit -->|payment| MultiEsdtPayment
-    payment-unit -->|multi_esdt| EsdtTokenPayment
-    payment-unit -->|payment| EgldOrEsdtTokenPaymentRefs
-    payment-unit -->|egld_or_single_esdt| EgldOrEsdtTokenPaymentRefs
-    payment-unit -->|payment| EgldOrMultiEsdtPayment
-    payment-unit -->|egld_or_multi_esdt| EgldOrMultiEsdtPayment
-    Gas --- gas-unit["()"]
-    gas-unit -->|gas| gas-explicit["ExplicitGas(u64)"]
-    gas-unit -->|gas| GasLeft
-    Data --- data-unit["()"]
-    data-unit -->|typed| Proxy
-    Proxy -->|init| deploy
-    Proxy -->|upgrade| upgrade
-    Proxy -->|endpoint| fc[Function Call]
-    data-unit -->|raw_deploy| deploy["DeployCall&lt;()&gt;"]
-    deploy -->|from_source| deploy-from-source["DeployCall&lt;FromSource&lt;ManagedAddress&gt;&gt;"]
-    deploy -->|code| deploy-code["DeployCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
-    deploy -->|code_metadata| deploy
-    data-unit -->|raw_upgrade| upgrade["UpgradeCall<()>"]
-    upgrade -->|from_source| upgrade-from-source["UpgradeCall&lt;CodeSource&lt;ManagedAddress&gt;&gt;"]
-    upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
-    upgrade -->|code_metadata| upgrade
-    data-unit -->|raw_call| fc[FunctionCall]
-    rh --- rh-unit("()")
-    rh-unit -->|original_type| rh-ot("OriginalTypeMarker<T>")
-    rh-ot -->|callback| CallbackClosure -->|gas_for_callback| CallbackClosureWithGas
-    rh-ot -->|returns| Decoder
-    rh-ot -->|with_result| Decoder
-    Decoder -->|returns| Decoder
-    Decoder -->|with_result| Decoder
 ```
