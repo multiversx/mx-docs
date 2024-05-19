@@ -1,6 +1,6 @@
 ---
 id: tx-result-handlers
-title: Result Handling
+title: Result Handlers
 ---
 
 [comment]: # (mx-abstract)
@@ -85,9 +85,14 @@ Result decoders come in handy when defining exact return types from smart contra
 When multiple result decoders are used in a transaction, a tuple with all the result types from each decoder will be returned.
 ::::
 
+
+## List of result decoders
+
 There are various predefined types of result decoders:
-- `ReturnsRawResult`
-    - returns `ManagedVec<Env::Api, ManagedBuffer<Env::Api>>`, representing the raw data result from the call.
+
+### `ReturnsRawResult`
+
+Returns: `ManagedVec<Env::Api, ManagedBuffer<Env::Api>>`, representing the raw data result from the call.
 
 ```rust title=contract.rs
 #[endpoint]
@@ -108,8 +113,9 @@ fn deploy_contract(
 }
 ```
 
-- `ReturnsResult`
-    - returns the original type from the function signature. The exact original type is extracted from the return type of the corresponding function from the proxy.
+### `ReturnsResult`
+
+Returns: the original type from the function signature. The exact original type is extracted from the return type of the corresponding function from the proxy.
 
 ```rust title=interact.rs
 async fn quorum_reached(&mut self, action_id: usize) -> bool {
@@ -118,18 +124,38 @@ async fn quorum_reached(&mut self, action_id: usize) -> bool {
         .to(self.state.current_multisig_address())
         .typed(multisig_proxy::MultisigProxy)
         .quorum_reached(action_id)
-        .returns(ReturnsResult) // knows from the proxy that the expected return type is bool
+        .returns(ReturnsResult) // knows from the original type marker that the expected return type is bool
         .prepare_async()
         .run()
         .await
 }
 ```
 
-- `ReturnsResultUnmanaged`
-    - especially useful in interactor environments, returns the original result type from the function signature (similar to `ReturnsResult`). However, `ReturnsResultUnmanaged` converts the original result type into an unmanaged type, for better accessibility outside the smart contract environment.
+### `ReturnsResultUnmanaged`
+
+Returns: the unmanaged version of the original result type. This relies on the `Unmanaged` associated type in `TypeAbi`. 
+
+For example:
+
+| Managed type          | Unmanaged version                     |
+| --------------------- | ------------------------------------- |
+| Managed `BigUint`     | Rust `BigUint` (alias: `RustBigUint`) |
+| Managed `BigInt`      | Rust `BigInt` (alias: `RustBigInt`)   |
+| `ManagedBuffer`       | `Vec<u8>`                             |
+| `ManagedAddress`      | `Address`                             |
+| `ManagedVec<T>`       | `Vec<T::Unmanaged>`                   |
+| `ManagedOption<T>`    | `Option<T::Unmanaged>`                |
+| `ManagedByteArray<N>` | `[u8; N]`                             |
+| `BigFloat`            | `f64`                                 |
+
+Also, most generic container types (`Option`, `Vec`, etc.) will point to themselves, but with the unmanaged version of their contents. 
+
+For all other types, it returns the original type, same as `ReturnsResult`.
+
+It is especially useful in interactor and test environments, as it allows us to avoid performing additional conversions.
 
 ```rust title=interact.rs
-async fn get_sum(&mut self) -> num_bigint::BigUint {
+async fn get_sum(&mut self) -> RustBigUint {
     self
         .interactor
         .query()
@@ -141,11 +167,15 @@ async fn get_sum(&mut self) -> num_bigint::BigUint {
         .run()
         .await
 }
-``` 
-In this case, the original return type of the endpoint `sum` is `multiversx_sc::types::BigUint` which is a managed type. `ReturnsResultUnmanaged` automatically converts this type into `num_bigint::BigUint`, a much more accessible type for the interactor, where we want to avoid constantly having to specify the API.
+```
 
-- `ReturnsStatus`
-    - especially useful in the testing and interactor environments, returns the transaction status as u64.
+In this case, the original return type of the endpoint `sum` is `multiversx_sc::types::BigUint` which is a managed type. `ReturnsResultUnmanaged` automatically provides us with `num_bigint::BigUint`, a much more accessible type for the interactor, where we want to avoid constantly having to specify the API.
+
+### `ReturnsStatus`
+
+Returns: the transaction status as u64.
+
+Especially useful in the testing and interactor environments.
 
 ```rust title=blackbox_test.rs
 #[test]
@@ -165,8 +195,11 @@ fn status_test() {
 }
 ```
 
-- `ReturnsMessage`
-    - especially useful in the testing and interactor environments, returns the transaction message as String.
+### `ReturnsMessage`
+
+Returns: the transaction error message as String.
+
+Especially useful in the testing and interactor environments, 
 
 ```rust title=blackbox_test.rs
 #[test]
@@ -188,8 +221,11 @@ fn status_and_message_test() {
 }
 ```
 
-- `ReturnsNewBech32Address`
-    - used in the testing and interactor environments, returns the newly deployed address after a deploy and converts it to `Bech32Address`.
+### `ReturnsNewBech32Address`
+
+Returns: the newly deployed address after a deploy, as `Bech32Address`.
+
+Used in the testing and interactor environments.
 
 ```rust title=interact.rs
 async fn deploy(&mut self) -> Bech32Address {
@@ -207,8 +243,11 @@ async fn deploy(&mut self) -> Bech32Address {
 }
 ```
 
-- `ReturnsNewManagedAddress`
-    - used in the smart contract environment, returns the newly deployed address after a deploy and converts it to `ManagedAddress`.
+### `ReturnsNewManagedAddress`
+
+Returns: the newly deployed address after a deploy, as `Bech32Address`.
+
+Used in the smart contract environments.
 
 ```rust title=contract.rs
 #[endpoint]
@@ -226,8 +265,9 @@ fn deploy_from_source(
 }
 ```
 
-- `ReturnsNewAddress`
-    - used in the smart contract environment, returns the newly deployed address after a deploy and converts it to `multiversx_sc::types::heap::Address`.
+### `ReturnsNewAddress`
+
+Returns: the newly deployed address after a deploy, as `multiversx_sc::types::heap::Address`.
 
 ```rust title=blackbox_test.rs
 #[test]
@@ -247,8 +287,11 @@ fn returns_address_test() {
 }
 ```
 
-- `ReturnsNewTokenIdentifier`
-    - used in interactor and testing environments, returns newly issued token identifier as String.
+### `ReturnsNewTokenIdentifier`
+
+Returns: a newly issued token identifier, as String. It will search for it in logs.
+
+Useable in interactor environments.
 
 ```rust title=interact.rs
 async fn issue_token(action_id: usize) -> String {
@@ -266,8 +309,11 @@ async fn issue_token(action_id: usize) -> String {
 }
 ```
 
-- `ReturnsBackTransfers`
-    - especially useful in the smart contract environment, returns the back-transfers of the call.
+### `ReturnsBackTransfers`
+
+Returns the back-transfers of the call, as a specialized structure, called `BackTransfers`.
+
+Useable in a smart contract environment.
 
 ```rust title=contract.rs
 #[endpoint]
