@@ -5,12 +5,25 @@ title: Result Handling
 
 [comment]: # (mx-abstract)
 
-intro
+Most of the transaction fields are inputs, or work like inputs. The last one of the fields is the one that deals with the outputs.
+
+There are 3 types of transactions where it comes to outputs:
+1. Transactions where we never receive a result, such as those sent via _transfer-execute_. Result handlers are not needed here, in fact they are inappropriate.
+2. Transactions that must finalize before we can move on. Here, various results might be returned, and we can decode them on the spot. Result handlers will determine what gets decoded and how.
+3. Transactions that will finalize at an unknown time in the future, such as cross-shard calls from contracts. Here, the result handler is the callback that we register, to be executed as soon as the VM receives the response from that transaction iand passes it on to our code.
+
+We've had callbacks for a long time, whereas decoders are new. A transaction can have either one, or the other, not both.
+
+We are going to go focus on their usage, and at the end also try to explain how they work.
 
 
 [comment]: # (mx-context-auto)
 
 ## Diagram
+
+The result handler diagram is split into two: the callback side, and the decoder side.
+
+The decoders are considerably more complex, here we have a simplified version.
 
 ```mermaid
 graph LR
@@ -30,11 +43,36 @@ graph LR
 
 ## No result handlers
 
-- transfer execute (duh)
+A transaction might have no result handlers attached to it, if:
+- The transaction does not return any result data, such as the case for _transfer-execute_ or simple _transfer_ transactions.
+- The transaction could return some results, but we are not interested in them.
+    - If no result handlers are specified, no decoding takes place.
+    - This is similar to using the `IgnoreValue` return type in the legacy contract call syntax.
+
+
 
 [comment]: # (mx-context-auto)
 
-## Asynchronou callbacks
+## Original result marker
+
+Type safety is not only important for inputs, but also for outputs. The first step is sigalling what the intended result type is in the original contract, where the endpoint is defined.
+
+Proxies define this type themselves, since they have access to the ABI.
+
+If set, the marker will be visible in the transaction type, as an `OriginalResultMarker<T>` result handler.
+
+:::info
+The `OriginalResultMarker` does not do anything by itself, it is a zero-size type, with no methods implemented.
+
+Having only this marker set is no different from having no result handlers specified. It is only a compile-time artifact for ensuring type safety for outputs.
+:::
+
+Even when we are providing raw data to a transaction, without proxies, we are allowed to specify the original intended result type outselves. We do this by calling `.original_result()`, with no arguments. If the type cannot be inferred, we need to specify it explicitly, `.original_result::<OriginalType>()`.
+
+
+[comment]: # (mx-context-auto)
+
+## Asynchronous callbacks
 
 
 [comment]: # (mx-context-auto)
