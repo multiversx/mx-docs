@@ -83,9 +83,7 @@ Just like for a new project, you will need to [generate](tx-proxies#how-to-gener
 
 You might have this kind of syntax in your contract. You can easily find it by searching in your oroject for `#[proxy]` or `.contract(`.
 
-- **Variant A**
-
-```rust
+```rust title="Variant A"
     #[proxy]
     fn vault_proxy(&self) -> vault::Proxy<Self::Api>;
 
@@ -100,9 +98,7 @@ You might have this kind of syntax in your contract. You can easily find it by s
     }
 ```
 
-- **Variant B**
-
-```rust
+```rust title="Variant B"
     #[proxy]
     fn vault_proxy(&self, sc_address: ManagedAddress) -> vault::Proxy<Self::Api>;
 
@@ -118,9 +114,7 @@ You might have this kind of syntax in your contract. You can easily find it by s
 
 ```
 
-- **Replace by:**
-
-```rust
+```rust title="Replace by"
     #[endpoint]
     fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
         self.tx()
@@ -157,9 +151,9 @@ A solution is planned for the near future.
 :::
 
 
-- **Transitional variant:**
+In case you want to migrate to the unified syntax and you cannot, or do not want to get rid of the old proxies, this is an alternative transitional syntax:
 
-```rust
+```rust title="Transitional variant"
     #[proxy]
     fn vault_proxy(&self, sc_address: ManagedAddress) -> vault::Proxy<Self::Api>;
 
@@ -173,7 +167,6 @@ A solution is planned for the near future.
     }
 ```
 
-In case you want to migrate to the unified syntax and you cannot, or do not want to get rid of the old proxies, this is an alternative transitional syntax.
 
 
 
@@ -204,9 +197,9 @@ We did not yet deprecate the old ones, but we encourage everyone to switch to th
 | `.with_egld_transfer(amount)` | `.egld(amount)` | |
 | `.with_esdt_transfer((token, nonce, amount))` | `.esdt((token, nonce, amount))`<br /> or <br />`.single_esdt(&token, nonce, &amount)` | `single_esdt` can deal with references, instead of taking owned objects. |
 | `.with_multi_token_transfer(p)` | `.payment(p)` | `payment` is universal. |
-| `.with_egld_or_single_esdt_transfer(p)` | `.payment(p)` | `payment` is universal. |
+| `.with_egld_or_single_esdt_transfer(p)` | `.payment(p)` | Method `payment` is universal. |
 | `.with_gas_limi(gas)` | `.gas(gas)` | |
-| `.with_extra_gas_for_callback(gas)` | `.gas_for_callback(gas)` | `payment` is universal. |
+| `.with_extra_gas_for_callback(gas)` | `.gas_for_callback(gas)` | Method `payment` is universal. |
 | `.async_call()` | - | Does nothing, can be removed with no consequences. |
 | `.async_call_promise()` | - | Does nothing, can be removed with no consequences. |
 | `.with_callback(cb)` | `.callback(cb)` | |
