@@ -7,6 +7,25 @@ title: Result Handling
 
 intro
 
+
+[comment]: # (mx-context-auto)
+
+## Diagram
+
+```mermaid
+graph LR
+    subgraph Result Handlers
+        rh-unit("()")
+        rh-unit -->|original_type| rh-ot("OriginalTypeMarker<T>")
+        rh-ot -->|callback| CallbackClosure -->|gas_for_callback| CallbackClosureWithGas
+        dh[Decode Handler]
+        rh-unit -->|"returns<br />with_result"| dh
+        rh-ot -->|"returns<br />with_result"| dh
+        dh -->|"returns<br />with_result"| dh
+    end
+```
+
+
 [comment]: # (mx-context-auto)
 
 ## No result handlers
