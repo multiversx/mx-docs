@@ -93,6 +93,7 @@ const sidebars = {
               "developers/transactions/tx-proxies",
               "developers/transactions/tx-result-handlers",
               "developers/transactions/tx-run",
+              "developers/transactions/tx-migration",
               "developers/transactions/tx-examples",
               "developers/transactions/tx-impl-details",
               "developers/transactions/tx-legacy-calls",
@@ -140,7 +141,7 @@ const sidebars = {
               "developers/testing/testing-overview",
               {
                 type: "category",
-                label: "Scenarios",
+                label: "MANDOS",
                 items: [
                   "developers/testing/scenario/concept",
                   "developers/testing/scenario/structure-json",
