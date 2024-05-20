@@ -85,6 +85,7 @@ const sidebars = {
             items: [
               "developers/transactions/tx-overview",
               "developers/transactions/tx-env",
+              "developers/transactions/run-options",
               "developers/transactions/tx-from",
               "developers/transactions/tx-to",
               "developers/transactions/tx-payment",
