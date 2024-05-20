@@ -7,13 +7,7 @@ title: Payments
 
 ## Overview
 
-Payments can be easily attached to the transaction with the new syntax through the `Payment` generic. In order to specialize the generic, the framework provides the `.payment(...)` method, which accepts all legal types (all types that `can` be payment) such as: `EsdtTokenPayment`, `(TokenIdentifier, u64, BigUint)`, `ManagedVec<EsdtTokenPayment>`, etc.
-
-::::important
-On MultiversX it is impossible to send both EGLD and any ESDT token at the same time.
-
-For this reason you will see no syntax for transferring both, neither when sending, nor receiving.
-::::
+Payments can be easily attached to the transaction with the new syntax through the `Payment` generic. In order to specialize the generic, the framework provides the `.payment(...)` method, which accepts all legal types (all types that `can` be payment) such as: `EsdtTokenPayment`, `(TokenIdentifier, u64, BigUint)`, `ManagedVec<EsdtTokenPayment>`, etc. The framework also provides other various helper methods, basically wrappers around `.payment(...)` for accessibility.
 
 [comment]: # (mx-context-auto)
 
@@ -77,7 +71,7 @@ There are several `EgldValue` specialization options provided by the framework:
             .tx() // tx with sc environment
             .to(to)
             .egld(payment) // BigUint value
-            .raw_call(endpoint_name)
+            .raw_call(endpoint_name) // endpoint call
             .argument(&args)
             .sync_call()
     }
@@ -91,8 +85,8 @@ There are several `EgldValue` specialization options provided by the framework:
         .tx() // tx with test exec environment
         .from(&address.to_address())
         .to(PRICE_AGGREGATOR_ADDRESS)
-        .typed(price_aggregator_proxy::PriceAggregatorProxy)
-        .stake()
+        .typed(price_aggregator_proxy::PriceAggregatorProxy) // typed call
+        .stake() // endpoint call
         .egld(STAKE_AMOUNT) // u64 value
         .run();
 ```
@@ -141,7 +135,7 @@ self.tx() // tx with sc environment
     .transfer();
 ```
 
-In this example, calling `.esdt(...)` will attach an ESDT payment load to the transaction. When adding subsequent `.esdt(...)` calls, the payload automatically converts into a multi payment.
+In this example, calling `.esdt(...)` will attach an ESDT payment load to the transaction. When adding subsequent `.esdt(...)` calls, the payload automatically converts into a `multi payment`.
 
 [comment]: # (mx-context-auto)
 
@@ -150,12 +144,11 @@ In this example, calling `.esdt(...)` will attach an ESDT payment load to the tr
 In order to use a multi ESDT payment, we can either: compose the multi token through subsequent `.esdt(...)` calls, or use `.multi_esdt(...)` with the payments object as parameter.
 
 ```rust title=contract.rs
-let tokens_to_claim = ManagedVec::<Self::Api, EsdtTokenPayment<Self::Api>>::new();
-self.tx().to(&caller).multi_esdt(tokens_to_claim).transfer();
+let tokens_to_claim = ManagedVec::<Self::Api, EsdtTokenPayment<Self::Api>>::new(); // multiple tokens
+self.tx().to(&caller).multi_esdt(tokens_to_claim).transfer(); // multi token payment
 ```
 
 In this case, using `.multi_esdt(...)` helps us create a multi payment payload for the transaction directly.
-
 
 [comment]: # (mx-context-auto)
 
