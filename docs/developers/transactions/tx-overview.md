@@ -223,6 +223,7 @@ graph LR
         to-unit -->|to| to-man-address[ManagedAddress]
         to-unit -->|to| to-address[Address]
         to-unit -->|to| to-bech32[Bech32Address]
+        to-unit -->|to| to-esdt-system-sc[ESDTSystemSCAddress]
         to-unit -->|to| to-caller[ToCaller]
         to-unit -->|to| to-self[ToSelf]
     end
@@ -281,9 +282,9 @@ graph LR
         rh-unit("()")
         rh-unit -->|original_type| rh-ot("OriginalTypeMarker<T>")
         rh-ot -->|callback| CallbackClosure -->|gas_for_callback| CallbackClosureWithGas
-        rh-ot -->|returns| Decoder
-        rh-ot -->|with_result| Decoder
-        Decoder -->|returns| Decoder
-        Decoder -->|with_result| Decoder
+        dh[Decode Handler]
+        rh-unit -->|"returns<br />with_result"| dh
+        rh-ot -->|"returns<br />with_result"| dh
+        dh -->|"returns<br />with_result"| dh
     end
 ```

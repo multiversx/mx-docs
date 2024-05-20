@@ -11,6 +11,23 @@ Within the context of a transaction that comprises seven distinct generics, `F
 
 A transaction originating from a contract environment cannot have a sender in the contract environment. The reason is that the current contract is always the same: the contract that starts the transaction.
 
+
+[comment]: # (mx-context-auto)
+
+## Diagram
+
+The sender is being set using the `.from(...)` method. Several types can be specified:
+
+```mermaid
+graph LR
+    subgraph From
+        from-unit["()"]
+        from-unit -->|from| from-man-address[ManagedAddress]
+        from-unit -->|from| from-address[Address]
+        from-unit -->|from| from-bech32[Bech32Address]
+    end
+```
+
 [comment]: # (mx-context-auto)
 
 ## No sender
