@@ -35,7 +35,6 @@ graph LR
 Across the three distinct environments in which a transaction can be initialised, `deploy`, also known as the `init` function, stands alone as the only invocation that cannot designate the recipient.
 
 ```rust title=blackbox.rs
-#[test]
 fn deploy() {
     self.world
         .tx()
