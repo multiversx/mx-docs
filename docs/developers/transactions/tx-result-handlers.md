@@ -70,6 +70,18 @@ Having only this marker set is no different from having no result handlers speci
 Even when we are providing raw data to a transaction, without proxies, we are allowed to specify the original intended result type outselves. We do this by calling `.original_result()`, with no arguments. If the type cannot be inferred, we need to specify it explicitly, `.original_result::<OriginalType>()`.
 
 
+
+[comment]: # (mx-context-auto)
+
+## Default result handler
+
+There is a special case of a default result handler in interactors and in tests.
+
+Without specifying anything, the framework will check that a transaction is successful. This applies to both interactors and tests (in contracts one cannot recover from a failed sync call, so this mechanism is not necessary).
+
+If, however, the developer expects the transaction to fail, this system can easily be overridden by adding an error-related result handler, such as [ExpectError](#expecterror), or [ReturnsStatus](#returnsstatus).
+
+
 [comment]: # (mx-context-auto)
 
 ## Asynchronous callbacks
@@ -79,16 +91,116 @@ Even when we are providing raw data to a transaction, without proxies, we are al
 
 ## Result decoders
 
-Result decoders come in handy when defining exact return types from smart contract endpoints. Being part of the unified syntax, they are consistent through the various environments (smart contract, interact, test) and can be used in combination with each other as long as it makes sense for the specific transaction. 
+Result decoders come in handy when defining exact return types from smart contract endpoints. Being part of the unified syntax, they are consistent through the various environments (smart contract, interact, test) and can be used in combination with each other as long as it makes sense for the specific transaction.
 
-::::note
-When multiple result decoders are used in a transaction, a tuple with all the result types from each decoder will be returned.
-::::
+There are two ways to add a result decoder: via `with_result` or `returns`. 
 
+[comment]: # (mx-context-auto)
+
+### `with_result`
+
+The simpler type of result decoder, it doesn't alter the return type of the transaction run method in any way.
+
+It registers lambdas or similar constructs, which then react to the results as they come.
+
+
+[comment]: # (mx-context-auto)
+
+### `returns`
+
+Adding a result handler via `result` causes the transaction run function to return various versions of the result, as indicated by the result handler.
+
+For instance, [ReturnsResult](#returnsresult) causes the deserialized result of the transaction to be returned.
+
+If we add multiple result handlers, we will get a tuple with all the requested results.
+
+:::info
+The return type is determined at compile time, with no runtime or bytecode size overhead.
+:::
+
+In the examples below, the return type is stated explicitly, for clarity. Please note that, because of type inference, they barely ever need to be specified like this.
+
+All examples assume the variable `tx` already has all inputs constructed for it. Let's also assume that the original result type is `MyResult`.
+
+```rust title="No decoder"
+let _: () = tx
+    .run();
+```
+
+The return type here is `()` nothing is deserialized.
+
+```rust title="One decoder"
+let r: MyResult = tx
+    .returns(ReturnsResult)
+    .run();
+```
+
+Here, we get the transaction result returned. You might see this in a contract, interactor, or test.
+
+```rust title="Two decoders"
+let r: (MyResult, BackTransfers) = tx
+    .returns(ReturnsResult)
+    .returns(ReturnsBackTransfers)
+    .run();
+```
+
+This time we want two values out. The framework packs them in a pair, behind the scenes. The order of the values in the tuple is always the same as the order the result handlers were passed. If we pass them in reverse order, we also get the output in reverse order:
+
+```rust title="Same two decoders, reverse order"
+let r: (BackTransfers, MyResult) = tx
+    .returns(ReturnsBackTransfers)
+    .returns(ReturnsResult)
+    .run();
+```
+
+This mechanism works with any number of result handlers. _(There is a limit of 16 for now, in the unlikely case that anybody will need more, it can easily be increased.)_
+
+```rust title="Three decoders"
+let r: (ManagedVec<ManagedBuffer>, ManagedAddress, BackTransfers) = tx
+    .returns(ReturnsRawResult)
+    .returns(ReturnsNewManagedAddress)
+    .returns(ReturnsBackTransfers)
+    .run();
+```
+
+There is no limitation that the same decoder cannot be used multiple times, although it makes little sense in practice:
+
+```rust title="Duplicate decoders"
+let r: (MyResult, MyResult, Address, MyResult) = tx
+    .returns(ReturnsResult)
+    .returns(ReturnsResult)
+    .returns(ReturnsNewAddress)
+    .returns(ReturnsResult)
+    .run();
+```
+
+Methods `returns` and `with_result` can be interspersed in any order. Calls to `with_result` will not affect the return type.
+
+```rust title="returns + with_result"
+let r: Address = tx
+    .returns(ReturnsAddress)
+    .with_result(WithResultRaw(|raw|) assert!(raw.is_empty())) 
+    .run();
+```
+
+Also adding an example with only `with_result`, something you are likely to see in black-box tests.
+
+```rust title="No return, with_result"
+let r: () = tx
+    .with_result(ExpectError(4, "sample error")) 
+    .run();
+```
+
+
+[comment]: # (mx-context-auto)
 
 ## List of result decoders
 
 There are various predefined types of result decoders:
+
+
+
+[comment]: # (mx-context-auto)
 
 ### `ReturnsRawResult`
 
@@ -113,6 +225,9 @@ fn deploy_contract(
 }
 ```
 
+
+[comment]: # (mx-context-auto)
+
 ### `ReturnsResult`
 
 Returns: the original type from the function signature. The exact original type is extracted from the return type of the corresponding function from the proxy.
@@ -130,6 +245,9 @@ async fn quorum_reached(&mut self, action_id: usize) -> bool {
         .await
 }
 ```
+
+
+[comment]: # (mx-context-auto)
 
 ### `ReturnsResultUnmanaged`
 
@@ -171,6 +289,9 @@ async fn get_sum(&mut self) -> RustBigUint {
 
 In this case, the original return type of the endpoint `sum` is `multiversx_sc::types::BigUint` which is a managed type. `ReturnsResultUnmanaged` automatically provides us with `num_bigint::BigUint`, a much more accessible type for the interactor, where we want to avoid constantly having to specify the API.
 
+
+[comment]: # (mx-context-auto)
+
 ### `ReturnsStatus`
 
 Returns: the transaction status as u64.
@@ -194,6 +315,9 @@ fn status_test() {
     assert_eq!(status, 4); // status 4 - user error
 }
 ```
+
+
+[comment]: # (mx-context-auto)
 
 ### `ReturnsMessage`
 
@@ -221,6 +345,9 @@ fn status_and_message_test() {
 }
 ```
 
+
+[comment]: # (mx-context-auto)
+
 ### `ReturnsNewBech32Address`
 
 Returns: the newly deployed address after a deploy, as `Bech32Address`.
@@ -242,6 +369,9 @@ async fn deploy(&mut self) -> Bech32Address {
         .await
 }
 ```
+
+
+[comment]: # (mx-context-auto)
 
 ### `ReturnsNewManagedAddress`
 
@@ -265,6 +395,9 @@ fn deploy_from_source(
 }
 ```
 
+
+[comment]: # (mx-context-auto)
+
 ### `ReturnsNewAddress`
 
 Returns: the newly deployed address after a deploy, as `multiversx_sc::types::heap::Address`.
@@ -287,6 +420,9 @@ fn returns_address_test() {
 }
 ```
 
+
+[comment]: # (mx-context-auto)
+
 ### `ReturnsNewTokenIdentifier`
 
 Returns: a newly issued token identifier, as String. It will search for it in logs.
@@ -308,6 +444,9 @@ async fn issue_token(action_id: usize) -> String {
         .await
 }
 ```
+
+
+[comment]: # (mx-context-auto)
 
 ### `ReturnsBackTransfers`
 
@@ -338,6 +477,11 @@ fn forward_sync_retrieve_funds_bt(
     );
 }
 ```
+
+
+[comment]: # (mx-context-auto)
+
+### `ExpectError`
 
 
 [comment]: # (mx-context-auto)
