@@ -81,7 +81,7 @@ const sidebars = {
           },
           {
             type: "category",
-            label: "Rust Transaction Syntax",
+            label: "Transaction Syntax",
             items: [
               "developers/transactions/tx-overview",
               "developers/transactions/tx-env",
@@ -93,6 +93,9 @@ const sidebars = {
               "developers/transactions/tx-data",
               "developers/transactions/tx-proxies",
               "developers/transactions/tx-result-handlers",
+              "developers/transactions/tx-run",
+              "developers/transactions/tx-migration",
+              "developers/transactions/tx-examples",
               "developers/transactions/tx-impl-details",
               "developers/transactions/tx-legacy-calls",
             ],
@@ -139,7 +142,7 @@ const sidebars = {
               "developers/testing/testing-overview",
               {
                 type: "category",
-                label: "Scenarios",
+                label: "MANDOS",
                 items: [
                   "developers/testing/scenario/concept",
                   "developers/testing/scenario/structure-json",

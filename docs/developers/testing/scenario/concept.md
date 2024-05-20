@@ -5,7 +5,15 @@ title: Concept
 
 [comment]: # (mx-context-auto)
 
-## What is a scenario?
+## What is MANDOS?
+
+MANDOS is short for MultiversX **A**ccount, **N**etwork and **D**ata **O**peration **S**cenarios. We sometimes call them simply "scenarios".
+
+They were designed to test the VM and the early contracts in a language-agnostic way, hence initially implemented in JSON.
+
+Initially written manually, they were gradually superseded by Rust tests. The format, however, is still very useful, since it can be generated from a backend, and then re-run on another.
+
+## Concept
 
 Let's think for a moment how an interaction with a blockchain might look like.
 

@@ -6,6 +6,21 @@ title: Gas (Bianca)
 [comment]: # (mx-abstract)
 
 
+[comment]: # (mx-context-auto)
+
+## Diagram
+
+The gas limit can be set using the `.gas(...)` method. Gas is normally represented as a `u64` value.
+
+```mermaid
+graph LR
+    subgraph Gas
+        gas-unit["()"]
+        gas-unit -->|gas| gas-explicit["ExplicitGas(u64)"]
+        gas-unit -->|gas| GasLeft
+    end
+```
+
 
 [comment]: # (mx-context-auto)
 

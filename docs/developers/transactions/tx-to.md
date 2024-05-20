@@ -11,6 +11,25 @@ Among the seven distinct generics defining a transaction, `To` signifies the the
 
 [comment]: # "mx-context-auto"
 
+## Diagram
+
+The sender is being set using the `.to(...)` method. Several types can be specified:
+
+```mermaid
+graph LR
+    subgraph To
+        to-unit["()"]
+        to-unit -->|to| to-man-address[ManagedAddress]
+        to-unit -->|to| to-address[Address]
+        to-unit -->|to| to-bech32[Bech32Address]
+        to-unit -->|to| to-esdt-system-sc[ESDTSystemSCAddress]
+        to-unit -->|to| to-caller[ToCaller]
+        to-unit -->|to| to-self[ToSelf]
+    end
+```
+
+[comment]: # "mx-context-auto"
+
 ## No recipient
 
 Across the three distinct environments in which a transaction can be initialised, `deploy`, also known as the `init` function, stands alone as the only invocation that cannot designate the recipient.
