@@ -281,7 +281,6 @@ graph LR
         upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
         upgrade -->|code_metadata| upgrade
         data-unit ---->|raw_call| fc[FunctionCall]
-
         data-unit -->|typed| Proxy
         Proxy -->|init| deploy
         Proxy -->|upgrade| upgrade

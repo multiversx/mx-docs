@@ -73,9 +73,6 @@ const sidebars = {
               "developers/developer-reference/upgrading-smart-contracts",
               "developers/developer-reference/sc-api-functions",
               "developers/developer-reference/storage-mappers",
-              "developers/developer-reference/rust-testing-framework",
-              "developers/developer-reference/rust-testing-framework-functions-reference",
-              "developers/developer-reference/sc-debugging",
               "developers/developer-reference/sc-random-numbers",
             ],
           },
@@ -137,9 +134,20 @@ const sidebars = {
           },
           {
             type: "category",
-            label: "Testing",
+            label: "Testing & Debugging",
             items: [
               "developers/testing/testing-overview",
+              {
+                type: "category",
+                label: "Rust testing",
+                items: [
+                  "developers/testing/rust/sc-test-overview",
+                  "developers/testing/rust/sc-blackbox",
+                  "developers/testing/rust/whitebox-legacy",
+                  "developers/testing/rust/whitebox-legacy-functions-reference",
+                ],
+              },
+              "developers/testing/sc-debugging",
               {
                 type: "category",
                 label: "MANDOS",

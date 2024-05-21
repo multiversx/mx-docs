@@ -7,7 +7,7 @@ title: Concept
 
 ## What is MANDOS?
 
-MANDOS is short for MultiversX **A**ccount, **N**etwork and **D**ata **O**peration **S**cenarios. We sometimes call them simply "scenarios".
+MANDOS is short for **M**ultiversX **A**ccount, **N**etwork and **D**ata **O**peration **S**cenarios. We sometimes call them simply "scenarios".
 
 They were designed to test the VM and the early contracts in a language-agnostic way, hence initially implemented in JSON.
 
