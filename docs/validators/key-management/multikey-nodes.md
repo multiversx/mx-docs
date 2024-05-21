@@ -321,7 +321,7 @@ This guide can lead to potential node jailing if done incorrectly. Make sure tha
 We strongly suggest to practice this process first on the public testnet. You should gather invaluable experience and know how.
 :::
 
-Whenever deciding to switch to single-key operation to multikey, the following steps on how to execute this process can be considered:
+Whenever deciding to switch from single-key operation to multikey, the following steps on how to execute this process can be considered:
 1. create your `allValidatorsKeys.pem` by manually (or through a text tool) concatenate all your `validatorKey.pem` files;
 2. start a multikey group, **configure it as a backup group**, provide the `allValidatorsKeys.pem` file to all the nodes forming the group;
 3. let this backup multikey group nodes sync and go the next step **after all these nodes are synced**;
