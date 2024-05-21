@@ -145,14 +145,9 @@ graph LR
 ```
 
 
+Proxies additionally capture the return type originally defined within the smart contract.
 
-## Original type ... anticipating RH
-
-- proxies also specify return type
-
-## NotPayable protection
-
-... against accidental payments
+All non-payment endpoints in the generated proxy have a safeguard to prevent accidental payments. This involves automatically setting the payment to **NotPayable**.
 
 ## Payment arguments not yet supported
 
