@@ -129,6 +129,8 @@ The settings are as follows:
     - Note that overflow checks are normally turned off in production, but are useful when testing. The overflow checks are enabled by default when testing smart contracts using the debugger.
     - _values_: `true` | `false`
     - _default_: `false`
+- `proxy`
+  - Customise the proxy. More details [HERE](../transactions/tx-proxies#how-to-set-up-project-to-re-generate-easily)
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 id: tx-proxies
-title: Proxies (Bianca)
+title: Proxies
 ---
 
 [comment]: # (mx-abstract)
