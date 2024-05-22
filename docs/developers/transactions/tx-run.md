@@ -13,11 +13,17 @@ As discussed previously, the transaction syntax is consistent through the variou
 The transaction itself is not different and will produce the same result, but the way the framework processes the transaction might differ depending on the environment.
 :::
 
+[comment]: # "mx-context-auto"
+
 ## Smart contract 
 
 From the smart contract point of view, the transaction ends when specifying the transaction type (sync/async call).
 
-- `async_call_and_exit` - executes the transaction asynchronously and exits after execution.
+[comment]: # "mx-context-auto"
+
+### `async_call_and_exit` 
+
+Executes the transaction asynchronously and exits after execution.
 
 ```rust title=contract.rs
     self.tx() // tx with sc environment
@@ -29,7 +35,11 @@ From the smart contract point of view, the transaction ends when specifying the 
 
 In this case, the function `async_call_and_exit` marks the end of the transaction and executes it asynchronously. After the transaction is executed, the `never` type is returned, marking the end of the execution.
 
-- `sync_call` - sends a transaction synchronously.
+[comment]: # "mx-context-auto"
+
+### `sync_call` 
+
+Sends a transaction synchronously.
 
 ```rust title=contract.rs
     self
@@ -40,13 +50,11 @@ In this case, the function `async_call_and_exit` marks the end of the transactio
         .sync_call(); // synchronous call
 ```
 
-- `async_call`, `async_call_promise` - backwards compatibility.
+[comment]: # "mx-context-auto"
 
-:::important
-For the moment, the functions `async_call` and `async_call_promise` exist for backwards compatibility reasons only. These functions do `NOT` execute a transaction, they just return the current object state. Use `async_call_and_exit` instead.
-:::
+### `upgrade_async_call_and_exit` 
 
-- `upgrade_async_call_and_exit` - upgrades contract asynchronously and exits after execution.
+Upgrades contract asynchronously and exits after execution.
 
 ```rust title=contract.rs
     self.tx() // tx with sc environment
@@ -57,7 +65,11 @@ For the moment, the functions `async_call` and `async_call_promise` exist for ba
         .upgrade_async_call_and_exit(); // upgrades async and exits
 ```
 
-- `sync_call_same_context` - executes the transaction synchronously on the same context (in the name of the caller).
+[comment]: # "mx-context-auto"
+
+### `sync_call_same_context`
+
+Executes the transaction synchronously on the same context (in the name of the caller).
 
 ```rust title=contract.rs
     self
@@ -68,7 +80,11 @@ For the moment, the functions `async_call` and `async_call_promise` exist for ba
         .sync_call_same_context(); // sync call in the same context
 ```
 
-- `sync_call_readonly` - executes the transaction synchronously, in readonly mode (target contract cannot have its state altered).
+[comment]: # "mx-context-auto"
+
+### `sync_call_readonly`
+
+Executes the transaction synchronously, in readonly mode (target contract cannot have its state altered).
 
 ```rust title=contract.rs
     let result = self
@@ -79,6 +95,20 @@ For the moment, the functions `async_call` and `async_call_promise` exist for ba
         .returns(ReturnsRawResult) // result handler - returns raw result data
         .sync_call_readonly(); // sync call in readonly mode
 ```
+
+
+[comment]: # "mx-context-auto"
+
+### `async_call`, `async_call_promise`
+
+Backwards compatibility only.
+
+:::important
+For the moment, the functions `async_call` and `async_call_promise` exist for backwards compatibility reasons only. These functions do `NOT` execute a transaction, they just return the current object state. Delete them from existing codebases.
+:::
+
+
+[comment]: # "mx-context-auto"
 
 ## Integration test
 
@@ -96,7 +126,14 @@ For the Rust testing environment, the only keyword for sending transactions is `
 
 In this case, regarding of the type of the transaction (raw call, deploy, upgrade, query), it eventually turns into a scenario `Step` (`ScQueryStep`, `ScCallStep`, `ScDeployStep`) and it is processed as such. 
 
+
+[comment]: # "mx-context-auto"
+
 ## Interactor
+
+[comment]: # "mx-context-auto"
+
+### Async Rust
 
 In the case of the interactor, the processing is similar to the integration test, with the exception that the interactor is using async Rust. First, the transaction is built, then it is turned into a `Step` using the `prepare_async` function, then we can `run` it and `await` the result.
 
@@ -112,3 +149,10 @@ In the case of the interactor, the processing is similar to the integration test
         .run() // runs the step
         .await; // awaits the result - async Rust
 ```
+
+[comment]: # "mx-context-auto"
+
+### Sync Rust
+
+We also have a plan for adding support for a blocking interactor API, but this is currently not availalbe.
+
