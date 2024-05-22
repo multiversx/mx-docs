@@ -151,7 +151,7 @@ fn deploy(&mut self) {
 
 [comment]: # (mx-context-auto)
 
-The example below is a blackbox test for upgrade functionality. This call encapsulates a raw_upgrade that explicitly sets the upgrade call source with a specific ManagedAddress and upgradeable code metadata.
+The example below is an endpoint that contains upgrade functionality. This call encapsulates a raw_upgrade that explicitly sets the upgrade call source with a specific ManagedAddress and *upgradeable* code metadata.
 ```rust title=lib.rs
 #[endpoint]
 fn upgrade_from_source(
