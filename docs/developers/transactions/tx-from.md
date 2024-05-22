@@ -88,8 +88,8 @@ For parametric testing, there is particular address type name:
 - **TestAddress**
   - encodes a dummy address, equivalent to `"address:{}"`; for the example below it is equivalent to `"address:owner"`;
   - contains two functions:
-    - `.eval_to_array()` parse the address into an array of u8
-    - `.eval_to_expr()` return the address as a String object
+    - **`.eval_to_array()`** parse the address into an array of u8
+    - **`.eval_to_expr()`** return the address as a String object
 ```rust title=blackbox_test.rs
 const OWNER_ADDRESS: TestAddress = TestAddress::new("owner");
 
