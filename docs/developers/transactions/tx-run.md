@@ -156,3 +156,38 @@ In the case of the interactor, the processing is similar to the integration test
 
 We also have a plan for adding support for a blocking interactor API, but this is currently not availalbe.
 
+
+
+[comment]: # "mx-context-auto"
+
+## Feature table
+
+This table shows what transaction fields are mandatory, optional, or disallowed, in order to run a transaction.
+
+| Environment           | Run method                    |From| To | Payment                   | Gas | Data       | Result Handler |
+| --------------------- | ----------------------------- | -- | -- | ------------------------- | --- | ---------- | -------------- |
+| SC: call              | `async_call_and_exit`         | ⛔ | ✅ | ✅                         | ⛔  | FC or `()` | callback only  |
+| SC: call              | `register_promise`            | ⛔ | ✅ | ✅                         | ✅  | FC         | callbacks only, with gas for callback |
+| SC: call              | `transfer_execute`            | ⛔ | ✅ | ✅                         | ✅  | FC or `()` | ⛔ |
+| SC: call              | `transfer`                    | ⛔ | ✅ | ✅                         | ✅  | `()`       | ⛔ |
+| SC: call              | `sync_call`                   | ⛔ | ✅ | ✅                         | 🟡  | FC         | ✅ |
+| SC: call              | `sync_call_same_context`      | ⛔ | ✅ | ✅                         | 🟡  | FC         | ✅ |
+| SC: call              | `sync_call_readonly`          | ⛔ | ✅ | ✅                         | 🟡  | FC         | ✅ |
+| SC: deploy            | `sync_call`                   | ⛔ | ⛔ | ![img](/img/egld32x32.png) | 🟡  | deploy     | ✅|
+| SC: upgrade           | `upgrade_async_call_and_exit` | ⛔ | ✅ | ![img](/img/egld32x32.png) | 🟡  | upgrade    | callback only |
+| Test: tx call         | `run`                         | ✅ | ✅ | ✅                         | 🟡  | FC or `()` | ✅ |
+| Test: tx deploy       | `run`                         | ✅ | ⛔ | ![img](/img/egld32x32.png) | 🟡  | deploy     | ✅ |
+| Test: query           | `run`                         | ✅ | ✅ | ✅                         | ⛔  | FC         | ✅ |
+| Interactor: tx call   | `run`                         | ✅ | ✅ | ✅                         | 🟡  | FC or `()` | ✅ |
+| Interactor: tx deploy | `run`                         | ✅ | ⛔ | ![img](/img/egld32x32.png) | 🟡  | deploy     | ✅ |
+| Interactor: query     | `run`                         | ✅ | ✅ | ✅                         | ⛔  | FC         | ✅ |
+
+Legend:
+
+| Symbol | Meaning     |
+| ------ | ----------- |
+| ✅     | Mandatory, any allowed value type |
+| ⛔     | Not allowed |
+| 🟡     | Optional    |
+| ![img](/img/egld32x32.png) | EGLD only |
+| FC    | Function Call |
