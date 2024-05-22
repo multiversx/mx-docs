@@ -1,6 +1,6 @@
 ---
-id: sc-blackbox
-title: Blackbox tests
+id: sc-blackbox-example
+title: Blackbox example
 ---
 
 [comment]: # "mx-abstract"

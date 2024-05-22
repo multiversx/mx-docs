@@ -142,7 +142,9 @@ const sidebars = {
                 label: "Rust testing",
                 items: [
                   "developers/testing/rust/sc-test-overview",
-                  "developers/testing/rust/sc-blackbox",
+                  "developers/testing/rust/sc-test setup",
+                  "developers/testing/rust/sc-blackbox-calls",
+                  "developers/testing/rust/sc-blackbox-example",
                   "developers/testing/rust/whitebox-legacy",
                   "developers/testing/rust/whitebox-legacy-functions-reference",
                 ],
