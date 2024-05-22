@@ -220,5 +220,143 @@ We have not extensively advertised the scenario-based black-box tests, knowing t
 
 If, however, you got to develop on that syntax, here is how to migrate to the new one.
 
-**TODO**
+```rust title=before_migration.rs
+use multiversx_sc_scenario::{scenario_model::*, *};
 
+const ADDER_PATH_EXPR: &str = "mxsc:output/adder.mxsc.json";
+
+fn world() -> ScenarioWorld {
+    let mut blockchain = ScenarioWorld::new();
+    blockchain.set_current_dir_from_workspace("contracts/examples/adder");
+
+    blockchain.register_contract(ADDER_PATH_EXPR, adder::ContractBuilder);
+    blockchain
+}
+
+#[test]
+fn adder_blackbox_raw() {
+    let mut world = world();
+    let adder_code = world.code_expression(ADDER_PATH_EXPR);
+
+    world
+        .set_state_step(
+            SetStateStep::new()
+                .put_account("address:owner", Account::new().nonce(1))
+                .new_address("address:owner", 1, "sc:adder"),
+        )
+        .sc_deploy(
+            ScDeployStep::new()
+                .from("address:owner")
+                .code(adder_code)
+                .argument("5")
+                .expect(TxExpect::ok().no_result()),
+        )
+        .sc_query(
+            ScQueryStep::new()
+                .to("sc:adder")
+                .function("getSum")
+                .expect(TxExpect::ok().result("5")),
+        )
+        .sc_call(
+            ScCallStep::new()
+                .from("address:owner")
+                .to("sc:adder")
+                .function("add")
+                .argument("3")
+                .expect(TxExpect::ok().no_result()),
+        )
+        .check_state_step(
+            CheckStateStep::new()
+                .put_account("address:owner", CheckAccount::new())
+                .put_account(
+                    "sc:adder",
+                    CheckAccount::new().check_storage("str:sum", "8"),
+                ),
+        );
+}
+```
+
+This was the old blackbox code from the `adder` contract, present in framework version `0.48.0`. 
+
+Migrating this test to unified syntax means, in a nutshell, separating each action into different steps, replacing verbose `CheckStateStep` and `SetStateStep` with their specific state builders, and replacing the interactions with actual transactions (deploy, query, call).
+
+This is how the migrated test looks like:
+```rust title=after_migration.rs
+use multiversx_sc_scenario::imports::*;
+
+use adder::*;
+
+// new types
+const OWNER_ADDRESS: TestAddress = TestAddress::new("owner");
+const ADDER_ADDRESS: TestSCAddress = TestSCAddress::new("adder");
+const CODE_PATH: MxscPath = MxscPath::new("output/adder.mxsc.json");
+
+fn world() -> ScenarioWorld {
+    let mut blockchain = ScenarioWorld::new();
+
+    blockchain.register_contract(CODE_PATH, adder::ContractBuilder);
+    blockchain
+}
+
+#[test]
+fn adder_blackbox() {
+    let mut world = world(); // ScenarioWorld
+
+    // starting mandos trace
+    world.start_trace();
+
+    // set state for owner
+    world.account(OWNER_ADDRESS).nonce(1);
+
+    // deploy the contract
+    let new_address = world
+        .tx() // tx with test environment
+        .from(OWNER_ADDRESS)
+        .typed(adder_proxy::AdderProxy) // typed call - proxy
+        .init(5u32) // deploy call
+        .code(CODE_PATH)
+        .new_address(ADDER_ADDRESS) // custom deploy address for tests
+        .returns(ReturnsNewAddress) // returns new address after deploy
+        .run(); // send transaction
+
+    assert_eq!(new_address, ADDER_ADDRESS.to_address());
+
+    // query the contract, `sum` view
+    world
+        .query() // tx with test query environment
+        .to(ADDER_ADDRESS)
+        .typed(adder_proxy::AdderProxy) // typed call - proxy
+        .sum()
+        .returns(ExpectValue(5u32)) // asserts returned value == 5u32
+        .run(); // send transaction
+
+    // contract call, `add` endpoint
+    world
+        .tx() // tx with test environment
+        .from(OWNER_ADDRESS)
+        .to(ADDER_ADDRESS)
+        .typed(adder_proxy::AdderProxy) // typed call - proxy
+        .add(1u32)
+        .run(); // send transaction
+
+    // query the contract, `sum view`
+    world
+        .query() // tx with test query environment
+        .to(ADDER_ADDRESS)
+        .typed(adder_proxy::AdderProxy) // typed call - proxy
+        .sum()
+        .returns(ExpectValue(6u32)) // asserts returned value == 6u32
+        .run(); // send transaction
+
+    // check state for owner
+    world.check_account(OWNER_ADDRESS);
+
+    // check state for adder
+    world
+        .check_account(ADDER_ADDRESS)
+        .check_storage("str:sum", "6");
+
+    // write mandos trace to file
+    world.write_scenario_trace("trace1.scen.json");
+}
+```
