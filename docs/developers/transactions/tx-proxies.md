@@ -144,8 +144,11 @@ graph LR
     end
 ```
 
+## Original type...anticipating Result Handlers
 
 Proxies additionally capture the return type originally defined within the smart contract.
+
+## NotPayable protection
 
 All non-payment endpoints in the generated proxy have a safeguard to prevent accidental payments. This involves automatically setting the payment to **NotPayable**.
 

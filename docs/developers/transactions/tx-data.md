@@ -85,20 +85,35 @@ Transactions with no data are classified as simple transfers. These simple trans
 ```
 [comment]: # (mx-context-auto)
 
-Inside a contract, all transactions are treated as untyped function calls. This applies to system smart contracts, calls, and even built-in functions.
+:::note
+Proxy allow strongly typed construction of the data field.
+:::
+
+## Untyped function call
+
+**`.raw_call()`** starts a contract call serialised by hand. It is used in proxy functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe.
 
 [comment]: # (mx-context-auto)
 
 ## Untyped deploy
 
-**`.raw_deploy()`** starts a contract deploy call serialised by hand. It is used in proxy deployment functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. All deployment calls require the following:
-  - **`.code()`**: explicitly sets the deployment code source as a byte array.
-  - **`.new_address()`**:  defines a mock address for the deployed contract (allowed only in testing environments).
+**`.raw_deploy()`** starts a contract deploy call serialised by hand. It is used in proxy deployment functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. 
 
-If you want to set code metadata, you can use **`.code_metadata()`**.
+Deployment calls needs to set:
+
+### Code
+
+**`.code()`** explicitly sets the deployment code source as a byte array.
+
+### New address
+
+**`.new_address()`** defines a mock address for the deployed contract (allowed only in testing environments).
+
+### Code metadata
+
+**`.code_metadata()`** explicitly sets code metadata.
 
 The example below is a blackbox test for deploy functionality. This call encapsulates a raw_deploy that explicitly sets the deployment code source with *"adder.mxsc.json"* and the returned address of the deploy with *"sc: adder"*.
-
 
 ```rust title=adder_blackbox_test.rs
 const OWNER_ADDRESS: TestAddress = TestAddress::new("owner");
@@ -121,15 +136,22 @@ fn deploy(&mut self) {
 ## Untyped upgrade
 
 `.raw_upgrade()` starts a contract deployment upgrade serialised by hand. It is used in a proxy upgrade call. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. All upgrade calls require:
- - **`.code()`**
 
-If you want to set code metadata in the upgrade, you can use **`.code_metadata()`**.
+### Code
 
-[comment]: # (mx-context-auto)
+**`.code()`** explicitly sets the upgrade code source as a byte array.
 
 ### From source
 
 **`.from_source()`** sets the upgrade code source as another deployed contract code.
+
+### Code metadata
+
+**`.code_metadata()`** explicitly sets code metadata.
+
+[comment]: # (mx-context-auto)
+
+The example below is a blackbox test for upgrade functionality. This call encapsulates a raw_upgrade that explicitly sets the upgrade call source with a specific ManagedAddress and upgradeable code metadata.
 ```rust title=lib.rs
 #[endpoint]
 fn upgrade_from_source(
