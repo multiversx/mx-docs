@@ -1,6 +1,6 @@
 ---
 id: tx-examples
-title: Examples
+title: Examples (TODO - not currently in sidebar)
 ---
 
 [comment]: # (mx-abstract)

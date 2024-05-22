@@ -241,17 +241,3 @@ Running this test will call the `add` endpoint of the contract, query the `sum` 
 :::info
 For ease of use, a small interactor CLI built around a smart contract's endpoints can now be `generated automatically` using [sc-meta all snippets](/developers/meta/sc-meta-cli#calling-snippets).
 :::
-
-## Feature table - Andrei
-
-```
-table ---> to, from, ...
-  |
-  |
-  v
-environments
-```
-
-[comment]: # (mx-context-auto)
-
-## Implementation details - Andrei (optional)
