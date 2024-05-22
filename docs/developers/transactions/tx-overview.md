@@ -174,8 +174,9 @@ graph LR
     To --> to-caller[ToCaller]
     To --> to-self[ToSelf]
     Payment --> payment-unit["()"]
-    Payment --> egld-biguint["Egld(BigUint)"]
-    Payment --> egld-u64["Egld(u64)"]
+    Payment --> egld["Egld(EgldValue)"]
+    egld --> egld-biguint["Egld(BigUint)"]
+    egld --> egld-u64["Egld(u64)"]
     Payment --> EsdtTokenPayment
     Payment --> MultiEsdtPayment
     Payment --> EgldOrEsdtTokenPaymentRefs
@@ -273,12 +274,12 @@ graph LR
     subgraph Data
         data-unit["()"]
         data-unit ----->|raw_deploy| deploy["DeployCall&lt;()&gt;"]
-        deploy -->|from_source| deploy-from-source["DeployCall&lt;FromSource&lt;ManagedAddress&gt;&gt;"]
-        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+        deploy -->|from_source| deploy-from-source["DeployCall&lt;FromSource&lt;_&gt;&gt;"]
+        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;_&gt;&gt;"]
         deploy -->|code_metadata| deploy
         data-unit ----->|raw_upgrade| upgrade["UpgradeCall<()>"]
-        upgrade -->|from_source| upgrade-from-source["UpgradeCall&lt;CodeSource&lt;ManagedAddress&gt;&gt;"]
-        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+        upgrade -->|from_source| upgrade-from-source["UpgradeCall&lt;CodeSource&lt;_&gt;&gt;"]
+        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;_&gt;&gt;"]
         upgrade -->|code_metadata| upgrade
         data-unit ---->|raw_call| fc[FunctionCall]
         data-unit -->|typed| Proxy
