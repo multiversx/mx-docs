@@ -21,15 +21,14 @@ graph LR
         payment-unit["()"]
         payment-unit -->|egld| egld-biguint["Egld(BigUint)"]
         payment-unit -->|egld| egld-u64["Egld(u64)"]
-        payment-unit -->|esdt| EsdtTokenPayment
+        payment-unit -->|"payment<br />esdt"| EsdtTokenPayment
+        payment-unit -->|"payment<br />single_esdt"| EsdtTokenPaymentRefs
         EsdtTokenPayment -->|esdt| MultiEsdtPayment
         MultiEsdtPayment -->|esdt| MultiEsdtPayment
-        payment-unit -->|payment| MultiEsdtPayment
-        payment-unit -->|multi_esdt| EsdtTokenPayment
-        payment-unit -->|payment| EgldOrEsdtTokenPaymentRefs
-        payment-unit -->|egld_or_single_esdt| EgldOrEsdtTokenPaymentRefs
-        payment-unit -->|payment| EgldOrMultiEsdtPayment
-        payment-unit -->|egld_or_multi_esdt| EgldOrMultiEsdtPayment
+        payment-unit -->|"payment<br >multi_esdt"| MultiEsdtPayment
+        payment-unit -->|"payment"| EgldOrEsdtTokenPayment
+        payment-unit -->|"payment<br />egld_or_single_esdt"| EgldOrEsdtTokenPaymentRefs
+        payment-unit -->|"payment<br />egld_or_multi_esdt"| EgldOrMultiEsdtPayment
     end
 ```
 
