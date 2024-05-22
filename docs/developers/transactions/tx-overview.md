@@ -158,8 +158,8 @@ graph LR
     Env --> TxScEnv
     Env --> ScenarioEnvExec
     Env --> ScenarioEnvQuery
-    Env --> InteractorExecEnv
-    Env --> InteractorQueryEnv
+    Env --> InteractorEnvExec
+    Env --> InteractorEnvQuery
     From --> from-unit["()"]
     From --> from-man-address[ManagedAddress]
     From --> from-address[Address]
@@ -205,6 +205,18 @@ Constructing a transaction is similar to exploring a map, or running a finite st
 Choosing a path at one point closes off many other options. The compiler is always guiding us and preventing us from ending up with an invalid transaction.
 
 Here is a map of all the paths you can take when configuring a transaction. The fields are mostly independent, so the map is split into 7 sections.
+
+
+```mermaid
+graph LR
+    subgraph Environment
+        sc-code["SC Code"] -->|"self.tx()"| sc-env[TxScEnv]
+        test-code["Test Code"] -->|"world.tx()"| ScenarioEnvExec
+        test-code["Test Code"] -->|"world.query()"| ScenarioEnvQuery
+        intr-code["Interactor Code"] -->|"interactor.tx()"| InteractorEnvExec
+        intr-code["Interactor Code"] -->|"interactor.query()"| InteractorEnvQuery
+    end
+```
 
 ```mermaid
 graph LR
@@ -260,19 +272,19 @@ graph LR
 graph LR
     subgraph Data
         data-unit["()"]
+        data-unit ----->|raw_deploy| deploy["DeployCall&lt;()&gt;"]
+        deploy -->|from_source| deploy-from-source["DeployCall&lt;FromSource&lt;ManagedAddress&gt;&gt;"]
+        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+        deploy -->|code_metadata| deploy
+        data-unit ----->|raw_upgrade| upgrade["UpgradeCall<()>"]
+        upgrade -->|from_source| upgrade-from-source["UpgradeCall&lt;CodeSource&lt;ManagedAddress&gt;&gt;"]
+        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+        upgrade -->|code_metadata| upgrade
+        data-unit ---->|raw_call| fc[FunctionCall]
         data-unit -->|typed| Proxy
         Proxy -->|init| deploy
         Proxy -->|upgrade| upgrade
         Proxy -->|endpoint| fc[Function Call]
-        data-unit -->|raw_deploy| deploy["DeployCall&lt;()&gt;"]
-        deploy -->|from_source| deploy-from-source["DeployCall&lt;FromSource&lt;ManagedAddress&gt;&gt;"]
-        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
-        deploy -->|code_metadata| deploy
-        data-unit -->|raw_upgrade| upgrade["UpgradeCall<()>"]
-        upgrade -->|from_source| upgrade-from-source["UpgradeCall&lt;CodeSource&lt;ManagedAddress&gt;&gt;"]
-        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
-        upgrade -->|code_metadata| upgrade
-        data-unit -->|raw_call| fc[FunctionCall]
     end
 ```
 

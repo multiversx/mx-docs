@@ -60,6 +60,24 @@ Once the environment is selected, developers have four methods to narrow down th
 Apart from the environment, developers are not obliged to include any specific details within a transaction. They have the freedom to construct the transaction in any manner they see fit, provided that the transaction ultimately contains sufficient information to execute the intended action accurately.
 :::
 
+
+[comment]: # (mx-context-auto)
+
+## Diagram
+
+Environments are the first field that gets initialized, as soon as the transaction object is created.
+
+```mermaid
+graph LR
+    subgraph Environment
+        sc-code["SC Code"] -->|"self.tx()"| sc-env[TxScEnv]
+        test-code["Test Code"] -->|"world.tx()"| ScenarioEnvExec
+        test-code["Test Code"] -->|"world.query()"| ScenarioEnvQuery
+        intr-code["Interactor Code"] -->|"interactor.tx()"| InteractorEnvExec
+        intr-code["Interactor Code"] -->|"interactor.query()"| InteractorEnvQuery
+    end
+```
+
 [comment]: # (mx-context-auto)
 
 ## Smart contract

@@ -241,7 +241,19 @@ const config = {
           },
           {
             from: "/developers/developer-reference/rust-smart-contract-debugging",
-            to: "/developers/developer-reference/sc-debugging",
+            to: "/developers/testing/sc-debugging",
+          },
+          {
+            from: "/developers/developer-reference/sc-debugging",
+            to: "/developers/testing/sc-debugging",
+          },
+          {
+            from: "/developers/developer-reference/rust-testing-framework",
+            to: "/developers/testing/rust/whitebox-legacy",
+          },
+          {
+            from: "/developers/developer-reference/rust-testing-framework-functions-reference",
+            to: "/developers/testing/rust/whitebox-legacy-functions-reference",
           },
           {
             from: "/developers/developer-reference/smart-contract-build-reference",

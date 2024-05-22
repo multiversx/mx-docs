@@ -1,6 +1,6 @@
 ---
-id: rust-testing-framework
-title: Rust Testing Framework
+id: whitebox-legacy
+title: Whitebox Framework
 ---
 
 [comment]: # (mx-abstract)
