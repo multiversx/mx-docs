@@ -96,6 +96,33 @@ Executes the transaction synchronously, in readonly mode (target contract cannot
         .sync_call_readonly(); // sync call in readonly mode
 ```
 
+### `transfer_execute`
+
+Sends transaction asynchronously, and doesn't wait for callback.
+
+```rust title=contract.rs
+      self
+          .tx()
+          .to(&caller)
+          .gas(50_000_000u64)
+          .raw_call(func_name)
+          .single_esdt(&token, 0u64, &amount)
+          .transfer_execute();
+```
+
+
+### `transfer`
+
+Same as `transfer_execute`, but only allowed for simple transfers.
+
+```rust title=contract.rs
+      self
+          .tx()
+          .to(&caller_address)
+          .egld(&collected_fees)
+          .transfer();
+```
+
 
 [comment]: # "mx-context-auto"
 
