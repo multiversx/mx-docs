@@ -43,18 +43,6 @@ Since this operation is specific to only the Rust debugger, it doesn't go throug
 
 [comment]: # "mx-context-auto"
 
-### Setting accounts
-
-
-
-
-[comment]: # "mx-context-auto"
-
-### Checking accounts
-
-
-[comment]: # "mx-context-auto"
-
 ### Calling contract code
 
 There are many ways to call contract code, but the one we recommend is [black-box style](sc-blackbox) using the [unified transaction syntax](/developers/transactions/tx-overview).
