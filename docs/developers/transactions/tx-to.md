@@ -56,23 +56,6 @@ Transactions, excluding deployments, require the designation of a recipient. Thi
 
 In the subsequent section, we will go into the various data types that are permissible for recipient nomination.
 
-### ManagedAddress
-
-This function, which is a sample from a **blackbox test**, increases a value and sends it to a particular wallet. This example specifically focuses on the `.to` call, which establishes the **receiver**. In this case, it is a hardcoded **ManagedAddress** instance.
-
-```rust title=blackbox_test.rs
-fn add_one(&mut self, from: &AddressValue) {
-    let to_wallet: ManagedAddress<StaticApi> = ManagedAddress::new_from_bytes(&[7u8; 32]);
-    self.world
-        .tx()
-        .from(OWNER_ADDRESS)
-        .to(to_wallet)
-        .typed(proxy::Proxy)
-        .add(1u32)
-        .run();
-}
-```
-
 ### Address
 
 Below there is an interactor that funds a specific contract with an amount of EGLD. The recipient contract is instantiated as an address object within the interactor's context.
@@ -90,10 +73,24 @@ async fn feed_contract_egld(&mut self) {
 }
 ```
 
-For parametric testing, there are particular address types:
+This function, which is a sample from a **blackbox test**, increases a value and sends it to a particular wallet. This example specifically focuses on the `.to` call, which establishes the **receiver**. In this case, it is a hardcoded **ManagedAddress** instance.
 
-- **TestSCAddress**
-  - encodes a dummy smart contract address, equivalent to `"sc:{}"`; For the example below it is equivalent to `"sc:example_contract"`;
+```rust title=blackbox_test.rs
+fn add_one(&mut self, from: &AddressValue) {
+    let to_wallet: ManagedAddress<StaticApi> = ManagedAddress::new_from_bytes(&[7u8; 32]);
+    self.world
+        .tx()
+        .from(OWNER_ADDRESS)
+        .to(to_wallet)
+        .typed(proxy::Proxy)
+        .add(1u32)
+        .run();
+}
+```
+
+## **TestSCAddress**
+
+For parametric testing, there are particular address types. `TestSCAddress` encodes a dummy smart contract address, equivalent to `"sc:{}"`; For the example below it is equivalent to `"sc:example_contract"`;
   - contains two functions:
     - **`.eval_to_array()`** parses the address into an array of u8.
     - **`.eval_to_expr()`** returns the address as a string object.
