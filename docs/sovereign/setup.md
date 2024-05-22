@@ -1,6 +1,8 @@
 # Setup Guide
 
-**Disclaimer: This guide is a preliminary version and not the final documentation for sovereign chains. It serves as a starting point for setting up and deploying contracts.**
+:::note
+ This guide is a preliminary version and not the final documentation for sovereign chains. It serves as a starting point for setting up a sovereign chain on a local machine.
+:::
 
 This guide will help you set up and deploy contracts on a sovereign chain. Follow these steps carefully to ensure a successful deployment.
 
@@ -11,18 +13,24 @@ This guide will help you set up and deploy contracts on a sovereign chain. Follo
     mxpy wallet new --format pem --outfile /home/ubuntu/wallet.pem
     ```
 
+:::note
+You can use any wallet of your choice, but for the purpose of this guide we are taking the step by step approach as if there is nothing available nor installed on your node.
+:::
+
+## Step 2: Download necessary contracts
+
 2. Download the WASM files from [here](https://github.com/multiversx/mx-sovereign-sc/releases).
 
-## Step 2: Clone the ```mx-chain-go``` Repository
+## Step 3: Clone the ```mx-chain-go``` Repository
 
-1. Clone the repository:
+1. Clone the github repository:
     ```bash
     git clone https://github.com/multiversx/mx-chain-go.git
     ```
 
-2. Checkout the specific branch:
+2. Checkout the specific sovereign chain sdk branch:
     ```bash
-    git checkout chain-sdk-go
+    git checkout chain-go-sdk
     ```
 
 3. Navigate to the testnet scripts directory:
@@ -35,19 +43,38 @@ This guide will help you set up and deploy contracts on a sovereign chain. Follo
     ./prerequisites.sh
     ```
 
-## Step 3: Deploy Contracts on Testnet
+:::note
+The prerequisites script...
+:::
 
-1. Update the `/config/configs.cfg` file with the OWNER and WASM file details. Example:
+## Step 4: Deploy Contracts on Testnet
+
+1. Update the `/config/configs.cfg` file with the Owner and WASM file details. Example:
     ```ini
     # Owner Configuration
-    WALLET="~/wallet.pem"
-    WALLET_ADDRESS=erd1...
+    WALLET="~/wallet.pem" 
+
+    # Main Chain Constants
+    PROXY = https://testnet-gateway.multiversx.com
+    CHAIN_ID = T
 
     # WASM Files
     ESDT_SAFE_WASM="~/contracts/esdt-safe.wasm"
     FEE_MARKET_WASM="~/contracts/fee-market.wasm"
     MULTISIG_VERIFIER_WASM="~/contracts/multisigverifier.wasm"
     ```
+
+:::note
+
+- **WALLET** - should represent the wallet generated at Step 1.
+- **PROXY** - in this case, for the purpose of the test, the used proxy is the testnet one. Of course that the proper proxy should be used when deploying your own set of contracts depending on the development phase of your project.
+- **CHAIN_ID** - should represent the chain ID of the chain where the contracts are to be deployed. The currently supported constants are :
+    - **"1"** for Mainnet;
+    - **"D"** for Devnet;
+    - **"T"** for Testnet;
+- **ESDT_SAFE_WASM, FEE_MARKET_WASM, MULTISIG_VERIFIER_WASM** - represent the paths to the location where the contracts have been downloaded at Step 2.
+:::
+
 
 2. Navigate to the `sovereignBridge` directory:
     ```bash
@@ -61,49 +88,50 @@ This guide will help you set up and deploy contracts on a sovereign chain. Follo
 
 4. Deploy all bridge contracts automatically:
     ```bash
-    deployAll
+    deployMainChainContractsAndSetupObserver
     ```
 
-5. Initialize the sovereign chain:
+5. Initialize and deploy the sovereign chain:
     ```bash
-    sovereignInit
+    sovereignDeploy
     ```
 
-Alternatively, you can deploy step-by-step:
-
-    ```bash
-    deployEsdtSafeContract
+:::note
+## Alternatively, you can do everything manually step-by-step:
+### Deploy contracts:
+```bash
+    deployEsdtSafeContract 
     deployFeeMarketContract
     setFeeMarketAddress
     disableFeeMarketContract
     unpauseEsdtSafeContract
-    ```
+```
 
-## Step 4: Update Sovereign Configurations
+### Update Sovereign Configurations
 
-1. Set the genesis contract:
+1. This instruction will copy the wasm files in the right location and update the genesis smart contracts:
+
     ```bash
     setGenesisContract
     ```
 
-2. Update the sovereign configuration file:
+2. This instruction will update sovereign config.toml file:
     ```bash
     updateSovereignConfig
     ```
 
-## Step 5: Prepare Docker Observer
+### Prepare Docker Observer
 
 1. Prepare the observer:
     ```bash
     prepareObserver
     ```
 
-2. Or specify an image version:
+2. Specify an image version:
     ```bash
     prepareObserver multiversx/chain-testnet:T1.7.4.0
     ```
-
-## Step 6: Deploy Sovereign Chain & Contracts
+### Deploy Sovereign Chain & Contracts
 
 1. Update the notifier notarization round configuration:
     ```bash
@@ -170,85 +198,12 @@ Alternatively, you can deploy step-by-step:
     unpauseEsdtSafeContractSovereign
     ```
 
+
+:::
+
 ## Step 7: Stop Local Sovereign Chain
 
 1. Stop the chain and all dependent services:
     ```bash
-    stopSovereign
-    ```
-
-# Sovereign Deposit Tokens Guide
-
-## Main Chain -> Sovereign Chain
-
-1. Update the `/config/configs.cfg` file with the token settings. Example:
-    ```ini
-    # Issue Token Settings
-    TOKEN_TICKER=TKN
-    TOKEN_DISPLAY_NAME=Token
-    NR_DECIMALS=18
-    INITIAL_SUPPLY=111222333
-    ```
-
-2. Navigate to the `sovereignBridge` directory:
-    ```bash
-    cd mx-chain-go/scripts/testnet/sovereignBridge/
-    ```
-
-3. Source the script:
-    ```bash
-    source script.sh
-    ```
-
-4. Issue a token on the main chain:
-    ```bash
-    issueToken
-    ```
-
-5. Deposit the token in the smart contract:
-    ```bash
-    depositTokenInSC
-    ```
-
-## Sovereign Chain -> Main Chain
-
-1. Update the `/config/configs.cfg` file with the sovereign token settings. Example:
-    ```ini
-    # Issue Sovereign Token Settings
-    TOKEN_TICKER_SOVEREIGN=SVN
-    TOKEN_DISPLAY_NAME_SOVEREIGN=SovToken
-    NR_DECIMALS_SOVEREIGN=18
-    INITIAL_SUPPLY_SOVEREIGN=333222111
-    ```
-
-2. Navigate to the `sovereignBridge` directory:
-    ```bash
-    cd mx-chain-go/scripts/testnet/sovereignBridge/
-    ```
-
-3. Source the script:
-    ```bash
-    source script.sh
-    ```
-
-4. Issue a new token on the local sovereign chain:
-    ```bash
-    issueTokenSovereign
-    ```
-
-Steps to transfer tokens:
-
-- Ensure the sovereign bridge contract has the BurnRole for the token you want to bridge. All new tokens have `ESDTBurnRoleForAll` enabled. If disabled, register the burn role:
-    ```bash
-    setLocalBurnRoleSovereign
-    ```
-
-- Register the sovereign token identifier on the main chain bridge contract:
-    ```bash
-    registerToken
-    ```
-
-- Deposit the token in the smart contract on the sovereign chain:
-    ```bash
-    depositTokenInSCSovereign
+    stopAndCleanSovereign
     ```

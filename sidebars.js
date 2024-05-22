@@ -462,7 +462,7 @@ const sidebars = {
         type: "category",
         label: "Introduction",
         items: [
-          "sovereign/key-features",
+          "sovereign/key-components",
           "sovereign/disclaimer",],
       },
       {
@@ -473,13 +473,7 @@ const sidebars = {
           "sovereign/software-dependencies",],
       },
       "sovereign/setup",
-      {
-        type: "category",
-        label: "Deployment",
-        items: [
-          "sovereign/deploy-sovereign",
-          "sovereign/deploy-contracts",],
-      },
+      "sovereign/deployment",
       {
         type: "category",
         label: "Managing a Sovereign Chain",
