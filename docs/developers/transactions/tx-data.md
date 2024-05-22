@@ -23,19 +23,43 @@ Using raw data is acceptable only when we are forwarding calls to unknown contra
 
 ## Diagram
 
-This is the diagram for the raw calls, without proxies. You can find the one involving proxies [here](tx-proxies#diagram)
+The basic transition diagram for constructing the data field is the one below. It shows the allowed data types and how to get from one to the other.
+
+Notice how the deploy and upgrade calls are further specified by the code source: either explicit code, or the code of another deployed contract.
 
 ```mermaid
 graph LR
-    subgraph "Data (raw)"
+    subgraph "Data: raw"
         data-unit["()"]
         deploy["DeployCall&lt;()&gt;"]
         data-unit -->|raw_deploy| deploy
-        deploy -->|from_source| deploy-src["DeployCall&lt;FromSource&lt;ManagedAddress&gt;&gt;"]
-        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+        deploy -->|from_source| deploy-src["DeployCall&lt;FromSource&lt;_&gt;&gt;"]
+        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;_&gt;&gt;"]
         data-unit -->|raw_upgrade| upgrade["UpgradeCall<()>"]
-        upgrade -->|from_source| upgrade-src["UpgradeCall&lt;CodeSource&lt;ManagedAddress&gt;&gt;"]
-        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
+        upgrade -->|from_source| upgrade-src["UpgradeCall&lt;CodeSource&lt;_&gt;&gt;"]
+        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;_&gt;&gt;"]
+        data-unit -->|"raw_call(endpoint_name)"| fc[FunctionCall]
+    end
+```
+
+What the first diagram does **not** contain are some additional methods that change the values, but not the type. They are:
+- `code_metadata` (deploy & upgrade only),
+- `argument`
+- `argument_raw`.
+
+If we also add them to the diagram we get a more complex version of it:
+
+```mermaid
+graph LR
+    subgraph "Data: raw, detailed"
+        data-unit["()"]
+        deploy["DeployCall&lt;()&gt;"]
+        data-unit -->|raw_deploy| deploy
+        deploy -->|from_source| deploy-src["DeployCall&lt;FromSource&lt;_&gt;&gt;"]
+        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;_&gt;&gt;"]
+        data-unit -->|raw_upgrade| upgrade["UpgradeCall<()>"]
+        upgrade -->|from_source| upgrade-src["UpgradeCall&lt;CodeSource&lt;_&gt;&gt;"]
+        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;_&gt;&gt;"]
         data-unit -->|"raw_call(endpoint_name)"| fc[FunctionCall]
 
         deploy -->|"code_metadata<br />argument<br />argument_raw"| deploy
@@ -48,27 +72,16 @@ graph LR
     end
 ```
 
-```mermaid
-graph LR
-    subgraph "Data (raw)"
-        data-unit["()"]
-        deploy["DeployCall&lt;()&gt;"]
-        data-unit -->|raw_deploy| deploy
-        deploy -->|from_source| deploy-src["DeployCall&lt;FromSource&lt;ManagedAddress&gt;&gt;"]
-        deploy -->|code| deploy-code["DeployCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
-        data-unit -->|raw_upgrade| upgrade["UpgradeCall<()>"]
-        upgrade -->|from_source| upgrade-src["UpgradeCall&lt;CodeSource&lt;ManagedAddress&gt;&gt;"]
-        upgrade -->|code| upgrade-code["UpgradeCall&lt;Code&lt;ManagedBuffer&gt;&gt;"]
-        data-unit -->|"raw_call(endpoint_name)"| fc[FunctionCall]
-    end
-```
-
+:::info
+These are diagrams for the raw calls, without proxies. You can find the one involving proxies [here](tx-proxies#diagram)
+:::
 
 [comment]: # (mx-context-auto)
 
 ## No data
 
 Transactions with no data are classified as simple transfers. These simple transactions can be transferred using:
+
 - **`.transfer()`**: executes simple transfers with a zero gas limit.
 ```rust title=lib.rs
     self.tx()
@@ -89,25 +102,24 @@ Transactions with no data are classified as simple transfers. These simple trans
 Proxy allow strongly typed construction of the data field.
 :::
 
+
+[comment]: # (mx-context-auto)
+
 ## Untyped function call
 
 **`.raw_call()`** starts a contract call serialised by hand. It is used in proxy functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe.
 
+
 [comment]: # (mx-context-auto)
 
-## Untyped deploy
+### Argument
 
-**`.raw_deploy()`** starts a contract deploy call serialised by hand. It is used in proxy deployment functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. 
+[comment]: # (mx-context-auto)
 
-Deployment calls needs to set:
+### Raw argument
 
-### Code
 
-**`.code()`** explicitly sets the deployment code source as a byte array.
-
-### New address
-
-**`.new_address()`** defines a mock address for the deployed contract (allowed only in testing environments).
+[comment]: # (mx-context-auto)
 
 ### Code metadata
 
@@ -131,19 +143,65 @@ fn deploy(&mut self) {
         .run();
 }
 ```
+
+
+[comment]: # (mx-context-auto)
+
+## Untyped deploy
+
+**`.raw_deploy()`** starts a contract deploy call serialised by hand. It is used in proxy deployment functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. 
+
+Deployment calls needs to set:
+
+
+[comment]: # (mx-context-auto)
+
+### Argument
+
+Same as for [function call arguments](#argument).
+
+[comment]: # (mx-context-auto)
+
+### Raw argument
+
+Same as for [function call raw arguments](#raw-argument).
+
+
+[comment]: # (mx-context-auto)
+
+### Code
+
+**`.code(...)`** explicitly sets the deployment code source as a byte array.
+
+
+[comment]: # (mx-context-auto)
+
+### New address
+
+**`.new_address(...)`** defines a mock address for the deployed contract (allowed only in testing environments).
+
+
 [comment]: # (mx-context-auto)
 
 ## Untyped upgrade
 
 `.raw_upgrade()` starts a contract deployment upgrade serialised by hand. It is used in a proxy upgrade call. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. All upgrade calls require:
 
-### Code
 
-**`.code()`** explicitly sets the upgrade code source as a byte array.
+[comment]: # (mx-context-auto)
 
-### From source
+### Argument
 
-**`.from_source()`** sets the upgrade code source as another deployed contract code.
+Same as for [function call arguments](#argument).
+
+[comment]: # (mx-context-auto)
+
+### Raw argument
+
+Same as for [function call raw arguments](#raw-argument).
+
+
+[comment]: # (mx-context-auto)
 
 ### Code metadata
 
@@ -169,3 +227,19 @@ fn upgrade_from_source(
         .upgrade_async_call_and_exit();
 }
 ```
+
+
+
+[comment]: # (mx-context-auto)
+
+### Code
+
+**`.code(...)`** explicitly sets the upgrade code source as a byte array.
+
+
+[comment]: # (mx-context-auto)
+
+### From source
+
+**`.from_source(...)`** sets the upgrade code source as another deployed contract code.
+
