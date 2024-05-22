@@ -106,8 +106,7 @@ In the first step, we will completely **remove the staking queue** and **unstake
 This process will occur automatically at the end of the epoch and requires no interaction from validators.
 Nodes' distribution remains unchanged.
 
-For owners which had **unstaked** nodes, these can be **restaked** using 'RestakeUnstakedNodes' complete details here:
-https://docs.multiversx.com/validators/delegation-manager/#restaking-nodes
+For owners which had **unstaked** nodes, these can be **restaked** using 'RestakeUnstakedNodes' complete details [here](https://docs.multiversx.com/validators/delegation-manager/#restaking-nodes)
 
 ![Staking V4 Step 1](/validators/stakingV4/stakingV4-step1.png)
 
@@ -375,6 +374,5 @@ the `TotalNumOfEligibleNodes` for a given epoch is 1600 nodes, this means owners
 The specific parameters, including the initial limit and `NodeLimitPercentage`, can be decided through a governance
 vote. This ensures community involvement in determining the rules governing node ownership.
 
-The actual limit is 50 nodes per provider with the calculation details from the 'systemSmartContractsConfig.toml' here:
-https://github.com/multiversx/mx-chain-mainnet-config/blob/2ca2da07427c5a802202d1ed364a923f0e366f13/systemSmartContractsConfig.toml#L15
+The actual limit is 50 nodes per provider with the calculation details from the 'systemSmartContractsConfig.toml' [here](https://github.com/multiversx/mx-chain-mainnet-config/blob/2ca2da07427c5a802202d1ed364a923f0e366f13/systemSmartContractsConfig.toml#L15)
 
