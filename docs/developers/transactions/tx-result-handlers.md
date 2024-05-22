@@ -427,7 +427,7 @@ fn returns_address_test() {
 
 Returns: a newly issued token identifier, as String. It will search for it in logs.
 
-Useable in interactor environments.
+Useable in interactor environments. 
 
 ```rust title=interact.rs
 async fn issue_token(action_id: usize) -> String {
@@ -483,6 +483,84 @@ fn forward_sync_retrieve_funds_bt(
 
 ### `ExpectError`
 
+Indicates that the expected return type is error and does an assert on the actual return value. Usable in the testing and interactor environments. 
+
+```rust title=blackbox_test.rs
+    self.world
+        .tx() // tx with testing environment
+        .from(BOARD_MEMBER_ADDRESS)
+        .to(MULTISIG_ADDRESS)
+        .typed(multisig_proxy::MultisigProxy)
+        .perform_action_endpoint(action_id)
+        .with_result(ExpectError(4, err_message)) // expects error return type
+        .run();
+```
+
+In this example, we expect the returned value to be an error with error code 4 (user error) and a specific error message. If not true, the execution fails. 
+
+However, because `ExpectError` only receives a status and a message, writing `ExpectError(0, "")` is equivalent to success (code 0 - ok, no error message).
+
+[comment]: # (mx-context-auto)
+
+### `ExpectValue`
+
+Indicates the expected return type and does an assert on the actual return value. Usable in the testing and interactor environments. 
+
+```rust title=blackbox_test.rs
+    world
+        .query()
+        .to(ADDER_ADDRESS)
+        .typed(adder_proxy::AdderProxy)
+        .sum()
+        .returns(ExpectValue(5u32))
+        .run();
+```
+
+[comment]: # (mx-context-auto)
+
+### `ExpectMessage`
+
+Indicates that the expected return type is error and does an assert on the actual error message. Usable in the testing and interactor environments. 
+
+```rust title=blackbox_test.rs
+    state
+        .world
+        .tx()
+        .from(USER_ADDRESS)
+        .to(TRANSFER_ROLE_FEATURES_ADDRESS)
+        .typed(transfer_role_proxy::TransferRoleFeaturesProxy)
+        .forward_payments(Address::zero(), "", MultiValueVec::<Vec<u8>>::new())
+        .egld_or_single_esdt(
+            &EgldOrEsdtTokenIdentifier::esdt(TRANSFER_TOKEN),
+            0u64,
+            &multiversx_sc::proxy_imports::BigUint::from(100u64),
+        )
+        .with_result(ExpectMessage("Destination address not whitelisted"))
+        .run();
+```
+
+[comment]: # (mx-context-auto)
+
+### `ExpectStatus`
+
+Indicates that the expected return type is u64 and does an assert on the actual transaction. Usable in the testing and interactor environments. 
+
+```rust title=blackbox_test.rs
+        self.world
+            .tx()
+            .from(from)
+            .to(PRICE_AGGREGATOR_ADDRESS)
+            .typed(price_aggregator_proxy::PriceAggregatorProxy)
+            .submit(
+                EGLD_TICKER,
+                USD_TICKER,
+                submission_timestamp,
+                price,
+                DECIMALS,
+            )
+            .with_result(ExpectStatus(4))
+            .run();
+```
 
 [comment]: # (mx-context-auto)
 
