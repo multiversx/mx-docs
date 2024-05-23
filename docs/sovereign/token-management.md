@@ -57,12 +57,14 @@
     issueTokenSovereign
     ```
 
-Steps to transfer tokens:
+### Steps to transfer tokens:
 
+:::info
 - Ensure the sovereign bridge contract has the BurnRole for the token you want to bridge. All new tokens have `ESDTBurnRoleForAll` enabled. If disabled, register the burn role:
     ```bash
     setLocalBurnRoleSovereign
     ```
+:::
 
 - Register the sovereign token identifier on the main chain bridge contract:
     ```bash

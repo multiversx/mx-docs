@@ -13,7 +13,7 @@ This guide provides detailed instructions on setting up, deploying, and managing
 1. [Introduction](/sovereign/key-features)
 2. [Prerequisites](/sovereign/system-requirements)
 3. [Setup Guide](/sovereign/setup)
-4. [Deployment](/sovereign/deploy-sovereign)
+4. [Custom Configurations](/sovereign/deployment)
 5. [Managing a Sovereign Chain](/sovereign/managing-sovereign)
 6. [Economics](/sovereign/token-economics)
 7. [Governance](sovereign/governance)
@@ -21,8 +21,7 @@ This guide provides detailed instructions on setting up, deploying, and managing
 9. [Security Considerations](/sovereign/security)
 10. [VMs](#vms)
 11. [Interoperability](#interoperability)
-12. [L2s](#l2s)
-13. [How to become a validator](/sovereign/validators)
+12. [How to become a validator](/sovereign/validators)
 
 ## Introduction
 
@@ -43,14 +42,7 @@ The setup guide will get you through the initial steps to get your sovereign cha
 - How do you create a new wallet?
 - Where can you download the required files?
 - What repositories should you use and how to prepare your environment?
-
-## Deployment
-
-The deployment chapter will provide detailed instructions on how to deploy contracts on the network. It will answer questions such as:
-- How do you deploy contracts? Can you do it in an automated manner?
+- How do you deploy necessary contracts? Can you do it in an automated manner?
 - What are the step-by-step instructions for manual deployment?
 - How do you update sovereign configurations and manage Docker observers?
-
-## Managing a Sovereign Chain
-
 

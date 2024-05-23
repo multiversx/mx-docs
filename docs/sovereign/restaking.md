@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In the always evolving blockchain space, reStaking products are emerging as a significant innovation. Eigenlayer is currently the leading platform, but new projects are continuously entering the Ethereum ecosystem with impressive valuations. Currently, over $13 billion is reStaked in Eigenlayer, despite the absence of a live product. 
+In the blockchain space, reStaking products are emerging as a significant innovation. Eigenlayer is currently the leading platform, but new projects are continuously entering the Ethereum ecosystem with impressive valuations. Currently, over $13 billion is reStaked in Eigenlayer, despite the absence of a live product. 
 
 ## General Economics and Staking Models
 

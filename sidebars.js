@@ -500,12 +500,12 @@ const sidebars = {
       {
         type: "category",
         label: "Interoperability",
-        items: ["sovereign/interoperability",],
-      },
-      {
-        type: "category",
-        label: "L2s",
-        items: ["sovereign/l2",],
+        items: [
+        "sovereign/interoperability",
+        "sovereign/ethereum-l2",
+        "sovereign/bitcoin-l2",
+        "sovereign/solana-l2",
+        ],
       },
       "sovereign/validators",
     ],

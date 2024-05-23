@@ -10,7 +10,7 @@ This guide will help you set up and deploy contracts on a sovereign chain. Follo
 
 1. Create a new wallet:
     ```bash
-    mxpy wallet new --format pem --outfile /home/ubuntu/wallet.pem
+    mxpy wallet new --format pem --outfile ~/wallet.pem
     ```
 
 :::note
@@ -44,10 +44,20 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
     ```
 
 :::note
-The prerequisites script...
+The prerequisites script verifies and downloads the necessary packages to run the nodes and clones the required repositories:
+
+- mx-chain-deploy-go: Initializes the configuration for the chain and deployment parameters.
+- mx-chain-proxy-go: Repository for the proxy.
+- mx-chain-sovereign-bridge-go: Repository for the bridge service.
 :::
 
 ## Step 4: Deploy Contracts on Testnet
+
+First navigate to the sovereignBridge folder:
+
+```bash
+cd ./sovereignBridge
+```
 
 1. Update the `/config/configs.cfg` file with the Owner and WASM file details. Example:
     ```ini
@@ -201,9 +211,20 @@ The prerequisites script...
 
 :::
 
-## Step 7: Stop Local Sovereign Chain
+## Step 5: Stop Local Sovereign Chain
 
 1. Stop the chain and all dependent services:
     ```bash
     stopAndCleanSovereign
     ```
+
+:::important
+This version of the documentation focuses solely on the essential steps required to set up and deploy a sovereign chain on either a local or remote computer. It does not include instructions for configuring:
+
+- Round length
+- Gas token
+- Fee model
+- Consensus model
+- And other related settings
+:::
+
