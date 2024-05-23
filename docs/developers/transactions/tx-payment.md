@@ -179,6 +179,15 @@ Make sure you don't pass a negative value!
 
 Any ESDT payment can be easily attached to a transaction through the `.esdt(...)` method. This method accepts as argument any type that can be converted into an `EsdtTokenPayment` and can be called multiple times on the same call.
 
+
+```mermaid
+graph LR
+    payment-unit["()"]
+    payment-unit -->|esdt| EsdtTokenPayment
+    EsdtTokenPayment -->|esdt| MultiEsdtPayment
+    MultiEsdtPayment -->|esdt| MultiEsdtPayment
+```
+
 ```rust title=contract.rs
 self.tx() // tx with sc environment
     .to(caller)
@@ -189,24 +198,14 @@ self.tx() // tx with sc environment
 
 In this example, calling `.esdt(...)` will attach an ESDT payment load to the transaction. When adding subsequent `.esdt(...)` calls, the payload automatically converts into a `multi payment`.
 
-[comment]: # (mx-context-auto)
-
-## Multi ESDT payment
-
-In order to use a multi ESDT payment, we can either: compose the multi token through subsequent `.esdt(...)` calls, or use `.multi_esdt(...)` with the payments object as parameter.
-
-```rust title=contract.rs
-let tokens_to_claim = ManagedVec::<Self::Api, EsdtTokenPayment<Self::Api>>::new(); // multiple tokens
-self.tx().to(&caller).multi_esdt(tokens_to_claim).transfer(); // multi token payment
-```
-
-In this case, using `.multi_esdt(...)` helps us create a multi payment payload for the transaction directly.
 
 [comment]: # (mx-context-auto)
 
-## Single ESDT payment (with references)
+## Single ESDT payment with references
 
-For accessibility, the framework provides a possibility to pass a single ESDT payment as reference, in order to avoid clones for subsequent token sends, using the method `.single_esdt(...)`.
+Sometimes we don't have ownership of the token identifier object, or amount, and we would like to avoid unnecessary clones. For this reason, we hava created the `EsdtTokenPaymentRefs`, whih contains references and can be used as the payment object.
+
+For brevity, instead of `payment(EsdtTokenPaymentRefs::new(&token_identifier, token_nonce, &amount))`, we can use `.single_esdt(&token_identifier, token_nonce, &amount)`.
 
 ```rust title=contract.rs
     #[payable("*")]
@@ -229,32 +228,68 @@ For accessibility, the framework provides a possibility to pass a single ESDT pa
 
 In this case, adding the ESDT token as payment through `.single_esdt(...)` gives the developer the possibility to keep using the referenced values afterwards without cloning.
 
+
+[comment]: # (mx-context-auto)
+
+## Multi ESDT payment
+
+The framework defines thr alias `type MultiEsdtPayment<Api> = ManagedVec<Api, EsdtTokenPayment<Api>>;`, which is how multi-esdt payments are held in memory. If we have an object of this type, we can pass it directly as payment.
+
+```rust
+let tokens_to_claim = MultiEsdtPayment::<Self::Api>::new(); // multiple tokens
+self.tx().to(&caller).payment(tokens_to_claim).transfer(); // multi token payment
+```
+
+It is also possible to pass a reference or `ManagedRef<MultiEsdtPayment>` as payment, e.g.:
+
+```rust
+// type annotation added for clarity, normally inferred
+let payments: ManagedRef<'static, MultiEsdtPayment<Self::Api>> = self.call_value().all_esdt_transfers();
+self.tx().to(&caller).payments(payments).transfer();
+```
+
+The input type is enough for the `payment` method. We also have `.multi_esdt(...)`, which does the same as `payment`, but will additionally convert the argument to `MultiEsdtPayment`. For instance, sending an `EsdtTokenPayment` to `multi_esdt` will set the payment to `MultiEsdtPayment` instead of `EsdtTokenPayment`.
+
+It is also possible to construct a `MultiEsdtPayment`  by calling `.esdt(...)` at least twice, as seen [earlier](#general-esdt-payment).
+
+
 [comment]: # (mx-context-auto)
 
 ## Mixed transfers
 
 Sometimes we don't know at compile time what kind of transfers we are going to perform. For this reason, we also provide contract call types that work with both EGLD and ESDT tokens. 
 
-On MultiversX, we can identify two types of mixed transfers:
-- EGLD and a single ESDT payload - can be attached to the transaction using `.egld_or_single_esdt(...)` and the object's reference.
+[comment]: # (mx-context-auto)
 
-```rust title=contract.rs
-    self.tx()
-        .to(caller)
-        .egld_or_single_esdt(&staking_token, 0, &unstake_amount)
-        .transfer();
+### EGLD or single ESDT
+
+`EgldOrEsdtTokenPayment` allows us to decide at runtime for either EGLD or single ESDT payments. The object can be used as payment.
+
+```rust
+// type annotation added for clarity, normally inferred
+let payment: EgldOrEsdtTokenPayment<Self::Api> = self.call_value().egld_or_single_esdt();
+self.tx().to(to).payment(payment).transfer();
 ```
-- EGLD and a multi ESDT payload - can be attached to the transaction using `.payment(...)` directly, and placing the full object as a parameter.
 
-```rust title=contract.rs
-let multi_tokens = 
-        MultiValueEncoded::<Self::Api, EgldOrEsdtTokenPayment<Self::Api>>::new();
-let egld_token = 
-        EgldOrEsdtTokenPayment::new(EgldOrEsdtTokenIdentifier::egld(), 0u64, amount);
+[comment]: # (mx-context-auto)
 
-multi_tokens.push(egld_token); // merging both tokens into one vec
+### EGLD or single ESDT references
 
-self.tx().to(&caller).payment(&multi_tokens).transfer(); // send everything as one
+We also have the type `EgldOrEsdtTokenPaymentRefs`, which contains references to the token identifier and amount. 
+
+For brevity, instead of `payment(EgldOrEsdtTokenPaymentRefs::new(&egld_or_esdt_token_identifier, token_nonce, &amount))`, we can use `.single_esdt(&egld_or_esdt_token_identifier, token_nonce, &amount)`.
+
+
+[comment]: # (mx-context-auto)
+
+### EGLD or multi-ESDT
+
+`EgldOrMultiEsdtPayment` allows us to decide at runtime for either EGLD or multiple ESDT payments. The object can be used as payment.
+
+```rust
+// type annotation added for clarity, normally inferred
+let payments: EgldOrMultiEsdtPayment<Self::Api> = self.call_value().any_payment();
+self.tx().to(to).payment(payment).transfer();
 ```
 
 [comment]: # (mx-context-auto)
