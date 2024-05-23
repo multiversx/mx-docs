@@ -311,3 +311,27 @@ The BLS keys' identities, on the other hand will have the following names & iden
 | 38a93e3c0... | tsp-03 | testing-staking-provider |
 | 1fce426b6... | tsp-04 | testing-staking-provider |
 
+[comment]: # (mx-context-auto)
+
+### Migration guide from single-key operation to multikey
+
+:::warning
+This guide can lead to potential node jailing if done incorrectly. Make sure that you understand completely all the steps involved.
+
+We strongly suggest to practice this process first on the public testnet. You should gather invaluable experience and know how.
+:::
+
+Whenever deciding to switch from single-key operation to multikey, the following steps on how to execute this process can be considered:
+1. create your `allValidatorsKeys.pem` by manually (or through a text tool) concatenate all your `validatorKey.pem` files;
+2. start a multikey group, **configure it as a backup group**, provide the `allValidatorsKeys.pem` file to all the nodes forming the group;
+3. let this backup multikey group nodes sync and go the next step **after all these nodes are synced**;
+4. switch off your single-key backup nodes (if you previously had ones);
+5. create a new multikey group, configure it as main group and let it sync. **Do not provide the `allValidatorsKeys.pem` keys yet!**. Go the next step **after all these nodes are synced**; 
+6. after the main group nodes are synced, copy the `allValidatorsKeys.pem` file to all nodes from the main group, switch off the main single-key nodes and restart the multikey nodes from the main group, so they will load the `allValidatorsKeys.pem` file;
+7. closely monitor all your nodes in the explorer, should be online and with their rating status increasing/at 100%. Repeat this step for a few times at 10 minutes interval. 
+
+Make sure that all operations from step 6 are made as quickly as possible. In case this step takes a long time, the backup multikey group should take over.
+
+:::caution
+Always attempt this process while closely monitor your nodes. If done correctly, your nodes might experience a brief rating drop (until the backup group takes over - if necessary)
+:::
