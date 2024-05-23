@@ -34,7 +34,7 @@ graph LR
 
 Transactions initiated in the **contract environment** have no sender specified. There is no need for sender identification because it always refers to the executing contract itself.
 
-```rust title=lib.rs
+```rust title=contract.rs
 #[payable("EGLD")]
 #[endpoint]
 fn transfer_egld(&self, to: ManagedAddress, amount: BigUint) {

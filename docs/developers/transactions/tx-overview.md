@@ -178,6 +178,7 @@ graph LR
     egld --> egld-biguint["Egld(BigUint)"]
     egld --> egld-u64["Egld(u64)"]
     Payment --> EsdtTokenPayment
+    Payment --> EsdtTokenPaymentRefs
     Payment --> MultiEsdtPayment
     Payment --> EgldOrEsdtTokenPaymentRefs
     Payment --> EgldOrMultiEsdtPayment

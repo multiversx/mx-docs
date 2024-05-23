@@ -561,9 +561,3 @@ Indicates that the expected return type is u64 and does an assert on the actual 
             .with_result(ExpectStatus(4))
             .run();
 ```
-
-[comment]: # (mx-context-auto)
-
-## Implementation details - Andrei M.
-
-might be a blog post
