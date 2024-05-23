@@ -184,7 +184,7 @@ The bridge contract executes the operations, performing `TransferESDT/MultiTrans
 
 **Finality and Consensus**
 
-To ensure the integrity and synchronization between the Sovereign Shard and the mainchain, the following steps are taken:
+To ensure the integrity and synchronization between the Sovereign Chain and the mainchain, the following steps are taken:
 
 - The Sovereign chain header includes an outgoing operations hash, which encapsulates the details of the operations to be executed on the mainchain.
 - Once the outgoing operations are executed on the mainchain in subsequent blocks, the Sovereign chain remains synchronized by validating every MultiversX header hash.
@@ -213,34 +213,10 @@ The `sovereignMultiSigContract` first verifies if the BLSMultiSig is valid and w
 
 The contract emits a logEvent the same way as mainchain to sovereign ESDTSafe SC does, in order to keep track of the processed outgoing transactions. This logEvent will be pushed towards the sovereign shard, in order to notarize the finalization of processing of the OutGoingTxData. This will close the loop of processing and offer utmost security for all funds.
 
+```
 Identifier = bridgeOps
-
-    Address = scAddress
-    Topics = sender, hash(outGoingTxData)
-    Data = nonce - increasing from internal storage
-
-The created event is an attestation that the outGoingTx was executed on the mainchain, and using this attestation on the sovereign shard, the rewards can be distributed from the accumulated fees.
-
-Bridging back and forth tokens which are originally from the Sovereign Chain:
-
-In order to bridge tokens from the sovereign chain to the mainchain, first a new ESDT token has to be created on the mainchain and burn/mint roles have to be given for the ESDTSafe contract.
-
-First - when a project wants to bridge from sovereign to the mainchain for the first time a selected ESDT token ID, he needs to make a special transaction towards the bridgeSC on the Sovereign chain. registerNewESDTForBridging@ESDTTokenID@tokenType. This endpoint is with a defined fee in WrappedEGLD (at least 0.5wEGLD as that is the price of issuing a token on the mainchain). After this endpoint is called, a defined set of rounds on mainnet (15 * 6 seconds) has to pass before enabling the actual bridge of tokens. The constants can be changed.
-
-When registerNewESDTForBridging is executed with success, a new event is added into the OutGoingTxs from the sovereign shards, added to the generated outgoing TX data and signed by consensus.
-
-On the mainchain, after verification for BLS multisig, ESDTSafe contract is called and told to execute a full registration of the ESDT token on the mainchain. This will be done by calling “registerAndSetAllRoles” on metachain ESDT system SC. The ESDTSafe contract will save the link between sovereignChainTokenID and mainChainTokenID. The bridge SC in case of Sovereign shard will need to incorporate the ESDTSafe contracts endpoint of deposit@address and in case of tokens which originated on the sovereign shard on deposit the local burn method is called.
-
-Decision of whether a token ID originated from the sovereign can be done by verifying the suffix/prefix of the tokenID as explained above. In case a tokenID originates on a sovereign shard, the SC will check if registerNewESDTForBridging was called before. After successful execution of the bridgeSC , the outGoing TX is formed as usual.
-
-On mainchain, after verification for BLS multisig, ESDT safe contract is called, ESDT safe verifies if tokenID is originally from sovereign, then mints the new tokens (creates NFTs if needed) and sends to the destination.
-
-When bridging the tokens back from mainchain to sovereign, the ESDTSafe contract will check on deposit if the tokenID is from sovereign or not (by checking the storage whether there was a link previously created or not). If it is from sovereign it will burn the received tokens and change logEvent for MultiversX to Sovereign - where tokenID will be the one for the sovereign shard. In the topics we add the bridgeSC address from sovereign and the destination address as well.
-
-Identifier = deposit
-
-    Address = mainchainSCAddress
-    Topics = sovereignBridgeSCAddress, destAddress, LIST<tokenID, nonceAsBytes, valueAsBytes/ESDTTransferData>
-    Data = block round as bytes
-
-So in case of Mainchain contracts, if the tokenID is from sovereign - the system BURN and MINT functionality/Create functions (create in case of nonce > 0).
+Address = scAddress
+Topics = sender, hash(outGoingTxData)
+Data = nonce - increasing from internal storage
+```
+The created event is an attestation that the `outGoingTx` was executed on the mainchain, and using this attestation on the sovereign chain, the rewards can be distributed from the accumulated fees.
