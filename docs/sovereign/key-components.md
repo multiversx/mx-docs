@@ -4,6 +4,9 @@
 
 This documentation is not complete. More content will be added once it is accepted and discussed on Agora or once it is implemented and available for production.
 
+Initial Sovereign Shard MIPs have been published on Agora and were used as specifications:
+- 
+
 :::
 
 Sovereign Chains mark significant progress for MultiversX in the field of appchains. While the concept is straightforward to discuss in general terms, developers, builders, or other entities looking to launch a sovereign chain need to consider several critical components. For clarity, we will divide these components into four major categories and describe the importance and role of each one.
@@ -38,7 +41,7 @@ This contract allows you to specify the fee for deposit transactions. The fee st
 
 The fee is applicable either per token in the `MultiESDTNFTTransfer` action or based on the gas used in the deposit transaction.
 
-### **MultiSig Verifier**
+#### **MultiSig Verifier**
 
 The `multisig` smart contract, operates solely on the mainchain, and is responsible for managing and validating the multi-signature operations for bridge transactions. It registers the public keys of the validators from the sovereign chain. It also validates the multi-signature received on this endpoint which is called by the bridge service:
 - `registerBridgeOps` - here, the multisig is validated, the hashes of the bridge operations are verified, and the hashes are recorded (these hashes are checked during the execution of executeBridgeOps).
@@ -64,6 +67,6 @@ For the setup described in this documentation, there is a single cross-chain tx 
 
 ### **4. Sovereign Chain**
 
-Info to be added about how to setup the nodes on a sovereign chain.
+
 
 

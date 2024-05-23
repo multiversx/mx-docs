@@ -1,7 +1,5 @@
 # Software Dependencies
 
-## Introduction
-
 Understanding and managing software dependencies is crucial for the successful deployment and maintenance of Sovereign Chains. Dependencies ensure that all components of your blockchain network work seamlessly together. This page outlines the key dependencies required for building and operating Sovereign Chains, including software libraries, frameworks, and tools.
 
 ## Core Dependencies
@@ -27,5 +25,5 @@ While not mandatory, it is recommended to use the latest version of Docker. If y
 Ensure you are using Go version 22 or later.
 
 :::note
-Please note that these scripts have been tested only on Linux.
+Please note that at the time of writing this documentation, the setup scripts have been tested only on Linux.
 :::

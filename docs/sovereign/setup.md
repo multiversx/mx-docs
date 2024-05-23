@@ -21,6 +21,8 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
 
 2. Download the WASM files from [here](https://github.com/multiversx/mx-sovereign-sc/releases).
 
+3. For the purpose of the automated setup and deployment, save them in a directory called `contracts` in the same location where the wallet has been stored. Otherwise you could configure their own location at step number 4.
+
 ## Step 3: Clone the ```mx-chain-go``` Repository
 
 1. Clone the github repository:
@@ -28,17 +30,12 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
     git clone https://github.com/multiversx/mx-chain-go.git
     ```
 
-2. Checkout the specific sovereign chain sdk branch:
+2. Checkout the specific sovereign chain sdk branch and navigate to testnet directory:
     ```bash
-    git checkout chain-go-sdk
+    cd mx-chain-go && git fetch && git checkout feat/chain-go-sdk && cd scripts/testnet
     ```
 
-3. Navigate to the testnet scripts directory:
-    ```bash
-    cd mx-chain-go/scripts/testnet
-    ```
-
-4. Run the prerequisites script:
+3. Run the prerequisites script:
     ```bash
     ./prerequisites.sh
     ```
@@ -85,23 +82,17 @@ cd ./sovereignBridge
 - **ESDT_SAFE_WASM, FEE_MARKET_WASM, MULTISIG_VERIFIER_WASM** - represent the paths to the location where the contracts have been downloaded at Step 2.
 :::
 
-
-2. Navigate to the `sovereignBridge` directory:
-    ```bash
-    cd mx-chain-go/scripts/testnet/sovereignBridge/
-    ```
-
-3. Source the script:
+2. Source the script:
     ```bash
     source script.sh
     ```
 
-4. Deploy all bridge contracts automatically:
+3. Deploy all bridge contracts, Sovereign Notifier and Service:
     ```bash
     deployMainChainContractsAndSetupObserver
     ```
 
-5. Initialize and deploy the sovereign chain:
+4. Initialize and deploy all sovereign chain dependencies:
     ```bash
     sovereignDeploy
     ```
