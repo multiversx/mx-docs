@@ -10,7 +10,7 @@ This guide provides detailed instructions on setting up, deploying, and managing
 
 ## Table of Contents
 
-1. [Introduction](/sovereign/key-features)
+1. [Introduction](/sovereign/concept)
 2. [Prerequisites](/sovereign/system-requirements)
 3. [Setup Guide](/sovereign/setup)
 4. [Custom Configurations](/sovereign/deployment)
