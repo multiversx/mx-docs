@@ -6,9 +6,21 @@ title: Legacy SC calls
 
 [comment]: # (mx-abstract)
 
-## Deprecated, kept for backwards compatibility (Andrei)
+## Deprecated, kept for backwards compatibility
 
-use new syntax
+This is the old contract call syntax, which was in use before the introduction of the unified transaction syntax.
+
+All of the objects described in this page are deprecated since version 0.49.0.
+
+:::caution
+There are methods with the same names and arguments in the new syntax, added for backwards compatibility, but they don't construct the same object anymore.
+:::
+
+:::caution
+Unless you are still working on a project that predates 0.49.0, you should disregard this page.
+
+Even if you do work on an old project, you should strive to upgrade it to at least 0.50.0 and [migrate](tx-migration) the syntax.
+:::
 
 [comment]: # (mx-context-auto)
 
