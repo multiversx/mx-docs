@@ -73,7 +73,7 @@ We have dedicated a page to each of these 7 fields:
 | [To](tx-to)                             | The receiver. Needs to be specified for any transaction expect for deploys. |
 | [Payment](tx-payment)                   | Optional, can be EGLD, single or multi-ESDT. We also have some payment types that get decided at runtime. |
 | [Gas](tx-gas)                           | Some transactions need explicit gas, others don't. |
-| [Data](tx-data)                         | Proxies (ideally) or raw | The main part of the payload. Can be inhabited by a function call, deploy data, upgrade data, or nothing, in the case of direct transfers.|
+| [Data](tx-data)                         | [Proxies](tx-proxies) (ideally) or raw | The main part of the payload. Can be inhabited by a function call, deploy data, upgrade data, or nothing, in the case of direct transfers.|
 | [Result Handlers](tx-result-handlers)   | Anything that deals with results, from callbacks to decoding logic. |
 
 We could also group them in threee broad categories:
@@ -205,7 +205,7 @@ Constructing a transaction is similar to exploring a map, or running a finite st
 
 Choosing a path at one point closes off many other options. The compiler is always guiding us and preventing us from ending up with an invalid transaction.
 
-Here is a map of all the paths you can take when configuring a transaction. The fields are mostly independent, so the map is split into 7 sections.
+Here is a map of all the paths you can take when configuring a transaction. The fields are mostly independent, so the map is split into 7 sections. See more details in each of their respective pages.
 
 
 ```mermaid
