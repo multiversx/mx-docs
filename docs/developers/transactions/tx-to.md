@@ -56,6 +56,8 @@ Transactions, excluding deployments, require the designation of a recipient. Thi
 
 In the subsequent section, we will go into the various data types that are permissible for recipient nomination.
 
+[comment]: # "mx-context-auto"
+
 ### Address
 
 Below there is an interactor that funds a specific contract with an amount of EGLD. The recipient contract is instantiated as an address object within the interactor's context.
@@ -87,6 +89,7 @@ fn add_one(&mut self, from: &AddressValue) {
         .run();
 }
 ```
+[comment]: # "mx-context-auto"
 
 ## **TestSCAddress**
 
@@ -112,6 +115,7 @@ fn stake(&mut self) {
         .run();
 }
 ```
+[comment]: # "mx-context-auto"
 
 ### Bech32Address
 In order to avoid repeated conversions, it keeps the **Bech32** representation **inside**. It wraps the address and presents it as a Bech32 expression.
@@ -139,6 +143,8 @@ async fn print_sum(&mut self, adder_address: &Bech32Address) {
 
 ## Special recipient
 
+[comment]: # "mx-context-auto"
+
 ### ESDTSystemSCAddress
 This type indicates the system smart contract address, which is the same on any MultiversX blockchain.
   - **`.to_managed_address()`**: converts the addresse to **ManagedAddress**.
@@ -163,6 +169,8 @@ fn sft_issue(
         )
 }
 ```
+[comment]: # "mx-context-auto"
+
 ### ToSelf
 It indicates that the transaction should be sent to itself.
 
@@ -181,4 +189,13 @@ pub fn nft_update_attributes<T: codec::TopEncode>(
         .nft_update_attributes(token_id, nft_nonce, new_attributes)
         .sync_call()
 }
+```
+[comment]: # "mx-context-auto"
+
+### ToCaller
+It indicates that the transaction should be sent to the caller, which is the sender of the current transaction.
+
+The next example is a snippet from an endpoint that transfers ESDT to the sender of the transaction.
+```rust
+self.tx().to(ToCaller).single_esdt(&id, nonce, &BigUint::from(1u8)).transfer();
 ```
