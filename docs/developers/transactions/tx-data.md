@@ -107,43 +107,37 @@ Proxy allow strongly typed construction of the data field.
 
 ## Untyped function call
 
-**`.raw_call()`** starts a contract call serialised by hand. It is used in proxy functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe.
+**`.raw_call(...)`** starts a contract call serialised by hand. It is used in proxy functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe.
 
 
 [comment]: # (mx-context-auto)
 
 ### Argument
 
+**`.argument(...)`** serializes the value, but does not enforce type safety. It adds argument to a contract deploy. It is safe to use [proxies](tx-proxies) instead, whenever possible.
+
+```rust
+tx().raw_call("example").argument(&argument)
+```
+
 [comment]: # (mx-context-auto)
 
 ### Raw argument
 
+**`arguments_raw(...)`** does not serialize the value and it does not enforce type safety. It adds serialized argument to a contract deploy.  It is safe to use [proxies](tx-proxies) instead, whenever possible.
+
+```rust
+tx().raw_call("example").arguments_raw(&arguments)
+```
 
 [comment]: # (mx-context-auto)
 
 ### Code metadata
 
 **`.code_metadata()`** explicitly sets code metadata.
-
-The example below is a blackbox test for deploy functionality. This call encapsulates a raw_deploy that explicitly sets the deployment code source with *"adder.mxsc.json"* and the returned address of the deploy with *"sc: adder"*.
-
-```rust title=adder_blackbox_test.rs
-const OWNER_ADDRESS: TestAddress = TestAddress::new("owner");
-const ADDER_ADDRESS: TestSCAddress = TestSCAddress::new("adder");
-const CODE_PATH: MxscPath = MxscPath::new("output/adder.mxsc.json");
-
-fn deploy(&mut self) {
-    self.world
-        .tx()
-        .from(OWNER_ADDRESS)
-        .typed(adder_proxy::AdderProxy)
-        .init(5u32)
-        .code(CODE_PATH)
-        .new_address(ADDER_ADDRESS)
-        .run();
-}
+```rust
+tx().raw_call("example").code_metadata(code_metadata)
 ```
-
 
 [comment]: # (mx-context-auto)
 
@@ -159,27 +153,51 @@ Deployment calls needs to set:
 ### Argument
 
 Same as for [function call arguments](#argument).
+```rust
+tx().raw_deploy().argument(&argument)
+```
 
 [comment]: # (mx-context-auto)
 
 ### Raw argument
 
 Same as for [function call raw arguments](#raw-argument).
-
+```rust
+tx().raw_deploy().arguments_raw(&arguments)
+```
 
 [comment]: # (mx-context-auto)
 
 ### Code
 
 **`.code(...)`** explicitly sets the deployment code source as a byte array.
-
+```rust
+tx().raw_deploy().code(code_path)
+```
 
 [comment]: # (mx-context-auto)
 
 ### New address
 
 **`.new_address(...)`** defines a mock address for the deployed contract (allowed only in testing environments).
+```rust
+tx().raw_deploy().new_address(address)
+```
 
+The example below is a blackbox test for deploy functionality. This call encapsulates a raw_deploy that explicitly sets the deployment code source with *"adder.mxsc.json"* and the returned address of the deploy with *"sc: adder"*.
+
+```rust title=adder_blackbox_test.rs
+fn deploy(&mut self) {
+    self.world
+        .tx()
+        .from(OWNER_ADDRESS)
+        .raw_deploy()
+        .argument(5u32)
+        .code(CODE_PATH)
+        .new_address(ADDER_ADDRESS)
+        .run();
+}
+```
 
 [comment]: # (mx-context-auto)
 
@@ -193,19 +211,45 @@ Same as for [function call raw arguments](#raw-argument).
 ### Argument
 
 Same as for [function call arguments](#argument).
+```rust
+tx().raw_upgrade().argument(&argument)
+```
 
 [comment]: # (mx-context-auto)
 
 ### Raw argument
 
 Same as for [function call raw arguments](#raw-argument).
-
+```rust
+tx().raw_upgrade().arguments_raw(&arguments)
+```
 
 [comment]: # (mx-context-auto)
 
 ### Code metadata
 
-**`.code_metadata()`** explicitly sets code metadata.
+Same as for [function call raw arguments](#code-metadata).
+```rust
+tx().raw_upgrade().code_metadata(code_metadata)
+```
+
+[comment]: # (mx-context-auto)
+
+### Code
+
+Same as for [function call arguments](#code).
+```rust
+tx().raw_upgrade().code(code_path)
+```
+
+[comment]: # (mx-context-auto)
+
+### From source
+
+**`.from_source(...)`** sets the upgrade code source as another deployed contract code.
+```rust
+tx().raw_upgrade().from_source(source_address)
+```
 
 [comment]: # (mx-context-auto)
 
@@ -227,19 +271,3 @@ fn upgrade_from_source(
         .upgrade_async_call_and_exit();
 }
 ```
-
-
-
-[comment]: # (mx-context-auto)
-
-### Code
-
-**`.code(...)`** explicitly sets the upgrade code source as a byte array.
-
-
-[comment]: # (mx-context-auto)
-
-### From source
-
-**`.from_source(...)`** sets the upgrade code source as another deployed contract code.
-
