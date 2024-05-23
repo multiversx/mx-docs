@@ -110,7 +110,7 @@ ESDTSafe Contract
 Identifier: deposit
 Address: scAddress
 Topics: address, LIST<tokenID, nonceAsBytes, valueAsBytes/ESDTTransferData>
-Data: localNonce (increasing), functionToCall, Arguments, gasLimit
+Data: localNonce (increasing), originalSender, gasLimit, functionToCall, Arguments
 ```
 
 Customizable Features

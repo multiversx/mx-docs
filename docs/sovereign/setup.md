@@ -4,7 +4,7 @@
  This guide is a preliminary version and not the final documentation for sovereign chains. It serves as a starting point for setting up a sovereign chain on a local machine.
 :::
 
-This guide will help you set up and deploy contracts on a sovereign chain. Follow these steps carefully to ensure a successful deployment.
+This guide will help you set up and deploy contracts on a sovereign chain. Follow these steps carefully to ensure a successful deployment, but before starting make sure you have installed all what you need (see [Software dependencies](/sovereign/software-dependencies)).
 
 ## Step 1: Create a New Wallet
 
@@ -87,12 +87,12 @@ cd ./sovereignBridge
     source script.sh
     ```
 
-3. Deploy all bridge contracts, Sovereign Notifier and Service:
+3. Deploy all bridge contracts, Sovereign Notifier and update Sovereign Configs:
     ```bash
     deployMainChainContractsAndSetupObserver
     ```
 
-4. Initialize and deploy all sovereign chain dependencies:
+4. Initialize and deploy sovereign chain with all required services:
     ```bash
     sovereignDeploy
     ```
