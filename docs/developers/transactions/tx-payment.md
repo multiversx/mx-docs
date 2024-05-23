@@ -17,26 +17,25 @@ The payment is a little more complex than the previous fields. The `.payment(...
 
 ```mermaid
 graph LR
-    subgraph Payment
-        payment-unit["()"]
-        payment-unit -->|egld| egld-biguint["Egld(BigUint)"]
-        payment-unit -->|egld| egld-u64["Egld(u64)"]
-        payment-unit -->|"payment<br />esdt"| EsdtTokenPayment
-        payment-unit -->|"payment<br />single_esdt"| EsdtTokenPaymentRefs
-        EsdtTokenPayment -->|esdt| MultiEsdtPayment
-        MultiEsdtPayment -->|esdt| MultiEsdtPayment
-        payment-unit -->|"payment<br >multi_esdt"| MultiEsdtPayment
-        payment-unit -->|"payment"| EgldOrEsdtTokenPayment
-        payment-unit -->|"payment<br />egld_or_single_esdt"| EgldOrEsdtTokenPaymentRefs
-        payment-unit -->|"payment<br />egld_or_multi_esdt"| EgldOrMultiEsdtPayment
-    end
+    payment-unit["()"]
+    payment-unit -->|egld| egld-biguint["Egld(BigUint)"]
+    payment-unit -->|egld| egld-u64["Egld(u64)"]
+    payment-unit -->|egld| egld-num["Egld(NumExpr)"]
+    payment-unit -->|"payment<br />esdt"| EsdtTokenPayment
+    payment-unit -->|"payment<br />single_esdt"| EsdtTokenPaymentRefs
+    EsdtTokenPayment -->|esdt| MultiEsdtPayment
+    MultiEsdtPayment -->|esdt| MultiEsdtPayment
+    payment-unit -->|"payment<br >multi_esdt"| MultiEsdtPayment
+    payment-unit -->|"payment"| EgldOrEsdtTokenPayment
+    payment-unit -->|"payment<br />egld_or_single_esdt"| EgldOrEsdtTokenPaymentRefs
+    payment-unit -->|"payment<br />egld_or_multi_esdt"| EgldOrMultiEsdtPayment
 ```
 
 [comment]: # (mx-context-auto)
 
 ## No payments
 
-When no payments are added, the `Payment` generic becomes `()`. These types of transactions make sense when dealing with contract calls that don't necessarily require payment.
+When no payments are added, the `Payment` fields remains of type `()`. This makes sense when dealing with contract or built-in function calls that don't involve payment.
 
 ```rust title=contract.rs
     self.tx() // tx with sc environment
@@ -47,25 +46,62 @@ When no payments are added, the `Payment` generic becomes `()`. These types of t
 
 In this example, the transaction is a smart contract call to a non payable endpoint with no arguments.
 
+
 [comment]: # (mx-context-auto)
 
 ## EGLD payment
 
-Attaching an `EGLD` payment can be done through the `.egld(...)` method. The structure responsible for this is `Egld<EgldValue>(pub EgldValue)`, which is a tuple struct. Essentially, the `Egld` struct is a simple wrapper around a single value of type `EgldValue`. Through the `EgldValue` trait, the developer can place any kind of value that can be interpreted as a positive number.
+We represent EGLD payments with the wrapper type `Egld`. This wrapper makes sure that there is no ambiguity as to what the given amount represents.
 
-There are several `EgldValue` specialization options provided by the framework:
-- `BigUint` 
+The `Egld` contains a single field, holding the amount. This amount will eventually be resolved as a `BigUint`, but the developer can also provide other types, if convenient, such as `u64`, `i32`, or `NumExpr`. In general, any type that implements trait `EgldValue` can be used.
+
+EGLD payments can be specified using `.payment(Egld(amount))`, but for brevity it is common to use method `.egld(amount)`, which does the same.
+
+:::caution
+The amounts are expressed in indivisible atto-EGLD (10^-18) units. You must always take the denomination into account.
+:::
+
+Some examples of specifying EGLD payments:
+
+[comment]: # (mx-context-auto)
+
+### `BigUint`
+
+The most straightforward type to encode amounts.
 
 ```rust title=contract.rs
     #[endpoint]
     #[payable("EGLD")]
-    fn call_endpoint(
+    fn send_egld(
+        &self,
+        to: ManagedAddress,
+        egld_amount: BigUint
+    ) {
+        self
+            .tx() // tx with sc environment
+            .to(to)
+            .egld(egld_amount) // BigUint value
+            .transfer()
+    }
+```
+
+[comment]: # (mx-context-auto)
+
+### `&BigUint` , `ManagedRef<BigUint>`
+
+
+References are also allowed. A slightly less common variation is the `ManagedRef` type, which is used in certain places of the framework. It is semantically equivalent to a readonly reference (`&...`). You can see it in this example:
+
+```rust title=contract.rs
+    #[endpoint]
+    #[payable("EGLD")]
+    fn forward_egld(
         &self,
         to: ManagedAddress,
         endpoint_name: ManagedBuffer,
         args: MultiValueEncoded<ManagedBuffer>,
     ) {
-        let payment = self.call_value().egld_value().clone_value(); // BigUint value
+        let payment = self.call_value().egld_value(); // readonly BigUint managed reference
         self
             .tx() // tx with sc environment
             .to(to)
@@ -76,7 +112,11 @@ There are several `EgldValue` specialization options provided by the framework:
     }
 ```
 
-- `u64`
+[comment]: # (mx-context-auto)
+
+### `u64`
+
+In tests it might be unwieldy to keep creating `BigUint` instances, and the amounts might not be so large, so it can be more cofortable to work with `u64` values.
 
 ```rust title=blackbox_test.rs
     const STAKE_AMOUNT: u64 = 20;
@@ -90,7 +130,13 @@ There are several `EgldValue` specialization options provided by the framework:
         .run();
 ```
 
-- `NumExpr`
+[comment]: # (mx-context-auto)
+
+### `NumExpr`
+
+This type helps us control how the values will be exported in the mandos trace. Its contents will be a numeric mandos expression. Use if you are insterested in a readable mandos output.
+
+Alternatively, it can visually convey certain information, in this case the mandos separators are (mis-)used to indicate the EGLD decimals.
 
 ```rust title=interact.rs
     self.interactor
@@ -103,9 +149,15 @@ There are several `EgldValue` specialization options provided by the framework:
         .await;
 ```
 
-The `NumExpr` type gives the developer the freedom to write big numbers as strings with separators and does the conversion automatically. In this example, the value put inside `NumExpr` is equal to 0,05 EGLD. The `0,` component is just stylistic and can be ignored, and there are 16 digits after `5` from a total of 18, marking the decimal point.
+In this example, the value put inside `NumExpr` is equal to 0,05 EGLD. The `0,` component is just stylistic and can be ignored, and there are 16 digits after `5` from a total of 18, marking the decimal point.
 
-- `i32`
+[comment]: # (mx-context-auto)
+
+### `i32`
+
+`i32` is only supported because it is the default Rust numeric type and unannotated numeric constants are of this type.
+
+Make sure you don't pass a negative value!
 
 ```rust title=blackbox_test.rs
     state
@@ -119,6 +171,7 @@ The `NumExpr` type gives the developer the freedom to write big numbers as strin
         .with_result(ExpectError(4, "wrong token"))
         .run();
 ```
+
 
 [comment]: # (mx-context-auto)
 
