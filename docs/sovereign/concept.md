@@ -20,12 +20,15 @@ Sovereign Chains aim to provide an SDK that allows developers to create highly e
 
 ### Issues with Layer2 Solutions
 
-At the time of publishing this documentation, Layer2 solutions on Ethereum face several challenges:
+The concept of Sovereign Chains is introduced to address some of the most encountered issues:
 
-1. Funds on Layer1 (L1) are often secured by small multi-signature wallets, leading to fragmented liquidity and application silos.
-2. Users require different gas tokens for various Layer2s (L2s), complicating the user experience.
-3. Interoperability and composability are not default features, resulting in duplicated applications with inherent security issues from the base layer.
-4. Users face difficulties moving funds and adapting to different deployments, hindering adoption.
+- **Unified Liquidity and Application Ecosystem:** Sovereign Chains eliminate the need for fragmented multi-signature wallets by providing a unified ecosystem. This ensures that liquidity is not dispersed and applications can operate seamlessly without silos.
+
+- **Simplified User Experience:** With Sovereign Chains, users interact within a single ecosystem that supports all necessary operations, eliminating the need for multiple gas tokens. This streamlines the user experience, making interactions more intuitive and user-friendly.
+
+- **Built-In Interoperability and Composability:** Sovereign Chains are designed with interoperability and composability as core features. Applications deployed on Sovereign Chains can interact seamlessly, leveraging built-in protocols that ensure secure and efficient cross-chain operations.
+
+- **Seamless Fund Movement and Deployment Adaptation**: Users can move funds effortlessly across different shards and deployments within the Sovereign Chain ecosystem. This flexibility simplifies adaptation to various applications and enhances overall adoption.
 
 ## Concept of Sovereign Chains
 
