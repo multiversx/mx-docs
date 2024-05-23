@@ -456,6 +456,60 @@ const sidebars = {
       },
       "integrators/walletconnect-json-rpc-methods",
     ],
+    "Sovereign Chains":[
+      "sovereign/Overview",
+      {
+        type: "category",
+        label: "Introduction",
+        items: [
+          "sovereign/concept",
+          "sovereign/key-components",
+          "sovereign/disclaimer",],
+      },
+      {
+        type: "category",
+        label: "Prerequisites",
+        items: [
+          "sovereign/system-requirements",
+          "sovereign/software-dependencies",],
+      },
+      "sovereign/setup",
+      "sovereign/deployment",
+      {
+        type: "category",
+        label: "Managing a Sovereign Chain",
+        items: [
+          "sovereign/managing-sovereign",
+          "sovereign/token-management",],
+      },
+      {
+        type: "category",
+        label: "Economics",
+        items: [
+          "sovereign/token-economics",
+          "sovereign/restaking",
+          "sovereign/dual-staking",],
+      },
+      "sovereign/governance",
+      "sovereign/testing",
+      "sovereign/security",
+      {
+        type: "category",
+        label: "VMs",
+        items: ["sovereign/vm",],
+      },
+      {
+        type: "category",
+        label: "Interoperability",
+        items: [
+        "sovereign/interoperability",
+        "sovereign/ethereum-l2",
+        "sovereign/bitcoin-l2",
+        "sovereign/solana-l2",
+        ],
+      },
+      "sovereign/validators",
+    ],
     "Ad-Astra Bridge": [
       "bridge/architecture",
       "bridge/transfer-flows",
