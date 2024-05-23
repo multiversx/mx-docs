@@ -261,5 +261,11 @@ self.tx().to(&caller).payment(&multi_tokens).transfer(); // send everything as o
 
 ## Normalization
 
-- what it is, builtin function calls
-- performed automatically
+We call normalization the logic of converting transactions with an ESDT payments fields into ESDT built-in function calls. Depending on the type of payment, the generated call be to either one of:
+- ESDTTransfer,
+- ESDTNFTTransfer,
+- MultiESDTNFTTransfer.
+
+For ESDTNFTTransfer and MultiESDTNFTTransfer, the recipient field also needs to be changed into the sender, and the real recipient added to the arguments.
+
+This operation is done automatically by the framework before sending transactions, so the developer should normally not worry about it.
