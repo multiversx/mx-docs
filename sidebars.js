@@ -462,6 +462,7 @@ const sidebars = {
         type: "category",
         label: "Introduction",
         items: [
+          "sovereign/concept",
           "sovereign/key-components",
           "sovereign/disclaimer",],
       },
