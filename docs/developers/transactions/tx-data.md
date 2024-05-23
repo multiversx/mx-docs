@@ -96,11 +96,6 @@ Transactions with no data are classified as simple transfers. These simple trans
         .payment(&token_payment)
         .transfer_if_not_empty();
 ```
-[comment]: # (mx-context-auto)
-
-:::note
-Proxy allow strongly typed construction of the data field.
-:::
 
 
 [comment]: # (mx-context-auto)
@@ -114,17 +109,21 @@ Proxy allow strongly typed construction of the data field.
 
 ### Argument
 
-**`.argument(...)`** serializes the value, but does not enforce type safety. It adds argument to a contract deploy. It is safe to use [proxies](tx-proxies) instead, whenever possible.
+**`.argument(...)`** serializes the value, but does not enforce type safety. It adds one argument to a function call.
+
+Can be called multiple times, once for each argument.
 
 ```rust
-tx().raw_call("example").argument(&argument)
+tx().raw_call("example").argument(&arg1).argument(&arg2)
 ```
+
+It is safe to user [proxies](tx-proxies) instead, whenever possible.
 
 [comment]: # (mx-context-auto)
 
-### Raw argument
+### Raw arguments
 
-**`arguments_raw(...)`** does not serialize the value and it does not enforce type safety. It adds serialized argument to a contract deploy.  It is safe to use [proxies](tx-proxies) instead, whenever possible.
+**`arguments_raw(...)`** overrides the entire argument buffer. It takes one argument of type `ManagedArgBuffer`. The arguments need to have been serialized beforehand.
 
 ```rust
 tx().raw_call("example").arguments_raw(&arguments)
@@ -153,15 +152,17 @@ Deployment calls needs to set:
 ### Argument
 
 Same as for [function call arguments](#argument).
+
 ```rust
 tx().raw_deploy().argument(&argument)
 ```
 
 [comment]: # (mx-context-auto)
 
-### Raw argument
+### Raw arguments
 
 Same as for [function call raw arguments](#raw-argument).
+
 ```rust
 tx().raw_deploy().arguments_raw(&arguments)
 ```
@@ -170,9 +171,25 @@ tx().raw_deploy().arguments_raw(&arguments)
 
 ### Code
 
-**`.code(...)`** explicitly sets the deployment code source as a byte array.
+**`.code(...)`** explicitly sets the deployment code source as bytes.
+
+Argument will normally be a `ManagedBuffer`, but can be any type that implements trait `CodeValue`.
+
 ```rust
-tx().raw_deploy().code(code_path)
+tx().raw_deploy().code(code_bytes)
+```
+
+
+[comment]: # (mx-context-auto)
+
+### From source
+
+**`.from_source(...)`** will instruct the VM to copy the code from another previously deployed contract.
+
+Argument will normally be a `ManagedAddress`, but can be any type that implements trait `FromSourceValue`.
+
+```rust
+tx().raw_deploy().from_source(other_address)
 ```
 
 [comment]: # (mx-context-auto)
@@ -211,15 +228,17 @@ fn deploy(&mut self) {
 ### Argument
 
 Same as for [function call arguments](#argument).
+
 ```rust
 tx().raw_upgrade().argument(&argument)
 ```
 
 [comment]: # (mx-context-auto)
 
-### Raw argument
+### Raw arguments
 
 Same as for [function call raw arguments](#raw-argument).
+
 ```rust
 tx().raw_upgrade().arguments_raw(&arguments)
 ```
@@ -237,24 +256,31 @@ tx().raw_upgrade().code_metadata(code_metadata)
 
 ### Code
 
-Same as for [function call arguments](#code).
+Same as for [deploy code](#code).
+
+Argument will normally be a `ManagedBuffer`, but can be any type that implements trait `CodeValue`.
+
 ```rust
-tx().raw_upgrade().code(code_path)
+tx().raw_upgrade().code(code_bytes)
 ```
 
 [comment]: # (mx-context-auto)
 
 ### From source
 
-**`.from_source(...)`** sets the upgrade code source as another deployed contract code.
+Same as for [deploy from source](#from-source).
+
+**`.from_source(...)`** will instruct the VM to copy the code from another previously deployed contract.
+
+Argument will normally be a `ManagedAddress`, but can be any type that implements trait `FromSourceValue`.
+
 ```rust
-tx().raw_upgrade().from_source(source_address)
+tx().raw_upgrade().from_source(other_address)
 ```
 
-[comment]: # (mx-context-auto)
-
 The example below is an endpoint that contains upgrade functionality. This call encapsulates a raw_upgrade that explicitly sets the upgrade call source with a specific ManagedAddress and *upgradeable* code metadata.
-```rust title=lib.rs
+
+```rust title=contract.rs
 #[endpoint]
 fn upgrade_from_source(
     &self,
