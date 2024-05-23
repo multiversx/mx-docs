@@ -4,9 +4,6 @@
 
 This documentation is not complete. More content will be added once it is accepted and discussed on Agora or once it is implemented and available for production.
 
-Initial Sovereign Shard MIPs have been published on Agora and were used as specifications:
-- 
-
 :::
 
 Sovereign Chains mark significant progress for MultiversX in the field of appchains. While the concept is straightforward to discuss in general terms, developers, builders, or other entities looking to launch a sovereign chain need to consider several critical components. For clarity, we will divide these components into four major categories and describe the importance and role of each one.

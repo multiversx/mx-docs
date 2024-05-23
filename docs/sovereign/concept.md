@@ -4,6 +4,9 @@
 
 This documentation is not complete. More content will be added once it is accepted and discussed on Agora or once it is implemented and available for production.
 
+The content created here is derived from:
+- [Sovereign Shards - MIP7 - part - 1](https://agora.multiversx.com/t/sovereign-shards-mip-7-part-1/185)
+
 :::
 
 The MultiversX blockchain utilizes a fully sharded architecture designed for scalability, processing tens of thousands of transactions per second, and allowing developers to deploy decentralized applications using smart contracts. The in-protocol token standard, ESDT, facilitates simple, inexpensive, secure and scalable token transfers. As the network expands, new shards are created, enabling horizontal scaling. Additionally, parallelization within the same shard supports vertical scaling. The system is decentralized, public, open, and uses EGLD as its base token.
@@ -102,15 +105,15 @@ But how do we achieve that? Even though the main components are going to be desc
 ESDTSafe Contract
 
 - Functionality: Users can deposit tokens and specify the destination address and execution call.
-- Endpoint: `deposit@address@functionToCall@arguments@gasLimit` receiving a `MultiESDTNFTTransfer`.
+- Endpoint: `deposit@address@gasLimit@functionToCall@arguments` receiving a `MultiESDTNFTTransfer`.
 - Verification: The contract verifies the validity of the address and generates a specific `logEvent`.
 
 `logEvent` Structure
-```init
+```json
 Identifier: deposit
 Address: scAddress
 Topics: address, LIST<tokenID, nonceAsBytes, valueAsBytes/ESDTTransferData>
-Data: localNonce (increasing), originalSender, gasLimit, functionToCall, Arguments
+Data: localNonce (increasing), originalSender, gasLimit, functionToCall, arguments
 ```
 
 Customizable Features
@@ -136,4 +139,108 @@ To avoid token ID collisions, each deployed Sovereign Chain adds a unique prefix
     Validator Verification: Validators verify and sign the block, ensuring all transactions are processed.
     Gas-Free Execution: Transactions are executed without gas on the Sovereign Shard, treated as DestME ESDT transfers.
 
+### Sovereign Chain to MultiversX Mainchain
 
+The Sovereign Chain to MultiversX Mainchain cross-chain communication process involves synchronizing the mainchain with the Sovereign Chain, handling cross-chain transactions, and ensuring smooth token transfers between the two. This description provides a conceptual explanation of the roles, processes, and smart contract interactions involved.
+
+#### Responsibilities of Sovereign Validators
+
+Sovereign Validators have two primary responsibilities:
+
+1. Syncing with the mainchain and pushing bridge transactions.
+2. Managing transfers from Sovereign to Main and vice versa.
+
+Types of Tokens
+
+There are two types of tokens involved in the bridging process:
+
+- **Token Type A**: Tokens initially originating from Main to Sovereign, with liquidity held in the safe contract on Main.
+- **Token Type B**: New tokens first issued on the Sovereign Chain, requiring creation and specific roles (`localMint`, `nftCreate`) for the `esdt-safe` contract.
+
+**Cross-Chain tx Process**
+
+Token Deposit
+
+**1. Users Deposit Tokens:**
+        Users on Sovereign deposit tokens into the `esdt-safe` contract on the Sovereign Chain. Now tokens are either burned (for Token Type A) or kept in the safe (for Token Type B).
+
+**2. Block Creation and Finalization:**
+        The Sovereign chain creates the next block and finalizes it. Outgoing transactions (Crossing to MultiversX) are compiled into compressed operations data.
+
+**3. Header Hash Addition:**
+        The leader adds the hash of the outgoing transaction data to the header of the Sovereign Chain block. Validators reach consensus, signing the header, which the leader combines using BLS multi-signature.
+
+**4. Posting to Mainchain:**
+        The signed header and list of outgoing transactions are posted to the MultiversX chain. The transaction data on MultiversX contains the signed header of the Sovereign chain, the outgoing operations data hash, and the full arguments of the outgoing operations.
+
+**5. Contract Validation and Execution:**
+        The contract on MultiversX validates the signed header and BLS multi-signature. It verifies if 
+
+```rust
+hash(outgoing operations data) = header.outgoingOpsHash
+```
+
+The bridge contract executes the operations, performing `TransferESDT/MultiTransferESDTNFT` for *Token Type A* and `minting/creating NFTs` for *Token Type B*.
+
+**Finality and Consensus**
+
+To ensure the integrity and synchronization between the Sovereign Shard and the mainchain, the following steps are taken:
+
+- The Sovereign chain header includes an outgoing operations hash, which encapsulates the details of the operations to be executed on the mainchain.
+- Once the outgoing operations are executed on the mainchain in subsequent blocks, the Sovereign chain remains synchronized by validating every MultiversX header hash.
+- The finality gadget plays an important role by ensuring that a header with *Nonce X* on the Sovereign chain is only finalized after confirming that the mainchain has executed the outgoing operations from the previous header. This interconnected process maintains consistency and order of operations.
+
+**Incentives and Validation**
+
+To encourage validators to ensure the smooth operation of bridge transactions and maintain network integrity, the following incentive and validation mechanisms are implemented:
+
+- **Incentive Structure Proposal:** Validators are incentivized to push outgoing transactions to the mainchain by distributing collected fees among them. Specifically, 10% of the fees are allocated to the leader, while the remaining 90% is distributed among the other validators. This incentivization ensures active participation and prompt processing of transactions.
+
+- **Validation Process:** Finality is crucial to maintaining the order and integrity of transactions. The system ensures that outgoing operations are executed in sequence without any gaps. This is achieved by generating `logEvents` on the mainchain, which are then pushed to the Sovereign Chain. These `logEvents` serve as proof of execution, ensuring validators can verify the completion and correctness of transactions, thereby maintaining a reliable and secure cross-chain operation.
+
+#### Smart Contracts for Cross Chain Tx
+
+Process:
+
+1. `SovereignMultiSigContract` is created and is the parent of the *ESDTSafe* contract, and only the `sovereignMultiSigContract` is allowed to transfer out funds from the `ESDTSafe` contract.
+
+2. The OutGoingTXData BLS MultiSigned by the validators will be put inside a mainchain transaction and sent by the leader of the Sovereign Chain for the current block. This transaction contains a set of token operations for a set of addresses.
+```
+txData = bridgeOps@LIST<address<LIST<tokenID, nonceAsBytes, valueAsBytes>, gasLimit,functionToCall, Arguments>>@Nonce@BLSMultiSig
+```
+
+The `sovereignMultiSigContract` first verifies if the BLSMultiSig is valid and whether it is signed by 67% of the BLSPubkeys registered in the sovereignMultiSigContract. If yes, the contract calls with the ESDTSafe contract to transfer the set of tokens. The ESDTSafe contract will iterate on the given list and make a multiESDTNFTTransfer to the given addresses with the given tokens.
+
+The contract emits a logEvent the same way as mainchain to sovereign ESDTSafe SC does, in order to keep track of the processed outgoing transactions. This logEvent will be pushed towards the sovereign shard, in order to notarize the finalization of processing of the OutGoingTxData. This will close the loop of processing and offer utmost security for all funds.
+
+Identifier = bridgeOps
+
+    Address = scAddress
+    Topics = sender, hash(outGoingTxData)
+    Data = nonce - increasing from internal storage
+
+The created event is an attestation that the outGoingTx was executed on the mainchain, and using this attestation on the sovereign shard, the rewards can be distributed from the accumulated fees.
+
+Bridging back and forth tokens which are originally from the Sovereign Chain:
+
+In order to bridge tokens from the sovereign chain to the mainchain, first a new ESDT token has to be created on the mainchain and burn/mint roles have to be given for the ESDTSafe contract.
+
+First - when a project wants to bridge from sovereign to the mainchain for the first time a selected ESDT token ID, he needs to make a special transaction towards the bridgeSC on the Sovereign chain. registerNewESDTForBridging@ESDTTokenID@tokenType. This endpoint is with a defined fee in WrappedEGLD (at least 0.5wEGLD as that is the price of issuing a token on the mainchain). After this endpoint is called, a defined set of rounds on mainnet (15 * 6 seconds) has to pass before enabling the actual bridge of tokens. The constants can be changed.
+
+When registerNewESDTForBridging is executed with success, a new event is added into the OutGoingTxs from the sovereign shards, added to the generated outgoing TX data and signed by consensus.
+
+On the mainchain, after verification for BLS multisig, ESDTSafe contract is called and told to execute a full registration of the ESDT token on the mainchain. This will be done by calling “registerAndSetAllRoles” on metachain ESDT system SC. The ESDTSafe contract will save the link between sovereignChainTokenID and mainChainTokenID. The bridge SC in case of Sovereign shard will need to incorporate the ESDTSafe contracts endpoint of deposit@address and in case of tokens which originated on the sovereign shard on deposit the local burn method is called.
+
+Decision of whether a token ID originated from the sovereign can be done by verifying the suffix/prefix of the tokenID as explained above. In case a tokenID originates on a sovereign shard, the SC will check if registerNewESDTForBridging was called before. After successful execution of the bridgeSC , the outGoing TX is formed as usual.
+
+On mainchain, after verification for BLS multisig, ESDT safe contract is called, ESDT safe verifies if tokenID is originally from sovereign, then mints the new tokens (creates NFTs if needed) and sends to the destination.
+
+When bridging the tokens back from mainchain to sovereign, the ESDTSafe contract will check on deposit if the tokenID is from sovereign or not (by checking the storage whether there was a link previously created or not). If it is from sovereign it will burn the received tokens and change logEvent for MultiversX to Sovereign - where tokenID will be the one for the sovereign shard. In the topics we add the bridgeSC address from sovereign and the destination address as well.
+
+Identifier = deposit
+
+    Address = mainchainSCAddress
+    Topics = sovereignBridgeSCAddress, destAddress, LIST<tokenID, nonceAsBytes, valueAsBytes/ESDTTransferData>
+    Data = block round as bytes
+
+So in case of Mainchain contracts, if the tokenID is from sovereign - the system BURN and MINT functionality/Create functions (create in case of nonce > 0).
