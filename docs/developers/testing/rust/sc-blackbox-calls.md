@@ -47,7 +47,7 @@ In this example, we are querying the `sum` view of the `adder` contract through 
 
 ```rust title=blackbox_test.rs
     let new_address = world // ScenarioWorld struct
-        .tx() //tx with testing environment
+        .tx() // tx with testing environment
         .from(OWNER_ADDRESS)
         .typed(adder_proxy::AdderProxy)
         .init(5u32) // deploy call
@@ -61,4 +61,15 @@ In this example, we are deploying the `adder` contract by calling it's `init` en
 
 ### Upgrade
 
-Not yet supported in the testing framework, coming soon.
+```rust title=blackbox_test.rs
+    world // ScenarioWorld struct
+        .tx() // tx with testing environment
+        .from(OWNER_ADDRESS)
+        .to(ADDER_ADDRESS)
+        .typed(adder_proxy::AdderProxy)
+        .upgrade(100u64) // upgrade call
+        .code(CODE_PATH) // contract code
+        .run(); // send transaction
+```
+
+In order to upgrade the contract inside the testing environment, we need to call the `upgrade` function through the proxy (as if it was an endpoint, similar to the deploy call). The upgrade call needs to know the contract code, so we always need to attach it to the transaction with `.code(...)`.
