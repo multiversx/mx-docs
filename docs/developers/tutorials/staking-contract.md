@@ -716,7 +716,7 @@ As you might've noticed, it can be quite a chore to keep upgrading the contract 
 - full unstake
 
 :::note
-A more detailed explanation of Rust tests can be found here: https://docs.multiversx.com/developers/developer-reference/rust-testing-framework/
+A more detailed explanation of Rust tests can be found here: https://docs.multiversx.com/developers/testing/rust/sc-test-overview/
 :::
 
 To test the previously described scenario, we're going to need a user address, and a new test function. Replace the contents of the `./tests/empty_rust_test.rs` file with the following:
@@ -878,7 +878,7 @@ To run a test, you can use click on the `Run Test` button from under the test na
 
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
 
-There is also a `Debug` button, which can be used to debug smart contracts. More details on that [here](/developers/developer-reference/sc-debugging/).
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that [here](/developers/testing/sc-debugging/).
 
 Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
 
