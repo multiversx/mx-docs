@@ -20,6 +20,20 @@ Do not be fooled by the identical legacy syntax, the implementation for **all** 
 :::
 
 
+[comment]: # (mx-context-auto)
+
+## Imports
+
+This is not strictly related to the unified syntax, but the imports were recently cleaned up. A single line should be enough for each of the contexts, as follows:
+- In contracts: `use multiversx_sc::imports::*;`
+- In tests: `use multiversx_sc_scenario::imports::*;`
+- In interactors: `use multiversx_sc_snippets::imports::*;`
+
+We also have `use multiversx_sc::derive_imports::*;`, which gives you derives like `TypeAbi` and the codec derives.
+
+The proxies have `use multiversx_sc::proxy_imports::*;`, but that gets generated automatically, so develoeprs shouldn't worry about it.
+
+
 
 [comment]: # (mx-context-auto)
 
