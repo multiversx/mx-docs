@@ -7,14 +7,14 @@ title: Migration
 
 There is an older syntax for producing contract calls, detailed [here](tx-legacy-calls). It is already in use in many projects.
 
-Upgrading to framework version 0.49.0 is almost comletely backwards compatible, but the new syntax is nicer and more reliable, so we encourage everyone to migrate.
+Upgrading to framework version 0.49.0 is almost completely backwards compatible, but the new syntax is nicer and more reliable, so we encourage everyone to migrate.
 
 This will be a migration guide, as well as some frequently encountered pitfalls.
 
 :::caution
 Even though the syntax is backwards compatible, the implementation of the [old syntax](tx-legacy-calls) has been replaced.
 
-To the best of our knowledge all code should continue behaving the same. However, if you upgrade beyond 0.49.0, please make sure to **test your smart contract fully** once again, even if you do not change a single line of code in your code base.
+To the best of our knowledge, all code should continue to behave the same. However, if you upgrade beyond 0.49.0, please make sure to **test your smart contract fully** once again, even if you do not change a single line of code in your code base.
 
 Do not be fooled by the identical legacy syntax, the implementation for **all** contract calls is new.
 :::
@@ -25,11 +25,11 @@ Do not be fooled by the identical legacy syntax, the implementation for **all** 
 
 ## Old `Proxy` type caveat
 
-I must start with the only instance of backwards incompatibility that we have after 0.49.0.
+We must start with the only instance of backwards incompatibility that we have after 0.49.0.
 
-It is very uncommon to encounter this problem, I don't expect developers to encounter it, but it did pop up in the DEX when migrating.
+It is very uncommon to encounter this problem, we don't expect developers to encounter it, but it did pop up in the DEX when migrating.
 
-The old `Proxy` type has been split in two: `Proxy` no longer includes the filed for the recipient, whereas there is a new `ProxyTo` type that does include it.
+The old `Proxy` type has been split in two: `Proxy` no longer includes the field for the recipient, whereas there is a new `ProxyTo` type that does include it.
 
 Whenever you encounter code of this sort, everything should remain unchanged:
 
@@ -45,7 +45,7 @@ If, however, your proxy getter looks like this, the return type has changed, the
     fn vault_proxy(&self, sc_address: ManagedAddress) -> vault::Proxy<Self::Api>;
 ```
 
-To preserve backwards compatibility in this case as well, we placed a hack it in the pre-processor stage: the `Proxy` return type is silently replaced by `ProxyTo` in the background, unbeknownst to the developer. For all practical purposes, the code should still be functioning the same way.
+To preserve backwards compatibility in this case as well, we placed a hack in the pre-processor stage: the `Proxy` return type is silently replaced by `ProxyTo` in the background, unbeknownst to the developer. For all practical purposes, the code should still be functioning the same way.
 
 If, however, the developer does not use the legacy proxy object directly, i.e. it returns it, or passes it on to another function, the framework cannot do the replacement there, and you might get a compilation error.
 
@@ -59,15 +59,15 @@ The solution in this case is simple: replace `Proxy` with `ProxyTo` in code.
 
 To use the new proxies, one must first [generate](tx-proxies#how-to-generate) them. The proxy is designed to be self-contained, so unless configured otherwise, it will also output a copy of the contract types involved in the ABI.
 
-No methods of these types are copied, but the annotations are important most of the time, so they need to be copied too. These types wil need the encode/decode annotations, as well as `Clone`, `Eq`, etc.
+No methods of these types are copied, but the annotations are important most of the time, so they need to be copied too. These types will need the encode/decode annotations, as well as `Clone`, `Eq`, etc.
 
-In order to do this, the proxy generator (via `TypeAbi`) needs to know what type annotations were originally declared. It turns out, derive annotations in Rust don't have access to the other derives that were declared on the same line. For instance `B` does not see `A` in `#[derive(A, B)]`.
+In order to do this, the proxy generator (via `TypeAbi`) needs to know what type annotations were originally declared. It turns out, derive annotations in Rust don't have access to the other derives that were declared on the same line. For instance, `B` does not see `A` in `#[derive(A, B)]`.
 
 The solution is to have another annotation, called `#[type_abi]` **before** the derives.
 
-Currently, `#[type_abi]` takes no arguments, and works the same way as `#[derive(TypeAbi)]`, but it might be extended in the future.
+Currently, `#[type_abi]` takes no arguments and works the same way as `#[derive(TypeAbi)]`, but it might be extended in the future.
 
-This is yet the case, but `#[derive(TypeAbi)]` might become deprecated at some point in the future, after most projects will have been migrated.
+This is yet the case, but `#[derive(TypeAbi)]` might become deprecated at some point in the future, after most projects will have been migrate.
 
 
 [comment]: # (mx-context-auto)
@@ -81,7 +81,7 @@ Just like for a new project, you will need to [generate](tx-proxies#how-to-gener
 
 ## Replace the old proxies in calls
 
-You might have this kind of syntax in your contract. You can easily find it by searching in your oroject for `#[proxy]` or `.contract(`.
+You might have this kind of syntax in your contract. You can easily find it by searching in your project for `#[proxy]` or `.contract(`.
 
 ```rust title="Variant A"
     #[proxy]
@@ -174,9 +174,9 @@ In case you want to migrate to the unified syntax and you cannot, or do not want
 
 ## (Optional) Remove contract dependencies
 
-The new proxies can be copy-pasted between contract crates. This means that a caler contract no longer needs to depend on its calees, in order to obtain the proxy. Once the new proxies are set up, you might be able to get rid of the dependency.
+The new proxies can be copy-pasted between contract crates. This means that a caller's contract no longer needs to depend on its callees, in order to obtain the proxy. Once the new proxies are set up, you might be able to get rid of the dependency.
 
-This also contracts no longer need to be on the same framework version. The same proxy, once generated, should work with any framework version the caller uses, irrespective of the callee.
+This also means contracts no longer need to be on the same framework version. The same proxy, once generated, should work with any framework version the caller uses, irrespective of the callee.
 
 :::info
 Dependencies might still be needed for shared structures and modules.

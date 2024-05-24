@@ -151,17 +151,3 @@ Proxies additionally capture the return type originally defined within the smart
 ## NotPayable protection
 
 All non-payment endpoints in the generated proxy have a safeguard to prevent accidental payments. This involves automatically setting the payment to **NotPayable**.
-
-## Payment arguments not yet supported
-
-SoonTM
-
-[comment]: # (mx-context-auto)
-
-## Old vs. new
-
-[comment]: # (mx-context-auto)
-
-## Implementation details
-
-- you will not need this!

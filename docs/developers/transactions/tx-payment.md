@@ -13,7 +13,7 @@ Payments can be easily attached to the transaction with the new syntax through t
 
 ## Diagram
 
-The payment is a little more complex than the previous fields. The `.payment(...)` method is suffcient to set any kind of acceptable payment object. However, we have several more functions to help setup the payment field:
+The payment is a little more complex than the previous fields. The `.payment(...)` method is sufficient to set any kind of acceptable payment object. However, we have several more functions to help setup the payment field:
 
 ```mermaid
 graph LR
@@ -35,7 +35,7 @@ graph LR
 
 ## No payments
 
-When no payments are added, the `Payment` fields remains of type `()`. This makes sense when dealing with contract or built-in function calls that don't involve payment.
+When no payments are added, the `Payment` fields remain of type `()`. This makes sense when dealing with contract or built-in function calls that don't involve payment.
 
 ```rust title=contract.rs
     self.tx() // tx with sc environment
@@ -116,7 +116,7 @@ References are also allowed. A slightly less common variation is the `ManagedRef
 
 ### `u64`
 
-In tests it might be unwieldy to keep creating `BigUint` instances, and the amounts might not be so large, so it can be more cofortable to work with `u64` values.
+In tests it might be unwieldy to keep creating `BigUint` instances, and the amounts might not be so large, so it can be more comfortable to work with `u64` values.
 
 ```rust title=blackbox_test.rs
     const STAKE_AMOUNT: u64 = 20;
@@ -203,7 +203,7 @@ In this example, calling `.esdt(...)` will attach an ESDT payment load to the tr
 
 ## Single ESDT payment with references
 
-Sometimes we don't have ownership of the token identifier object, or amount, and we would like to avoid unnecessary clones. For this reason, we hava created the `EsdtTokenPaymentRefs`, whih contains references and can be used as the payment object.
+Sometimes we don't have ownership of the token identifier object, or amount, and we would like to avoid unnecessary clones. For this reason, we hava created the `EsdtTokenPaymentRefs`, which contains references and can be used as the payment object.
 
 For brevity, instead of `payment(EsdtTokenPaymentRefs::new(&token_identifier, token_nonce, &amount))`, we can use `.single_esdt(&token_identifier, token_nonce, &amount)`.
 
@@ -233,7 +233,7 @@ In this case, adding the ESDT token as payment through `.single_esdt(...)` gives
 
 ## Multi ESDT payment
 
-The framework defines thr alias `type MultiEsdtPayment<Api> = ManagedVec<Api, EsdtTokenPayment<Api>>;`, which is how multi-esdt payments are held in memory. If we have an object of this type, we can pass it directly as payment.
+The framework defines the alias `type MultiEsdtPayment<Api> = ManagedVec<Api, EsdtTokenPayment<Api>>;`, which is how multi-esdt payments are held in memory. If we have an object of this type, we can pass it directly as payment.
 
 ```rust
 let tokens_to_claim = MultiEsdtPayment::<Self::Api>::new(); // multiple tokens
