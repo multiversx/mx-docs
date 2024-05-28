@@ -32,7 +32,7 @@ This SDK consists of a CLI tool, namely `mxpy`, and Python helpers and utilities
 ## `sdk-py`: the Python libraries
 
 :::note
-The `multiversx-sdk` package is a unification of the previous packages (multiversx-sdk-core, multiversx-sdk-wallet and multiversx-sdk-network-providers). This is the package that **should** be used from now on. All the upcoming updates will come only to this package. The older packages will no longer receiver updates and will soon be deprecated.
+The `multiversx-sdk` package is a unification of the previous packages (multiversx-sdk-core, multiversx-sdk-wallet and multiversx-sdk-network-providers). This is the package that **should** be used from now on. All the upcoming updates will come only to this package. The older packages will no longer receive updates and will soon be deprecated.
 :::
 
 | Package                                                                                     | Source code                                                               | Description                                                                                   |
