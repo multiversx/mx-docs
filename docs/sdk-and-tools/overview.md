@@ -54,7 +54,15 @@ You might also want to have a look over [**xSuite**](https://xsuite.dev), a tool
 
 [comment]: # (mx-context-auto)
 
-### mxpy - Python SDK
+### sdk-py - Python SDK
+
+| Name                                                                                       | Description                                              |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| [sdk-py](/sdk-and-tools/sdk-py/#sdk-py-the-python-libraries)                               | Python SDK that can be used to create wallets, create and send transactions, interact with Smart Contracts and with the MultiversX Network in general.                          |
+
+[comment]: # (mx-context-auto)
+
+### mxpy - Python SDK (CLI)
 
 | Name                                                                                       | Description                                              |
 |--------------------------------------------------------------------------------------------|----------------------------------------------------------|

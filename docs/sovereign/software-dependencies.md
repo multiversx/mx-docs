@@ -22,7 +22,7 @@ While not mandatory, it is recommended to use the latest version of Docker. If y
 
 ### Golang
 
-Ensure you are using Go version 22 or later.
+Ensure you are using Go version 1.20.
 
 :::note
 Please note that at the time of writing this documentation, the setup scripts have been tested only on Linux.
