@@ -25,7 +25,6 @@ git+https://git@github.com/multiversx/mx-sdk-py.git@v1.2.3#egg=multiversx_sdk
 
 <!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py/main/examples/Cookbook.ipynb" } -->
 
-
 ## Addresses
 
 Create an `Address` object from a _bech32-encoded_ string:
@@ -461,9 +460,14 @@ The mnemonic can be saved to a keystore file:
 
 ```py
 from multiversx_sdk import UserWallet
+from pathlib import Path
+
+path = Path("./output")
+if not path.exists():
+    path.mkdir(parents=True, exist_ok=True)
 
 wallet = UserWallet.from_mnemonic(mnemonic.get_text(), "password")
-wallet.save(Path("./output/walletWithMnemonic.json"))
+wallet.save(path / "walletWithMnemonic.json")
 ```
 
 Given a mnemonic, one can derive keypairs:
@@ -479,18 +483,26 @@ print("Public key:", public_key.hex())
 A keypair can be saved as a JSON wallet:
 
 ```py
+path = Path("./output")
+if not path.exists():
+    path.mkdir(parents=True, exist_ok=True)
+
 wallet = UserWallet.from_secret_key(secret_key, "password")
-wallet.save(Path("./output/wallet.json"), address_hrp="erd")
+wallet.save(path / "wallet.json", address_hrp="erd")
 ```
 
 ... or as a PEM wallet (usually not recommended):
 
 ```py
-from multiversx_sdk import UserPEM
+from multiversx_sdk import Address, UserPEM
+
+path = Path("./output")
+if not path.exists():
+    path.mkdir(parents=True, exist_ok=True)
 
 label = Address(public_key.buffer, "erd").to_bech32()
 pem = UserPEM(label=label, secret_key=secret_key)
-pem.save(Path("./output/wallet.pem"))
+pem.save(path / "wallet.pem")
 ```
 
 ## Loading wallets
