@@ -11,7 +11,7 @@ You will also learn how to reproduce a contract build, given its source code and
 > **Reproducible builds**, also known as **deterministic compilation**, is a process of compiling software which ensures the resulting binary code can be reproduced. Source code compiled using deterministic compilation will always output the same binary [[Wikipedia]](https://en.wikipedia.org/wiki/Reproducible_builds).
 
 :::important
-As of September 2022, the Rust toolchain does not support reproducible builds out-of-the-box, thus we recommend smart contract developers to follow this tutorial in order to achieve deterministic compilation.
+As of May 2024, the Rust toolchain does not support reproducible builds out-of-the-box, thus we recommend smart contract developers to follow this tutorial in order to achieve deterministic compilation.
 :::
 
 [comment]: # (mx-context-auto)
@@ -22,12 +22,12 @@ Before diving into contract build reproducibility, let's grasp the concept of `c
 
 When a smart contract is deployed, the network stores the bytecode, and also computes its `blake2b` checksum (using a digest length of 256 bits). This is called the `codehash`.
 
-Assume that we are interested into the following contract, deployed on _devnet_: [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy). It's source code is published on [GitHub](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
+Assume that we are interested into the following contract (a simple on-chain **adder**), deployed on _devnet_: [erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy). It's source code is published on [GitHub](https://github.com/multiversx/mx-contracts-rs).
 
 We can fetch the _codehash_ of the contract from the API:
 
 ```bash
-curl -s https://devnet-api.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy \
+curl -s https://devnet-api.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy \
 | jq -r -j .codeHash \
 | base64 -d \
 | xxd -p \
@@ -37,7 +37,7 @@ curl -s https://devnet-api.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz40
 The output is:
 
 ```
-58c6e78f40bd6ccc30d8a01f952b34a13ebfdad796a2526678be17c5d7820174
+384b680df7a95ebceca02ffb3e760a2fc288dea1b802685ef15df22ae88ba15b
 ```
 
 If the `WASM` file is directly available, we can also use the utility `b2sum` to locally compute the _codehash_:
@@ -49,7 +49,7 @@ b2sum -l 256 adder.wasm
 The output would be the same:
 
 ```
-58c6e78f40bd6ccc30d8a01f952b34a13ebfdad796a2526678be17c5d7820174
+384b680df7a95ebceca02ffb3e760a2fc288dea1b802685ef15df22ae88ba15b
 ```
 
 All in all, in order to verify the bytecode equality of two given builds of a contract we can simply compare the _codehash_ property.
@@ -58,37 +58,30 @@ All in all, in order to verify the bytecode equality of two given builds of a co
 
 ## Supporting reproducible builds
 
-As of October 2022, the recommended approach to support reproducible builds for your smart contract is to use a build script relying on a specially-designed, [publicly-available, tagged Docker image](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags), that includes tagged, explicit versions of the build tools (_Rust_, _wasm-opt_ etc.).
+As of May 2024, the recommended approach to support reproducible builds for your smart contract is to use a build script relying on a specially-designed, [publicly-available, tagged Docker image](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags), that includes tagged, explicit versions of the build tools (_Rust_, _wasm-opt_ etc.).
 
 This approach is recommended in order to counteract eventual pieces of non-determinism related to `cargo`'s (essential component of the Rust toolchain) sensibility on the environment.
 
 :::important
-If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [this one](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/blob/main/.github/workflows/on_release_build_contracts.yml), which performs the deployment (production-ready) build within the _release_ procedure.
+If the code source of your smart contract is hosted on GitHub, then it's a good practice to define a GitHub Workflow similar to [release.yml](https://github.com/multiversx/mx-contracts-rs/blob/main/.github/workflows/release.yml), which performs the deployment (production-ready) build within the _release_ procedure. Additionally, define a dry-run reproducible build on all your branches. See this workflow as an example: [on_pull_request_build_contracts.yml](https://github.com/multiversx/mx-contracts-rs/blob/main/.github/workflows/on_pull_request_build_contracts.yml).
 :::
 
 [comment]: # (mx-context-auto)
 
 ### Choose an image tag
 
-The first step for supporting reproducible builds is to decide on a specific Docker image tag to use. Check the **frozen** tags listed at [multiversx/sdk-rust-contract-builder](https://hub.docker.com/r/multiversx/sdk-rust-contract-builder/tags), and inspect their labels - especially the labels `rust` and `wasm-opt-binaryen`:
-
-```
-LABEL rust=nightly-2022-08-23
-LABEL wasm-opt-binaryen=version_105
-```
-
 For a new smart contract that isn't released yet (deployed on the network), it's recommended to pick the tag with the **largest index number**, which tipically includes recent versions of `rust` and other necessary dependencies.
 
 However, for minor releases or patches, it's wise to stick to the previously chosen image tag, for the same (nuanced) reasons you would not embrace an update of your development tools in the middle of fixing a critical bug (in any development context).
 
-The chosen, _frozen_ image tag should accompany the versioned source code (e.g. via _release notes_), in order to inform others on how to reproduce a specific build (of a specific source code version). In this context, _frozen_ image tag refers to a Docker image tag that will never get any updates after its initial publishing.
+The chosen, _frozen_ image tag **should accompany the versioned source code (e.g. via _release notes_), in order to inform others on how to reproduce a specific build** (of a specific source code version). In this context, a _frozen_ image tag refers to a Docker image tag that will never get any updates after its initial publishing.
 
 :::tip
 It's perfectly normal to switch to a newer image tag on each (major) release of your contract. Just make sure you spread this information - i.e. using _release notes_.
 :::
 
 :::caution
-Never pick the tag called `latest` for production-ready builds.
+Never pick the tag called `latest` or `next` for production-ready builds.
 :::
 
 [comment]: # (mx-context-auto)
@@ -101,14 +94,14 @@ In this section, you'll learn how to run a reproducible build, or, to put it dif
 
 ### Fetch the source code
 
-Let's clone the [example source code](https://github.com/multiversx/mx-reproducible-contract-build-example-sc) locally, and switch to [a certain version](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.2.0) that we'd like to build:
+Let's clone [mx-contracts-rs](https://github.com/multiversx/mx-contracts-rs) locally, and switch to [a certain version](https://github.com/multiversx/mx-contracts-rs/releases/tag/v0.45.4) that we'd like to build:
 
 ```bash
 mkdir -p ~/contracts && cd ~/contracts
-git clone https://github.com/multiversx/mx-reproducible-contract-build-example-sc.git --branch=v0.2.0 --depth=1
+git clone https://github.com/multiversx/mx-contracts-rs.git --branch=v0.45.4 --depth=1
 ```
 
-By inspecting the release notes, we see that [`v0.2.0`](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/releases/tag/v0.2.0) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v4.1.0`.
+By inspecting the release notes, we see that [`v0.45.4`](https://github.com/multiversx/mx-contracts-rs/releases/tag/v0.45.4) was built using the `image:tag = multiversx/sdk-rust-contract-builder:v5.4.1`.
 
 [comment]: # (mx-context-auto)
 
@@ -127,7 +120,7 @@ wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/bui
 Export the following variables:
 
 ```bash
-export PROJECT=~/contracts/reproducible-contract-build-example
+export PROJECT=~/contracts/mx-contracts-rs
 export BUILD_OUTPUT=~/contracts/output-from-docker
 # Below, the image tag is just an example:
 export IMAGE=multiversx/sdk-rust-contract-builder:v1.2.3
@@ -163,12 +156,12 @@ These being said, let's summarize the steps above into a single bash snippet:
 ```bash
 wget https://raw.githubusercontent.com/multiversx/mx-sdk-build-contract/main/build_with_docker.py
 
-export PROJECT=~/contracts/reproducible-contract-build-example
+export PROJECT=~/contracts/mx-contracts-rs
 export BUILD_OUTPUT=~/contracts/output-from-docker
 # Below, the image tag is just an example:
 export IMAGE=multiversx/sdk-rust-contract-builder:v1.2.3
 
-python3 ./build_contract_rust_with_docker.py --image=${IMAGE} \
+python3 ./build_with_docker.py --image=${IMAGE} \
     --project=${PROJECT} \
     --output=${BUILD_OUTPUT}
 ```
@@ -187,16 +180,16 @@ First, make sure you have the:
 Then, use the `reproducible-build` command (below, the image tag is just an example):
 
 ```
-mxpy contract reproducible-build --docker-image="multiversx/sdk-rust-contract-builder:v4.1.3"
+mxpy contract reproducible-build --docker-image="multiversx/sdk-rust-contract-builder:v1.2.3"
 ```
 
 This will build all the smart contracts inside the current working directory. If you want to build the smart contracts inside another directory, you can specify an input directory:
 
 ```
-mxpy contract reproducible-build ~/contracts/reproducible-contract-build-example --docker-image="multiversx/sdk-rust-contract-builder:v4.1.3"
+mxpy contract reproducible-build ~/contracts/mx-contracts-rs --docker-image="multiversx/sdk-rust-contract-builder:v1.2.3"
 ```
 
-Upon a successful build, an output folder named `output-docker` will be generated containing:
+Upon a successful build, an output folder named `output-docker` will be generated. It contains one subfolder for each contract, each holding the following files:
 
 - `contract.wasm`: the actual bytecode of the smart contract, to be deployed on the network;
 - `contract.abi.json`: the ABI of the smart contract (a listing of endpoints and types definitions), to be used when developing dApps or simply interacting with the contract (e.g. using _sdk-js_);
@@ -204,7 +197,7 @@ Upon a successful build, an output folder named `output-docker` will be generate
 - **`contract-1.2.3.source.json`** : packaged (bundled) source code.
 
 :::tip
-You can run a local test using this [example-sc](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
+You can run a local test using [these example contracts](https://github.com/multiversx/mx-contracts-rs).
 :::
 
 [comment]: # (mx-context-auto)
@@ -216,10 +209,10 @@ Once the build is ready, you can check the codehash of the generated `*.wasm`, b
 For our example, that should be:
 
 ```
-adder.codehash.txt: 58c6e78f40bd6ccc30d8a01f952b34a13ebfdad796a2526678be17c5d7820174
+adder.codehash.txt: 384b680df7a95ebceca02ffb3e760a2fc288dea1b802685ef15df22ae88ba15b
 ```
 
-We can see that it matches the previously fetched (or computed) codehash. That is, the contract deployed at [erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqahertgz4020wegswus8m7f2ak8a6d0gv396qw3t2zy) is guaranteed to have been built from the same source code version as the one that we've checked out.
+We can see that it matches the previously fetched (or computed) codehash. That is, the contract deployed at [erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy](https://devnet-explorer.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy) is guaranteed to have been built from the same source code version as the one that we've checked out.
 
 **Congratulations!** You've achieved a reproducible contract build 🎉
 
