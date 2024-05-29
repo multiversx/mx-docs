@@ -309,7 +309,7 @@ We see that we indeed got the value `6`. Our upgrade was sucessfull.
 
 Verifying a smart contract means ensuring that the contract deployed on the network matches a specific version of the original source code. That is done by an external service that, under the hood, performs a reproducible build of the given contract and compares the resulting bytecode with the one deployed on the network.
 
-To learn more about reproducible builds, please follow [**this page**](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [**this repository**](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
+To learn more about reproducible builds, please follow [**this page**](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [**this repository**](https://github.com/multiversx/mx-contracts-rs).
 
 The command used for verifying contracts is:
 ```sh
@@ -333,7 +333,7 @@ The account that triggers the code verification process must be the owner of the
 :::
 
 :::info
-The _packaged source_ passed as `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
+The _packaged source_ passed as `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-contracts-rs/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
 :::
 
 [comment]: # (mx-context-auto)
