@@ -31,6 +31,6 @@ In order to view the current configuration, one can issue the command `mxpy conf
 
 One can alter the current configuration using the command `mxpy config set`. For example, in order to set the **_rust version_** to be used, one would do the following:
 
-```
-$ mxpy config set dependencies.rust.tag nightly-2023-12-11
+```bash
+$ mxpy config set dependencies.rust.tag stable
 ```
