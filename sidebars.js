@@ -162,6 +162,14 @@ const sidebars = {
               "developers/testing/testing-in-go",
             ],
           },
+          {
+            type: "category",
+            label: "Interactors",
+            items: [
+              "developers/interactor/interactors-overview",
+              "developers/interactor/interactors-example",
+            ],
+          },
         ],
       },
       {
@@ -483,7 +491,7 @@ const sidebars = {
       },
       "integrators/walletconnect-json-rpc-methods",
     ],
-    "Sovereign Chains":[
+    "Sovereign Chains": [
       "sovereign/Overview",
       {
         type: "category",
@@ -529,10 +537,10 @@ const sidebars = {
         type: "category",
         label: "Interoperability",
         items: [
-        "sovereign/interoperability",
-        "sovereign/ethereum-l2",
-        "sovereign/bitcoin-l2",
-        "sovereign/solana-l2",
+          "sovereign/interoperability",
+          "sovereign/ethereum-l2",
+          "sovereign/bitcoin-l2",
+          "sovereign/solana-l2",
         ],
       },
       "sovereign/validators",
