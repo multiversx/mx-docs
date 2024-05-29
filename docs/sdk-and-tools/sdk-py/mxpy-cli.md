@@ -38,16 +38,14 @@ pipx upgrade multiversx-sdk-cli
 
 ### Using the installation script
 
-This method should _only_ be used if you installed **mxpy** as described [here](installing-mxpy.md#install-using-mxpy-up).
-
-If you are using a older version of `mxpy` you can simply upgrade to a newer version by typing the following commands in a terminal:
+If you've previously installed **mxpy** using the legacy **mxpy-up** installation script, you should switch to the **pipx** approach. Make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
 
 ```sh
-wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py && python3 mxpy-up.py
+rm ~/multiversx-sdk/mxpy
+rm -rf ~/multiversx-sdk/mxpy-venv
 ```
 
-This will recreate the light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv`. 
-Since you've had a previous `mxpy` version installed, you probably have already altered the **`$PATH`** variable so you don't have to re-alter it.
+Additionally, you might want to cleanup the shell profile files, to not alter anymore the `PATH` variable with respect to `~/multiversx-sdk`: `~/.profile`, `~/.bashrc` and / or `~/.zshrc`.
 
 [comment]: # (mx-context-auto)
 
