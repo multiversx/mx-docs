@@ -19,8 +19,6 @@ In order to view the current configuration, one can issue the command `mxpy conf
 
 ```
 {
-    "dependencies.llvm.tag": "v...",
-    "dependencies.vmtools.tag": "v...",
     "dependencies.rust.tag": ""
 }
 ```
