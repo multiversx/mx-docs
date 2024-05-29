@@ -106,10 +106,15 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Then, choose **Proceed with installation (default)**. 
 
-Once Rust is installed, open a new terminal (shell), then switch to a nightly version and install the `wasm32-unknown-unknown` target:
+Once Rust is installed, open a new terminal (shell), then switch to a recent stable version and install the `wasm32-unknown-unknown` target:
+
+:::tip
+Generally speaking, you should install Rust `v1.78.0` (stable channel) or later, or `nightly-2024-05-22` (nightly channel) or later.
+:::
 
 ```bash
-rustup default nightly-2023-12-11
+rustup update
+rustup default stable
 rustup target add wasm32-unknown-unknown
 ```
 
@@ -141,7 +146,7 @@ For CI / CD, install Rust as follows:
 ```bash
 wget -O rustup.sh https://sh.rustup.rs && \
     chmod +x rustup.sh && \
-    ./rustup.sh --verbose --default-toolchain nightly-2023-12-11 --target wasm32-unknown-unknown -y
+    ./rustup.sh --verbose --default-toolchain stable --target wasm32-unknown-unknown -y
 
 cargo install multiversx-sc-meta --locked
 ```
@@ -174,7 +179,7 @@ installed toolchains
 --------------------
 
 [...]
-nightly-2023-12-11-x86_64-unknown-linux-gnu (default)
+stable-x86_64-unknown-linux-gnu (default)
 
 installed targets for active toolchain
 --------------------------------------
@@ -186,19 +191,19 @@ active toolchain
 ----------------
 
 [...]
-nightly-2023-12-11-x86_64-unknown-linux-gnu (default)
+stable-x86_64-unknown-linux-gnu (default)
 ```
 
 You can also check the status of your Rust installation using `mxpy`:
 
-```
+```bash
 $ mxpy deps check rust
 
-INFO     cli.deps: Checking dependency: module = rust, tag = nightly-2023-12-11
+INFO     cli.deps: Checking dependency: module = rust, tag = stable
 INFO     modules: which rustc: /home/ubuntu/.cargo/bin/rustc
 INFO     modules: which cargo: /home/ubuntu/.cargo/bin/cargo
 INFO     modules: which sc-meta: /home/ubuntu/.cargo/bin/sc-meta  
 INFO     modules: which wasm-opt: /home/ubuntu/.cargo/bin/wasm-opt
 INFO     modules: which twiggy: /home/ubuntu/.cargo/bin/twiggy
-INFO     cli.deps: [rust nightly-2023-12-11] is installed.
+INFO     cli.deps: [rust stable] is installed.
 ```
