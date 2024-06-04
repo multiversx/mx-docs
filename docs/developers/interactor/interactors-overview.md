@@ -65,7 +65,7 @@ This command performs the following actions:
 - **Compiles the contract** (still needs to be built).
 - **Creates a** `sc-config.toml` configuration file. If the file already exists, another proxy path is inserted (the path to the interactor) without changing the previous setup.
 - **Generates a proxy** based on the configuration path from the file.
-- **Creates an async microservice with a CLI** based on the contract endpoints found in the proxy. Returns typed results for further processing. The new project will be under the newly created `interact-rs` folder, inside the contract root folder.
+- **Creates an async Rust program with a CLI** based on the contract endpoints found in the proxy. Returns typed results for further processing. The new project will be under the newly created `interactor` folder, inside the contract root folder.
 
 ::::note
 Make sure to include the newly generated interactor into the existing file hierarchy to be able to compile and run the code.
@@ -75,15 +75,15 @@ Make sure to include the newly generated interactor into the existing file hiera
 
 ## Scenarios & CLI
 
-Given the customizable nature of real-life scenarios, the generated interactor provides only a minimal starting point for your microservice. 
+Given the customizable nature of real-life scenarios, the generated interactor provides only a minimal starting point for your Rust program. 
 The generated interactions include:
 - Separate functions for calling each endpoint of the smart contract (based on the proxy).
 - A CLI with distinct commands for each specific endpoint call.
 
-In order to run the code and make use of the CLI, simply call `cargo run <endpoint_name>` in the root of the `interact-rs` folder.
+In order to run the code and make use of the CLI, simply call `cargo run <endpoint_name>` in the root of the `interactor` folder.
 
 ```bash
-interact-rs % cargo run deploy
+interactor % cargo run deploy
 ```
 
 If, however, the CLI needs to cover more complex scenarios, the generated async functions can be used directly and composed with each other. If a testing approach is preferred instead of the CLI, then we can make use of the `tokio::test` feature, and we could write a system test as such:

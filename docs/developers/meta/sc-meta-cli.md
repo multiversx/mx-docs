@@ -394,18 +394,18 @@ Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate w
 
 ### Calling `snippets`
 
-Calling `cargo run snippets` in the meta crate or `sc-meta all snippets` in the root crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
+Calling `cargo run snippets` in the meta crate or `sc-meta all snippets` in the root crate will create a project called `interactor` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
 
 An interactor is a small tool, meant for developers to interact with the contract on-chain and write system tests. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. 
 
-Inside the `interact-rs` project there is the small interactor file, `interact_main.rs`, as well as a newly generated contract proxy. The `sc-config.toml` file of the contract (if existent) will be updated with the newly created proxy path (to the interact-rs project) or created from scratch if not existent.
+Inside the `interactor` project there is the small interactor file, `interact_main.rs`, as well as a newly generated contract proxy. The `sc-config.toml` file of the contract (if existent) will be updated with the newly created proxy path (to the interactor project) or created from scratch if not existent.
 
 After calling `sc-meta all snippets` in the `factorial` smart contract crate, we get:
 ![img](/img/snippets_folder_structure.png)
 
 
 Parameters:
-- `--overwrite` Override snippets project if it already exists. Rewrites `sc-config.toml` as well, placing only interact-rs as proxy path.
+- `--overwrite` Override snippets project if it already exists. Rewrites `sc-config.toml` as well, placing only interactor as proxy path.
 - `--path` Target directory where to call all contract meta crates. Will be current directory if not specified.
 - `--ignore` Ignore all directories with these names. [default: target]
 - `--no-abi-git-version` Skips loading the Git version into the ABI.

@@ -33,13 +33,13 @@ adder % sc-meta all snippets
 
 ![img](/img/adder_snippets_gen.jpeg)
 
-After running `sc-meta all snippets` in the adder root folder, a new project named `interact-rs` is generated along with its own `Cargo.toml`. For the adder contract, the `sc-config.toml` file is already created, so the new proxy path is only inserted into the file.
+After running `sc-meta all snippets` in the adder root folder, a new project named `interactor` is generated along with its own `Cargo.toml`. For the adder contract, the `sc-config.toml` file is already created, so the new proxy path is only inserted into the file.
 
 [comment]: # (mx-context-auto)
 
 ### Import the new project
 
-To compile and run the code, import the new project into the existing file hierarchy. Include `interact-rs` in adder's `Cargo.toml` workspaces:
+To compile and run the code, import the new project into the existing file hierarchy. Include `interactor` in adder's `Cargo.toml` workspaces:
 
 ```toml
 [workspace]
@@ -47,7 +47,7 @@ members = [
     ".",
     "meta",
     "interact",
-    "interact-rs"
+    "interactor"
 ]
 ```
 
@@ -75,10 +75,10 @@ async fn main() {
 }
 ```
 
-As seen in the picture, three CLI commands are available, each corresponding to an endpoint of the contract (deploy, add, and getSum). To deploy the contract and generate the `state.toml` file containing the newly deployed address, execute `cargo run deploy` in the `interact-rs` root folder.
+As seen in the picture, three CLI commands are available, each corresponding to an endpoint of the contract (deploy, add, and getSum). To deploy the contract and generate the `state.toml` file containing the newly deployed address, execute `cargo run deploy` in the `interactor` root folder.
 
 ```bash
-interact-rs % cargo run deploy
+interactor % cargo run deploy
 ```
 
 ![img](/img/state_toml_gen.jpeg)
@@ -251,8 +251,8 @@ This function is a mix of our previous endpoint calls. First, we deploy a new co
 Executing the above mentioned function will give us this result:
 
 ```bash
-interact-rs % cargo run full
-   Compiling rust-interact v0.0.0 (/Users/calin/Documents/work/MultiversX/adder/interact-rs)
+interactor % cargo run full
+   Compiling rust-interact v0.0.0 (/Users/calin/Documents/work/MultiversX/adder/interactor)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.69s
      Running `/Users/calin/Documents/work/MultiversX/adder/target/debug/rust-interact full`
 sender's recalled nonce: 1427

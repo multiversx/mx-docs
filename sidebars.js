@@ -140,6 +140,7 @@ const sidebars = {
                 items: [
                   "developers/testing/rust/sc-test-overview",
                   "developers/testing/rust/sc-test setup",
+                  "developers/testing/rust/mandos-trace",
                   "developers/testing/rust/sc-blackbox-calls",
                   "developers/testing/rust/sc-blackbox-example",
                   "developers/testing/rust/whitebox-legacy",
