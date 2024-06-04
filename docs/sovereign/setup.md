@@ -4,7 +4,7 @@
  This guide is a preliminary version and not the final documentation for sovereign chains. It serves as a starting point for setting up a sovereign chain on a local machine.
 :::
 
-This guide will help you set up and deploy contracts on a sovereign chain. Follow these steps carefully to ensure a successful deployment, but before starting make sure you have installed all what you need (see [Software dependencies](/sovereign/software-dependencies)).
+This guide will help you deploy contract on main chain, set up configuration files and deploy sovereign chain and all dependent services. Follow these steps carefully to ensure a successful deployment, but before starting make sure you have installed all what you need (see [Software dependencies](/sovereign/software-dependencies)).
 
 ## Step 1: Create a New Wallet
 
@@ -75,11 +75,13 @@ cd ./sovereignBridge
 
 - **WALLET** - should represent the wallet generated at Step 1.
 - **PROXY** - in this case, for the purpose of the test, the used proxy is the testnet one. Of course that the proper proxy should be used when deploying your own set of contracts depending on the development phase of your project.
-- **CHAIN_ID** - should represent the chain ID of the chain where the contracts are to be deployed. The currently supported constants are :
+- **CHAIN_ID** - should represent the chain ID of the chain where the contracts are to be deployed. The currently supported constants are:
     - **"1"** for Mainnet;
     - **"D"** for Devnet;
     - **"T"** for Testnet;
 - **ESDT_SAFE_WASM, FEE_MARKET_WASM, MULTISIG_VERIFIER_WASM** - represent the paths to the location where the contracts have been downloaded at Step 2.
+
+Before going forward, please make sure you have funds in the wallet on the chain you selected.
 :::
 
 2. Source the script:
