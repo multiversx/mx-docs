@@ -124,8 +124,6 @@ use multiversx_sc_scenario::*;
 
 fn world() -> ScenarioWorld {
     let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/adder");
-
     blockchain.register_contract("file:output/adder.wasm", adder::ContractBuilder);
     blockchain
 }
@@ -150,20 +148,20 @@ Here it is also customary to add a `_rs` suffix to the test functions, to distin
 
 ### Rust backend environment minimal setup
 
-The example above is a great example of a minimal setup. Other than creating the `world: ScenarioWorld` object, there are two lines of interest:
+The example above is a great example of a minimal setup. Other than creating the `world: ScenarioWorld` object, this is the line of interest:
 
-1. `blockchain.set_current_dir_from_workspace("<contract crate relative path to workspace>");`
-    - Tells the framework where the current crate lies relative to the workspace.
-    - It helps the framework resolve relative paths, especially to contract binaries.
-    - When debugging, the current executable path is the one of the workspace, there is no other way of getting back to the crate containing the test.
-    - Not required when the contract crate is its own workspace.
-2. `blockchain.register_contract("file:<path to binary>", <contract_crate>::ContractBuilder);`
-    - The Rust backend doesn't run compiled contracts, instead, it hooks the actual Rust contract code to its engine. This is where we tell the framework how to do that.
-    - The interpretation of this is:
-        - whenever the framework is asked to deploy or run a contract whose code would normally lie on disk at `<path to binary>` ...
-        - it should run the code, a prepared by `<contract_crate>::ContractBuilder`.
-    - The path to binary is given as a scenario value expression. [The file syntax](/developers/testing/scenario/values-simple#file-contents) in the example is simply the most common way of loading a large value from file. It is also possible to provide the compiled contract as bytes, (e.g. `"0x0061736d0100000001661160000060017..."`), but hard-coding that is weird.
-    - The `ContractBuilder` object is generated automatically for every contract, by the `#[multiversx_sc::contract]` procedural macro. That is why you won't see it in code, but it's always there.
+```rust
+blockchain.register_contract("file:<path to binary>", <contract_crate>::ContractBuilder);
+```
+
+The Rust backend doesn't run compiled contracts, instead, it hooks the actual Rust contract code to its engine. This is where we tell the framework how to do that.
+The interpretation of this is:
+- whenever the framework is asked to deploy or run a contract whose code would normally lie on disk at `<path to binary>` ...
+- it should run the code, a prepared by `<contract_crate>::ContractBuilder`.
+
+The path to binary is given as a scenario value expression. [The file syntax](/developers/testing/scenario/values-simple#file-contents) in the example is simply the most common way of loading a large value from file. It is also possible to provide the compiled contract as bytes, (e.g. `"0x0061736d0100000001661160000060017..."`), but hard-coding that is weird.
+
+The `ContractBuilder` object is generated automatically for every contract, by the `#[multiversx_sc::contract]` procedural macro. That is why you won't see it in code, but it's always there.
 
 [comment]: # (mx-context-auto)
 

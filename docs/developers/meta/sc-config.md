@@ -493,7 +493,6 @@ To achieve the same effect on the Rust scenario runner, configure as in the foll
 fn world() -> ScenarioWorld {
     // Initialize the blockchain mock, the same as for a regular test.
     let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/multisig");
 
     // Contracts that have no multi-contract config are provided the same as before.
     blockchain.register_contract("file:test-contracts/adder.wasm", adder::ContractBuilder);

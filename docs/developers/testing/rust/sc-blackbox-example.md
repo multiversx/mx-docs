@@ -20,8 +20,6 @@ const CODE_PATH: MxscPath = MxscPath::new("output/adder.mxsc.json");
 
 fn world() -> ScenarioWorld {
     let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/adder");
-
     blockchain.register_contract(CODE_PATH, adder::ContractBuilder);
     blockchain
 }
@@ -124,8 +122,6 @@ The framework provides various types that offer accessibility acting as a wrappe
 ```rust
 fn world() -> ScenarioWorld {
     let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/adder");
-
     blockchain.register_contract(CODE_PATH, adder::ContractBuilder);
     blockchain
 }
