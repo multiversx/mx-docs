@@ -89,5 +89,9 @@ AWS instances for Snapshotless Observing Squads can be easily deployed via our A
 [comment]: # (mx-context-auto)
 
 ### One click deploy in Google Cloud
-Google Cloud instances for Snapshotless Observing Squads can be easily deployed via our virtual magine image available in the [Google Cloud Marketplace](https://console.cloud.google.com/marketplace/product/multiversx-gcp-markeplace/multiversx-snapshotless-observing-squad).
+Google Cloud instances for Snapshotless Observing Squads can be easily deployed via our virtual machine image available in the [Google Cloud Marketplace](https://console.cloud.google.com/marketplace/product/multiversx-gcp-markeplace/multiversx-snapshotless-observing-squad).
 
+### One click deploy in Digital Ocean
+Digital Ocean droplets for Full Observing Squads and Snapshotless Observing Squads can be easily deployed via our droplets available here:
+- [Full Digital Ocean Observing Squad](https://marketplace.digitalocean.com/apps/multiversx-full-observing-squad)
+- [Snapshotless Digital Ocean Observing Squad](https://marketplace.digitalocean.com/apps/multiversx-observing-squad)
