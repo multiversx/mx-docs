@@ -94,6 +94,4 @@ Google Cloud instances for Snapshotless Observing Squads can be easily deployed 
 [comment]: # (mx-context-auto)
 
 ### One click deploy in Digital Ocean
-Digital Ocean droplets for Full Observing Squads and Snapshotless Observing Squads can be easily deployed via our droplets available here:
-- [Full Digital Ocean Observing Squad](https://marketplace.digitalocean.com/apps/multiversx-full-observing-squad)
-- [Snapshotless Digital Ocean Observing Squad](https://marketplace.digitalocean.com/apps/multiversx-observing-squad)
+Digital Ocean droplets for Snapshotless Observing Squads can be easily deployed via our droplets available in the [Digital Ocean Marketplace](https://marketplace.digitalocean.com/apps/multiversx-observing-squad).
