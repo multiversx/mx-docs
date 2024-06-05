@@ -242,5 +242,5 @@ cat logs/mx-chain-.......log
 
 More detailed commands for installing, building and running an Observing Squad using Docker are described [here](https://github.com/multiversx/mx-chain-observing-squad.git). The images (for the Proxy and for the Observers) are published on [Docker Hub](https://hub.docker.com/u/multiversx).
 
-### One click deploy in Digital Ocean
+## One click deploy in Digital Ocean
 Digital Ocean droplets for Full Observing Squads can be easily deployed via our droplets available in the [Digital Ocean Marketplace](https://marketplace.digitalocean.com/apps/multiversx-full-observing-squad).
