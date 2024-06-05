@@ -8,6 +8,13 @@ Understanding and managing software dependencies is crucial for the successful d
 
 Ensure you are using the latest version of mxpy. Follow the installation or upgrade instructions provided [here](/sdk-and-tools/sdk-py/installing-mxpy) if you haven't done so already.
 
+### multiversx-sdk
+
+To install this dependency on Linux, use the following command:
+```
+pip install multiversx-sdk
+```
+
 ### Linux Screen
 
 To install the screen utility on Linux, use the following command:
