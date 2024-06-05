@@ -81,7 +81,7 @@ cd ./sovereignBridge
     - **"T"** for Testnet;
 - **ESDT_SAFE_WASM, FEE_MARKET_WASM, MULTISIG_VERIFIER_WASM** - represent the paths to the location where the contracts have been downloaded at Step 2.
 
-Before going forward, please make sure you have funds in the wallet on the chain you choosed in the configuration file.
+Before going forward, please make sure you have funds in the wallet on the chain you chose in the configuration file.
 :::
 
 2. Source the script:
