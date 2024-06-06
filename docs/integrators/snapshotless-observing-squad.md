@@ -93,5 +93,10 @@ Google Cloud instances for Snapshotless Observing Squads can be easily deployed 
 
 [comment]: # (mx-context-auto)
 
+## One click deploy in Tencent Cloud
+Tencent Cloud nodes for Snapshotless Observing Squads can be easily deployed from the [Tencent Cloud Market](https://www.tencentcloud.com/market/product/P20240326183001630223531).
+
+[comment]: # (mx-context-auto)
+
 ## One click deploy in Digital Ocean
 Digital Ocean droplets for Snapshotless Observing Squads can be easily deployed via our droplets available in the [Digital Ocean Marketplace](https://marketplace.digitalocean.com/apps/multiversx-observing-squad).
