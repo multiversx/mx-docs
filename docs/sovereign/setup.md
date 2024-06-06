@@ -25,6 +25,8 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
 
 ## Step 3: Clone the ```mx-chain-go``` Repository
 
+Before proceeding, ensure that a SSH key for GitHub is configured on your machine.
+
 1. Clone the github repository:
     ```bash
     git clone https://github.com/multiversx/mx-chain-go.git
