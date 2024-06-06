@@ -17,14 +17,14 @@ Before this version, nightly Rust was required.
 
 For everything after v0.50.0 we recommend running the latest stable version of Rust. Older versions have had compatiblity issues with certain framework dependencies, on certain versions of the compiler.
 
-Nightly Rust is still allowed, but not recommended. We will still be running 
+Nightly Rust is still allowed, but not recommended. We will still be supporting nightly builds and running continuous integration on `nightly-2024-05-22`.
 
 Also, everything on versions older than v0.50.0 needs to run on nightly Rust.
 
 So, to summarize:
-- After `v0.50.3`: `stable`, Rust >= 1.78 required.
+- After `v0.50.2`: `stable`, Rust >= 1.78 required.
 - After `v0.50.0`: `stable`.
-- Before `v0.50.0`: `nightly-2023-12-11` is recommended, it has worked best over the last year.
+- Before `v0.50.0`: `nightly-2023-12-11` and `nightly-2024-05-22` are both known to be running fine.
 
 
 [comment]: # (mx-context-auto)
