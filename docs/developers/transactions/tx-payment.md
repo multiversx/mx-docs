@@ -18,17 +18,18 @@ The payment is a little more complex than the previous fields. The `.payment(...
 ```mermaid
 graph LR
     payment-unit["()"]
-    payment-unit -->|egld| egld-biguint["Egld(BigUint)"]
-    payment-unit -->|egld| egld-u64["Egld(u64)"]
-    payment-unit -->|egld| egld-num["Egld(NumExpr)"]
-    payment-unit -->|"payment<br />esdt"| EsdtTokenPayment
-    payment-unit -->|"payment<br />single_esdt"| EsdtTokenPaymentRefs
+    payment-unit --->|"&lt;proxy&gt;"| not-payable["NotPayable"]
+    payment-unit --->|egld| egld-biguint["Egld(BigUint)"]
+    payment-unit --->|egld| egld-u64["Egld(u64)"]
+    payment-unit --->|egld| egld-num["Egld(NumExpr)"]
+    payment-unit --->|"payment<br />esdt"| EsdtTokenPayment
+    payment-unit --->|"payment<br />single_esdt"| EsdtTokenPaymentRefs
     EsdtTokenPayment -->|esdt| MultiEsdtPayment
     MultiEsdtPayment -->|esdt| MultiEsdtPayment
-    payment-unit -->|"payment<br >multi_esdt"| MultiEsdtPayment
-    payment-unit -->|"payment"| EgldOrEsdtTokenPayment
-    payment-unit -->|"payment<br />egld_or_single_esdt"| EgldOrEsdtTokenPaymentRefs
-    payment-unit -->|"payment<br />egld_or_multi_esdt"| EgldOrMultiEsdtPayment
+    payment-unit --->|"payment<br >multi_esdt"| MultiEsdtPayment
+    payment-unit --->|"payment"| EgldOrEsdtTokenPayment
+    payment-unit --->|"payment<br />egld_or_single_esdt"| EgldOrEsdtTokenPaymentRefs
+    payment-unit --->|"payment<br />egld_or_multi_esdt"| EgldOrMultiEsdtPayment
 ```
 
 [comment]: # (mx-context-auto)
@@ -45,6 +46,15 @@ When no payments are added, the `Payment` fields remain of type `()`. This makes
 ```
 
 In this example, the transaction is a smart contract call to a non payable endpoint with no arguments.
+
+
+[comment]: # (mx-context-auto)
+
+### `NotPayable`
+
+The `NotPayable` object is a variation of the no-payment indicator `()`. It acts the same way, with only one difference: no payment can be added on top of it.
+
+[Proxies](tx-proxies#notpayable-protection) will add the `NotPayable` flag to transactions to non-payable endpoints, to provide an additional layer of security.
 
 
 [comment]: # (mx-context-auto)

@@ -308,7 +308,7 @@ An _external view contract_ has a behavior different from that of a regular cont
   - `add-unlabelled`
     - Specifies that all unlabelled endpoints should be added to this contract.
     - _values_: `true` | `false`
-    - _default_: `false`
+    - _default_: `true`
   - `add-labels`
     - All endpoints labelled with at least one of these labels will be added to the contract.
     - _values_: a list of string labels, e.g. `add-labels = ["label1", "label2"]`
