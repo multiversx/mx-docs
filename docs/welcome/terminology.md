@@ -1,6 +1,6 @@
 ---
-id: glossary
-title: Glossary
+id: terminology
+title: Terminology
 ---
 
 **Metachain**: the blockchain that runs in a special shard, where the main responsibilities are not processing transactions,

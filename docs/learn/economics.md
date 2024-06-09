@@ -1,6 +1,6 @@
 ---
-id: economics-overview
-title: Overview
+id: economics
+title: Economics
 ---
 
 [comment]: # (mx-abstract)

@@ -30,16 +30,18 @@ const sidebars = {
    */
 
   docs: {
-    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
-    Technology: [
-      "technology/architecture-overview",
-      "technology/glossary",
-      "technology/entities",
-      "technology/chronology",
-      "technology/secure-proof-of-stake",
-      "technology/adaptive-state-sharding",
-      "technology/the-wasm-vm",
-      "technology/cross-shard-transactions",
+    "Welcome": ["welcome/welcome-to-multiversx"],
+    "Learn about MultiversX": [
+      "welcome/welcome-to-multiversx",
+      "learn/EGLD",
+      "learn/architecture-overview",
+      "learn/entities",
+      "learn/chronology",
+      "learn/consensus",
+      "learn/sharding",
+      "learn/space-vm",
+      "learn/transactions",
+      "learn/economics",
     ],
     Developers: [
       "developers/overview",
@@ -60,129 +62,305 @@ const sidebars = {
       },
       {
         type: "category",
-        label: "Smart Contracts",
+        label: "MultiversX Stack",
         items: [
-          "developers/smart-contracts",
           {
             type: "category",
-            label: "Rust Developer reference",
+            label: "Development Frameworks",
             items: [
-              "developers/developer-reference/sc-annotations",
-              "developers/developer-reference/sc-modules",
-              "developers/developer-reference/sc-payments",
-              "developers/developer-reference/sc-contract-calls",
-              "developers/developer-reference/upgrading-smart-contracts",
-              "developers/developer-reference/sc-api-functions",
-              "developers/developer-reference/storage-mappers",
-              "developers/developer-reference/rust-testing-framework",
-              "developers/developer-reference/rust-testing-framework-functions-reference",
-              "developers/developer-reference/sc-debugging",
-              "developers/developer-reference/sc-random-numbers",
-            ],
-          },
-          {
-            type: "category",
-            label: "Data",
-            items: [
-              "developers/data/serialization-overview",
-              "developers/data/simple-values",
-              "developers/data/composite-values",
-              "developers/data/custom-types",
-              "developers/data/defaults",
-              "developers/data/multi-values",
-              "developers/data/code-metadata",
-              "developers/data/abi",
-            ],
-          },
-          {
-            type: "category",
-            label: "Rust Developers Best Practices",
-            items: [
-              "developers/best-practices/best-practices-basics",
-              "developers/best-practices/biguint-operations",
-              "developers/best-practices/the-dynamic-allocation-problem",
-            ],
-          },
-          {
-            type: "category",
-            label: "Configuration & Tooling",
-            items: [
-              "developers/meta/sc-meta",
-              "developers/meta/sc-build-reference",
-              "developers/meta/sc-config",
-              "developers/meta/sc-meta-cli",
-              "developers/meta/sc-allocator",
-              "developers/meta/rust-nightly",
-            ],
-          },
-          {
-            type: "category",
-            label: "Testing",
-            items: [
-              "developers/testing/testing-overview",
               {
                 type: "category",
-                label: "Scenarios",
+                label: "Rust Development Framework",
                 items: [
-                  "developers/testing/scenario/concept",
-                  "developers/testing/scenario/structure-json",
-                  "developers/testing/scenario/values-simple",
-                  "developers/testing/scenario/values-complex",
-                  "developers/testing/scenario/running-scenarios",
-                  "developers/testing/scenario/generating-scenarios",
+                  "developers/smart-contracts",
+                  {
+                    type: "category",
+                    label: "Rust Developer reference",
+                    items: [
+                      "developers/developer-reference/sc-annotations",
+                      "developers/developer-reference/sc-modules",
+                      "developers/developer-reference/sc-payments",
+                      "developers/developer-reference/sc-contract-calls",
+                      "developers/developer-reference/upgrading-smart-contracts",
+                      "developers/developer-reference/sc-api-functions",
+                      "developers/developer-reference/storage-mappers",
+                      "developers/developer-reference/rust-testing-framework",
+                      "developers/developer-reference/rust-testing-framework-functions-reference",
+                      "developers/developer-reference/sc-debugging",
+                      "developers/developer-reference/sc-random-numbers",
+                    ],
+                  },
+                  {
+                    type: "category",
+                    label: "Data",
+                    items: [
+                      "developers/data/serialization-overview",
+                      "developers/data/simple-values",
+                      "developers/data/composite-values",
+                      "developers/data/custom-types",
+                      "developers/data/defaults",
+                      "developers/data/multi-values",
+                      "developers/data/code-metadata",
+                      "developers/data/abi",
+                    ],
+                  },
+                  {
+                    type: "category",
+                    label: "Rust Developers Best Practices",
+                    items: [
+                      "developers/best-practices/best-practices-basics",
+                      "developers/best-practices/biguint-operations",
+                      "developers/best-practices/the-dynamic-allocation-problem",
+                    ],
+                  },
+                  {
+                    type: "category",
+                    label: "Configuration & Tooling",
+                    items: [
+                      "developers/meta/sc-meta",
+                      "developers/meta/sc-build-reference",
+                      "developers/meta/sc-config",
+                      "developers/meta/sc-meta-cli",
+                      "developers/meta/sc-allocator",
+                      "developers/meta/rust-nightly",
+                    ],
+                  },
+                  {
+                    type: "category",
+                    label: "Testing",
+                    items: [
+                      "developers/testing/testing-overview",
+                      {
+                        type: "category",
+                        label: "Scenarios",
+                        items: [
+                          "developers/testing/scenario/concept",
+                          "developers/testing/scenario/structure-json",
+                          "developers/testing/scenario/values-simple",
+                          "developers/testing/scenario/values-complex",
+                          "developers/testing/scenario/running-scenarios",
+                          "developers/testing/scenario/generating-scenarios",
+                        ],
+                      },
+                      "developers/testing/testing-in-go",
+                    ],
+                  },
                 ],
               },
-              "developers/testing/testing-in-go",
+            ],
+          },
+          {
+            type: "category",
+            label: "SDKs",
+            items: [
+              {
+                type: "category",
+                label: "Python SDK",
+                items: [
+                  "sdk-and-tools/sdk-py/sdk-py",
+                  "sdk-and-tools/sdk-py/sdk-py-cookbook",
+                  "sdk-and-tools/sdk-py/installing-mxpy",
+                  "sdk-and-tools/sdk-py/configuring-mxpy",
+                  "sdk-and-tools/sdk-py/mxpy-cli",
+                  "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
+                  "sdk-and-tools/sdk-py/smart-contract-interactions",
+                  "sdk-and-tools/sdk-py/sdk-py-migration-guides",
+                ],
+              },
+              {
+                type: "category",
+                label: "Javascript SDK",
+                items: [
+                  "sdk-and-tools/sdk-js/sdk-js",
+                  {
+                    label: "Cookbook",
+                    type: "doc",
+                    id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                  },
+                  {
+                    type: "category",
+                    label: "Cookbook (versioned)",
+                    link: {
+                      type: "doc",
+                      id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
+                    },
+                    items: [
+                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
+                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                    ]
+                  },
+                  "sdk-and-tools/sdk-js/extending-sdk-js",
+                  "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
+                  "sdk-and-tools/sdk-js/sdk-js-migration-guides",
+                  "sdk-and-tools/sdk-js/sdk-js-signing-providers",
+                ],
+              },
+              {
+                type: "category",
+                label: "NestJS SDK",
+                items: [
+                  "sdk-and-tools/sdk-nestjs/sdk-nestjs",
+                  "sdk-and-tools/sdk-nestjs/sdk-nestjs-auth",
+                  "sdk-and-tools/sdk-nestjs/sdk-nestjs-cache",
+                  "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
+                ],
+              },
+              "sdk-and-tools/sdk-go",
+              "sdk-and-tools/mxjava",
+              {
+                type: "category",
+                label: "dApp SDK",
+                items: [
+                  "sdk-and-tools/sdk-dapp/sdk-dapp",
+                  {
+                    type: "category",
+                    label: "Internal Processes",
+                    items: ["sdk-and-tools/sdk-dapp/internal-processes/guardians"],
+                  },
+                ],
+              },
+              "sdk-and-tools/erdcpp",
+              "sdk-and-tools/erdkotlin",
+              "sdk-and-tools/sdk-js-wallet-cli"
+            ],
+          },
+          {
+            type: "category",
+            label: "MultiversX API",
+            items: [
+              {
+                type: "category",
+                label: "Rest API",
+                items: [
+                  "sdk-and-tools/rest-api/rest-api",
+                  "sdk-and-tools/rest-api/multiversx-api",
+                  {
+                    type: "category",
+                    label: "MultiversX Gateway",
+                    items: [
+                      "sdk-and-tools/rest-api/gateway-overview",
+                      "sdk-and-tools/proxy",
+                      "sdk-and-tools/rest-api/addresses",
+                      "sdk-and-tools/rest-api/transactions",
+                      "sdk-and-tools/rest-api/network",
+                      "sdk-and-tools/rest-api/nodes",
+                      "sdk-and-tools/rest-api/blocks",
+                      "sdk-and-tools/rest-api/virtual-machine",
+                      "sdk-and-tools/rest-api/versions-and-changelog",
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "category",
+            label: "Tools",
+            items: [
+              "sdk-and-tools/overview",
+              {
+                type: "category",
+                label: "Elasticsearch",
+                items: [
+                  "sdk-and-tools/elastic-search",
+                  "sdk-and-tools/indexer",
+                  "sdk-and-tools/es-index-wrong-mapping",
+                  {
+                    type: "category",
+                    label: "Elasticsearch indices",
+                    items: [
+                      "sdk-and-tools/indices/es-index-accounts",
+                      "sdk-and-tools/indices/es-index-accountsesdt",
+                      "sdk-and-tools/indices/es-index-accountsesdthistory",
+                      "sdk-and-tools/indices/es-index-accountshistory",
+                      "sdk-and-tools/indices/es-index-blocks",
+                      "sdk-and-tools/indices/es-index-delegators",
+                      "sdk-and-tools/indices/es-index-epochinfo",
+                      "sdk-and-tools/indices/es-index-logs",
+                      "sdk-and-tools/indices/es-index-miniblocks",
+                      "sdk-and-tools/indices/es-index-operations",
+                      "sdk-and-tools/indices/es-index-rating",
+                      "sdk-and-tools/indices/es-index-receipts",
+                      "sdk-and-tools/indices/es-index-rounds",
+                      "sdk-and-tools/indices/es-index-scdeploys",
+                      "sdk-and-tools/indices/es-index-scresults",
+                      "sdk-and-tools/indices/es-index-tags",
+                      "sdk-and-tools/indices/es-index-tokens",
+                      "sdk-and-tools/indices/es-index-transactions",
+                      "sdk-and-tools/indices/es-index-validators",
+                    ],
+                  },
+                ],
+              },
+              "sdk-and-tools/notifier",
+              "sdk-and-tools/chain-simulator",
+              "sdk-and-tools/google-bigquery",
+              "sdk-and-tools/devcontainers",
+              {
+                type: "category",
+                label: "Troubleshooting",
+                items: [
+                  "sdk-and-tools/troubleshooting/troubleshooting",
+                  "sdk-and-tools/troubleshooting/rust-setup",
+                  "sdk-and-tools/troubleshooting/ide-setup",
+                  "sdk-and-tools/troubleshooting/multiplatform",
+                ],
+              }
+            ],
+          },
+          {
+            type: "category",
+            label: "Event logs",
+            items: [
+              "developers/event-logs/contract-call-events",
+              "developers/event-logs/contract-deploy-events",
+              "developers/event-logs/esdt-events",
+              "developers/event-logs/execution-events",
+              "developers/event-logs/system-delegation-events",
+            ],
+          },
+          {
+            type: "category",
+            label: "Blockchain Operations",
+            items: [
+              "developers/account-storage",
+              "developers/built-in-functions",
+              "developers/constants",
+              "developers/contract-api-limits",
+              "developers/creating-wallets",
+              {
+                type: "category",
+                label: "Gas and Fees",
+                items: [
+                  "developers/gas-and-fees/overview",
+                  "developers/gas-and-fees/egld-transfers",
+                  "developers/gas-and-fees/system-smart-contracts",
+                  "developers/gas-and-fees/user-defined-smart-contracts",
+                ],
+              },
+              "developers/guard-accounts",
+              "developers/relayed-transactions",
+              "developers/reproducible-contract-builds",
+              "developers/sc-calls-format",
+              "developers/setup-local-testnet",
+              "developers/setup-local-testnet-advanced",
+              {
+                type: "category",
+                label: "Signing Transactions",
+                items: [
+                  "developers/signing-transactions/signing-transactions",
+                  "developers/signing-transactions/tools-for-signing",
+                  "developers/signing-transactions/signing-programmatically",
+                ],
+              },
             ],
           },
         ],
       },
       {
         type: "category",
-        label: "Event logs",
-        items: [
-          "developers/event-logs/contract-call-events",
-          "developers/event-logs/contract-deploy-events",
-          "developers/event-logs/esdt-events",
-          "developers/event-logs/execution-events",
-          "developers/event-logs/system-delegation-events",
-        ],
-      },
-      {
-        type: "category",
-        label: "Blockchain Operations",
-        items: [
-          "developers/account-storage",
-          "developers/built-in-functions",
-          "developers/constants",
-          "developers/contract-api-limits",
-          "developers/creating-wallets",
-          {
-            type: "category",
-            label: "Gas and Fees",
-            items: [
-              "developers/gas-and-fees/overview",
-              "developers/gas-and-fees/egld-transfers",
-              "developers/gas-and-fees/system-smart-contracts",
-              "developers/gas-and-fees/user-defined-smart-contracts",
-            ],
-          },
-          "developers/guard-accounts",
-          "developers/relayed-transactions",
-          "developers/reproducible-contract-builds",
-          "developers/sc-calls-format",
-          "developers/setup-local-testnet",
-          "developers/setup-local-testnet-advanced",
-          {
-            type: "category",
-            label: "Signing Transactions",
-            items: [
-              "developers/signing-transactions/signing-transactions",
-              "developers/signing-transactions/tools-for-signing",
-              "developers/signing-transactions/signing-programmatically",
-            ],
-          },
-        ],
+        label: "Token Standard - ESDT",
+        items: ["tokens/intro", "tokens/fungible-tokens", "tokens/nft-tokens"],
       },
       {
         type: "category",
@@ -190,167 +368,6 @@ const sidebars = {
         items: ["developers/guidelines/react-development"],
       },
     ],
-    "SDK and Tools": [
-      "sdk-and-tools/overview",
-      {
-        type: "category",
-        label: "Rest API",
-        items: [
-          "sdk-and-tools/rest-api/rest-api",
-          "sdk-and-tools/rest-api/multiversx-api",
-          {
-            type: "category",
-            label: "MultiversX Gateway",
-            items: [
-              "sdk-and-tools/rest-api/gateway-overview",
-              "sdk-and-tools/proxy",
-              "sdk-and-tools/rest-api/addresses",
-              "sdk-and-tools/rest-api/transactions",
-              "sdk-and-tools/rest-api/network",
-              "sdk-and-tools/rest-api/nodes",
-              "sdk-and-tools/rest-api/blocks",
-              "sdk-and-tools/rest-api/virtual-machine",
-              "sdk-and-tools/rest-api/versions-and-changelog",
-            ],
-          },
-        ],
-      },
-      {
-        type: "category",
-        label: "Elasticsearch",
-        items: [
-          "sdk-and-tools/elastic-search",
-          "sdk-and-tools/indexer",
-          "sdk-and-tools/es-index-wrong-mapping",
-          {
-            type: "category",
-            label: "Elasticsearch indices",
-            items: [
-              "sdk-and-tools/indices/es-index-accounts",
-              "sdk-and-tools/indices/es-index-accountsesdt",
-              "sdk-and-tools/indices/es-index-accountsesdthistory",
-              "sdk-and-tools/indices/es-index-accountshistory",
-              "sdk-and-tools/indices/es-index-blocks",
-              "sdk-and-tools/indices/es-index-delegators",
-              "sdk-and-tools/indices/es-index-epochinfo",
-              "sdk-and-tools/indices/es-index-logs",
-              "sdk-and-tools/indices/es-index-miniblocks",
-              "sdk-and-tools/indices/es-index-operations",
-              "sdk-and-tools/indices/es-index-rating",
-              "sdk-and-tools/indices/es-index-receipts",
-              "sdk-and-tools/indices/es-index-rounds",
-              "sdk-and-tools/indices/es-index-scdeploys",
-              "sdk-and-tools/indices/es-index-scresults",
-              "sdk-and-tools/indices/es-index-tags",
-              "sdk-and-tools/indices/es-index-tokens",
-              "sdk-and-tools/indices/es-index-transactions",
-              "sdk-and-tools/indices/es-index-validators",
-            ],
-          },
-        ],
-      },
-      "sdk-and-tools/notifier",
-      "sdk-and-tools/chain-simulator",
-      "sdk-and-tools/google-bigquery",
-      "sdk-and-tools/devcontainers",
-      {
-        type: "category",
-        label: "SDKs",
-        items: [
-          {
-            type: "category",
-            label: "Python SDK",
-            items: [
-              "sdk-and-tools/sdk-py/sdk-py",
-              "sdk-and-tools/sdk-py/sdk-py-cookbook",
-              "sdk-and-tools/sdk-py/installing-mxpy",
-              "sdk-and-tools/sdk-py/configuring-mxpy",
-              "sdk-and-tools/sdk-py/mxpy-cli",
-              "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
-              "sdk-and-tools/sdk-py/smart-contract-interactions",
-              "sdk-and-tools/sdk-py/sdk-py-migration-guides",
-            ],
-          },
-          {
-            type: "category",
-            label: "Javascript SDK",
-            items: [
-              "sdk-and-tools/sdk-js/sdk-js",
-              {
-                label: "Cookbook",
-                type: "doc",
-                id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
-              },
-              {
-                type: "category",
-                label: "Cookbook (versioned)",
-                link: {
-                  type: "doc",
-                  id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
-                },
-                items: [
-                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
-                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
-                ]
-              },
-              "sdk-and-tools/sdk-js/extending-sdk-js",
-              "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
-              "sdk-and-tools/sdk-js/sdk-js-migration-guides",
-              "sdk-and-tools/sdk-js/sdk-js-signing-providers",
-            ],
-          },
-          {
-            type: "category",
-            label: "NestJS SDK",
-            items: [
-              "sdk-and-tools/sdk-nestjs/sdk-nestjs",
-              "sdk-and-tools/sdk-nestjs/sdk-nestjs-auth",
-              "sdk-and-tools/sdk-nestjs/sdk-nestjs-cache",
-              "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
-            ],
-          },
-          "sdk-and-tools/sdk-go",
-          "sdk-and-tools/mxjava",
-          {
-            type: "category",
-            label: "dApp SDK",
-            items: [
-              "sdk-and-tools/sdk-dapp/sdk-dapp",
-              {
-                type: "category",
-                label: "Internal Processes",
-                items: ["sdk-and-tools/sdk-dapp/internal-processes/guardians"],
-              },
-            ],
-          },
-          "sdk-and-tools/erdcpp",
-          "sdk-and-tools/erdkotlin",
-          "sdk-and-tools/sdk-js-wallet-cli"
-        ],
-      },
-      {
-        type: "category",
-        label: "Troubleshooting",
-        items: [
-          "sdk-and-tools/troubleshooting/troubleshooting",
-          "sdk-and-tools/troubleshooting/rust-setup",
-          "sdk-and-tools/troubleshooting/ide-setup",
-          "sdk-and-tools/troubleshooting/multiplatform",
-        ],
-      }
-    ],
-    Wallet: [
-      "wallet/overview",
-      "wallet/web-wallet",
-      "wallet/xalias",
-      "wallet/wallet-extension",
-      "wallet/webhooks",
-      "wallet/ledger",
-      "wallet/xportal",
-      "wallet/create-a-fungible-token",
-      "wallet/keystore",
-    ],
-    Tokens: ["tokens/overview", "tokens/esdt-tokens", "tokens/nft-tokens"],
     Validators: [
       "validators/overview",
       "validators/staking-v4",
@@ -414,14 +431,7 @@ const sidebars = {
         label: "FAQs and tools",
         items: ["validators/faq", "validators/useful-links"],
       },
-    ],
-    Economics: [
-      "economics/economics-overview",
-      "economics/staking-providers-apr",
-    ],
-    Governance: [
-      "governance/overview",
-      "governance/governance-interaction",
+      "economics/staking-providers-apr"
     ],
     Integrators: [
       "integrators/overview",
@@ -456,66 +466,105 @@ const sidebars = {
       },
       "integrators/walletconnect-json-rpc-methods",
     ],
-    "Sovereign Chains":[
-      "sovereign/Overview",
+    Advanced: [
       {
         type: "category",
-        label: "Introduction",
-        items: [
-          "sovereign/concept",
-          "sovereign/key-components",
-          "sovereign/disclaimer",],
+        label: "Ad-Astra Bridge",
+        items: [ 
+          "bridge/architecture",
+          "bridge/transfer-flows",
+          "bridge/multiple-chains",
+          "bridge/whitelist-requirements",],
       },
       {
         type: "category",
-        label: "Prerequisites",
+        label: "Sovereign Chains",
         items: [
-          "sovereign/system-requirements",
-          "sovereign/software-dependencies",],
-      },
-      "sovereign/setup",
-      "sovereign/deployment",
-      {
-        type: "category",
-        label: "Managing a Sovereign Chain",
-        items: [
-          "sovereign/managing-sovereign",
-          "sovereign/token-management",],
-      },
-      {
-        type: "category",
-        label: "Economics",
-        items: [
-          "sovereign/token-economics",
-          "sovereign/restaking",
-          "sovereign/dual-staking",],
-      },
-      "sovereign/governance",
-      "sovereign/testing",
-      "sovereign/security",
-      {
-        type: "category",
-        label: "VMs",
-        items: ["sovereign/vm",],
-      },
-      {
-        type: "category",
-        label: "Interoperability",
-        items: [
-        "sovereign/interoperability",
-        "sovereign/ethereum-l2",
-        "sovereign/bitcoin-l2",
-        "sovereign/solana-l2",
+          "sovereign/Overview",
+          {
+            type: "category",
+            label: "Introduction",
+            items: [
+              "sovereign/concept",
+              "sovereign/key-components",
+              "sovereign/disclaimer",],
+          },
+          {
+            type: "category",
+            label: "Prerequisites",
+            items: [
+              "sovereign/system-requirements",
+              "sovereign/software-dependencies",],
+          },
+          "sovereign/setup",
+          "sovereign/deployment",
+          {
+            type: "category",
+            label: "Managing a Sovereign Chain",
+            items: [
+              "sovereign/managing-sovereign",
+              "sovereign/token-management",],
+          },
+          {
+            type: "category",
+            label: "Economics",
+            items: [
+              "sovereign/token-economics",
+              "sovereign/restaking",
+              "sovereign/dual-staking",],
+          },
+          "sovereign/governance",
+          "sovereign/testing",
+          "sovereign/security",
+          {
+            type: "category",
+            label: "VMs",
+            items: ["sovereign/vm",],
+          },
+          {
+            type: "category",
+            label: "Interoperability",
+            items: [
+            "sovereign/interoperability",
+            "sovereign/ethereum-l2",
+            "sovereign/bitcoin-l2",
+            "sovereign/solana-l2",
+            ],
+          },
+          "sovereign/validators",
         ],
       },
-      "sovereign/validators",
+      {
+        type: "category",
+        label: "Governance",
+        items: [
+          "governance/overview",
+          "governance/governance-interaction",
+        ],
+      },
+      {
+        type: "category",
+        label: "User Guides",
+        items: [
+          {
+            type: "category",
+            label: "Wallet",
+            items: [
+              "wallet/overview",
+              "wallet/web-wallet",
+              "wallet/xalias",
+              "wallet/wallet-extension",
+              "wallet/webhooks",
+              "wallet/ledger",
+              "wallet/xportal",
+              "wallet/create-a-fungible-token",
+              "wallet/keystore",
+            ],
+          },
+        ],
+      },
     ],
-    "Ad-Astra Bridge": [
-      "bridge/architecture",
-      "bridge/transfer-flows",
-      "bridge/multiple-chains",
-      "bridge/whitelist-requirements",
-    ],
+    Terminology: ["welcome/terminology"],
   },
 };
 
