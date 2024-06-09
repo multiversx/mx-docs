@@ -1,6 +1,6 @@
 ---
-id: rust-testing-framework-functions-reference
-title: Rust Testing Framework Functions Reference
+id: whitebox-legacy-functions-reference
+title: Whitebox Functions Reference
 ---
 
 [comment]: # (mx-abstract)

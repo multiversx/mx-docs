@@ -8,6 +8,13 @@ Understanding and managing software dependencies is crucial for the successful d
 
 Ensure you are using the latest version of mxpy. Follow the installation or upgrade instructions provided [here](/sdk-and-tools/sdk-py/installing-mxpy) if you haven't done so already.
 
+### multiversx-sdk
+
+To install this dependency on Linux, use the following command:
+```
+pip install multiversx-sdk
+```
+
 ### Linux Screen
 
 To install the screen utility on Linux, use the following command:
@@ -22,7 +29,7 @@ While not mandatory, it is recommended to use the latest version of Docker. If y
 
 ### Golang
 
-Ensure you are using Go version 22 or later.
+Ensure you are using Go version 1.20.
 
 :::note
 Please note that at the time of writing this documentation, the setup scripts have been tested only on Linux.

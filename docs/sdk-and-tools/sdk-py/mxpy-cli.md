@@ -38,16 +38,14 @@ pipx upgrade multiversx-sdk-cli
 
 ### Using the installation script
 
-This method should _only_ be used if you installed **mxpy** as described [here](installing-mxpy.md#install-using-mxpy-up).
-
-If you are using a older version of `mxpy` you can simply upgrade to a newer version by typing the following commands in a terminal:
+If you've previously installed **mxpy** using the legacy **mxpy-up** installation script, you should switch to the **pipx** approach. Make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
 
 ```sh
-wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py && python3 mxpy-up.py
+rm ~/multiversx-sdk/mxpy
+rm -rf ~/multiversx-sdk/mxpy-venv
 ```
 
-This will recreate the light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv`. 
-Since you've had a previous `mxpy` version installed, you probably have already altered the **`$PATH`** variable so you don't have to re-alter it.
+Additionally, you might want to cleanup the shell profile files, to not alter anymore the `PATH` variable with respect to `~/multiversx-sdk`: `~/.profile`, `~/.bashrc` and / or `~/.zshrc`.
 
 [comment]: # (mx-context-auto)
 
@@ -309,7 +307,7 @@ We see that we indeed got the value `6`. Our upgrade was sucessfull.
 
 Verifying a smart contract means ensuring that the contract deployed on the network matches a specific version of the original source code. That is done by an external service that, under the hood, performs a reproducible build of the given contract and compares the resulting bytecode with the one deployed on the network.
 
-To learn more about reproducible builds, please follow [**this page**](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [**this repository**](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
+To learn more about reproducible builds, please follow [**this page**](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [**this repository**](https://github.com/multiversx/mx-contracts-rs).
 
 The command used for verifying contracts is:
 ```sh
@@ -333,7 +331,7 @@ The account that triggers the code verification process must be the owner of the
 :::
 
 :::info
-The _packaged source_ passed as `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
+The _packaged source_ passed as `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-contracts-rs/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
 :::
 
 [comment]: # (mx-context-auto)

@@ -129,6 +129,8 @@ The settings are as follows:
     - Note that overflow checks are normally turned off in production, but are useful when testing. The overflow checks are enabled by default when testing smart contracts using the debugger.
     - _values_: `true` | `false`
     - _default_: `false`
+- `proxy`
+  - Customise the proxy. More details [HERE](../transactions/tx-proxies#how-to-set-up-project-to-re-generate-easily)
 
 ---
 
@@ -306,7 +308,7 @@ An _external view contract_ has a behavior different from that of a regular cont
   - `add-unlabelled`
     - Specifies that all unlabelled endpoints should be added to this contract.
     - _values_: `true` | `false`
-    - _default_: `false`
+    - _default_: `true`
   - `add-labels`
     - All endpoints labelled with at least one of these labels will be added to the contract.
     - _values_: a list of string labels, e.g. `add-labels = ["label1", "label2"]`
@@ -491,7 +493,6 @@ To achieve the same effect on the Rust scenario runner, configure as in the foll
 fn world() -> ScenarioWorld {
     // Initialize the blockchain mock, the same as for a regular test.
     let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/multisig");
 
     // Contracts that have no multi-contract config are provided the same as before.
     blockchain.register_contract("file:test-contracts/adder.wasm", adder::ContractBuilder);

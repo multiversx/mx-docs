@@ -108,6 +108,11 @@ h2.anchor code {
   order: 5;
 }
 
+.table-center-content {
+  text-align: center;
+  vertical-align: middle;
+}
+
 /* -------------------- End Overrides ------------------- */
 
 /* -------------------- Start Navbar Icons ------------------- */

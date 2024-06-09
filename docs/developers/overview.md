@@ -95,9 +95,6 @@ Learn about transaction's gas and how a fee is calculated:
 | [Upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts)                                   | The implications of upgrading a Smart Contract.                                                 |
 | [MultiversX SC api functions](/developers/developer-reference/sc-api-functions)                                          | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
 | [Storage mappers](/developers/developer-reference/storage-mappers)                                                       | Decide from multiple ways of storing data in your SC, by considering performance.               |
-| [Rust testing framework](/developers/developer-reference/rust-testing-framework)                                         | Test your Smart Contract directly in Rust.                                                      |
-| [Rust testing framework functions reference](/developers/developer-reference/rust-testing-framework-functions-reference) | A list of available functions to be used when testing your Smart Contract in Rust.              |
-| [Rust smart contract debugging](/developers/developer-reference/sc-debugging)                                            | How to debug your Smart Contract.                                                               |
 | [Rust smart contract build reference](/developers/meta/sc-build-reference)                                               | How to build and organize your Smart Contract.                                                  |
 | [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                                   | How to generate random number in Smart Contracts.                                               |
 
@@ -111,6 +108,20 @@ Learn about transaction's gas and how a fee is calculated:
 | [Biguint operations](/developers/best-practices/biguint-operations)                         | Handle Biguint operations in a more efficient way. |
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
 | [Multi values](/developers/data/multi-values)                                               | Take advantage of the variadic input and output.   |
+
+
+[comment]: # (mx-context-auto)
+
+### Smart Contract Testing
+
+| Name                                                                 | Description                                              |
+|----------------------------------------------------------------------|----------------------------------------------------------|
+| [Overview](/developers/testing/rust/sc-test-overview)                | Introduction to all the testing methods available in Rust|
+| [Blackbox tests](/developers/testing/rust/sc-blackbox)               | The best way to write integration tests, by simulating transactionds|
+| [Whitebox framework](/developers/testing/rust/whitebox-legacy)       | Older testing framework, but still in use in some projects.|
+| [Whitebox framework functions reference](/developers/testing/rust/whitebox-legacy-functions-reference) | A list of available functions to be used when using the whitebox framework.              |
+| [Debugging](/developers/testing/sc-debugging)                        | How to debug your smart contract tests.   |
+
 
 [comment]: # (mx-context-auto)
 

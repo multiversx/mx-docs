@@ -150,14 +150,14 @@ Have a look at this example with custom types.
 Let's take the following `enum` and `struct`:
 
 ```rust
-#[derive(TypeAbi)]
+#[type_abi]
 pub struct MyAbiStruct<M: ManagedTypeApi> {
     pub field1: BigUint<M>,
     pub field2: ManagedVec<M, Option<u32>>,
     pub field3: (bool, i32)
 }
 
-#[derive(TypeAbi)]
+#[type_abi]
 pub enum MyAbiEnum<M: ManagedTypeApi> {
         Nothing,
         Something(i32),

@@ -78,7 +78,7 @@ pipx upgrade multiversx-sdk-cli
 
 Installing **mxpy** using **mxpy-up** is not recommended anymore. We recommend using **pipx** instead.
 
-If you've previously installed **mxpy** using **mxpy-up** and you'd like to switch to **pipx**, make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
+If you've previously installed **mxpy** using the legacy **mxpy-up**, you should switch to the **pipx** approach. Make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
 
 ```sh
 rm ~/multiversx-sdk/mxpy
