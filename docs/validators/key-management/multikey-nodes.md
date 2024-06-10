@@ -340,8 +340,7 @@ Always attempt this process while closely monitor your nodes. If done correctly,
 
 **1. Login as root & update/upgrade the machine**
 
-```
-bash
+```bash
 apt-get update
 apt-get upgrade
 apt autoremove
@@ -349,13 +348,13 @@ apt autoremove
 
 **2. Add and configure the ubuntu user**
 
-```
+```bash
 adduser ubuntu
 ```
 
 Set a long password
 
-```
+```bash
 usermod -aG sudo ubuntu
 echo 'StrictHostKeyChecking=no' >> /etc/ssh/ssh_config
 visudo
@@ -369,7 +368,7 @@ ubuntu  ALL=(ALL) NOPASSWD:ALL
 
 Save & exit
 
-```
+```bash
 sudo su ubuntu
 sudo visudo -f /etc/sudoers.d/myOverrides
 ```
@@ -384,7 +383,7 @@ Save & exit
 
 **3. Configure ssh service:**
 
-```
+```bash
 cd
 mkdir .ssh && chmod 700 .ssh && cd .ssh/
 nano authorized_keys
@@ -393,13 +392,13 @@ nano authorized_keys
 Paste your pubkey & save & exit
 The pubkey can be obtained by typing `cat ~/.ssh/id_rsa.pub` (or the name of your key) 
 
-```
+```bash
 chmod 600 authorized_keys
 ```
 
 ssh config
 
-```
+```bash
 sudo nano /etc/ssh/sshd_config
 ```
 
@@ -419,7 +418,7 @@ Uncomment and set the following fields to their respective values:
 
 Save & exit
 
-```
+```bash
 sudo systemctl restart sshd
 ```
 
@@ -428,7 +427,7 @@ At this time a snapshot/image of the host could be generated using the providerâ
 
 **4. Configure your local ssh config file** 
 
-```
+```bash
 nano ~/.ssh/config
 ```
 
@@ -447,14 +446,14 @@ Save & exit
 
 **5. Keys Setup**
 
-```
+```bash
 cd ~
 mkdir VALIDATOR_KEYS
 ```
 
 Copy your validator(s) .pem file either by using scp:
 
-```
+```bash
 scp allValidatorsKeys.pem ubuntu@xxx.yyy.zzz.xxx:/home/ubuntu/VALIDATOR_KEYS
 ``` 
 
@@ -467,7 +466,7 @@ sftp://host-0
 
 **6. Node Setup**
 
-```
+```bash
 git clone https://github.com/multiversx/mx-chain-scripts
 cd mx-chain-scripts/config/
 nano variables.cfg
@@ -484,7 +483,7 @@ Set the following:
 
 Save & exit
 
-```
+```bash
 cd ..
 ./script.sh install
 ```
@@ -492,20 +491,20 @@ cd ..
 Install your node(s)
 You can tweak several binary flags settings by typing
 
-```
+```bash
 sudo nano /etc/systemd/system/elrond-node-0.service
 ```
 
 Save & exit
 Reload the service file:
 
-```
+```bash
 sudo systemctl daemon-reload
 ```
 
 For additional `prefs.toml` file settings adjustments, can use this:
 
-```
+```bash
 nano ~/elrond-nodes/node-0/config/prefs.toml
 ```
 
@@ -518,7 +517,7 @@ Set the following:
     RedundancyLevel = <redundancy level: 0 for main, 1 for first backup...>
 ```
 
-```
+```bash
 cp ~/VALIDATOR_KEYS/allValidatorsKeys.pem ~/elrond-nodes/node-0/config/
 cd ~/mx-chain-scripts
 ./script.sh start
@@ -529,12 +528,12 @@ cd ~/mx-chain-scripts
 
 The running node can be monitored using the termui console
 
-```
+```bash
 ~/elrond-utils/termui -address 127.0.0.1:8080
 ```
 
 If the node does not start in a reasonable time frame (5 minutes), we can check the log output by using this command:
 
-```
+```bash
 sudo journalctl -f -u elrond-node-0.service
 ```
