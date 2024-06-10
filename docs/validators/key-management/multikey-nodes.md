@@ -346,7 +346,7 @@ apt-get upgrade
 apt autoremove
 ```
 
-**2. Add and configure the ubuntu user**
+**2. Add and configure the `ubuntu` user**
 
 ```bash
 adduser ubuntu
