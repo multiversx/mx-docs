@@ -403,13 +403,13 @@ ssh config
 sudo nano /etc/ssh/sshd_config
 ```
 
-Uncomment & change this line to match your desired port:
+Uncomment and change this line to match your desired port:
 
 ```
 Port <any port value > 1024> # example: 7728
 ```
 
-Set the following fields to their respective values: 
+Uncomment and set the following fields to their respective values: 
 
 ```
     PermitRootLogin -> no
@@ -511,7 +511,7 @@ nano ~/elrond-nodes/node-0/config/prefs.toml
 
 Set the following:
 
-```
+```toml
     DestinationShardAsObserver = "<shard ID>"
     NodeDisplayName = "node"
     Identity = "identity"
