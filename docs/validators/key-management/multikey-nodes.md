@@ -412,9 +412,9 @@ Port <any port value > 1024> # example: 7728
 Set the following fields to their respective values: 
 
 ```
-#    PermitRootLogin -> no
-#    PubkeyAuthentication -> yes
-#    PasswordAuthentication -> no
+    PermitRootLogin -> no
+    PubkeyAuthentication -> yes
+    PasswordAuthentication -> no
 ```
 
 Save & exit
@@ -476,10 +476,10 @@ nano variables.cfg
 Set the following:
 
 ```
-#    ENVIRONMENT="mainnet"
-#    GITHUBTOKEN="<your github token>"
-#    NODE_EXTRA_FLAGS="" # optional for extra flags (example: `-log-save -profile-mode`)  
-#    OVERRIDE_CONFIGVER="" # optional for a particulare release (example: `rc-v1.6.0`)
+    ENVIRONMENT="mainnet"
+    GITHUBTOKEN="<your github token>"
+    NODE_EXTRA_FLAGS="" # optional for extra flags (example: `-log-save -profile-mode`)  
+    OVERRIDE_CONFIGVER="" # optional for a particulare release (example: `rc-v1.6.0`)
 ```
 
 Save & exit
@@ -512,10 +512,10 @@ nano ~/elrond-nodes/node-0/config/prefs.toml
 Set the following:
 
 ```
-#    DestinationShardAsObserver = "<shard ID>"
-#    NodeDisplayName = "node"
-#    Identity = "identity"
-#    RedundancyLevel = <redundancy level: 0 for main, 1 for first backup...>
+    DestinationShardAsObserver = "<shard ID>"
+    NodeDisplayName = "node"
+    Identity = "identity"
+    RedundancyLevel = <redundancy level: 0 for main, 1 for first backup...>
 ```
 
 ```
