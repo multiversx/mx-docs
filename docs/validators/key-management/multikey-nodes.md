@@ -315,12 +315,6 @@ The BLS keys' identities, on the other hand will have the following names & iden
 
 ### Migration guide from single-key operation to multikey
 
-:::warning
-This guide can lead to potential node jailing if done incorrectly. Make sure that you understand completely all the steps involved.
-
-We strongly suggest to practice this process first on the public testnet. You should gather invaluable experience and know how.
-:::
-
 Whenever deciding to switch from single-key operation to multikey, the following steps on how to execute this process can be considered:
 1. Create your `allValidatorsKeys.pem` by manually (or through a text tool) concatenate all your `validatorKey.pem` files;
 2. Start a multikey group, **configure it as a backup group**, provide the `allValidatorsKeys.pem` file to all the nodes forming the group;
@@ -331,6 +325,12 @@ Whenever deciding to switch from single-key operation to multikey, the following
 7. Closely monitor all your nodes in the explorer, should be online and with their rating status increasing/at 100%. Repeat this step for a few times at 10 minutes interval. 
 
 Make sure that all operations from step 6 are made as quickly as possible. In case this step takes a long time, the backup multikey group should take over.
+
+:::warning
+This guide can lead to potential node jailing if done incorrectly. Make sure that you understand completely all the steps involved.
+
+We strongly suggest to practice this process first on the public testnet. You should gather invaluable experience and know how.
+:::
 
 :::caution
 Always attempt this process while closely monitor your nodes. If done correctly, your nodes might experience a brief rating drop (until the backup group takes over - if necessary)
@@ -389,8 +389,8 @@ mkdir .ssh && chmod 700 .ssh && cd .ssh/
 nano authorized_keys
 ```
 
-Paste your pubkey & save & exit
-The pubkey can be obtained by typing `cat ~/.ssh/id_rsa.pub` (or the name of your key) 
+Paste your pubkey, save & exit
+The pubkey can be obtained by typing `cat ~/.ssh/id_rsa.pub` (or the name of your key) on the machine that will be used to connect to this host
 
 ```bash
 chmod 600 authorized_keys
