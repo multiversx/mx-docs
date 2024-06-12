@@ -13,7 +13,7 @@ The environments:
 - Smart contract - Rust framework, the syntax for writing smart contracts (`TxScEnv`)
 - Integration test - Rust testing framework, used for writing Rust tests against the Rust VM and Go VM (`ScenarioTxEnv`, `ScenarioEnvExec`, `ScenarioTxEnvData`, `ScenarioEnvQuery`)
 - Parametric test - symbolic execution, safety of the smart contract code (coming soon)
-- Interactor - Rust microservice, used for system testing and interaction with the smart contract on the real blockchain (`InteractorExecEnv`, `InteractorQueryEnv`)
+- Interactor - Rust program, used for system testing and interaction with the smart contract on the real blockchain (`InteractorExecEnv`, `InteractorQueryEnv`)
 
 :::info
 The Rust unified syntax is able to interact with all of these environments, meaning that the syntax remains the same for all purposes mentioned above. The only element that changes the route of the transaction (whether it's going to be run inside a `smart contract`, `test`, or `interactor`) is the environment `TxEnv`. 
@@ -219,7 +219,7 @@ async fn example_scenario() -> num_bigint::BigUint {
 For the moment, every interactor transaction needs to go through `prepare_async` in order to convert tx data to other needed types. The function does `not` create an async blockchain call, rather it refers to async Rust.
 
 
-As seen above, the transaction syntax remains consistent over the various environments. The developer can further improve the microservice by including the scenario function into a CLI or writing system tests. 
+As seen above, the transaction syntax remains consistent over the various environments. The developer can further improve the interactor by including the scenario function into a CLI or writing system tests. 
 
 For example, a system test can look like this:
 ```rust title=interact.rs

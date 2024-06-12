@@ -140,6 +140,7 @@ const sidebars = {
                 items: [
                   "developers/testing/rust/sc-test-overview",
                   "developers/testing/rust/sc-test setup",
+                  "developers/testing/rust/mandos-trace",
                   "developers/testing/rust/sc-blackbox-calls",
                   "developers/testing/rust/sc-blackbox-example",
                   "developers/testing/rust/whitebox-legacy",
@@ -160,6 +161,14 @@ const sidebars = {
                 ],
               },
               "developers/testing/testing-in-go",
+            ],
+          },
+          {
+            type: "category",
+            label: "Interactors",
+            items: [
+              "developers/interactor/interactors-overview",
+              "developers/interactor/interactors-example",
             ],
           },
         ],
@@ -483,7 +492,7 @@ const sidebars = {
       },
       "integrators/walletconnect-json-rpc-methods",
     ],
-    "Sovereign Chains":[
+    "Sovereign Chains": [
       "sovereign/Overview",
       {
         type: "category",
@@ -529,10 +538,10 @@ const sidebars = {
         type: "category",
         label: "Interoperability",
         items: [
-        "sovereign/interoperability",
-        "sovereign/ethereum-l2",
-        "sovereign/bitcoin-l2",
-        "sovereign/solana-l2",
+          "sovereign/interoperability",
+          "sovereign/ethereum-l2",
+          "sovereign/bitcoin-l2",
+          "sovereign/solana-l2",
         ],
       },
       "sovereign/validators",
