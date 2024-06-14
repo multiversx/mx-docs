@@ -2,18 +2,18 @@
 
 ## Main Chain -> Sovereign Chain
 
-1. Update the `/config/configs.cfg` file with the token settings. Example:
+1. You should be in the follwing folder:
+    ```bash
+    /mx-chain-go/scripts/testnet/sovereignBridge
+    ```
+
+2. Update the configuration file `config/configs.cfg` with the token settings you prefer. Example:
     ```ini
-    # Issue Token Settings
+    # Issue Main Chain Token Settings
     TOKEN_TICKER=TKN
     TOKEN_DISPLAY_NAME=Token
     NR_DECIMALS=18
     INITIAL_SUPPLY=111222333
-    ```
-
-2. Navigate to the `sovereignBridge` directory:
-    ```bash
-    cd mx-chain-go/scripts/testnet/sovereignBridge/
     ```
 
 3. Source the script:
@@ -33,18 +33,18 @@
 
 ## Sovereign Chain -> Main Chain
 
-1. Update the `/config/configs.cfg` file with the sovereign token settings. Example:
+1. You should be in the follwing folder:
+    ```bash
+    /mx-chain-go/scripts/testnet/sovereignBridge
+    ```
+
+2. Update the configuration file `config/configs.cfg` with the sovereign token settings you prefer. Example:
     ```ini
     # Issue Sovereign Token Settings
     TOKEN_TICKER_SOVEREIGN=SVN
     TOKEN_DISPLAY_NAME_SOVEREIGN=SovToken
     NR_DECIMALS_SOVEREIGN=18
     INITIAL_SUPPLY_SOVEREIGN=333222111
-    ```
-
-2. Navigate to the `sovereignBridge` directory:
-    ```bash
-    cd mx-chain-go/scripts/testnet/sovereignBridge/
     ```
 
 3. Source the script:
@@ -68,7 +68,7 @@
 
 - Register the sovereign token identifier on the main chain bridge contract:
     ```bash
-    registerToken
+    registerSovereignToken
     ```
 
 - Deposit the token in the smart contract on the sovereign chain:

@@ -1,10 +1,12 @@
 # Setup Guide
 
+## Deploy local Sovereign Chain
+
 :::note
  This guide is a preliminary version and not the final documentation for sovereign chains. It serves as a starting point for setting up a sovereign chain on a local machine.
 :::
 
-This guide will help you deploy contract on main chain, set up configuration files and deploy sovereign chain and all dependent services. Follow these steps carefully to ensure a successful deployment, but before starting make sure you have installed all what you need (see [Software dependencies](/sovereign/software-dependencies)).
+This guide will help you deploy contract on main chain, set up configuration files and deploy sovereign chain and all dependent services. Follow these steps carefully to ensure a successful deployment.
 
 ## Step 1: Create a New Wallet
 
@@ -13,23 +15,19 @@ This guide will help you deploy contract on main chain, set up configuration fil
     mxpy wallet new --format pem --outfile ~/wallet.pem
     ```
 
+2. Get funds in the wallet on the chain you want the sovereign to be connected to.
+
 :::note
 You can use any wallet of your choice, but for the purpose of this guide we are taking the step by step approach as if there is nothing available nor installed on your node.
 :::
 
-## Step 2: Download necessary contracts
+## Step 2: Get the ```mx-chain-go``` Repository
 
-2. Download the WASM files from [here](https://github.com/multiversx/mx-sovereign-sc/releases).
+Before proceeding, ensure that a **SSH key** for GitHub is configured on your machine.
 
-3. For the purpose of the automated setup and deployment, save them in a directory called `contracts` in the same location where the wallet has been stored. Otherwise you could configure their own location at step number 4.
-
-## Step 3: Clone the ```mx-chain-go``` Repository
-
-Before proceeding, ensure that a SSH key for GitHub is configured on your machine.
-
-1. Clone the github repository:
+1. Clone the GitHub repository:
     ```bash
-    git clone https://github.com/multiversx/mx-chain-go.git
+    git clone git@github.com:multiversx/mx-chain-go.git
     ```
 
 2. Checkout the specific sovereign chain sdk branch and navigate to testnet directory:
@@ -45,45 +43,43 @@ Before proceeding, ensure that a SSH key for GitHub is configured on your machin
 :::note
 The prerequisites script verifies and downloads the necessary packages to run the nodes and clones the required repositories:
 
-- mx-chain-deploy-go: Initializes the configuration for the chain and deployment parameters.
-- mx-chain-proxy-go: Repository for the proxy.
-- mx-chain-sovereign-bridge-go: Repository for the bridge service.
+- **mx-chain-deploy-go**: Initializes the configuration for the chain and deployment parameters.
+- **mx-chain-proxy-go**: Repository for the proxy.
+- **mx-chain-sovereign-bridge-go**: Repository for the cross-chain service.
 :::
 
-## Step 4: Deploy Contracts on Testnet
+## Step 3: Deploy Sovereign setup
 
 First navigate to the sovereignBridge folder:
 
 ```bash
-cd ./sovereignBridge
+cd sovereignBridge
 ```
 
-1. Update the `/config/configs.cfg` file with the Owner and WASM file details. Example:
+1. Update the configuration file `config/configs.cfg` with paths you want to use, wallet location and main chain constants. Example:
     ```ini
+    # Sovereign Paths
+    SOVEREIGN_DIRECTORY="~/sovereign"
+    TXS_OUTFILE_DIRECTORY="${SOVEREIGN_DIRECTORY}/txsOutput"
+    CONTRACTS_DIRECTORY="${SOVEREIGN_DIRECTORY}/contracts"
+
     # Owner Configuration
-    WALLET="~/wallet.pem" 
+    WALLET="~/wallet.pem"
 
     # Main Chain Constants
     PROXY = https://testnet-gateway.multiversx.com
     CHAIN_ID = T
-
-    # WASM Files
-    ESDT_SAFE_WASM="~/contracts/esdt-safe.wasm"
-    FEE_MARKET_WASM="~/contracts/fee-market.wasm"
-    MULTISIG_VERIFIER_WASM="~/contracts/multisigverifier.wasm"
     ```
 
 :::note
 
+- **SOVEREIGN_DIRECTORY, TXS_OUTFILE_DIRECTORY, CONTRACTS_DIRECTORY** - represent the paths to the location where the deploy scripts will generate the outputs.
 - **WALLET** - should represent the wallet generated at Step 1.
 - **PROXY** - in this case, for the purpose of the test, the used proxy is the testnet one. Of course that the proper proxy should be used when deploying your own set of contracts depending on the development phase of your project.
 - **CHAIN_ID** - should represent the chain ID of the chain where the contracts are to be deployed. The currently supported constants are:
     - **"1"** for Mainnet;
     - **"D"** for Devnet;
     - **"T"** for Testnet;
-- **ESDT_SAFE_WASM, FEE_MARKET_WASM, MULTISIG_VERIFIER_WASM** - represent the paths to the location where the contracts have been downloaded at Step 2.
-
-Before going forward, please make sure you have funds in the wallet on the chain you chose in the configuration file.
 :::
 
 2. Source the script:
@@ -91,54 +87,50 @@ Before going forward, please make sure you have funds in the wallet on the chain
     source script.sh
     ```
 
-3. Deploy all bridge contracts, Sovereign Notifier and update Sovereign Configs:
+3. Install the [software dependencies](/sovereign/software-dependencies) and download the cross-chain contracts by running the Sovereign bridge prerequisites:
     ```bash
-    deployMainChainContractsAndSetupObserver
+    runBridgePrerequisites
     ```
 
-4. Initialize and deploy sovereign chain with all required services:
+4. Deploy all cross-chain contracts on main chain and deploy sovereign chain with all dependent services:
     ```bash
-    sovereignDeploy
+    deploySovereignWithCrossChainContracts
     ```
 
 :::note
-## Alternatively, you can do everything manually step-by-step:
-### Deploy contracts:
-```bash
+## Alternatively, you can deploy everything manually step-by-step:
+### Deploy contracts and update sovereign configs:
+1. Deploy cross-chain contracts on main chain:
+    ```bash
     deployEsdtSafeContract 
     deployFeeMarketContract
     setFeeMarketAddress
     disableFeeMarketContract
     unpauseEsdtSafeContract
-```
+    ```
 
-### Update Sovereign Configurations
-
-1. This instruction will copy the wasm files in the right location and update the genesis smart contracts:
-
+2. This instruction will copy the wasm files in the right location and update the genesis smart contracts:
     ```bash
     setGenesisContract
     ```
 
-2. This instruction will update sovereign config.toml file:
+3. This instruction will update sovereignConfig.toml file: (Outgoing subscribed events deposit address will be esdt-safe address from sovereign chain. Notifier config subscribed events will come from esdt-safe address from main chain.)
     ```bash
     updateSovereignConfig
     ```
 
-### Prepare Docker Observer
-
-1. Prepare the observer:
+4. Prepare a docker container for the observer:
     ```bash
     prepareObserver
     ```
-
-2. Specify an image version:
+    alternatively, use a specific image version
     ```bash
     prepareObserver multiversx/chain-testnet:T1.7.4.0
     ```
+
 ### Deploy Sovereign Chain & Contracts
 
-1. Update the notifier notarization round configuration:
+1. Update the notifier notarization round configuration (the observer will notarize blocks from current nonce, not from genesis of main chain):
     ```bash
     updateNotifierNotarizationRound
     ```
@@ -150,67 +142,99 @@ Before going forward, please make sure you have funds in the wallet on the chain
 
 3. Deploy the multisig verifier contract on testnet:
     ```bash
-    deployMultisigVerifierContract
+    deployHeaderVerifierContract
     ```
 
 4. Set the ESDT safe address in the multisig contract on testnet:
     ```bash
-    setEsdtSafeAddress
+    setEsdtSafeAddressInHeaderVerifier
     ```
 
-5. Update and start the bridge service:
+5. Start the bridge service, start sovereign nodes and deploy the observer:
     ```bash
-    updateAndStartBridgeService
+    sovereignStart
     ```
 
-6. Start the sovereign chain:
+6. Set the multisig address in ESDT safe on testnet:
     ```bash
-    ../sovereignStart.sh
+    setHeaderVerifierAddressInEsdtSafe
     ```
 
-7. Deploy the observer on testnet:
+7. Set the sovereign bridge address in ESDT safe on testnet:
     ```bash
-    deployObserver
+    setSovereignBridgeAddressInEsdtSafe
     ```
 
-8. Set the multisig address in ESDT safe on testnet:
-    ```bash
-    setMultisigAddress
-    ```
-
-9. Set the sovereign bridge address in ESDT safe on testnet:
-    ```bash
-    setSovereignBridgeAddress
-    ```
-
-10. Get funds in your wallet from a genesis wallet:
+8. Get funds in your wallet from a genesis wallet:
     ```bash
     getFundsInAddressSovereign
     ```
 
-11. Set the fee market address in sovereign:
+9. Set the fee market address in sovereign:
     ```bash
     setFeeMarketAddressSovereign
     ```
 
-12. Disable the fee market contract in sovereign:
+10. Disable the fee market contract in sovereign:
     ```bash
     disableFeeMarketContractSovereign
     ```
 
-13. Unpause the ESDT safe contract in sovereign:
+11. Unpause the ESDT safe contract in sovereign:
     ```bash
     unpauseEsdtSafeContractSovereign
     ```
-
-
 :::
 
-## Step 5: Stop Local Sovereign Chain
+## Stop local Sovereign Chain
 
-1. Stop the chain and all dependent services:
+1. You should be in the follwing folder:
+    ```bash
+    /mx-chain-go/scripts/testnet/sovereignBridge
+    ```
+
+2. Source the script:
+    ```bash
+    source script.sh
+    ```
+
+3. Stop and clean the chain with all dependent services:
     ```bash
     stopAndCleanSovereign
+    ```
+
+## Upgrade local Sovereign Chain
+
+1. You should be in the follwing folder:
+    ```bash
+    /mx-chain-go/scripts/testnet/sovereignBridge
+    ```
+
+2. Source the script:
+    ```bash
+    source script.sh
+    ```
+
+3. Upgrade and restart Sovereign chain and all dependent services:
+    ```bash
+    sovereignUpgradeAndRestart
+    ```
+
+## Restart local Sovereign Chain
+
+1. You should be in the follwing folder:
+    ```bash
+    /mx-chain-go/scripts/testnet/sovereignBridge
+    ```
+
+2. Source the script:
+    ```bash
+    source script.sh
+    ```
+
+3. Restart Sovereign chain and all dependent services:
+    ```bash
+    sovereignRestart
     ```
 
 :::important
