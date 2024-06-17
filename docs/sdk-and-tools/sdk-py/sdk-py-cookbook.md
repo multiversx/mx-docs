@@ -142,8 +142,8 @@ The **transaction factory** is parametrized at instantiation, and the transactio
 from multiversx_sdk import TransferTransactionsFactory
 
 transfer_factory = TransferTransactionsFactory(config=config)
-alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
 # With "data" field
 transaction = transfer_factory.create_transaction_for_native_token_transfer(
@@ -281,7 +281,7 @@ inner_tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(
 
 config = TransactionsFactoryConfig(chain_id="D")
 factory = RelayedTransactionsFactory(config=config)
-relayer = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+relayer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
 relayed_tx = factory.create_relayed_v1_transaction(
     inner_transaction=inner_tx,
@@ -317,7 +317,7 @@ inner_tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(
 
 config = TransactionsFactoryConfig(chain_id="D")
 factory = RelayedTransactionsFactory(config=config)
-relayer = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+relayer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
 relayed_tx = factory.create_relayed_v2_transaction(
     inner_transaction=inner_tx,
@@ -499,7 +499,7 @@ print(parsed_outcome)
 Contract upgrade transactions are similar to deployment transactions (see above), in the sense that they also require a contract bytecode. In this context, though, the contract address is already known.
 
 ```py
-contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
 bytecode = Path("./contracts/adder.wasm").read_bytes()
 
 upgrade_transaction = factory.create_transaction_for_upgrade(
@@ -540,7 +540,7 @@ factory = SmartContractTransactionsFactory(config, abi)
 Now, let's prepare a contract transaction, to call the `add` function of our previously deployed smart contract:
 
 ```py
-contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy")
+contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy")
 
 # For arguments, use typed value objects if you haven't provided an ABI to the factory:
 args = [U32Value(42)]
@@ -638,7 +638,7 @@ You will notice that the `SmartContractQueriesController` requires a `QueryRunne
 from multiversx_sdk import (ProxyNetworkProvider, QueryRunnerAdapter,
                             SmartContractQueriesController)
 
-contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4")
+contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4")
 query_runner = QueryRunnerAdapter(ProxyNetworkProvider("https://devnet-api.multiversx.com"))
 
 query_controller = SmartContractQueriesController(query_runner)
@@ -918,7 +918,7 @@ For further reference, please see [nonce management](/integrators/creating-trans
 Broadcast a single transaction:
 
 ```py
-alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
 tx = Transaction(
     sender=alice.to_bech32(),
