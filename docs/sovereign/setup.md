@@ -160,27 +160,22 @@ cd sovereignBridge
     setHeaderVerifierAddressInEsdtSafe
     ```
 
-7. Set the sovereign bridge address in ESDT safe on testnet:
-    ```bash
-    setSovereignBridgeAddressInEsdtSafe
-    ```
-
-8. Get funds in your wallet from a genesis wallet:
+7. Get funds in your wallet from a genesis wallet:
     ```bash
     getFundsInAddressSovereign
     ```
 
-9. Set the fee market address in sovereign:
+8. Set the fee market address in sovereign:
     ```bash
     setFeeMarketAddressSovereign
     ```
 
-10. Disable the fee market contract in sovereign:
+9. Disable the fee market contract in sovereign:
     ```bash
     disableFeeMarketContractSovereign
     ```
 
-11. Unpause the ESDT safe contract in sovereign:
+10. Unpause the ESDT safe contract in sovereign:
     ```bash
     unpauseEsdtSafeContractSovereign
     ```
@@ -188,46 +183,37 @@ cd sovereignBridge
 
 ## Stop local Sovereign Chain
 
-1. You should be in the follwing folder:
-    ```bash
-    /mx-chain-go/scripts/testnet/sovereignBridge
-    ```
+1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
 
-2. Source the script:
+    Source the script:
     ```bash
     source script.sh
     ```
 
-3. Stop and clean the chain with all dependent services:
+2. Stop and clean the chain with all dependent services:
     ```bash
     stopAndCleanSovereign
     ```
 
 ## Upgrade local Sovereign Chain
 
-1. You should be in the follwing folder:
-    ```bash
-    /mx-chain-go/scripts/testnet/sovereignBridge
-    ```
+1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
 
-2. Source the script:
+    Source the script:
     ```bash
     source script.sh
     ```
 
-3. Upgrade and restart Sovereign chain and all dependent services:
+2. Upgrade and restart Sovereign chain and all dependent services:
     ```bash
     sovereignUpgradeAndRestart
     ```
 
 ## Restart local Sovereign Chain
 
-1. You should be in the follwing folder:
-    ```bash
-    /mx-chain-go/scripts/testnet/sovereignBridge
-    ```
+1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
 
-2. Source the script:
+    Source the script:
     ```bash
     source script.sh
     ```

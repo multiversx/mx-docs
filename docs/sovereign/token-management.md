@@ -2,12 +2,9 @@
 
 ## Main Chain -> Sovereign Chain
 
-1. You should be in the follwing folder:
-    ```bash
-    /mx-chain-go/scripts/testnet/sovereignBridge
-    ```
+1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
 
-2. Update the configuration file `config/configs.cfg` with the token settings you prefer. Example:
+    Update the configuration file `config/configs.cfg` with the token settings you prefer. Example:
     ```ini
     # Issue Main Chain Token Settings
     TOKEN_TICKER=TKN
@@ -33,12 +30,9 @@
 
 ## Sovereign Chain -> Main Chain
 
-1. You should be in the follwing folder:
-    ```bash
-    /mx-chain-go/scripts/testnet/sovereignBridge
-    ```
+1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
 
-2. Update the configuration file `config/configs.cfg` with the sovereign token settings you prefer. Example:
+    Update the configuration file `config/configs.cfg` with the sovereign token settings you prefer. Example:
     ```ini
     # Issue Sovereign Token Settings
     TOKEN_TICKER_SOVEREIGN=SVN
@@ -47,12 +41,12 @@
     INITIAL_SUPPLY_SOVEREIGN=333222111
     ```
 
-3. Source the script:
+2. Source the script:
     ```bash
     source script.sh
     ```
 
-4. Issue a new token on the local sovereign chain:
+3. Issue a new token on the local sovereign chain:
     ```bash
     issueTokenSovereign
     ```
