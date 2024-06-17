@@ -23,20 +23,37 @@ Each module should have a maximum of 200-300 lines. If you ever need more than t
 
 ## Function Size
 
-Each function should be 30-50 lines. Any more than that and it's really hard to navigate the file. 
+Each function should be ~30 lines. Any more than that and it's really hard to navigate the file. 
 
 ## Code Placement
 
-The lib.rs file should contain only the init and upgrade functions most of the time. Sometimes it's tempting to bundle a bunch of unrelated functions there, but don't. You'll end up with a lib.rs file of 500 lines. 
+The `lib.rs` file should contain only the `init` and `upgrade` functions most of the time. Sometimes it's tempting to bundle a bunch of unrelated functions there, but don't. You'll end up with an unreasonably large `lib.rs` file. 
 
 ## Module Placement
 
-Each module can be placed in its own folder along with other related modules. Sure, splitting the code is nice, but having to navigate through 20 files, all at the level of lib.rs, doesn't help at all. This makes it even easier to search for specific features. 
+Each module can be placed in its own folder along with other related modules. Sure, splitting the code is nice, but having to navigate through a large number of files, all at the level of `lib.rs`, might be cumbersome. This makes it even easier to search for specific features. 
 
 ## Error Messages
 
 If you have the same error message in multiple places, it's better to declare a static with the message and use that instead of copy-pasting the message. If you have the same condition too, consider having a separate `require_X` function. 
 
+Example:
+```
+pub static TOO_MANY_ARGS_ERR_MSG: &[u8] = b"Too many arguments";
+
+#[endpoint(myEndpoint)]
+fn my_endpoint(&self, args: MultiValueEncoded<ManagedBuffer>) {
+    require!(args.len() < 10, TOO_MANY_ARGS_ERR_MSG);
+}
+```
+
+or:
+```
+fn require_less_than_max_args(&self, args: &MultiValueEncoded<ManagedBuffer>) {
+    require!(args.len() < 10, "Too many arguments");
+}
+```
+
 ## Small PRs
 
-Unless you're mass-upgrading everything, in which case you really have no other choice, it's much better to keep your PRs focused on one specific task. Also much easier for reviewers to spot issues instead of simply giving you a green and moving on. 
+Unless you're mass-upgrading everything, in which case you really have no other choice, it's much better to keep your PRs focused on one specific task. Also much easier for reviewers to spot issues.
