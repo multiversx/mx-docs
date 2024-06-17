@@ -494,9 +494,9 @@ parsed_outcome = parser.parse_deploy(transaction_outcome)
 print(parsed_outcome)
 ```
 
-### Contract upgrades
+## Contract upgrades
 
-Contract upgrade transactions are similar to deployment transactions, in the sense that they also require a contract bytecode. In this context, though, the contract address is already known.
+Contract upgrade transactions are similar to deployment transactions (see above), in the sense that they also require a contract bytecode. In this context, though, the contract address is already known.
 
 ```py
 contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
