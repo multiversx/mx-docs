@@ -10,7 +10,7 @@ EGLD is the native cryptocurrency of MultiversX, functioning as digital, global 
 - **Ownership:** EGLD allows you to be your own bank, with full control over your funds.
 - **Security:** Protected by cryptography, exists under your own account, ensuring the safety of your funds and transactions.
 - **Decentralized:** No central authority controls EGLD, making it a truly decentralized currency.
-- **Accessibility:** All you need is an internet connection and a wallet to use EGLD. Forget about banks.
+- **Accessibility:** All you need is an internet connection and a wallet to use EGLD.
 - **Flexibility:** EGLD can be divided into small units(as small as 0.000000000000000001), allowing for transactions of any size.
 - **Payments:** Sending EGLD without any intermediary, everything directly on-chain, is like being face-to-face and handing cash over.
 
