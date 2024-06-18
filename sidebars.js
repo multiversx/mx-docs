@@ -30,9 +30,9 @@ const sidebars = {
    */
 
   docs: {
-    "Welcome": ["welcome/welcome-to-multiversx"],
+    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
     "Learn about MultiversX": [
-      "welcome/welcome-to-multiversx",
+      "learn/multiversx-ecosystem",
       "learn/EGLD",
       "learn/architecture-overview",
       "learn/entities",
@@ -397,20 +397,25 @@ const sidebars = {
     ],
     Validators: [
       "validators/overview",
-      "validators/staking-v4",
       "validators/system-requirements",
       {
         type: "category",
-        label: "Setup",
+        label: "Install a Node",
         items: [
           "validators/nodes-scripts/config-scripts",
           "validators/nodes-scripts/install-update",
         ],
       },
-      "validators/node-upgrades",
       {
         type: "category",
-        label: "Nodes Management",
+        label: "Upgrade a Node",
+        items: [
+          "validators/node-upgrades",
+        ],
+      },
+      {
+        type: "category",
+        label: "Manage a Node",
         items: [
           "validators/nodes-scripts/manage-node",
           "validators/nodes-scripts/use-docker",
@@ -421,14 +426,8 @@ const sidebars = {
           "validators/import-db",
           "validators/node-cli",
           "validators/node-databases",
-          "validators/useful-links",
-        ],
-      },
-      {
-        type: "category",
-        label: "Staking, Unstaking, Unjailing",
-        items: [
           "validators/staking/staking",
+          "validators/staking-v4",
           "validators/staking/unjailing",
           "validators/staking/staking-smart-contract",
         ],
@@ -438,8 +437,8 @@ const sidebars = {
         label: "The Delegation Manager",
         items: [
           "validators/delegation-manager",
-          "validators/delegation-dashboard",
-          "validators/staking/convert-existing-validator-into-staking-pool",
+          "economics/staking-providers-apr",
+          "validators/staking/convert-existing-validator-into-staking-provider",
           "validators/staking/merge-validator-delegation-sc",
         ],
       },
@@ -455,10 +454,9 @@ const sidebars = {
       },
       {
         type: "category",
-        label: "FAQs and tools",
+        label: "FAQs and Tools",
         items: ["validators/faq", "validators/useful-links"],
       },
-      "economics/staking-providers-apr"
     ],
     Integrators: [
       "integrators/overview",
