@@ -40,14 +40,14 @@ const FeatureList = [
     title: "Create a Token",
     content:
       "Issue your own ESDT token, MultiversX's improved equivalent of ERC-20.",
-    docName: "tokens/overview",
+    docName: "tokens/intro",
     icon: "🔷",
   },
   {
     title: "Learn How MultiversX Works",
     content:
       "Explore Adaptive state sharding, Secure Proof of Stake, and the MultiversX WASM VM.",
-    docName: "technology/architecture-overview",
+    docName: "learn/architecture-overview",
     icon: "🔬",
   },
 ];
