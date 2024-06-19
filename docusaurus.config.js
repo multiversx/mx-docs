@@ -200,6 +200,50 @@ const config = {
       {
         redirects: [
           {
+            from: "/technology/glossary",
+            to: "/welcome/terminology",
+          },
+          {
+            from: "/technology/architecture-overview",
+            to: "/learn/architecture-overview",
+          },
+          {
+            from: "/technology/secure-proof-of-stake",
+            to: "/learn/consensus",
+          },
+          {
+            from: "/technology/chronology",
+            to: "/learn/chronology",
+          },
+          {
+            from: "/technology/entities",
+            to: "/learn/entities",
+          },
+          {
+            from: "/technology/adaptive-state-sharding",
+            to: "/learn/sharding",
+          },
+          {
+            from: "/technology/cross-shard-transactions",
+            to: "/learn/transactions",
+          },
+          {
+            from: "/economics",
+            to: "/learn/economics",
+          },
+          {
+            from: "/tokens/esdt-tokens",
+            to: "/tokens/fungible-tokens",
+          },
+          {
+            from: "/tokens/overview",
+            to: "/tokens/intro",
+          },
+          {
+            from: "/validators/staking/convert-existing-validator-into-staking-pool",
+            to: "/validators/staking/convert-existing-validator-into-staking-provider",
+          },
+          {
             from: "/sdk-and-tools/rest-api/api-com/",
             to: "/sdk-and-tools/rest-api/multiversx-api/",
           },
