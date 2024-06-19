@@ -11,7 +11,7 @@ EGLD is the native cryptocurrency of MultiversX, functioning as digital, global 
 - **Security:** Protected by cryptography, exists under your own account, ensuring the safety of your funds and transactions.
 - **Decentralized:** No central authority controls EGLD, making it a truly decentralized currency.
 - **Accessibility:** All you need is an internet connection and a wallet to use EGLD.
-- **Flexibility:** EGLD can be divided into small units(as small as 0.000000000000000001), allowing for transactions of any size.
+- **Flexibility:** EGLD can be divided into small units (as small as 0.000000000000000001), allowing for transactions of any size.
 - **Payments:** Sending EGLD without any intermediary, everything directly on-chain, is like being face-to-face and handing cash over.
 
 ### Unique Aspects of EGLD
@@ -50,3 +50,7 @@ You can earn EGLD, receive it from your peers, friends or buy it from exchanges 
 - **Wallets**: [xPortal](https://xportal.com/) wallet lets you buy EGLD with a debit/credit card, directly from the dApp.
 - **Staking Rewards**: You can [play the role](/docs/learn/entities.md) of a delegator (user) or validator (node operator) and start earning EGLD by delegating to a staking provider or by simply [running a validator node](/docs/validators/delegation-manager.mdx).
 - **Earn EGLD:** You can earn EGLD by participating in [hackathons, campaigns, coding challenges](https://multiversx.com/events), airdrops, bug bounties etc.
+
+:::note
+To interact with the [Testnet](https://testnet-explorer.multiversx.com/) or [Devnet](https://devnet-explorer.multiversx.com/), you'll need xEGLD, which can be obtained from one of the available [faucets](/docs/wallet/web-wallet.md#testnet-and-devnet-faucet).
+:::

@@ -21,12 +21,12 @@ With **MultiversX**, you can explore a vast ecosystem of applications or develop
 
 MultiversX is a distributed transactional computation protocol that relies on a sharded state architecture and a [Secure Proof of Stake](/docs/learn/consensus.md) consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, MultiversX runs on [average computers](/docs/validators/system-requirements.md).
 
-By employing [_sharding_](/docs/lea), a method of parallelizing data & transactions processing, MultiversX’s performance will scale up with the number of computers joining the network, reaching more than 100.000 transactions per second while growing increasingly decentralized.
+By employing [_sharding_](/docs/learn/sharding.md), a method of parallelizing data & transactions processing, MultiversX’s performance will scale up with the number of computers joining the network, reaching more than 100,000 transactions per second while growing increasingly decentralized.
 
 :::important
 **What is a blockchain?**
 
-A blockchain is a database of transactions that is continually updated and shared across numerous computers in a network. Each new set of transactions is grouped into a "block," which is added to the chain of previous transactions, hence the name blockchain. Public blockchains like MultiversX enable anyone to add data, but not remove it (**immutable**). To alter any information or manipulate the system, one would need to compromise the majority of computers on the network, which is an incredibly challenging task. This inherent difficulty makes decentralized blockchains like MultiversX highly secure and trustworthy.
+A blockchain is a database of transactions that is continually updated and shared across numerous computers in a network. Each new set of transactions is grouped into a "block," which is added to the chain of previous blocks, hence the name blockchain. Public blockchains like MultiversX enable anyone to add data, but not remove it (**immutable**). To alter any information or manipulate the system, one would need to compromise the majority of computers on the network, which is an incredibly challenging task. This inherent difficulty makes decentralized blockchains like MultiversX highly secure and trustworthy.
 :::
 
 [comment]: # (mx-context-auto)
@@ -54,6 +54,6 @@ With transaction costs averaging just $0.002, MultiversX allows anyone to send v
 - **Sovereign Chain: **+78,000 TPS, 1s latency
 - xPortal App: buy, store, earn, pay EGLD, BTC, ETH, BNB
 - Smart Contracts, Staking & Delegation, Tokens
-- Validated through multiple audits from Trial of Bits, RuntimeVerification, Certik & others
+- Validated through multiple audits from Trail of Bits, RuntimeVerification, Certik & others
 
 The official roadmap can be found here: https://multiversx.com/roadmap

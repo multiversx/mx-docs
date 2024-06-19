@@ -30,8 +30,9 @@ const sidebars = {
    */
 
   docs: {
-    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
+    "Welcome to MultiversX":["welcome/welcome-to-multiversx"],
     "Learn about MultiversX": [
+      "learn/getting-started",
       "learn/multiversx-ecosystem",
       "learn/EGLD",
       "learn/architecture-overview",
