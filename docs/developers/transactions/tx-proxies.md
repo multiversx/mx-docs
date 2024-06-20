@@ -142,6 +142,7 @@ add-unlabelled = false
 add-labels = ["proxy_one"]
 add-endpoints = ["user_role"]
 ```
+
 [comment]: # (mx-context-auto)
 
 ## Adjustments in contracts
@@ -170,6 +171,8 @@ pub enum Status {
 If the custom type is in a private module or another crate is better to replace it because the proxy will be useless.
 
 
+[comment]: # (mx-context-auto)
+
 ## Diagram
 
 This is the diagram for how to populate the data field using proxies. For the raw setup, see [here](tx-data#diagram)
@@ -190,8 +193,18 @@ graph LR
         upgrade -->|code_metadata| upgrade
     end
 ```
+
+
+[comment]: # (mx-context-auto)
+
 ## Original type
-Proxies have the power to define the **original type** by themselves because, when they are generated, they have access to the ABI. The return type of each function from proxy is the originally defined within the smart contract.
+
+Proxies have the power to define the **original type** by themselves because, when they are generated, they have access to the ABI.
+
+The proxy will add the type definition by calling `.original_type()`, which places an [`OriginalResultMarker`](tx-result-handlers#original-result-marker) object as the transaction result handler. This is a zero-sized type, it is only there for type inference and safety in result handlers.
+
+
+[comment]: # (mx-context-auto)
 
 ## NotPayable protection
 
