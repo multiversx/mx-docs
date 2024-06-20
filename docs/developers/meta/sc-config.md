@@ -48,6 +48,16 @@ lto = true
 debug = false
 panic = "abort"
 overflow-checks = false
+
+[[proxy]]
+path = "src/main_proxy.rs"
+override-import = "use new::overide::path"
+add-unlabelled=false
+add-labels=["label_one"]
+add-endpoints=["endpoint_one"]
+[[proxy.path-rename]]
+from = "main"
+to = "new::main"
 ```
 
 The settings are as follows:
@@ -130,8 +140,35 @@ The settings are as follows:
     - _values_: `true` | `false`
     - _default_: `false`
 - `proxy`
-  - Customise the proxy. More details [HERE](../transactions/tx-proxies#how-to-set-up-project-to-re-generate-easily)
-
+  - Sets custom configuration for a generated proxy. More details about proxies are available [here](../../transactions/tx-proxies#how-to-set-up-project-to-re-generate-easily)
+  - `path`
+    - Set the output path where the generated proxy will be saved.
+    - _values_: `String`
+    - _default_: `"output/proxy.rs"`
+  - `override-import`
+    - Override the proxy imports: `use multiversx_sc::proxy_imports::*;`.
+    - _values_: `String`
+    - _default_: `""`
+  - `path-rename`
+    - Rename paths from structures and enumerations in generated proxy.
+    - _values_:
+      - `from`: `String`
+      - `to`: `String`    
+    - _default_:
+      - `from`: `""`
+      - `to`: `""`
+  - `add-unlabelled`
+    - Specifies that all unlabelled endpoints should be added in the proxy.
+    - _values_: `true` | `false`
+    - _default_: `true`
+  - `add-labels`
+    - Endpoints labelled with at least one of these tags are added to the proxy.
+    - _values_: a list of string labels, e.g. `add-labels = ["label1", "label2"]`
+    - _default_: `[]`
+  - `add-endpoints`
+    - A proxy generated only with the endpoints specified in the list.
+    - _values_: a list of endpoint names, e.g. `add-endpoints = ["endpoint_one", "endpoint_two"]`
+    - _default_: `[]`
 ---
 
 [comment]: # (mx-context-auto)
@@ -164,6 +201,16 @@ allocator = "fail"
 stack-size = "2 pages"
 features = []
 kill-legacy-callback = false
+
+[[proxy]]
+path = "output/proxy.rs"
+override-import = ""
+add-unlabelled = true
+add-labels = []
+add-endpoints = []
+[[proxy.path-rename]]
+from = ""
+to = ""
 ```
 
 ---
@@ -249,6 +296,10 @@ add-labels = ["multisig-external-view"]
 name = "multisig-full"
 add-unlabelled = true
 add-labels = ["multisig-external-view"]
+
+[[proxy]]
+variant = "full"
+path = "src/full_proxy.rs"
 ```
 
 [comment]: # (mx-context-auto)
@@ -318,7 +369,7 @@ An _external view contract_ has a behavior different from that of a regular cont
     - It bypasses the label system.
     - Can be useful if for some reason labels are missing in code or deemed too cumbersome.
     - Use the public endpoint names, not the Rust function names.
-    - _values_: a list of endpoint names, e.g. `add-labels = ["myEndpoint1", "myEndpoint1"]`
+    - _values_: a list of endpoint names, e.g. `add-endpoints = ["myEndpoint1", "myEndpoint1"]`
     - _default_: `[]`
 - `labels-for-contracts`
     - Currently not used in any of our projects, probably better to stay away from this feature. Providing documentation for reference, anyway.
@@ -326,6 +377,11 @@ An _external view contract_ has a behavior different from that of a regular cont
     - It can be a little harder to read than the contract to label map, but it can be used.
     - There is a special key, `default`, which refers to the unlabelled endpoints.
     - Example, equivalent to the labels in :
+- `proxy`
+  - `variant`
+    - Generates a proxy for a specific variant
+    - _value_: `String`
+    - _default_: `main_contract`
 
 ```toml
 [settings]
