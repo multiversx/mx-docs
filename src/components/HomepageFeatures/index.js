@@ -18,6 +18,12 @@ const FeatureList = [
     icon: "🛠️",
   },
   {
+    title: "Sovereign Chains",
+    content: "Discover and deploy your Sovereign Chain.",
+    docName: "sovereign/overview",
+    icon: "⛓️",
+  },
+  {
     title: "Run a Validator Node",
     content: "Validate transactions, secure the network, and earn rewards.",
     docName: "validators/overview",

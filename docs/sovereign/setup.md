@@ -56,7 +56,12 @@ First navigate to the sovereignBridge folder:
 cd sovereignBridge
 ```
 
-1. Update the configuration file `config/configs.cfg` with paths you want to use, wallet location and main chain constants. Example:
+1. Install the [software dependencies](/sovereign/software-dependencies) and download the cross-chain contracts by running the Sovereign bridge prerequisites script:
+    ```bash
+    ./prerequisites.sh
+    ```
+
+2. Update the configuration file `config/configs.cfg` with paths you want to use, wallet location and main chain constants. Example:
     ```ini
     # Sovereign Paths
     SOVEREIGN_DIRECTORY="~/sovereign"
@@ -82,14 +87,9 @@ cd sovereignBridge
     - **"T"** for Testnet;
 :::
 
-2. Source the script:
+3. Source the script:
     ```bash
     source script.sh
-    ```
-
-3. Install the [software dependencies](/sovereign/software-dependencies) and download the cross-chain contracts by running the Sovereign bridge prerequisites:
-    ```bash
-    runBridgePrerequisites
     ```
 
 4. Deploy all cross-chain contracts on main chain and deploy sovereign chain with all dependent services:
@@ -150,38 +150,43 @@ cd sovereignBridge
     setEsdtSafeAddressInHeaderVerifier
     ```
 
-5. Start the bridge service, start sovereign nodes and deploy the observer:
+5. Create Docker container for the Observer:
+    ```bash
+    createObserver
+    ```
+
+6. Start the bridge service, start sovereign nodes and deploy the observer:
     ```bash
     sovereignStart
     ```
 
-6. Set the multisig address in ESDT safe on testnet:
+7. Set the multisig address in ESDT safe on testnet:
     ```bash
     setHeaderVerifierAddressInEsdtSafe
     ```
 
-7. Get funds in your wallet from a genesis wallet:
+8. Get funds in your wallet from a genesis wallet:
     ```bash
     getFundsInAddressSovereign
     ```
 
-8. Set the fee market address in sovereign:
+9. Set the fee market address in sovereign:
     ```bash
     setFeeMarketAddressSovereign
     ```
 
-9. Disable the fee market contract in sovereign:
+10. Disable the fee market contract in sovereign:
     ```bash
     disableFeeMarketContractSovereign
     ```
 
-10. Unpause the ESDT safe contract in sovereign:
+11. Unpause the ESDT safe contract in sovereign:
     ```bash
     unpauseEsdtSafeContractSovereign
     ```
 :::
 
-## Stop local Sovereign Chain
+## Stop and clean local Sovereign Chain
 
 1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
 
@@ -195,7 +200,7 @@ cd sovereignBridge
     stopAndCleanSovereign
     ```
 
-## Upgrade local Sovereign Chain
+## Upgrade and reset local Sovereign Chain
 
 1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
 
@@ -204,9 +209,9 @@ cd sovereignBridge
     source script.sh
     ```
 
-2. Upgrade and restart Sovereign chain and all dependent services:
+2. Upgrade and reset Sovereign chain and all dependent services:
     ```bash
-    sovereignUpgradeAndRestart
+    sovereignUpgradeAndReset
     ```
 
 ## Restart local Sovereign Chain
