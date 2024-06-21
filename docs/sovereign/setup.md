@@ -56,7 +56,7 @@ First navigate to the sovereignBridge folder:
 cd sovereignBridge
 ```
 
-1. Install the [software dependencies](/sovereign/software-dependencies) and download the cross-chain contracts by running the Sovereign bridge prerequisites script:
+1. Install the [software dependencies](/sovereign/software-dependencies) and download the cross-chain contracts by running the sovereign bridge prerequisites script:
     ```bash
     ./prerequisites.sh
     ```
@@ -96,95 +96,6 @@ cd sovereignBridge
     ```bash
     deploySovereignWithCrossChainContracts
     ```
-
-:::note
-## Alternatively, you can deploy everything manually step-by-step:
-### Deploy contracts and update sovereign configs:
-1. Deploy cross-chain contracts on main chain:
-    ```bash
-    deployEsdtSafeContract 
-    deployFeeMarketContract
-    setFeeMarketAddress
-    disableFeeMarketContract
-    unpauseEsdtSafeContract
-    ```
-
-2. This instruction will copy the wasm files in the right location and update the genesis smart contracts:
-    ```bash
-    setGenesisContract
-    ```
-
-3. This instruction will update sovereignConfig.toml file: (Outgoing subscribed events deposit address will be esdt-safe address from sovereign chain. Notifier config subscribed events will come from esdt-safe address from main chain.)
-    ```bash
-    updateSovereignConfig
-    ```
-
-4. Prepare a docker container for the observer:
-    ```bash
-    prepareObserver
-    ```
-    alternatively, use a specific image version
-    ```bash
-    prepareObserver multiversx/chain-testnet:T1.7.4.0
-    ```
-
-### Deploy Sovereign Chain & Contracts
-
-1. Update the notifier notarization round configuration (the observer will notarize blocks from current nonce, not from genesis of main chain):
-    ```bash
-    updateNotifierNotarizationRound
-    ```
-
-2. Run the configuration script:
-    ```bash
-    ../config.sh
-    ```
-
-3. Deploy the multisig verifier contract on testnet:
-    ```bash
-    deployHeaderVerifierContract
-    ```
-
-4. Set the ESDT safe address in the multisig contract on testnet:
-    ```bash
-    setEsdtSafeAddressInHeaderVerifier
-    ```
-
-5. Create Docker container for the Observer:
-    ```bash
-    createObserver
-    ```
-
-6. Start the bridge service, start sovereign nodes and deploy the observer:
-    ```bash
-    sovereignStart
-    ```
-
-7. Set the multisig address in ESDT safe on testnet:
-    ```bash
-    setHeaderVerifierAddressInEsdtSafe
-    ```
-
-8. Get funds in your wallet from a genesis wallet:
-    ```bash
-    getFundsInAddressSovereign
-    ```
-
-9. Set the fee market address in sovereign:
-    ```bash
-    setFeeMarketAddressSovereign
-    ```
-
-10. Disable the fee market contract in sovereign:
-    ```bash
-    disableFeeMarketContractSovereign
-    ```
-
-11. Unpause the ESDT safe contract in sovereign:
-    ```bash
-    unpauseEsdtSafeContractSovereign
-    ```
-:::
 
 ## Stop and clean local Sovereign Chain
 
