@@ -73,7 +73,7 @@ const sidebars = {
               "developers/developer-reference/upgrading-smart-contracts",
               "developers/developer-reference/sc-api-functions",
               "developers/developer-reference/storage-mappers",
-              "developers/developer-reference/messages",
+              "developers/developer-reference/sc-messages",
               "developers/developer-reference/sc-random-numbers",
             ],
           },

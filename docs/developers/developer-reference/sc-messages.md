@@ -1,5 +1,5 @@
 ---
-id: messages
+id: sc-messages
 title: Messages
 ---
 
