@@ -118,7 +118,7 @@ Rating for proposers is even stricter: there is a compounding penalty rule, whic
 
 The amount of `0.92592` points is deducted from the rating of the proposer on the first unsuccesful proposal, but the second unsuccessful proposal will be penalized by `0.92592 × 1.1`. The third, by `0.92592 × 1.1 × 1.1`. The general formula is:
 
-0.92592 × 1.1^{cfp-1}0.92592×1.1^cfp^−1
+0.92592 × 1.1^\{cfp-1}0.92592×1.1^cfp^−1
 
 where `cfp` is the number of consecutive failed proposals.
 
