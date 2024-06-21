@@ -35,7 +35,7 @@ pip install multiversx-sdk
 
 ### tmux
 :::note
-Installing tmux is optional if the deploy scripts are edited to not depend on it.
+If you want to use tmux (which is the default configuration), you should install it.
 :::
 To install tmux, use the following command:
 ```
