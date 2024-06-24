@@ -142,8 +142,8 @@ The **transaction factory** is parametrized at instantiation, and the transactio
 from multiversx_sdk import TransferTransactionsFactory
 
 transfer_factory = TransferTransactionsFactory(config=config)
-alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
 # With "data" field
 transaction = transfer_factory.create_transaction_for_native_token_transfer(
@@ -281,7 +281,7 @@ inner_tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(
 
 config = TransactionsFactoryConfig(chain_id="D")
 factory = RelayedTransactionsFactory(config=config)
-relayer = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+relayer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
 relayed_tx = factory.create_relayed_v1_transaction(
     inner_transaction=inner_tx,
@@ -317,7 +317,7 @@ inner_tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(
 
 config = TransactionsFactoryConfig(chain_id="D")
 factory = RelayedTransactionsFactory(config=config)
-relayer = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+relayer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
 relayed_tx = factory.create_relayed_v2_transaction(
     inner_transaction=inner_tx,
@@ -329,22 +329,113 @@ relayed_tx.nonce = 37
 print(transaction_converter.transaction_to_dictionary(relayed_tx))
 ```
 
-## Contract deployments and interactions
+## Contract ABIs
 
-Create a transaction to deploy a smart contract:
+A contract's ABI describes the endpoints, data structure and events that a contract exposes. While contract interactions are possible without the ABI, they are easier to implement when the definitions are available.
+
+### Load the ABI from a file
+
+```py
+from multiversx_sdk.abi import Abi, AbiDefinition
+
+abi_definition = AbiDefinition.load(Path("./contracts/adder.abi.json"))
+abi = Abi(abi_definition)
+```
+
+Or even simpler:
+
+```py
+abi = Abi.load(Path("./contracts/adder.abi.json"))
+```
+
+### Manually construct the ABI
+
+If an ABI file isn't directly available, but you do have knowledge of the contract's endpoints and types, you can manually construct the ABI. Let's see a simple example:
+
+```py
+abi_definition = AbiDefinition.from_dict({
+    "endpoints": [{
+        "name": "add",
+        "inputs": [
+            {
+                "name": "value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    }]
+})
+```
+
+An endpoint with both inputs and outputs:
+
+```py
+abi_definition = AbiDefinition.from_dict({
+    "endpoints": [
+        {
+            "name": "foo",
+            "inputs": [
+                { "type": "BigUint" },
+                { "type": "u32" },
+                { "type": "Address" }
+            ],
+            "outputs": [
+                { "type": "u32" }
+            ]
+        },
+        {
+            "name": "bar",
+            "inputs": [
+                { "type": "counted-variadic<utf-8 string>" },
+                { "type": "variadic<u64>" }
+            ],
+            "outputs": []
+        }
+    ]
+})
+```
+
+## Contract deployments
+
+### Load the bytecode from a file
 
 ```py
 from pathlib import Path
 
+bytecode = Path("contracts/adder.wasm").read_bytes()
+```
+
+### Perform a contract deployment
+
+First, let's create a `SmartContractTransactionsFactory`:
+
+```py
 from multiversx_sdk import SmartContractTransactionsFactory
 
-sc_factory = SmartContractTransactionsFactory(config)
-bytecode = Path("./data/counter.wasm").read_bytes()
+factory = SmartContractTransactionsFactory(config)
+```
 
-deploy_transaction = sc_factory.create_transaction_for_deploy(
+If the contract ABI is available, provide it to the factory:
+
+```py
+abi = Abi.load(Path("contracts/adder.abi.json"))
+factory = SmartContractTransactionsFactory(config, abi)
+```
+
+Now, prepare the deploy transaction:
+
+```py
+from multiversx_sdk.abi import U32Value
+
+# For deploy arguments, use typed value objects if you haven't provided an ABI to the factory:
+args = [U32Value(42)]
+# Or use simple, plain Python values and objects if you have provided an ABI to the factory:
+args = [42]
+
+deploy_transaction = factory.create_transaction_for_deploy(
     sender=alice,
     bytecode=bytecode,
-    arguments=[42, "test"],
+    arguments=args,
     gas_limit=10000000,
     is_upgradeable=True,
     is_readable=True,
@@ -356,18 +447,67 @@ print("Transaction:", transaction_converter.transaction_to_dictionary(deploy_tra
 print("Transaction data:", deploy_transaction.data.decode())
 ```
 
-Create a transaction to upgrade an existing smart contract:
+:::tip
+When creating transactions using `SmartContractTransactionsFactory`, even if the ABI is available and provided,
+you can still use _typed value_ objects as arguments for deployments and interactions.
+
+Even further, you can use a mix of _typed value_ objects and plain Python values and objects. For example:
+```
+args = [U32Value(42), "hello", { "foo": "bar" }, TokenIdentifierValue("TEST-abcdef")];
+```
+:::
+
+:::note
+Setting the transaction nonce, signing a transaction and broadcasting it are depicted in a later section.
+:::
+
+### Computing the contract address
+
+Even before broadcasting, at the moment you know the sender address and the nonce for your deployment transaction, you can (deterministically) compute the (upcoming) address of the contract:
 
 ```py
-contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
-bytecode = Path("./data/counter.wasm").read_bytes()
+from multiversx_sdk import AddressComputer
 
-upgrade_transaction = sc_factory.create_transaction_for_upgrade(
+address_computer = AddressComputer()
+contract_address = address_computer.compute_contract_address(
+    deployer=Address.new_from_bech32(deploy_transaction.sender),
+    deployment_nonce=deploy_transaction.nonce
+)
+
+print("Contract address:", contract_address.to_bech32())
+```
+
+### Parsing transaction outcome
+
+In the end, you can parse the results using a `SmartContractTransactionsOutcomeParser`. However, since the `parse_deploy` method requires a `TransactionOutcome` object as input, we need to first convert our `TransactionOnNetwork` object to a `TransactionOutcome`, by means of a `TransactionsConverter`.
+
+```py
+from multiversx_sdk import SmartContractTransactionsOutcomeParser, TransactionsConverter
+
+converter = TransactionsConverter()
+parser = SmartContractTransactionsOutcomeParser()
+
+transaction_on_network = proxy.get_transaction("0a7da74038244790b5bd4cd614c26cd5a6be76a6fcfcfb037974cc116b2ee9c6")
+transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
+parsed_outcome = parser.parse_deploy(transaction_outcome)
+
+print(parsed_outcome)
+```
+
+## Contract upgrades
+
+Contract upgrade transactions are similar to deployment transactions (see above), in the sense that they also require a contract bytecode. In this context, though, the contract address is already known.
+
+```py
+contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+bytecode = Path("./contracts/adder.wasm").read_bytes()
+
+upgrade_transaction = factory.create_transaction_for_upgrade(
     sender=alice,
     contract=contract_address,
     bytecode=bytecode,
     gas_limit=10000000,
-    arguments=[42, "test"],
+    arguments=[42],
     is_upgradeable=True,
     is_readable=True,
     is_payable=True,
@@ -378,24 +518,81 @@ print("Transaction:", transaction_converter.transaction_to_dictionary(upgrade_tr
 print("Transaction data:", upgrade_transaction.data.decode())
 ```
 
-Create a transaction that invokes a smart contract function:
+## Contract interactions
+
+The recommended way to create transactions for calling (and, for that matter, deploying and upgrading) smart contracts is through a `SmartContractTransactionsFactory`.
 
 ```py
-contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+from multiversx_sdk import SmartContractTransactionsFactory
 
-call_transaction = sc_factory.create_transaction_for_execute(
-    sender=alice,
-    contract=contract_address,
-    function="foo",
-    gas_limit=10000000,
-    arguments=[42, "test"]
-)
-
-print("Transaction:", transaction_converter.transaction_to_dictionary(call_transaction))
-print("Transaction data:", call_transaction.data.decode())
+factory = SmartContractTransactionsFactory(config)
 ```
 
-Now, let's create a call that also transfers one or more tokens (**transfer & execute**):
+If the contract ABI is available, provide it to the factory:
+
+```py
+abi = Abi.load(Path("contracts/adder.abi.json"))
+factory = SmartContractTransactionsFactory(config, abi)
+```
+
+### Regular interactions
+
+Now, let's prepare a contract transaction, to call the `add` function of our previously deployed smart contract:
+
+```py
+contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy")
+
+# For arguments, use typed value objects if you haven't provided an ABI to the factory:
+args = [U32Value(42)]
+# Or use simple, plain Python values and objects if you have provided an ABI to the factory:
+args = [42]
+
+transaction = factory.create_transaction_for_execute(
+    sender=alice,
+    contract=contract_address,
+    function="add",
+    gas_limit=10000000,
+    arguments=args
+)
+
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
+```
+
+:::tip
+When creating transactions using `SmartContractTransactionsFactory`, even if the ABI is available and provided,
+you can still use _typed value_ objects as arguments for deployments and interactions.
+
+Even further, you can use a mix of _typed value_ objects and plain Python values and objects. For example:
+```
+args = [U32Value(42), "hello", { "foo": "bar" }, TokenIdentifierValue("TEST-abcdef")];
+```
+:::
+
+:::note
+Setting the transaction nonce, signing a transaction and broadcasting it are depicted in a later section.
+:::
+
+### Transfer & execute
+
+At times, you may want to send some tokens (native EGLD or ESDT) along with the contract call.
+
+For transfer & execute with native EGLD, prepare your transaction as follows:
+
+```py
+transaction = factory.create_transaction_for_execute(
+    sender=alice,
+    contract=contract_address,
+    function="add",
+    gas_limit=10000000,
+    arguments=[42],
+    native_transfer_amount=1000000000000000000
+)
+```
+
+Above, we're sending 1 EGLD along with the contract call.
+
+For transfer & execute with ESDT tokens, prepare your transaction as follows:
 
 ```py
 first_token = Token("TEST-38f249", 1)
@@ -406,31 +603,70 @@ second_transfer = TokenTransfer(second_token, 10000000000000000000)
 
 transfers = [first_transfer, second_transfer]
 
-call_transaction = sc_factory.create_transaction_for_execute(
+transaction = factory.create_transaction_for_execute(
     sender=alice,
     contract=contract_address,
-    function="hello",
+    function="add",
     gas_limit=10000000,
-    arguments=[42, "test"],
+    arguments=[42],
     token_transfers=transfers
 )
 
-print("Transaction:", transaction_converter.transaction_to_dictionary(call_transaction))
-print("Transaction data:", call_transaction.data.decode())
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
 ```
+
+### Parsing transaction outcome
+
+:::note
+Documentation in this section is preliminary and subject to change.
+:::
+
+### Decode transaction events
+
+:::note
+Documentation in this section is preliminary and subject to change.
+:::
 
 ## Contract queries
 
-In order to create a contract query and run it (more details about **network providers** can be found below), do as follows:
+In order to perform Smart Contract queries, we recommend the use of `SmartContractQueriesController`.
+
+You will notice that the `SmartContractQueriesController` requires a `QueryRunner` object at initialization. A `NetworkProvider`, slighly adapted, is used to satisfy this requirement (more details about **network providers** can be found in a later section).
 
 ```py
 from multiversx_sdk import (ProxyNetworkProvider, QueryRunnerAdapter,
                             SmartContractQueriesController)
 
-contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4")
+contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4")
 query_runner = QueryRunnerAdapter(ProxyNetworkProvider("https://devnet-api.multiversx.com"))
 
 query_controller = SmartContractQueriesController(query_runner)
+
+```
+
+If the contract ABI is available, provide it to the controller:
+
+```py
+abi = Abi.load(Path("contracts/adder.abi.json"))
+query_controller = SmartContractQueriesController(query_runner, abi)
+```
+
+Query the contract as follows:
+
+```py
+data_parts = query_controller.query(
+    contract=contract.to_bech32(),
+    function="getSum",
+    arguments=[],
+)
+
+print("Return data (parsed):", data_parts)
+```
+
+For finer control, first create a contract query, then run it and parse the outcome at a later time:
+
+```py
 query = query_controller.create_query(
     contract=contract.to_bech32(),
     function="getSum",
@@ -438,9 +674,11 @@ query = query_controller.create_query(
 )
 
 response = query_controller.run_query(query)
+data_parts = query_controller.parse_query_response(response)
 
 print("Return code:", response.return_code)
-print("Return data:", response.return_data_parts)
+print("Return data (raw):", response.return_data_parts)
+print("Return data (parsed):", data_parts)
 ```
 
 ## Creating wallets
@@ -680,7 +918,7 @@ For further reference, please see [nonce management](/integrators/creating-trans
 Broadcast a single transaction:
 
 ```py
-alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
 tx = Transaction(
     sender=alice.to_bech32(),
