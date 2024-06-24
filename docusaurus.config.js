@@ -1,11 +1,12 @@
 // @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
-require("dotenv").config();
-const math = require("remark-math");
-const katex = require("rehype-katex");
+// `@type` JSDoc annotations allow editor autocompletion and type checking
+// (when paired with `@ts-check`).
+// There are various equivalent ways to declare your Docusaurus config.
+// See: https://docusaurus.io/docs/api/docusaurus-config
 
-const lightCodeTheme = require("prism-react-renderer/themes/vsDark");
-const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
+import { themes as prismThemes } from "prism-react-renderer";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -13,55 +14,35 @@ const config = {
   titleDelimiter: "•",
   tagline:
     "A highly scalable, fast and secure blockchain platform for distributed apps, enterprise use cases and the new internet economy.",
-  url: "https://docs.multiversx.com",
-  baseUrl: "/",
-  onBrokenLinks: "log",
-  onBrokenMarkdownLinks: "log",
   favicon: "img/favicons/favicon.ico",
+
+  // Set the production url of your site here
+  url: "https://docs.multiversx.com",
+  // Set the /<baseUrl>/ pathname under which your site is served
+  // For GitHub pages deployment, it is often '/<projectName>/'
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "multiversx", // Usually your GitHub org/user name.
   projectName: "mx-docs", // Usually your repo name.
 
-  // mermaid support
-  markdown: {
-    mermaid: true,
-  },
-  themes: ["@docusaurus/theme-mermaid"],
+  onBrokenLinks: "log",
+  onBrokenMarkdownLinks: "log",
 
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
+  // Even if you don't use internationalization, you can use this field to set
+  // useful metadata like html lang. For example, if your site is Chinese, you
+  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
   },
 
-  presets: [
-    [
-      "classic",
-      /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
-        docs: {
-          routeBasePath: "/", // Serve the docs at the site's root
-          sidebarPath: require.resolve("./sidebars.js"),
-          /* other docs plugin options */
-          remarkPlugins: [math],
-          rehypePlugins: [katex],
-          editUrl: "https://github.com/multiversx/mx-docs/edit/development",
-          showLastUpdateTime: true,
-        },
-        blog: false, // Optional: disable the blog plugin
-        theme: {
-          customCss: require.resolve("./src/css/custom.css"),
-        },
-        gtag: {
-          trackingID: "G-TW3LCJ0LS7",
-        },
-      }),
-    ],
-  ],
+  // mermaid support
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
 
   stylesheets: [
     {
@@ -78,14 +59,43 @@ const config = {
     },
   ],
 
+  presets: [
+    [
+      "classic",
+      /** @type {import('@docusaurus/preset-classic').Options} */
+      ({
+        docs: {
+          routeBasePath: "/", // Serve the docs at the site's root
+          sidebarPath: "./sidebars.js",
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
+          showLastUpdateTime: true,
+          // Please change this to your repo.
+          // Remove this to remove the "edit this page" links.
+          editUrl: "https://github.com/multiversx/mx-docs/edit/development",
+        },
+        blog: false,
+        theme: {
+          customCss: "./src/css/custom.css",
+        },
+        gtag: {
+          trackingID: "G-TW3LCJ0LS7",
+        },
+      }),
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       colorMode: {
         defaultMode: "dark",
-        disableSwitch: true,
+        disableSwitch: false,
         respectPrefersColorScheme: false,
       },
+
+      // Replace with your project's social card
+      image: "img/share.jpg",
       navbar: {
         logo: {
           alt: "MultiversX Docs",
@@ -171,16 +181,15 @@ const config = {
           },
         ],
       },
-      image: "img/share.jpg",
       footer: {
         style: "light",
         links: [],
         copyright: `Copyright © ${new Date().getFullYear()} MultiversX. All rights reserved.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
-        additionalLanguages: ["rust", "tsx", "jsonp", "toml"],
+        theme: prismThemes.vsDark,
+        darkTheme: prismThemes.oceanicNext,
+        additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json"],
       },
       algolia: {
         // The application ID provided by Algolia
@@ -468,4 +477,4 @@ const config = {
   ],
 };
 
-module.exports = config;
+export default config;
