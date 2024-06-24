@@ -91,7 +91,7 @@ Learn about transaction's gas and how a fee is calculated:
 | [MultiversX serialization format](/developers/data/serialization-overview)                                               | How MultiversX smart contracts serialize arguments, results, and storage.                       |
 | [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations in your contracts to make use of many built-in features from the framework. |
 | [MultiversX SC modules](/developers/developer-reference/sc-modules)                                                      | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
-| [MultiversX SC contract calls](/developers/developer-reference/sc-contract-calls)                                        | Learn how to call a Smart Contract from another Smart Contract.                                 |
+| [MultiversX SC contract calls](/developers/transactions/tx-legacy-calls)                                        | Learn how to call a Smart Contract from another Smart Contract.                                 |
 | [Code metadata](/developers/data/code-metadata)                                                                          | Choose the properties / eligible actions of your Smart Contract.                                |
 | [Upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts)                                   | The implications of upgrading a Smart Contract.                                                 |
 | [MultiversX SC api functions](/developers/developer-reference/sc-api-functions)                                          | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
@@ -118,7 +118,7 @@ Learn about transaction's gas and how a fee is calculated:
 | Name                                                                 | Description                                              |
 |----------------------------------------------------------------------|----------------------------------------------------------|
 | [Overview](/developers/testing/rust/sc-test-overview)                | Introduction to all the testing methods available in Rust|
-| [Blackbox tests](/developers/testing/rust/sc-blackbox)               | The best way to write integration tests, by simulating transactionds|
+| [Blackbox tests](/developers/testing/rust/sc-blackbox-calls)               | The best way to write integration tests, by simulating transactionds|
 | [Whitebox framework](/developers/testing/rust/whitebox-legacy)       | Older testing framework, but still in use in some projects.|
 | [Whitebox framework functions reference](/developers/testing/rust/whitebox-legacy-functions-reference) | A list of available functions to be used when using the whitebox framework.              |
 | [Debugging](/developers/testing/sc-debugging)                        | How to debug your smart contract tests.   |
