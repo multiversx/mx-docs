@@ -31,16 +31,6 @@ A blockchain is a database of transactions that is continually updated and share
 
 [comment]: # (mx-context-auto)
 
-## **How is MultiversX different?**
-
-The MultiversX network is the first to present a viable solution where all three aspects of sharding - state, network, and transactions - have been implemented at once. Combined with its “Adaptive” component, this novel architecture allows for dynamic network configuration to maintain a high level of security while scaling with demand.
-
-In addition to scaling through sharding, MultiversX also approaches the consensus problem with a mechanism called Secure Proof of Stake, which mitigates potential attack vectors when compared to Proof of Work, while also enabling large throughput and fast execution.
-
-By solving some of the hardest consensus and sharding problems in the blockchain space, MultiversX is able to provide a very high level of performance on a network made of inexpensive computers, resulting in a very low cost per transaction. In addition to performance and cost, MultiversX also stands out through the quality of the developer experience and the resulting boost in usability on the end-user side.
-
-[comment]: # (mx-context-auto)
-
 ## **Why would I use MultiversX?**
 
 MultiversX is a collaborative story written by all of us, inviting any builder to discover the digital universes that can be built together no matter that it is in DeFi, Gaming or Payments area. MultiversX nodes are distributed to more than 125 different staking providers, ensuring a robust and secure network. It becomes invaluable for individuals facing uncertainty regarding the security, stability, or mobility of their assets due to external forces beyond their control, and thanks to the ESDT standard and guardians that enhance its security.
@@ -50,8 +40,8 @@ With transaction costs averaging just $0.002, MultiversX allows anyone to send v
 **Important achievements:**
 
 - First live blockchain architecture with state sharding on mainnet, running for >4y with 0s downtime
-- **MainChain: **+30,000 TPS(scales > 100kTPS), 6s latency, $0.002/tx
-- **Sovereign Chains: **+78,000 TPS, 1s latency
+- **MainChain:** +30,000 TPS(scales > 100kTPS), 6s latency, $0.002/tx
+- **Sovereign Chains:** +78,000 TPS, 1s latency
 - xPortal App: buy, store, earn, pay EGLD, BTC, ETH, BNB with more than 1.5M users and >100k WAU (weekly active users)
 - Smart Contracts, Staking & Delegation, Tokens, Bridges, Oracles
 - Validated through multiple audits from Trail of Bits, RuntimeVerification, Certik & others
