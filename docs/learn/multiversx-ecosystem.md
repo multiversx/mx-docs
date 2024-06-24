@@ -49,11 +49,13 @@ With transaction costs averaging just $0.002, MultiversX allows anyone to send v
 
 **Important achievements:**
 
-- First live blockchain architecture with state sharding
+- First live blockchain architecture with state sharding on mainnet, running for >4y with 0s downtime
 - **MainChain: **+30,000 TPS(scales > 100kTPS), 6s latency, $0.002/tx
-- **Sovereign Chain: **+78,000 TPS, 1s latency
-- xPortal App: buy, store, earn, pay EGLD, BTC, ETH, BNB
-- Smart Contracts, Staking & Delegation, Tokens
+- **Sovereign Chains: **+78,000 TPS, 1s latency
+- xPortal App: buy, store, earn, pay EGLD, BTC, ETH, BNB with more than 1.5M users and >100k WAU (weekly active users)
+- Smart Contracts, Staking & Delegation, Tokens, Bridges, Oracles
 - Validated through multiple audits from Trail of Bits, RuntimeVerification, Certik & others
+- More than 400 dApps already launched on Mainnet and many more in development on Devnet
+
 
 The official roadmap can be found here: https://multiversx.com/roadmap
