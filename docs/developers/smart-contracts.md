@@ -15,6 +15,6 @@ which allows for unusually clean and efficient code in smart contracts, a rarity
 A declarative testing framework is bundled as well. For the best coding experience, 
 developers have the [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide) at their disposal.
 
-Read more about the MultiversX VM [here](/technology/the-wasm-vm). 
+Read more about the MultiversX VM [here](/learn/space-vm). 
 
 Navigate through the sidebar to see some tutorials to get you started, as well as the Rust framework documentation.
