@@ -293,6 +293,10 @@ For NFT:
 - ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 - ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
 - ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
+- ESDTRoleModifyRoyalties : this role allows one to modify royalities of a specific NFT
+- ESDTRoleSetNewURI : this role allows one to set new uris of a specific NFT
+- ESDTRoleModifyCreator : this role allows one to rewrite the creator of a specific token
+- ESDTRoleNFTRecreate : this role allows one to recreate the whole NFT with new attributes
 
 For SFT:
 
@@ -683,7 +687,7 @@ The manager of an ESDT token may wipe out a single NFT held by a frozen Account.
 
 ```rust
 WipeTransaction {
-    Sender: <account address of the token managers>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 60000000
@@ -691,6 +695,91 @@ WipeTransaction {
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <account address to wipe in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Modify Royalties**
+
+The manager of an ESDT token may want to set new royalities. This operation will rewrite the royalities on the specified token ID. It requires `ESDTRoleNFTModifyRoyalties` role.
+This is done by performing a transaction like this:
+
+```rust
+ModifyRoyalitiesTransaction {
+    Sender: <account address of the token managers>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTModifyRoyalties" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <new royalties in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **ESDTNFTSetNewURIs**
+
+The manager of an ESDT token may want to set new uris. This operation will rewrite the uris on the specified token ID. It requires `ESDTRoleNFTSetNewURIs` role.
+This is done by performing a transaction like this:
+
+```rust
+SetNewURIsTransaction {
+    Sender: <account address of the token managers>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTNFTSetNewURIs" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <list of new uris in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Modify Creator**
+
+The creator of an NFT can be changed using a transaction like this:
+
+```rust
+ModifyCreatorTransaction {
+    Sender: <account address of the new creator that has `ESDTRoleModifyCreator` role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTModifyCreator" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **MetaData Recreate**
+
+The whole NFT can be recreated with new attributes using a transaction like this:
+
+```rust
+MetaDataRecreateTransaction {
+    Sender: <account address that has `ESDTRoleNFTRecreate` role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTMetaDataRecreate" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <new attributes in hexadecimal encoding>
 }
 ```
 
