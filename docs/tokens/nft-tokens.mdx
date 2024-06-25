@@ -293,6 +293,7 @@ For NFT:
 - ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 - ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
 - ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
+- ESDTRoleNFTUpdate : this role allows one to update meta data attributes of a specific NFT
 - ESDTRoleModifyRoyalties : this role allows one to modify royalities of a specific NFT
 - ESDTRoleSetNewURI : this role allows one to set new uris of a specific NFT
 - ESDTRoleModifyCreator : this role allows one to rewrite the creator of a specific token
@@ -709,7 +710,7 @@ This is done by performing a transaction like this:
 
 ```rust
 ModifyRoyalitiesTransaction {
-    Sender: <account address of the token managers>
+    Sender: <account address of the token manager>
     Receiver: <same as sender>
     Value: 0
     GasLimit: 60000000
@@ -724,14 +725,14 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 [comment]: # (mx-context-auto)
 
-### **ESDTNFTSetNewURIs**
+### **Set new URIs**
 
 The manager of an ESDT token may want to set new uris. This operation will rewrite the uris on the specified token ID. It requires `ESDTRoleNFTSetNewURIs` role.
 This is done by performing a transaction like this:
 
 ```rust
 SetNewURIsTransaction {
-    Sender: <account address of the token managers>
+    Sender: <account address of the token manager>
     Receiver: <same as sender>
     Value: 0
     GasLimit: 60000000
@@ -766,6 +767,27 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 [comment]: # (mx-context-auto)
 
+### **MetaData Update**
+
+The NFT meta data can be updated using a transaction like this:
+
+```rust
+MetaDataUpdateTransaction {
+    Sender: <account address that has `ESDTRoleNFTUpdate` role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTMetaDataUpdate" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + ...
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
 ### **MetaData Recreate**
 
 The whole NFT can be recreated with new attributes using a transaction like this:
@@ -780,6 +802,7 @@ MetaDataRecreateTransaction {
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <NFT nonce in hexadecimal encoding> +
           "@" + <new attributes in hexadecimal encoding>
+          ...
 }
 ```
 
