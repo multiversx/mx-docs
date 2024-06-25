@@ -780,7 +780,11 @@ MetaDataUpdateTransaction {
     Data: "ESDTMetaDataUpdate" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <NFT nonce in hexadecimal encoding> +
-          "@" + ...
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <royalities in hexadecimal encoding> +
+          "@" + <hash in hexadecimal encoding> +
+          "@" + <attributes in hexadecimal encoding> +
+          "@" + <uris list in hexadecimal encoding>
 }
 ```
 
@@ -801,8 +805,11 @@ MetaDataRecreateTransaction {
     Data: "ESDTMetaDataRecreate" +
           "@" + <token identifier in hexadecimal encoding> +
           "@" + <NFT nonce in hexadecimal encoding> +
-          "@" + <new attributes in hexadecimal encoding>
-          ...
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <royalities in hexadecimal encoding> +
+          "@" + <hash in hexadecimal encoding> +
+          "@" + <attributes in hexadecimal encoding> +
+          "@" + <uris list in hexadecimal encoding>
 }
 ```
 
