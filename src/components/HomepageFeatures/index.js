@@ -18,6 +18,12 @@ const FeatureList = [
     icon: "🛠️",
   },
   {
+    title: "Sovereign Chains",
+    content: "Discover and deploy your Sovereign Chain.",
+    docName: "sovereign/overview",
+    icon: "⛓️",
+  },
+  {
     title: "Run a Validator Node",
     content: "Validate transactions, secure the network, and earn rewards.",
     docName: "validators/overview",
@@ -40,14 +46,14 @@ const FeatureList = [
     title: "Create a Token",
     content:
       "Issue your own ESDT token, MultiversX's improved equivalent of ERC-20.",
-    docName: "tokens/overview",
+    docName: "tokens/intro",
     icon: "🔷",
   },
   {
     title: "Learn How MultiversX Works",
     content:
       "Explore Adaptive state sharding, Secure Proof of Stake, and the MultiversX WASM VM.",
-    docName: "technology/architecture-overview",
+    docName: "learn/architecture-overview",
     icon: "🔬",
   },
 ];
