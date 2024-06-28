@@ -1,6 +1,6 @@
 ---
-id: adaptive-state-sharding
-title: Adaptive State Sharding
+id: sharding
+title: Sharding
 ---
 
 Sharding was first used in databases and is a method for distributing data across multiple machines. This makes it a _scaling technique_, and can be used by blockchain networks to partition states and transaction processing, so that each node of the network would only need to process a fraction of all the transactions. Moreover, sharding allows for the parallel processing of transactions. As long as there is a sufficient number of nodes verifying each transaction, ensuring high reliability and security, then splitting a blockchain into shards will allow it to process far more transactions by means of parallelization, and thus greatly improving transaction throughput and efficiency. Moreover, sharding promises to increase the throughput of the network as it expands and the number of validator grows - a property called _horizontal scaling_.
