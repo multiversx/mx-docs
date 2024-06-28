@@ -315,23 +315,225 @@ The BLS keys' identities, on the other hand will have the following names & iden
 
 ### Migration guide from single-key operation to multikey
 
+Whenever deciding to switch from single-key operation to multikey, the following steps on how to execute this process can be considered:
+1. Create your `allValidatorsKeys.pem` by manually (or through a text tool) concatenate all your `validatorKey.pem` files;
+2. Start a multikey group, **configure it as a backup group**, provide the `allValidatorsKeys.pem` file to all the nodes forming the group;
+3. Let this backup multikey group nodes sync and go the next step **after all these nodes are synced**;
+4. Switch off your single-key backup nodes (if you previously had ones);
+5. Create a new multikey group, configure it as main group and let it sync. **Do not provide the `allValidatorsKeys.pem` keys yet!**. Go the next step **after all these nodes are synced**; 
+6. After the main group nodes are synced, copy the `allValidatorsKeys.pem` file to all nodes from the main group, switch off the main single-key nodes and restart the multikey nodes from the main group, so they will load the `allValidatorsKeys.pem` file;
+7. Closely monitor all your nodes in the explorer, should be online and with their rating status increasing/at 100%. Repeat this step for a few times at 10 minutes interval. 
+
+Make sure that all operations from step 6 are made as quickly as possible. In case this step takes a long time, the backup multikey group should take over.
+
 :::warning
 This guide can lead to potential node jailing if done incorrectly. Make sure that you understand completely all the steps involved.
 
 We strongly suggest to practice this process first on the public testnet. You should gather invaluable experience and know how.
 :::
 
-Whenever deciding to switch from single-key operation to multikey, the following steps on how to execute this process can be considered:
-1. create your `allValidatorsKeys.pem` by manually (or through a text tool) concatenate all your `validatorKey.pem` files;
-2. start a multikey group, **configure it as a backup group**, provide the `allValidatorsKeys.pem` file to all the nodes forming the group;
-3. let this backup multikey group nodes sync and go the next step **after all these nodes are synced**;
-4. switch off your single-key backup nodes (if you previously had ones);
-5. create a new multikey group, configure it as main group and let it sync. **Do not provide the `allValidatorsKeys.pem` keys yet!**. Go the next step **after all these nodes are synced**; 
-6. after the main group nodes are synced, copy the `allValidatorsKeys.pem` file to all nodes from the main group, switch off the main single-key nodes and restart the multikey nodes from the main group, so they will load the `allValidatorsKeys.pem` file;
-7. closely monitor all your nodes in the explorer, should be online and with their rating status increasing/at 100%. Repeat this step for a few times at 10 minutes interval. 
-
-Make sure that all operations from step 6 are made as quickly as possible. In case this step takes a long time, the backup multikey group should take over.
-
 :::caution
 Always attempt this process while closely monitor your nodes. If done correctly, your nodes might experience a brief rating drop (until the backup group takes over - if necessary)
 :::
+
+### Setup a multikey node
+
+**1. Login as root & update/upgrade the machine**
+
+```bash
+apt-get update
+apt-get upgrade
+apt autoremove
+```
+
+**2. Add and configure the `ubuntu` user**
+
+```bash
+adduser ubuntu
+```
+
+Set a long password
+
+```bash
+usermod -aG sudo ubuntu
+echo 'StrictHostKeyChecking=no' >> /etc/ssh/ssh_config
+visudo
+```   
+
+Add this line:
+
+```
+ubuntu  ALL=(ALL) NOPASSWD:ALL
+```
+
+Save & exit
+
+```bash
+sudo su ubuntu
+sudo visudo -f /etc/sudoers.d/myOverrides
+```
+
+Add this line:
+
+```
+ubuntu  ALL=(ALL) NOPASSWD:ALL
+```
+
+Save & exit
+
+**3. Configure ssh service:**
+
+```bash
+cd
+mkdir .ssh && chmod 700 .ssh && cd .ssh/
+nano authorized_keys
+```
+
+Paste your pubkey, save & exit
+The pubkey can be obtained by typing `cat ~/.ssh/id_rsa.pub` (or the name of your key) on the machine that will be used to connect to this host
+
+```bash
+chmod 600 authorized_keys
+```
+
+ssh config
+
+```bash
+sudo nano /etc/ssh/sshd_config
+```
+
+Uncomment and change this line to match your desired port:
+
+```
+Port <any port value > 1024> # example: 7728
+```
+
+Uncomment and set the following fields to their respective values: 
+
+```
+    PermitRootLogin -> no
+    PubkeyAuthentication -> yes
+    PasswordAuthentication -> no
+```
+
+Save & exit
+
+```bash
+sudo systemctl restart sshd
+```
+
+At this time a snapshot/image of the host could be generated using the provider’s accepted method. This snapshot/image could later be used to create/spin up further machines with all the initial setup already completed.
+
+
+**4. Configure your local ssh config file** 
+
+```bash
+nano ~/.ssh/config
+```
+
+Add:
+
+```
+Host host-0
+  Hostname xxx.yyy.zzz.ttt
+  User ubuntu
+  Port 7728
+  IdentityFile ~/.ssh/id_rsa
+```
+
+Save & exit
+
+
+**5. Keys Setup**
+
+```bash
+cd ~
+mkdir VALIDATOR_KEYS
+```
+
+Copy your validator(s) .pem file either by using scp:
+
+```bash
+scp allValidatorsKeys.pem ubuntu@xxx.yyy.zzz.xxx:/home/ubuntu/VALIDATOR_KEYS
+``` 
+
+Or by using nautilius file explorer:
+
+```
+sftp://host-0
+``` 
+
+
+**6. Node Setup**
+
+```bash
+git clone https://github.com/multiversx/mx-chain-scripts
+cd mx-chain-scripts/config/
+nano variables.cfg
+```
+
+Set the following:
+
+```
+    ENVIRONMENT="mainnet"
+    GITHUBTOKEN="<your github token>"
+    NODE_EXTRA_FLAGS="" # optional for extra flags (example: `-log-save -profile-mode`)  
+    OVERRIDE_CONFIGVER="" # optional for a particulare release (example: `rc-v1.6.0`)
+```
+
+Save & exit
+
+```bash
+cd ..
+./script.sh install
+```
+
+Install your node(s)
+You can tweak several binary flags settings by typing
+
+```bash
+sudo nano /etc/systemd/system/elrond-node-0.service
+```
+
+Save & exit
+Reload the service file:
+
+```bash
+sudo systemctl daemon-reload
+```
+
+For additional `prefs.toml` file settings adjustments, can use this:
+
+```bash
+nano ~/elrond-nodes/node-0/config/prefs.toml
+```
+
+Set the following:
+
+```toml
+    DestinationShardAsObserver = "<shard ID>"
+    NodeDisplayName = "node"
+    Identity = "identity"
+    RedundancyLevel = <redundancy level: 0 for main, 1 for first backup...>
+```
+
+```bash
+cp ~/VALIDATOR_KEYS/allValidatorsKeys.pem ~/elrond-nodes/node-0/config/
+cd ~/mx-chain-scripts
+./script.sh start
+```
+
+
+**7. Node Checkup**
+
+The running node can be monitored using the termui console
+
+```bash
+~/elrond-utils/termui -address 127.0.0.1:8080
+```
+
+If the node does not start in a reasonable time frame (5 minutes), we can check the log output by using this command:
+
+```bash
+sudo journalctl -f -u elrond-node-0.service
+```
