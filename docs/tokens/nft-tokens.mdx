@@ -305,6 +305,9 @@ For SFT:
 - ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
 - ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
 - ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
+- ESDTRoleModifyRoyalties : this role allows one to modify royalities of a specific NFT
+- ESDTRoleSetNewURI : this role allows one to set new uris of a specific NFT
+- ESDTRoleModifyCreator : this role allows one to rewrite the creator of a specific token
 
 To see how roles can be assigned, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
@@ -749,7 +752,12 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### **Modify Creator**
 
-The creator of an NFT can be changed using a transaction like this:
+[comment]: - only for dynamic nfts, SFT, metaESDT (only for accounts that have metadata on system account)
+
+The creator of a token can be changed. For this, the token has to be moved to the new creator account. The new creator
+account requires `ESDTRoleModifyCreator` role. Also, the token has to be of dynamic type.
+
+The creator can be modified using a transaction like this:
 
 ```rust
 ModifyCreatorTransaction {
@@ -810,6 +818,25 @@ MetaDataRecreateTransaction {
           "@" + <hash in hexadecimal encoding> +
           "@" + <attributes in hexadecimal encoding> +
           "@" + <uris list in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Make token dynamic**
+
+The ESDT manager can change token type to dynamic using a transaction like this:
+
+```rust
+ChangeToDynamicTransaction {
+    Sender: <account address that has `ESDTRoleNFTRecreate` role>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "changeToDynamic" +
+          "@" + <token identifier in hexadecimal encoding>
 }
 ```
 
