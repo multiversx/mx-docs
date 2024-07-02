@@ -13,7 +13,7 @@ If you're not on MultiversX, get started by creating your wallet with [xPortal](
 If you want to learn more, get started by diving into these concepts:
 - [**MultiversX Blockchain Basics**](https://www.youtube.com/watch?v=tv6OBimIX98&list=PLQVcheGWwBRWFjgEGLx1Fv2qF_6UVpSXX) - Learn about the basics of the blockchain, cryptocurrencies, consensus models, MultiversX explorer, wallet and a live demo of how to interact with the network.
 - [**Architecture**](/docs/learn/architecture-overview.md) - A breakdown of Multiversx's onchain system.
-- [**Sovereign Chains**](/docs/sovereign/Overview.md) - Learn what Sovereign Chains represent for MultiversX.
+- [**Sovereign Chains**](/docs/sovereign/overview.md) - Learn what Sovereign Chains represent for MultiversX.
 
 ## **Build**
 If you are a developer, you've come to the right place. The development act is one of the easiest and most straight-forward that you will find in the entire space, with lots of tools and support offered by the foundation and community fellow developers.

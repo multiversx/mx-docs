@@ -507,7 +507,7 @@ const sidebars = {
         type: "category",
         label: "Sovereign Chains",
         items: [
-          "sovereign/Overview",
+          "sovereign/overview",
           {
             type: "category",
             label: "Introduction",

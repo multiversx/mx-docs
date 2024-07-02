@@ -47,7 +47,7 @@ MultiversX is a [sharded](/docs/learn/sharding.md) blockchain network, with a [P
    - 5000+ nodes (3200+ validator nodes)
    - 4 shards (1 Metachain, 3 transaction shards)
    - more shards can be added if needed
- - [Sovereign Chains](/docs/sovereign/Overview.md):
+ - [Sovereign Chains](/docs/sovereign/overview.md):
    - DEMO - ["voyager" sovereign chain](https://explorer.voyager1.dev/) was launched as a test sovereign chain and reached a max TPS of >77k TPS with 1s block time
    - Multi-VM - compatible with [Bitcoin](https://cdn.prod.website-files.com/6597cc7be68d63ec0c8ce338/664f6e01f2dd839286e20536_BitcoinX-litepaper.pdf), [Ethereum](https://cdn.prod.website-files.com/6597cc7be68d63ec0c8ce338/664f6e03efeeeb4e8c2efaf8_EthereumX-litepaper.pdf), [Solana](https://cdn.prod.website-files.com/6597cc7be68d63ec0c8ce338/664f6e026748935c069bd7a5_SolanaX-litepaper.pdf) and much more.
    - Interoperability Layer - hyper-scalable, composable and configurable technological tree designed for flexibility and interoperability. 

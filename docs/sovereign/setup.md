@@ -8,20 +8,7 @@
 
 This guide will help you deploy contract on main chain, set up configuration files and deploy sovereign chain and all dependent services. Follow these steps carefully to ensure a successful deployment.
 
-## Step 1: Create a New Wallet
-
-1. Create a new wallet:
-    ```bash
-    mxpy wallet new --format pem --outfile ~/wallet.pem
-    ```
-
-2. Get funds in the wallet on the chain you want the sovereign to be connected to.
-
-:::note
-You can use any wallet of your choice, but for the purpose of this guide we are taking the step by step approach as if there is nothing available nor installed on your node.
-:::
-
-## Step 2: Get the ```mx-chain-go``` Repository
+## Step 1: Get the ```mx-chain-go``` Repository
 
 Before proceeding, ensure that a **SSH key** for GitHub is configured on your machine.
 
@@ -48,7 +35,7 @@ The prerequisites script verifies and downloads the necessary packages to run th
 - **mx-chain-sovereign-bridge-go**: Repository for the cross-chain service.
 :::
 
-## Step 3: Deploy Sovereign setup
+## Step 2: Deploy Sovereign setup
 
 First navigate to the sovereignBridge folder:
 
@@ -61,7 +48,18 @@ cd sovereignBridge
     ./prerequisites.sh
     ```
 
-2. Update the configuration file `config/configs.cfg` with paths you want to use, wallet location and main chain constants. Example:
+2. Create a new wallet:
+    ```bash
+    mxpy wallet new --format pem --outfile ~/wallet.pem
+    ```
+
+:::note
+You can use any wallet of your choice, but for the purpose of this guide we are generating a new wallet.
+:::
+
+3. Get funds in the wallet on the chain you want the sovereign to be connected to.
+
+4. Update the configuration file `config/configs.cfg` with paths you want to use, wallet location and main chain constants. Example:
     ```ini
     # Sovereign Paths
     SOVEREIGN_DIRECTORY="~/sovereign"
@@ -77,7 +75,6 @@ cd sovereignBridge
     ```
 
 :::note
-
 - **SOVEREIGN_DIRECTORY, TXS_OUTFILE_DIRECTORY, CONTRACTS_DIRECTORY** - represent the paths to the location where the deploy scripts will generate the outputs.
 - **WALLET** - should represent the wallet generated at Step 1.
 - **PROXY** - in this case, for the purpose of the test, the used proxy is the testnet one. Of course that the proper proxy should be used when deploying your own set of contracts depending on the development phase of your project.
@@ -87,12 +84,12 @@ cd sovereignBridge
     - **"T"** for Testnet;
 :::
 
-3. Source the script:
+5. Source the script:
     ```bash
     source script.sh
     ```
 
-4. Deploy all cross-chain contracts on main chain and deploy sovereign chain with all dependent services:
+6. Deploy all cross-chain contracts on main chain and deploy sovereign chain with all dependent services:
     ```bash
     deploySovereignWithCrossChainContracts
     ```
