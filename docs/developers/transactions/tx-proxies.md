@@ -21,9 +21,9 @@ Proxy generation can be triggered by calling `sc-meta all proxy` in the contract
 
 This first image represents the structure of the project without calling a proxy generator, while the second one shows how it is called and what files it generates.
 
-![img info screenshot](/img/tree_before_proxy.png "Project structure before calling "sc-meta all proxy" in the example contract folder in the framework")
+![img](/img/tree_before_proxy.png)
 
-![img info screenshot](/img/tree_after_proxy.png "Project structure after calling "sc-meta all proxy" in the example contract folder in the framework")
+![img](/img/tree_after_proxy.png)
 
 [comment]: # (mx-context-auto)
 

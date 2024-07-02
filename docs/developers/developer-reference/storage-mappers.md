@@ -1118,13 +1118,33 @@ Using the correct mapper for your situation can greatly decrease gas costs and c
 
 ## Accessing a value at an address
 
-Because of the way the storage mappers are structured, it is very easy to access a "remote" value, meaning a value stored 
-under a key at a different address than the current one. 
+Because of the way the storage mappers are structured, it is very easy to access a "remote" value, meaning a value stored under a key at a different address than the current one.
 
-If a developer wanted, for example, to iterate over another contract's `SetMapper`, instead of retrieving the values through
-a call to an endpoint and then iterating, one could simply create a new `SetMapper` with a specific `address` parameter 
-(the address of the contract where the remote storage is located) and the `exact key` used by the storage they wish to access.
-Afterwards, it acts like a "local" storage mapper, so the `iter` function can be called easily to accomplish the task.
+```rust
+#[storage_mapper("key_example")]
+fn content(&self) -> MapMapper<u32, u32>;
+
+#[storage_mapper_from_address("key_example")]
+fn content_from_address(&self, address: ManagedAddress, ...) -> SetMapper<u32, ManagedAddress>;
+```
+
+The `content_from_address` function is used to create a `SetMapper` for accessing the storage of another contract, identified by its address.
+
+The function can have any name, but it is necessary to be tagged with `#[storage_mapper_from_address("key_example")]`, where **"key_example"** is the **exact key** used by the storage they wish to access.
+
+[comment]: # (mx-context-auto)
+
+### Parameters
+
+- `&self`: reference to the current instance of the contract.
+- `address: ManagedAddress`: required parameter; it specifies the address of the contract whose storage mapper you want to access.
+- **optional** extra keys of any type.
+
+[comment]: # (mx-context-auto)
+
+### Return type
+
+The function will return the desired mapper that will store the data. In addition, `ManagedAddress` will always be added to the end of the list of generics in the storage mapper.
 
 :::important important
 This feature only works `intra-shard`. 
@@ -1132,9 +1152,12 @@ This feature only works `intra-shard`.
 Also note that a remote value found under a key at an address can only be `read`, not modified. 
 :::
 
-Let's take this example:
+[comment]: # (mx-context-auto)
+
+### Example
+
 ```rust title=contract_to_be_called/lib.rs
-#[storage_mapper("my_remote_mapper")]
+#[storage_mapper("my_remote_maper")]
 fn my_set_mapper(&self) -> SetMapper<u32>
 ```
 
@@ -1143,18 +1166,19 @@ This is a simple `SetMapper` registered under the address of `contract_to_be_cal
 ```rust title=caller_contract/lib.rs
 // the address of the contract containing the storage (contract_to_be_called)
 #[storage_mapper("contract_address")]
-fn contract_address(&self) -> SingleValueMapper<ManagedAddress>; 
+fn contract_address(&self) -> SingleValueMapper<ManagedAddress>;
+
+// by creating the mapper with the address of the sc and exact storage key
+// we get access to the value stored under that key
+#[storage_mapper_from_address("contract_address")]
+fn contract_from_address(&self, address: ManagedAddress) -> SetMapper<u32, ManagedAddress>;
 
 #[endpoint]
 fn my_endpoint(&self) -> u32 {
     let mut sum = 0u32;
     let address = self.contract_address().get();
 
-    // by creating the mapper with the address of the sc and exact storage key 
-    // we get access to the value stored under that key
-    let mapper: SetMapper<u32, _> =
-        SetMapper::new_from_address(address, StorageKey::from("my_remote_mapper"));
-    for number in mapper.iter() {
+    for number in self.contract_from_address(address).iter() {
         sum += number
     }
 
