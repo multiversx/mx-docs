@@ -1157,7 +1157,7 @@ Also note that a remote value found under a key at an address can only be `read`
 ### Example
 
 ```rust title=contract_to_be_called/lib.rs
-#[storage_mapper("my_remote_maper")]
+#[storage_mapper("my_remote_mapper")]
 fn my_set_mapper(&self) -> SetMapper<u32>
 ```
 
