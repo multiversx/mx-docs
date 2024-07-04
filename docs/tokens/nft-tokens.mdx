@@ -831,7 +831,7 @@ The ESDT manager can change token type to dynamic using a transaction like this:
 
 ```rust
 ChangeToDynamicTransaction {
-    Sender: <account address that has `ESDTRoleNFTRecreate` role>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 60000000
@@ -840,7 +840,84 @@ ChangeToDynamicTransaction {
 }
 ```
 
+The following token types cannot be changed to dynamic: `FungibleESDT`, `NonFungibleESDT`, `NonFungibleESDTv2`
+
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Update token**
+
+The token type can be updated to the lastest version, which will update token type and propagate it to shard's
+system account. Currently, token type is correctly saved only on metachain and there is no type related information
+on shard level, the shard only knows if the token is non fungible with implicit type `NonFungibleESDT`, but it
+does not know specifically if it's `NonFungibleESDT`, `MetaESDT` or `SemiFungibleESDT`. So, the update operation will
+proceed in the following way:
+- if token type is `NonFungibleESDT` it will be set to `NonFungibleESDTv2`, and it will be propagated to shard's system account
+- if token type is `MetaESDT` or `SemiFungibleESDT` it will be propagated to shard's system account
+
+This can be done using a transaction like this:
+
+```rust
+UpdateTokenIDTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "updateTokenID" +
+          "@" + <token identifier in hexadecimal encoding>
+}
+```
+
+The following token types cannot be changed to dynamic: `FungibleESDT`, `NonFungibleESDT`, `NonFungibleESDTv2`
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Register dynamic token**
+
+A token can be registered directly as dynamic.
+
+This can be done using a transaction like this:
+
+```rust
+UpdateTokenIDTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "registerDynamic" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
+          "@" + <token compressed type (which can be `NFT`, `SFT`, `META`, `FNG`) in hexadecimal encoding>
+}
+```
+
+The following token types cannot be registered as dynamic: `FungibleESDT`
+
+[comment]: # (mx-context-auto)
+
+### **Register and set all roles to dynamic**
+
+A token can be registered directly as dynamic together will all roles set for the specific type.
+
+This can be done using a transaction like this:
+
+```rust
+UpdateTokenIDTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "registerAndSetAllRolesDynamic" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
+          "@" + <token compressed type (which can be `NFT`, `SFT`, `META`, `FNG`) in hexadecimal encoding>
+}
+```
+
+The following token types cannot be registered as dynamic: `FungibleESDT`
 
 [comment]: # (mx-context-auto)
 
