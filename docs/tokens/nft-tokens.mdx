@@ -882,7 +882,7 @@ A token can be registered directly as dynamic.
 This can be done using a transaction like this:
 
 ```rust
-UpdateTokenIDTransaction {
+RegisterDynamicTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
@@ -905,7 +905,7 @@ A token can be registered directly as dynamic together will all roles set for th
 This can be done using a transaction like this:
 
 ```rust
-UpdateTokenIDTransaction {
+RegisterAndSetAllRolesDynamicTransaction {
     Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
