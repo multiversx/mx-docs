@@ -261,102 +261,100 @@ successes:
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.38s
 ```
 
-This setup can be used for extensive testing, but also as a tool for live deployment on mainnet, tracking and interaction. One can, for example, create a different `ContractInteract` struct for each development environment and further structure all the interactions into different integration tests.
+[comment]: # (mx-context-auto)
 
-```rust
-struct ContractInteract {
-    interactor: Interactor,
-    wallet_address: Address,
-    contract_code: BytesValue,
-    state: State,
-}
+## Improvements
 
-struct MainNetContractInteract {
-    interactor: Interactor,
-    wallet_address: Address,
-    contract_code: BytesValue,
-    state: State,
-}
+This setup can be used for extensive testing, but also as a tool for live deployment on mainnet, tracking and interaction.  In a multi-contract setup, one can, for example, create different modules for specific interactions with each contract and development environment and further structure all the interactions into different integration tests.
 
-impl ContractInteract {
-    async fn new() -> Self {
-        let mut interactor = Interactor::new(DEVNET).await;
-        let wallet_address = interactor.register_wallet(test_wallets::alice());
+Let’s take the example of the [DEX smart contract interactors](https://github.com/multiversx/mx-exchange-sc/tree/feat/unified/dex/interactor). Here, all the proxy files are organized in a different crate for easier access. 
 
-        let contract_code = BytesValue::interpret_from(
-            "mxsc:../output/defi-protocol-sc.mxsc.json",
-            &InterpreterContext::default(),
-        );
+![img](/img/dex_interactor_file_structure.jpeg)
 
-        ContractInteract {
-            interactor,
-            wallet_address,
-            contract_code,
-            state: State::load_state(),
-        }
-    }
+Furthermore, all the contracts that are part of the DEX flow have separate interaction modules, so we can easily keep track of the flow when writing complex tests. 
 
-// other functions
-}
+This is the `energy_factory` file, containing only interactions with the `energy factory smart contract`, using the specific proxy and contract address:
+```rust title=energy_factory.rs
+use multiversx_sc_snippets::imports::*;
+use proxies::energy_factory_proxy;
 
-impl MainNetContractInteract {
-    async fn new() -> Self {
-        let mut interactor = Interactor::new(MAINNET).await;
-        let wallet_address =
-            interactor.register_wallet(sdk::wallet::Wallet::from_pem_file("myWallet.pem").unwrap());
+use crate::{
+    structs::{to_rust_biguint, InteractorEnergy},
+    DexInteract,
+};
 
-        let contract_code = BytesValue::interpret_from(
-            "mxsc:../output/defi-protocol-sc.mxsc.json",
-            &InterpreterContext::default(),
-        );
+pub(crate) async fn get_energy_amount_for_user(
+    dex_interact: &mut DexInteract,
+    user: Address,
+) -> RustBigUint {
+    let result_token = dex_interact
+        .interactor
+        .query()
+        .to(dex_interact.state.current_energy_factory_address())
+        .typed(energy_factory_proxy::SimpleLockEnergyProxy)
+        .get_energy_amount_for_user(ManagedAddress::from(user))
+        .returns(ReturnsResult)
+        .prepare_async()
+        .run()
+        .await;
 
-        MainNetContractInteract {
-            interactor,
-            wallet_address,
-            contract_code,
-            state: State::load_state_main_net(),
-        }
-    }
-
-// other functions
-}
-
-#[tokio::test]
-async fn mainnet_setup() {
-    let mut interact = MainNetContractInteract::new().await;
-
-    interact.deploy().await; 
-    interact.pause().await;
-    interact.feed_egld().await;
-    interact.update_storage().await;
-    interact.unpause().await;
-    // other setup functions
-}
-
-#[tokio::test]
-async fn mainnet_views() {
-    let mut interact = MainNetContractInteract::new().await;
-
-    interact.get_user_count().await;
-    interact.get_all_payments().await;
-    interact.get_current_token_id().await;
-    interact.get_participants_list().await;
-    // other view functions to check the current state of the contract
-}
-
-#[tokio::test]
-async fn devnet_integration_test() {
-    let mut interact = ContractInteract::new().await;
-
-    interact.deploy().await;
-    interact.update_storage().await;
-    interact.stake_egld().await;
-    interact.check_staked_amount().await;
-    // other setup and logic related functions
+    to_rust_biguint(result_token)
 }
 ```
 
-Organizing the code this way streamlines the process even further. Now, it is just a matter of using a different datatype in order to keep track of the development environments be able to rerun everything quickly if needed. 
+After having implemented this structure, writing integration test is a smooth process, even though the logic gets complicated: 
+
+```rust title=dex_interact.rs
+impl DexInteract {
+    async fn full_farm_scenario(&mut self, args: &AddArgs) {
+    // adds liquidity to the pair SC
+    let (_, _, lp_token) = pair::add_liquidity(self, args).await.0; 
+    // enters farm in the farm locked SC
+    let _result = farm_locked::enter_farm(self, lp_token).await;
+    // query the energy factory SC
+    let _query = energy_factory::get_energy_amount_for_user(self, Address::zero()).await;
+    // stake farm tokens in the farm staking proxy SC 
+    let _farm_token = farm_staking_proxy::stake_farm_tokens(self, Vec::new(), None).await; 
+    // more logic 
+    }
+}
+
+#[cfg(test)]
+pub mod integration_tests {
+    use multiversx_sc_snippets::tokio;
+
+    use crate::{dex_interact_cli::SwapArgs, pair, DexInteract};
+
+    #[tokio::test]
+    async fn test_swap() {
+        // initialize interactor
+        let mut dex_interact = DexInteract::init().await;
+        // test users
+        dex_interact.register_wallets();
+        // mock arguments
+        let args = SwapArgs::default();
+
+        // swap tokens with the pair SC
+        let result = pair::swap_tokens_fixed_input(&mut dex_interact, &args).await;
+        println!("result {:#?}", result);  
+    }
+
+    #[tokio::test]
+    async fn test_full_farm_scenario() {
+        // initialize interactor
+        let mut dex_interact = DexInteract::init().await;
+        // test users
+        dex_interact.register_wallets();
+        // mock arguments
+        let args = AddArgs::default();
+
+        // runs a full farm scenario
+        dex_interact.full_farm_scenario(args).await;
+    }
+}
+```
+
+Organizing the code this way streamlines the process even further. Now, it is just a matter of using a different datatype or a different module in order to keep track of the various contracts and development environments and be able to rerun everything quickly if needed. 
 
 [comment]: # (mx-context-auto)
 
