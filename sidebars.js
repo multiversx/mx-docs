@@ -30,7 +30,7 @@ const sidebars = {
    */
 
   docs: {
-    "Welcome to MultiversX":["welcome/welcome-to-multiversx"],
+    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
     "Learn about MultiversX": [
       "learn/getting-started",
       "learn/multiversx-ecosystem",
@@ -59,6 +59,7 @@ const sidebars = {
           "developers/tutorials/energy-dao",
           "developers/tutorials/dex-walkthrough",
           "developers/tutorials/wallet-connect-v2-migration",
+          "developers/tutorials/interactors-guide",
         ],
       },
       {
@@ -497,7 +498,7 @@ const sidebars = {
       {
         type: "category",
         label: "Ad-Astra Bridge",
-        items: [ 
+        items: [
           "bridge/architecture",
           "bridge/transfer-flows",
           "bridge/multiple-chains",
@@ -552,10 +553,10 @@ const sidebars = {
             type: "category",
             label: "Interoperability",
             items: [
-            "sovereign/interoperability",
-            "sovereign/ethereum-l2",
-            "sovereign/bitcoin-l2",
-            "sovereign/solana-l2",
+              "sovereign/interoperability",
+              "sovereign/ethereum-l2",
+              "sovereign/bitcoin-l2",
+              "sovereign/solana-l2",
             ],
           },
           "sovereign/validators",
