@@ -1128,7 +1128,7 @@ fn content(&self) -> MapMapper<u32, u32>;
 fn content_from_address(&self, address: ManagedAddress, ...) -> SetMapper<u32, ManagedAddress>;
 ```
 
-The `content_from_address` function is used to create a `SetMapper` for accessing the storage of another contract, identified by its address.
+The `content_from_address` function is used to create a **new map** for accessing the storage of another contract, identified by its address.
 
 The function can have any name, but it is necessary to be tagged with `#[storage_mapper_from_address("key_example")]`, where **"key_example"** is the **exact key** used by the storage they wish to access.
 
@@ -1155,6 +1155,8 @@ Also note that a remote value found under a key at an address can only be `read`
 [comment]: # (mx-context-auto)
 
 ### Example
+
+If a developer wanted, for example, to iterate over another contract's `SetMapper`, instead of retrieving the values through a call to an endpoint and then iterating, one could simply create a new `SetMapper` with a specific `address` parameter. Afterwards, the `iter` function can be called easily to accomplish the task.
 
 ```rust title=contract_to_be_called/lib.rs
 #[storage_mapper("my_remote_mapper")]
