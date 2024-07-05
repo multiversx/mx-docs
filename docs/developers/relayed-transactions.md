@@ -253,7 +253,7 @@ Decoding the arguments ([useful resources here](/developers/sc-calls-format/)) w
 This feature is not available at the moment on Mainnet.
 :::
 
-Relayed transactions v3 feature comes with a change on the entire transaction structure, adding a new optional field `InnerTransactions`, which is a slice of pointers to the Transaction structure. That being said, relayed transactions v3 allow the user to send multiple inner transactions on the same relayed transaction which will be executed as normal transactions, without the gas consuming data field of the old relayed transactions versions.
+Relayed transactions v3 feature comes with a change on the entire transaction structure, adding a new optional field `InnerTransactions`, which is a collection of inner transactions. That being said, relayed transactions v3 allow the user to send multiple inner transactions on the same relayed transaction which will be executed as normal transactions, without the gas consuming data field of the old relayed transactions versions.
 
 If we take the above example of relayed transaction v1, which would have consumed a total amount of gas of 61040000, with the relayed v3 approach the same transaction cost would be:
 ```js
@@ -294,22 +294,22 @@ RelayedV3Transaction {
 }
 ```
 
-Therefore, when one wants to build such a transaction should follow the next steps:
+Therefore, in order to build such a transaction, one has to follow the next steps:
 
 - create the inner transactions. Make sure that:
-  - all inner transactions have the `relayer` field set with the address that would pay the gas
-  - all inner transactions senders are in the same shard with the relayer
+  - all inner transactions have the `relayer` field set to the address that would pay the gas
+  - all inner transactions senders are in **the same shard** with the relayer
   - in case there are multiple inner transactions from the same sender, the transactions are in the order of the execution, with increasing correct nonces, starting from the current sender's nonce
   - all inner transactions are valid and signed
 - create the relayed transactions:
   - the receiver of the relayed transactions is the relayer
   - value must be 0 and data field empty
   - add all inner transactions on the `innerTransactions` field
-  - compute the gas limit: `min gas limit * number of inner transactions + sum of all inner transactions gas limits`
+  - compute the gas limit: `move balance cost * number of inner transactions + sum of all inner transactions gas limits`
 
 :::note
 1. If the relayed transaction v3 is guarded, the cost of the guarded transaction will be consumed only once, not for each inner transaction.
-2. There are situation where inner transactions are accepted, but before execution, the state based on which those transactions were accepted changed, so some of or all inner transactions will be no longer valid. In this case, the gas will be consumed from the relayer, even though these following inner transactions won't have other effects.
+2. There are situations where inner transactions are initially accepted, but before their execution, the underlying state changes (due to the execution of other transactions), rendering some or all of these transactions invalid. In such cases, the relayer will still incur gas costs (pays the fee), even though these inner transactions produce no effects.
 :::
 
 ### Example
@@ -326,7 +326,7 @@ Here's an example of a relayed v3 transaction. Its intent is:
   "sender": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0",
   "gasPrice": 1000000000,
   "gasLimit": 10200000,
-  "signature": "signature",
+  "signature": "...",
   "chainID": "T",
   "version": 2,
   "innerTransactions": [
@@ -338,7 +338,7 @@ Here's an example of a relayed v3 transaction. Its intent is:
       "gasPrice": 1000000000,
       "gasLimit": 5000000,
       "data": "YWRkQDAx",
-      "signature": "signature",
+      "signature": "...",
       "chainID": "T",
       "version": 2,
       "relayer": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0"
@@ -351,7 +351,7 @@ Here's an example of a relayed v3 transaction. Its intent is:
       "gasPrice": 1000000000,
       "gasLimit": 5000000,
       "data": "YWRkQDAx",
-      "signature": "signature",
+      "signature": "...",
       "chainID": "T",
       "version": 2,
       "relayer": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0"
@@ -363,7 +363,7 @@ Here's an example of a relayed v3 transaction. Its intent is:
       "sender": "erd1xfr34s4yft7pk4gf8mt7a2kkfz4z2f3rvuy9pwlgkeymue8pcfkqfxv2mv",
       "gasPrice": 1000000000,
       "gasLimit": 50000,
-      "signature": "signature",
+      "signature": "...",
       "chainID": "T",
       "version": 2,
       "relayer": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0"
