@@ -255,11 +255,26 @@ This feature is not available at the moment on Mainnet.
 
 Relayed transactions v3 feature comes with a change on the entire transaction structure, adding a new optional field `InnerTransactions`, which is a collection of inner transactions. That being said, relayed transactions v3 allow the user to send multiple inner transactions on the same relayed transaction which will be executed as normal transactions, without the gas consuming data field of the old relayed transactions versions.
 
-If we take the above example of relayed transaction v1, which would have consumed a total amount of gas of 61040000, with the relayed v3 approach the same transaction cost would be:
+In terms of gas limit computation, let's consider the following example: relayed transaction with one inner transaction of type move balance, that also has a data field `test` of length 4.
 ```js
-    gasLimit = <move_balance_cost> + <inner transaction gas limit>
-    gasLimit =      50_000         +        60_000_000
-    gasLimit = 60050000
+    gasLimitInnerTxs = <base_cost> + <cost_per_byte> * length(txData)
+    gasLimitInnerTxs =    50_000   +      4          *     1_500
+    gasLimitInnerTxs = 56_000
+    
+    gasLimitRelayedTx = <move_balance_cost> * len(inner_transactions) + <gasLimitInnerTxs>
+    gasLimitRelayedTx =      50_000         *            1            +        56_000
+    gasLimitRelayedTx = 100_000
+```
+
+Similar for a relayed transaction v3 that has 3 inner transactions of type move balance(empty data field on each):
+```js    
+    gasLimitInnerTxs = <move_balance_cost> + <move_balance_cost> + <move_balance_cost>
+    gasLimitInnerTxs =       50_000        +        50_000       +      50_000
+    gasLimitInnerTxs = 150_000
+
+    gasLimitRelayedTx = <move_balance_cost> * len(inner_transactions) + <gasLimitInnerTxs>
+    gasLimitRelayedTx =      50_000         *            3            +      150_000
+    gasLimitRelayedTx = 300_000
 ```
 
 It would look like:
