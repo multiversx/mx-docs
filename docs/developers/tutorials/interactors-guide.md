@@ -32,7 +32,7 @@ In this tutorial we will focus on integration testing using the interactors made
 Get a headstart by using sc-meta to generate one of our smart contract templates as a starting point for your smart contract. Let’s say we start from the `empty` template contract and name it `my-contract`.
 
 ```bash
-sc-meta new --template adder --name my-contract
+sc-meta new --template empty --name my-contract
 code my-contract # opens the contract in VSCode (optional)
 ```
 
@@ -91,7 +91,7 @@ In this snippet, we have created a storage mapper named `already_registered` to 
 
 ## Step 3: Build the contract
 
-Considering our syntax development is done, we should now be able to build the contract. We need to build the contract in order to generate necessary files for deployment and testing inside the `output` folder such as *my-contract.was* and *my-contract.mxsc.json*.
+Considering our syntax development is done, we should now be able to build the contract. We need to build the contract in order to generate necessary files for deployment and testing inside the `output` folder such as *my-contract.wasm* and *my-contract.mxsc.json*.
 
 ```bash
 cd my-contract
@@ -110,7 +110,7 @@ sc-meta all snippets
 
 This command compiled the contract and generated a new folder called `interactor`. The interactor is by default a Rust CLI program that uses the smart contract proxy to send calls to the contract.
 
-Inside the src folder *(interactor/src)*, we should find the newly generated proxy of the contract *(proxy.rs)* and the `interactor_main.rs` file, which is the main file of the project. A *sc-config.toml* file has also been created (if not existent) containing the path of the proxy file. 
+Inside the source folder *(interactor/src)*, we should find the newly generated proxy of the contract *(proxy.rs)* and the `interactor_main.rs` file, which is the main file of the project. A *sc-config.toml* file has also been created (if not existent) containing the path of the proxy file. 
 
 If we navigate to *interactor/src/interactor_main.rs*, inside the `main` function, we can find all the CLI command available to us:
 
@@ -133,7 +133,7 @@ async fn main() {
 }
 ```
 
-As you can see, `sc-meta` automatically generated all the logic behind calling the smart contract endpoints. The interactor uses async Rust, so all the functions are marked as async and need to be awaited to get a result.
+As you can see, `sc-meta` automatically generated all the logic behind calling the smart contract endpoints. The interactor uses asynchronous Rust, so all the functions are marked as `async` and need to be awaited to get a result.
 
 In order to compile the project, we need to include it in the project tree. In this case, we have to add the interactor project to the smart contract’s workspaces, in the *Cargo.toml* file:
 
@@ -360,6 +360,6 @@ Organizing the code this way streamlines the process even further. Now, it is ju
 
 ## Conclusion
 
-The interactors are a versatile tool that greatly simplifies various processes around a smart contract, including deployment, upgrades, interaction, and testing. These tools not only save time but also offer a robust starting codebase for Rust developers. They also provide a valuable learning opportunity for non-Rust developers to explore async Rust and other advanced features.
+The interactors are a versatile tool that greatly simplifies various processes around a smart contract, including deployment, upgrades, interaction, and testing. These tools not only save time but also offer a robust starting codebase for Rust developers. They also provide a valuable learning opportunity for non-Rust developers to explore asynchronous Rust and other advanced features.
 
 We highly recommend experimenting with these interactors, as they are efficient time-savers and are likely to be expanded with even more features in the future. By incorporating these practices, you can ensure that your smart contract functions as intended, providing a reliable and efficient service to users on MultiversX.
