@@ -249,6 +249,10 @@ Decoding the arguments ([useful resources here](/developers/sc-calls-format/)) w
 
 ## Relayed transactions version 3
 
+:::note
+This feature is not available at the moment on Mainnet.
+:::
+
 Relayed transactions v3 feature comes with a change on the entire transaction structure, adding a new optional field `InnerTransactions`, which is a slice of pointers to the Transaction structure. That being said, relayed transactions v3 allow the user to send multiple inner transactions on the same relayed transaction which will be executed as normal transactions, without the gas consuming data field of the old relayed transactions versions.
 
 If we take the above example of relayed transaction v1, which would have consumed a total amount of gas of 61040000, with the relayed v3 approach the same transaction cost would be:
