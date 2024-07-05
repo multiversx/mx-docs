@@ -263,7 +263,7 @@ In terms of gas limit computation, let's consider the following example: relayed
     
     gasLimitRelayedTx = <move_balance_cost> * len(inner_transactions) + <gasLimitInnerTxs>
     gasLimitRelayedTx =      50_000         *            1            +        56_000
-    gasLimitRelayedTx = 100_000
+    gasLimitRelayedTx = 106_000
 ```
 
 Similar for a relayed transaction v3 that has 3 inner transactions of type move balance(empty data field on each):
