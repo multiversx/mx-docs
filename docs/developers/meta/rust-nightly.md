@@ -22,10 +22,9 @@ Nightly Rust is still allowed, but not recommended. We will still be supporting 
 Also, everything on versions older than v0.50.0 needs to run on nightly Rust.
 
 So, to summarize:
-- After `v0.50.2`: `stable`, Rust >= 1.78 required.
-- After `v0.50.0`: `stable`.
-- Before `v0.50.0`: `nightly-2023-12-11` and `nightly-2024-05-22` are both known to be running fine.
-
+- Before `v0.50`: `nightly-2023-12-11` and `nightly-2024-05-22` are both known to be running fine;
+- On `v0.50` (use `v0.50.6`): any version of `stable` Rust;
+- Starting with `v0.51`: `stable`, Rust >= 1.78 required.
 
 [comment]: # (mx-context-auto)
 
