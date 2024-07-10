@@ -43,6 +43,14 @@
   --docsearch-hit-active-color: #242526 !important;
 }
 
+/* -------------------- Start Tailwind -------------------- */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------- End Tailwind -------------------- */
+
 /* -------------------- Start Overrides ------------------- */
 
 .plugin-pages #docusaurus_skipToContent_fallback {
