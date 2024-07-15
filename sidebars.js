@@ -56,6 +56,7 @@ const sidebars = {
           "developers/tutorials/energy-dao",
           "developers/tutorials/dex-walkthrough",
           "developers/tutorials/wallet-connect-v2-migration",
+          "developers/tutorials/eth-to-mvx",
         ],
       },
       {
