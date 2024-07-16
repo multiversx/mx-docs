@@ -1,8 +1,7 @@
 import React from "react";
-import Link from "@docusaurus/Link";
 import { faBook, faHammer, faServer } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import clsx from "clsx";
+
+import Section from "../Section";
 
 const TITLE = "MultiversX Developer Docs";
 const SUBTITLE = "Choose your path, you must.";
@@ -27,39 +26,20 @@ const CARDS = [
   },
 ];
 
-const HeroCard = ({ title, text, link, icon }) => {
-  return (
-    <Link
-      to={link}
-      className={clsx(
-        "group relative cursor-pointer overflow-clip rounded-3xl from-primary/30 via-transparent to-transparent"
-      )}
-    >
-      <div className="">
-        <FontAwesomeIcon icon={icon} />
-        <dt>{title}</dt>
-        <dd className="mb-0 text-sm">{text}</dd>
-      </div>
-    </Link>
-  );
-};
-
 const Hero = () => {
   return (
     <>
-      <section className="">
-        <div className="">
-          <h1>{TITLE}</h1>
-          <p>{SUBTITLE}</p>
+      <section className="flex-col justify-start items-start gap-32 inline-flex">
+        <div className="self-stretch flex-col justify-center items-start gap-4 flex">
+          <h1 className="text-neutral-50 mb-0 text-[56px] font-medium leading-[56px]">
+            {TITLE}
+          </h1>
+          <p className="text-neutral-500 text-[21px] font-normal leading-relaxed">
+            {SUBTITLE}
+          </p>
         </div>
       </section>
-      <section className="">
-        <dl>
-          {CARDS.map((card) => (
-            <HeroCard {...card} key={card.title} />
-          ))}
-        </dl>
-      </section>
+      <Section cards={CARDS} cardsClassname="hero-card" />
     </>
   );
 };

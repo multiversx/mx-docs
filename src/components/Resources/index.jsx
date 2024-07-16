@@ -1,7 +1,7 @@
 import React from "react";
-import clsx from "clsx";
 
-const TITLE = "";
+import Section from "../Section";
+
 const SUBTITLE = "More resources:";
 const LINKS = [
   {
@@ -22,35 +22,8 @@ const LINKS = [
   },
 ];
 
-const ResourceCard = ({ text, link }) => {
-  return (
-    <a
-      href={link}
-      className={clsx("relative")}
-      target="_blank"
-      rel="noreferrer nofollow noopener"
-    >
-      {text}
-    </a>
-  );
-};
-
 const Resources = () => {
-  return (
-    <section className="">
-      {(TITLE || SUBTITLE) && (
-        <div className="">
-          <h2>{TITLE}</h2>
-          <p>{SUBTITLE}</p>
-        </div>
-      )}
-      <dl>
-        {LINKS.map((card) => (
-          <ResourceCard {...card} key={card.title} />
-        ))}
-      </dl>
-    </section>
-  );
+  return <Section subtitle={SUBTITLE} links={LINKS} />;
 };
 
 export default Resources;

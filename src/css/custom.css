@@ -30,6 +30,7 @@
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme="dark"] {
+  --ifm-background-color: #0e0e0e !important;
   --ifm-color-primary: #23f7dd;
   --ifm-color-primary-dark: #21af90;
   --ifm-color-primary-darker: #1fa588;
@@ -39,8 +40,10 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 
-  --ifm-footer-background-color: #242526;
-  --docsearch-hit-active-color: #242526 !important;
+  --ifm-navbar-background-color: transparent;
+
+  --ifm-footer-background-color: var(--ifm-background-color);
+  --docsearch-hit-active-color: var(--ifm-background-color) !important;
 }
 
 /* -------------------- Start Tailwind -------------------- */
@@ -199,11 +202,17 @@ h2.anchor code {
 /* -------------------- End Navbar Icons ------------------- */
 
 /* -------------------- Start Navbar ------------------- */
-.navbar .navbar__items .navbar__brand + .navbar__item {
+/* .navbar .navbar__items .navbar__brand + .navbar__item {
   margin-left: calc(50% - 245px);
 }
 .navbar__brand {
   margin-left: 1rem;
+} */
+
+.navbar {
+  background-color: rgba(14, 14, 14, 0.5);
+  backdrop-filter: blur(0.375rem);
+  border-bottom: 1px solid var(--neutral-850, #212121);
 }
 
 /* -------------------- End Navbar ------------------- */
@@ -311,3 +320,13 @@ h2.anchor code {
 }
 
 /* -------------------- End Mermaid ------------------- */
+
+/* -------------------- Start New ------------------- */
+html:not(.docs-wrapper) #__docusaurus {
+  background: url("/img/homepage-bg.png"), var(--ifm-background-color);
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-blend-mode: lighten;
+}
+/* -------------------- End New ------------------- */

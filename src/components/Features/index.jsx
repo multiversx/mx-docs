@@ -1,6 +1,6 @@
 import React from "react";
-import Link from "@docusaurus/Link";
-import clsx from "clsx";
+
+import Section from "../Section";
 
 const TITLE = "Do more with MultiversX";
 const CARDS = [
@@ -46,32 +46,14 @@ const CARDS = [
   },
 ];
 
-const FeatureCard = ({ title, text, link, icon }) => {
-  return (
-    <Link
-      to={link}
-      className={clsx(
-        "group relative cursor-pointer overflow-clip rounded-3xl from-primary/30 via-transparent to-transparent"
-      )}
-    >
-      <div className="">
-        <dt>{title}</dt>
-        <dd className="mb-0 text-sm">{text}</dd>
-      </div>
-    </Link>
-  );
-};
-
 const Features = () => {
   return (
-    <section className="">
-      <h2>{TITLE}</h2>
-      <dl>
-        {CARDS.map((card) => (
-          <FeatureCard {...card} key={card.title} />
-        ))}
-      </dl>
-    </section>
+    <Section
+      title={TITLE}
+      cards={CARDS}
+      cardsClassname="feature-card"
+      hasSmallCards={true}
+    />
   );
 };
 
