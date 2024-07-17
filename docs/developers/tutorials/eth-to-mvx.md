@@ -21,7 +21,7 @@ The MultiversX VM was built to be a fast and secure execution engine, stateless 
 
 Let’s take a look to a simple adder contract in Ethereum’s Solidity
 
-```solidity
+```typescript
 contract Adder {
     uint private sum;
     
@@ -63,7 +63,7 @@ The element that defines the MultiversX framework is the fact that by a series o
 
 ## Handling the storage
 
-Contracts in MultiversX are important to be as small as possible, the reason why the whole storage is not handled by the contract, but rather the VM, the contract only holding a handle of a memory location inside the VM where the data is actually stored. A very popular concept that you will see here is the one of storage mappers, which are some structures designed to handle the serialization inside the storage, depending on the data types.
+Contracts in MultiversX are important to be as small as possible, the reason why the whole storage is not handled by the contract, but rather the VM, the contract only holding a handle of a memory location inside the VM where the data is actually stored. A very popular concept that you will see here is the one of `storage mappers`, which are some structures designed to handle the serialization inside the storage, depending on the data types.
 
 In the contract example the annotation above the declaration of `sum` is a storage mapper holding a single value of type `BigUint`. This mapper allows accessing and changing the value of our variable stored in the assigned memory location inside the VM. For multiple particular uses we implemented a series of mappers of which you can find out more about in our [documentation](https://docs.multiversx.com/developers/developer-reference/storage-mappers/).
 
@@ -73,7 +73,7 @@ Despite the fact that Ethereum also advances towards a similar concept of storag
 
 One of the main issues of some Rust types such as `String` or `Vec<T>` when it comes to smart contract development is that they are dynamically allocated on heap, meaning that the smart contract asks for more memory than it actually needs from the runtime environment (the VM). For a small collection this is insignificant, but for a bigger collection, this can become slow and the VM might even stop the contract and mark the execution as failed. Not to mention that more memory used leads to longer execution times, which ultimately leads to also increased gas costs.
 
-One of the most important outcomes of this issue is the fact that MultiversX smart contracts don’t use the `st` library. You will always see them marked with `#[no_std]`.
+One of the most important outcomes of this issue is the fact that MultiversX smart contracts don’t use the `std` library. You will always see them marked with `#[no_std]`.
 
 The solution to this problem, that the developers of  MultiversX came with, is called `managed types`. These managed types are the key elements behind the concept with the VM handling the smart contract memory that we mentioned before. Inside the contract these managed types only store a `handle`, which is a `u32` index representing the location within the VM memory where the data is stored.
 
@@ -103,7 +103,7 @@ We mentioned before that dynamic sized variables have their size calculated at c
 
 We implemented a concept called `ManagedType` which is a trait that many of our data types possess, allowing a more efficient way to hold them internally.
 
-Lets take for example an endpoint having an optional parameter. Option as you know has 2 possible elements: an empty value representing `none` or a parameter encrusted in something representing `some`. Putting a small restriction for this parameter to be one of a kind in an endpoint we can assume that if by the time we reached it, if there are no bytes left to cover, we have a`none, or if we have straight up a parameter of the type we specified, than we have the `some` option. Imagine now that we also extended this principle to a multivalue type attribute having the same logic behind. 
+Lets take for example an endpoint having an optional parameter. Option as you know has 2 possible elements: an empty value representing `none` or a parameter encrusted in something representing `some`. Putting a small restriction for this parameter to be one of a kind in an endpoint we can assume that if by the time we reached it, if there are no bytes left to cover, we have a `none`, or if we have straight up a parameter of the type we specified, than we have the `some` option. Imagine now that we also extended this principle to a multivalue type attribute having the same logic behind. 
 
 Because of these optimisations MultiversX’s provides one of the most efficient and cheap ways to interact with a smart contract on the blockchain.
 
@@ -182,7 +182,7 @@ Each one of these 7 fields has a trait that governs what types are allowed to oc
 
 All of these positions (except the environment Env) can be empty, unitialized. This is signaled at compile time by the unit type, (). In fact, a transaction always starts out with all fields empty, except for the environment.
 
-For instance, if we are in a contract and write self.tx(), the universal start of a transaction, the resulting type will be Tx<TxScEnv<Self::Api>, (), (), (), (), (), ()>, where TxScEnv<Self::Api> is simply the smart contract call environment. Of course, the transaction at this stage is unusable, it is up to the developer to add the required fields and send it.
+For instance, if we are in a contract and write `self.tx()`, the universal start of a transaction, the resulting type will be `Tx<TxScEnv<Self::Api>, (), (), (), (), (), ()>`, where `TxScEnv<Self::Api>` is simply the smart contract call environment. Of course, the transaction at this stage is unusable, it is up to the developer to add the required fields and send it.
 
 In its most basic form, a transaction might be constructed as follows:
 
@@ -209,7 +209,7 @@ Let's dive into an example!
 
 In Ethereum a transfer requires  a couple of implementations of some functions of a ERC721 standard.
 
-```solidity
+```typescript
 import "./erc721.sol";
 
   function _transfer(address _from, address _to, uint256 _tokenId) private {
@@ -237,7 +237,7 @@ fn transfer(&self, to_address: ManagedAddress) {
       .transfer();
 }
 ```
-An essential element of the MultiversX smart contract is that every smart contract is also an account, just like a normal user, meaning that it also has an address and a balance and it can perform transactions. From this perspective we can say that transfers in MultiversX are always done from the address of the contract and in thai case, the tokens sent, before the transaction, they have to be owned by the contract.
+An essential element of the MultiversX smart contract is that every smart contract is also an account, just like a normal user, meaning that it also has an address and a balance and it can perform transactions. From this perspective we can say that transfers in MultiversX are always done from the address of the contract, and in that case, before the transaction the tokens have to be owned by the contract.
 
 ## Smart contract differences
 
@@ -264,7 +264,7 @@ Furthermore the balance can be easily set in any endpoint by calling `self.balan
 
 Lets take a simple voting contract in Solidity:
 
-```solidity
+```typescript
 pragma solidity ^0.6.4;
 
 contract Voting {
@@ -314,7 +314,6 @@ pub trait Voting {
         }
     }
 
-
     #[endpoint]
     fn vote_for_candidate(&self, candidate: ManagedBuffer) {
         require!(
@@ -336,7 +335,7 @@ pub trait Voting {
 
 Notice that the candidates from the Solidity contract in MultiversX’s contract translate into a storage mapper of type `UnorderedSetMapper`. This mapper was specially designed to allow easy and cheap access to a list of elements stored within at the cost of its ordering. Checking whether a candidate exists within the list or not becomes simple by just calling `self.candidates().contains(&candidate)`.
 
-Next we have the increase of the number of votes which is done by `self.votes_received(&candidate).update(|votes| *votes += 1)`;. Here update receives a lambda allowing a total control of the contents of the storage.
+Next we have the increase of the number of votes which is done by `self.votes_received(&candidate).update(|votes| *votes += 1);`. Here update receives a lambda allowing a total control of the contents of the storage.
 
 The implementation of totalVotesFor becomes redundant in MultiversX thanks to the `#[view(getvotesReceived)]` annotation which gives our votes_received storage view access on blockchain.
 
@@ -344,7 +343,7 @@ The implementation of totalVotesFor becomes redundant in MultiversX thanks to th
 
 While Ethereum implemented its own [tool](https://remix.ethereum.org/) to facilitate deployment and interaction with smart contracts, the developers at MultiversX went on an approach facilitating these elements from the same IDE, within the same framework, and by writing mostly the same Rust syntax as in the smart contract itself.
 
-For MultiversX, the Interactors have multiple purposes, besides just helping you deploy a smart contract on the blockchain. These interractors work side by side with another tool developed by MultiversX developers called [sc-meta](https://docs.multiversx.com/developers/meta/sc-meta/) which facilitates smart contract building and proxies and interactor code auto-generation.
+For MultiversX, the Interactors have multiple purposes, besides just helping you deploy a smart contract on the blockchain. These interactors work side by side with another tool developed by MultiversX developers called [sc-meta](https://docs.multiversx.com/developers/meta/sc-meta/) which facilitates smart contract building and proxies and interactor code auto-generation.
 
 By using sc-meta one can easily be straight up ready to interact with his smart contract by generating his interactor with `sc-meta all snippets`.
 
