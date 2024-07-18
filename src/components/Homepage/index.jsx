@@ -8,7 +8,11 @@ import clsx from "clsx";
 
 export default function Homepage() {
   return (
-    <div className={clsx("container pt-24 pb-60 flex-col gap-24 inline-flex")}>
+    <div
+      className={clsx(
+        "container font-roobert-medium py-24 flex-col gap-24 inline-flex"
+      )}
+    >
       <Hero />
       <Features />
       <Promo />

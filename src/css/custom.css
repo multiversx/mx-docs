@@ -4,9 +4,43 @@
  * work well for content-centric websites.
  */
 
+@font-face {
+  font-family: "Roobert Regular";
+  src: url("https://cdn.multiversx.com/fonts/roobert/regular.woff2")
+      format("woff2"),
+    url("https://cdn.multiversx.com/fonts/roobert/regular.woff") format("woff"),
+    url("https://cdn.multiversx.com/fonts/roobert/regular.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Roobert Medium";
+  src: url("https://cdn.multiversx.com/fonts/roobert/medium.woff2")
+      format("woff2"),
+    url("https://cdn.multiversx.com/fonts/roobert/medium.woff") format("woff"),
+    url("https://cdn.multiversx.com/fonts/roobert/medium.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Roobert SemiBold";
+  src: url("https://cdn.multiversx.com/fonts/roobert/semibold.woff2")
+      format("woff2"),
+    url("https://cdn.multiversx.com/fonts/roobert/semibold.woff") format("woff"),
+    url("https://cdn.multiversx.com/fonts/roobert/semibold.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: 600;
+}
+
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #00947e;
+  --ifm-background-color: theme(colors.neutral.100);
+  --ifm-color-primary: #098ea0;
   --ifm-color-primary-dark: #006553;
   --ifm-color-primary-darker: #004b3c;
   --ifm-color-primary-darkest: #00392c;
@@ -15,6 +49,8 @@
   --ifm-color-primary-lightest: #23f7dd;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --ifm-heading-font-family: theme(fontFamily.roobert-medium);
 
   --ifm-h1-font-size: 2rem;
   --ifm-h2-font-size: 1.5rem;
@@ -26,24 +62,27 @@
   --ifm-heading-font-weight: 600;
 
   --ifm-footer-padding-vertical: 1.25rem;
+
+  --ifm-navbar-link-color: theme(colors.neutral.850);
+  --ifm-navbar-item-padding-horizontal: 1rem;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme="dark"] {
-  --ifm-background-color: #0e0e0e !important;
-  --ifm-color-primary: #23f7dd;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-background-color: theme(colors.neutral.925) !important;
+  --ifm-color-primary: theme(colors.teal.400);
+  --ifm-color-primary-dark: theme(colors.teal.500);
+  --ifm-color-primary-darker: theme(colors.teal.600);
+  --ifm-color-primary-darkest: theme(colors.teal.800);
+  --ifm-color-primary-light: theme(colors.teal.300);
+  --ifm-color-primary-lighter: theme(colors.teal.200);
+  --ifm-color-primary-lightest: theme(colors.teal.100);
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-
-  --ifm-navbar-background-color: transparent;
 
   --ifm-footer-background-color: var(--ifm-background-color);
   --docsearch-hit-active-color: var(--ifm-background-color) !important;
+
+  --ifm-navbar-link-color: theme(colors.neutral.400);
 }
 
 /* -------------------- Start Tailwind -------------------- */
@@ -209,10 +248,23 @@ h2.anchor code {
   margin-left: 1rem;
 } */
 
-.navbar {
+/* .navbar {
   background-color: rgba(14, 14, 14, 0.5);
   backdrop-filter: blur(0.375rem);
   border-bottom: 1px solid var(--neutral-850, #212121);
+} */
+
+/* [data-theme="dark"] {
+  --ifm-background-color: theme(colors.neutral.925) !important; */
+
+.navbar {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+[data-theme="dark"] .navbar {
+  background-color: rgba(14, 14, 14, 0.5);
+}
+.navbar:not(.navbar-sidebar--show) {
+  backdrop-filter: blur(0.375rem);
 }
 
 /* -------------------- End Navbar ------------------- */
@@ -322,11 +374,29 @@ h2.anchor code {
 /* -------------------- End Mermaid ------------------- */
 
 /* -------------------- Start New ------------------- */
-html:not(.docs-wrapper) #__docusaurus {
+html[data-has-hydrated="true"]:not(.docs-wrapper) #__docusaurus {
   background: url("/img/homepage-bg.png"), var(--ifm-background-color);
   background-position: top right;
   background-repeat: no-repeat;
   background-size: contain;
+}
+
+html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper)
+  #__docusaurus {
+  background: url("/img/homepage-bg-dark.png"), var(--ifm-background-color);
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: contain;
   background-blend-mode: lighten;
+}
+
+.section-shadow {
+  box-shadow: 0px 10px 9px 0px rgba(0, 0, 0, 0.06),
+    0px 4px 4px 0px rgba(0, 0, 0, 0.08);
+}
+
+.section-small-shadow {
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 /* -------------------- End New ------------------- */

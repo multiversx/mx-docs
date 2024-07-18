@@ -23,7 +23,7 @@ const LINKS = [
 ];
 
 const Resources = () => {
-  return <Section subtitle={SUBTITLE} links={LINKS} />;
+  return <Section subtitle={SUBTITLE} links={LINKS} className="-mt-20" />;
 };
 
 export default Resources;

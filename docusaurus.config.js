@@ -105,12 +105,12 @@ const config = {
         items: [
           {
             href: "/developers/overview",
-            label: "Develop",
+            label: "Developers",
             position: "left",
           },
           {
             href: "/validators/overview",
-            label: "Validate",
+            label: "Validators",
             position: "left",
           },
           {
@@ -202,6 +202,16 @@ const config = {
       slugPreprocessor: (slugBase) =>
         slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, ""),
     }),
+
+  headTags: [
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://cdn.multiversx.com",
+      },
+    },
+  ],
 
   plugins: [
     [
