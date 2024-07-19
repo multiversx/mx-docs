@@ -70,7 +70,7 @@
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme="dark"] {
   --ifm-background-color: theme(colors.neutral.925) !important;
-  --ifm-color-primary: theme(colors.teal.400);
+  --ifm-color-primary: #23f7dd;
   --ifm-color-primary-dark: theme(colors.teal.500);
   --ifm-color-primary-darker: theme(colors.teal.600);
   --ifm-color-primary-darkest: theme(colors.teal.800);
@@ -398,5 +398,20 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper)
 .section-small-shadow {
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
     0px 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-teal:hover,
+.btn-teal:active,
+.btn-teal:focus {
+  box-shadow: 0 0 8px 1px rgba(0, 255, 224, 0.6);
+}
+
+[data-theme="dark"] .has-icon-gradient .card-icon path {
+  fill: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><linearGradient id='grad'><stop offset='0%' stop-color='%2300FFC2'/><stop offset='100%' stop-color='%2328CAE0'/></linearGradient></svg>#grad")
+    var(--ifm-color-primary);
+}
+
+.community-card .card-icon {
+  font-size: 48px;
 }
 /* -------------------- End New ------------------- */

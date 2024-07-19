@@ -37,7 +37,7 @@ const Community = () => {
       title={TITLE}
       subtitle={SUBTITLE}
       cards={CARDS}
-      cardsClassname="community-card"
+      cardsClassname="community-card has-icon-gradient"
     />
   );
 };

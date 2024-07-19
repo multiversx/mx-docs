@@ -5,8 +5,9 @@ import {
   faArrowUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import clsx from "clsx";
+
+import ExternalIcon from "./external.svg";
 
 const SectionCard = ({
   title = "",
@@ -58,10 +59,10 @@ const SectionCard = ({
       <div className="grow shrink basis-0 self-stretch rounded-2xl flex-col justify-between items-start inline-flex">
         <div className="self-stretch h-[65px] flex-col justify-start items-start gap-3 flex">
           {icon && (
-            <div className="h-8 justify-center items-center inline-flex">
+            <div className="justify-center items-center inline-flex">
               <FontAwesomeIcon
                 icon={icon}
-                className="text-center text-primary text-[32px] font-black"
+                className="card-icon text-center text-primary text-[32px] font-black"
               />
             </div>
           )}
@@ -72,7 +73,7 @@ const SectionCard = ({
             <div className="w-4 h-4 justify-center items-center flex">
               <FontAwesomeIcon
                 icon={faArrowRight}
-                className="w-3.5 text-center text-primary text-sm font-normal"
+                className="text-center text-primary text-sm font-normal"
               />
             </div>
           </div>
@@ -90,12 +91,12 @@ const SectionLink = ({ text = "", link, className }) => {
     <Link
       to={link}
       className={clsx(
-        "link text-primary text-lg font-semibold leading-normal gap-2 inline-flex justify-center items-center hover:no-underline",
+        "link text-primary hover:text-teal-200 text-lg font-semibold leading-normal gap-2 inline-flex justify-center items-center hover:no-underline",
         className
       )}
     >
       {text}
-      <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="w-4" />
+      <ExternalIcon className="w-4" />
     </Link>
   );
 };
@@ -152,7 +153,7 @@ const Section = ({
           )}
         >
           {links.map((link) => (
-            <li key={link.title} className="inline-flex">
+            <li key={link.link} className="inline-flex">
               <SectionLink {...link} className={linksClassname} />
             </li>
           ))}

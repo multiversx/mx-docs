@@ -45,7 +45,7 @@ const Promo = () => {
           <Link
             to="/sovereign"
             className={clsx(
-              "text-black dark:text-primary bg-white hover:bg-neutral-200 dark:bg-primary dark:hover:bg-teal-600 px-3  rounded-xl justify-center items-center flex hover:no-underline"
+              "btn-teal text-black dark:text-primary bg-white hover:bg-neutral-200 dark:bg-primary dark:hover:bg-teal-300 px-3  rounded-xl justify-center items-center flex hover:no-underline"
             )}
           >
             <div className="px-4 py-3 rounded-lg justify-center items-center gap-2 flex">
@@ -53,17 +53,12 @@ const Promo = () => {
                 Sovereign Chains Documentation
               </div>
             </div>
-            <Link
-              to="/sovereign"
-              className={clsx("p-[9px] justify-center items-center flex")}
-            >
-              <div className="w-[30px] h-[30px] justify-center items-center flex">
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="w-6 text-center text-gray-950 text-2xl font-black"
-                />
-              </div>
-            </Link>
+            <div className="w-[30px] h-[30px] justify-center items-center flex">
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className="w-6 text-center text-gray-950 text-2xl font-black"
+              />
+            </div>
           </Link>
         </div>
       </div>
