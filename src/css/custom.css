@@ -375,8 +375,12 @@ h2.anchor code {
 
 /* -------------------- Start New ------------------- */
 html[data-has-hydrated="true"]:not(.docs-wrapper) #__docusaurus {
-  background: url("/img/theme/astronaut.png") right -20px top 80px no-repeat,
-    url("/img/theme/ray-opaque.png") right -50px top no-repeat,
+  background: image-set(
+        url("/img/theme/astronaut.webp") 1x,
+        url("/img/theme/astronaut@2x.webp") 2x
+      )
+      right -20px top 80px no-repeat,
+    url("/img/theme/ray-opaque.webp") right -50px top no-repeat,
     var(--ifm-background-color);
   background-size: 45vw, 80vw, auto;
   background-blend-mode: normal, difference, normal;
@@ -384,8 +388,12 @@ html[data-has-hydrated="true"]:not(.docs-wrapper) #__docusaurus {
 
 html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper)
   #__docusaurus {
-  background: url("/img/theme/astronaut.png") right -20px top 80px no-repeat,
-    url("/img/theme/ray.png") right -50px top no-repeat,
+  background: image-set(
+        url("/img/theme/astronaut.webp") 1x,
+        url("/img/theme/astronaut@2x.webp") 2x
+      )
+      right -20px top 80px no-repeat,
+    url("/img/theme/ray.webp") right -50px top no-repeat,
     var(--ifm-background-color);
   background-size: 45vw, 80vw, auto;
   background-blend-mode: normal, lighten, normal;

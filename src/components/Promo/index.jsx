@@ -25,7 +25,7 @@ const Promo = () => {
         <source src="videos/sov-animation-loop-header-transcode.mp4" />
         <source src="videos/sov-animation-loop-header-transcode.webm" />
       </video>
-      <div className="absolute top-0 bottom-0 lg:top-auto lg:bottom-auto z-1 h-[326px] flex-col justify-start items-center lg:gap-14 inline-flex">
+      <div className="absolute top-[40px] sm:top-auto sm:bottom-auto z-1 h-[326px] flex-col justify-start items-center lg:gap-14 inline-flex">
         <div className="p-10 flex-col justify-start items-center gap-4 flex rounded-[40px] promo-shadow">
           <div className="h-7 px-[7px] bg-teal-400/10 rounded-[48px] border border-solid border-green-600/70 backdrop-blur-[36px] justify-center items-center inline-flex">
             <div className="self-stretch px-1.5 justify-center items-center gap-2 flex">
@@ -41,7 +41,7 @@ const Promo = () => {
             {SUBTITLE}
           </div>
         </div>
-        <div className="justify-center items-start gap-2 inline-flex">
+        <div className="justify-center items-start gap-2 inline-flex px-5">
           <Link
             to="/sovereign"
             className={clsx(
