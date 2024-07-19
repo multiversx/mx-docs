@@ -379,7 +379,7 @@ html[data-has-hydrated="true"]:not(.docs-wrapper) #__docusaurus {
         url("/img/theme/astronaut.webp") 1x,
         url("/img/theme/astronaut@2x.webp") 2x
       )
-      right -20px top 80px no-repeat,
+      right -20px top 40px no-repeat,
     url("/img/theme/ray-opaque.webp") right -50px top no-repeat,
     var(--ifm-background-color);
   background-size: 45vw, 80vw, auto;
@@ -392,7 +392,7 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper)
         url("/img/theme/astronaut.webp") 1x,
         url("/img/theme/astronaut@2x.webp") 2x
       )
-      right -20px top 80px no-repeat,
+      right -20px top 40px no-repeat,
     url("/img/theme/ray.webp") right -50px top no-repeat,
     var(--ifm-background-color);
   background-size: 45vw, 80vw, auto;
@@ -408,6 +408,9 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper)
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
     0px 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
+.title-shadow {
+  text-shadow: 0 0 8px var(--ifm-background-color);
+}
 
 .btn-teal:hover,
 .btn-teal:active,
@@ -416,8 +419,7 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper)
 }
 
 [data-theme="dark"] .has-icon-gradient .card-icon path {
-  fill: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPjxsaW5lYXJHcmFkaWVudCBpZD0nZ3JhZCc+PHN0b3Agb2Zmc2V0PScwJScgc3RvcC1jb2xvcj0nIzAwRkZDMicvPjxzdG9wIG9mZnNldD0nMTAwJScgc3RvcC1jb2xvcj0nIzI4Q0FFMCcvPjwvbGluZWFyR3JhZGllbnQ+PC9zdmc+#grad")
-    var(--ifm-color-primary);
+  fill: url("#icon-gradient") var(--ifm-color-primary);
 }
 
 .community-card .card-icon {

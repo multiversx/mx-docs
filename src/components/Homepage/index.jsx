@@ -13,6 +13,19 @@ export default function Homepage() {
         "container font-roobert-medium py-24 flex-col gap-24 inline-flex"
       )}
     >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        role="img"
+        width="0"
+        height="0"
+      >
+        <linearGradient id="icon-gradient">
+          <stop offset="0%" stop-color="#00FFC2"></stop>
+          <stop offset="100%" stop-color="#28CAE0"></stop>
+        </linearGradient>
+      </svg>
       <Hero />
       <Features />
       <Promo />
