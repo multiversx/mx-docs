@@ -27,7 +27,7 @@ const SectionCard = ({
         )}
       >
         <div className="grow shrink basis-0 self-stretch rounded-2xl flex-col justify-between items-start inline-flex">
-          <div className="self-stretch h-[65px] flex-col justify-start items-start gap-3 flex">
+          <div className="self-stretch flex-col justify-start items-start gap-3 flex">
             <div className="justify-start items-center gap-1 inline-flex">
               <dt className="text-primary text-lg font-semibold leading-normal">
                 {title}
@@ -35,12 +35,12 @@ const SectionCard = ({
               <div className="w-4 h-4 justify-center items-center flex">
                 <FontAwesomeIcon
                   icon={faArrowRight}
-                  className="w-3.5 h-[13.50px] text-center text-primary text-sm font-normal]"
+                  className="text-center text-primary text-sm"
                 />
               </div>
             </div>
           </div>
-          <dd className="ms-0 self-stretch text-neutral-500 text-sm font-normal leading-tight">
+          <dd className="ms-0 self-stretch text-neutral-500 text-sm leading-tight font-roobert">
             {text}
           </dd>
         </div>
@@ -73,12 +73,12 @@ const SectionCard = ({
             <div className="w-4 h-4 justify-center items-center flex">
               <FontAwesomeIcon
                 icon={faArrowRight}
-                className="text-center text-primary text-sm font-normal"
+                className="text-center text-primary text-sm"
               />
             </div>
           </div>
         </div>
-        <dd className="ms-0 dark:text-neutral-500 text-base font-normal leading-snug">
+        <dd className="ms-0 text-neutral-500 leading-snug font-roobert">
           {text}
         </dd>
       </div>
@@ -115,14 +115,12 @@ const Section = ({
     <section className={clsx("section", className)}>
       <div className={clsx("section-header")}>
         {title && (
-          <h2 className="mb-0 text-neutral-1000 dark:text-neutral-50 text-[32px] font-medium leading-loose">
+          <h2 className="mb-0 text-neutral-1000 dark:text-neutral-50 text-[32px] font-medium leading-snug">
             {title}
           </h2>
         )}
         {subtitle && (
-          <p className="mb-0 text-neutral-500 text-base font-normal leading-snug">
-            {subtitle}
-          </p>
+          <p className="mb-0 text-neutral-500 leading-snug">{subtitle}</p>
         )}
       </div>
       {cards.length > 0 && (

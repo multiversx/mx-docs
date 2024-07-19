@@ -70,7 +70,7 @@
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme="dark"] {
   --ifm-background-color: theme(colors.neutral.925) !important;
-  --ifm-color-primary: #23f7dd;
+  --ifm-color-primary: theme(colors.teal.400);
   --ifm-color-primary-dark: theme(colors.teal.500);
   --ifm-color-primary-darker: theme(colors.teal.600);
   --ifm-color-primary-darkest: theme(colors.teal.800);

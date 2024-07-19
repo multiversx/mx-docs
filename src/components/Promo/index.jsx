@@ -37,7 +37,7 @@ const Promo = () => {
           <div className="lg:w-[686px] text-center text-neutral-200 font-medium text-[42px] leading-[46px] lg:text-[56px] lg:leading-[56px]">
             {TITLE}
           </div>
-          <div className="lg:w-[700px] text-center text-neutral-500 lg:text-[21px] font-normal leading-relaxed">
+          <div className="lg:w-[700px] text-center text-neutral-500 lg:text-[21px] font-normal font-roobert leading-snug">
             {SUBTITLE}
           </div>
         </div>

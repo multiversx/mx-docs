@@ -19,10 +19,12 @@ module.exports = {
       },
       colors: {
         neutral: {
-          400: "#23f7dd",
           850: "#212121",
           925: "#0E0E0E",
           1000: "#080808",
+        },
+        teal: {
+          400: "#23f7dd",
         },
         primary: {
           DEFAULT: "var(--ifm-color-primary)",

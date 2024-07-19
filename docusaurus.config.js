@@ -119,7 +119,7 @@ const config = {
             position: "left",
           },
           {
-            href: "/technology/architecture-overview",
+            href: "/learn/architecture-overview",
             label: "Learn",
             position: "left",
           },
