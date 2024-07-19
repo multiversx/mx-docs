@@ -407,7 +407,7 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper)
 }
 
 [data-theme="dark"] .has-icon-gradient .card-icon path {
-  fill: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><linearGradient id='grad'><stop offset='0%' stop-color='%2300FFC2'/><stop offset='100%' stop-color='%2328CAE0'/></linearGradient></svg>#grad")
+  fill: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPjxsaW5lYXJHcmFkaWVudCBpZD0nZ3JhZCc+PHN0b3Agb2Zmc2V0PScwJScgc3RvcC1jb2xvcj0nIzAwRkZDMicvPjxzdG9wIG9mZnNldD0nMTAwJScgc3RvcC1jb2xvcj0nIzI4Q0FFMCcvPjwvbGluZWFyR3JhZGllbnQ+PC9zdmc+#grad")
     var(--ifm-color-primary);
 }
 
