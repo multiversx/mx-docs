@@ -10,6 +10,7 @@ const TAG = "Sovereign Chains";
 const TITLE = "Build and deploy custom L2s or Appchains";
 const SUBTITLE =
   "Enable new types of use cases made possible by scalable, efficient, secure and dedicated blockchains - powered by the Sovereign Chain SDK.";
+const LINK = "sovereign/overview";
 
 const Promo = () => {
   return (
@@ -41,26 +42,28 @@ const Promo = () => {
             {SUBTITLE}
           </div>
         </div>
-        <div className="justify-center items-start gap-2 inline-flex px-5">
-          <Link
-            to="/sovereign"
-            className={clsx(
-              "btn-teal text-black dark:text-primary bg-white hover:bg-neutral-200 dark:bg-primary dark:hover:bg-teal-300 px-3  rounded-xl justify-center items-center flex hover:no-underline"
-            )}
-          >
-            <div className="px-4 py-3 rounded-lg justify-center items-center gap-2 flex">
-              <div className="text-center text-gray-950 text-lg font-semibold leading-normal">
-                Sovereign Chains Documentation
+        {LINK && (
+          <div className="justify-center items-start gap-2 inline-flex px-5">
+            <Link
+              to={LINK}
+              className={clsx(
+                "btn-teal text-black dark:text-primary bg-white hover:bg-neutral-200 dark:bg-primary dark:hover:bg-teal-300 px-3  rounded-xl justify-center items-center flex hover:no-underline"
+              )}
+            >
+              <div className="px-4 py-3 rounded-lg justify-center items-center gap-2 flex">
+                <div className="text-center text-gray-950 text-lg font-semibold leading-normal">
+                  Sovereign Chains Documentation
+                </div>
               </div>
-            </div>
-            <div className="w-[30px] h-[30px] justify-center items-center flex">
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                className="w-6 text-center text-gray-950 text-2xl font-black"
-              />
-            </div>
-          </Link>
-        </div>
+              <div className="justify-center items-center flex">
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className="w-6 text-center text-gray-950 text-2xl font-black"
+                />
+              </div>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
