@@ -164,7 +164,7 @@ const config = {
               },
               {
                 label: "Bridge",
-                href: "https://ad-astra.multiversx.com",
+                href: "https://bridge.multiversx.com",
                 target: "_blank",
               },
               {
