@@ -22,27 +22,27 @@ const CARDS = [
   {
     title: "Get the Architecture Overview",
     text: "Explore MultiversX innovations.",
-    link: "/integrators/overview",
+    link: "/technology/architecture-overview",
   },
   {
     title: "Discover SpaceVM",
     text: "A fast and secure virtual machine to power growth.",
-    link: "/integrators/overview",
+    link: "/technology/the-wasm-vm",
   },
   {
     title: "Get EGLD",
     text: "You need EGLD or xEGLD in order to be able to interact with the MultiversX Network.",
-    link: "/integrators/overview",
+    link: "/wallet/web-wallet/#testnet-and-devnet-faucet",
   },
   {
     title: "Tools & Resources",
     text: "You can access the best set of tools that you may need for running your project.",
-    link: "/integrators/overview",
+    link: "https://multiversx.com/builders/builder-tools-resources",
   },
   {
     title: "Tutorials",
     text: "A great start for anyone looking to learn.",
-    link: "/integrators/overview",
+    link: "https://multiversx.com/builders/build-your-first-multiversx-dapp-in-30-minutes",
   },
 ];
 
