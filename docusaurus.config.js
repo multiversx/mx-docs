@@ -191,8 +191,8 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} MultiversX. All rights reserved.`,
       },
       prism: {
-        theme: prismThemes.vsDark,
-        darkTheme: prismThemes.oceanicNext,
+        theme: prismThemes.vsLight,
+        darkTheme: prismThemes.vsDark,
         additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json"],
       },
       algolia: {
