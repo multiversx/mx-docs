@@ -7,7 +7,7 @@ html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
       right -20px top 40px no-repeat,
     url("/img/theme/ray-opaque.webp") right -50px top no-repeat,
     var(--ifm-background-color);
-  background-size: 45vw, 80vw, auto;
+  background-size: 680px, 1200px, auto;
   background-blend-mode: normal, difference, normal;
 }
 
@@ -22,8 +22,32 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
       right -20px top 40px no-repeat,
     url("/img/theme/ray.webp") right -50px top no-repeat,
     var(--ifm-background-color);
-  background-size: 45vw, 80vw, auto;
+  background-size: 680px, 1200px, auto;
   background-blend-mode: normal, lighten, normal;
+}
+
+@media only screen and (max-width: 428px) {
+  html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
+    #__docusaurus,
+  html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
+      .search-page-wrapper
+    )
+    #__docusaurus {
+    background-position: right -20px top 190px, right -100px top 140px;
+    background-size: 64vw, 160vw, auto;
+  }
+}
+
+@media only screen and (min-width: 429px) and (max-width: 992px) {
+  html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
+    #__docusaurus,
+  html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
+      .search-page-wrapper
+    )
+    #__docusaurus {
+    background-position: right -20px top 120px, right -100px top 100px;
+    background-size: 70vw, 120vw, auto;
+  }
 }
 
 html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(

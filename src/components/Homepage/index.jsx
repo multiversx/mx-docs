@@ -10,11 +10,7 @@ import "./homepage.css";
 
 export default function Homepage() {
   return (
-    <div
-      className={clsx(
-        "container font-medium py-24 flex-col gap-24 inline-flex"
-      )}
-    >
+    <>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
@@ -24,15 +20,21 @@ export default function Homepage() {
         height="0"
       >
         <linearGradient id="icon-gradient">
-          <stop offset="0%" stop-color="#00FFC2"></stop>
-          <stop offset="100%" stop-color="#28CAE0"></stop>
+          <stop offset="0%" stopColor="#00FFC2"></stop>
+          <stop offset="100%" stopColor="#28CAE0"></stop>
         </linearGradient>
       </svg>
-      <Hero />
-      <Features />
-      <Promo />
-      <Community />
-      <Resources />
-    </div>
+      <div
+        className={clsx(
+          "container font-medium py-4 gap-24 sm:py-24 sm:gap-24 flex-col inline-flex"
+        )}
+      >
+        <Hero />
+        <Features />
+        <Promo />
+        <Community />
+        <Resources />
+      </div>
+    </>
   );
 }

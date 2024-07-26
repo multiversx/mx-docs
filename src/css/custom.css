@@ -237,6 +237,12 @@ div[class*="colorModeToggle"] .clean-btn:hover {
   background-color: theme(colors.neutral.700);
 }
 
+@media only screen and (max-width: 998px) {
+  .navbar__items--right .dropdown.dropdown--right {
+    display: none;
+  }
+}
+
 .navbar__items--right {
   display: flex;
   align-items: center;
@@ -246,7 +252,7 @@ div[class*="colorModeToggle"] .clean-btn:hover {
 .header-telegram-link,
 .header-github-link,
 .header-discord-link,
-.header-app-change-link {
+.header-app-change {
   --ifm-navbar-item-padding-horizontal: 0.5rem;
   --ifm-navbar-item-padding-vertical: 0.5rem;
 }
@@ -254,7 +260,7 @@ div[class*="colorModeToggle"] .clean-btn:hover {
 .header-telegram-link:hover,
 .header-github-link:hover,
 .header-discord-link:hover,
-.header-app-change-link:hover {
+.header-app-change:hover {
   opacity: 0.6;
 }
 
@@ -314,6 +320,45 @@ div[class*="colorModeToggle"] .clean-btn:hover {
 [data-theme="dark"] .header-app-change::before {
   background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYgMS41VjQuNUM2IDUuMzQzNzUgNS4zMTI1IDYgNC41IDZIMS41QzAuNjU2MjUgNiAwIDUuMzQzNzUgMCA0LjVWMS41QzAgMC42ODc1IDAuNjU2MjUgMCAxLjUgMEg0LjVDNS4zMTI1IDAgNiAwLjY4NzUgNiAxLjVaTTYgOS41VjEyLjVDNiAxMy4zNDM4IDUuMzEyNSAxNCA0LjUgMTRIMS41QzAuNjU2MjUgMTQgMCAxMy4zNDM4IDAgMTIuNVY5LjVDMCA4LjY4NzUgMC42NTYyNSA4IDEuNSA4SDQuNUM1LjMxMjUgOCA2IDguNjg3NSA2IDkuNVpNOCAxLjVDOCAwLjY4NzUgOC42NTYyNSAwIDkuNSAwSDEyLjVDMTMuMzEyNSAwIDE0IDAuNjg3NSAxNCAxLjVWNC41QzE0IDUuMzQzNzUgMTMuMzEyNSA2IDEyLjUgNkg5LjVDOC42NTYyNSA2IDggNS4zNDM3NSA4IDQuNVYxLjVaTTE0IDkuNVYxMi41QzE0IDEzLjM0MzggMTMuMzEyNSAxNCAxMi41IDE0SDkuNUM4LjY1NjI1IDE0IDggMTMuMzQzOCA4IDEyLjVWOS41QzggOC42ODc1IDguNjU2MjUgOCA5LjUgOEgxMi41QzEzLjMxMjUgOCAxNCA4LjY4NzUgMTQgOS41WiIgZmlsbD0iI0Y1RjVGNSIvPgo8L3N2Zz4K")
     no-repeat;
+}
+
+@media only screen and (min-width: 998px) {
+  .header-telegram-link,
+  .header-github-link,
+  .header-discord-link,
+  .header-app-change {
+    font-size: 0;
+    color: transparent;
+  }
+  .header-telegram-link svg,
+  .header-github-link svg,
+  .header-discord-link svg,
+  .header-app-change svg {
+    display: none;
+  }
+
+  .header-telegram-link,
+  .header-github-link,
+  .header-discord-link,
+  .header-app-change {
+    font-size: 0;
+    color: transparent;
+  }
+}
+@media only screen and (max-width: 998px) {
+  .header-telegram-link,
+  .header-github-link,
+  .header-discord-link,
+  .header-app-change {
+    padding-left: 40px;
+  }
+  .header-discord-link::before,
+  .header-github-link::before,
+  .header-telegram-link::before,
+  .header-app-change::before {
+    position: absolute;
+    left: 20px;
+  }
 }
 
 /* -------------------- End Navbar ------------------- */
@@ -394,6 +439,11 @@ html[data-theme="dark"] .DocSearch {
   gap: 0.625rem;
   border-radius: 0.375rem;
   height: 2rem;
+}
+@media only screen and (max-width: 768px) {
+  .navbar .DocSearch-Button {
+    width: 32px;
+  }
 }
 .navbar .DocSearch-Search-Icon {
   width: 1rem;
