@@ -1,10 +1,12 @@
+import clsx from "clsx";
+
 import Community from "../Community";
 import Features from "../Features";
 import Hero from "../Hero";
 import Promo from "../Promo";
 import Resources from "../Resources";
 
-import clsx from "clsx";
+import "./homepage.css";
 
 export default function Homepage() {
   return (

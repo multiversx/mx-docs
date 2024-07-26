@@ -1,0 +1,65 @@
+html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
+  #__docusaurus {
+  background: image-set(
+        url("/img/theme/astronaut.webp") 1x,
+        url("/img/theme/astronaut@2x.webp") 2x
+      )
+      right -20px top 40px no-repeat,
+    url("/img/theme/ray-opaque.webp") right -50px top no-repeat,
+    var(--ifm-background-color);
+  background-size: 45vw, 80vw, auto;
+  background-blend-mode: normal, difference, normal;
+}
+
+html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
+    .search-page-wrapper
+  )
+  #__docusaurus {
+  background: image-set(
+        url("/img/theme/astronaut.webp") 1x,
+        url("/img/theme/astronaut@2x.webp") 2x
+      )
+      right -20px top 40px no-repeat,
+    url("/img/theme/ray.webp") right -50px top no-repeat,
+    var(--ifm-background-color);
+  background-size: 45vw, 80vw, auto;
+  background-blend-mode: normal, lighten, normal;
+}
+
+html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
+    .search-page-wrapper
+  ) {
+  --ifm-background-color: theme(colors.neutral.925);
+}
+html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
+    .search-page-wrapper
+  )
+  .navbar {
+  background-color: rgba(14, 14, 14, 0.5);
+}
+
+.section-shadow {
+  box-shadow: 0 0.625rem 0.563rem 0 rgba(0, 0, 0, 0.06),
+    0 0.25rem 0.25rem 0 rgba(0, 0, 0, 0.08);
+}
+
+.section-small-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+.title-shadow {
+  text-shadow: 0 0 0.5rem var(--ifm-background-color);
+}
+
+.btn-teal:hover,
+.btn-teal:active,
+.btn-teal:focus {
+  box-shadow: 0 0 0.5rem 1px rgba(0, 255, 224, 0.6);
+}
+
+[data-theme="dark"] .has-icon-gradient .card-icon path {
+  fill: url("#icon-gradient") var(--ifm-color-primary);
+}
+
+.community-card .card-icon {
+  font-size: 3rem;
+}
