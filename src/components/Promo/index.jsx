@@ -11,6 +11,7 @@ const TITLE = "Build and deploy custom L2s or Appchains";
 const SUBTITLE =
   "Enable new types of use cases made possible by scalable, efficient, secure and dedicated blockchains - powered by the Sovereign Chain SDK.";
 const LINK = "sovereign/overview";
+const BUTTON = "Sovereign Chains Documentation";
 
 const Promo = () => {
   return (
@@ -38,7 +39,7 @@ const Promo = () => {
           <div className="lg:w-[686px] text-center text-neutral-200 font-medium text-[42px] leading-[46px] lg:text-[56px] lg:leading-[56px]">
             {TITLE}
           </div>
-          <div className="lg:w-[700px] text-center text-neutral-500 lg:text-[21px] font-normal font-roobert leading-snug">
+          <div className="lg:w-[700px] text-center text-neutral-500 lg:text-[21px] font-normal leading-snug">
             {SUBTITLE}
           </div>
         </div>
@@ -52,7 +53,7 @@ const Promo = () => {
             >
               <div className="px-4 py-3 rounded-lg justify-center items-center gap-2 flex">
                 <div className="text-center text-gray-950 text-lg font-semibold leading-normal">
-                  Sovereign Chains Documentation
+                  {BUTTON}
                 </div>
               </div>
               <div className="justify-center items-center flex">

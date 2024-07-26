@@ -13,9 +13,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        roobert: ['"Roobert Regular"', ...fontFamily.sans],
-        "roobert-medium": ['"Roobert Medium"', ...fontFamily.sans],
-        "roobert-semibold": ['"Roobert SemiBold"', ...fontFamily.sans],
+        sans: ["Roobert", "system-ui", ...fontFamily.sans],
       },
       colors: {
         neutral: {

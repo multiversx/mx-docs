@@ -10,7 +10,7 @@ export default function Homepage() {
   return (
     <div
       className={clsx(
-        "container font-roobert-medium py-24 flex-col gap-24 inline-flex"
+        "container font-medium py-24 flex-col gap-24 inline-flex"
       )}
     >
       <svg

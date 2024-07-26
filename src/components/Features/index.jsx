@@ -27,7 +27,7 @@ const CARDS = [
   {
     title: "Discover SpaceVM",
     text: "A fast and secure virtual machine to power growth.",
-    link: "/technology/the-wasm-vm",
+    link: "/learn/space-vm",
   },
   {
     title: "Get EGLD",

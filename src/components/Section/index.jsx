@@ -1,9 +1,6 @@
 import React from "react";
 import Link from "@docusaurus/Link";
-import {
-  faArrowRight,
-  faArrowUpRightFromSquare,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 
@@ -40,7 +37,7 @@ const SectionCard = ({
               </div>
             </div>
           </div>
-          <dd className="ms-0 self-stretch text-neutral-500 text-sm leading-tight font-roobert">
+          <dd className="ms-0 self-stretch text-neutral-500 text-sm leading-tight">
             {text}
           </dd>
         </div>
@@ -78,9 +75,7 @@ const SectionCard = ({
             </div>
           </div>
         </div>
-        <dd className="ms-0 text-neutral-500 leading-snug font-roobert">
-          {text}
-        </dd>
+        <dd className="ms-0 text-neutral-500 leading-snug">{text}</dd>
       </div>
     </Link>
   );
