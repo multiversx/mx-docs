@@ -18,5 +18,3 @@ See [migration support](https://github.com/multiversx/mx-sdk-js-core/issues?q=la
 ## Migrate to a newer sdk-wallet
 
 See [migration support](https://github.com/multiversx/mx-sdk-js-wallet/issues?q=label:migration).
-
-

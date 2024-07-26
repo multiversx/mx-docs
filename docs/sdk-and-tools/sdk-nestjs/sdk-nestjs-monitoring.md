@@ -18,18 +18,20 @@ The package relies on Prometheus to aggregate the metrics, and it is using [prom
 
 `sdk-nestjs-monitoring` is delivered via **npm,** and it can be installed as follows:
 
-```
+```bash
 npm install @multiversx/sdk-nestjs-monitoring
 ```
 
 [comment]: # (mx-context-auto)
 
 ## Utility
+
 The package exports **performance profilers**, **interceptors** and **metrics**.
 
 [comment]: # (mx-context-auto)
 
 ### Performance profiler
+
 `PerformanceProfiler` is a class exported by the package that allows you to measure the execution time of your code.
 
 ```typescript
@@ -43,8 +45,9 @@ console.log(`doSomething() method execution time lasted ${profilerDurationInMs} 
 ```
 
 The `.stop()` method can receive two optional parameters:
+
 - `description` - text used for default logging. Default: `undefined`
-- `log` - boolean to determine if log should be printed. If `log` is set to true, the logging class used to print will be `Logger` from `"@nestjs/common"`.` `Default: `false`
+- `log` - boolean to determine if log should be printed. If `log` is set to true, the logging class used to print will be `Logger` from `"@nestjs/common"`.``Default: `false`
 
 ```typescript
 import { PerformanceProfiler } from '@multiversx/sdk-nestjs-monitoring';
@@ -53,6 +56,7 @@ const profiler = new PerformanceProfiler();
 await doSomething();
 profiler.stop(`doSomething() execution time`, true);
 ```
+
 The output of the code above will be "`doSomething() execution time: 1.532ms`"
 
 ---
@@ -60,6 +64,7 @@ The output of the code above will be "`doSomething() execution time: 1.532ms`"
 [comment]: # (mx-context-auto)
 
 ### Cpu Profiler
+
 `CpuProfiler` is a class exported by the package that allows you to measure the CPU execution time of your code. Given that JavaScript is a single-threaded language, it's important to be mindful of the amount of CPU time allocated to certain operations, as excessive consumption can lead to slowdowns or even blockages in your process.
 
 ```typescript
@@ -73,6 +78,7 @@ console.log(`doHttpRequest() method execution time lasted ${profilerDurationInMs
 ```
 
 The `.stop()` method can receive two optional parameters:
+
 - `description` - text used for default logging. Setting the description automatically triggers the printing of the `PerformanceProfiler` value. Default: `undefined`
 
 ```typescript
@@ -86,6 +92,7 @@ const cpuProfiler = new CpuProfiler();
 await doSomethingCpuIntensive();
 cpuProfiler.stop(`doSomethingCpuIntensive() execution time`);
 ```
+
 The output of the code above will be <br/>
 
 `doHttpRequest() execution time: 100ms, CPU time: 1ms`
@@ -98,6 +105,7 @@ The output of the code above will be <br/>
 [comment]: # (mx-context-auto)
 
 ## Interceptors
+
 The package provides a series of [Nestjs Interceptors](https://docs.nestjs.com/interceptors) which will automatically log and set the CPU and overall duration for each request in a [Prometheus](https://prometheus.io) histogram ready to be scrapped by Prometheus.
 
 `LoggingInterceptor` interceptor will set the execution time of each request in a Prometheus histogram using [performance profilers](#performance-profiler).

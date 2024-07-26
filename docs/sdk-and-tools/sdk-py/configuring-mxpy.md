@@ -17,7 +17,7 @@ mxpy's configuration is stored in the file `~/multiversx-sdk/mxpy.json`.
 
 In order to view the current configuration, one can issue the command `mxpy config dump`. Output example:
 
-```
+```json
 {
     "dependencies.rust.tag": ""
 }
