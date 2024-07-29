@@ -86,7 +86,7 @@ const SectionLink = ({ text = "", link, className }) => {
     <Link
       to={link}
       className={clsx(
-        "link text-primary hover:text-teal-200 text-lg font-semibold leading-normal gap-2 inline-flex justify-center items-center hover:no-underline",
+        "link text-primary hover:text-teal-500 dark:hover:text-teal-200 text-lg font-semibold leading-normal gap-2 inline-flex justify-center items-center hover:no-underline",
         className
       )}
     >
