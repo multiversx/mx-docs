@@ -19,7 +19,7 @@ const SectionCard = ({
       <Link
         to={link}
         className={clsx(
-          "section-small-card section-small-shadow w-auto h-[196px] p-10 rounded-2xl border border-solid border-white/5 backdrop-blur-[52px] justify-between items-end inline-flex hover:no-underline hover:bg-neutral-200 dark:hover:bg-neutral-900/80",
+          "section-small-card section-small-shadow w-auto h-[196px] p-10 rounded-2xl border border-solid border-white/5 backdrop-blur-[52px] justify-between items-end inline-flex hover:no-underline bg-white hover:bg-teal-50 dark:bg-transparent dark:hover:bg-neutral-900/80",
           className
         )}
       >
@@ -49,7 +49,7 @@ const SectionCard = ({
     <Link
       to={link}
       className={clsx(
-        "section-card section-shadow grow shrink basis-0 h-[236px] p-10 rounded-3xl backdrop-blur-[50px] justify-between items-end flex hover:no-underline bg-white hover:bg-neutral-200 dark:bg-neutral-900/80 dark:hover:bg-neutral-800/80",
+        "section-card section-shadow grow shrink basis-0 h-[236px] p-10 rounded-3xl backdrop-blur-[50px] justify-between items-end flex hover:no-underline bg-white hover:bg-teal-50 dark:bg-neutral-900/80 dark:hover:bg-neutral-800/80",
         className
       )}
     >
