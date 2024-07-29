@@ -165,6 +165,7 @@ html.docs-wrapper {
 
 .navbar {
   background-color: rgba(255, 255, 255, var(--navbar-transparency, 0.75));
+  font-family: theme(fontFamily.sans);
   /* border-bottom: 1px solid theme(colors.neutral.200); */
 }
 [data-theme="dark"] .navbar {
