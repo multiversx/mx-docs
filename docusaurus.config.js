@@ -295,6 +295,10 @@ const config = {
             to: "/developers/developer-reference/sc-annotations",
           },
           {
+            from: "/developers/developer-reference/sc-contract-calls",
+            to: "/developers/transactions/tx-legacy-calls",
+          },
+          {
             from: "/developers/developer-reference/wasm-modules",
             to: "/developers/developer-reference/sc-modules",
           },
