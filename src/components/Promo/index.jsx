@@ -4,16 +4,12 @@ import clsx from "clsx";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import homepage from "../../../homepage";
 import "./promo.css";
 
-const TAG = "Sovereign Chains";
-const TITLE = "Build and deploy custom L2s or Appchains";
-const SUBTITLE =
-  "Enable new types of use cases made possible by scalable, efficient, secure and dedicated blockchains - powered by the Sovereign Chain SDK.";
-const LINK = "sovereign/overview";
-const BUTTON = "Sovereign Chains Documentation";
-
 const Promo = () => {
+  const { promo } = homepage;
+
   return (
     <div className="promo relative h-[706px] rounded-[40px] flex-col justify-center items-center gap-32 inline-flex overflow-hidden">
       <video
@@ -32,28 +28,28 @@ const Promo = () => {
           <div className="h-7 px-[7px] bg-teal-400/10 rounded-[48px] border border-solid border-green-600/70 backdrop-blur-[36px] justify-center items-center inline-flex">
             <div className="self-stretch px-1.5 justify-center items-center gap-2 flex">
               <div className="text-center text-white dark:text-teal-200 dark:opacity-60 text-base font-normal leading-none">
-                {TAG}
+                {promo.tag}
               </div>
             </div>
           </div>
           <div className="lg:w-[686px] text-center text-neutral-200 font-medium text-[42px] leading-[46px] lg:text-[56px] lg:leading-[56px]">
-            {TITLE}
+            {promo.title}
           </div>
           <div className="lg:w-[700px] text-center text-neutral-500 lg:text-[21px] font-normal leading-snug">
-            {SUBTITLE}
+            {promo.subtitle}
           </div>
         </div>
-        {LINK && (
+        {promo.link && (
           <div className="justify-center items-start gap-2 inline-flex px-5">
             <Link
-              to={LINK}
+              to={promo.link}
               className={clsx(
                 "btn-teal text-black dark:text-primary bg-white hover:bg-neutral-200 dark:bg-primary dark:hover:bg-teal-300 px-3  rounded-xl justify-center items-center flex hover:no-underline"
               )}
             >
               <div className="px-4 py-3 rounded-lg justify-center items-center gap-2 flex">
                 <div className="text-center text-gray-950 text-lg font-semibold leading-normal">
-                  {BUTTON}
+                  {promo.button}
                 </div>
               </div>
               <div className="justify-center items-center flex">
