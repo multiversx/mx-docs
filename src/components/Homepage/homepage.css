@@ -21,7 +21,11 @@ html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
         url("/img/theme/astronaut@2x.webp") 2x
       )
       right -20px top 40px no-repeat,
-    url("/img/theme/ray-opaque.webp") right -50px top no-repeat,
+    image-set(
+        url("/img/theme/glow-light.webp") 1x,
+        url("/img/theme/glow-light@2x.webp") 2x
+      )
+      right -180px top -150px no-repeat,
     var(--ifm-background-color);
   background-size: 680px, 1200px, auto;
   background-blend-mode: normal, difference, normal;
@@ -36,7 +40,11 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
         url("/img/theme/astronaut@2x.webp") 2x
       )
       right -20px top 40px no-repeat,
-    url("/img/theme/ray.webp") right -50px top no-repeat,
+    image-set(
+        url("/img/theme/glow-dark.webp") 1x,
+        url("/img/theme/glow-dark@2x.webp") 2x
+      )
+      right -180px top -150px no-repeat,
     var(--ifm-background-color);
   background-size: 680px, 1200px, auto;
   background-blend-mode: normal, lighten, normal;
@@ -61,7 +69,7 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
       .search-page-wrapper
     )
     #__docusaurus {
-    background-position: right -20px top 120px, right -100px top 100px;
+    background-position: right -20px top 120px, right -150px top 20px;
     background-size: 70vw, 120vw, auto;
   }
 }
