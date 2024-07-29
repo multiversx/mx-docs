@@ -59,7 +59,7 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
     .search-page-wrapper
   )
   .navbar {
-  background-color: rgba(14, 14, 14, 0.5);
+  background-color: rgba(14, 14, 14, var(--navbar-transparency, 0.75));
 }
 
 .section-shadow {

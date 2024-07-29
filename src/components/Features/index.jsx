@@ -32,7 +32,7 @@ const CARDS = [
   {
     title: "Get EGLD",
     text: "You need EGLD or xEGLD in order to be able to interact with the MultiversX Network.",
-    link: "/wallet/web-wallet/#testnet-and-devnet-faucet",
+    link: "/learn/EGLD#getting-egld",
   },
   {
     title: "Tools & Resources",
