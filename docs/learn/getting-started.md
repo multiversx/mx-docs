@@ -10,13 +10,17 @@ If you're not on MultiversX, get started by creating your wallet with [xPortal](
 :::
 
 ## **Learn**
+
 If you want to learn more, get started by diving into these concepts:
+
 - [**MultiversX Blockchain Basics**](https://www.youtube.com/watch?v=tv6OBimIX98&list=PLQVcheGWwBRWFjgEGLx1Fv2qF_6UVpSXX) - Learn about the basics of the blockchain, cryptocurrencies, consensus models, MultiversX explorer, wallet and a live demo of how to interact with the network.
 - [**Architecture**](/docs/learn/architecture-overview.md) - A breakdown of Multiversx's onchain system.
 - [**Sovereign Chains**](/docs/sovereign/overview.md) - Learn what Sovereign Chains represent for MultiversX.
 
 ## **Build**
+
 If you are a developer, you've come to the right place. The development act is one of the easiest and most straight-forward that you will find in the entire space, with lots of tools and support offered by the foundation and community fellow developers.
+
 - [**Get EGLD**](/docs/learn/EGLD.md#getting-egld) - You need EGLD or xEGLD in order to be able to interact with the MultiversX Network.
 - [**Tutorials**](https://multiversx.com/builders/build-your-first-multiversx-dapp-in-30-minutes) - A great start for anyone looking to learn what it means to develop on the MultiversX blockchain.
 - [**Cryptozombies**](https://cryptozombies.io/en/multiversx) - Interactive tutorials for learning how to write MultiversX Smart Contracts.
@@ -27,6 +31,7 @@ If you are a developer, you've come to the right place. The development act is o
 - [**Support**](https://t.me/MultiversXDevelopers) - We encourage everyone to ask for support or seek answers for their questions if there are any. You can find us on [Telegram](https://t.me/MultiversXDevelopers), [Discord](https://discord.gg/multiversxbuilders) or [StackOverflow](https://stackoverflow.com/questions/tagged/multiversx).
 
 ## **Contribute**
+
 MultiversX highly values and encourages contributions from the community, especially those who make their code public. To stay engaged with the latest developments and connect with other developers, consider joining a developer session.
 
 :::note
@@ -34,6 +39,7 @@ Contributing to the [MultiversX electric-capital repository](https://github.com/
 :::
 
 ### **Repositories**
+
 | Repository   | Description   |
 |------------|------------|
 | [Protocol](https://github.com/multiversx/mx-chain-go)| Implementation of the protocol|
@@ -44,6 +50,7 @@ Contributing to the [MultiversX electric-capital repository](https://github.com/
 | [MultiversX Organization](https://github.com/multiversx/) | Official MultiversX Github Organization|
 
 ### **Developer Sessions**
+
 We host a bi-monthly developer session to discuss upcoming changes to the protocol, SDKs and Tools. The call is open to anyone and we expect any builder to join and get involved.
 
 - [Sessions Calendar](https://multiversx.com/events/sessions) - Calendar of all planned Developer and Validators Sessions.

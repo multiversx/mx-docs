@@ -11,7 +11,7 @@ This page describes the delegation dashboard, which is a tool that allows you to
 
 ## **Introduction**
 
-Delegation Manager Dashboard is an open-source intuitive interface that anyone can deploy to engage their customers, partners, or friends and operate Elrond Validator nodes.
+Delegation Manager Dashboard is an open-source intuitive interface that anyone can deploy to engage their customers, partners, or friends and operate MultiversX Validator nodes.
 
 With minimal effort and no coding skills, you can create a custom dashboard for your Validator node(s), and enable your community to start delegating their tokens to it.
 
