@@ -9,7 +9,7 @@ A blockchain transaction is a cryptographically signed instruction sent from one
 
 A MultiversX transaction is an action initiated by an account managed by a user. For example, when Bob sends Alice 1 EGLD, Bob's account is debited and Alice's is credited. This state-changing action occurs within a transaction.
 
-Transactions update the network's state and are broadcast to the entire network. Validators execute and validate these transactions, ensuring they adhere to the network's rules. Each transaction includes details like sender and receiver addresses, the amount of EGLD transferred, and associated fees. These transactions are cryptographically signed to ensure authenticity and security. Transactions require a fee and must be included in a validated block. To make this overview simpler we'll cover [gas fees](/docs/developers/gas-and-fees/overview.md) and validation elsewhere.
+Transactions update the network's state and are broadcast to the entire network. Validators execute and validate these transactions, ensuring they adhere to the network's rules. Each transaction includes details like sender and receiver addresses, the amount of EGLD transferred, and associated fees. These transactions are cryptographically signed to ensure authenticity and security. Transactions require a fee and must be included in a validated block. To make this overview simpler we'll cover [gas fees](/developers/gas-and-fees/overview) and validation elsewhere.
 
 Here’s what a typical MultiversX transaction might include:
 
@@ -45,7 +45,7 @@ A ready-to-broadcast transaction is structured as follows:
 
 ### **Prerequisites**
 :::note
-To help you better understand this section, we recommend you first read [Sharding](/docs/learn/sharding.md) and our [introduction to MultiversX](/docs/welcome/welcome-to-multiversx.md).
+To help you better understand this section, we recommend you first read [Sharding](/learn/sharding) and our [introduction to MultiversX](/welcome/welcome-to-multiversx).
 :::
 
 For an in depth example of how the cross-shard transactions are being executed and how the communication between shards and the metachain occurs, we are simplifying the entire process to just two shards and the metachain. Assuming that a user generates a transaction from his wallet, which has an address in shard 0 and wants to send EGLD to another user that has a wallet with an address in shard 1, the steps depicted in the figure below are required for processing the cross-shard transaction.

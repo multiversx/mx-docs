@@ -20,6 +20,7 @@ These functions check the blockchain state. They will panic and the test will fa
 [comment]: # (mx-context-auto)
 
 ### check_egld_balance
+
 ```rust
 check_egld_balance(&self, address: &Address, expected_balance: &num_bigint::BigUint)
 ```
@@ -29,6 +30,7 @@ Checks the EGLD balance for the given address.
 [comment]: # (mx-context-auto)
 
 ### check_esdt_balance
+
 ```rust
 check_esdt_balance(&self, address: &Address, token_id: &[u8], expected_balance: &num_bigint::BigUint)
 ```
@@ -38,6 +40,7 @@ Checks the fungible ESDT balance for the given address.
 [comment]: # (mx-context-auto)
 
 ### check_nft_balance
+
 ```rust
 check_nft_balance<T>(&self, address: &Address, token_id: &[u8], nonce: u64, expected_balance: &num_bigint::BigUint, opt_expected_attributes: Option<&T>)
 ```
@@ -63,6 +66,7 @@ These functions get the current state. They are generally used after a transacti
 [comment]: # (mx-context-auto)
 
 ### get_egld_balance
+
 ```rust
 get_egld_balance(&self, address: &Address) -> num_bigint::BigUint
 ```
@@ -72,6 +76,7 @@ Gets the EGLD balance for the given account.
 [comment]: # (mx-context-auto)
 
 ### get_esdt_balance
+
 ```rust
 get_esdt_balance(&self, address: &Address, token_id: &[u8], token_nonce: u64) -> num_bigint::BigUint
 ```
@@ -81,6 +86,7 @@ Gets the ESDT balance for the given account. If you're interested in fungible to
 [comment]: # (mx-context-auto)
 
 ### get_nft_attributes
+
 ```rust
 get_nft_attributes<T: TopDecode>(&self, address: &Address, token_id: &[u8], token_nonce: u64) -> Option<T>
 ```
@@ -90,6 +96,7 @@ Gets the NFT attributes for a token owned by the given address. Will return `Opt
 [comment]: # (mx-context-auto)
 
 ### dump_state
+
 ```rust
 dump_state(&self)
 ```
@@ -99,6 +106,7 @@ Prints the current state to console. Useful for debugging.
 [comment]: # (mx-context-auto)
 
 ### dump_state_for_account_hex_attributes
+
 ```rust
 dump_state_for_account_hex_attributes(&self, address: &Address)
 ```
@@ -108,6 +116,7 @@ Similar to the function before, but dumps state only for the given account.
 [comment]: # (mx-context-auto)
 
 ### dump_state_for_account
+
 ```rust
 dump_state_for_account<AttributesType: TopDecode + core::fmt::Debug>(&self, address: &Address)
 ```
@@ -118,11 +127,12 @@ Similar to the function before, but prints the attributes in a user-friendly for
 
 ## State-altering functions
 
-These functions alter the state in some way.   
+These functions alter the state in some way.
 
 [comment]: # (mx-context-auto)
 
 ### create_user_account
+
 ```rust
 create_user_account(&mut self, egld_balance: &num_bigint::BigUint) -> Address
 ```
@@ -132,6 +142,7 @@ Creates a new user account, with the given EGLD balance. The Address is pseudo-r
 [comment]: # (mx-context-auto)
 
 ### create_user_account_fixed_address
+
 ```rust
 create_user_account_fixed_address(&mut self, address: &Address, egld_balance: &num_bigint::BigUint)
 ```
@@ -141,11 +152,13 @@ Same as the function above, but it lets you create an account with a fixed addre
 [comment]: # (mx-context-auto)
 
 ### create_sc_account
+
 ```rust
 create_sc_account<CB, ContractObjBuilder>(&mut self, egld_balance: &num_bigint::BigUint, owner: Option<&Address>, obj_builder: ContractObjBuilder, contract_wasm_path: &str) -> ContractObjWrapper<CB, ContractObjBuilder>
 ```
 
-Where: 
+Where:
+
 ```rust
     CB: ContractBase<Api = DebugApi> + CallableContract + 'static,
     ContractObjBuilder: 'static + Copy + Fn() -> CB,
@@ -160,6 +173,7 @@ The `ContractObjWrapper` will be used whenever you interact with the SC, which w
 [comment]: # (mx-context-auto)
 
 ### create_sc_account_fixed_address
+
 ```rust
 create_sc_account_fixed_address<CB, ContractObjBuilder>(&mut self, address: &Address, egld_balance: &num_bigint::BigUint, owner: Option<&Address>, obj_builder: ContractObjBuilder, contract_wasm_path: &str) -> ContractObjWrapper<CB, ContractObjBuilder>
 ```
@@ -169,6 +183,7 @@ Same as the function above, but the address can be set by the caller instead of 
 [comment]: # (mx-context-auto)
 
 ### set_egld_balance
+
 ```rust
 set_egld_balance(&mut self, address: &Address, balance: &num_bigint::BigUint)
 ```
@@ -178,6 +193,7 @@ Sets the EGLD balance for the given account.
 [comment]: # (mx-context-auto)
 
 ### set_esdt_balance
+
 ```rust
 set_esdt_balance(&mut self, address: &Address, token_id: &[u8], balance: &num_bigint::BigUint)
 ```
@@ -187,6 +203,7 @@ Sets the fungible token balance for the given account.
 [comment]: # (mx-context-auto)
 
 ### set_nft_balance
+
 ```rust
 set_nft_balance<T: TopEncode>(&mut self, address: &Address, token_id: &[u8], nonce: u64, balance: &num_bigint::BigUint, attributes: &T)
 ```
@@ -196,6 +213,7 @@ Sets the non-fungible token balance for the given account, and the attributes. A
 [comment]: # (mx-context-auto)
 
 ### set_esdt_local_roles
+
 ```rust
 set_esdt_local_roles(&mut self, address: &Address, token_id: &[u8], roles: &[EsdtLocalRole])
 ```
@@ -205,6 +223,7 @@ Sets the ESDT token roles for the given address and token. Usually used during s
 [comment]: # (mx-context-auto)
 
 ### set_block_epoch
+
 ```rust
 set_block_epoch(&mut self, block_epoch: u64)
 ```
@@ -212,6 +231,7 @@ set_block_epoch(&mut self, block_epoch: u64)
 [comment]: # (mx-context-auto)
 
 ### set_block_nonce
+
 ```rust
 et_block_nonce(&mut self, block_nonce: u64)
 ```
@@ -219,6 +239,7 @@ et_block_nonce(&mut self, block_nonce: u64)
 [comment]: # (mx-context-auto)
 
 ### set_block_round
+
 ```rust
 set_block_round(&mut self, block_round: u64)
 ```
@@ -226,6 +247,7 @@ set_block_round(&mut self, block_round: u64)
 [comment]: # (mx-context-auto)
 
 ### set_block_timestamp
+
 ```rust
 set_block_timestamp(&mut self, block_timestamp: u64)
 ```
@@ -233,6 +255,7 @@ set_block_timestamp(&mut self, block_timestamp: u64)
 [comment]: # (mx-context-auto)
 
 ### set_block_random_seed
+
 ```rust
 set_block_random_seed(&mut self, block_random_seed: Box<[u8; 48]>)
 ```
@@ -242,6 +265,7 @@ Set various values for the current block info.
 [comment]: # (mx-context-auto)
 
 ### set_prev_block_epoch
+
 ```rust
 set_prev_block_epoch(&mut self, block_epoch: u64)
 ```
@@ -249,6 +273,7 @@ set_prev_block_epoch(&mut self, block_epoch: u64)
 [comment]: # (mx-context-auto)
 
 ### set_prev_block_nonce
+
 ```rust
 set_prev_block_nonce(&mut self, block_nonce: u64)
 ```
@@ -256,6 +281,7 @@ set_prev_block_nonce(&mut self, block_nonce: u64)
 [comment]: # (mx-context-auto)
 
 ### set_prev_block_round
+
 ```rust
 set_prev_block_round(&mut self, block_round: u64)
 ```
@@ -263,6 +289,7 @@ set_prev_block_round(&mut self, block_round: u64)
 [comment]: # (mx-context-auto)
 
 ### set_prev_block_timestamp
+
 ```rust
 set_prev_block_timestamp(&mut self, block_timestamp: u64)
 ```
@@ -270,6 +297,7 @@ set_prev_block_timestamp(&mut self, block_timestamp: u64)
 [comment]: # (mx-context-auto)
 
 ### set_prev_block_random_seed
+
 ```rust
 set_prev_block_random_seed(&mut self, block_random_seed: Box<[u8; 48]>)
 ```
@@ -283,6 +311,7 @@ Same as the ones above, but sets the block info for the previous block.
 These functions help interacting with smart contracts. While they would still fit into the state-altering category, we feel they deserve their own section.  
 
 Note: We will shorten the signatures by not specifying the complete types for the ContractObjWrapper. For reference, the contract wrapper is of type `ContractObjWrapper<CB, ContractObjBuilder>`, where
+
 ```rust
     CB: ContractBase<Api = DebugApi> + CallableContract + 'static,
     ContractObjBuilder: 'static + Copy + Fn() -> CB,
@@ -291,15 +320,17 @@ Note: We will shorten the signatures by not specifying the complete types for th
 [comment]: # (mx-context-auto)
 
 ### execute_tx
+
 ```rust
 execute_tx(&mut self, caller: &Address, sc_wrapper: &ContractObjWrapper<...>, egld_payment: &num_bigint::BigUint, tx_fn: TxFn) -> TxResult
 ```
 
-Executes a transaction towards the given SC (defined by the wrapper), with optional EGLD payment (pass 0 if you want no payment). `tx_fn` is a lambda function that accepts a contract object as an argument. For more details about how to write such a lambda, you can take a look at the [Crowdfunding test examples](/developers/developer-reference/rust-testing-framework).  
+Executes a transaction towards the given SC (defined by the wrapper), with optional EGLD payment (pass 0 if you want no payment). `tx_fn` is a lambda function that accepts a contract object as an argument. For more details about how to write such a lambda, you can take a look at the [Crowdfunding test examples](/developers/testing/rust/whitebox-legacy).  
 
 [comment]: # (mx-context-auto)
 
 ### execute_esdt_transfer
+
 ```rust
 execute_esdt_transfer(&mut self, caller: &Address, sc_wrapper: &ContractObjWrapper<...>, token_id: &[u8], esdt_nonce: u64, esdt_amount: &num_bigint::BigUint, tx_fn: TxFn) -> TxResult
 ```
@@ -309,6 +340,7 @@ Same as the function above, but executes an ESDT/NFT transfer instead of EGLD tr
 [comment]: # (mx-context-auto)
 
 ### execute_esdt_multi_transfer
+
 ```rust
 execute_esdt_multi_transfer(&mut self, caller: &Address, sc_wrapper: &ContractObjWrapper<...>, esdt_transfers: &[TxInputESDT], tx_fn: TxFn) -> TxResult
 ```
@@ -318,6 +350,7 @@ Same as the function above, but executes a MultiESDTNFT transfer instead.
 [comment]: # (mx-context-auto)
 
 ### execute_query
+
 ```rust
 execute_query(&mut self, sc_wrapper: &ContractObjWrapper<...>, query_fn: TxFn) -> TxResult
 ```
@@ -327,6 +360,7 @@ Executes a SCQuery on the SC. None of the changes are commited into the state, b
 [comment]: # (mx-context-auto)
 
 ### execute_in_managed_environment
+
 ```rust
 execute_in_managed_environment(&self, f: Func) -> T
 ```
@@ -337,4 +371,4 @@ Executes an arbitrary function and returns its result. The result can be any typ
 
 ## Undocumented functions
 
-There are some scenario generation functions that have not been included, but we recommend not bothering with scenario generation. The process is very time-consuming and the results are some unreadable scenario files. If you need to write scenarios, we recommend writing them yourself. If you still want to dabble into the scenario generation, there are some examples in the [Crowdfunding test examples](/developers/developer-reference/rust-testing-framework).  
+There are some scenario generation functions that have not been included, but we recommend not bothering with scenario generation. The process is very time-consuming and the results are some unreadable scenario files. If you need to write scenarios, we recommend writing them yourself. If you still want to dabble into the scenario generation, there are some examples in the [Crowdfunding test examples](/developers/testing/rust/whitebox-legacy).  

@@ -105,7 +105,7 @@ Rest API documentation of `api.multiversx.com` can be found on the [Swagger docs
 
 [comment]: # (mx-context-auto)
 
-## References:
+## References
 
 - Github repository: [https://github.com/multiversx/mx-api-service](https://github.com/multiversx/mx-api-service)
 - Swagger docs: [https://api.multiversx.com](https://api.multiversx.com)

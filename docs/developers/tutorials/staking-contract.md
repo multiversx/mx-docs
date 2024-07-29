@@ -15,7 +15,7 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy/). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
+First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
 [comment]: # (mx-context-auto)
 
@@ -165,12 +165,12 @@ We've also added `#[view]` annotation for the storage mappers, so we can later p
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
-- https://docs.multiversx.com/developers/developer-reference/sc-api-functions/
-- https://docs.multiversx.com/developers/developer-reference/storage-mappers/
+- [https://docs.multiversx.com/developers/developer-reference/sc-api-functions](/developers/developer-reference/sc-api-functions)
+- [https://docs.multiversx.com/developers/developer-reference/storage-mappers](/developers/developer-reference/storage-mappers)
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
 
-Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.multiversx.com/developers/best-practices/biguint-operations/.
+Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: [https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) and also about the implications of cloning types from the Rust framework: [https://docs.multiversx.com/developers/best-practices/biguint-operations](/developers/best-practices/biguint-operations).
 
 Secondly, the `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
 
@@ -226,7 +226,7 @@ You can skip this section if you already have a devnet wallet setup.
 
 Let's create a devnet wallet. Access the [Web Wallet](https://devnet-wallet.multiversx.com/), and select "create new wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
-Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/
+Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow [these instructions](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file):
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 
@@ -255,7 +255,7 @@ Now that we've created a wallet, it's time to deploy our contract. **Make sure y
 ```
 
 :::note  
-If you wanted to use testnet, the proxy would be "https://testnet-gateway.multiversx.com" and the chain ID would be "T". For mainnet, it would be "https://gateway.multiversx.com" and chain ID "1".
+If you wanted to use testnet, the proxy would be `https://testnet-gateway.multiversx.com` and the chain ID would be `"T"`. For mainnet, it would be `https://gateway.multiversx.com` and chain ID `"1"`.
 
 More details can be found [here](/developers/constants/).
 :::

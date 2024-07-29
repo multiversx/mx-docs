@@ -67,7 +67,7 @@ An example of a configuration is:
 
 ### Proxy support
 
-There are some endpoints in elrond-proxy that rely on an Elasticsearch instance. They can be found [here](/sdk-and-tools/proxy#dependency-on-elastic-search).
+There are some endpoints in elrond-proxy that rely on an Elasticsearch instance. They can be found [here](/sdk-and-tools/proxy#dependency-on-elasticsearch).
 
 [comment]: # (mx-context-auto)
 

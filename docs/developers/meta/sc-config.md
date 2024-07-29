@@ -8,6 +8,7 @@ title: Configuration
 We like to say that developers don't write smart contracts directly, rather they write _specifications_ for smart contracts, from which an automated process creates the smart contracts themselves.
 
 This philosophy has two practical implications:
+
 1. The smart contract code itself has no direct knowledge of the underlying technology or of the blockchain, and can therefore be used to build other products too, such as tests, interactors, services, etc.
 2. The build process is its own separate thing, which needs to be configured.
 
@@ -140,7 +141,7 @@ The settings are as follows:
     - _values_: `true` | `false`
     - _default_: `false`
 - `proxy`
-  - Sets custom configuration for a generated proxy. More details about proxies are available [here](../../transactions/tx-proxies#how-to-set-up-project-to-re-generate-easily)
+  - Sets custom configuration for a generated proxy. More details about proxies are available [here](/developers/transactions/tx-proxies#how-to-set-up-project-to-re-generate-easily)
   - `path`
     - Set the output path where the generated proxy will be saved.
     - _values_: `String`
@@ -576,4 +577,3 @@ fn world() -> ScenarioWorld {
     blockchain
 }
 ```
-

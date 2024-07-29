@@ -18,7 +18,7 @@ MultiversX NFTs(non-fungible tokens) are a breed of digital assets that are revo
 
 ### NFT and SFT
 
-The MultiversX protocol introduces native NFT support by adding metadata and attributes on top of the already existing [Fungible tokens](/tokens/esdt-tokens).
+The MultiversX protocol introduces native NFT support by adding metadata and attributes on top of the already existing [Fungible tokens](/tokens/fungible-tokens).
 This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, as well as an assignable URI.
 Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/tokens/nft-tokens#nftsft-fields).
 
@@ -274,7 +274,7 @@ IssuanceTransaction {
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
 
-Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/tokens/esdt-tokens#token-management).
+Once this transaction is processed by the Metachain, Alice becomes the designated **manager of AliceTokens**. She can add quantity later using `ESDTNFTCreate`. For more operations available to ESDT token managers, see [Token management](/tokens/fungible-tokens#token-management).
 
 In that smart contract result, the `data` field will contain a transfer syntax which is explained below. What is important to note is that the token identifier can be fetched from
 here in order to use it for transfers. Alternatively, the token identifier can be fetched from the API (explained also in section [REST API - Get NFT data](/tokens/nft-tokens#get-nft-data-for-an-address) ).
@@ -330,7 +330,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 For example, `ESDTRoleNFTCreate` = `45534454526f6c654e4654437265617465`
 
-Unset transactions are very similar. You can find an example [here](/tokens/esdt-tokens#unset-special-role).
+Unset transactions are very similar. You can find an example [here](/tokens/fungible-tokens#unset-special-role).
 
 [comment]: # (mx-context-auto)
 
@@ -700,14 +700,14 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### **Transferring token management rights**
 
-The manager of an ESDT token can transfer the ownership if the ESDT was created as upgradable. Check the [ESDT - Upgrading (changing properties)](/tokens/esdt-tokens#upgrading-changing-properties) section for more details.
+The manager of an ESDT token can transfer the ownership if the ESDT was created as upgradable. Check the [ESDT - Upgrading (changing properties)](/tokens/fungible-tokens#upgrading-changing-properties) section for more details.
 
 [comment]: # (mx-context-auto)
 
 ### **Upgrading (changing properties)**
 
 The manager of an ESDT token may individually change any of the properties of the token, or multiple properties at once, only if the ESDT was created as upgradable.
-Check the [ESDT - Transferring token management rights](/tokens/esdt-tokens#transferring-token-management-rightss) section for more details.
+Check the [ESDT - Transferring token management rights](/tokens/fungible-tokens#transferring-token-management-rights) section for more details.
 
 [comment]: # (mx-context-auto)
 
@@ -771,7 +771,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 Multiple semi-fungible and/or non-fungible tokens can be transferred in a single transaction to a single receiver.
 
-More details can be found [here](/tokens/esdt-tokens#multiple-tokens-transfer).
+More details can be found [here](/tokens/fungible-tokens#multiple-tokens-transfer).
 
 [comment]: # (mx-context-auto)
 
@@ -1077,22 +1077,22 @@ In this example, `erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
 
 ### <span class="badge badge--primary">GET</span> **Get all ESDT tokens for an address** {#get-all-esdt-tokens-for-an-address}
 
-One can use [get all esdt tokens for an address endpoint](/tokens/esdt-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
+One can use [get all esdt tokens for an address endpoint](/tokens/fungible-tokens#get-all-esdt-tokens-for-an-address) used for ESDT.
 
 [comment]: # (mx-context-auto)
 
 ### <span class="badge badge--primary">GET</span> **Get all issued ESDT tokens** {#get-all-issued-esdt-tokens}
 
-One can use [get all issued esdt tokens endpoint](/tokens/esdt-tokens#get-all-issued-esdt-tokens) used for ESDT.
+One can use [get all issued esdt tokens endpoint](/tokens/fungible-tokens#get-all-issued-esdt-tokens) used for ESDT.
 
 [comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> **Get ESDT properties** {#get-esdt-properties}
 
-Properties can be queried via the [getTokenProperties function](/tokens/esdt-tokens#get-esdt-token-properties) provided by ESDT.
+Properties can be queried via the [getTokenProperties function](/tokens/fungible-tokens#get-esdt-token-properties) provided by ESDT.
 
 [comment]: # (mx-context-auto)
 
 ### <span class="badge badge--success">POST</span> **Get special roles** {#get-special-roles}
 
-Special roles can be queried via the [getSpecialRoles function](/tokens/esdt-tokens#get-special-roles-for-a-token) provided by ESDT.
+Special roles can be queried via the [getSpecialRoles function](/tokens/fungible-tokens#get-special-roles-for-a-token) provided by ESDT.

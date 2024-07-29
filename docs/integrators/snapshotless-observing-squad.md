@@ -6,7 +6,7 @@ title: Snapshotless Observing Squad
 [comment]: # (mx-abstract)
 
 This page describes the Snapshotless Observing Squad, a type of Observing Squad optimized for real-time requests such as accounts data fetching and vm-query operations.
-More details related to exposed endpoints are available [here](/sdk-and-tools/proxy/#proxy-snapshotless-endpoints).
+More details related to exposed endpoints are available [here](/sdk-and-tools/proxy#snapshotless-observers-support).
 
 [comment]: # (mx-context-auto)
 

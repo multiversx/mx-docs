@@ -130,11 +130,11 @@ Learn about transaction's gas and how a fee is calculated:
 
 | Name                                                                 | Description                                              |
 |----------------------------------------------------------------------|----------------------------------------------------------|
-| [Scenario Overview](/developers/scenario-reference/overview)             | Test your Smart Contracts by using Scenario JSON tests. |
-| [Scenario Structure](/developers/scenario-reference/structure)           | How to structure a scenario.                          |
-| [Scenario Simple Values](/developers/scenario-reference/values-simple)   | Handle simple values in scenario tests.                    |
-| [Scenario Complex Values](/developers/scenario-reference/values-complex) | Handle complex values in scenario tests.                   |
-| [Embedding Scenario code in GO](/developers/scenario-reference/embed)    | How to embed scenario code in Go.                          |
+| [Scenario Overview](/developers/testing/scenario/concept)             | Test your Smart Contracts by using Scenario JSON tests. |
+| [Scenario Structure](/developers/testing/scenario/structure-json)           | How to structure a scenario.                          |
+| [Scenario Simple Values](/developers/testing/scenario/values-simple)   | Handle simple values in scenario tests.                    |
+| [Scenario Complex Values](/developers/testing/scenario/values-complex) | Handle complex values in scenario tests.                   |
+| [Embedding Scenario code in GO](/developers/testing/testing-in-go)    | How to embed scenario code in Go.                          |
 
 [comment]: # (mx-context-auto)
 
@@ -180,4 +180,4 @@ the execution of smart contract, information about ESDT transfers or built-in fu
 | [Setup local testnet advanced](/developers/setup-local-testnet-advanced) | How to set up a localnet (local testnet) - advanced solution                           |
 | [Creating wallets](/developers/creating-wallets)                         | Examples on creating wallets.                                                          |
 | [Reproducible builds](/developers/reproducible-contract-builds)          | How to perform reproducible contract builds.                                           |
-| [Contract API limits](/developers/contract-api-limits)                   | Limits that a smart contract must abide when calling external (node-related) functions | 
+| [Contract API limits](/developers/contract-api-limits)                   | Limits that a smart contract must abide when calling external (node-related) functions |
