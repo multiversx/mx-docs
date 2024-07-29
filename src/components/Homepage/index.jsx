@@ -15,9 +15,9 @@ export default function Homepage() {
 
   useEffect(() => {
     if (ref.current !== null) {
-      if (window.scrollY === 0) {
-        document.documentElement.style.setProperty("--navbar-transparency", 0);
-        document.documentElement.style.setProperty("--navbar-blur", 0);
+      if (window.scrollY > 100) {
+        document.documentElement.style.setProperty("--navbar-transparency", 0.75);
+        document.documentElement.style.setProperty("--navbar-blur", 0.375);
       }
 
       window.addEventListener(

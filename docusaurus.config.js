@@ -193,7 +193,7 @@ const config = {
       prism: {
         theme: prismThemes.vsLight,
         darkTheme: prismThemes.vsDark,
-        additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json"],
+        additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json", "solidity", "yaml"],
       },
       algolia: {
         // The application ID provided by Algolia

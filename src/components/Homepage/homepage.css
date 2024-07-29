@@ -1,3 +1,8 @@
+html:not(.docs-wrapper):not(.search-page-wrapper) {
+  --navbar-transparency: 0;
+  --navbar-blur: 0;
+}
+
 html[data-theme="dark"]:not(.docs-wrapper):not(.search-page-wrapper) {
   --ifm-background-color: theme(colors.neutral.925);
 }

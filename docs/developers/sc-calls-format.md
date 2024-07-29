@@ -116,11 +116,13 @@ c70cf50b238372fffaf7b7c5723b06b57859d424a2da621bcc1b2f317543aa36
 
 ### Converting addresses using online tools
 
-There are multiple (_unofficial or community supported_) tools that one can use in order to convert an address into hexadecimal encoding:
+There are multiple tools that one can use in order to convert an address into hexadecimal encoding:
 
-- https://slowli.github.io/bech32-buffer/ (go to `Data`, select `erd` as Tag and `Bech32` as Encoding)
+- [https://utils.multiversx.com/converters#addresses-bech32-to-hexadecimal](https://utils.multiversx.com/converters#addresses-bech32-to-hexadecimal)
 
-- http://207.244.241.38/elrond-converters/#bech32-to-hex
+- [https://slowli.github.io/bech32-buffer](https://slowli.github.io/bech32-buffer) (go to `Data`, select `erd` as Tag and `Bech32` as Encoding)
+
+- [http://207.244.241.38/elrond-converters/#bech32-to-hex](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 
 [comment]: # (mx-context-auto)
 
