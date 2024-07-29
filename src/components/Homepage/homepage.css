@@ -1,3 +1,14 @@
+html[data-theme="dark"]:not(.docs-wrapper):not(.search-page-wrapper) {
+  --ifm-background-color: theme(colors.neutral.925);
+}
+
+html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
+    .search-page-wrapper
+  )
+  .navbar {
+  background-color: rgba(14, 14, 14, var(--navbar-transparency, 0.75));
+}
+
 html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
   #__docusaurus {
   background: image-set(
@@ -48,18 +59,6 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
     background-position: right -20px top 120px, right -100px top 100px;
     background-size: 70vw, 120vw, auto;
   }
-}
-
-html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
-    .search-page-wrapper
-  ) {
-  --ifm-background-color: theme(colors.neutral.925);
-}
-html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
-    .search-page-wrapper
-  )
-  .navbar {
-  background-color: rgba(14, 14, 14, var(--navbar-transparency, 0.75));
 }
 
 .section-shadow {
