@@ -96,6 +96,17 @@ const config = {
 
       // Replace with your project's social card
       image: "img/share.jpg",
+
+      metadata: [
+        { name: "twitter:site", content: "@MultiversX" },
+        { name: "twitter:creator", content: "@MultiversX" },
+        { name: "twitter:title", content: "MultiversX Docs" },
+        {
+          name: "twitter:description",
+          content:
+            "A highly scalable, fast and secure blockchain platform for distributed apps, enterprise use cases and the new internet economy.",
+        },
+      ],
       navbar: {
         logo: {
           alt: "MultiversX Docs",
@@ -193,7 +204,16 @@ const config = {
       prism: {
         theme: prismThemes.vsLight,
         darkTheme: prismThemes.vsDark,
-        additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json", "solidity", "yaml"],
+        additionalLanguages: [
+          "rust",
+          "tsx",
+          "toml",
+          "bash",
+          "diff",
+          "json",
+          "solidity",
+          "yaml",
+        ],
       },
       algolia: {
         // The application ID provided by Algolia
@@ -492,7 +512,68 @@ const config = {
         },
       },
     ],
-    async function myPlugin(context, options) {
+    [
+      "pwa",
+      {
+        // debug: isDeployPreview,
+        offlineModeActivationStrategies: [
+          "appInstalled",
+          "standalone",
+          "queryString",
+        ],
+        // swRegister: false,
+        // swCustom: require.resolve("./src/sw.js"), // TODO make it possible to use relative path
+        pwaHead: [
+          {
+            tagName: "link",
+            rel: "icon",
+            href: "img/favicons/apple-touch-icon.png",
+          },
+          {
+            tagName: "link",
+            rel: "manifest",
+            href: "manifest/manifest.json",
+          },
+          {
+            tagName: "meta",
+            name: "theme-color",
+            content: "rgb(14, 14, 14)",
+          },
+          {
+            tagName: "meta",
+            name: "apple-mobile-web-app-capable",
+            content: "yes",
+          },
+          {
+            tagName: "meta",
+            name: "apple-mobile-web-app-status-bar-style",
+            content: "#0e0e0e",
+          },
+          {
+            tagName: "link",
+            rel: "apple-touch-icon",
+            href: "img/favicons/apple-touch-icon.png",
+          },
+          {
+            tagName: "link",
+            rel: "mask-icon",
+            href: "img/favicons/apple-touch-icon.png",
+            color: "rgb(14, 14, 14)",
+          },
+          {
+            tagName: "meta",
+            name: "msapplication-TileImage",
+            content: "img/favicons/mstile-150x150.png",
+          },
+          {
+            tagName: "meta",
+            name: "msapplication-TileColor",
+            content: "#0e0e0e",
+          },
+        ],
+      },
+    ],
+    async function tailwindPlugin(context, options) {
       return {
         name: "docusaurus-tailwindcss",
         configurePostCss(postcssOptions) {
