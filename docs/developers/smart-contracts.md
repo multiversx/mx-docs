@@ -11,10 +11,10 @@ The MultiversX Blockchain's virtual machine (VM) executes [WebAssembly](https://
 written in _any programming language_ that can be compiled to WASM bytecode. **Though, we only provide support for Rust.**
 
 Developers are encouraged to use Rust for their smart contracts, however. MultiversX provides a [Rust framework](https://github.com/multiversx/mx-sdk-rs) 
-which allows for unusually clean and efficient code in smart contracts, a rarity in the blockchain field. 
-A declarative testing framework is bundled as well. For the best coding experience, 
+which allows for unusually clean and efficient code in smart contracts, a rarity in the blockchain field.
+A declarative testing framework is bundled as well. For the best coding experience,
 developers have the [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide) at their disposal.
 
-Read more about the MultiversX VM [here](/learn/space-vm). 
+Read more about the MultiversX VM [here](/learn/space-vm).
 
 Navigate through the sidebar to see some tutorials to get you started, as well as the Rust framework documentation.

@@ -105,12 +105,12 @@ const config = {
         items: [
           {
             href: "/developers/overview",
-            label: "Develop",
+            label: "Developers",
             position: "left",
           },
           {
             href: "/validators/overview",
-            label: "Validate",
+            label: "Validators",
             position: "left",
           },
           {
@@ -119,30 +119,34 @@ const config = {
             position: "left",
           },
           {
-            href: "/technology/architecture-overview",
+            href: "/learn/architecture-overview",
             label: "Learn",
             position: "left",
           },
           {
             href: "https://github.com/multiversx",
+            label: "GitHub",
             position: "right",
             className: "header-github-link",
             "aria-label": "GitHub",
           },
           {
             href: "https://discord.gg/multiversxbuilders",
+            label: "Discord",
             position: "right",
             className: "header-discord-link",
             "aria-label": "Discord",
           },
           {
             href: "https://t.me/MultiversX",
+            label: "Telegram",
             position: "right",
             className: "header-telegram-link",
             "aria-label": "Chat",
           },
           {
             type: "dropdown",
+            label: "Websites",
             position: "right",
             className: "header-app-change",
             "aria-label": "Websites",
@@ -164,7 +168,7 @@ const config = {
               },
               {
                 label: "Bridge",
-                href: "https://ad-astra.multiversx.com",
+                href: "https://bridge.multiversx.com",
                 target: "_blank",
               },
               {
@@ -187,9 +191,9 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} MultiversX. All rights reserved.`,
       },
       prism: {
-        theme: prismThemes.vsDark,
-        darkTheme: prismThemes.oceanicNext,
-        additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json"],
+        theme: prismThemes.vsLight,
+        darkTheme: prismThemes.vsDark,
+        additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json", "solidity", "yaml"],
       },
       algolia: {
         // The application ID provided by Algolia
@@ -202,6 +206,16 @@ const config = {
       slugPreprocessor: (slugBase) =>
         slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, ""),
     }),
+
+  headTags: [
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://cdn.multiversx.com",
+      },
+    },
+  ],
 
   plugins: [
     [
@@ -478,6 +492,17 @@ const config = {
         },
       },
     ],
+    async function myPlugin(context, options) {
+      return {
+        name: "docusaurus-tailwindcss",
+        configurePostCss(postcssOptions) {
+          // Appends TailwindCSS and AutoPrefixer.
+          postcssOptions.plugins.push(require("tailwindcss"));
+          postcssOptions.plugins.push(require("autoprefixer"));
+          return postcssOptions;
+        },
+      };
+    },
   ],
 };
 

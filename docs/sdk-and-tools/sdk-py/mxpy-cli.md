@@ -13,7 +13,7 @@ The complete Command Line Interface is listed [**here**](https://github.com/mult
 
 For example:
 
-```
+```sh
 mxpy --help
 mxpy tx --help
 mxpy tx new --help
@@ -30,6 +30,7 @@ This page will guide you through the process of handling common tasks using **mx
 ### Upgrade using pipx
 
 In case you used **pipx** to install **mxpy**, to upgrade to a newer version, you can run the following command:
+
 ```sh
 pipx upgrade multiversx-sdk-cli
 ```
@@ -54,11 +55,13 @@ Additionally, you might want to cleanup the shell profile files, to not alter an
 Using `mxpy` you can either check if a dependency is installed or install a new dependency.
 
 To check if a dependecy is installed you can use:
+
 ```sh
 mxpy deps check <dependecy-name>
 ```
 
 To install a new dependency you can use:
+
 ```sh
 mxpy deps install <dependency-name>
 ```
@@ -66,12 +69,14 @@ mxpy deps install <dependency-name>
 Both `mxpy deps check <dependecy-name>` and `mxpy deps install <dependency-name>` use the `<dependency-name>` as a positional argument.
 
 To find out which dependencies can be managed using `mxpy` you can type one of the following commands and you will see which positional arguments it accepts:
+
 ```sh
 mxpy deps check -h
 mxpy deps install -h
 ```
 
 For example, in order to check if `rust` is installed you would type:
+
 ```sh
 mxpy deps check rust
 ```
@@ -79,6 +84,7 @@ mxpy deps check rust
 When installing dependecies the `--overwrite` argument can be used to overwrite an existing version.
 
 For example, to install `rust`, you can simply type the command:
+
 ```sh
 mxpy deps install rust
 ```
@@ -91,13 +97,15 @@ Generally speaking, the default `rust` version installed by `mxpy` is the one re
 
 :::note
 On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` before running `mxpy deps install rust`:
-    
+
 ```bash
 sudo apt-get install build-essential pkg-config libssl-dev
 ```
+
 :::
 
 Here's how to install a specific version of `rust` (example):
+
 ```sh
 mxpy deps install rust --overwrite
 ```
@@ -107,6 +115,7 @@ mxpy deps install rust --overwrite
 ## Creating wallets
 
 There are a couple available wallet formats:
+
 - `raw-mnemonic` - secret phrase in plain text
 - `keystore-mnemonic` - secret phrase, as a password-encrypted JSON keystore file
 - `keystore-secret-key` - secret key (irreversibly derived from the secret phrase), as a password-encrypted JSON keystore file
@@ -115,9 +124,11 @@ There are a couple available wallet formats:
 For this example, we are going to create a `keystore-mnemonic` wallet.
 
 Let's create a keystore wallet:
+
 ```sh
 mxpy wallet new --format keystore-mnemonic --outfile test_wallet.json
 ```
+
 The wallet's mnemonic will appear, followed by a prompt to set a password for the file. Once you input the password and press "Enter", the file will be generated at the location specified by the `--outfile` argument.
 
 [comment]: # (mx-context-auto)
@@ -127,16 +138,18 @@ The wallet's mnemonic will appear, followed by a prompt to set a password for th
 As you have read above, there are multiple ways in which you can store your secret keys.
 
 To convert a wallet from a type to another you can use:
+
 ```sh
 mxpy wallet convert
 ```
 
 :::info
 Keep in mind that the conversion isn't always possible (due to irreversible derivations of the secret phrase):
- - `raw-mnemonic` can be converted to any other format
- - `keystore-mnemonic` can be converted to any other format
- - `keystore-secret-key` can only be converted to `pem`
- - `pem` can only be converted to `keystore-secret-key`
+
+- `raw-mnemonic` can be converted to any other format
+- `keystore-mnemonic` can be converted to any other format
+- `keystore-secret-key` can only be converted to `pem`
+- `pem` can only be converted to `keystore-secret-key`
 
 It's mandatory that you keep a backup of your secret phrase somewhere safe.
 :::
@@ -144,6 +157,7 @@ It's mandatory that you keep a backup of your secret phrase somewhere safe.
 Let's convert the previously created `keystore-mnemonic` to a `PEM` wallet. We discourage the use of PEM wallets for storing cryptocurrencies due to their lower security level. However, they prove to be highly convenient and user-friendly for application testing purposes.
 
 To convert the wallet we type the follwing command:
+
 ```sh
 mxpy wallet convert --infile test_wallet.json --in-format keystore-mnemonic --outfile converted_wallet.pem --out-format pem
 ```
@@ -151,6 +165,7 @@ mxpy wallet convert --infile test_wallet.json --in-format keystore-mnemonic --ou
 After being prompted to enter the password you've previously set for the wallet the new `.pem` file will be created.
 
 The command arguments can be found [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#walletconvert) or by typing:
+
 ```sh
 mxpy wallet convert --help
 ```
@@ -164,6 +179,7 @@ In order to deploy a smart contract on the network, you need to build it first.
 The contract we will be using for this examples can be found [here](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/adder).
 
 The `mxpy` command used for building contracts is:
+
 ```sh
 mxpy contract build --path <path to contract>
 ```
@@ -173,6 +189,7 @@ If our working directory is already the contract's directory we can skip the `--
 The generated `.wasm` file will be created in a directory called `output` inside the contract's directory.
 
 The command accepts a few parameters that you can check out [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#contractbuild) or by simply typing:
+
 ```sh
 mxpy contract build --help
 ```
@@ -186,6 +203,7 @@ If you'd like to build a smart contract directly using `sc-meta` instead, please
 After you've built your smart contract, it can be deployed on the network.
 
 For deploying a smart contract the following command can be used:
+
 ```sh
 mxpy contract deploy
 ```
@@ -197,6 +215,7 @@ The `--bytecode` argument specifies the path to your previously-built contract. 
 For example, if your contract is in `~/contracts/adder`, the generated bytecode file `adder.wasm` will be in `~/contracts/adder/output`. So, when providing the `--bytecode` argument the path should be `~/contracts/adder/output/adder.wasm`.
 
 The `mxpy contract deploy` command needs a multitude of other parameters that can be checked out [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#contractdeploy) or by simply typing the following:
+
 ```sh
 mxpy contract deploy --help
 ```
@@ -228,6 +247,7 @@ The `--pem` argument is used to provide the sender of the transaction, the payer
 After deploying our smart contract we can start interacting with it. The contract has a function called `add()` that we can call and it will increase the value stored in the contract with the value we provide.
 
 To call a function we use the `mxpy contract call` command. Here's an example of how we can do that:
+
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
@@ -269,11 +289,13 @@ We've modified our adder contract to add `1` to every value added to the contrac
 Before deploying the contract we need to build it again to make sure we are using the latest version. We then deploy the newly built contract, then we call it and query it.
 
 First we build the contract:
+
 ```sh
 mxpy contract build
 ```
 
 Then we upgrade the contract by running:
+
 ```sh
 mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --bytecode ~/contracts/adder/output/adder.wasm \
@@ -286,6 +308,7 @@ mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfk
 We provide as a positional argument the contract's address that we want to upgrade, in our case the previously deployed adder contract. The `--bytecode` is used to provide the new code that will replace the old code. We also set the `--arguments` to `0` as we didn't change the constructor and the contract will start counting from `0` again. The rest of the arguments you know from all the previous operations we've done.
 
 Now let's add `5` to the contract one more time. We do so by running the following:
+
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
@@ -295,6 +318,7 @@ mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv
 ```
 
 Now, if we query the contract we should see the value `6`. We added `5` in the contract but modified the contract code to add `1` to every value. Let's see!
+
 ```sh
 mxpy contract query erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 --proxy https://devnet-gateway.multiversx.com --function getSum
 ```
@@ -310,6 +334,7 @@ Verifying a smart contract means ensuring that the contract deployed on the netw
 To learn more about reproducible builds, please follow [**this page**](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [**this repository**](https://github.com/multiversx/mx-contracts-rs).
 
 The command used for verifying contracts is:
+
 ```sh
 mxpy contract verify
 ```
@@ -339,6 +364,7 @@ The _packaged source_ passed as `--packaged-src` can be obtained either from [th
 ## Creating and sending transactions
 
 To create a new transaction we use the `mxpy tx new` command. Let's see how that works:
+
 ```sh
 mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
@@ -365,9 +391,11 @@ Each guarded transaction needs an additional `50000` gas for the `gasLimit`. The
 
 :::note
 Here are the urls to our hosted co-signer services:
-- Mainnet: https://tools.multiversx.com/guardian
-- Devnet: https://devnet-tools.multiversx.com/guardian
-- Testnet: https://testnet-tools.multiversx.com/guardian
+
+- Mainnet: [https://tools.multiversx.com/guardian](https://tools.multiversx.com/guardian)
+- Devnet: [https://devnet-tools.multiversx.com/guardian](https://devnet-tools.multiversx.com/guardian)
+- Testnet: [https://testnet-tools.multiversx.com/guardian](https://testnet-tools.multiversx.com/guardian)
+
 :::
 
 ```sh

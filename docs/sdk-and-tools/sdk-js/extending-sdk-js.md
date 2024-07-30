@@ -24,7 +24,7 @@ The default classes from `@multiversx/sdk-network-providers` should **only be us
 
 You can derive from the default network providers (`ApiNetworkProvider` and `ProxyNetworkProvider`) and overwrite / add additional methods, making use of `doGetGeneric()` and `doPostGeneric()`. For example:
 
-```
+```js
 export class MyTailoredNetworkProvider extends ApiNetworkProvider {
     async getEconomics(): Promise<{totalSupply: number, marketCap: number}> {
         let response = await this.doGetGeneric("economics");
@@ -41,7 +41,7 @@ export class MyTailoredNetworkProvider extends ApiNetworkProvider {
 
 If, for some reason, the default transaction completion detection algorithm provided by **sdk-js** does not satisfy your requirements, you may want to use a different strategy for transaction awaiting, such as:
 
-```
+```js
 await transactionWatcher.awaitAllEvents(txHash, ["mySpecialEventFoo", "mySpecialEventBar"]);
 await transactionWatcher.awaitAnyEvents(txHash, ["mySpecialEventFoo", "mySpecialEventBar"]);
 ```

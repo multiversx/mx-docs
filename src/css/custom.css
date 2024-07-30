@@ -4,9 +4,47 @@
  * work well for content-centric websites.
  */
 
+/* -------------------- Start Fonts -------------------- */
+
+@font-face {
+  font-family: "Roobert";
+  src: url("https://cdn.multiversx.com/fonts/roobert/regular.woff2")
+      format("woff2"),
+    url("https://cdn.multiversx.com/fonts/roobert/regular.woff") format("woff"),
+    url("https://cdn.multiversx.com/fonts/roobert/regular.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Roobert";
+  src: url("https://cdn.multiversx.com/fonts/roobert/medium.woff2")
+      format("woff2"),
+    url("https://cdn.multiversx.com/fonts/roobert/medium.woff") format("woff"),
+    url("https://cdn.multiversx.com/fonts/roobert/medium.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Roobert";
+  src: url("https://cdn.multiversx.com/fonts/roobert/semibold.woff2")
+      format("woff2"),
+    url("https://cdn.multiversx.com/fonts/roobert/semibold.woff") format("woff"),
+    url("https://cdn.multiversx.com/fonts/roobert/semibold.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* -------------------- End Fonts -------------------- */
+
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #00947e;
+  --ifm-background-color: theme(colors.neutral.100);
+  --ifm-color-primary: #098ea0;
   --ifm-color-primary-dark: #006553;
   --ifm-color-primary-darker: #004b3c;
   --ifm-color-primary-darkest: #00392c;
@@ -14,7 +52,8 @@
   --ifm-color-primary-lighter: #00c4ac;
   --ifm-color-primary-lightest: #23f7dd;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --ifm-heading-font-family: theme(fontFamily.sans);
 
   --ifm-h1-font-size: 2rem;
   --ifm-h2-font-size: 1.5rem;
@@ -24,24 +63,39 @@
   --ifm-h6-font-size: 0.75rem;
 
   --ifm-heading-font-weight: 600;
-
   --ifm-footer-padding-vertical: 1.25rem;
+  --ifm-navbar-link-color: theme(colors.neutral.850);
+  --ifm-navbar-link-hover-color: theme(colors.primary.DEFAULT);
+  --ifm-navbar-item-padding-horizontal: 0.5rem;
+
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme="dark"] {
-  --ifm-color-primary: #23f7dd;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+html[data-theme="dark"] {
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 
-  --ifm-footer-background-color: #242526;
-  --docsearch-hit-active-color: #242526 !important;
+  --ifm-background-color: theme(colors.neutral.900);
+  --ifm-color-primary: theme(colors.teal.400);
+  --ifm-color-primary-dark: theme(colors.teal.500);
+  --ifm-color-primary-darker: theme(colors.teal.600);
+  --ifm-color-primary-darkest: theme(colors.teal.800);
+  --ifm-color-primary-light: theme(colors.teal.300);
+  --ifm-color-primary-lighter: theme(colors.teal.200);
+  --ifm-color-primary-lightest: theme(colors.teal.100);
+
+  --ifm-footer-background-color: var(--ifm-background-color);
+  --ifm-navbar-link-color: theme(colors.neutral.400);
+  --ifm-navbar-link-hover-color: theme(colors.neutral.100);
 }
+
+/* -------------------- Start Tailwind -------------------- */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------- End Tailwind -------------------- */
 
 /* -------------------- Start Overrides ------------------- */
 
@@ -99,13 +153,33 @@ h2.anchor code {
   font-weight: 500;
   margin-top: 0.25rem;
 }
-.table-of-contents__link .badge,
-.anchor .navbar__items--right .dropdown.dropdown--right + div {
-  order: 4;
-  margin-right: 0.5rem;
+
+/* -------------------- End Overrides ------------------- */
+
+/* -------------------- Start Navbar ------------------- */
+
+html.docs-wrapper {
+  --navbar-transparency: 0.75 !important;
+  --navbar-blur: 0.375rem !important;
 }
-.navbar__items--right .dropdown.dropdown--right {
-  order: 5;
+
+.navbar {
+  background-color: rgba(245, 245, 245, var(--navbar-transparency, 0.75));
+  font-family: theme(fontFamily.sans);
+  /* border-bottom: 1px solid theme(colors.neutral.200); */
+}
+[data-theme="dark"] .navbar {
+  background-color: rgba(23, 23, 23, var(--navbar-transparency, 0.75));
+  /* border-bottom: 1px solid theme(colors.neutral.850); */
+}
+.navbar:not(.navbar-sidebar--show) {
+  backdrop-filter: blur(var(--navbar-blur, 0.375rem));
+}
+.navbar__items:not(.navbar__items--right) .navbar__item.navbar__link {
+  --ifm-navbar-item-padding-horizontal: 1rem;
+
+  font-size: 15px;
+  letter-spacing: -0.3px;
 }
 
 .table-center-content {
@@ -113,57 +187,129 @@ h2.anchor code {
   vertical-align: middle;
 }
 
-/* -------------------- End Overrides ------------------- */
+.navbar__logo {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.navbar__logo img {
+  height: 1.5rem;
+}
 
-/* -------------------- Start Navbar Icons ------------------- */
+.table-of-contents__link .badge,
+.anchor .navbar__items--right .dropdown.dropdown--right + div {
+  order: 4;
+  margin-right: 0.5rem;
+}
+.navbar__items--right .dropdown.dropdown--right {
+  --ifm-navbar-item-padding-horizontal: 0.5rem;
+  --ifm-navbar-item-padding-vertical: 0.5rem;
+  order: 5;
+}
+
+div[class*="colorModeToggle"] {
+  order: 4;
+}
+div[class*="colorModeToggle"] .clean-btn {
+  order: 4;
+  --ifm-color-emphasis-200: theme(colors.neutral.300);
+  padding: 0.375rem;
+}
+[data-theme="dark"] div[class*="colorModeToggle"] .clean-btn {
+  --ifm-color-emphasis-200: theme(colors.neutral.700);
+}
+
+.navbar__items--right .dropdown.dropdown--right,
+div[class*="colorModeToggle"] .clean-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 0.375rem;
+  backdrop-filter: blur(16px);
+  background-color: theme(colors.neutral.200);
+}
+
+.navbar__items--right .dropdown.dropdown--right:hover,
+div[class*="colorModeToggle"] .clean-btn:hover {
+  background-color: theme(colors.neutral.300);
+}
+
+[data-theme="dark"] .navbar__items--right .dropdown.dropdown--right,
+[data-theme="dark"] div[class*="colorModeToggle"] .clean-btn {
+  background-color: theme(colors.neutral.850);
+}
+
+[data-theme="dark"] .navbar__items--right .dropdown.dropdown--right:hover,
+[data-theme="dark"] div[class*="colorModeToggle"] .clean-btn:hover {
+  background-color: theme(colors.neutral.700);
+}
+
+@media only screen and (max-width: 998px) {
+  .navbar__items--right .dropdown.dropdown--right {
+    display: none;
+  }
+}
+
+.navbar__items--right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-telegram-link,
+.header-github-link,
+.header-discord-link,
+.header-app-change {
+  --ifm-navbar-item-padding-horizontal: 0.5rem;
+  --ifm-navbar-item-padding-vertical: 0.5rem;
+}
 
 .header-telegram-link:hover,
 .header-github-link:hover,
 .header-discord-link:hover,
-.header-app-change-link:hover {
+.header-app-change:hover {
   opacity: 0.6;
 }
 
-.header-discord-link::before {
+.header-discord-link::before,
+.header-github-link::before,
+.header-telegram-link::before {
   content: "";
-  width: 24px;
-  height: 24px;
+  width: 1.25rem;
+  height: 1.25rem;
   display: flex;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19.952,5.672c-1.904-1.531-4.916-1.79-5.044-1.801c-0.201-0.017-0.392,0.097-0.474,0.281 c-0.006,0.012-0.072,0.163-0.145,0.398c1.259,0.212,2.806,0.64,4.206,1.509c0.224,0.139,0.293,0.434,0.154,0.659 c-0.09,0.146-0.247,0.226-0.407,0.226c-0.086,0-0.173-0.023-0.252-0.072C15.584,5.38,12.578,5.305,12,5.305S8.415,5.38,6.011,6.872 c-0.225,0.14-0.519,0.07-0.659-0.154c-0.14-0.225-0.07-0.519,0.154-0.659c1.4-0.868,2.946-1.297,4.206-1.509 c-0.074-0.236-0.14-0.386-0.145-0.398C9.484,3.968,9.294,3.852,9.092,3.872c-0.127,0.01-3.139,0.269-5.069,1.822 C3.015,6.625,1,12.073,1,16.783c0,0.083,0.022,0.165,0.063,0.237c1.391,2.443,5.185,3.083,6.05,3.111c0.005,0,0.01,0,0.015,0 c0.153,0,0.297-0.073,0.387-0.197l0.875-1.202c-2.359-0.61-3.564-1.645-3.634-1.706c-0.198-0.175-0.217-0.477-0.042-0.675 c0.175-0.198,0.476-0.217,0.674-0.043c0.029,0.026,2.248,1.909,6.612,1.909c4.372,0,6.591-1.891,6.613-1.91 c0.198-0.172,0.5-0.154,0.674,0.045c0.174,0.198,0.155,0.499-0.042,0.673c-0.07,0.062-1.275,1.096-3.634,1.706l0.875,1.202 c0.09,0.124,0.234,0.197,0.387,0.197c0.005,0,0.01,0,0.015,0c0.865-0.027,4.659-0.667,6.05-3.111 C22.978,16.947,23,16.866,23,16.783C23,12.073,20.985,6.625,19.952,5.672z M8.891,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913s1.674,0.857,1.674,1.913S9.816,14.87,8.891,14.87z M15.109,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913c0.924,0,1.674,0.857,1.674,1.913S16.033,14.87,15.109,14.87z'/%3E%3C/svg%3E")
+}
+
+.header-discord-link::before {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23262626' d='M19.952,5.672c-1.904-1.531-4.916-1.79-5.044-1.801c-0.201-0.017-0.392,0.097-0.474,0.281 c-0.006,0.012-0.072,0.163-0.145,0.398c1.259,0.212,2.806,0.64,4.206,1.509c0.224,0.139,0.293,0.434,0.154,0.659 c-0.09,0.146-0.247,0.226-0.407,0.226c-0.086,0-0.173-0.023-0.252-0.072C15.584,5.38,12.578,5.305,12,5.305S8.415,5.38,6.011,6.872 c-0.225,0.14-0.519,0.07-0.659-0.154c-0.14-0.225-0.07-0.519,0.154-0.659c1.4-0.868,2.946-1.297,4.206-1.509 c-0.074-0.236-0.14-0.386-0.145-0.398C9.484,3.968,9.294,3.852,9.092,3.872c-0.127,0.01-3.139,0.269-5.069,1.822 C3.015,6.625,1,12.073,1,16.783c0,0.083,0.022,0.165,0.063,0.237c1.391,2.443,5.185,3.083,6.05,3.111c0.005,0,0.01,0,0.015,0 c0.153,0,0.297-0.073,0.387-0.197l0.875-1.202c-2.359-0.61-3.564-1.645-3.634-1.706c-0.198-0.175-0.217-0.477-0.042-0.675 c0.175-0.198,0.476-0.217,0.674-0.043c0.029,0.026,2.248,1.909,6.612,1.909c4.372,0,6.591-1.891,6.613-1.91 c0.198-0.172,0.5-0.154,0.674,0.045c0.174,0.198,0.155,0.499-0.042,0.673c-0.07,0.062-1.275,1.096-3.634,1.706l0.875,1.202 c0.09,0.124,0.234,0.197,0.387,0.197c0.005,0,0.01,0,0.015,0c0.865-0.027,4.659-0.667,6.05-3.111 C22.978,16.947,23,16.866,23,16.783C23,12.073,20.985,6.625,19.952,5.672z M8.891,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913s1.674,0.857,1.674,1.913S9.816,14.87,8.891,14.87z M15.109,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913c0.924,0,1.674,0.857,1.674,1.913S16.033,14.87,15.109,14.87z'/%3E%3C/svg%3E")
     no-repeat;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 [data-theme="dark"] .header-discord-link::before {
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M19.952,5.672c-1.904-1.531-4.916-1.79-5.044-1.801c-0.201-0.017-0.392,0.097-0.474,0.281 c-0.006,0.012-0.072,0.163-0.145,0.398c1.259,0.212,2.806,0.64,4.206,1.509c0.224,0.139,0.293,0.434,0.154,0.659 c-0.09,0.146-0.247,0.226-0.407,0.226c-0.086,0-0.173-0.023-0.252-0.072C15.584,5.38,12.578,5.305,12,5.305S8.415,5.38,6.011,6.872 c-0.225,0.14-0.519,0.07-0.659-0.154c-0.14-0.225-0.07-0.519,0.154-0.659c1.4-0.868,2.946-1.297,4.206-1.509 c-0.074-0.236-0.14-0.386-0.145-0.398C9.484,3.968,9.294,3.852,9.092,3.872c-0.127,0.01-3.139,0.269-5.069,1.822 C3.015,6.625,1,12.073,1,16.783c0,0.083,0.022,0.165,0.063,0.237c1.391,2.443,5.185,3.083,6.05,3.111c0.005,0,0.01,0,0.015,0 c0.153,0,0.297-0.073,0.387-0.197l0.875-1.202c-2.359-0.61-3.564-1.645-3.634-1.706c-0.198-0.175-0.217-0.477-0.042-0.675 c0.175-0.198,0.476-0.217,0.674-0.043c0.029,0.026,2.248,1.909,6.612,1.909c4.372,0,6.591-1.891,6.613-1.91 c0.198-0.172,0.5-0.154,0.674,0.045c0.174,0.198,0.155,0.499-0.042,0.673c-0.07,0.062-1.275,1.096-3.634,1.706l0.875,1.202 c0.09,0.124,0.234,0.197,0.387,0.197c0.005,0,0.01,0,0.015,0c0.865-0.027,4.659-0.667,6.05-3.111 C22.978,16.947,23,16.866,23,16.783C23,12.073,20.985,6.625,19.952,5.672z M8.891,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913s1.674,0.857,1.674,1.913S9.816,14.87,8.891,14.87z M15.109,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913c0.924,0,1.674,0.857,1.674,1.913S16.033,14.87,15.109,14.87z'/%3E%3C/svg%3E")
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23F5F5F5' d='M19.952,5.672c-1.904-1.531-4.916-1.79-5.044-1.801c-0.201-0.017-0.392,0.097-0.474,0.281 c-0.006,0.012-0.072,0.163-0.145,0.398c1.259,0.212,2.806,0.64,4.206,1.509c0.224,0.139,0.293,0.434,0.154,0.659 c-0.09,0.146-0.247,0.226-0.407,0.226c-0.086,0-0.173-0.023-0.252-0.072C15.584,5.38,12.578,5.305,12,5.305S8.415,5.38,6.011,6.872 c-0.225,0.14-0.519,0.07-0.659-0.154c-0.14-0.225-0.07-0.519,0.154-0.659c1.4-0.868,2.946-1.297,4.206-1.509 c-0.074-0.236-0.14-0.386-0.145-0.398C9.484,3.968,9.294,3.852,9.092,3.872c-0.127,0.01-3.139,0.269-5.069,1.822 C3.015,6.625,1,12.073,1,16.783c0,0.083,0.022,0.165,0.063,0.237c1.391,2.443,5.185,3.083,6.05,3.111c0.005,0,0.01,0,0.015,0 c0.153,0,0.297-0.073,0.387-0.197l0.875-1.202c-2.359-0.61-3.564-1.645-3.634-1.706c-0.198-0.175-0.217-0.477-0.042-0.675 c0.175-0.198,0.476-0.217,0.674-0.043c0.029,0.026,2.248,1.909,6.612,1.909c4.372,0,6.591-1.891,6.613-1.91 c0.198-0.172,0.5-0.154,0.674,0.045c0.174,0.198,0.155,0.499-0.042,0.673c-0.07,0.062-1.275,1.096-3.634,1.706l0.875,1.202 c0.09,0.124,0.234,0.197,0.387,0.197c0.005,0,0.01,0,0.015,0c0.865-0.027,4.659-0.667,6.05-3.111 C22.978,16.947,23,16.866,23,16.783C23,12.073,20.985,6.625,19.952,5.672z M8.891,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913s1.674,0.857,1.674,1.913S9.816,14.87,8.891,14.87z M15.109,14.87c-0.924,0-1.674-0.857-1.674-1.913 s0.749-1.913,1.674-1.913c0.924,0,1.674,0.857,1.674,1.913S16.033,14.87,15.109,14.87z'/%3E%3C/svg%3E")
     no-repeat;
 }
 
 .header-github-link::before {
-  content: "";
-  width: 24px;
-  height: 24px;
-  display: flex;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23262626' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
     no-repeat;
 }
 
 [data-theme="dark"] .header-github-link::before {
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23F5F5F5' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
     no-repeat;
 }
 
 .header-telegram-link::before {
-  content: "";
-  width: 24px;
-  height: 24px;
-  display: flex;
-  margin-top: 4px;
-  background: url("data:image/svg+xml;base64,IDxzdmcKICAgICAgICAgICAgY2xhc3NOYW1lPSJhcHAtaWNvbiIKICAgICAgICAgICAgcm9sZT0iaW1nIgogICAgICAgICAgICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgICAgICAgICAgIHZpZXdCb3g9IjAgMCAyMiAxOSIKICAgICAgICAgID4KICAgICAgICAgICAgPHBhdGgKICAgICAgICAgICAgICBmaWxsUnVsZT0iZXZlbm9kZCIKICAgICAgICAgICAgICBkPSJNLjQ2MSA4Ljg5NGw0LjkgMS44MjkgMS44OTcgNi4xYy4xMjEuMzkuNi41MzUuOTE3LjI3NWwyLjczLTIuMjI2YS44MTUuODE1IDAgMCAxIC45OTQtLjAyOGw0LjkyNyAzLjU3N2MuMzQuMjQ3LjgyLjA2LjkwNS0uMzVMMjEuMzQuNzEyYS41NzguNTc4IDAgMCAwLS43NzQtLjY1NkwuNDU2IDcuODEzYS41NzguNTc4IDAgMCAwIC4wMDUgMS4wOHptNi40OTIuODU1bDkuNTc3LTUuODk4Yy4xNzItLjEwNi4zNDkuMTI3LjIwMS4yNjRsLTcuOTA0IDcuMzQ3YTEuNjQgMS42NCAwIDAgMC0uNTA4Ljk4bC0uMjY5IDEuOTk1Yy0uMDM1LjI2Ny0uNDEuMjkzLS40ODMuMDM2TDYuNTMgMTAuODM0YS45NjQuOTY0IDAgMCAxIC40MjItMS4wODV6IgogICAgICAgICAgICA+PC9wYXRoPgogICAgICAgICAgPC9zdmc+")
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3C!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--%3E%3Cpath fill='%23262626' d='M248 8C111 8 0 119 0 256S111 504 248 504 496 393 496 256 385 8 248 8zM363 176.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7 .2-.7 .3-3.1-1.2-4.4s-3.6-.8-5.1-.5q-3.3 .7-104.6 69.1-14.8 10.2-26.9 9.9c-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3q.8-6.7 18.5-13.7 108.4-47.2 144.6-62.3c68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6 .5 9.6 2.9a10.5 10.5 0 0 1 3.5 6.7A43.8 43.8 0 0 1 363 176.7z'/%3E%3C/svg%3E")
     no-repeat;
 }
 
 [data-theme="dark"] .header-telegram-link::before {
-  background: url("data:image/svg+xml;base64,IDxzdmcKICBjbGFzc05hbWU9ImFwcC1pY29uIgogIHJvbGU9ImltZyIKICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgdmlld0JveD0iMCAwIDIyIDE5Igo+CiAgPHBhdGgKICAgIGZpbGxSdWxlPSJldmVub2RkIgogICAgZD0iTS40NjEgOC44OTRsNC45IDEuODI5IDEuODk3IDYuMWMuMTIxLjM5LjYuNTM1LjkxNy4yNzVsMi43My0yLjIyNmEuODE1LjgxNSAwIDAgMSAuOTk0LS4wMjhsNC45MjcgMy41NzdjLjM0LjI0Ny44Mi4wNi45MDUtLjM1TDIxLjM0LjcxMmEuNTc4LjU3OCAwIDAgMC0uNzc0LS42NTZMLjQ1NiA3LjgxM2EuNTc4LjU3OCAwIDAgMCAuMDA1IDEuMDh6bTYuNDkyLjg1NWw5LjU3Ny01Ljg5OGMuMTcyLS4xMDYuMzQ5LjEyNy4yMDEuMjY0bC03LjkwNCA3LjM0N2ExLjY0IDEuNjQgMCAwIDAtLjUwOC45OGwtLjI2OSAxLjk5NWMtLjAzNS4yNjctLjQxLjI5My0uNDgzLjAzNkw2LjUzIDEwLjgzNGEuOTY0Ljk2NCAwIDAgMSAuNDIyLTEuMDg1eiIgZmlsbD0iI2ZmZiIKICA+PC9wYXRoPgo8L3N2Zz4=")
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3C!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--%3E%3Cpath fill='%23F5F5F5' d='M248 8C111 8 0 119 0 256S111 504 248 504 496 393 496 256 385 8 248 8zM363 176.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7 .2-.7 .3-3.1-1.2-4.4s-3.6-.8-5.1-.5q-3.3 .7-104.6 69.1-14.8 10.2-26.9 9.9c-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3q.8-6.7 18.5-13.7 108.4-47.2 144.6-62.3c68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6 .5 9.6 2.9a10.5 10.5 0 0 1 3.5 6.7A43.8 43.8 0 0 1 363 176.7z'/%3E%3C/svg%3E")
     no-repeat;
 }
 
@@ -172,30 +318,55 @@ h2.anchor code {
 }
 .header-app-change::before {
   content: "";
-  width: 20px;
-  height: 20px;
+  width: 1rem;
+  height: 1rem;
   display: flex;
-  background: url("data:image/svg+xml;base64,PHN2ZwogIGNsYXNzTmFtZT0iYXBwLWljb24gYXBwLXN3aXRjaGVyLWljb24iCiAgcm9sZT0iaW1nIgogIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICB2aWV3Qm94PSIwIDAgNTEyIDUxMiIKICBhcmlhLWxhYmVsPSJNZW51Igo+CiAgPHBhdGggZD0iTTE0OS4zMzMgNTZ2ODBjMCAxMy4yNTUtMTAuNzQ1IDI0LTI0IDI0SDI0Yy0xMy4yNTUgMC0yNC0xMC43NDUtMjQtMjRWNTZjMC0xMy4yNTUgMTAuNzQ1LTI0IDI0LTI0aDEwMS4zMzNjMTMuMjU1IDAgMjQgMTAuNzQ1IDI0IDI0em0xODEuMzM0IDI0MHYtODBjMC0xMy4yNTUtMTAuNzQ1LTI0LTI0LTI0SDIwNS4zMzNjLTEzLjI1NSAwLTI0IDEwLjc0NS0yNCAyNHY4MGMwIDEzLjI1NSAxMC43NDUgMjQgMjQgMjRoMTAxLjMzM2MxMy4yNTYgMCAyNC4wMDEtMTAuNzQ1IDI0LjAwMS0yNHptMzItMjQwdjgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNEg0ODhjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0VjU2YzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgzODYuNjY3Yy0xMy4yNTUgMC0yNCAxMC43NDUtMjQgMjR6bS0zMiA4MFY1NmMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMjA1LjMzM2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNGgxMDEuMzMzYzEzLjI1NiAwIDI0LjAwMS0xMC43NDUgMjQuMDAxLTI0em0tMjA1LjMzNCA1NkgyNGMtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNGgxMDEuMzMzYzEzLjI1NSAwIDI0LTEwLjc0NSAyNC0yNHYtODBjMC0xMy4yNTUtMTAuNzQ1LTI0LTI0LTI0ek0wIDM3NnY4MGMwIDEzLjI1NSAxMC43NDUgMjQgMjQgMjRoMTAxLjMzM2MxMy4yNTUgMCAyNC0xMC43NDUgMjQtMjR2LTgwYzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgyNGMtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0em0zODYuNjY3LTU2SDQ4OGMxMy4yNTUgMCAyNC0xMC43NDUgMjQtMjR2LTgwYzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgzODYuNjY3Yy0xMy4yNTUgMC0yNCAxMC43NDUtMjQgMjR2ODBjMCAxMy4yNTUgMTAuNzQ1IDI0IDI0IDI0em0wIDE2MEg0ODhjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0di04MGMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMzg2LjY2N2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNHpNMTgxLjMzMyAzNzZ2ODBjMCAxMy4yNTUgMTAuNzQ1IDI0IDI0IDI0aDEwMS4zMzNjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0di04MGMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMjA1LjMzM2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0eiI+PC9wYXRoPgo8L3N2Zz4=")
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYgMS41VjQuNUM2IDUuMzQzNzUgNS4zMTI1IDYgNC41IDZIMS41QzAuNjU2MjUgNiAwIDUuMzQzNzUgMCA0LjVWMS41QzAgMC42ODc1IDAuNjU2MjUgMCAxLjUgMEg0LjVDNS4zMTI1IDAgNiAwLjY4NzUgNiAxLjVaTTYgOS41VjEyLjVDNiAxMy4zNDM4IDUuMzEyNSAxNCA0LjUgMTRIMS41QzAuNjU2MjUgMTQgMCAxMy4zNDM4IDAgMTIuNVY5LjVDMCA4LjY4NzUgMC42NTYyNSA4IDEuNSA4SDQuNUM1LjMxMjUgOCA2IDguNjg3NSA2IDkuNVpNOCAxLjVDOCAwLjY4NzUgOC42NTYyNSAwIDkuNSAwSDEyLjVDMTMuMzEyNSAwIDE0IDAuNjg3NSAxNCAxLjVWNC41QzE0IDUuMzQzNzUgMTMuMzEyNSA2IDEyLjUgNkg5LjVDOC42NTYyNSA2IDggNS4zNDM3NSA4IDQuNVYxLjVaTTE0IDkuNVYxMi41QzE0IDEzLjM0MzggMTMuMzEyNSAxNCAxMi41IDE0SDkuNUM4LjY1NjI1IDE0IDggMTMuMzQzOCA4IDEyLjVWOS41QzggOC42ODc1IDguNjU2MjUgOCA5LjUgOEgxMi41QzEzLjMxMjUgOCAxNCA4LjY4NzUgMTQgOS41WiIgZmlsbD0iIzI2MjYyNiIvPgo8L3N2Zz4K")
     no-repeat;
 }
 
 [data-theme="dark"] .header-app-change::before {
-  background: url("data:image/svg+xml;base64,PHN2ZwogIGNsYXNzTmFtZT0iYXBwLWljb24gYXBwLXN3aXRjaGVyLWljb24iCiAgcm9sZT0iaW1nIgogIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICB2aWV3Qm94PSIwIDAgNTEyIDUxMiIKICBhcmlhLWxhYmVsPSJNZW51Igo+CiAgPHBhdGggZD0iTTE0OS4zMzMgNTZ2ODBjMCAxMy4yNTUtMTAuNzQ1IDI0LTI0IDI0SDI0Yy0xMy4yNTUgMC0yNC0xMC43NDUtMjQtMjRWNTZjMC0xMy4yNTUgMTAuNzQ1LTI0IDI0LTI0aDEwMS4zMzNjMTMuMjU1IDAgMjQgMTAuNzQ1IDI0IDI0em0xODEuMzM0IDI0MHYtODBjMC0xMy4yNTUtMTAuNzQ1LTI0LTI0LTI0SDIwNS4zMzNjLTEzLjI1NSAwLTI0IDEwLjc0NS0yNCAyNHY4MGMwIDEzLjI1NSAxMC43NDUgMjQgMjQgMjRoMTAxLjMzM2MxMy4yNTYgMCAyNC4wMDEtMTAuNzQ1IDI0LjAwMS0yNHptMzItMjQwdjgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNEg0ODhjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0VjU2YzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgzODYuNjY3Yy0xMy4yNTUgMC0yNCAxMC43NDUtMjQgMjR6bS0zMiA4MFY1NmMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMjA1LjMzM2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNGgxMDEuMzMzYzEzLjI1NiAwIDI0LjAwMS0xMC43NDUgMjQuMDAxLTI0em0tMjA1LjMzNCA1NkgyNGMtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNGgxMDEuMzMzYzEzLjI1NSAwIDI0LTEwLjc0NSAyNC0yNHYtODBjMC0xMy4yNTUtMTAuNzQ1LTI0LTI0LTI0ek0wIDM3NnY4MGMwIDEzLjI1NSAxMC43NDUgMjQgMjQgMjRoMTAxLjMzM2MxMy4yNTUgMCAyNC0xMC43NDUgMjQtMjR2LTgwYzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgyNGMtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0em0zODYuNjY3LTU2SDQ4OGMxMy4yNTUgMCAyNC0xMC43NDUgMjQtMjR2LTgwYzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgzODYuNjY3Yy0xMy4yNTUgMC0yNCAxMC43NDUtMjQgMjR2ODBjMCAxMy4yNTUgMTAuNzQ1IDI0IDI0IDI0em0wIDE2MEg0ODhjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0di04MGMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMzg2LjY2N2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNHpNMTgxLjMzMyAzNzZ2ODBjMCAxMy4yNTUgMTAuNzQ1IDI0IDI0IDI0aDEwMS4zMzNjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0di04MGMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMjA1LjMzM2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0eiIgZmlsbD0iI2ZmZiI+PC9wYXRoPgo8L3N2Zz4=")
-    no-repeat;
-}
-[data-theme="dark"] .header-app-change:hover::before {
-  background: url("data:image/svg+xml;base64,PHN2ZwogIGNsYXNzTmFtZT0iYXBwLWljb24gYXBwLXN3aXRjaGVyLWljb24iCiAgcm9sZT0iaW1nIgogIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICB2aWV3Qm94PSIwIDAgNTEyIDUxMiIKICBhcmlhLWxhYmVsPSJNZW51Igo+CiAgPHBhdGggZD0iTTE0OS4zMzMgNTZ2ODBjMCAxMy4yNTUtMTAuNzQ1IDI0LTI0IDI0SDI0Yy0xMy4yNTUgMC0yNC0xMC43NDUtMjQtMjRWNTZjMC0xMy4yNTUgMTAuNzQ1LTI0IDI0LTI0aDEwMS4zMzNjMTMuMjU1IDAgMjQgMTAuNzQ1IDI0IDI0em0xODEuMzM0IDI0MHYtODBjMC0xMy4yNTUtMTAuNzQ1LTI0LTI0LTI0SDIwNS4zMzNjLTEzLjI1NSAwLTI0IDEwLjc0NS0yNCAyNHY4MGMwIDEzLjI1NSAxMC43NDUgMjQgMjQgMjRoMTAxLjMzM2MxMy4yNTYgMCAyNC4wMDEtMTAuNzQ1IDI0LjAwMS0yNHptMzItMjQwdjgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNEg0ODhjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0VjU2YzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgzODYuNjY3Yy0xMy4yNTUgMC0yNCAxMC43NDUtMjQgMjR6bS0zMiA4MFY1NmMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMjA1LjMzM2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNGgxMDEuMzMzYzEzLjI1NiAwIDI0LjAwMS0xMC43NDUgMjQuMDAxLTI0em0tMjA1LjMzNCA1NkgyNGMtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNGgxMDEuMzMzYzEzLjI1NSAwIDI0LTEwLjc0NSAyNC0yNHYtODBjMC0xMy4yNTUtMTAuNzQ1LTI0LTI0LTI0ek0wIDM3NnY4MGMwIDEzLjI1NSAxMC43NDUgMjQgMjQgMjRoMTAxLjMzM2MxMy4yNTUgMCAyNC0xMC43NDUgMjQtMjR2LTgwYzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgyNGMtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0em0zODYuNjY3LTU2SDQ4OGMxMy4yNTUgMCAyNC0xMC43NDUgMjQtMjR2LTgwYzAtMTMuMjU1LTEwLjc0NS0yNC0yNC0yNEgzODYuNjY3Yy0xMy4yNTUgMC0yNCAxMC43NDUtMjQgMjR2ODBjMCAxMy4yNTUgMTAuNzQ1IDI0IDI0IDI0em0wIDE2MEg0ODhjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0di04MGMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMzg2LjY2N2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0djgwYzAgMTMuMjU1IDEwLjc0NSAyNCAyNCAyNHpNMTgxLjMzMyAzNzZ2ODBjMCAxMy4yNTUgMTAuNzQ1IDI0IDI0IDI0aDEwMS4zMzNjMTMuMjU1IDAgMjQtMTAuNzQ1IDI0LTI0di04MGMwLTEzLjI1NS0xMC43NDUtMjQtMjQtMjRIMjA1LjMzM2MtMTMuMjU1IDAtMjQgMTAuNzQ1LTI0IDI0eiIgZmlsbD0iIzIzRjdERCI+PC9wYXRoPgo8L3N2Zz4=")
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYgMS41VjQuNUM2IDUuMzQzNzUgNS4zMTI1IDYgNC41IDZIMS41QzAuNjU2MjUgNiAwIDUuMzQzNzUgMCA0LjVWMS41QzAgMC42ODc1IDAuNjU2MjUgMCAxLjUgMEg0LjVDNS4zMTI1IDAgNiAwLjY4NzUgNiAxLjVaTTYgOS41VjEyLjVDNiAxMy4zNDM4IDUuMzEyNSAxNCA0LjUgMTRIMS41QzAuNjU2MjUgMTQgMCAxMy4zNDM4IDAgMTIuNVY5LjVDMCA4LjY4NzUgMC42NTYyNSA4IDEuNSA4SDQuNUM1LjMxMjUgOCA2IDguNjg3NSA2IDkuNVpNOCAxLjVDOCAwLjY4NzUgOC42NTYyNSAwIDkuNSAwSDEyLjVDMTMuMzEyNSAwIDE0IDAuNjg3NSAxNCAxLjVWNC41QzE0IDUuMzQzNzUgMTMuMzEyNSA2IDEyLjUgNkg5LjVDOC42NTYyNSA2IDggNS4zNDM3NSA4IDQuNVYxLjVaTTE0IDkuNVYxMi41QzE0IDEzLjM0MzggMTMuMzEyNSAxNCAxMi41IDE0SDkuNUM4LjY1NjI1IDE0IDggMTMuMzQzOCA4IDEyLjVWOS41QzggOC42ODc1IDguNjU2MjUgOCA5LjUgOEgxMi41QzEzLjMxMjUgOCAxNCA4LjY4NzUgMTQgOS41WiIgZmlsbD0iI0Y1RjVGNSIvPgo8L3N2Zz4K")
     no-repeat;
 }
 
-/* -------------------- End Navbar Icons ------------------- */
+@media only screen and (min-width: 998px) {
+  .header-telegram-link,
+  .header-github-link,
+  .header-discord-link,
+  .header-app-change {
+    font-size: 0;
+    color: transparent;
+  }
+  .header-telegram-link svg,
+  .header-github-link svg,
+  .header-discord-link svg,
+  .header-app-change svg {
+    display: none;
+  }
 
-/* -------------------- Start Navbar ------------------- */
-.navbar .navbar__items .navbar__brand + .navbar__item {
-  margin-left: calc(50% - 245px);
+  .header-telegram-link,
+  .header-github-link,
+  .header-discord-link,
+  .header-app-change {
+    font-size: 0;
+    color: transparent;
+  }
 }
-.navbar__brand {
-  margin-left: 1rem;
+@media only screen and (max-width: 998px) {
+  .header-telegram-link,
+  .header-github-link,
+  .header-discord-link,
+  .header-app-change {
+    padding-left: 40px;
+  }
+  .header-discord-link::before,
+  .header-github-link::before,
+  .header-telegram-link::before,
+  .header-app-change::before {
+    position: absolute;
+    left: 20px;
+  }
 }
 
 /* -------------------- End Navbar ------------------- */
@@ -216,6 +387,102 @@ h2.anchor code {
   text-decoration: none;
 }
 /* -------------------- End Footer ------------------- */
+
+/* ------------------- Start Docsearch ------------------- */
+
+.DocSearch {
+  --docsearch-primary-color: theme(colors.primary.DEFAULT);
+  --docsearch-text-color: theme(colors.neutral.800);
+  --docsearch-spacing: 12px;
+  --docsearch-icon-stroke-width: 1.4;
+  --docsearch-highlight-color: var(--docsearch-primary-color);
+  --docsearch-muted-color: theme(colors.neutral.800);
+  --docsearch-container-background: rgba(101, 108, 133, 0.8);
+  --docsearch-logo-color: #5468ff;
+  --docsearch-modal-width: 560px;
+  --docsearch-modal-height: 600px;
+  --docsearch-modal-background: #f5f6f7;
+  --docsearch-modal-shadow: 0 0.625rem 9px 0 rgba(0, 0, 0, 0.06),
+    00.25rem0.25rem 0 rgba(0, 0, 0, 0.08);
+  --docsearch-searchbox-height: 56px;
+  --docsearch-searchbox-background: theme(colors.neutral.200);
+  --docsearch-searchbox-focus-background: #fff;
+  --docsearch-searchbox-shadow: inset 0 0 0 1px var(--docsearch-primary-color);
+  --docsearch-hit-height: 56px;
+  --docsearch-hit-color: #444950;
+  --docsearch-hit-active-color: #fff;
+  --docsearch-hit-background: #fff;
+  --docsearch-hit-shadow: 0 1px 3px 0 #d4d9e1;
+  --docsearch-key-gradient: rgba(0, 0, 0, 0.55);
+  --docsearch-key-shadow: none;
+  --docsearch-key-pressed-shadow: none;
+  --docsearch-footer-height: 44px;
+  --docsearch-footer-background: theme(colors.neutral.200);
+  --docsearch-footer-shadow: none;
+}
+html[data-theme="dark"] .DocSearch {
+  --docsearch-hit-active-color: var(--ifm-background-color);
+  --docsearch-text-color: #fff;
+  --docsearch-container-background: rgba(9, 10, 17, 0.8);
+  --docsearch-modal-background: theme(colors.neutral.900);
+  --docsearch-modal-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --docsearch-searchbox-background: theme(colors.neutral.850);
+  --docsearch-searchbox-focus-background: theme(colors.neutral.700);
+  --docsearch-hit-color: #bec3c9;
+  --docsearch-hit-shadow: none;
+  --docsearch-hit-background: #090a11;
+  --docsearch-footer-background: theme(colors.neutral.800);
+  --docsearch-footer-shadow: none;
+  --docsearch-logo-color: #fff;
+  --docsearch-muted-color: #fff;
+  --docsearch-key-gradient: rgba(255, 255, 255, 0.15);
+}
+
+.navbar .DocSearch-Button {
+  display: flex;
+  width: 200px;
+  padding: 0.375rem 0.375rem 0.375rem 0.5rem;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 0.375rem;
+  height: 2rem;
+}
+@media only screen and (max-width: 768px) {
+  .navbar .DocSearch-Button {
+    width: 32px;
+  }
+}
+.navbar .DocSearch-Search-Icon {
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.8;
+}
+.navbar .DocSearch-Button-Placeholder {
+  font-family: theme(fontFamily.sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1rem;
+  letter-spacing: -0.14px;
+  opacity: 0.56;
+}
+.DocSearch-Commands-Key,
+.navbar .DocSearch-Button-Key {
+  --docsearch-muted-color: #fff;
+
+  border-radius: 0.25rem;
+  top: 0;
+  border-bottom: 0;
+  box-shadow: none;
+  padding-bottom: 0;
+  font-weight: 600;
+}
+
+/* -------------------- End Docsearch ------------------- */
+
+/* ====================================== GLOBAL ================================ */
+
+/* ------------------- Start Tabs ------------------- */
 
 .tabs-container .tabs {
   font-weight: var(--ifm-font-weight-regular);
@@ -253,6 +520,48 @@ h2.anchor code {
   border-top-left-radius: 0;
   margin: 0 !important;
 }
+
+/* -------------------- End Tabs ------------------- */
+
+/* -------------------- Start Table ------------------- */
+
+table {
+  display: table;
+  border-radius: 0.5rem;
+
+  border-spacing: 0;
+  border-collapse: separate;
+  border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
+  overflow: hidden;
+}
+
+table th,
+table td {
+  border: 0;
+}
+
+table th:not(:last-child),
+table td:not(:last-child) {
+  border-right: var(--ifm-table-border-width) solid
+    var(--ifm-table-border-color);
+}
+
+table > thead > tr:not(:last-child) > th,
+table > thead > tr:not(:last-child) > td,
+table > tbody > tr:not(:last-child) > th,
+table > tbody > tr:not(:last-child) > td,
+table > tfoot > tr:not(:last-child) > th,
+table > tfoot > tr:not(:last-child) > td,
+table > tr:not(:last-child) > td,
+table > tr:not(:last-child) > th,
+table > thead:not(:last-child),
+table > tbody:not(:last-child),
+table > tfoot:not(:last-child) {
+  border-bottom: var(--ifm-table-border-width) solid
+    var(--ifm-table-border-color);
+}
+
+/* -------------------- End Table ------------------- */
 
 /* -------------------- Start Markdown ------------------- */
 .markdown {
