@@ -26,9 +26,9 @@ const Section = ({
         )}
       </div>
       {cards.length > 0 && (
-        <dl
+        <ul
           className={clsx(
-            "cards grid gap-1 mt-3xl",
+            "list-none pl-0 my-4 cards grid gap-1 mt-3xl",
             {
               "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4":
                 hasSmallCards,
@@ -44,12 +44,12 @@ const Section = ({
               isSmallCard={hasSmallCards}
             />
           ))}
-        </dl>
+        </ul>
       )}
       {links.length > 0 && (
         <ul
           className={clsx(
-            "links justify-start items-center gap-x-6 gap-y-2 inline-flex flex-wrap pl-0 mb-0"
+            "list-none pl-0 my-0 links justify-start items-center gap-x-6 gap-y-2 inline-flex flex-wrap"
           )}
         >
           {links.map((link) => (

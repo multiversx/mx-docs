@@ -33,5 +33,19 @@
       "type": "image/png",
       "purpose": "any"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/img/favicons/preview-dark.jpg",
+      "sizes": "1280x1280",
+      "type": "image/jpg",
+      "label": "MultiversX Docs Dark Mode"
+    },
+    {
+      "src": "/img/favicons/preview-light.jpg",
+      "sizes": "1280x1280",
+      "type": "image/jpg",
+      "label": "MultiversX Docs Light Mode"
+    }
   ]
 }
