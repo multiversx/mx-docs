@@ -39,6 +39,7 @@
       "src": "/img/favicons/preview-dark.jpg",
       "sizes": "1280x1280",
       "type": "image/jpg",
+      "form_factor": "wide",
       "label": "MultiversX Docs Dark Mode"
     },
     {
