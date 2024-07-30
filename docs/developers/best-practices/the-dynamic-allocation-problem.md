@@ -54,7 +54,7 @@ Below is a table of unmanaged types (basic Rust types) and their managed counter
 [^1]: `ArrayVec` allocates on the stack, and so it has a fixed capacity - it cannot grow indefinitely. You can make it as large as you please, but be warned that adding beyond this capacity results in a panic. Use `try_push` instead of `push` for more graceful error handling.
 [^2]: Be careful when passing arrays around, since they get copied when returned from functions. This can add a lot of expensive memory copies in your contract.
 
-In most cases, the managed types can be used as drop-in replacements for the basic Rust types. For a simple example, see [BigUint Operations](#biguint-operations).
+In most cases, the managed types can be used as drop-in replacements for the basic Rust types. For a simple example, see [BigUint Operations](/developers/best-practices/biguint-operations).
 
 We also recommend _allocating Rust arrays directly on the stack_ (as local variables) whenever a contiguous area of useful memory is needed. Moreover, avoid allocating mutable global buffers for this purpose, which require `unsafe` code to work with.
 

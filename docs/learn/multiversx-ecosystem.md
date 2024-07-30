@@ -19,9 +19,9 @@ With **MultiversX**, you can explore a vast ecosystem of applications or develop
 
 ## **What is MultiversX?**
 
-MultiversX is a distributed transactional computation protocol that relies on a sharded state architecture and a [Secure Proof of Stake](/docs/learn/consensus.md) consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, MultiversX runs on [average computers](/docs/validators/system-requirements.md).
+MultiversX is a distributed transactional computation protocol that relies on a sharded state architecture and a [Secure Proof of Stake](/learn/consensus) consensus mechanism. While most other blockchain networks require custom hardware and high energy consumption, MultiversX runs on [average computers](/validators/system-requirements).
 
-By employing [_sharding_](/docs/learn/sharding.md), a method of parallelizing data & transactions processing, MultiversX’s performance will scale up with the number of computers joining the network, reaching more than 100,000 transactions per second while growing increasingly decentralized.
+By employing [_sharding_](/learn/sharding), a method of parallelizing data & transactions processing, MultiversX’s performance will scale up with the number of computers joining the network, reaching more than 100,000 transactions per second while growing increasingly decentralized.
 
 :::important
 **What is a blockchain?**

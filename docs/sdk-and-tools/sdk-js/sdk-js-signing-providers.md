@@ -75,7 +75,7 @@ The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-j
 
 [comment]: # (mx-context-auto)
 
-### Login and logout
+### Login and logout {#wallet-login-and-logout}
 
 Then, ask the user to log in:
 
@@ -127,7 +127,7 @@ const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#wallet-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -167,7 +167,7 @@ for (const plainTransaction of plainSignedTransactions) {
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#wallet-signing-messages}
 
 Messages can be signed as follows:
 
@@ -210,7 +210,7 @@ await provider.init();
 
 [comment]: # (mx-context-auto)
 
-### Login and logout
+### Login and logout {#extension-login-and-logout}
 
 Then, ask the user to log in:
 
@@ -240,7 +240,7 @@ const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#extension-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -257,7 +257,7 @@ await provider.signTransactions([firstTransaction, secondTransaction]);
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#extension-signing-messages}
 
 Arbitrary messages can be signed as follows:
 
@@ -343,7 +343,7 @@ await provider.init();
 
 [comment]: # (mx-context-auto)
 
-### Login and logout
+### Login and logout  {#walletconnect-login-and-logout}
 
 Then, ask the user to log in using xPortal on her phone:
 
@@ -385,7 +385,7 @@ await provider.logout();
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#walletconnect-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -404,7 +404,7 @@ Alternatively, one can sign a single transaction using the method `signTransacti
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#walletconnect-signing-messages}
 
 Arbitrary messages can be signed as follows:
 
@@ -485,7 +485,7 @@ const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#hw-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -504,7 +504,7 @@ Alternatively, one can sign a single transaction using the method `signTransacti
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#hw-signing-messages}
 
 Arbitrary messages can be signed as follows:
 

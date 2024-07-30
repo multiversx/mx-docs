@@ -201,7 +201,7 @@ Generally speaking, in order to create transactions that transfer native tokens 
 
 :::note
 In `sdk-core v13`, the [`TransferTransactionsFactory`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransferTransactionsFactory.html) class was extended with new methods,
-to be aligned with the [SDKs specs](https://github.com/multiversx/mx-sdk-specs/blob/main/core/transactions-factories/transfer_transactions_factory.md).
+to be aligned with the [SDKs specs](https://github.com/multiversx/mx-sdk-specs/blob/main/core/transactions-factories/transfer_transactions_factory).
 The old, legacy methods are still available (see below), thus existing client code isn't affected.
 :::
 

@@ -7,7 +7,7 @@ title: Test setup
 
 ## Overview
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Registering contracts
 
@@ -16,7 +16,7 @@ Since we don't have native execution in the Rust backend yet, the only way to ru
 Since this operation is specific to only the Rust debugger, it doesn't go through the mandos pipeline.
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Setting accounts
 
@@ -48,7 +48,7 @@ We can also chain the set state declarations (if useful) as such:
         .esdt_balance(TOKEN_ID, 500); // end set state for `second`
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Checking accounts
 
@@ -72,7 +72,7 @@ The same rules apply when chaining multiple account checks as for chaining accou
         .check_storage("str:sum", "6");
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Mandos trace
 

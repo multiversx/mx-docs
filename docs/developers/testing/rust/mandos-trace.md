@@ -19,7 +19,7 @@ A Mandos `trace` is an auto-generated scenario file (`.scen.json`) derived from 
 
 Auto-generating Mandos scenarios is particularly useful for testing the contract against both Go and Rust VMs. Writing the integration test in Rust allows us to test the contract against the Rust VM. By generating a scenario trace, we can then test the scenario against the Go VM without manually rewriting the logic.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Example
 

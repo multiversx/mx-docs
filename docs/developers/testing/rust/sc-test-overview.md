@@ -25,14 +25,14 @@ graph TD
 Of course, a local test environment is not a blockchain, so many things need to be mocked. The test state is held on a `BlockchainMock`, which needs to be initialized with user accounts, tokens, smart contracts, etc.
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### ScenarioWorld (facade)
 
 In order to simplify interactions with the system, all tests use a unique facade for all operations. It is called `ScenarioWorld`, and it gets created at the beginning of each test in a `world()` function.
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Registering contracts
 
@@ -41,7 +41,7 @@ Since we don't have native execution in the Rust backend yet, the only way to ru
 Since this operation is specific to only the Rust debugger, it doesn't go through the mandos pipeline.
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Calling contract code
 
@@ -55,7 +55,7 @@ The call styles are:
 - [Whitebox framework (legacy)](whitebox-legacy)
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Rust testing architecture
 
@@ -83,7 +83,7 @@ The ScenarioWorld and its builders are in fact constructing mandos steps in the 
 The tests are also allowed to construct these mandos steps themselves, but this is currently discouraged, because mandos syntax is very weakly typed and prone to error.
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### ScenarioExecutor (Mandos)
 

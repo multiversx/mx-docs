@@ -51,7 +51,7 @@ const homepage = {
       {
         title: "Get the Architecture Overview",
         text: "Explore MultiversX innovations.",
-        link: "/technology/architecture-overview",
+        link: "/learn/architecture-overview",
       },
       {
         title: "Discover SpaceVM",

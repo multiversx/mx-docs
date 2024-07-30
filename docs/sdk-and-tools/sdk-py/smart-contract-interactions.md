@@ -290,7 +290,7 @@ myMultiESDTNFTPayableEndpoint() {
 In this example, we call `myMultiESDTPayableEndpoint` endpoint, by transferring 3 different tokens (the first two are fungible tokens and the last one is an NFT). The endpoint takes 2 BigUInt arguments. The layout of the snippet is almost the same as with **ESDTNFTTransfer** (including the fact that the sender is the same as the receiver) but has different arguments. We now pass the destination address first and the number of ESDT/NFT tokens that we want to sent. Then, for each sent token, we specify the identifier, the nonce (in our example 0 for the fungible tokens and a specific value for the NFT) and the amount. In the end, like with the **ESDTTransfer**, we pass the name of the method we want to call and the rest of the parameters of that specific method.
 
 :::tip
-More information about ESDT Transfers [here](/developers/esdt-tokens/#transfers).
+More information about ESDT Transfers [here](/tokens/fungible-tokens/#transfers).
 :::
 
 [comment]: # (mx-context-auto)

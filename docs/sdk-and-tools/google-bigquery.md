@@ -7,7 +7,7 @@ title: Google BigQuery
 
 This page succinctly describes how to use Google BigQuery to analyze data from the MultiversX blockchain.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 [comment]: # (mx-context-auto)
 

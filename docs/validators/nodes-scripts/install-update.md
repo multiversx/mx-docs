@@ -137,7 +137,7 @@ Upgrade your node by running the script and selecting either of these options:
 ~/mx-chain-scripts/script.sh
 ```
 
-These are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/multiversx/mx-chain-scripts/blob/master/README.md). You can also ask any questions in the MultiversX [Validators chat](https://t.me/MultiversXValidators)
+These are the basic steps. Please carefully read the on-screen instructions, refer to the scripts [readme file](https://github.com/multiversx/mx-chain-scripts/blob/master/README). You can also ask any questions in the MultiversX [Validators chat](https://t.me/MultiversXValidators)
 
 [comment]: # (mx-context-auto)
 

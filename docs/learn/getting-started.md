@@ -14,18 +14,18 @@ If you're not on MultiversX, get started by creating your wallet with [xPortal](
 If you want to learn more, get started by diving into these concepts:
 
 - [**MultiversX Blockchain Basics**](https://www.youtube.com/watch?v=tv6OBimIX98&list=PLQVcheGWwBRWFjgEGLx1Fv2qF_6UVpSXX) - Learn about the basics of the blockchain, cryptocurrencies, consensus models, MultiversX explorer, wallet and a live demo of how to interact with the network.
-- [**Architecture**](/docs/learn/architecture-overview.md) - A breakdown of Multiversx's onchain system.
-- [**Sovereign Chains**](/docs/sovereign/overview.md) - Learn what Sovereign Chains represent for MultiversX.
+- [**Architecture**](/learn/architecture-overview) - A breakdown of Multiversx's onchain system.
+- [**Sovereign Chains**](/sovereign/overview) - Learn what Sovereign Chains represent for MultiversX.
 
 ## **Build**
 
 If you are a developer, you've come to the right place. The development act is one of the easiest and most straight-forward that you will find in the entire space, with lots of tools and support offered by the foundation and community fellow developers.
 
-- [**Get EGLD**](/docs/learn/EGLD.md#getting-egld) - You need EGLD or xEGLD in order to be able to interact with the MultiversX Network.
+- [**Get EGLD**](/learn/EGLD.md#getting-egld) - You need EGLD or xEGLD in order to be able to interact with the MultiversX Network.
 - [**Tutorials**](https://multiversx.com/builders/build-your-first-multiversx-dapp-in-30-minutes) - A great start for anyone looking to learn what it means to develop on the MultiversX blockchain.
 - [**Cryptozombies**](https://cryptozombies.io/en/multiversx) - Interactive tutorials for learning how to write MultiversX Smart Contracts.
 - [**Tools and resources**](https://multiversx.com/builders/builder-tools-resources) - You can access the best set of tools that you may need for running your project.
-- [**SC development Framework**](/docs/developers/smart-contracts.md) - The MultiversX Blockchain's VM executes WebAssembly which means that it can execute smart contracts written in any programming language that can be compiled to WASM bytecode. Though, at the time of writing, we only provide support for Rust, with Swift being planned for the end of the year 2024. 
+- [**SC development Framework**](/developers/smart-contracts) - The MultiversX Blockchain's VM executes WebAssembly which means that it can execute smart contracts written in any programming language that can be compiled to WASM bytecode. Though, at the time of writing, we only provide support for Rust, with Swift being planned for the end of the year 2024. 
 - [**Backend**](https://www.youtube.com/watch?v=6m4o_NkLP8o&list=PLQVcheGWwBRWFjgEGLx1Fv2qF_6UVpSXX&index=8) - So you've written your smart contract, but now you need to interact with it. Learn from this first-hand experience of interacting with smart contracts.
 - [**Frontend**](https://www.youtube.com/watch?v=eMNIN5ip2w0&list=PLQVcheGWwBRWFjgEGLx1Fv2qF_6UVpSXX&index=5) - Because UI/UX is a big deal for MultiversX, having fully functional frontends is of utmost importance for your users and also for anyone interacting with blockchain.
 - [**Support**](https://t.me/MultiversXDevelopers) - We encourage everyone to ask for support or seek answers for their questions if there are any. You can find us on [Telegram](https://t.me/MultiversXDevelopers), [Discord](https://discord.gg/multiversxbuilders) or [StackOverflow](https://stackoverflow.com/questions/tagged/multiversx).
