@@ -1,23 +1,29 @@
 {
-  "name": "docs.multiversx.com",
-  "short_name": "MultiversX · Docs",
+  "name": "MultiversX • Docs",
+  "short_name": "MultiversX Docs",
   "dir": "ltr",
   "lang": "en",
   "start_url": "/",
   "display": "minimal-ui",
-  "background_color": "#f8f9ff",
-  "theme_color": "#f8f9ff",
+  "background_color": "#0e0e0e",
+  "theme_color": "#0e0e0e",
   "description": "A highly scalable, fast and secure blockchain platform for distributed apps, enterprise use cases and the new internet economy.",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://docs.multiversx.com/manifest/manifest.json"
+    }
+  ],
   "icons": [
     {
       "src": "/img/favicon/apple-touch-icon.png",
-      "sizes": "192x192",
+      "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/img/favicon/favicon-256x256.png",
-      "sizes": "256x256",
+      "src": "/img/favicon/favicon-192x192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
