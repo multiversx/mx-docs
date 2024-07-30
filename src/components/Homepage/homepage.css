@@ -27,7 +27,7 @@ html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
       )
       right -180px top -150px no-repeat,
     var(--ifm-background-color);
-  background-size: 680px, 1200px, auto;
+  background-size: 40vw, 60vw, auto;
   background-blend-mode: normal, difference, normal;
 }
 
@@ -46,7 +46,7 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
       )
       right -180px top -150px no-repeat,
     var(--ifm-background-color);
-  background-size: 680px, 1200px, auto;
+  background-size: 40vw, 60vw, auto;
   background-blend-mode: normal, lighten, normal;
 }
 
