@@ -95,7 +95,7 @@ const config = {
       },
 
       // Replace with your project's social card
-      image: "img/share.jpg",
+      image: "img/social.jpg",
 
       metadata: [
         { name: "twitter:site", content: "@MultiversX" },
