@@ -710,7 +710,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### **Modify Royalties**
 
-The manager of an ESDT token may want to set new royalities. This operation will rewrite the royalities on the specified token ID. It requires `ESDTRoleNFTModifyRoyalties` role.
+The manager of an ESDT token may want to set new royalities. This operation will rewrite the royalities on the specified token ID.
+It requires `ESDTRoleNFTModifyRoyalties` role.
 This is done by performing a transaction like this:
 
 ```rust
@@ -732,7 +733,8 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### **Set new URIs**
 
-The manager of an ESDT token may want to set new uris. This operation will rewrite the uris on the specified token ID. It requires `ESDTRoleNFTSetNewURIs` role.
+The manager of an ESDT token may want to set new URIs. This operation will rewrite the URIs on the specified token ID.
+It requires `ESDTRoleNFTSetNewURIs` role.
 This is done by performing a transaction like this:
 
 ```rust
@@ -743,8 +745,10 @@ SetNewURIsTransaction {
     GasLimit: 60000000
     Data: "ESDTSetNewURIs" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
-          "@" + <list of new uris in hexadecimal encoding>
+          "@" + <token nonce in hexadecimal encoding> +
+          "@" + <new URI1 in hexadecimal encoding> +
+          "@" + <new URI2 in hexadecimal encoding> +
+            ...
 }
 ```
 
@@ -757,7 +761,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 [comment]: - only for dynamic nfts, SFT, metaESDT (only for accounts that have metadata on system account)
 
 The creator of a token can be changed. For this, the token has to be moved to the new creator account. The new creator
-account requires `ESDTRoleModifyCreator` role. Also, the token has to be of dynamic type.
+account requires `ESDTRoleModifyCreator` role. Also, the token has to be of dynamic type in order for this to work.
 
 The creator can be modified using a transaction like this:
 
@@ -769,7 +773,7 @@ ModifyCreatorTransaction {
     GasLimit: 60000000
     Data: "ESDTModifyCreator" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding>
+          "@" + <token nonce in hexadecimal encoding>
 }
 ```
 
@@ -779,7 +783,10 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### **MetaData Update**
 
-The NFT meta data can be updated using a transaction like this:
+The manager of an ESDT token may want to update token metadata. This operation will update token metadata on the specified token ID.
+It requires `ESDTRoleNFTUpdate` role. If nothing is received for a given attribute, the old version of that attribute will be kept.
+
+This is done by performing a transaction like this:
 
 ```rust
 MetaDataUpdateTransaction {
@@ -789,7 +796,7 @@ MetaDataUpdateTransaction {
     GasLimit: 60000000
     Data: "ESDTMetaDataUpdate" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <token nonce in hexadecimal encoding> +
           "@" + <token name in hexadecimal encoding> +
           "@" + <royalities in hexadecimal encoding> +
           "@" + <hash in hexadecimal encoding> +
@@ -805,6 +812,11 @@ _For more details about how arguments have to be encoded, check [here](/develope
 ### **MetaData Recreate**
 
 The whole NFT can be recreated with new attributes using a transaction like this:
+
+The manager of an ESDT token may want to recreate the whole token with new attributes. This operation will recreate token attributes on the specified token ID.
+It requires `ESDTRoleNFTRecreate` role. If an argument is not being set, that field is set to zero.
+
+This is done by performing a transaction like this:
 
 ```rust
 MetaDataRecreateTransaction {
