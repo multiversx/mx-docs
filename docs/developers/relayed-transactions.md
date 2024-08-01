@@ -14,14 +14,17 @@ Relayed transactions (or meta-transactions) are transactions with the fee paid b
 In other words, if a relayer is willing to pay for an interaction, it is not mandatory that the address
 interacting with a Smart Contract has any EGLD for fees.
 
-More details and specifications can be found on [MultiversX Specs](https://github.com/multiversx/mx-specs/blob/main/sc-meta-transactions.md).
+More details and specifications can be found on [MultiversX Specs](https://github.com/multiversx/mx-specs/blob/main/sc-meta-transactions).
 
 [comment]: # (mx-context-auto)
 
 ## Types of relayed transactions
 
-Currently, there are 2 versions of relayed transactions: v1 and v2. In the end, they both have the same effect,
-but v2 comes with optimisations in terms of gas usage, making it our recommendation.
+Currently, there are 3 versions of relayed transactions: v1, v2 and v3. In the end, they all have the same effect.
+
+Relayed v2 was meant to bring optimisations in terms of gas usage. But v3 reduces the costs even further, making it our recommendation.
+
+Once all applications will completely transition to relayed v3 model, v1 and v2 will be removed.
 
 [comment]: # (mx-context-auto)
 
@@ -241,3 +244,145 @@ Decoding the arguments ([useful resources here](/developers/sc-calls-format/)) w
 - 2nd argument: `0f` => `15` (nonce of the inner transaction)
 - 3rd argument: `616464` => `add` (function to be called - no argument needed in this example)
 - 4th argument: `9abd13f4f53f3f23597744d65fc5d351bb6773e05a954b419c08d18593d1c6926279a4d16144d3f866a5487803142fcff0eab6ad588209969acb7abed210200b` (the signature of the inner transaction)
+
+[comment]: # (mx-context-auto)
+
+## Relayed transactions version 3
+
+:::note
+This feature is not available at the moment on Mainnet.
+:::
+
+Relayed transactions v3 feature comes with a change on the entire transaction structure, adding a new optional field `InnerTransactions`, which is a collection of inner transactions. That being said, relayed transactions v3 allow the user to send multiple inner transactions on the same relayed transaction which will be executed as normal transactions, without the gas consuming data field of the old relayed transactions versions.
+
+In terms of gas limit computation, let's consider the following example: relayed transaction with one inner transaction of type move balance, that also has a data field `test` of length 4.
+```js
+    gasLimitInnerTxs = <base_cost> + <cost_per_byte> * length(txData)
+    gasLimitInnerTxs =    50_000   +      4          *     1_500
+    gasLimitInnerTxs = 56_000
+    
+    gasLimitRelayedTx = <move_balance_cost> * len(inner_transactions) + <gasLimitInnerTxs>
+    gasLimitRelayedTx =      50_000         *            1            +        56_000
+    gasLimitRelayedTx = 106_000
+```
+
+Similar for a relayed transaction v3 that has 3 inner transactions of type move balance(empty data field on each):
+```js    
+    gasLimitInnerTxs = <move_balance_cost> + <move_balance_cost> + <move_balance_cost>
+    gasLimitInnerTxs =       50_000        +        50_000       +      50_000
+    gasLimitInnerTxs = 150_000
+
+    gasLimitRelayedTx = <move_balance_cost> * len(inner_transactions) + <gasLimitInnerTxs>
+    gasLimitRelayedTx =      50_000         *            3            +      150_000
+    gasLimitRelayedTx = 300_000
+```
+
+It would look like:
+
+```rust
+RelayedV3Transaction {
+    Sender: <Relayer address>
+    Receiver: <Relayer address>
+    Value: 0
+    GasLimit: <move_balance_cost> * len(InnerTransactions) + sum(<gas needed for each inner transaction>)
+    InnerTransactions: []Transaction {
+        {
+          "nonce": <Nonce>,
+          "value": <Value>,
+          "receiver": <Receiver address>,
+          "sender": <Sender address>,
+          "gasLimit": <Gas limit>,
+          "data": <Data>,
+          "relayer": <Relayer address>,
+        },
+        {
+          "nonce": <Nonce>,
+          "value": <Value>,
+          "receiver": <Receiver address>,
+          "sender": <Sender address>,
+          "gasLimit": <Gas limit>,
+          "data": <Data>,
+          "relayer": <Relayer address>,
+        },
+        ...
+    }
+}
+```
+
+Therefore, in order to build such a transaction, one has to follow the next steps:
+
+- create the inner transactions. Make sure that:
+  - all inner transactions have the `relayer` field set to the address that would pay the gas
+  - all inner transactions senders are in **the same shard** with the relayer
+  - in case there are multiple inner transactions from the same sender, the transactions are in the order of the execution, with increasing correct nonces, starting from the current sender's nonce
+  - all inner transactions are valid and signed
+- create the relayed transactions:
+  - the receiver of the relayed transactions is the relayer
+  - value must be 0 and data field empty
+  - add all inner transactions on the `innerTransactions` field
+  - compute the gas limit: `move balance cost * number of inner transactions + sum of all inner transactions gas limits`
+
+:::note
+1. If the relayed transaction v3 is guarded, the cost of the guarded transaction will be consumed only once, not for each inner transaction.
+2. There are situations where inner transactions are initially accepted, but before their execution, the underlying state changes (due to the execution of other transactions), rendering some or all of these transactions invalid. In such cases, the relayer will still incur gas costs (pays the fee), even though these inner transactions produce no effects.
+:::
+
+### Example
+
+Here's an example of a relayed v3 transaction. Its intent is:
+- 2 sc calls of method `add@01` of a previously deployed adder contract
+- 1 move balance
+
+```json
+{
+  "nonce": 0,
+  "value": "0",
+  "receiver": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0",
+  "sender": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0",
+  "gasPrice": 1000000000,
+  "gasLimit": 10200000,
+  "signature": "...",
+  "chainID": "T",
+  "version": 2,
+  "innerTransactions": [
+    {
+      "nonce": 1,
+      "value": "0",
+      "receiver": "erd1qqqqqqqqqqqqqpgq3tssqmcde5w6626mkrm9cehcqgquwmvwl0jq3umv7s",
+      "sender": "erd1ws52y4t8pmwx9zcuwg0swxymxkg6dwsfpcf3qxmsjvzjtmwkl0jqpn44dn",
+      "gasPrice": 1000000000,
+      "gasLimit": 5000000,
+      "data": "YWRkQDAx",
+      "signature": "...",
+      "chainID": "T",
+      "version": 2,
+      "relayer": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0"
+    },
+    {
+      "nonce": 2,
+      "value": "0",
+      "receiver": "erd1qqqqqqqqqqqqqpgq3tssqmcde5w6626mkrm9cehcqgquwmvwl0jq3umv7s",
+      "sender": "erd1ws52y4t8pmwx9zcuwg0swxymxkg6dwsfpcf3qxmsjvzjtmwkl0jqpn44dn",
+      "gasPrice": 1000000000,
+      "gasLimit": 5000000,
+      "data": "YWRkQDAx",
+      "signature": "...",
+      "chainID": "T",
+      "version": 2,
+      "relayer": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0"
+    },
+    {
+      "nonce": 0,
+      "value": "1000000000000000000",
+      "receiver": "erd1v7p7uefggz04qst7fzd8hwrl95v03g5uh5fj9vka6ydmdguqy6ws28at85",
+      "sender": "erd1xfr34s4yft7pk4gf8mt7a2kkfz4z2f3rvuy9pwlgkeymue8pcfkqfxv2mv",
+      "gasPrice": 1000000000,
+      "gasLimit": 50000,
+      "signature": "...",
+      "chainID": "T",
+      "version": 2,
+      "relayer": "erd1dcad0dlle658mggthhpvaypjag2et25yk3c2r7p9gjqkgqpxtukqcqakt0"
+    }
+  ]
+}
+```

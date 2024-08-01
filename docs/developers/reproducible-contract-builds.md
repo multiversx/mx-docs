@@ -174,7 +174,7 @@ A more straightforward alternative to the previous bash script is to use **mxpy*
 
 First, make sure you have the:
 
-- latest [mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended) installed,
+- latest [mxpy](/sdk-and-tools/sdk-py/installing-mxpy) installed,
 - latest [docker engine](https://docs.docker.com/engine/install/) installed.
 
 Then, use the `reproducible-build` command (below, the image tag is just an example):
@@ -227,11 +227,11 @@ Please note that as a **Beta** feature still in development, certain steps descr
 :::
 
 :::tip
-Make sure that you have the latest `mxpy` installed. In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
+Make sure that you have the latest `mxpy` installed. In order to install mxpy, follow the instructions at [install mxpy](/sdk-and-tools/sdk-py/installing-mxpy).
 :::
 
 1. The contract must be deterministically built as described [above](/developers/reproducible-contract-builds#building-via-docker-reproducible-build).
-2. To start with the verification process, we need to first deploy the smart contract. For deploying contracts have a look here: https://docs.multiversx.com/sdk-and-tools/sdk-py/smart-contract-interactions/#deploy--upgrade.
+2. To start with the verification process, we need to first deploy the smart contract. For deploying contracts have a look [here](/sdk-and-tools/sdk-py/smart-contract-interactions/#deploy--upgrade).
 3. Upon deploying, the output will not only provide information such as the transaction hash and data, but also the address of the newly deployed contract.
 4. In order to verify your contract the command you have to use is (below, the image tag is just an example):
 

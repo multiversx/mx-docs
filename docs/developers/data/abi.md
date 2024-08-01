@@ -118,6 +118,7 @@ Please note that the type names are not necessarily the ones from Rust, we are t
 ### Basic types
 
 First off, there are a number of [basic types](/developers/data/simple-values) that are known, and which have a universal representation:
+
 - Numerical types: `BigUint`, `BigInt`, `u64`, `i32`, etc.
 - Booleans: `bool`.
 - Raw byte arrays are all specified as `bytes`, irrespective of the underlying implementation in the contract. Someone who just interacts with the contract does not care whether the contracts works with `ManagedBuffer`, `Vec<u8>`, or something else, it's all the same to the exterior.
@@ -130,6 +131,7 @@ First off, there are a number of [basic types](/developers/data/simple-values) t
 ### Composite types
 
 Then, there are several standard [composite types](/developers/data/composite-values). They also have type arguments that describe the type of their content:
+
 - Variable-length lists: `List<T>`, where `T` can be any type; e.g. `List<u32>`.
 - Fixed-length arrays: `arrayN<T>`, where `N` is a number and `T` can be any type; e.g. `array5<u8>` represents 5 bytes.
 - Heterogenous fixed-length tuples, `tuple<T1,T2,...,TN>`, no spaces, where `T1`, `T2` , ... , `TN` can be any types; e.g. `tuple<i16,bytes>`.
@@ -308,6 +310,7 @@ You can read more about Rust enums [here](https://doc.rust-lang.org/book/ch06-01
 [comment]: # (mx-context-auto)
 
 ### Overview
+
 The framework will export all data types found in arguments, results, and events, but it doesn't intrinsically know abut the data that we use in SFT and NFT attributes. This is why there is a special annotation to specify this explicitly.
 
 Starting with the framework version `0.44`, developers can use the new trait annotation `#[esdt_attribute("name", Type)]` in order to export ESDT attributes types in the ABI file. 
@@ -321,6 +324,7 @@ The annotation can only be used at trait level along with `#[multiversx_sc::cont
 :::
 
 The exported data will end up in 2 places:
+
 1. In the contract ABI, in a special `"esdt_attributes"` section;
 2. In a special ESDT ABI file (`name.esdt-abi.json`), one for each such declared ESDT.
 
@@ -360,6 +364,7 @@ Adding the `#[esdt_attribute("testBasic", BigUint)]` at trait level along with `
 The abi can be generated calling `sc-meta all abi` in the contract folder, or by building the contract using `sc-meta all build` (this command also adds the `wasm` file to the `output` folder).
 
 Building the contract using `sc-meta all build` will generate the following folder structure:
+
 ```
 some_contract
 ├── output

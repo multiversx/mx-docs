@@ -170,7 +170,7 @@ The `init` method of the Crowdfunding smart contract is currently empty. We'll a
 
 ## **Step 3: the build**
 
-After creating the file `src/crowdfunding.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-the-code), you can issue the first build command. Make sure you save the file first.
+After creating the file `src/crowdfunding.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-write-the-code), you can issue the first build command. Make sure you save the file first.
 
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 

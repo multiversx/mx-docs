@@ -523,7 +523,7 @@ This API is accessible through `self.send()`. It provides functionalities like s
 
 We will not describe every single function in the API, as that would create confusion. We will only describe those that are recommended to be used (as they're mostly wrappers around more complicated low-level functions).
 
-For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](sc-contract-calls.md) section.
+For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](/developers/transactions/tx-legacy-calls) section.
 
 Without further ado, let's take a look at the available functions:
 
