@@ -7,7 +7,7 @@ title: Ethereum to MultiversX migration guide
 
 ## Introduction
 
-In the last period smart contracts suffered a rapid growth as many blockchains brought on the table better and better ways to develop one. In this article we will make a short comparison between writing a smart contract in Ethereum and one in MultiversX, and bring you another perspective from the Ethereum background to what could be an amazing experience of developing in Rust with MultiversX’s framework.
+In the last period smart contracts suffered a rapid growth as many blockchains brought on the table better and better ways to develop one. In this article we will make a short comparison between writing a smart contract in Ethereum and one in MultiversX, and bring you another perspective from the Ethereum background to what could be an amazing experience of developing in Rust with SpaceCraftSDK - MultiversX’s framework.
 
 [comment]: # (mx-context-auto)
 
@@ -59,7 +59,7 @@ pub trait Adder {
     fn sum(&self) -> SingleValueMapper<BigUint>;
 }
 ```
-The element that defines the MultiversX framework is the fact that by a series of implementations the whole structure of smart contracts is drastically simplified. The MultiversX framework offers a series of annotations that transforms basic rust elements such as functions, traits into smart contract specific elements such as endpoints, storage mappers, modules etc.. In this way, for example, a method marked with `#[endpoint]` makes it public to be called as an endpoint of the contract.
+The element that defines SpaceCraftSDK is the fact that by a series of implementations the whole structure of smart contracts is drastically simplified. SpaceCraftSDK offers a series of annotations that transforms basic rust elements such as functions, traits into smart contract specific elements such as endpoints, storage mappers, modules etc.. In this way, for example, a method marked with `#[endpoint]` makes it public to be called as an endpoint of the contract.
 
 ## Handling the storage
 
@@ -198,7 +198,7 @@ self.tx()
 
 Ultimately, the purpose of a transaction is to be executed. Simply constructing a transaction has no effect in itself. So we must finalize each transaction construct with a call that sends it to the blockchain.
 
-In the MultiversX framework the transaction syntax is consistent, the only element differing being the execution. More specifically:
+In SpaceCraftSDK the transaction syntax is consistent, the only element differing being the execution. More specifically:
 
 In a contract, the options are `.transfer()`, `.transfer_execute()`, `.async_call_and_exit()`, `.sync_call()`, etc.
 In unit tests written in Rust just `.run()` is universal.
