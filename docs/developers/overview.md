@@ -34,7 +34,7 @@ A list with everything that you can explore as a developer on MultiversX.
 Below is a list of tutorials for building on MultiversX:
 
 | Name                                                                                | Description                                                      |
-|-------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.       |
 | [Cryptozombies Tutorials](https://cryptozombies.io/en/multiversx)        | Interactive way of learning how to write MultiversX Smart Contracts.       |
 | [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.     |
@@ -45,6 +45,7 @@ Below is a list of tutorials for building on MultiversX:
 | [Energy DAO Tutorial](/developers/tutorials/energy-dao)                             | In depth analysis of the Energy DAO SC template.                 |
 | [DEX Walkthrough](/developers/tutorials/dex-walkthrough)                            | In depth walkthrough of all the main DEX contracts.              |
 | [WalletConnect 2.0 Migration](/developers/tutorials/wallet-connect-v2-migration)    | WalletConnect 2.0 Migration Guide                                |
+| [Ethereum to MultiversX migration guide](/developers/tutorials/eth-to-mvx)          | Guide for Ethereum developers to start building on MultiversX.   |
 
 [comment]: # (mx-context-auto)
 
@@ -52,9 +53,9 @@ Below is a list of tutorials for building on MultiversX:
 
 One can (programatically) interact with the MultiversX Network by leveraging a set of **SDKs (TypeScript, Go, Python, C++ etc.), tools and APIs**. For more details, please follow:
 
-| Name                                                              | Description                                                                     |
-|-------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| [SDKs and Tools - Overview](/sdk-and-tools/overview)             | The complete list of SDKs, tools and APIs.                                      |
+| Name                                                 | Description                                |
+| ---------------------------------------------------- | ------------------------------------------ |
+| [SDKs and Tools - Overview](/sdk-and-tools/overview) | The complete list of SDKs, tools and APIs. |
 
 [comment]: # (mx-context-auto)
 
@@ -62,10 +63,10 @@ One can (programatically) interact with the MultiversX Network by leveraging a s
 
 The following content explains the structure of a transaction, how to sign or send them:
 
-| Name                                                                                 | Description                                             |
-|--------------------------------------------------------------------------------------|---------------------------------------------------------|
-| [Signing transactions](/developers/signing-transactions)                             | How to serialize and sign transactions.                 |
-| [Tools for signing](/developers/signing-transactions/tools-for-signing)              | What to use in order to generate and sign transactions. |
+| Name                                                                                  | Description                                             |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [Signing transactions](/developers/signing-transactions)                              | How to serialize and sign transactions.                 |
+| [Tools for signing](/developers/signing-transactions/tools-for-signing)               | What to use in order to generate and sign transactions. |
 | [Signing programmatically](/developers/signing-transactions/signing-programmatically) | How to sign transactions by using one of our SDKs.      |
 
 [comment]: # (mx-context-auto)
@@ -75,7 +76,7 @@ The following content explains the structure of a transaction, how to sign or se
 Learn about transaction's gas and how a fee is calculated:
 
 | Name                                                                                      | Description                                                               |
-|-------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | [Overview](/developers/gas-and-fees/overview)                                             | General concepts and overview about gas cost, limit, price and fee.       |
 | [For move-balance transfers](/developers/gas-and-fees/egld-transfers)                     | How fees are computed for move-balance transfers (EGLD transfers).        |
 | [For System Smart Contracts](/developers/gas-and-fees/system-smart-contracts)             | How fees are computed when interacting with system smart contracts.       |
@@ -104,12 +105,11 @@ Learn about transaction's gas and how a fee is calculated:
 ### Smart Contract Developers Best Practices
 
 | Name                                                                                        | Description                                        |
-|---------------------------------------------------------------------------------------------|----------------------------------------------------|
+| ------------------------------------------------------------------------------------------- | -------------------------------------------------- |
 | [Best practices basics](/developers/best-practices/best-practices-basics)                   | How to better structure your Smart Contract code.  |
 | [Biguint operations](/developers/best-practices/biguint-operations)                         | Handle Biguint operations in a more efficient way. |
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
 | [Multi values](/developers/data/multi-values)                                               | Take advantage of the variadic input and output.   |
-
 
 [comment]: # (mx-context-auto)
 
@@ -147,19 +147,19 @@ the execution of smart contract, information about ESDT transfers or built-in fu
 
 #### Event structure
 
-| Field      | Type     | Description                                       |
-|------------|----------|---------------------------------------------------|
-| identifier | string   | The identifier for the event.                     |
-| address    | string   | The associated address.                           |
-| topics     | []string | An array containing information about the event.  |
-| data       | string   | Additional data related to the event.             |
+| Field      | Type     | Description                                      |
+| ---------- | -------- | ------------------------------------------------ |
+| identifier | string   | The identifier for the event.                    |
+| address    | string   | The associated address.                          |
+| topics     | []string | An array containing information about the event. |
+| data       | string   | Additional data related to the event.            |
 
 [comment]: # (mx-context-auto)
 
 #### Event logs can be categorized into the following types:
 
 | Name                                                                          | Description                                                                                                                                                                                                         |
-|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [ESDT Operations Events](/developers/event-logs/esdt-events)                  | ESDT operations, which encompass token creation, transfers, and other critical actions, generate log events. These events record sender and receiver addresses, token amounts, and operation types.                 |
 | [Execution Events](/developers/event-logs/execution-events)                   | Execution events are dedicated to recording the status of transaction execution. They indicate whether a transaction was successfully executed or encountered an error.                                             |
 | [Smart Contract Call Events](/developers/event-logs/contract-call-events)     | Smart contract calls often emit log events to report their execution status and results. These events typically include information such as the caller's address, the called function, and any other relevant data. |
@@ -171,7 +171,7 @@ the execution of smart contract, information about ESDT transfers or built-in fu
 ### Others
 
 | Name                                                                     | Description                                                                            |
-|--------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
 | [Constants](/developers/constants)                                       | A list of useful constants that governs the MultiversX Mainnet.                        |
 | [Built in functions](/developers/built-in-functions)                     | Built-in functions - protocol-side functions.                                          |
 | [Account storage](/developers/account-storage)                           | How the data is stored under an account + how to query and change it.                  |
