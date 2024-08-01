@@ -2,7 +2,7 @@
 
 The repository contains the [documentation](https://docs.multiversx.com) for the MultiversX Network protocol.
 
-![docs.multiversx.com](https://github.com/multiversx/mx-docs/blob/main/static/img/share.jpg)
+![docs.multiversx.com](https://github.com/multiversx/mx-docs/blob/main/static/img/social.jpg)
 
 ## About
 
