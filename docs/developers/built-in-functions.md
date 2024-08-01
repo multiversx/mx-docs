@@ -116,8 +116,8 @@ already covered [here](/developers/account-storage).
 
 ## **ESDT and NFT built-in functions**
 
-Most of the ESDT and NFT related built-in function are already described in the [ESDT](/developers/esdt-tokens/) and
-[NFT](/developers/nft-tokens) sections.
+Most of the ESDT and NFT related built-in function are already described in the [ESDT](/tokens/fungible-tokens) and
+[NFT](/tokens/nft-tokens) sections.
 
 [comment]: # (mx-context-auto)
 

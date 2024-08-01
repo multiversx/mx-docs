@@ -9,5 +9,5 @@ For more details, please follow:
 
  - [The Staking Smart Contract](/validators/staking/staking-smart-contract)
  - [The Delegation Manager](/validators/delegation-manager)
- - [ESDT tokens](/developers/esdt-tokens)
- - [NFT tokens](/developers/nft-tokens)
+ - [ESDT tokens](/tokens/fungible-tokens)
+ - [NFT tokens](/tokens/nft-tokens)

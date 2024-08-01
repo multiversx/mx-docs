@@ -13,13 +13,13 @@ As discussed previously, the transaction syntax is consistent through the variou
 The transaction itself is not different and will produce the same result, but the way the framework processes the transaction might differ depending on the environment.
 :::
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Smart contract 
 
 From the smart contract point of view, the transaction ends when specifying the transaction type (sync/async call).
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### `async_call_and_exit` 
 
@@ -35,7 +35,7 @@ Executes the transaction asynchronously and exits after execution.
 
 In this case, the function `async_call_and_exit` marks the end of the transaction and executes it asynchronously. After the transaction is executed, the `never` type is returned, marking the end of the execution.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### `sync_call` 
 
@@ -50,7 +50,7 @@ Sends a transaction synchronously.
         .sync_call(); // synchronous call
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### `upgrade_async_call_and_exit` 
 
@@ -65,7 +65,7 @@ Upgrades contract asynchronously and exits after execution.
         .upgrade_async_call_and_exit(); // upgrades async and exits
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### `sync_call_same_context`
 
@@ -80,7 +80,7 @@ Executes the transaction synchronously on the same context (in the name of the c
         .sync_call_same_context(); // sync call in the same context
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### `sync_call_readonly`
 
@@ -124,7 +124,7 @@ Same as `transfer_execute`, but only allowed for simple transfers.
 ```
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### `async_call`, `async_call_promise`
 
@@ -135,7 +135,7 @@ For the moment, the functions `async_call` and `async_call_promise` exist for ba
 :::
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Integration test
 
@@ -154,11 +154,11 @@ For the Rust testing environment, the only keyword for sending transactions is `
 In this case, regarding of the type of the transaction (raw call, deploy, upgrade, query), it eventually turns into a scenario `Step` (`ScQueryStep`, `ScCallStep`, `ScDeployStep`) and it is processed as such. 
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Interactor
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Async Rust
 
@@ -177,7 +177,7 @@ In the case of the interactor, the processing is similar to the integration test
         .await; // awaits the result - async Rust
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Sync Rust
 
@@ -185,7 +185,7 @@ We also have a plan for adding support for a blocking interactor API, but this i
 
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Feature table
 

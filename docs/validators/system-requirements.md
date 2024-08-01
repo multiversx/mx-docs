@@ -30,9 +30,26 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 :::
 
 :::tip
-1. Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pending third-party issues.
-2. We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw` or `lscpu`
+We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw` or `lscpu`
 :::
+
+[comment]: # (mx-context-auto)
+
+## **ARM Architecture Support**
+
+Processors with ARM architecture are now supported, starting from mainnet epoch 1265 (related to [this](https://github.com/multiversx/mx-chain-mainnet-config/releases/tag/v1.6.7.0) release).  
+Synchronization from genesis to epoch 1265 is not possible on ARM processors.
+
+:::caution
+This update comes after extensive testing to ensure compatibility and functionality. However, we advise caution with its use in production environments.
+:::
+
+Usage recommendations:  
+- Testnet/Devnet Validators: ARM processors can be utilized effectively as validator nodes on Testnet or Devnet.  
+- Mainnet Observers: ARM processors can be utilized effectively as observer nodes that can provide API support to non-critical services.  
+- Mainnet Validators: Despite successful testing, **it is NOT recommended to use ARM processors as mainnet validators** at this time due to potential performance and reliability concerns.
+
+We will continue to monitor and improve support for ARM architecture, and we encourage the community to provide [feedback](https://t.me/MultiversXValidators) on their experiences.
 
 [comment]: # (mx-context-auto)
 

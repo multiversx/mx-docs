@@ -4,11 +4,11 @@ title: Payload (data)
 ---
 
 [comment]: # (mx-abstract)
-## Overview
 
 ## Overview
 
 The data field can hold arbitrary data, but for practical purposes, it is normally one of three:
+
 - a function call,
 - deploy data, or
 - an upgrade call.
@@ -20,7 +20,6 @@ Always use [proxies](tx-proxies) when the target contract ABI is known. A contra
 
 Using raw data is acceptable only when we are forwarding calls to unknown contracts, for instance in contracts like the multisig, governance of other forwarders.
 :::
-
 
 [comment]: # (mx-context-auto)
 
@@ -46,6 +45,7 @@ graph LR
 ```
 
 What the first diagram does **not** contain are some additional methods that change the values, but not the type. They are:
+
 - `code_metadata` (deploy & upgrade only),
 - `argument`
 - `argument_raw`.
@@ -107,7 +107,6 @@ Transactions with no data are classified as simple transfers. These simple trans
 
 **`.raw_call(...)`** starts a contract call serialised by hand. It is used in proxy functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe.
 
-
 [comment]: # (mx-context-auto)
 
 ### Argument
@@ -149,7 +148,6 @@ tx().raw_call("example").code_metadata(code_metadata)
 
 Deployment calls needs to set:
 
-
 [comment]: # (mx-context-auto)
 
 ### Argument
@@ -164,7 +162,7 @@ tx().raw_deploy().argument(&argument)
 
 ### Raw arguments
 
-Same as for [function call raw arguments](#raw-argument).
+Same as for [function call raw arguments](#raw-arguments).
 
 ```rust
 tx().raw_deploy().arguments_raw(&arguments)
@@ -225,7 +223,6 @@ fn deploy(&mut self) {
 
 `.raw_upgrade()` starts a contract deployment upgrade serialised by hand. It is used in a proxy upgrade call. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. All upgrade calls require:
 
-
 [comment]: # (mx-context-auto)
 
 ### Argument
@@ -240,7 +237,7 @@ tx().raw_upgrade().argument(&argument)
 
 ### Raw arguments
 
-Same as for [function call raw arguments](#raw-argument).
+Same as for [function call raw arguments](#raw-arguments).
 
 ```rust
 tx().raw_upgrade().arguments_raw(&arguments)

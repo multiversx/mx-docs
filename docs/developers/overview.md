@@ -36,6 +36,7 @@ Below is a list of tutorials for building on MultiversX:
 | Name                                                                                | Description                                                      |
 | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.       |
+| [Cryptozombies Tutorials](https://cryptozombies.io/en/multiversx)        | Interactive way of learning how to write MultiversX Smart Contracts.       |
 | [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.     |
 | [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                  |
 | [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                  |
@@ -85,19 +86,19 @@ Learn about transaction's gas and how a fee is calculated:
 
 ### Smart Contract Developer reference
 
-| Name                                                                                   | Description                                                                                        |
-| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [How to format the data field for Smart Contract calls](/developers/sc-calls-format)   | Learn how a Smart Contract call looks like and how arguments should be encoded.                    |
-| [MultiversX serialization format](/developers/data/serialization-overview)             | How MultiversX smart contracts serialize arguments, results, and storage.                          |
-| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)            | How to use annotations in your contracts to make use of many built-in features from the framework. |
-| [MultiversX SC modules](/developers/developer-reference/sc-modules)                    | Learn how to divide a Smart Contract into multiples smaller components by using modules.           |
-| [MultiversX SC contract calls](/developers/developer-reference/sc-contract-calls)      | Learn how to call a Smart Contract from another Smart Contract.                                    |
-| [Code metadata](/developers/data/code-metadata)                                        | Choose the properties / eligible actions of your Smart Contract.                                   |
-| [Upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts) | The implications of upgrading a Smart Contract.                                                    |
-| [MultiversX SC api functions](/developers/developer-reference/sc-api-functions)        | Make use of the MultiversX VM API functions to query relevant data from the blockchain.            |
-| [Storage mappers](/developers/developer-reference/storage-mappers)                     | Decide from multiple ways of storing data in your SC, by considering performance.                  |
-| [Rust smart contract build reference](/developers/meta/sc-build-reference)             | How to build and organize your Smart Contract.                                                     |
-| [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers) | How to generate random number in Smart Contracts.                                                  |
+| Name                                                                                                                     | Description                                                                                     |
+|--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| [How to format the data field for Smart Contract calls](/developers/sc-calls-format)                                     | Learn how a Smart Contract call looks like and how arguments should be encoded.                 |
+| [MultiversX serialization format](/developers/data/serialization-overview)                                               | How MultiversX smart contracts serialize arguments, results, and storage.                       |
+| [MultiversX SC annotations](/developers/developer-reference/sc-annotations)                                              | How to use annotations in your contracts to make use of many built-in features from the framework. |
+| [MultiversX SC modules](/developers/developer-reference/sc-modules)                                                      | Learn how to divide a Smart Contract into multiples smaller components by using modules.        |
+| [MultiversX SC contract calls](/developers/transactions/tx-legacy-calls)                                        | Learn how to call a Smart Contract from another Smart Contract.                                 |
+| [Code metadata](/developers/data/code-metadata)                                                                          | Choose the properties / eligible actions of your Smart Contract.                                |
+| [Upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts)                                   | The implications of upgrading a Smart Contract.                                                 |
+| [MultiversX SC api functions](/developers/developer-reference/sc-api-functions)                                          | Make use of the MultiversX VM API functions to query relevant data from the blockchain.         |
+| [Storage mappers](/developers/developer-reference/storage-mappers)                                                       | Decide from multiple ways of storing data in your SC, by considering performance.               |
+| [Rust smart contract build reference](/developers/meta/sc-build-reference)                                               | How to build and organize your Smart Contract.                                                  |
+| [Random numbers in smart contracts](/developers/developer-reference/sc-random-numbers)                                   | How to generate random number in Smart Contracts.                                               |
 
 [comment]: # (mx-context-auto)
 
@@ -110,31 +111,30 @@ Learn about transaction's gas and how a fee is calculated:
 | [The dynamic allocation problem](/developers/best-practices/the-dynamic-allocation-problem) | Description of the dynamic allocation problem.     |
 | [Multi values](/developers/data/multi-values)                                               | Take advantage of the variadic input and output.   |
 
-
 [comment]: # (mx-context-auto)
 
 ### Smart Contract Testing
 
-| Name                                                                                                   | Description                                                                 |
-| ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
-| [Overview](/developers/testing/rust/sc-test-overview)                                                  | Introduction to all the testing methods available in Rust                   |
-| [Blackbox tests](/developers/testing/rust/sc-blackbox)                                                 | The best way to write integration tests, by simulating transactionds        |
-| [Whitebox framework](/developers/testing/rust/whitebox-legacy)                                         | Older testing framework, but still in use in some projects.                 |
-| [Whitebox framework functions reference](/developers/testing/rust/whitebox-legacy-functions-reference) | A list of available functions to be used when using the whitebox framework. |
-| [Debugging](/developers/testing/sc-debugging)                                                          | How to debug your smart contract tests.                                     |
+| Name                                                                 | Description                                              |
+|----------------------------------------------------------------------|----------------------------------------------------------|
+| [Overview](/developers/testing/rust/sc-test-overview)                | Introduction to all the testing methods available in Rust|
+| [Blackbox tests](/developers/testing/rust/sc-blackbox-calls)               | The best way to write integration tests, by simulating transactionds|
+| [Whitebox framework](/developers/testing/rust/whitebox-legacy)       | Older testing framework, but still in use in some projects.|
+| [Whitebox framework functions reference](/developers/testing/rust/whitebox-legacy-functions-reference) | A list of available functions to be used when using the whitebox framework.              |
+| [Debugging](/developers/testing/sc-debugging)                        | How to debug your smart contract tests.   |
 
 
 [comment]: # (mx-context-auto)
 
 ### Scenarios Reference
 
-| Name                                                                     | Description                                             |
-| ------------------------------------------------------------------------ | ------------------------------------------------------- |
-| [Scenario Overview](/developers/scenario-reference/overview)             | Test your Smart Contracts by using Scenario JSON tests. |
-| [Scenario Structure](/developers/scenario-reference/structure)           | How to structure a scenario.                            |
-| [Scenario Simple Values](/developers/scenario-reference/values-simple)   | Handle simple values in scenario tests.                 |
-| [Scenario Complex Values](/developers/scenario-reference/values-complex) | Handle complex values in scenario tests.                |
-| [Embedding Scenario code in GO](/developers/scenario-reference/embed)    | How to embed scenario code in Go.                       |
+| Name                                                                 | Description                                              |
+|----------------------------------------------------------------------|----------------------------------------------------------|
+| [Scenario Overview](/developers/testing/scenario/concept)             | Test your Smart Contracts by using Scenario JSON tests. |
+| [Scenario Structure](/developers/testing/scenario/structure-json)           | How to structure a scenario.                          |
+| [Scenario Simple Values](/developers/testing/scenario/values-simple)   | Handle simple values in scenario tests.                    |
+| [Scenario Complex Values](/developers/testing/scenario/values-complex) | Handle complex values in scenario tests.                   |
+| [Embedding Scenario code in GO](/developers/testing/testing-in-go)    | How to embed scenario code in Go.                          |
 
 [comment]: # (mx-context-auto)
 

@@ -43,8 +43,8 @@ In addition to these, tokens' properties should be set.
 
 Useful resources:
 
-- [Token parameters format](/tokens/esdt-tokens#parameters-format) - constraints about length, charset and so on.
-- [Token properties](/tokens/esdt-tokens#configuration-properties-of-an-esdt-token) - what the properties stand for.
+- [Token parameters format](/tokens/fungible-tokens#parameters-format) - constraints about length, charset and so on.
+- [Token properties](/tokens/fungible-tokens#configuration-properties-of-an-esdt-token) - what the properties stand for.
 
 Enter the required details. Next, click on **_Continue_** button to proceed. You will have to review the transaction and sign it, if everything looks good.
 
@@ -88,4 +88,4 @@ Once the transaction is successfully executed, the recipient should receive the 
 ## **Managing a token from Web Wallet**
 
 At the time of writing, a dashboard for tokens owners is still under construction. Meanwhile, token operations have to be done
-manually, by following the transaction formats described [here](/tokens/esdt-tokens/#management-operations).
+manually, by following the transaction formats described [here](/tokens/fungible-tokens/#management-operations).

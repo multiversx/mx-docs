@@ -34,6 +34,7 @@ If you've previously installed **mxpy** using **mxpy-up** and you'd like to swit
 rm ~/multiversx-sdk/mxpy
 rm -rf ~/multiversx-sdk/mxpy-venv
 ```
+
 :::
 
 In order to install **mxpy** using `pipx`, run the following command:

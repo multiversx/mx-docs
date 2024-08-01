@@ -3,7 +3,7 @@ id: sc-blackbox-example
 title: Blackbox example
 ---
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Example explained
 
@@ -79,7 +79,7 @@ fn adder_blackbox() {
 ```
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Imports
 
@@ -89,7 +89,7 @@ use multiversx_sc_scenario::imports::*;
 
 Importing everything from `multiversx_sc_scenario` gives us all the tools we need to write integration tests. From data types to methods, the dependency to `multiversx_sc_scenario` is definitely worth it for the majority of developers.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Contract reference
 
@@ -99,7 +99,7 @@ use adder::*;
 
 In this case, the only reason we import the contract files is to gain access to `adder_proxy.rs`, which is located at `adder/src/adder_proxy.rs`.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Constants
 
@@ -115,7 +115,7 @@ The framework provides various types that offer accessibility acting as a wrappe
 - `TestSCAddress` - creates a test address for a smart contract. Same as before, using `TestSCAddress::new("adder")` is equivalent to using `sc:adder`.
 - `MxscPath` - creates a path that is specifically used for locating the contract code.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Environment setup function (`world`)
 
@@ -129,7 +129,7 @@ fn world() -> ScenarioWorld {
 
 In the environment setup function of this example, the first step is to create an instance of the `ScenarioWorld` struct. This `ScenarioWorld` instance gives us access to the majority of the methods from the testing framework. Afterwards, we set the current directory path (used for debugging) and then we register the `adder` contract by providing the code path (path to `adder` root).
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Setup mock accounts
 
@@ -139,7 +139,7 @@ In the environment setup function of this example, the first step is to create a
 
 This snippet initializes a `SetStateBuilder` which helps us set the owner account at a custom address (`OWNER_ADDRESS`), and give it nonce 1. Now we can use the owner account to send transactions, and the account will be visible if checked.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### The test itself
 
@@ -154,7 +154,7 @@ fn adder_blackbox() {
 
 First thing to do inside the actual test is to initialize the environment using the `world()` function. Afterwards, we can write transactions and check results.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Deploy
 
@@ -178,7 +178,7 @@ There are, however, a few differences:
 - `.new_address(ADDER_ADDRESS)` - only available in the testing framework inside a `deploy transaction`, indicates that the newly deployed contract should exist at test address `ADDER_ADDRESS`. If not specified, a mock address will be created and automatically assigned to the smart contract and a warning will appear in the console.
 - `.run()` - converts tx data into `Step` data and then runs the step.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Query
 
@@ -194,7 +194,7 @@ There are, however, a few differences:
 
 After deploying the contract, we are now free to interact with it by sending transactions at the specified address. In this example, we are querying the `sum` endpoint of the contract and doing an assert on the result. By using `.returns(ExpectValue(5u32))` we indicate that the returned result should be `5u32` and any other result will throw an error.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Regular transactions
 
@@ -210,7 +210,7 @@ After deploying the contract, we are now free to interact with it by sending tra
 
 In this snippet, we are sending a transaction which is a typed contract call for endpoint `add`, with `1u32` as argument. We are using the `AdderProxy` object from the `adder_proxy` file in order to create the call. 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Check accounts
 
@@ -220,7 +220,7 @@ In this snippet, we are sending a transaction which is a typed contract call for
 
 In order to check the current state of the environment, we create a `CheckStateBuilder` using `check_account`. In this case, `.check_account(OWNER_ADDRESS)` checks if there is any account present at address `OWNER_ADDRESS`. In case of inconsistencies, the method throws an error and stops the execution.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Traces
 

@@ -9,7 +9,7 @@ title: Receiver
 
 Among the seven distinct generics defining a transaction, `To` signifies the **third** generic field - **the entity that receives the transaction**. With the exception of deployments, it is required to be specified for every transaction in any environment.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Diagram
 
@@ -28,7 +28,7 @@ graph LR
     end
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## No recipient
 
@@ -48,7 +48,7 @@ fn deploy() {
 ```
 
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Explicit recipient
 
@@ -56,7 +56,7 @@ Transactions, excluding deployments, require the designation of a recipient. Thi
 
 In the subsequent section, we will go into the various data types that are permissible for recipient nomination.
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Address
 
@@ -89,7 +89,7 @@ fn add_one(&mut self, from: &AddressValue) {
         .run();
 }
 ```
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## **TestSCAddress**
 
@@ -115,7 +115,7 @@ fn stake(&mut self) {
         .run();
 }
 ```
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### Bech32Address
 In order to avoid repeated conversions, it keeps the **Bech32** representation **inside**. It wraps the address and presents it as a Bech32 expression.
@@ -139,11 +139,11 @@ async fn print_sum(&mut self, adder_address: &Bech32Address) {
 }
 ```
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ## Special recipient
 
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### ESDTSystemSCAddress
 This type indicates the system smart contract address, which is the same on any MultiversX blockchain.
@@ -169,7 +169,7 @@ fn sft_issue(
         )
 }
 ```
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### ToSelf
 It indicates that the transaction should be sent to itself.
@@ -190,7 +190,7 @@ pub fn nft_update_attributes<T: codec::TopEncode>(
         .sync_call()
 }
 ```
-[comment]: # "mx-context-auto"
+[comment]: # (mx-context-auto)
 
 ### ToCaller
 It indicates that the transaction should be sent to the caller, which is the sender of the current transaction.

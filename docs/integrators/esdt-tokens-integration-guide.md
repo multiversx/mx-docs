@@ -23,8 +23,8 @@ In addition to this, one can check if the transaction is a successful ESDT trans
 receiver can be further parsed. 
 
 One has to follow these steps:
-- check if the transaction is an ESDT transfer (data field format is `ESDTTransfer@<tokenID hexadecimal>@<amount hexadecimal>`. More details [here](/developers/esdt-tokens#transfers))
-- parse the tokens transfer details from Logs&Events. More details [here](/developers/esdt-tokens#parse-fungible-tokens-transfer-logs)
+- check if the transaction is an ESDT transfer (data field format is `ESDTTransfer@<tokenID hexadecimal>@<amount hexadecimal>`. More details [here](/tokens/fungible-tokens#transfers))
+- parse the tokens transfer details from Logs&Events. More details [here](/tokens/fungible-tokens#parse-fungible-tokens-transfer-logs)
 
 [comment]: # (mx-context-auto)
 
@@ -53,7 +53,7 @@ TokenTransferTransaction {
 
 Any other transaction that does not follow this structure has to be omitted. 
 
-When we find such a transaction, we will fetch the logs of the transaction, as described [here](/developers/esdt-tokens#parse-fungible-tokens-transfer-logs). 
+When we find such a transaction, we will fetch the logs of the transaction, as described [here](/tokens/fungible-tokens#parse-fungible-tokens-transfer-logs). 
 The logs will provide us information about the receiver, the token and the amount to be transferred. If the log is there, we are sure that 
 the transfer is successful, and we can start processing with the extracted data.
 
@@ -61,7 +61,7 @@ the transfer is successful, and we can start processing with the extracted data.
 
 ## **Sending ESDT tokens**
 Sending ESDT tokens to a given recipient can be done via preparing and broadcasting to the network a transaction that 
-follows the format described [here](/developers/esdt-tokens#transfers).
+follows the format described [here](/tokens/fungible-tokens#transfers).
 
 Also, there is support for building tokens transfer transaction on many SDKs. A few examples are:
 - [sdk-js - ESDTTransferPayloadBuilder](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/tokenTransferBuilders.ts)
@@ -71,19 +71,19 @@ Also, there is support for building tokens transfer transaction on many SDKs. A 
 
 ## **Balances check**
 From time to time, or for safety reasons before performing a transaction, an integrator would want to check the tokens balance of some
-addresses. This can be performed via [Get address token balance endpoint](/developers/esdt-tokens#get-balance-for-an-address-and-an-esdt-token).
+addresses. This can be performed via [Get address token balance endpoint](/tokens/fungible-tokens#get-balance-for-an-address-and-an-esdt-token).
 
 [comment]: # (mx-context-auto)
 
 ## **Getting tokens properties**
 Each token has some properties such as the name, the ticker, the token identifier or the number of decimals. 
-These properties can be fetched via an API call described [here](/developers/esdt-tokens#get-esdt-token-properties).
+These properties can be fetched via an API call described [here](/tokens/fungible-tokens#get-esdt-token-properties).
 
 [comment]: # (mx-context-auto)
 
 ## **Useful tools**
-- ESDT documentation can be found [here](/developers/esdt-tokens).
-- ESDT API docs can be found [here](/developers/esdt-tokens#rest-api).
+- ESDT documentation can be found [here](/tokens/fungible-tokens).
+- ESDT API docs can be found [here](/tokens/fungible-tokens#rest-api).
 - sdk-js helper functions can be found [here](https://github.com/multiversx/mx-sdk-js-core/blob/release/v9/src/esdtHelpers.ts).
 - sdk-js token transfer transactions builder can be found [here](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/tokenTransferBuilders.ts).
 - erdjava token transfer transactions builder can be found [here](https://github.com/multiversx/mx-sdk-erdjava/blob/main/src/main/java/multiversx/esdt/builders/ESDTNFTTransferBuilder.java).

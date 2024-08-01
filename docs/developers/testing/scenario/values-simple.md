@@ -39,7 +39,7 @@ A note on error messages: whenever we write a test that fails, the test runner t
 
 The value interpreter is not very complex and uses simple prefixes for most functions. Examples of prefixes are `"str:"` and `"u32:"`.
 
-The `|` (pipe) operator, which we use for concatenation has the highest priority. More about it [here](/developers/scenario-reference/values-complex#concatenation).
+The `|` (pipe) operator, which we use for concatenation has the highest priority. More about it [here](/developers/testing/scenario/values-complex#concatenation).
 
 The arguments of functions start after the prefix (no whitespace) and end either at the first pipe (`|`) or at the end of the string.
 
@@ -103,14 +103,14 @@ Sometimes positive numbers can start with a "1" bit and get accidentally interpr
 
 :::note Examples
 
-- `"1" `is represented as `"0x01"`, signed interpretation: `1`, everything OK.
+- `"1"` is represented as `"0x01"`, signed interpretation: `1`, everything OK.
 - `"255"` is represented as `"0xff"`, signed interpretation: `"-1",` this might not be what we expected.
 - `"+255"` is represented as `"0x00ff"`, signed interpretation: `"255".` The prepended zero byte makes sure the contract interprets it as positive. The `+` makes sure those leading zeroes are added if necessary.
 - `"+1"` is still represented as `"0x01"`, here the leading 0 is not necessary. Still, it is good practice adding the `+` if we know the argument is expected to be signed.
 - `"-1"` is represented as `"0xff"`. Negative numbers are also represented in the minimum number of bytes possible.
 :::
 
-For more about signed number encoding, see [the big number serialization format](/developers/data/serialization-overview/#arbitrary-width-big-numbers).
+For more about signed number encoding, see [the big number serialization format](/developers/data/simple-values#arbitrary-width-big-numbers).
 
 [comment]: # (mx-context-auto)
 
@@ -125,6 +125,7 @@ The format helps developers to also easily represent nested numbers. These are a
 - `i64:` `i32:` `i16:` `i8:` interpret the argument as a signed int and convert to 2's complement big endian bytes of respective length (8/4/2/1 bytes)
 
 :::note Examples
+
 - `"biguint:0"` equals `0x00000000`
 - `"biguint:1"` equals `0x0000000101`
 - `"biguint:256"` equals `0x00000020100`
@@ -142,6 +143,7 @@ The format helps developers to also easily represent nested numbers. These are a
 The `nested:` prefix prepends the length of the argument. It is similar to `biguint:`, but does not expect a number.
 
 :::note Examples
+
 - `"nested:str:abc"` equals `0x00000003|str:abc`
 - `"nested:0x01020304"` equals `0x0000000401020304`
 :::

@@ -105,9 +105,9 @@ Rest API documentation of `api.multiversx.com` can be found on the [Swagger docs
 
 [comment]: # (mx-context-auto)
 
-## References:
+## References
 
 - Github repository: [https://github.com/multiversx/mx-api-service](https://github.com/multiversx/mx-api-service)
 - Swagger docs: [https://api.multiversx.com](https://api.multiversx.com)
 - Raw JSON Swagger OpenAPI definitions: [https://api.multiversx.com/-json](https://api.multiversx.com/-json)
-- MultiversX blog: [https://elrond.com/blog/elrond-api-internet-scale-defi](https://elrond.com/blog/elrond-api-internet-scale-defi)
+- MultiversX blog: [https://multiversx.com/blog/elrond-api-internet-scale-defi](https://multiversx.com/blog/elrond-api-internet-scale-defi)

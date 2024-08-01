@@ -18,7 +18,7 @@ This package contains a set of utilities commonly used for authentication purpos
 
   `sdk-nestjs-auth` is delivered via **npm** and it can be installed as follows:
 
-```
+```bash
  npm install @multiversx/sdk-nestjs-auth
  ```
 
@@ -33,11 +33,10 @@ This package validates a payload signed by a MultiversX wallet. You can use the 
 3. Select a wallet you prefer to use from the modal dialog, and give it access to the page
 4. **Done!** You can now copy the token and use it as a Bearer token in your requests.
 
-  To use it in your requests, you need to have an `Authorization` header with the value :
+To use it in your requests, you need to have an `Authorization` header with the value :
   `Bearer <your_token_goes_here>`.
 
-    You also need to add an `origin` header with the value `https://utils.multiversx.com`.
-
+You also need to add an `origin` header with the value `https://utils.multiversx.com`.
 *Note: these steps are only needed while testing. In production, a frontend application will handle token generation*
 
 ## Utility
@@ -118,6 +117,7 @@ NestJS guards can be controller-scoped, method-scoped, or global-scoped. Setting
    // your methods...
  }
  ```
+
 In the example above the `NativeAuthGuard` is controller-scoped. This means that all of the methods from `ProjectsController` will be protected by the guard.
 
 ```typescript
@@ -156,11 +156,11 @@ In this case, the guard is method-scoped. Only `createProject` benefits from the
  }
  ```
 
-  ### JWT Authenticate Guard
+### JWT Authenticate Guard
 
   `JwtAuthenticateGuard` performs validation of a traditional [JSON web token](https://datatracker.ietf.org/doc/html/rfc7519). The usage is exactly the same as for the native auth guards.
 
-                                                                                 ```typescript
+```typescript
  import { JwtAuthenticateGuard } from "@multiversx/sdk-nestjs-auth";
 
  @Controller('users')
@@ -206,7 +206,8 @@ The package exposes 3 decorators : `NativeAuth`, `Jwt` and `NoAuth`
 ### NativeAuth Decorator
 
 The `NativeAuth` decorator accepts a single parameter. In can be one of the following values :
-  - `issued` - block timestamp
+
+- `issued` - block timestamp
 - `expires` - expiration time
 - `address` - address that signed the access token
 - `origin` - URL of the page that generated the token
@@ -229,7 +230,7 @@ Below is an example showing how to use the decorator to extract the signers addr
  }
  ```
 
-  ### Jwt Decorator
+### Jwt Decorator
 
 The `Jwt` decorator works just like `NativeAuth`. The fields accessible inside it are dependent on the client that created the token, and are out of scope for this documentation.
 
