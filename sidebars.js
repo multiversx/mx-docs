@@ -139,16 +139,16 @@ const sidebars = {
                       "developers/meta/sc-build-reference",
                       "developers/meta/sc-config",
                       "developers/meta/sc-meta-cli",
-                      {
-                        type: "category",
-                        label: "Interactors",
-                        items: [
-                          "developers/meta/interactor/interactors-overview",
-                          "developers/meta/interactor/interactors-example",
-                        ],
-                      },
                       "developers/meta/sc-allocator",
                       "developers/meta/rust-nightly",
+                    ],
+                  },
+                  {
+                    type: "category",
+                    label: "Interactors",
+                    items: [
+                      "developers/meta/interactor/interactors-overview",
+                      "developers/meta/interactor/interactors-example",
                     ],
                   },
                   {
@@ -244,6 +244,7 @@ const sidebars = {
                   "sdk-and-tools/sdk-nestjs/sdk-nestjs-monitoring",
                 ],
               },
+              "sdk-and-tools/sdk-rust",
               "sdk-and-tools/sdk-go",
               "sdk-and-tools/mxjava",
               {
