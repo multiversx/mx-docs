@@ -30,7 +30,7 @@ const sidebars = {
    */
 
   docs: {
-    "Welcome to MultiversX":["welcome/welcome-to-multiversx"],
+    "Welcome to MultiversX": ["welcome/welcome-to-multiversx"],
     "Learn about MultiversX": [
       "learn/getting-started",
       "learn/multiversx-ecosystem",
@@ -138,6 +138,14 @@ const sidebars = {
                       "developers/meta/sc-build-reference",
                       "developers/meta/sc-config",
                       "developers/meta/sc-meta-cli",
+                      {
+                        type: "category",
+                        label: "Interactors",
+                        items: [
+                          "developers/meta/interactor/interactors-overview",
+                          "developers/meta/interactor/interactors-example",
+                        ],
+                      },
                       "developers/meta/sc-allocator",
                       "developers/meta/rust-nightly",
                     ],
@@ -498,7 +506,7 @@ const sidebars = {
       {
         type: "category",
         label: "Ad-Astra Bridge",
-        items: [ 
+        items: [
           "bridge/architecture",
           "bridge/transfer-flows",
           "bridge/multiple-chains",
@@ -553,10 +561,10 @@ const sidebars = {
             type: "category",
             label: "Interoperability",
             items: [
-            "sovereign/interoperability",
-            "sovereign/ethereum-l2",
-            "sovereign/bitcoin-l2",
-            "sovereign/solana-l2",
+              "sovereign/interoperability",
+              "sovereign/ethereum-l2",
+              "sovereign/bitcoin-l2",
+              "sovereign/solana-l2",
             ],
           },
           "sovereign/validators",
