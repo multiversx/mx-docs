@@ -95,7 +95,18 @@ const config = {
       },
 
       // Replace with your project's social card
-      image: "img/share.jpg",
+      image: "img/social.jpg",
+
+      metadata: [
+        { name: "twitter:site", content: "@MultiversX" },
+        { name: "twitter:creator", content: "@MultiversX" },
+        { name: "twitter:title", content: "MultiversX Docs" },
+        {
+          name: "twitter:description",
+          content:
+            "A highly scalable, fast and secure blockchain platform for distributed apps, enterprise use cases and the new internet economy.",
+        },
+      ],
       navbar: {
         logo: {
           alt: "MultiversX Docs",
@@ -105,12 +116,12 @@ const config = {
         items: [
           {
             href: "/developers/overview",
-            label: "Develop",
+            label: "Developers",
             position: "left",
           },
           {
             href: "/validators/overview",
-            label: "Validate",
+            label: "Validators",
             position: "left",
           },
           {
@@ -119,30 +130,34 @@ const config = {
             position: "left",
           },
           {
-            href: "/technology/architecture-overview",
+            href: "/learn/architecture-overview",
             label: "Learn",
             position: "left",
           },
           {
             href: "https://github.com/multiversx",
+            label: "GitHub",
             position: "right",
             className: "header-github-link",
             "aria-label": "GitHub",
           },
           {
             href: "https://discord.gg/multiversxbuilders",
+            label: "Discord",
             position: "right",
             className: "header-discord-link",
             "aria-label": "Discord",
           },
           {
             href: "https://t.me/MultiversX",
+            label: "Telegram",
             position: "right",
             className: "header-telegram-link",
             "aria-label": "Chat",
           },
           {
             type: "dropdown",
+            label: "Websites",
             position: "right",
             className: "header-app-change",
             "aria-label": "Websites",
@@ -164,7 +179,7 @@ const config = {
               },
               {
                 label: "Bridge",
-                href: "https://ad-astra.multiversx.com",
+                href: "https://bridge.multiversx.com",
                 target: "_blank",
               },
               {
@@ -187,9 +202,18 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} MultiversX. All rights reserved.`,
       },
       prism: {
-        theme: prismThemes.vsDark,
-        darkTheme: prismThemes.oceanicNext,
-        additionalLanguages: ["rust", "tsx", "toml", "bash", "diff", "json"],
+        theme: prismThemes.vsLight,
+        darkTheme: prismThemes.vsDark,
+        additionalLanguages: [
+          "rust",
+          "tsx",
+          "toml",
+          "bash",
+          "diff",
+          "json",
+          "solidity",
+          "yaml",
+        ],
       },
       algolia: {
         // The application ID provided by Algolia
@@ -202,6 +226,16 @@ const config = {
       slugPreprocessor: (slugBase) =>
         slugBase.replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, ""),
     }),
+
+  headTags: [
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://cdn.multiversx.com",
+      },
+    },
+  ],
 
   plugins: [
     [
@@ -279,6 +313,10 @@ const config = {
           {
             from: "/developers/developer-reference/wasm-annotations",
             to: "/developers/developer-reference/sc-annotations",
+          },
+          {
+            from: "/developers/developer-reference/sc-contract-calls",
+            to: "/developers/transactions/tx-legacy-calls",
           },
           {
             from: "/developers/developer-reference/wasm-modules",
@@ -474,6 +512,77 @@ const config = {
         },
       },
     ],
+    [
+      "pwa",
+      {
+        // debug: isDeployPreview,
+        offlineModeActivationStrategies: [
+          "appInstalled",
+          "standalone",
+          "queryString",
+        ],
+        // swRegister: false,
+        // swCustom: require.resolve("./src/sw.js"), // TODO make it possible to use relative path
+        pwaHead: [
+          {
+            tagName: "link",
+            rel: "icon",
+            href: "img/favicons/apple-touch-icon.png",
+          },
+          {
+            tagName: "link",
+            rel: "manifest",
+            href: "manifest/manifest.json",
+          },
+          {
+            tagName: "meta",
+            name: "theme-color",
+            content: "rgb(14, 14, 14)",
+          },
+          {
+            tagName: "meta",
+            name: "apple-mobile-web-app-capable",
+            content: "yes",
+          },
+          {
+            tagName: "meta",
+            name: "apple-mobile-web-app-status-bar-style",
+            content: "#0e0e0e",
+          },
+          {
+            tagName: "link",
+            rel: "apple-touch-icon",
+            href: "img/favicons/apple-touch-icon.png",
+          },
+          {
+            tagName: "link",
+            rel: "mask-icon",
+            href: "img/favicons/apple-touch-icon.png",
+            color: "rgb(14, 14, 14)",
+          },
+          {
+            tagName: "meta",
+            name: "msapplication-TileImage",
+            content: "img/favicons/mstile-150x150.png",
+          },
+          {
+            tagName: "meta",
+            name: "msapplication-TileColor",
+            content: "#0e0e0e",
+          },
+        ],
+      },
+    ],
+    async function tailwindPlugin(context, options) {
+      return {
+        name: "docusaurus-tailwindcss",
+        configurePostCss(postcssOptions) {
+          postcssOptions.plugins.push(require("tailwindcss"));
+          postcssOptions.plugins.push(require("autoprefixer"));
+          return postcssOptions;
+        },
+      };
+    },
   ],
 };
 

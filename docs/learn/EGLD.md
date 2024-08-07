@@ -23,7 +23,7 @@ Validators, the record-keepers of MultiversX, ensure no one is cheating. They ar
 
 The work validators do, and the capital they stake, keeps MultiversX secure and decentralized. **EGLD powers MultiversX.**
 
-When you stake your EGLD, you help secure the network and earn rewards. The threat of losing staked EGLD deters attackers. [More on staking](/docs/validators/staking/staking.md).
+When you stake your EGLD, you help secure the network and earn rewards. The threat of losing staked EGLD deters attackers. [More on staking](/validators/staking).
 
 :::
 
@@ -40,17 +40,17 @@ When you stake your EGLD, you help secure the network and earn rewards. The thre
 ### Getting EGLD
 
 :::important
-EGLD can be purchased through various exchanges and stored in compatible wallets.** Always ensure to use trusted platforms for transactions.**
+EGLD can be purchased through various exchanges and stored in compatible wallets. **Always ensure to use trusted platforms for transactions.**
 :::
 
-You can earn EGLD, receive it from your peers, friends or buy it from exchanges and various other apps. 
+You can earn EGLD, receive it from your peers, friends or buy it from exchanges and various other apps.
 
-- **Centralized exchanges (CEXs)**: Exchanges are platforms that offer you the service of buying EGLD using traditional currencies. **They have custody over any EGLD you buy until you send it to a [wallet](/docs/wallet/overview.md) you control.**
-- **Receive EGLD from your peers and friends:**: [Once you have a MultiversX account](/docs/wallet/web-wallet.md), all you need to do is to share your public address to start sending and receiving EGLD.
+- **Centralized exchanges (CEXs)**: Exchanges are platforms that offer you the service of buying EGLD using traditional currencies. **They have custody over any EGLD you buy until you send it to a [wallet](/wallet/overview) you control.**
+- **Receive EGLD from your peers and friends:**: [Once you have a MultiversX account](/wallet/web-wallet), all you need to do is to share your public address to start sending and receiving EGLD.
 - **Wallets**: [xPortal](https://xportal.com/) wallet lets you buy EGLD with a debit/credit card, directly from the dApp.
-- **Staking Rewards**: You can [play the role](/docs/learn/entities.md) of a delegator (user) or validator (node operator) and start earning EGLD by delegating to a staking provider or by simply [running a validator node](/docs/validators/delegation-manager.mdx).
+- **Staking Rewards**: You can [play the role](/learn/entities) of a delegator (user) or validator (node operator) and start earning EGLD by delegating to a staking provider or by simply [running a validator node](/validators/delegation-manager).
 - **Earn EGLD:** You can earn EGLD by participating in [hackathons, campaigns, coding challenges](https://multiversx.com/events), airdrops, bug bounties etc.
 
 :::note
-To interact with the [Testnet](https://testnet-explorer.multiversx.com/) or [Devnet](https://devnet-explorer.multiversx.com/), you'll need xEGLD, which can be obtained from one of the available [faucets](/docs/wallet/web-wallet.md#testnet-and-devnet-faucet).
+To interact with the [Testnet](https://testnet-explorer.multiversx.com) or [Devnet](https://devnet-explorer.multiversx.com), you'll need xEGLD, which can be obtained from one of the available [faucets](/wallet/web-wallet.md#testnet-and-devnet-faucet).
 :::

@@ -9,14 +9,18 @@ Below is the list of software needed to deploy a local Sovereign Chain. All the 
 ## Core Dependencies
 
 ### Python3
+
 To install python3, use the following command:
-```
+
+```bash
 sudo apt install python3
 ```
 
 ## pipx
+
 To install pipx, use the following command:
-```
+
+```bash
 sudo apt install pipx
 pipx ensurepath
 sudo pipx ensurepath --global
@@ -29,16 +33,19 @@ Ensure you are using the latest version of mxpy. Follow the installation or upgr
 ### multiversx-sdk
 
 To install this dependency on Linux, use the following command:
-```
+
+```bash
 pip install multiversx-sdk
 ```
 
 ### tmux
+
 :::note
 If you want to use tmux (which is the default configuration), you should install it.
 :::
 To install tmux, use the following command:
-```
+
+```bash
 sudo apt install tmux
 ```
 
@@ -46,14 +53,15 @@ sudo apt install tmux
 
 To install the screen utility on Linux, use the following command:
 
-```
+```bash
 sudo apt install screen
 ```
 
 ### wget
 
 To install wget, use the following command:
-```
+
+```bash
 apt install wget
 ```
 

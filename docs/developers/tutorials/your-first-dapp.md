@@ -8,7 +8,7 @@ title: Build a dApp in 15 minutes
 Let's build your first decentralized App on the MultiversX Blockchain
 
 :::important
-Also [make sure you have **mxpy installed**](/sdk-and-tools/sdk-py/installing-mxpy), as we will use it to compile, deploy and interact with MultiversX smart contracts. 
+Also [make sure you have **mxpy installed**](/sdk-and-tools/sdk-py/installing-mxpy), as we will use it to compile, deploy and interact with MultiversX smart contracts.
 :::
 
 [comment]: # (mx-context-auto)

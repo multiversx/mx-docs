@@ -21,7 +21,7 @@ All tools are expected to work on MacOS. Though, even if the tests within the co
 
 ### Apple Silicon (M1, M2)
 
-As of February 2024, the Node can only be compiled using the AMD64 version of Go. Thus, dependent tools, such as [localnets](/developers/setup-local-testnet.md), the [Chain Simulator](/sdk-and-tools/chain-simulator.md) etc. will rely on the [Apple Rosetta binary translator](https://en.wikipedia.org/wiki/Rosetta_(software)).
+As of February 2024, the Node can only be compiled using the AMD64 version of Go. Thus, dependent tools, such as [localnets](/developers/setup-local-testnet), the [Chain Simulator](/sdk-and-tools/chain-simulator) etc. will rely on the [Apple Rosetta binary translator](https://en.wikipedia.org/wiki/Rosetta_(software)).
 
 :::note
 As of February 2024, a native ARM64 version of the Node is in the works. This will allow the dependent tools to run natively on Apple Silicon.

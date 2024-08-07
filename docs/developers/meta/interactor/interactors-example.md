@@ -285,5 +285,5 @@ async fn test_full_farm_scenario() {
 }
 ```
 
-As illustrated, these tests resemble typical Rust tests but apply scenarios directly on the actual blockchain, facilitated by the [interactor tx environment](/docs//developers/transactions/tx-env.md#interactor). These tests can be executed with `cargo test` or `sc-meta test`, seamlessly integrating into your standard testing workflow.
+As illustrated, these tests resemble typical Rust tests but apply scenarios directly on the actual blockchain, facilitated by the [interactor tx environment](/developers/transactions/tx-env#interactor). These tests can be executed with `cargo test` or `sc-meta test`, seamlessly integrating into your standard testing workflow.
 

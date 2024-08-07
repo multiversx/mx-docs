@@ -1042,7 +1042,7 @@ import { ExplorerLink } from "@multiversx/sdk-dapp/UI/ExplorerLink";
 
 Starting with the 2.0 version of the dApp SDK ( previously `@elrondnetwork/dapp-core@2.0.0` ) and `@multiversx/sdk-dapp@2.2.8` [WalletConnect 2.0](https://docs.walletconnect.com/2.0/) is available as a login and signing provider, allowing users to login by scanning a QR code with the Mobile App
 
-This is an implementation of the [sdk-wallet-connect-provider](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) ( [docs](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-signing-providers/#the-wallet-connect-provider) ) signing provider
+This is an implementation of the [sdk-wallet-connect-provider](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) ( [docs](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-signing-providers/#the-walletconnect-provider) ) signing provider
 
 A `Project ID` is required to enable the WalletConnect functionality.
 
@@ -1081,4 +1081,4 @@ Due to this, you cannot yet use the DappProvider wrapping logic in a React Nativ
 
 We have a couple of solutions in mind and are actively working on exploring ways to overcome these limitations.
 Until then, you can use `@multiversx/sdk-*` libraries and @walletconnect to connect to the xPortal App.
-There are also guide for doing this from the [community](https://github.com/S4F-IT/maiar-integration/blob/master/README.md)
+There are also guide for doing this from the [community](https://github.com/S4F-IT/maiar-integration/blob/master/README)

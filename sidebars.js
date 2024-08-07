@@ -60,6 +60,7 @@ const sidebars = {
           "developers/tutorials/dex-walkthrough",
           "developers/tutorials/wallet-connect-v2-migration",
           "developers/tutorials/interactors-guide",
+          "developers/tutorials/eth-to-mvx",
         ],
       },
       {
@@ -138,6 +139,14 @@ const sidebars = {
                       "developers/meta/sc-build-reference",
                       "developers/meta/sc-config",
                       "developers/meta/sc-meta-cli",
+                      {
+                        type: "category",
+                        label: "Interactors",
+                        items: [
+                          "developers/meta/interactor/interactors-overview",
+                          "developers/meta/interactor/interactors-example",
+                        ],
+                      },
                       "developers/meta/sc-allocator",
                       "developers/meta/rust-nightly",
                     ],
