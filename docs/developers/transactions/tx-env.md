@@ -166,7 +166,7 @@ Not yet available, coming soon.
 
 ## Interactor
 
-The interactors are microservices written in Rust, used for interacting with the smart contract on the real blockchain (deploy/upgrade, query, call) and system testing. Interactor environments such as `InteractorExecEnv` and `InteractorQueryEnv` are essential for transactions meant to be ran on the real blockchain, from a different environment than the smart contract. The easiest way to create transactions using the interactor environments is to create an instance of the `Interactor` struct.
+The interactors are Rust programs, used for interacting with the smart contract on the real blockchain (deploy/upgrade, query, call) and system testing. Interactor environments such as `InteractorExecEnv` and `InteractorQueryEnv` are essential for transactions meant to be ran on the real blockchain, from a different environment than the smart contract. The easiest way to create transactions using the interactor environments is to create an instance of the `Interactor` struct.
 
 ```rust title=interact.rs
 const GATEWAY: &str = "https://devnet-gateway.multiversx.com";
