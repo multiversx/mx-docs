@@ -16,16 +16,8 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
 
 html[data-has-hydrated="true"]:not(.docs-wrapper):not(.search-page-wrapper)
   #__docusaurus {
-  background: image-set(
-        url("/img/theme/astronaut.webp") 1x,
-        url("/img/theme/astronaut@2x.webp") 2x
-      )
-      right -20px top 40px no-repeat,
-    image-set(
-        url("/img/theme/glow-light.webp") 1x,
-        url("/img/theme/glow-light@2x.webp") 2x
-      )
-      right -180px top -150px no-repeat,
+  background: url("/img/theme/astronaut@2x.webp") right -20px top 40px no-repeat,
+    url("/img/theme/glow-light@2x.webp") right -180px top -150px no-repeat,
     var(--ifm-background-color);
   background-size: 40vw, 60vw, auto;
   background-blend-mode: normal, difference, normal;
@@ -35,16 +27,8 @@ html[data-has-hydrated="true"][data-theme="dark"]:not(.docs-wrapper):not(
     .search-page-wrapper
   )
   #__docusaurus {
-  background: image-set(
-        url("/img/theme/astronaut.webp") 1x,
-        url("/img/theme/astronaut@2x.webp") 2x
-      )
-      right -20px top 40px no-repeat,
-    image-set(
-        url("/img/theme/glow-dark.webp") 1x,
-        url("/img/theme/glow-dark@2x.webp") 2x
-      )
-      right -180px top -150px no-repeat,
+  background: url("/img/theme/astronaut@2x.webp") right -20px top 40px no-repeat,
+    url("/img/theme/glow-dark@2x.webp") right -180px top -150px no-repeat,
     var(--ifm-background-color);
   background-size: 40vw, 60vw, auto;
   background-blend-mode: normal, lighten, normal;
