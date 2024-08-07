@@ -5,7 +5,7 @@ title: Go SDK
 
 [comment]: # (mx-abstract)
 
-MultiversX SDK for Golang
+## MultiversX SDK for Golang
 
 **sdk-go** consists of Go helpers and utilities for interacting with the Blockchain. 
 
