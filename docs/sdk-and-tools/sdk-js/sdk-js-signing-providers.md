@@ -522,6 +522,178 @@ console.log(message.toJSON());
 
 [comment]: # (mx-context-auto)
 
+## The Web Wallet Cross Window Provider
+
+[`@multiversx/sdk-web-wallet-cross-window-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-cross-window-provider) allows the users of a dApp to log in and sign transactions using the MultiversX Web Wallet.
+
+In order to aquire the instance (singleton) of the provider, do as follows:
+
+```js
+import { CrossWindowProvider } from "@multiversx/sdk-web-wallet-cross-window-provider";
+
+const provider = CrossWindowProvider.getInstance();
+```
+
+Before performing any operation, make sure to initialize the provider and web wallet address:
+
+```js
+await provider.init();
+provider.setWalletUrl("https://wallet.multiversx.com");
+```
+
+[comment]: # (mx-context-auto)
+
+### Login and logout {#cross-window-login-and-logout}
+
+Then, ask the user to log in:
+
+```js
+const address = await provider.login();
+
+console.log(address);
+console.log(provider.account);
+```
+
+In order to log out, do as follows:
+
+```js
+await provider.logout();
+```
+
+The `login()` method supports the `token` parameter, for **the native authentication flow** (always recommended, see above):
+
+```js
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+await provider.login({ token: nativeAuthInitialPart });
+
+const address = provider.account.address;
+const signature = provider.account.signature;
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing transactions {#cross-window-signing-transactions}
+
+Transactions can be signed as follows:
+
+```js
+import { Transaction } from "@multiversx/sdk-core";
+
+const firstTransaction = new Transaction({ ... });
+const secondTransaction = new Transaction({ ... });
+
+await provider.signTransactions([firstTransaction, secondTransaction]);
+
+// "firstTransaction" and "secondTransaction" can now be broadcasted.
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing messages {#cross-window-signing-messages}
+
+Arbitrary messages can be signed as follows:
+
+```js
+import { SignableMessage } from "@multiversx/sdk-core";
+
+const message = new SignableMessage({
+    message: Buffer.from("hello")
+});
+
+await provider.signMessage(message);
+
+console.log(message.toJSON());
+```
+
+[comment]: # (mx-context-auto)
+
+## The Metamask Proxy Provider
+
+[`@multiversx/sdk-metamask-proxy-provider`](https://github.com/multiversx/mx-sdk-js-metamask-proxy-provider) allows the users of a dApp to log in and sign transactions using the Metamask wallet by using MultiversX Web Wallet as a proxy widget in iframe.
+
+In order to aquire the instance (singleton) of the provider, do as follows:
+
+```js
+import { MetamaskProxyProvider } from "@multiversx/sdk-metamask-proxy-provider";
+
+const provider = MetamaskProxyProvider.getInstance();
+```
+
+Before performing any operation, make sure to initialize the provider and metamask snap web wallet address:
+
+```js
+await provider.init();
+provider.setWalletUrl("https://snap-wallet.multiversx.com");
+```
+
+[comment]: # (mx-context-auto)
+
+### Login and logout {#metamask-proxy-login-and-logout}
+
+Then, ask the user to log in:
+
+```js
+const address = await provider.login();
+
+console.log(address);
+console.log(provider.account);
+```
+
+In order to log out, do as follows:
+
+```js
+await provider.logout();
+```
+
+The `login()` method supports the `token` parameter, for **the native authentication flow** (always recommended, see above):
+
+```js
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+await provider.login({ token: nativeAuthInitialPart });
+
+const address = provider.account.address;
+const signature = provider.account.signature;
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing transactions {#metamask-proxy-signing-transactions}
+
+Transactions can be signed as follows:
+
+```js
+import { Transaction } from "@multiversx/sdk-core";
+
+const firstTransaction = new Transaction({ ... });
+const secondTransaction = new Transaction({ ... });
+
+await provider.signTransactions([firstTransaction, secondTransaction]);
+
+// "firstTransaction" and "secondTransaction" can now be broadcasted.
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing messages {#metamask-proxy-signing-messages}
+
+Arbitrary messages can be signed as follows:
+
+```js
+import { SignableMessage } from "@multiversx/sdk-core";
+
+const message = new SignableMessage({
+    message: Buffer.from("hello")
+});
+
+await provider.signMessage(message);
+
+console.log(message.toJSON());
+```
+
+[comment]: # (mx-context-auto)
+
 ## Verifying the signature of a login token
 
 :::note
