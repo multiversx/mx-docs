@@ -529,7 +529,7 @@ console.log(message.toJSON());
 In order to aquire the instance (singleton) of the provider, do as follows:
 
 ```js
-import { CrossWindowProvider } from "@multiversx/sdk-web-wallet-cross-window-provider/out";
+import { CrossWindowProvider } from "@multiversx/sdk-web-wallet-cross-window-provider";
 
 const provider = CrossWindowProvider.getInstance();
 ```
@@ -615,7 +615,7 @@ console.log(message.toJSON());
 In order to aquire the instance (singleton) of the provider, do as follows:
 
 ```js
-import { MetamaskProxyProvider } from "@multiversx/sdk-metamask-proxy-provider/out";
+import { MetamaskProxyProvider } from "@multiversx/sdk-metamask-proxy-provider";
 
 const provider = MetamaskProxyProvider.getInstance();
 ```
