@@ -722,7 +722,7 @@ ModifyRoyalitiesTransaction {
     GasLimit: 60000000
     Data: "ESDTModifyRoyalties" +
           "@" + <token identifier in hexadecimal encoding> +
-          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <token nonce in hexadecimal encoding> +
           "@" + <new royalties in hexadecimal encoding>
 }
 ```
@@ -758,7 +758,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### **Modify Creator**
 
-[comment]: - only for dynamic nfts, SFT, metaESDT (only for accounts that have metadata on system account)
+[comment]: # - only for dynamic nfts, SFT, metaESDT (only for accounts that have metadata on system account)
 
 The creator of a token can be changed. For this, the token has to be moved to the new creator account. The new creator
 account requires `ESDTRoleModifyCreator` role. Also, the token has to be of dynamic type in order for this to work.
