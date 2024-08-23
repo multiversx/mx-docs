@@ -673,7 +673,7 @@ Use:
 
 - `useGetPendingTransactions` to get a list of all pending transactions.
 - `useGetSuccessfulTransactions` to get a list of all successful transactions.
-- `useGetFailedTransactions` to get a list of all pending transactions.
+- `useGetFailedTransactions` to get a list of all failed transactions.
 
 An especially useful hook called `useGetActiveTransactionsStatus` will keep you updated with the status
 of all transactions at a certain point in time.

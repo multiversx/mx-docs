@@ -118,7 +118,7 @@ Learn about transaction's gas and how a fee is calculated:
 | Name                                                                 | Description                                              |
 |----------------------------------------------------------------------|----------------------------------------------------------|
 | [Overview](/developers/testing/rust/sc-test-overview)                | Introduction to all the testing methods available in Rust|
-| [Blackbox tests](/developers/testing/rust/sc-blackbox-calls)               | The best way to write integration tests, by simulating transactionds|
+| [Blackbox tests](/developers/testing/rust/sc-blackbox-calls)               | The best way to write integration tests, by simulating transactions|
 | [Whitebox framework](/developers/testing/rust/whitebox-legacy)       | Older testing framework, but still in use in some projects.|
 | [Whitebox framework functions reference](/developers/testing/rust/whitebox-legacy-functions-reference) | A list of available functions to be used when using the whitebox framework.              |
 | [Debugging](/developers/testing/sc-debugging)                        | How to debug your smart contract tests.   |
