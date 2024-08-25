@@ -69,6 +69,39 @@ The name of this endpoint is pretty self explanatory. It is used to insert an ar
 - If the received token as payment is in fact `WEGLD`.
 - If the amount received as payment is exactly the needed amount for registering all the tokens.
 
+## `deposit`
+```rust
+    #[payable("*")]
+    #[endpoint]
+    fn deposit(
+        &self,
+        to: ManagedAddress,
+        opt_transfer_data: OptionalValue<
+            MultiValue3<GasLimit, ManagedBuffer, ManagedVec<ManagedBuffer>>,
+        >,
+    )
+```
+Depositing tokens to the Sovereign Chain is an important feature. One big feature is being able to bridge tokens and also execute other functions from a single transaction. This endpoint firstly checks if there is any fee enabled for the current Sovereign Chain.
+If any fee is enabled there is a convention implemented that the first payment sent as parameter to be the fee token. Another convention is that there can only be 10 maximum transfers per transaction.   
+
+Since there is a token whitelist system in place, each token received by this endpoint will be checked for this condition and in the case that the token is not whitelisted it will be simply refunded back to the caller. In the other scenario the tokens will be verifier for the chain prefix inside the `TokenIdentifier` field and with that they will be burned from the current chain the transaction will be happening.
+As the parameters suggest, the `TransferData` value can be optional. In the case when it's not, there are 2 checks needed to be done before finishing the process of bridging. 
+
+- Check if the gas limit is under the specified limit.
+- If the endpoint that has to be executed is not banned.
+
+The bridging of the tokens happen through smart contracts events. In this case the event will look like this:
+
+```rust
+#[event("deposit")]
+fn deposit_event(
+    &self,
+    #[indexed] dest_address: &ManagedAddress,
+    #[indexed] tokens: &MultiValueEncoded<MultiValue3<TokenIdentifier, u64, EsdtTokenData>>,
+    event_data: OperationData<Self::Api>,
+);
+```
+Events are another great feature of the MultiversX protocol. We recommend taking a look over the [Events documentation](https://docs.multiversx.com/developers/event-logs/execution-events/).
 # Token Handler SC
 The Token Handler SC takes the responsibility of the bridge for issuing and minting tokens. When a new Sovereign Chain will be deployed there will be multiple bridge contracts that will call the same Token Handler.
 
