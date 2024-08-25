@@ -1,6 +1,9 @@
 # Enshrine ESDT Safe Bridge Contract
 ## `executeBridgeOps@hashOfHashes@Operation`
-
+```rust
+#[endpoint(executeBridgeOps)]
+fn execute_operations(&self, hash_of_hashes: ManagedBuffer, operation: Operation<Self::Api>)
+```
 This endpoint is responsible for executing and transferring the `Operation` that is given as a parameter. The first checks that are performed include:
 
 - If the current chain isn’t a Sovereign Chain, execution must happen inside the Main Chain.
@@ -106,10 +109,25 @@ Events are another great feature of the MultiversX protocol. We recommend taking
 The Token Handler SC takes the responsibility of the bridge for issuing and minting tokens. When a new Sovereign Chain will be deployed there will be multiple bridge contracts that will call the same Token Handler.
 
 ## `whitelistEnshrineEsdt`
+```rust
+    #[only_owner]
+    #[endpoint(whitelistEnshrineEsdt)]
+    fn whitelist_enshrine_esdt(&self, enshrine_esdt_address: ManagedAddress<Self::Api>)
+```
 Since there will be multiple bridge contracts that will call the same Token Handler contract, those have to be whitelisted so only them can call it. This endpoint has the `[only_owner]` annotation to specify that nobody else but the owner can whitelist any other contract.
 The only implied check on this endpoint is that the address given as parameter is in fact a valid smart contract address and if this condition is met, the address is registered in the contract's storage.
 
 ## `transferTokens`
+```rust
+    #[payable("*")]
+    #[endpoint(transferTokens)]
+    fn transfer_tokens(
+        &self,
+        opt_transfer_data: Option<TransferData<Self::Api>>,
+        to: ManagedAddress,
+        tokens: MultiValueEncoded<OperationEsdtPayment<Self::Api>>,
+    )
+```
 This endpoint is the logic for transferring tokens between Sovereign Chains. At first sight it seems pretty simple since it has few lines of code. The `structs` used as parameters will probably look familiar if you read the `Enshrine ESDT` section because they were explained there.
 ```rust
         opt_transfer_data: Option<TransferData<Self::Api>>,
