@@ -136,3 +136,44 @@ This endpoint is the logic for transferring tokens between Sovereign Chains. At 
 ```
 The first step is to mint the tokens received as a parameter. Here for each token received the contract will make a `sync_call` to the ESDT System SC on the `esdt_local_mint` function if the nonce of the token is equal to 0, meaning it is not a NFT token. In the latter case, the contract will send a raw call to the same System SC but for the NFT create function. 
 After the minting step, there comes the *distribution* step. If the given `opt_transfer_data` has any data this means that the Token Handler will initiate a raw call towards another contract. Information such as receiver address, function name, arguments, gas limit are specified in `transfer_data`. If the optional structure holds no data means that the given tokens are meant for a simple transfer and with that the ESDT multi transfer function is called.
+
+# Header Verifier SC
+The role of this contract is to verify and register up and coming bridge operations. Since this contract has a mapper for the BLS public keys of the Validators, each one of them has to give a valid MultiBLS signature for every bridge operation.
+
+## `registerBridgeOps`
+```rust
+    #[endpoint(registerBridgeOps)]
+    fn register_bridge_operations(
+        &self,
+        signature: BlsSignature<Self::Api>,
+        bridge_operations_hash: ManagedBuffer,
+        operations_hashes: MultiValueEncoded<ManagedBuffer>,
+    ) 
+```
+Before explaining what this endpoint does, a quick description of the parameters should be made:
+
+- `signature`: the MultiBLS aggregated signature from the Validators
+- `bridge_operations_hash`: the aggregated hash of all the `Operation` hashes, will be referred to as `hash_of_hashes` as well 
+- `operation_hashes`: a list containing all the `Operation` hashes
+
+This endpoint has three checks imposed before it registers the `Operation` received as parameter.
+The first one searches the `hash_of_hashes_history` mapper, where all the previous aggregated hashes are registere. If it was already registered in a previous transaction, the execution will fail at this point.
+The second one is to verify if the MultiBLS signature received is indeed authentinc.
+The last check consists of calculating if the hash of the `operations_hashes` list is equal to `bridge_operations_hash`.
+
+After all of those have passed, the `operations_hashes` will be inserted in the `pending_hashes` mapper and the `bridge_operations_hash` will be used as a key for the given list.
+
+## `setEsdtSafeAddress`
+```rust
+    #[only_owner]
+    #[endpoint(setEsdtSafeAddress)]
+    fn set_esdt_safe_address(&self, esdt_safe_address: ManagedAddress)
+```
+The only role for this endpoint is to put in the storage of the contract the address of the bridge contract that will be removing the executed operation hashes with the endpoint described below.
+
+## `removeExecutedHash`
+```rust
+    #[endpoint(removeExecutedHash)]
+    fn remove_executed_hash(&self, hash_of_hashes: &ManagedBuffer, operation_hash: &ManagedBuffer)
+```
+This endpoint's name is pretty self explanatory, it removes the hash of an operation from the `pending_operations` storage mapper. The only requirement is that the caller of this endpoint the bridge contract which's address is stored inside the corresponding storage mapper. 
