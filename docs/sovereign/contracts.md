@@ -129,11 +129,7 @@ The only implied check on this endpoint is that the address given as parameter i
     )
 ```
 This endpoint is the logic for transferring tokens between Sovereign Chains. At first sight it seems pretty simple since it has few lines of code. The `structs` used as parameters will probably look familiar if you read the `Enshrine ESDT` section because they were explained there.
-```rust
-        opt_transfer_data: Option<TransferData<Self::Api>>,
-        to: ManagedAddress,
-        tokens: MultiValueEncoded<OperationEsdtPayment<Self::Api>>,
-```
+
 The first step is to mint the tokens received as a parameter. Here for each token received the contract will make a `sync_call` to the ESDT System SC on the `esdt_local_mint` function if the nonce of the token is equal to 0, meaning it is not a NFT token. In the latter case, the contract will send a raw call to the same System SC but for the NFT create function. 
 After the minting step, there comes the *distribution* step. If the given `opt_transfer_data` has any data this means that the Token Handler will initiate a raw call towards another contract. Information such as receiver address, function name, arguments, gas limit are specified in `transfer_data`. If the optional structure holds no data means that the given tokens are meant for a simple transfer and with that the ESDT multi transfer function is called.
 
