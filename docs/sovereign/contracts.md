@@ -1,3 +1,22 @@
+# Context
+The sovereign shard is a completely independent chain with smart contract processing, ESDT transfers, delegation, staking, governance, guardians and all the features the MultiversX main chain has. It is configurable according to the developer, features can be turned on/off, new features can be added on protocol level.
+
+The developer can choose between proof of authority, proof of stake, delegated proof of stake, secure proof of stake models. Number of minimum/maximum of validators can be set, with any additional criteria (like staking different tokens). Fee model and gas token is configurable as well. By implementing the VMExecutionHandler interface, developers can build multiple VMs, which can be connected to the WasmVM and SystemVM as well for seamless interactions and built in composability.
+
+Built-in bridge between sovereign chain and MultiversX Network without relayers:
+1. MultiversX to Sovereign:
+    - User deposits token in safe contract which he wants to bridge
+    - Validators in the sovereign chain follow the mainchain headers and will push to the sovereign chain the header, the bridge txs and the proof for it.
+    - Leaders include proofs of execution from mainchain, right now in terms of adding mainchain header hashes in the sovereign chain header, validators verify it and sign sovereign chain block only if all steps are correct. The notifier/proof system provides an abstracted interface through which sovereign nodes can verify and validate the authenticity of data.
+    - Incoming Txs are processed by Incoming Txs processor after verifying the proofs. User receives tokens on the sovereign chain.
+2. Sovereign to MultiversX:
+    - User sends token to bridgeSC on sovereign
+    - The validators create a proof on the sovereign chain, for a batch of transfers, that will be sent to the mainchain bridgeSC.
+    - Validators add this information to the sovereignChainBlockBody. Otherwise the block is not signed.
+    - Leader will push the created txData to the mainchain
+    - BridgeSC on the mainchain verifies the proof and executes the transfers.
+    - Sovereign validators will notarize the event of finishing transfer on the following sovereign block. By receiving the attestation logEvent directly from the mainchain.
+
 # Enshrine ESDT Safe Bridge Contract
 ## `executeBridgeOps@hashOfHashes@Operation`
 ```rust
