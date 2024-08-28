@@ -1,6 +1,7 @@
 ---
 id: overview
 title: Validators - Overview
+displayed_sidebar: Validators
 ---
 
 [comment]: # (mx-abstract)
