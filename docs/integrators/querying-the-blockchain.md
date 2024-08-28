@@ -45,8 +45,8 @@ The _shallow_ status is, generally speaking, sufficient for integrators that are
 :::
 
 The **shallow status** of a transaction can be one of the following:
- - `success` - the transaction has been fully executed - with respect to network's sharded architecture, it has been executed in both source and destination shards.
- - `invalid` - the transaction has been marked as invalid for execution at sender's side (e.g. not enough balance at sender's side, sending value to non-payable contracts etc.).
+ - `success` - the transaction has been fully executed - with respect to the network's sharded architecture, it has been executed in both source and destination shards.
+ - `invalid` - the transaction has been marked as invalid for execution at sender's side (e.g., not enough balance at sender's side, sending value to non-payable contracts etc.).
  - `pending` - the transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).
 
 ### Process status
@@ -54,7 +54,7 @@ The **shallow status** of a transaction can be one of the following:
 The **process status** of a transaction indicates whether a transaction has been processed successfully or not.
 
 :::note
-The _process_ status is, generally speaking, useful for integrators that are interested into smart contract interactions.
+The _process_ status is, generally speaking, useful for integrators that are interested in smart contract interactions.
 :::
 
 :::note
@@ -62,8 +62,8 @@ Fetching the _process status_ of a transaction is less efficient than fetching t
 :::
 
 The **process status** of a transaction can be one of the following:
- - `success` - the transaction has been fully executed - with respect to network's sharded architecture, it has been executed in both source and destination shards.
- - `fail` - the transaction has been processed, but with errors (e.g. _user error_ or _out of gas_), or it has been marked as invalid (see _shallow_ status).
+ - `success` - the transaction has been fully executed - with respect to the network's sharded architecture, it has been executed in both source and destination shards.
+ - `fail` - the transaction has been processed, but with errors (e.g., _user error_ or _out of gas_), or it has been marked as invalid (see _shallow_ status).
  - `pending` - the transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).
  - `unknown` - the processing status cannot be precisely determined yet.
 
