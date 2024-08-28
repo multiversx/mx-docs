@@ -29,9 +29,6 @@ pub fn main() {
 }
 ```
 
-In this case, when creating `decimal` from a `BigUint` of value `1`, the `data` field of the struct will contain the value `1 * scaling_factor` (in this case `10^2`). Being the first instance, the value will be calculated and then cached, so that when `cached_decimal` is created, the `scaling_factor` value for the specific number of decimals (`ConstDecimals<2>`) will be retrieved from the static API instead of recalculated.
-
-
 [comment]: # (mx-context-auto)
 
 ## Number of decimals
@@ -89,7 +86,6 @@ pub fn main() {
         );
     }
     ```
-    - `root<T: Decimals>(&self, degree: BigUint<M>, precision: T) ->` !TODO! nth root
 - Scaling:
     - `scale(&self) -> usize` returns the number of decimals (the scale).
     - `scaling_factor<M: ManagedTypeApi>(&self) -> BigUint<M>` returns the scaling factor value (`10^num_decimals`).
