@@ -53,6 +53,8 @@ The following list explains what the parameters do:
 - `VmQueryDelayAfterStartInSec` is a parameter that should is taken into account only when the node is started. The vm-query requests are not executed in this initial startup phase;
 - `EndpointsThrottlers` is a list that defines some REST API endpoints and their maximum simultaneous requests that the node can handle.
 
+[comment]: # (mx-context-auto)
+
 ## VM settings for query operations
 
 The node can handle one or more query-services able to simultaneous execute vm queries.
@@ -69,6 +71,8 @@ The `NumConcurrentVMs` value specifies the number of VMs instances allocated for
 :::important
 The increased number of VMs allocated for the vm-query engine will put pressure on the RAM allocation for the node process at around 500-600 MB / extra instance. Disk & CPU utilization will also get higher in a proportional manner.
 :::
+
+[comment]: # (mx-context-auto)
 
 ## UserAccounts cache parameters
 

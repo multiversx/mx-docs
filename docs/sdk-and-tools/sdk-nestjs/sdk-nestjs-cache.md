@@ -17,18 +17,20 @@ This package contains a set of utilities commonly used for caching purposes in t
 
 `sdk-nestjs-cache` is delivered via **npm** and it can be installed as follows:
 
-```
+```bash
 npm install @multiversx/sdk-nestjs-cache
 ```
 
 [comment]: # (mx-context-auto)
 
 ## Utility
+
 The package exports two services: an **in-memory cache service** and **remote cache service**.
 
 [comment]: # (mx-context-auto)
 
 ## Table of contents
+
 - [In Memory Cache](#in-memory-cache) - super fast in-memory caching system based on [LRU cache](https://www.npmjs.com/package/lru-cache)
 - [Redis Cache](#redis-cache) - Caching system based on [Redis](https://www.npmjs.com/package/@multiversx/sdk-nestjs-redis)
 - [Cache Service](#cache-service) - MultiversX caching system which combines in-memory and Redis cache, forming a two-layer caching system
@@ -36,6 +38,7 @@ The package exports two services: an **in-memory cache service** and **remote ca
 [comment]: # (mx-context-auto)
 
 ## In memory cache
+
 In memory cache, available through `InMemoryCacheService`, is used to read and write data from and into the memory storage of your Node.js instance.
 
 *Note that if you have multiple instances of your application you must sync the local cache across all your instances.*
@@ -43,6 +46,7 @@ In memory cache, available through `InMemoryCacheService`, is used to read and w
 Let's take as an example a `ConfigService` that loads some non-crucial configuration from the database and can be cached for 10 seconds.
 
 Usage example:
+
 ```typescript
 import { Injectable } from '@nestjs/common';
 import { InMemoryCacheService } from '@multiversx/sdk-nestjs-cache';
@@ -66,6 +70,7 @@ export class ConfigService {
   }
 }
 ```
+
 When the `.loadConfiguration()` method is called for the first time, the `.getConfigurationFromDb()` method will be executed and the value returned from it will be set in cache with `configurationKey` key. If another `.loadConfiguration()` call comes in 10 seconds interval, the data will be returned from cache and `.getConfigurationFromDb()` will not be executed again.
 
 [comment]: # (mx-context-auto)
@@ -141,6 +146,7 @@ When the `.loadConfiguration()` method is called for the first time, the `.getCo
 [comment]: # (mx-context-auto)
 
 ## Redis Cache
+
 Redis cache, available through `RedisCacheService`, is a caching system build on top of Redis. It is used as a shared cache among multiple microservices.
 
 Let's build the same config loader class but with data shared across multiple clusters using Redis. The implementation is almost identical since both `InMemoryCache` and `RedisCache` have similar class structure.
@@ -171,6 +177,7 @@ export class ConfigService {
 }
 
 ```
+
 [comment]: # (mx-context-auto)
 
 ### Redis cache methods
@@ -234,6 +241,7 @@ export class ConfigService {
 [comment]: # (mx-context-auto)
 
 ## Cache Service
+
 Cache service is using both [In Memory Cache](#in-memory-cache) and [Redis Cache](#redis-cache) to form a two-layer caching system.
 
 Usage example:
@@ -270,6 +278,7 @@ Whenever `.loadConfigurationMethod()` is called, the service will first look int
 All methods from `CacheService` use the two layer caching system except the ones that contains `local` and `remote` in their name. Those methods refer strictly to in memory cache and Redis cache.
 
 Examples:
+
 - `.getLocal()`, `.setLocal()`, `.getOrSetLocal()` are the same methods as [In Memory Cache](#in-memory-cache)
 - `.getRemote()`, `.setRemove()`, `.getOrSetRemove()` are the same methods as [Redis Cache](#redis-cache)
 

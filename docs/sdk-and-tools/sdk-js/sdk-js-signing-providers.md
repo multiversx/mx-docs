@@ -17,11 +17,13 @@ Note that for most purposes, **we recommend using [sdk-dapp](https://github.com/
 
 Generally speaking, a signing provider is a component that supports the following use-cases:
 
- - **Log in (trivial flow, not recommended)**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
- - **Log in using native authentication (recommended)**: once the user decides to log in, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and she is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
-  - **Log out**: once the user decides to log out from the dApp, the latter should ask the wallet to do so. Once the user is signed out, the flow continues back to the dApp.
-  - **Sign transactions**: while interacting with the dApp, the user might be asked to sign one or more transactions. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed transactions, ready to be broadcasted to the Network.
-  - **Sign messages**: while interacting with the dApp, the user might be asked to sign an arbitrary message. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed message.
+- **Log in (trivial flow, not recommended)**: the user of a dApp is asked her MultiversX identity. The user reaches the wallet, unlocks it, and confirms the login. The flow continues back to the dApp, which is now informed about the user's blockchain address. Note, though, that this piece of information is not authenticated: the dApp receives a _hint_ about the user's address, not a _guarantee_ (proof). Sometimes (though rarely), this is enough. If in doubt, always have your users login using the **native authentication** flow (see below).
+- **Log in using native authentication (recommended)**: once the user decides to log in, the dApp crafts a special piece of data called _the native authentication initial part_ - a shortly-lived artifact that contains, among others, a marker of the originating dApp and a marker of the target Network. The user is given this piece of data and she is asked to sign it, to prove her MultiversX identity. The user then reaches the wallet, which unwraps and (partly) displays the payload of _the native authentication initial part_. The user unlocks the wallet and confirms the login - under the hood, the _part_ is signed with the user's secret key. The flow continues back to the dApp, which now receives the user's blockchain address, along with a proof (signature). Then, the dApp (e.g. maybe a server-side component) can verify the signature to make sure that the user is indeed the owner of the address.
+- **Log out**: once the user decides to log out from the dApp, the latter should ask the wallet to do so. Once the user is signed out, the flow continues back to the dApp.
+- **Sign transactions**: while interacting with the dApp, the user might be asked to sign one or more transactions. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed transactions, ready to be broadcasted to the Network.
+- **Sign messages**: while interacting with the dApp, the user might be asked to sign an arbitrary message. The user reaches the wallet, unlocks it again if necessary, and confirms the signing. The flow continues back to the dApp, which receives the signed message.
+
+[comment]: # (mx-context-auto)
 
 ## Implementations (available providers)
 
@@ -73,7 +75,7 @@ The following provider URLs [are defined](https://github.com/multiversx/mx-sdk-j
 
 [comment]: # (mx-context-auto)
 
-### Login and logout
+### Login and logout {#wallet-login-and-logout}
 
 Then, ask the user to log in:
 
@@ -125,7 +127,7 @@ const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#wallet-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -165,7 +167,7 @@ for (const plainTransaction of plainSignedTransactions) {
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#wallet-signing-messages}
 
 Messages can be signed as follows:
 
@@ -208,7 +210,7 @@ await provider.init();
 
 [comment]: # (mx-context-auto)
 
-### Login and logout
+### Login and logout {#extension-login-and-logout}
 
 Then, ask the user to log in:
 
@@ -238,7 +240,7 @@ const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#extension-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -255,7 +257,7 @@ await provider.signTransactions([firstTransaction, secondTransaction]);
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#extension-signing-messages}
 
 Arbitrary messages can be signed as follows:
 
@@ -341,7 +343,7 @@ await provider.init();
 
 [comment]: # (mx-context-auto)
 
-### Login and logout
+### Login and logout  {#walletconnect-login-and-logout}
 
 Then, ask the user to log in using xPortal on her phone:
 
@@ -383,7 +385,7 @@ await provider.logout();
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#walletconnect-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -402,7 +404,7 @@ Alternatively, one can sign a single transaction using the method `signTransacti
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#walletconnect-signing-messages}
 
 Arbitrary messages can be signed as follows:
 
@@ -483,7 +485,7 @@ const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart
 
 [comment]: # (mx-context-auto)
 
-### Signing transactions
+### Signing transactions {#hw-signing-transactions}
 
 Transactions can be signed as follows:
 
@@ -502,7 +504,179 @@ Alternatively, one can sign a single transaction using the method `signTransacti
 
 [comment]: # (mx-context-auto)
 
-### Signing messages
+### Signing messages {#hw-signing-messages}
+
+Arbitrary messages can be signed as follows:
+
+```js
+import { SignableMessage } from "@multiversx/sdk-core";
+
+const message = new SignableMessage({
+    message: Buffer.from("hello")
+});
+
+await provider.signMessage(message);
+
+console.log(message.toJSON());
+```
+
+[comment]: # (mx-context-auto)
+
+## The Web Wallet Cross Window Provider
+
+[`@multiversx/sdk-web-wallet-cross-window-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-cross-window-provider) allows the users of a dApp to log in and sign transactions using the MultiversX Web Wallet.
+
+In order to aquire the instance (singleton) of the provider, do as follows:
+
+```js
+import { CrossWindowProvider } from "@multiversx/sdk-web-wallet-cross-window-provider";
+
+const provider = CrossWindowProvider.getInstance();
+```
+
+Before performing any operation, make sure to initialize the provider and web wallet address:
+
+```js
+await provider.init();
+provider.setWalletUrl("https://wallet.multiversx.com");
+```
+
+[comment]: # (mx-context-auto)
+
+### Login and logout {#cross-window-login-and-logout}
+
+Then, ask the user to log in:
+
+```js
+const address = await provider.login();
+
+console.log(address);
+console.log(provider.account);
+```
+
+In order to log out, do as follows:
+
+```js
+await provider.logout();
+```
+
+The `login()` method supports the `token` parameter, for **the native authentication flow** (always recommended, see above):
+
+```js
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+await provider.login({ token: nativeAuthInitialPart });
+
+const address = provider.account.address;
+const signature = provider.account.signature;
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing transactions {#cross-window-signing-transactions}
+
+Transactions can be signed as follows:
+
+```js
+import { Transaction } from "@multiversx/sdk-core";
+
+const firstTransaction = new Transaction({ ... });
+const secondTransaction = new Transaction({ ... });
+
+await provider.signTransactions([firstTransaction, secondTransaction]);
+
+// "firstTransaction" and "secondTransaction" can now be broadcasted.
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing messages {#cross-window-signing-messages}
+
+Arbitrary messages can be signed as follows:
+
+```js
+import { SignableMessage } from "@multiversx/sdk-core";
+
+const message = new SignableMessage({
+    message: Buffer.from("hello")
+});
+
+await provider.signMessage(message);
+
+console.log(message.toJSON());
+```
+
+[comment]: # (mx-context-auto)
+
+## The Metamask Proxy Provider
+
+[`@multiversx/sdk-metamask-proxy-provider`](https://github.com/multiversx/mx-sdk-js-metamask-proxy-provider) allows the users of a dApp to log in and sign transactions using the Metamask wallet by using MultiversX Web Wallet as a proxy widget in iframe.
+
+In order to aquire the instance (singleton) of the provider, do as follows:
+
+```js
+import { MetamaskProxyProvider } from "@multiversx/sdk-metamask-proxy-provider";
+
+const provider = MetamaskProxyProvider.getInstance();
+```
+
+Before performing any operation, make sure to initialize the provider and metamask snap web wallet address:
+
+```js
+await provider.init();
+provider.setWalletUrl("https://snap-wallet.multiversx.com");
+```
+
+[comment]: # (mx-context-auto)
+
+### Login and logout {#metamask-proxy-login-and-logout}
+
+Then, ask the user to log in:
+
+```js
+const address = await provider.login();
+
+console.log(address);
+console.log(provider.account);
+```
+
+In order to log out, do as follows:
+
+```js
+await provider.logout();
+```
+
+The `login()` method supports the `token` parameter, for **the native authentication flow** (always recommended, see above):
+
+```js
+const nativeAuthInitialPart = await nativeAuthClient.initialize();
+await provider.login({ token: nativeAuthInitialPart });
+
+const address = provider.account.address;
+const signature = provider.account.signature;
+const nativeAuthToken = nativeAuthClient.getToken(address, nativeAuthInitialPart, signature);
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing transactions {#metamask-proxy-signing-transactions}
+
+Transactions can be signed as follows:
+
+```js
+import { Transaction } from "@multiversx/sdk-core";
+
+const firstTransaction = new Transaction({ ... });
+const secondTransaction = new Transaction({ ... });
+
+await provider.signTransactions([firstTransaction, secondTransaction]);
+
+// "firstTransaction" and "secondTransaction" can now be broadcasted.
+```
+
+[comment]: # (mx-context-auto)
+
+### Signing messages {#metamask-proxy-signing-messages}
 
 Arbitrary messages can be signed as follows:
 

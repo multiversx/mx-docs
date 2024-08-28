@@ -14,7 +14,6 @@ Scenario files should end in `.scen.json`, where "scen" comes from "scenario". T
 
 On a side note, there is also an older format that is now deprecated, where test file names end in `.test.json`, but you shouldn't worry about it.
 
-
 [comment]: # (mx-context-auto)
 
 ## **Top level**
@@ -179,7 +178,7 @@ Not all of its sections are required each time. These sections are:
                 - `frozen` ESDT tokens can be frozen by their creator if they are configured to be freezable
     - `username` the "herotag", which is stored directly in the account trie
     - `storage` initializes storage with given key-value map. Both keys and values can be of any length.
-    - `code` typically provided in the format `"code": "file:path/to/binary"` More on this [here](/developers/scenario-reference/values-simple#file-contents). Having a `code` makes the account a smart contract.
+    - `code` typically provided in the format `"code": "file:path/to/binary"` More on this [here](/developers/testing/scenario/values-simple#file-contents). Having a `code` makes the account a smart contract.
 - `newAddresses` - mock contract address generation during deploy. We basically tell the blockchain mock what address name to generate when deploying new contracts. Not having this would give a generated address that is hard to predict when developing tests. It consists of a list of triples:
     - `creatorAddress`
     - `creatorNonce`

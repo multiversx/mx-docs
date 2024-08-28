@@ -8,6 +8,7 @@ title: Configuration
 We like to say that developers don't write smart contracts directly, rather they write _specifications_ for smart contracts, from which an automated process creates the smart contracts themselves.
 
 This philosophy has two practical implications:
+
 1. The smart contract code itself has no direct knowledge of the underlying technology or of the blockchain, and can therefore be used to build other products too, such as tests, interactors, services, etc.
 2. The build process is its own separate thing, which needs to be configured.
 
@@ -48,6 +49,16 @@ lto = true
 debug = false
 panic = "abort"
 overflow-checks = false
+
+[[proxy]]
+path = "src/main_proxy.rs"
+override-import = "use new::overide::path"
+add-unlabelled=false
+add-labels=["label_one"]
+add-endpoints=["endpoint_one"]
+[[proxy.path-rename]]
+from = "main"
+to = "new::main"
 ```
 
 The settings are as follows:
@@ -129,7 +140,36 @@ The settings are as follows:
     - Note that overflow checks are normally turned off in production, but are useful when testing. The overflow checks are enabled by default when testing smart contracts using the debugger.
     - _values_: `true` | `false`
     - _default_: `false`
-
+- `proxy`
+  - Sets custom configuration for a generated proxy. More details about proxies are available [here](/developers/transactions/tx-proxies#how-to-set-up-project-to-re-generate-easily)
+  - `path`
+    - Set the output path where the generated proxy will be saved.
+    - _values_: `String`
+    - _default_: `"output/proxy.rs"`
+  - `override-import`
+    - Override the proxy imports: `use multiversx_sc::proxy_imports::*;`.
+    - _values_: `String`
+    - _default_: `""`
+  - `path-rename`
+    - Rename paths from structures and enumerations in generated proxy.
+    - _values_:
+      - `from`: `String`
+      - `to`: `String`    
+    - _default_:
+      - `from`: `""`
+      - `to`: `""`
+  - `add-unlabelled`
+    - Specifies that all unlabelled endpoints should be added in the proxy.
+    - _values_: `true` | `false`
+    - _default_: `true`
+  - `add-labels`
+    - Endpoints labelled with at least one of these tags are added to the proxy.
+    - _values_: a list of string labels, e.g. `add-labels = ["label1", "label2"]`
+    - _default_: `[]`
+  - `add-endpoints`
+    - A proxy generated only with the endpoints specified in the list.
+    - _values_: a list of endpoint names, e.g. `add-endpoints = ["endpoint_one", "endpoint_two"]`
+    - _default_: `[]`
 ---
 
 [comment]: # (mx-context-auto)
@@ -162,6 +202,16 @@ allocator = "fail"
 stack-size = "2 pages"
 features = []
 kill-legacy-callback = false
+
+[[proxy]]
+path = "output/proxy.rs"
+override-import = ""
+add-unlabelled = true
+add-labels = []
+add-endpoints = []
+[[proxy.path-rename]]
+from = ""
+to = ""
 ```
 
 ---
@@ -247,6 +297,10 @@ add-labels = ["multisig-external-view"]
 name = "multisig-full"
 add-unlabelled = true
 add-labels = ["multisig-external-view"]
+
+[[proxy]]
+variant = "full"
+path = "src/full_proxy.rs"
 ```
 
 [comment]: # (mx-context-auto)
@@ -306,7 +360,7 @@ An _external view contract_ has a behavior different from that of a regular cont
   - `add-unlabelled`
     - Specifies that all unlabelled endpoints should be added to this contract.
     - _values_: `true` | `false`
-    - _default_: `false`
+    - _default_: `true`
   - `add-labels`
     - All endpoints labelled with at least one of these labels will be added to the contract.
     - _values_: a list of string labels, e.g. `add-labels = ["label1", "label2"]`
@@ -316,7 +370,7 @@ An _external view contract_ has a behavior different from that of a regular cont
     - It bypasses the label system.
     - Can be useful if for some reason labels are missing in code or deemed too cumbersome.
     - Use the public endpoint names, not the Rust function names.
-    - _values_: a list of endpoint names, e.g. `add-labels = ["myEndpoint1", "myEndpoint1"]`
+    - _values_: a list of endpoint names, e.g. `add-endpoints = ["myEndpoint1", "myEndpoint1"]`
     - _default_: `[]`
 - `labels-for-contracts`
     - Currently not used in any of our projects, probably better to stay away from this feature. Providing documentation for reference, anyway.
@@ -324,6 +378,11 @@ An _external view contract_ has a behavior different from that of a regular cont
     - It can be a little harder to read than the contract to label map, but it can be used.
     - There is a special key, `default`, which refers to the unlabelled endpoints.
     - Example, equivalent to the labels in :
+- `proxy`
+  - `variant`
+    - Generates a proxy for a specific variant
+    - _value_: `String`
+    - _default_: `main_contract`
 
 ```toml
 [settings]
@@ -491,7 +550,6 @@ To achieve the same effect on the Rust scenario runner, configure as in the foll
 fn world() -> ScenarioWorld {
     // Initialize the blockchain mock, the same as for a regular test.
     let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/multisig");
 
     // Contracts that have no multi-contract config are provided the same as before.
     blockchain.register_contract("file:test-contracts/adder.wasm", adder::ContractBuilder);
@@ -519,4 +577,3 @@ fn world() -> ScenarioWorld {
     blockchain
 }
 ```
-

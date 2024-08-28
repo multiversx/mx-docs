@@ -3,10 +3,17 @@ id: concept
 title: Concept
 ---
 
-
 [comment]: # (mx-context-auto)
 
-## What is a scenario?
+## What is MANDOS?
+
+MANDOS is short for **M**ultiversX **A**ccount, **N**etwork and **D**ata **O**peration **S**cenarios. We sometimes call them simply "scenarios".
+
+They were designed to test the VM and the early contracts in a language-agnostic way, hence initially implemented in JSON.
+
+Initially written manually, they were gradually superseded by Rust tests. The format, however, is still very useful, since it can be generated from a backend, and then re-run on another.
+
+## Concept
 
 Let's think for a moment how an interaction with a blockchain might look like.
 
@@ -24,7 +31,6 @@ So it doesn't really matter if these steps are real or imagined. All that matter
 
 Because of their generality, it is natural to think of all blockchain interactions and black-box tests as such scenarios.
 
-
 [comment]: # (mx-context-auto)
 
 ## Scenario formats
@@ -41,7 +47,6 @@ There are several ways to generate a scenario JSON file automatically, and we en
 
 The greatest benefit of the JSON format is that it is language-agnostic, and so it can be used with any of our backends.
 
-
 [comment]: # (mx-context-auto)
 
 ## Scenarios as tests
@@ -51,7 +56,6 @@ Scenarios also have syntax for checking transaction outputs and the blockchain s
 :::important What kind of tests are they?
 They are always **black-box** tests. They model real blockchain interactions, so there is no way for them to peek inside contracts and access their private functions.
 :::
-
 
 [comment]: # (mx-context-auto)
 

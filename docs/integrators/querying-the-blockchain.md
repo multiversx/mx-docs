@@ -7,54 +7,65 @@ title: Querying the Blockchain
 
 This page describes how to query the Network in order to fetch data such as transactions and blocks (hyperblocks).
 
+:::note
+On this page, we refer to the [Gateway (Proxy) REST API](/sdk-and-tools/rest-api/gateway-overview) - i.e. the one backed by an [observing squad](/integrators/observing-squad).
+:::
+
 [comment]: # (mx-context-auto)
 
 ## **Querying broadcasted transactions**
 
-In order to query a transaction and inspect its status, please follow:
+In order to fetch a previously-broadcasted transaction, use:
 
 - [get transaction by hash](/sdk-and-tools/rest-api/transactions#get-transaction)
-- [get transaction status by hash](/sdk-and-tools/rest-api/transactions#get-transaction-status)
 
-Querying a _recently_ broadcasted transaction may not return the _hyperblock coordinates_ (hyperblock nonce and hyperblock hash) in the response. However, once the transaction is fully executed - according to the `status` field (whether with success or with failure), the hyperblock coordinates will be set and present in the response.
+:::note
+Fetching a _recently_ broadcasted transaction may not return the _hyperblock coordinates_ (hyperblock nonce and hyperblock hash) in the response. However, once the transaction is notarized on both shards (with acknowledgement from the metachain), the hyperblock coordinates will be set and present in the response.
+:::
+
+In order to inspect the **status** of a transaction, use:
+
+- [get transaction **shallow status** by hash](/sdk-and-tools/rest-api/transactions#get-transaction-status)
+- [get transaction **process status** by hash](/sdk-and-tools/rest-api/transactions#get-transaction-process-status)
+
+For the difference between the _shallow status_ and the _process status_, see the next section.
 
 [comment]: # (mx-context-auto)
 
 ## **Transaction Status**
 
-For **regular transfer transactions**, the transaction `status` has the following meaning:
+### Shallow status
 
-| Status                                                | Meaning                                                                                                                                                       |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **success** or **executed**                           | The transaction has been fully executed - with respect to MultiversX's sharded architecture, it has been executed in both source shard and destination shard. |
-| **invalid**                                           | The transaction has been processed with failure (not enough balance at sender's side).                                                                        |
-| **pending** or **received** or **partially-executed** | The transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).                                                  |
-| **fail** or **not-executed**                          | Regular transfer transactions cannot reach this status.                                                                                                       |
+The **shallow status** of a transaction indicates whether a transaction has been **handled and executed** by the network.
+However, the _shallow_ status does not provide information about the transaction's **processing outcome**, and does not capture processing errors.
+That is, transactions processed with errors (e.g. _user error_ or _out of gas_) have the status `success` (somehow counterintuitively).
 
-:::caution
-The statuses are (broadly speaking) directly fetched from the Observer Nodes themselves. The Node [v1.1.6](https://github.com/multiversx/mx-chain-go/releases/tag/v1.1.6) returns different statuses than previous versions. For example, the status **executed** has been renamed to **success**, while the statuses **received** and **partially-executed** have been merged under the status **pending**.
-
-Currently, the HTTP API does not implement a versioning scheme (work is in progress on this matter) and thus does not yet provide a layer that abstracts away this renaming of statuses. Therefore, **the API consumers** - in order to appropriately handle the data coming from both versions of the Node (prior to `v1.1.6` and after `v1.1.6`) - **are recommended to**:
-
-✔ handle **success** and **executed** as synonyms
-
-✔ handle **pending**, **received** and **partially-executed** as synonyms
-
-✔ handle **fail** and **not-executed** as synonyms.
+:::note
+The _shallow_ status is, generally speaking, sufficient for integrators that are only interested into simple transfers (of EGLD or custom tokens).
 :::
 
-For **smart contract transactions**, the transaction status has the following meaning:
+The **shallow status** of a transaction can be one of the following:
+ - `success` - the transaction has been fully executed - with respect to the network's sharded architecture, it has been executed in both source and destination shards.
+ - `invalid` - the transaction has been marked as invalid for execution at sender's side (e.g., not enough balance at sender's side, sending value to non-payable contracts etc.).
+ - `pending` - the transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).
 
-| Status                                                | Meaning                                                                                                                                                                                                                                                                           |
-| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **success** or **executed**                           | The smart contract transaction has been executed, **but not necessarily with** **success** - transactions executed with errors such as `user error` (raised by the contract) or `out of gas` also have this status - the erroneous scenarios will be handled in a future release. |
-| **invalid**                                           | The transaction has been processed with failure at sender's side (e.g. not enough balance), but did not actually reach the Smart Contract for execution.                                                                                                                          |
-| **pending** or **received** or **partially-executed** | The transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).                                                                                                                                                                      |
-| **fail**                                              | Not yet applicable. Reserved for future use - for transactions with `user error`.                                                                                                                                                                                                 |
+### Process status
 
-:::important
-Documentation in this sub-section (about smart contract transactions) is preliminary and subject to change.
+The **process status** of a transaction indicates whether a transaction has been processed successfully or not.
+
+:::note
+The _process_ status is, generally speaking, useful for integrators that are interested in smart contract interactions.
 :::
+
+:::note
+Fetching the _process status_ of a transaction is less efficient than fetching the _shallow status_.
+:::
+
+The **process status** of a transaction can be one of the following:
+ - `success` - the transaction has been fully executed - with respect to the network's sharded architecture, it has been executed in both source and destination shards.
+ - `fail` - the transaction has been processed, but with errors (e.g., _user error_ or _out of gas_), or it has been marked as invalid (see _shallow_ status).
+ - `pending` - the transaction has been accepted in the _mempool_ or accepted and partially executed (in the source shard).
+ - `unknown` - the processing status cannot be precisely determined yet.
 
 [comment]: # (mx-context-auto)
 

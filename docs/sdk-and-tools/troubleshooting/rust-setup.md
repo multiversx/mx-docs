@@ -62,13 +62,21 @@ rustup self uninstall
 
 ## Installing Rust and sc-meta
 
-[comment]: # (mx-context-auto)
-
 :::note
 `sc-meta` is universal smart contract management tool. Please follow [this](/developers/meta/sc-meta) for more information.
 :::
 
+[comment]: # (mx-context-auto)
+
 ### With mxpy
+
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
+    
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+
+Install Rust and `sc-meta` using `mxpy`:
 
 ```bash
 mxpy deps install rust --overwrite
@@ -84,7 +92,13 @@ For more information, go to [managing dependencies using `mxpy`](/sdk-and-tools/
 
 ### Without mxpy
 
-As recommended on [rust-lang.org](https://www.rust-lang.org/tools/install):
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
+    
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+
+Install Rust as recommended on [rust-lang.org](https://www.rust-lang.org/tools/install):
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -92,10 +106,15 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Then, choose **Proceed with installation (default)**. 
 
-Once Rust is installed, open a new terminal (shell), then switch to a nightly version and install the `wasm32-unknown-unknown` target:
+Once Rust is installed, open a new terminal (shell), then switch to a recent stable version and install the `wasm32-unknown-unknown` target:
+
+:::tip
+Generally speaking, you should install Rust `v1.78.0` (stable channel) or later, or `nightly-2024-05-22` (nightly channel) or later.
+:::
 
 ```bash
-rustup default nightly-2023-12-11
+rustup update
+rustup default stable
 rustup target add wasm32-unknown-unknown
 ```
 
@@ -116,31 +135,35 @@ cargo install twiggy
 
 ### Without mxpy (CI / CD)
 
-For CI / CD, use the following:
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
+    
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+
+For CI / CD, install Rust as follows:
 
 ```bash
 wget -O rustup.sh https://sh.rustup.rs && \
     chmod +x rustup.sh && \
-    ./rustup.sh --verbose --default-toolchain nightly-2023-12-11 --target wasm32-unknown-unknown -y
+    ./rustup.sh --verbose --default-toolchain stable --target wasm32-unknown-unknown -y
 
 cargo install multiversx-sc-meta --locked
 ```
 
 [comment]: # (mx-context-auto)
 
-### Handle missing dependencies of sc-meta
+### Handle missing dependencies
 
-`sc-meta` requires a few dependencies that are not installed by default on some systems. In this case, installation of `sc-meta` fails.
-
-For a workaround, please follow this [GitHub issue](https://github.com/multiversx/mx-sdk-py-cli/issues/338).
-
-### Handle missing dependencies: build-essential
-
-On Ubuntu, you might also need to install `build-essential`:
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` before installing Rust:
     
 ```bash
-sudo apt-get install build-essential
+sudo apt-get install build-essential pkg-config libssl-dev
 ```
+
+Also see this [GitHub issue](https://github.com/multiversx/mx-sdk-py-cli/issues/338).
+
+[comment]: # (mx-context-auto)
 
 ## Check your Rust installation
 
@@ -156,7 +179,7 @@ installed toolchains
 --------------------
 
 [...]
-nightly-2023-12-11-x86_64-unknown-linux-gnu (default)
+stable-x86_64-unknown-linux-gnu (default)
 
 installed targets for active toolchain
 --------------------------------------
@@ -164,24 +187,23 @@ installed targets for active toolchain
 [...]
 wasm32-unknown-unknown
 
-
 active toolchain
 ----------------
 
 [...]
-nightly-2023-12-11-x86_64-unknown-linux-gnu (default)
+stable-x86_64-unknown-linux-gnu (default)
 ```
 
 You can also check the status of your Rust installation using `mxpy`:
 
-```
+```bash
 $ mxpy deps check rust
 
-INFO     cli.deps: Checking dependency: module = rust, tag = nightly-2023-12-11
+INFO     cli.deps: Checking dependency: module = rust, tag = stable
 INFO     modules: which rustc: /home/ubuntu/.cargo/bin/rustc
 INFO     modules: which cargo: /home/ubuntu/.cargo/bin/cargo
 INFO     modules: which sc-meta: /home/ubuntu/.cargo/bin/sc-meta  
 INFO     modules: which wasm-opt: /home/ubuntu/.cargo/bin/wasm-opt
 INFO     modules: which twiggy: /home/ubuntu/.cargo/bin/twiggy
-INFO     cli.deps: [rust nightly-2023-12-11] is installed.
+INFO     cli.deps: [rust stable] is installed.
 ```

@@ -542,11 +542,11 @@ The optional query parameter **`sender`** is only applicable to requests against
 
 [comment]: # (mx-context-auto)
 
-## <span class="badge badge--primary">GET</span> **Get Transaction Status** {#get-transaction-status}
+## <span class="badge badge--primary">GET</span> **Get Transaction Shallow Status** {#get-transaction-status}
 
 `https://gateway.multiversx.com/transaction/:txHash/status`
 
-This endpoint allows one to query the Status of a Transaction.
+This endpoint allows one to query **the shallow status** of a transaction. For more details, see [this](/integrators/querying-the-blockchain).
 
 <Tabs
 defaultValue="Request"
@@ -578,7 +578,7 @@ Transaction status retrieved successfully.
 ```json
 {
   "data": {
-    "status": "executed"
+    "status": "success"
   },
   "error": "",
   "code": "successful"
@@ -591,6 +591,49 @@ Transaction status retrieved successfully.
 :::important
 The optional query parameter **`sender`** is only applicable to requests against the Proxy (not against the Observer Nodes).
 :::
+
+[comment]: # (mx-context-auto)
+
+## <span class="badge badge--primary">GET</span> **Get Transaction Process Status** {#get-transaction-process-status}
+
+`https://gateway.multiversx.com/transaction/:txHash/process-status`
+
+This endpoint allows one to query the **process status** of a transaction. For more details, see [this](/integrators/querying-the-blockchain).
+
+<Tabs
+defaultValue="Request"
+values={[
+{label: 'Request', value: 'Request'},
+{label: 'Response', value: 'Response'},
+]}>
+<TabItem value="Request">
+
+Path Parameters
+
+| Param  | Required                                  | Type     | Description                               |
+| ------ | ----------------------------------------- | -------- | ----------------------------------------- |
+| txHash | <span class="text-danger">REQUIRED</span> | `string` | The hash (identifier) of the Transaction. |
+
+</TabItem>
+<TabItem value="Response">
+
+🟢 200: OK
+
+Transaction status retrieved successfully.
+
+```json
+{
+  "data": {
+      "reason": ""
+      "status": "success"
+  },
+  "error": "",
+  "code": "successful"
+}
+```
+
+</TabItem>
+</Tabs>
 
 [comment]: # (mx-context-auto)
 

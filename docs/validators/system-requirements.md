@@ -17,27 +17,39 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 
 ## **Minimum System Requirements for running 1 MultiversX Node**
 
-- 4 x dedicated/physical CPUs, either Intel or AMD, with the `SSE4.1` and `SSE4.2` flags (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
+- 4 x dedicated/physical CPUs, either Intel or AMD, **with `SSE4.1` and `SSE4.2` flags** (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 8 GB RAM
 - 200 GB SSD
 - 100 Mbit/s always-on internet connection, at least 4 TB/month data plan
 - Linux OS (Ubuntu 22.04 recommended) / MacOS
 
-:::tip
-Support for ARM processors (e.g. for Raspberry Pi) will come in the future, pending third-party issues.
-:::
-
 :::caution
-If the system chosen to host the node is a VPS, the host should have dedicated CPUs. This is mandatory. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
+1. The CPUs must be `SSE4.1` and `SSE4.2` capable, otherwise the node won't be able to use the Wasmer 2 VM available through the VM 1.5 (and above) and the node will not be able to sync blocks from the network.
+2. If the system chosen to host the node is a VPS, the host must have dedicated CPUs. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
+3. If you run multiple MultiversX Nodes on the same machine, the host running those nodes should have the specs at least equal to the minimum system requirements multiplied by the number of nodes running on that host.
 :::
 
 :::tip
-We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw`
+We are promoting using processors that support the `fma` or `fma3` instruction set since it is widely used by our VM. Displaying the available CPU instruction set can be done using the Linux shell command `sudo lshw` or `lscpu`
 :::
 
+[comment]: # (mx-context-auto)
+
+## **ARM Architecture Support**
+
+Processors with ARM architecture are now supported, starting from mainnet epoch 1265 (related to [this](https://github.com/multiversx/mx-chain-mainnet-config/releases/tag/v1.6.7.0) release).  
+Synchronization from genesis to epoch 1265 is not possible on ARM processors.
+
 :::caution
-In case a decision to run multiple MultiversX Nodes on the same machine is chosen, the host running those nodes should have at least the minimum system requirements multiplied by the number of nodes running on that host.
+This update comes after extensive testing to ensure compatibility and functionality. However, we advise caution with its use in production environments.
 :::
+
+Usage recommendations:  
+- Testnet/Devnet Validators: ARM processors can be utilized effectively as validator nodes on Testnet or Devnet.  
+- Mainnet Observers: ARM processors can be utilized effectively as observer nodes that can provide API support to non-critical services.  
+- Mainnet Validators: Despite successful testing, **it is NOT recommended to use ARM processors as mainnet validators** at this time due to potential performance and reliability concerns.
+
+We will continue to monitor and improve support for ARM architecture, and we encourage the community to provide [feedback](https://t.me/MultiversXValidators) on their experiences.
 
 [comment]: # (mx-context-auto)
 

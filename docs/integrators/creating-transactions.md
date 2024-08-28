@@ -67,7 +67,7 @@ General network parameters, such as the **chain ID**, **the minimum gas price**,
 
 Each transaction broadcasted to the Network must have the **nonce** field set consistently with the **account nonce**. In the Network, transactions of a given sender address are processed in order, with respect to the transaction nonce.
 
-The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tools/rest-api/addresses#span-classbadge-badge-primarygetspan-get-address-nonce).
+The account nonce can be fetched from the API: [Get Address Nonce](/sdk-and-tools/rest-api/addresses#get-address-nonce).
 
 **The nonce must be a strictly increasing number, scoped to a given sender.** The sections below describe common issues and possible solutions when managing the nonce for transaction construction.
 
@@ -97,7 +97,7 @@ If broadcasted transactions have their nonces higher than the current account no
 
 ### **Issue: too many transactions from the same account**
 
-Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius.md), the transaction pool allows a maximum of **100** transactions from the same sender to exist, at a given moment.
+Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius), the transaction pool allows a maximum of **100** transactions from the same sender to exist, at a given moment.
 
 For example, if an address broadcasts `120` transactions with nonces from `1` to `120`, then the transactions with nonces `1 - 100` will be accepted for processing, while the remaining `20` transactions will be dropped.
 

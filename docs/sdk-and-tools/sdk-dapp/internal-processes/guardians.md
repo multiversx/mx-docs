@@ -34,7 +34,7 @@ transaction.setOptions(TransactionOptions.withOptions({
 
 ### Signing the transaction
 
-Once these fields are set, the transaction must be signed by both Guardian (adding the `guardianSignuature` field) and UserSigner (adding the `signature` field).
+Once these fields are set, the transaction must be signed by both Guardian (adding the `guardianSignature` field) and UserSigner (adding the `signature` field).
 All signing providers (except Ledger) take care internally of formatting the transaction, as described above (excluding adding the extra `gasLimit`).
 
 [comment]: # (mx-context-auto)

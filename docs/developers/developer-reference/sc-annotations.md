@@ -45,7 +45,7 @@ Only one contract, module or proxy annotation is allowed per Rust module. If the
 
 ### `#[multiversx_sc::proxy]`
 
-The `proxy` annotation must always be placed on a trait and will automatically make that trait a smart contract call proxy. More about smart contract proxies in [the contract calls reference](/developers/developer-reference/sc-contract-calls).
+The `proxy` annotation must always be placed on a trait and will automatically make that trait a smart contract call proxy. More about smart contract proxies in [the contract calls reference](/developers/transactions/tx-legacy-calls).
 
 In short, contracts always get an auto-generated proxy. However, if such an auto-generated proxy of another contract is not available, it is possible to define such a "contract interface" by hand, using the `proxy` attribute.
 
@@ -96,21 +96,22 @@ Example:
 ```rust
 #[multiversx_sc::contract]
 pub trait Example {
-	#[endpoint]
-	fn example(&self) {
+    #[endpoint]
+    fn example(&self) {
     }
 
     #[endpoint(camelCaseEndpointName)]
-	fn snake_case_method_name(&self, value: BigUint) {
+    fn snake_case_method_name(&self, value: BigUint) {
     }
 
     fn private_method(&self, value: &BigUint) {
     }
-
+    
     #[view(getData)]
-	fn get_data(&self) -> u32{
-        0
+    fn get_data(&self) -> u32 {
+    	0
     }
+}
 ```
 
 In this example, 3 methods are public endpoints. They are named `example`, `camelCaseEndpointName` and `getData`. All other names are internal and do not show up in the resulting contract.
@@ -129,7 +130,7 @@ Callbacks are special methods that get called automatically when the response co
 
 They also act as closures, since they can retain some of the context of the transaction that performed the asynchronous call in the first place.
 
-A more detailed explanation on how they work in [the contract calls reference](/developers/developer-reference/sc-contract-calls).
+A more detailed explanation on how they work in [the contract calls reference](/developers/transactions/tx-legacy-calls).
 
 [comment]: # (mx-context-auto)
 
@@ -150,12 +151,13 @@ This is the simplest way to retrieve data from the storage. Let's start with an 
 ```rust
 #[multiversx_sc::contract]
 pub trait Adder {
-	#[view(getSum)]
-	#[storage_get("sum")]
-	fn get_sum(&self) -> BigUint;
+    #[view(getSum)]
+    #[storage_get("sum")]
+    fn get_sum(&self) -> BigUint;
 
-	#[storage_get("example_map")]
+    #[storage_get("example_map")]
     fn get_value(&self, key_1: u32, key_2: u32) -> SerializableType;
+}
 ```
 
 First off, please note that a storage method can also be annotated with `#[view]` or `#[endpoint]`. The endpoint annotations refer to the role of the method in the contract, while the storage annotation refers to its implementation, so there is no overlap.
@@ -179,11 +181,12 @@ This is the simplest way to write data to storage. Example:
 ```rust
 #[multiversx_sc::contract]
 pub trait Adder {
-	#[storage_set("sum")]
-	fn set_sum(&self, sum: &BigUint);
+    #[storage_set("sum")]
+    fn set_sum(&self, sum: &BigUint);
 
-	#[storage_set("example_map")]
+    #[storage_set("example_map")]
     fn set_value(&self, key_1: u32, key_2: u32, value: &SerializableType);
+}
 ```
 
 It works very similarly to `storage_get`, with the notable difference that instead of returning a value, the value must be provided as an argument. The value to store is always the last argument.
@@ -194,14 +197,14 @@ Again, just like for the getter, an arbitrary number of additional map keys can 
 There is no mechanism in place to ensure that there is no overlap between storage keys. Nothing prevents a developer from writing:
 
 ```rust
-	#[storage_set("sum")]
-	fn set_sum(&self, sum: &BigUint);
+#[storage_set("sum")]
+fn set_sum(&self, sum: &BigUint);
 
-    #[storage_set("sum")]
-	fn set_another_sum(&self, another_sum: &BigUint);
+#[storage_set("sum")]
+fn set_another_sum(&self, another_sum: &BigUint);
 
-	#[storage_set("s")]
-    fn set_value(&self, key: u16, value: &SerializableType);
+#[storage_set("s")]
+fn set_value(&self, key: u16, value: &SerializableType);
 ```
 
 The first problem is easy to spot: we have 2 setters with the same key.
@@ -223,11 +226,11 @@ There are many storage mappers in the framework and more can be custom-defined.
 Example:
 
 ```rust
-	#[storage_mapper("user_status")]
-	fn user_status(&self) -> SingleValueMapper<UserStatus>;
+#[storage_mapper("user_status")]
+fn user_status(&self) -> SingleValueMapper<UserStatus>;
 
-    #[storage_mapper("list_mapper")]
-	fn list_mapper(&self, sub_key: usize) -> LinkedListMapper<u32>;
+#[storage_mapper("list_mapper")]
+fn list_mapper(&self, sub_key: usize) -> LinkedListMapper<u32>;
 ```
 
 The `SingleValueMapper` is the simplest of them all, since it only manages one storage key. Even though it only works with one storage entry, its syntax is more compact than `storage_get`/`storage_set` so it is used quite a lot.
@@ -243,8 +246,8 @@ Also note that additional sub-keys are also allowed for storage mappers, the sam
 This is very similar to `storage_get`, but instead of retrieving the value, it returns a boolean indicating whether the serialized value is empty or not. It does not attempt to deserialize the value, so it can be faster and more resilient than `storage_get`, depending on type.
 
 ```rust
-	#[storage_is_empty("opt_addr")]
-	fn is_empty_opt_addr(&self) -> bool;
+#[storage_is_empty("opt_addr")]
+fn is_empty_opt_addr(&self) -> bool;
 ```
 
 Nowadays, it is more common to use storage mappers. The `SingleValueMapper` has an `is_empty()` method that does the same.
@@ -257,8 +260,8 @@ This is very similar to `storage_set`, but instead of serializing and writing th
 It does not do any serializing, so it can be faster than `storage_set`, depending on type.
 
 ```rust
-	#[storage_clear("field_to_clear")]
-	fn clear_storage_value(&self);
+#[storage_clear("field_to_clear")]
+fn clear_storage_value(&self);
 ```
 
 Nowadays, it is more common to use storage mappers. The `SingleValueMapper` has an `clear()` method that does the same.
@@ -274,14 +277,14 @@ Because they are not saved on the chain in full, they are also a lot cheaper tha
 In smart contracts we define them as trait methods with no implementation, as follows:
 
 ```rust
-	#[event("transfer")]
-	fn transfer_event(
-		&self,
-		#[indexed] from: &ManagedAddress,
-		#[indexed] to: &ManagedAddress,
-		#[indexed] token_id: u32,
-        data: ManagedBuffer,
-	);
+#[event("transfer")]
+fn transfer_event(
+    &self,
+    #[indexed] from: &ManagedAddress,
+    #[indexed] to: &ManagedAddress,
+    #[indexed] token_id: u32,
+    data: ManagedBuffer,
+);
 ```
 
 The annotation always requires the name of the event to be specified explicitly in brackets.
@@ -308,8 +311,8 @@ This is a simple getter, which provides a convenient instance of a contract prox
 ```rust
 #[multiversx_sc::module]
 pub trait ForwarderAsyncCallModule {
-	#[proxy]
-	fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::Api>;
+    #[proxy]
+    fn vault_proxy(&self, to: Address) -> vault::Proxy<Self::Api>;
 
     // ...
 }

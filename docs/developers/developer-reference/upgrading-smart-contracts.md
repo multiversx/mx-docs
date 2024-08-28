@@ -33,6 +33,8 @@ fn upgrade(&self, new_value: u64) {
 
 Let's assume we deploy the contract with the argument **1u64**, and then we upgrade it using the argument **2u64**. If before the new release, after upgrading the SC, we would have the value **1u64** in storage (as the `init` function would have been called, which saves the value in the storage only when it is empty), with the new release, the new value in the storage would be **2u64**.
 
+[comment]: # (mx-context-auto)
+
 ## Deep diving into the Smart Contract Upgrade Process
 
 Upgrading a smart contract is a relatively easy process, but its implications are not exactly obvious. To upgrade a smart contract, simply run the following command:

@@ -30,7 +30,7 @@ Note that Rust is also the recommended programming language for writing Smart Co
 | Name                                                                                                     | Description                                         |
 |----------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
 | [sdk-js](/sdk-and-tools/sdk-js)                                                                          | High level overview about sdk-js.                   |
-| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook)                                                 | Learn how to handle common tasks by using sdk-js.   |
+| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13)                                             | Learn how to handle common tasks by using sdk-js.   |
 | [Extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js)                                               | How to extend and tailor certain modules of sdk-js. |
 | [Writing and testing sdk-js interactions](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions) | Write sdk-js interactions for Visual Studio Code    |
 | [sdk-js migration guides](/sdk-and-tools/sdk-js/sdk-js-migration-guides)                                 | Migrate from sdk-js v9.x to v10+                    |
@@ -54,7 +54,15 @@ You might also want to have a look over [**xSuite**](https://xsuite.dev), a tool
 
 [comment]: # (mx-context-auto)
 
-### mxpy - Python SDK
+### sdk-py - Python SDK
+
+| Name                                                                                       | Description                                              |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| [sdk-py](/sdk-and-tools/sdk-py/#sdk-py-the-python-libraries)                               | Python SDK that can be used to create wallets, create and send transactions, interact with Smart Contracts and with the MultiversX Network in general.                          |
+
+[comment]: # (mx-context-auto)
+
+### mxpy - Python SDK (CLI)
 
 | Name                                                                                       | Description                                              |
 |--------------------------------------------------------------------------------------------|----------------------------------------------------------|
@@ -160,6 +168,17 @@ Events notifier is an external service that can be used to fetch block events an
 | Name                                       | Description                          |
 |--------------------------------------------|--------------------------------------|
 | [Events notifier](/sdk-and-tools/notifier) | A notifier service for block events. |
+
+[comment]: # (mx-context-auto)
+
+### Chain simulator
+
+Chain simulator is designed to replicate the behavior of a local testnet. 
+It can also be pre-initialized / initialized with blockchain state from other networks, such as mainnet or something similar.
+
+| Name                                              | Description                  |
+|---------------------------------------------------|------------------------------|
+| [Chain simulator](/sdk-and-tools/chain-simulator) | A service for local testing. |
 
 [comment]: # (mx-context-auto)
 

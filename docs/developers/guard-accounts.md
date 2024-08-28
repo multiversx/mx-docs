@@ -63,18 +63,18 @@ In order to register a guardian a user has to set a **guardian** address by send
 
 ### Guard account
 
-In order to activate guardian signing (co-signing) a ```GuardAccount``` builtin function transaction needs to be sent to MultiversX network. A guard account transaction can be issued by the account and processed by the protocol only if the account has an ```activeGuardian``` (see [guardian-data fields](/sdk-and-tools/rest-api/addresses#get-address-guardian-data)) already set (which implies that the **20 epochs** since sending the ```SetGuardian``` already passed). When the account is guarded, any transaction issued by the owner of the account would be ignored unless it also carries the signature of its set guardian. This transaction could be sent either directly from the user or also through a relayer, if the user does not have the egld required for the transaction fee. 
+In order to activate guardian signing (co-signing) a ```GuardAccount``` builtin function transaction needs to be sent to MultiversX network. A guard account transaction can be issued by the account and processed by the protocol only if the account has an ```activeGuardian``` (see [guardian-data fields](/sdk-and-tools/rest-api/addresses#get-address-guardian-data)) already set (which implies that the **20 epochs** since sending the ```SetGuardian``` already passed). When the account is guarded, any transaction issued by the owner of the account would be ignored unless it also carries the signature of its set guardian. This transaction could be sent either directly from the user or also through a relayer, if the user does not have the egld required for the transaction fee.
 
-The field ```"guarded":true``` in [guardian-data fields](/sdk-and-tools/rest-api/addresses#get-address-guardian-data) specifies that the ```GuardAccount``` transaction was executed and was successful for the account. In this case all transactions from the user account, to be executed by the protocol, will require to be guarded transactions, and the guardian to be the activeGuardian of the account. The only exception is the SetGuardian transaction which can as well be sent through a regular transaction, in which case, the new guardian will become pending for 20 epochs, and at the end of these 20 epochs replace the current active guardian. 
+The field ```"guarded":true``` in [guardian-data fields](/sdk-and-tools/rest-api/addresses#get-address-guardian-data) specifies that the ```GuardAccount``` transaction was executed and was successful for the account. In this case all transactions from the user account, to be executed by the protocol, will require to be guarded transactions, and the guardian to be the activeGuardian of the account. The only exception is the SetGuardian transaction which can as well be sent through a regular transaction, in which case, the new guardian will become pending for 20 epochs, and at the end of these 20 epochs replace the current active guardian.
 
-In case ```"guarded":false``` even if there is a non-empty ```activeGuardian```, the protocol will still only execute regular (non-guarded) transactions. 
+In case ```"guarded":false``` even if there is a non-empty ```activeGuardian```, the protocol will still only execute regular (non-guarded) transactions.
 
 :::note
 The exception is the ```setGuardian``` transaction which can either:
 
 - be executed immediately if it is co-signed by the active guardian and **cleans up any pending guardian activation**;
-
 - not be confirmed by the guardian but in this case the guardian can only be set with an activation time in future (e.g the same 20 epochs from the initial setting of a guardian).
+
 :::
 
 :::note
@@ -180,12 +180,14 @@ There is no official solution released for the **Ledger**. As soon as there is o
 In the meantime you can use the **MultiversX Guardians Test - BETA** version:
 
 **How to activate it?**
+
 1. In Ledger Live
 2. Go to My Ledger
 3. Go to Settings (⚙️)
 4. Go to Experimental features
 5. Enable Developer Mode - ✅
 6. Search and install MultiversX Guardians Test
+
 :::
 
 :::important
@@ -205,4 +207,3 @@ There should be no impact on integrators who utilize the [sdk-dapp](https://gith
 ### Trusted Co-Signer Service for Guardians
 
 In the future we want to publish the codebase to MultiversX TCS so that third party TCS service providers will be allowed to be listed in the MultiversX wallet, this process of launching a TCS guardian service needs to be defined.
-

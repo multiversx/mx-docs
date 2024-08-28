@@ -1,6 +1,8 @@
-# MultiversX docs
+# MultiversX Docs
 
 The repository contains the [documentation](https://docs.multiversx.com) for the MultiversX Network protocol.
+
+![docs.multiversx.com](https://github.com/multiversx/mx-docs/blob/main/static/img/social.jpg)
 
 ## About
 
@@ -11,13 +13,13 @@ This repository also has GitHub actions that will trigger the real-time updating
 
 In order to ensure that the newly added content is correctly aligned and every Markdown feature is working as intended, one can run the project on a local machine.
 
-### Requirements:
+### Requirements
 
 - a `git` client installed
-- `nodejs` (v16.14.2) and `npm` installed
+- `nodejs` (v18.19.0 LTS) and `npm` installed
 - optional, but useful: an IDE (Visual Code for example)
 
-### Steps:
+### Steps
 
 - clone the repository
 - run `npm install` (only for the first usage)
@@ -44,7 +46,7 @@ Anyone can contribute to the docs. Any help is appreciated. Here are some ways i
 
 ### Guidelines
 
-Each documentation page should include a `Edit this page` link that will redirect the user to the corresponding GitHub edit page. 
+Each documentation page should include a `Edit this page` link that will redirect the user to the corresponding GitHub edit page.
 
 Alternatively, contributions can be made manually by following the steps below:
 
