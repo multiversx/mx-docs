@@ -31,20 +31,10 @@ The block time (round duration) is [6 seconds](/developers/constants). Also see 
 
 Currently, the MultiversX network has 3 regular shards, plus a special one, called the _metachain_ - this arrangement holds not only on _mainnet_, but also on _devnet_ and _testnet_.
 
-Each account is assigned to a _shard_, which holds its state, including the balance information. The shard assignment formula is based on the _address_ of the account.
-
 Transactions between accounts assigned to the same shard are called _intra-shard transactions_. Transactions between accounts located in distinct shards are called _cross-shard transactions_.
 
 More details about the sharded architecture of MultiversX can be found [here](/learn/sharding).
-
 Integrators may choose to have a unified view of the network, leveraging the [hyperblock](/integrators/egld-integration-guide) abstraction.
-
-### What can be said about blocks and transactions finality?
-
-A transaction is final when the block or blocks (for cross-shard transactions) that notarize it have been declared **final**.
-Generally speaking, a transaction can be considered final as soon as it presents the _hyperblock coordinates_ (hyperblock nonce and hyperblock hash), when queried from the network.
-
-For more details, see [integration guide](/integrators/egld-integration-guide) and [querying the blockchain](/integrators/querying-the-blockchain).
 
 ## Wallet
 
@@ -69,6 +59,13 @@ See [transactions](/learn/transactions).
 ### How to determine the status of a transaction?
 
 See [querying the blockchain](/integrators/querying-the-blockchain).
+
+### What can be said about transactions finality?
+
+A transaction is final when the block or blocks (for cross-shard transactions) that notarize it have been declared **final**.
+Generally speaking, a transaction can be considered final as soon as it presents the _hyperblock coordinates_ (hyperblock nonce and hyperblock hash) when queried from the network, and these coordinates are under (older than) the [latest final hyperblock](/integrators/querying-the-blockchain#querying-finality-information).
+
+For more details, see [integration guide](/integrators/egld-integration-guide) and [querying the blockchain](/integrators/querying-the-blockchain).
 
 ## Accounts
 
