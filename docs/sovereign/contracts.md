@@ -17,6 +17,101 @@ Built-in bridge between sovereign chain and MultiversX Network without relayers:
     - BridgeSC on the mainchain verifies the proof and executes the transfers.
     - Sovereign validators will notarize the event of finishing transfer on the following sovereign block. By receiving the attestation logEvent directly from the mainchain.
 
+# Chain Factory Contract
+The main job of the chain factory SC is to create new sovereign chains, keep the map of all contracts related to the sovereign chains and to validate ESDT prefixes on sovereign chains.  This contract and the others from the sovereign chain stack list will not be owned by any address, upgrades will go through only after voting, and no admin keys have access to any funds. Completely permissionless start, setup and running, without the possibilities of manipulation or unintended upgrades.
+
+This contract will give out a combination of deterministic+random chain IDs for each of the sovereign chains, roughly the same way we do with creation of ESDT Token ID (the project sends the ticker of 3-8 characters and the system attaches a randomness of 6 characters to those). We will use the created chain IDs as ESDT token prefix for the sovereign chains as well. The IDs and token prefix will contain only alphanumerical characters. 
+
+The chain-factory SC will be deployed by us, however we will renounce the ownership, making it self running. And upgrade/modification will be done only through another so called “controller” contract in which we implement a full DAO of voting. The “controller” will be owned by itself, so it needs to be forward compatible, super general. Will talk about that later.
+
+## `addContractsToMap`
+```rust
+    #[only_owner]
+    #[endpoint(addContractsToMap)]
+    fn add_contracts_to_map(
+        &self,
+        contracts_map: MultiValueEncoded<Self::Api, ContractMapArgs<Self::Api>>,
+    ) 
+```
+The initial setup of the contract will be made by a user account and finally it will give the ownership to the controller. On initial setup we will add the map of address to base contract and base contracts to address. This is needed in order to use `deployContractFromSource`/`upgradeContractFromSource`. The list of needed contracts are: `chainFactorySC`, `controllerSC`, `sovereignHeaderVerifierSC`, `sovereignCrossChainOperationSC`, `chainConfigSC`, `slashingSC`. 
+
+We defined the `ContractMapArgs` structure because the contract names are put inside an `enum` because in this context it easeier to check and work with than `ManagedBuffer`. Here is the definition of the `struct` along side the `enum`. When calling this endpoint the `id` field of the structure will have a value from 0 to 6, each number representing the position of the contract's name inside the `ScArray` enum.
+
+```rust
+#[derive(TypeAbi, TopEncode, TopDecode, NestedEncode, NestedDecode, ManagedVecItem)]
+struct ContractMapArgs<M: ManagedTypeApi> {
+    id: ScArray,
+    address: ManagedAddress<M>,
+}
+
+#[derive(
+    TypeAbi, TopEncode, TopDecode, NestedEncode, NestedDecode, Clone, 
+    ManagedVecItem, PartialEq,
+)]
+pub enum ScArray {
+    ChainFactory,
+    Controller,
+    SovereignHeaderVerifier,
+    SovereignCrossChainOperation,
+    ChainConfig,
+    Slashing,
+}
+```
+
+## `deploySovereignChainConfigContract`
+```rust
+    #[payable("EGLD")]
+    #[endpoint(deploySovereignChainConfigContract)]
+    fn deploy_sovereign_chain_config_contract(
+        &self,
+        min_validators: usize,
+        max_validators: usize,
+        min_stake: BigUint,
+        chain_name: ManagedBuffer,
+        additional_stake_required: MultiValueEncoded<StakeMultiArg<Self::Api>>,
+    )
+```
+Through this contract, a sovereign chain can be deployed. Deploying a sovereign chain will cost 10eGLD. The user will send in the txData all the custom parameters through which he wants to deploy the config contract. The chainFactorySC will call `deployFromSource` and set the user as the administrator on top of the chainConfigContract, this in order to make the initial setup easily, before actually starting to run the sovereign chains.
+
+Here is what the `deployFromSource` looks inside the endpoint:
+```rust
+        let sc_address = self
+            .tx()
+            .raw_deploy()
+            .from_source(source_address)
+            .code_metadata(metadata)
+            .arguments_raw(args)
+            .returns(ReturnsNewManagedAddress)
+            .sync_call();
+```
+After the new `sc_address` is returned from the executed transaction, it will be saved into the contract's storage along side the `chain_id` as the key.
+
+## `deploySovereignCrossChainOperation@chainID`
+```rust
+    #[only_owner]
+    #[endpoint(deployCrossChainOperation)]
+    fn deploy_cross_chain_operation(
+        &self,
+        chain_id: ManagedBuffer,
+        is_sovereign_chain: bool,
+        token_handler_address: ManagedAddress,
+        opt_wegld_identifier: Option<TokenIdentifier>,
+        opt_sov_token_prefix: Option<ManagedBuffer>,
+    )
+```
+
+## `deploysovereignHeaderVerifier@chainID`
+```rust
+    #[only_owner]
+    #[endpoint(deployHeaderVerifier)]
+    fn deploy_header_verifier(
+        &self,
+        chain_id: ManagedBuffer,
+        bls_pub_keys: MultiValueEncoded<ManagedBuffer>,
+    )
+```
+Each of these endpoints have the role of deploying contracts that will help the Sovereign Chain work as it should be. the `CrossChainOperation` contract is `Enshrine ESDT` contract that we will cover up next, same with the `Sovereign Header Verifier`. Both of the endpoints have the needed parameters to initialize the contracts and call `deploy_from_source` and register the returned addresses of the new contracts and put them inside the `Chain-Factory` contract storage.
+
 # Enshrine ESDT Safe Bridge Contract
 ## `executeBridgeOps@hashOfHashes@Operation`
 ```rust
