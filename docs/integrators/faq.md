@@ -39,6 +39,13 @@ More details about the sharded architecture of MultiversX can be found [here](/l
 
 Integrators may choose to have a unified view of the network, leveraging the [hyperblock](/integrators/egld-integration-guide) abstraction.
 
+### What can be said about blocks and transactions finality?
+
+A transaction is final when the block or blocks (for cross-shard transactions) that notarize it have been declared **final**.
+Generally speaking, a transaction can be considered final as soon as it presents the _hyperblock coordinates_ (hyperblock nonce and hyperblock hash), when queried from the network.
+
+For more details, see [integration guide](/integrators/egld-integration-guide) and [querying the blockchain](/integrators/querying-the-blockchain).
+
 ## Wallet
 
 ### What signature scheme does MultiversX use?
@@ -54,6 +61,10 @@ CoinType is **508**, according to: [SLIP-0044](https://github.com/satoshilabs/sl
 The derivation path is `m/44'/508'/0'/0'/{address_index}'`. That is, the _account index_ stays fixed at `0`, while the _address index_ is allowed to vary.
 
 ## Transactions
+
+### What is the schema of a transaction?
+
+See [transactions](/learn/transactions).
 
 ### How to determine the status of a transaction?
 
