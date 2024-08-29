@@ -503,6 +503,7 @@ const sidebars = {
         ],
       },
       "integrators/walletconnect-json-rpc-methods",
+      "integrators/faq",
     ],
     Advanced: [
       {
