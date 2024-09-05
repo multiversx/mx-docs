@@ -13,10 +13,6 @@ This page will guide you through the process of handling common tasks using **sd
 This cookbook makes use of `sdk-js v13`. In order to migrate from `sdk-js v12.x` to `sdk-js v13`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-js-core/issues/392).
 :::
 
-:::important
-This page is a work in progress. Please check back later for more content.
-:::
-
 ## Creating network providers
 
 Creating an API provider:
@@ -24,7 +20,7 @@ Creating an API provider:
 ```js
 import { ApiNetworkProvider } from "@multiversx/sdk-network-providers";
 
-const apiNetworkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com");
+const apiNetworkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com", { clientName: "multiversx-your-client-name" });
 ```
 
 Creating a Proxy provider:
@@ -32,7 +28,7 @@ Creating a Proxy provider:
 ```js
 import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers";
 
-const proxyNetworkProvider = new ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
+const proxyNetworkProvider = new ProxyNetworkProvider("https://devnet-gateway.multiversx.com", { clientName: "multiversx-your-client-name" });
 ```
 
 Use the classes from `@multiversx/sdk-network-providers` **only as a starting point**.
@@ -201,7 +197,7 @@ Generally speaking, in order to create transactions that transfer native tokens 
 
 :::note
 In `sdk-core v13`, the [`TransferTransactionsFactory`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransferTransactionsFactory.html) class was extended with new methods,
-to be aligned with the [SDKs specs](https://github.com/multiversx/mx-sdk-specs/blob/main/core/transactions-factories/transfer_transactions_factory).
+to be aligned with the [SDKs specs](https://github.com/multiversx/mx-sdk-specs/blob/main/core/transactions-factories/transfer_transactions_factory.md).
 The old, legacy methods are still available (see below), thus existing client code isn't affected.
 :::
 
@@ -343,7 +339,7 @@ import BigNumber from "bignumber.js";
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
 
-console.log("Format using bignumber.js:",new BigNumber("1500000000000000000").shiftedBy(-18).toFixed(4));
+console.log("Format using bignumber.js:", new BigNumber("1500000000000000000").shiftedBy(-18).toFixed(4));
 ```
 
 You can parse amounts using `parseAmount` from `sdk-dapp`:
@@ -1072,8 +1068,4 @@ transaction.signature = await signer.sign(bytesToSign);
 
 :::note
 If you'd like to learn more about hash signing, please refer to the overview on [signing transactions](/developers/signing-transactions).
-:::
-
-:::important
-This page is a work in progress. Please check back later for more content.
 :::
