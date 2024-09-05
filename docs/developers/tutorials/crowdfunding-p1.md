@@ -212,7 +212,7 @@ It's time to add some functionality to the `init` function now, because the next
 
 [comment]: # (mx-context-auto)
 
-# **Step 4: the test**
+## **Step 4: the test**
 
 In this step you will use the `init` method to persist some values in the storage of the Crowdfunding smart contract. Afterwards, we will write a test to make sure that these values were properly stored.
 
