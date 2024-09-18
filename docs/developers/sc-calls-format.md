@@ -76,7 +76,7 @@ There are multiple ways of formatting the data field:
 
 - manually convert each argument, and then join the function name, alongside the argument via the `@` character.
 - use a pre-defined arguments serializer, such as [the one found in sdk-js](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/smartcontracts/argSerializer.ts).
-- use sdk-js's [contract calls](/sdk-and-tools/sdk-js/sdk-js-cookbook/#contract-interactions).
+- use sdk-js's [contract calls](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13/#contract-interactions).
 - use sdk-cpp's [contract calls](https://github.com/multiversx/mx-sdk-cpp/blob/main/src/smartcontracts/contract_call.cpp).
 - and so on
 
@@ -116,17 +116,19 @@ c70cf50b238372fffaf7b7c5723b06b57859d424a2da621bcc1b2f317543aa36
 
 ### Converting addresses using online tools
 
-There are multiple (_unofficial or community supported_) tools that one can use in order to convert an address into hexadecimal encoding:
+There are multiple tools that one can use in order to convert an address into hexadecimal encoding:
 
-- https://slowli.github.io/bech32-buffer/ (go to `Data`, select `erd` as Tag and `Bech32` as Encoding)
+- [https://utils.multiversx.com/converters#addresses-bech32-to-hexadecimal](https://utils.multiversx.com/converters#addresses-bech32-to-hexadecimal)
 
-- http://207.244.241.38/elrond-converters/#bech32-to-hex
+- [https://slowli.github.io/bech32-buffer](https://slowli.github.io/bech32-buffer) (go to `Data`, select `erd` as Tag and `Bech32` as Encoding)
+
+- [http://207.244.241.38/elrond-converters/#bech32-to-hex](http://207.244.241.38/elrond-converters/#bech32-to-hex)
 
 [comment]: # (mx-context-auto)
 
 ### Converting addresses using mxpy
 
-Make sure you have `mxpy` [installed](/sdk-and-tools/sdk-py/installing-mxpy/).
+Make sure you have `mxpy` [installed](/sdk-and-tools/sdk-py/installing-mxpy).
 
 ```bash
 mxpy wallet bech32 --decode erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
@@ -178,7 +180,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 ### Converting addresses using sdk-go
 
-Find more about `sdk-go` [here](/sdk-and-tools/erdgo/).
+Find more about `sdk-go` [here](/sdk-and-tools/sdk-go/).
 
 ```js
 import (
@@ -189,7 +191,7 @@ import (
 
 addressObj, err := data.NewAddressFromBech32String("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 if err != nil {
-	return err
+    return err
 }
 
 fmt.Println(hex.EncodeToString(addressObj.AddressBytes()))
@@ -208,7 +210,7 @@ import (
 
 addressBytes, err := hex.DecodeString("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
 if err != nil {
-	return err
+    return err
 }
 addressObj := data.NewAddressFromBytes(addressBytes)
 
@@ -223,7 +225,7 @@ The encoding algorithm that handles these conversions can be found [here](https:
 
 ### Converting addresses using sdk-java
 
-Find more about `sdk-java` [here](/sdk-and-tools/erdjava/).
+Find more about `sdk-java` [here](/sdk-and-tools/mxjava).
 
 ```java
 System.out.println(Address.fromBech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").hex());

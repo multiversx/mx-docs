@@ -15,7 +15,7 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy/). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
+First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
 
 [comment]: # (mx-context-auto)
 
@@ -69,7 +69,7 @@ Both can be easily installed from the "Extensions" menu in VSCode.
 Run the following command in the folder in which you want your smart contract to be created:
 
 ```
-mxpy contract new staking-contract --template empty
+mxpy contract new --name staking-contract --template empty
 ```
 
 Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
@@ -165,12 +165,12 @@ We've also added `#[view]` annotation for the storage mappers, so we can later p
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
-- https://docs.multiversx.com/developers/developer-reference/sc-api-functions/
-- https://docs.multiversx.com/developers/developer-reference/storage-mappers/
+- [https://docs.multiversx.com/developers/developer-reference/sc-api-functions](/developers/developer-reference/sc-api-functions)
+- [https://docs.multiversx.com/developers/developer-reference/storage-mappers](/developers/developer-reference/storage-mappers)
 
 Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
 
-Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html and also about the implications of cloning types from the Rust framework: https://docs.multiversx.com/developers/best-practices/biguint-operations/.
+Firstly, the last _clone_ is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: [https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) and also about the implications of cloning types from the Rust framework: [https://docs.multiversx.com/developers/best-practices/biguint-operations](/developers/best-practices/biguint-operations).
 
 Secondly, the `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
 
@@ -226,7 +226,7 @@ You can skip this section if you already have a devnet wallet setup.
 
 Let's create a devnet wallet. Access the [Web Wallet](https://devnet-wallet.multiversx.com/), and select "create new wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
-Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow these instructions: https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/
+Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow [these instructions](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file):
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 
@@ -255,7 +255,7 @@ Now that we've created a wallet, it's time to deploy our contract. **Make sure y
 ```
 
 :::note  
-If you wanted to use testnet, the proxy would be "https://testnet-gateway.multiversx.com" and the chain ID would be "T". For mainnet, it would be "https://gateway.multiversx.com" and chain ID "1".
+If you wanted to use testnet, the proxy would be `https://testnet-gateway.multiversx.com` and the chain ID would be `"T"`. For mainnet, it would be `https://gateway.multiversx.com` and chain ID `"1"`.
 
 More details can be found [here](/developers/constants/).
 :::
@@ -716,7 +716,7 @@ As you might've noticed, it can be quite a chore to keep upgrading the contract 
 - full unstake
 
 :::note
-A more detailed explanation of Rust tests can be found here: https://docs.multiversx.com/developers/developer-reference/rust-testing-framework/
+A more detailed explanation of Rust tests can be found here: https://docs.multiversx.com/developers/testing/rust/sc-test-overview/
 :::
 
 To test the previously described scenario, we're going to need a user address, and a new test function. Replace the contents of the `./tests/empty_rust_test.rs` file with the following:
@@ -878,7 +878,7 @@ To run a test, you can use click on the `Run Test` button from under the test na
 
 ![img](/developers/staking-contract-tutorial-img/running_rust_test.png)
 
-There is also a `Debug` button, which can be used to debug smart contracts. More details on that [here](/developers/developer-reference/sc-debugging/).
+There is also a `Debug` button, which can be used to debug smart contracts. More details on that [here](/developers/testing/sc-debugging/).
 
 Alternatively, you can run all the tests in the file by running the following command in the VSCode terminal, in the `./staking-contract` folder:
 

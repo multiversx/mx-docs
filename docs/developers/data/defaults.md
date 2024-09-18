@@ -8,7 +8,6 @@ Smart contracts occasionally need to interact with uninitialized data. Most nota
 
 Uninitialized storage is indistinguishable from empty storage values, or storage that has been deleted. It always acts like  
 
-
 [comment]: # (mx-context-auto)
 
 ## Built-in defaults
@@ -26,7 +25,7 @@ For instance, for all numeric types, zero is the default value, because we repre
 | `u32`                                     | `0`                            |
 | `u64`                                     | `0`                            |
 | `usize`                                   | `0`                            |
-| `BigUnt`                                  | `0`                            |
+| `BigUint`                                 | `0`                            |
 | `i8`                                      | `0`                            |
 | `i16`                                     | `0`                            |
 | `i32`                                     | `0`                            |
@@ -40,8 +39,6 @@ For instance, for all numeric types, zero is the default value, because we repre
 | `String`                                  | `"".to_string()`               |
 | `DayOfWeek` (see example above)           | `DayOfWeek::Monday`            |
 | `EnumWithEverything` (see example above)  | `EnumWithEverything::Default`  |
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -75,6 +72,8 @@ enum Either {
 If you need the default, one workaround is to place these structures inside an `Option`. Options always have the default `None`, no matter the contents.
 
 There is, however, another way to do it: for custom structures it is possible to define custom defaults, as we will see in the next section.
+
+[comment]: # (mx-context-auto)
 
 ## Custom defaults
 

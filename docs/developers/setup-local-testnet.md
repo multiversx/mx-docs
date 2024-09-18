@@ -19,7 +19,7 @@ If not specified otherwise, the localnet starts with two shards plus the metacha
 
 ## Prerequisites: mxpy
 
-In order to install **mxpy**, follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy#install-using-mxpy-up-recommended).
+In order to install **mxpy**, follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
 
 :::note
 This guide assumes you are using `mxpy v7` or newer.

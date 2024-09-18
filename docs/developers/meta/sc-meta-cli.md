@@ -11,11 +11,9 @@ As mentioned [before](/developers/meta/sc-meta#standalone-tool-vs-contract-tool)
 
 We will go through the CLI of both of these flavors.
 
-
 [comment]: # (mx-exclude-context)
 
 ## Standalone tool CLI
-
 
 [comment]: # (mx-context-auto)
 
@@ -51,21 +49,20 @@ cargo run build
 ```
 :::
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
 - `--ignore`
     - Ignore all directories with these names.
     - _default_: `target`.
-- `--no-abi-git-version
+- `--no-abi-git-version`
     - Skips loading the Git version into the ABI
 - `--target-dir-meta`
     - For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
     - _default_: uses the workspace, or builds in `meta/target`.
 - `--target-dir-all`
     - Overrides both the `--target-dir-meta` and the `--target-dir-wasm` args.
-
 
 [comment]: # (mx-context-auto)
 
@@ -77,14 +74,13 @@ As an example, below is the output of calling it in the example contract folder 
 
 ![sc-meta info screenshot](/developers/sc-meta/sc-meta-info.png "Result of calling sc-meta info in the example contract folder in the framework")
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
 - `--ignore`
     - Ignore all directories with these names.
     - _default_: `target`.
-
 
 [comment]: # (mx-context-auto)
 
@@ -104,7 +100,7 @@ For projects with multiple contract crates, we recommend upgrading all of them a
 Generally, we strongly recommend to ensure code versioning or at least a backup of the contract code to avoid the impossibility of reverting permanent changes. This automatic code altering process involved in using `sc-meta upgrade` highly raises this recommendation.
 :::
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -114,6 +110,9 @@ Paramameters:
 - `--to`
     - Overrides the version to upgrade to.
     - _default_: the last released version.
+- `--no-check`
+    - By default `upgrade` compile checks the project after each major version upgrade. This is to allow developers that upgrade multiple versions to address issues with the upgrade before too many such issues get to accumulate. This feature can be turned off by the `--no-check` flag.
+    - _default_: project is compiled.
 
 [comment]: # (mx-context-auto)
 
@@ -152,7 +151,7 @@ Example output (abridged):
 }
 ```
 
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -173,7 +172,7 @@ The tool will replace all necessary names in the project, based on the the proje
 - the contract trait name,
 - the file name of the main source file.
 
-Paramameters:
+Parameters:
 - `--template`
     - The contract template to clone. Available options can be retrieve by using [this](/developers/meta/sc-meta-cli#calling-templates)
     - Required.
@@ -187,8 +186,6 @@ Paramameters:
     - Target directory where to create the new contract directory.
     - _default_: current directory.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Calling `templates`
@@ -201,17 +198,44 @@ empty
 adder
 ```
 
-Paramameter:
+Parameter:
 - `--tag`
     -  The framework version on which the contracts should be created.
     - _default_: The latest released version.
 
+[comment]: # (mx-context-auto)
+
+### Calling `test`
+
+This command is a useful shorthand for running various types of tests.
+
+Parameters:
+- `--path`  
+    - Target directory where to generate contract integration tests.
+    - _default_: current directory.
+- `--go`            
+    - Use this argument to only run the mx-scenario-go tool, directly. It is equivalent to running `mx-scenario-go run`.
+    - You can find out how to install `mx-scenario-go` [here](/developers/meta/sc-meta-cli#calling-install).
+    - _default_: `false`
+- `--scen`          
+    - This argument causes cargo test to be run with the `multiversx-sc-scenario/run-go-tests` feature, causing tests relying on the mx-scenairo-go tool to also be run.
+    - _default_: `false`
+    - If `scen` and `go` are both specified, scen overrides the go argument.
+- `--nocapture`    
+    - This argument prints the entire output of the vm.
+    - _default_: `false`
+- `--help`        
+    - Print help
+- `--version`      
+    - Print version
 
 [comment]: # (mx-context-auto)
 
 ### Calling `test-gen`
 
-<!-- TODO: expand section and move to a separate page -->
+The `test-gen` tool is used to [generate boilerplate](/developers/testing/scenario/running-scenarios#auto-generating-the-boilerplate) code when [integrating JSON scenario files in a contract's Rust test suite](/developers/testing/scenario/running-scenarios#integration-in-rust).
+
+In short:
 
 Contracts often have JSON scenario tests associated with them, which normally reside in the `scenarios` folder, under the contract crate root.
 
@@ -221,55 +245,9 @@ These integration tests come in two flavors:
 - Rust tests, that exclusively use the Rust debugger infrastructure;
 - VM tests that use the Go infrastructure.
 
-An example:
+Read more about JSON scenarios in smart contract projects [here](/developers/testing/scenario/running-scenarios).
 
-```rust title="adder/tests/adder_scenario_rs_test.rs"
-use multiversx_sc_scenario::*;
-
-fn world() -> ScenarioWorld {
-    let mut blockchain = ScenarioWorld::new();
-    blockchain.set_current_dir_from_workspace("contracts/examples/adder");
-
-    blockchain.register_contract("file:output/adder.wasm", adder::ContractBuilder);
-    blockchain
-}
-
-#[test]
-fn adder_rs() {
-    world().run("scenarios/adder.scen.json");
-}
-
-#[test]
-fn interactor_trace_rs() {
-    world().run("scenarios/interactor_trace.scen.json");
-}
-```
-
-```rust title="adder/tests/adder_scenario_go_test.rs"
-use multiversx_sc_scenario::*;
-
-fn world() -> ScenarioWorld {
-    ScenarioWorld::vm_go()
-}
-
-#[test]
-fn adder_go() {
-    world().run("scenarios/adder.scen.json");
-}
-
-#[test]
-fn interactor_trace_go() {
-    world().run("scenarios/interactor_trace.scen.json");
-}
-```
-
-The `world()` definition is expected form the developer, but the tests themselves are generated and updated automatically when calling `sc-meta test-gen`.
-
-:::caution
-The tool does not work well with code that is commented-out. In order to temporarily disable a test, annotate it with `#[ignore]`.
-:::
-
-Paramameters:
+Parameters:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
@@ -279,13 +257,59 @@ Paramameters:
 - `--create`
     - Creates test files if they don't exist.
 
+[comment]: # (mx-exclude-context)
 
+### Calling `install`
+
+This command can be used to quickly install other tools needed for smart contract development, interaction and testing.
+
+Parameters:
+- `all`
+    - Installs all the known tools.
+- `mx-scenario-go`
+    - Installs the `mx-scenario-go` tool.
+    - Can further specify the framework version on which the contracts should be created by using `--tag`
 
 ---
 
 [comment]: # (mx-exclude-context)
 
 ## Individual contract CLI
+
+[comment]: # (mx-context-auto)
+
+### Calling `abi`
+
+ABI generation can be triggered by calling `sc-meta all abi` or `cargo run abi` in the contract root folder. This command generates the main ABI file of the contract (`<contract>.abi.json`) along with all the other json files created if `#[esdt_attribute("name", type)]` was used (`<name>.esdt-abi.json`). You can read more about ESDT Attribute ABI [here](/developers/data/abi#esdt-attribute-abi).
+
+ABI generation will also be triggered for all the other contract commands, such as `build`, `build-dbg`, `update`, etc. The `abi` command is for when we just want to generate the ABI and do nothing else.
+
+For a simple contract such as:
+
+```rust title=lib.rs
+#[multiversx_sc::contract]
+#[esdt_attribute("myTicker", u64)]
+pub trait SomeContract {
+    #[init]
+    fn init(&self) {}
+}
+```
+
+The produced files are:
+
+```text
+output
+├── myTicker.esdt-abi.json
+└── some_contract.abi.json
+```
+
+Arguments:
+
+- `--path` Used to specify a target directory where to call all contract meta crates. Will be current directory if not specified.
+- `--ignore` Followed by a name is used to ignore all directories with these names [default: `target`].
+- `--no-abi-git-version` Skips loading the Git version into the ABI
+- `--target-dir-meta` For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
+- `--target-dir-all` Overrides both the `--target-dir-meta` and the `--target-dir-wasm` args.
 
 [comment]: # (mx-context-auto)
 
@@ -370,8 +394,21 @@ Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate w
 
 ### Calling `snippets`
 
-Calling `cargo run snippets` in the meta crate will create a project called `interact-rs` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
+Calling `cargo run snippets` in the meta crate or `sc-meta all snippets` in the root crate will create a project called `interactor` in the contract main directory, containing auto-generated boilerplate code for building an interactor for the current contract.
 
-An interactor is a small tool, meant for developers to interact with the contract on-chain. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. There will be more documentation in the works on this topic.
+An interactor is a small tool, meant for developers to interact with the contract on-chain and write system tests. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. 
 
+Inside the `interactor` project there is the small interactor file, `interact_main.rs`, as well as a newly generated contract proxy. The `sc-config.toml` file of the contract (if existent) will be updated with the newly created proxy path (to the interactor project) or created from scratch if not existent.
+
+After calling `sc-meta all snippets` in the `factorial` smart contract crate, we get:
+![img](/img/snippets_folder_structure.png)
+
+
+Parameters:
+- `--overwrite` Override snippets project if it already exists. Rewrites `sc-config.toml` as well, placing only interactor as proxy path.
+- `--path` Target directory where to call all contract meta crates. Will be current directory if not specified.
+- `--ignore` Ignore all directories with these names. [default: target]
+- `--no-abi-git-version` Skips loading the Git version into the ABI.
+- `--target-dir-meta` For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
+- `--target-dir-all` Overrides both the --target-dir-meta and the --target-dir-wasm args.
 

@@ -5,393 +5,688 @@ title: Cookbook
 
 [comment]: # (mx-abstract)
 
+[comment]: # (mx-context-auto)
+
 ## Overview
 
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries).
 
 :::note
-All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py-examples)**.
+All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/main/examples/Cookbook.ipynb)**.
 :::
 
-We are going to make use of the packages [multiversx-sdk-core](https://github.com/multiversx/mx-sdk-py-core), [multiversx-sdk-wallet](https://github.com/multiversx/mx-sdk-py-wallet) and [multiversx-sdk-network-providers](https://github.com/multiversx/mx-sdk-py-network-providers) (available as of January 2023), which were previously nicknamed _erdpy-eggs_. These packages can be installed directly from GitHub or from [**PyPI**](https://pypi.org/user/MultiversX). 
+We are going to use the [multiversx-sdk-py](https://github.com/multiversx/mx-sdk-py) package. This package can be installed directly from GitHub or from [**PyPI**](https://pypi.org/project/multiversx-sdk/).
 
-Example for installing the packages directly from GitHub, using a `requirements.txt` file:
+Example for installing the package directly from GitHub, using a `requirements.txt` file:
 
 ```
-git+https://git@github.com/multiversx/mx-sdk-py-core.git@v1.2.3#egg=multiversx_sdk_core
-git+https://git@github.com/multiversx/mx-sdk-py-wallet.git@v4.5.6#egg=multiversx_sdk_wallet
-git+https://git@github.com/multiversx/mx-sdk-py-network-providers.git@v7.8.9#egg=multiversx_sdk_network_providers
+git+https://git@github.com/multiversx/mx-sdk-py.git@v1.2.3#egg=multiversx_sdk
 ```
 
-These packages are distributed separately and have individual release schedules (make sure to check the **release tags on GitHub**), but they are designed to work together, with as little impedance mismatch as possible.
-
-:::important
-Documentation is preliminary and subject to change (the packages might suffer a series of breaking changes in 2023).
-:::
-
-<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py-examples/main/Cookbook.ipynb" } -->
-
-[comment]: # (mx-context-auto)
+<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py/main/examples/Cookbook.ipynb" } -->
 
 ## Addresses
 
 Create an `Address` object from a _bech32-encoded_ string:
 
-```
-from multiversx_sdk_core import Address
+```py
+from multiversx_sdk import Address
 
-address = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+address = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
-print("Address (bech32-encoded)", address.bech32())
-print("Public key (hex-encoded):", address.hex())
+print("Address (bech32-encoded)", address.to_bech32())
+print("Public key (hex-encoded):", address.to_hex())
 print("Public key (hex-encoded):", address.pubkey.hex())
 ```
 
 ... or from a _hex-encoded_ string - note that you have to provide the address prefix, also known as the **HRP** (_human-readable part_ of the address):
 
-```
-address = Address.from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1", "erd");
+```py
+address = Address.new_from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1", "erd")
 ```
 
 ... or from a raw public key:
 
-```
+```py
 pubkey = bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
 address = Address(pubkey, "erd")
 ```
 
 Alternatively, you can use an `AddressFactory` (initialized with a specific **HRP**) to create addresses:
 
-```
-from multiversx_sdk_core import AddressFactory
+```py
+from multiversx_sdk import AddressFactory
 
 factory = AddressFactory("erd")
 
 address = factory.create_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 address = factory.create_from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
-address = factory.create_from_pubkey(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
+address = factory.create_from_public_key(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
 ```
 
 Addresses can be converted from one representation to another as follows:
 
-```
-print(address.bech32())
-print(address.hex())
-```
-
-... or using a converter:
-
-```
-from multiversx_sdk_core import AddressConverter
-
-converter = AddressConverter("erd")
-
-pubkey = converter.bech32_to_pubkey("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-bech32 = converter.pubkey_to_bech32(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
+```py
+print(address.to_bech32())
+print(address.to_hex())
 ```
 
 Getting the shard of an address:
 
-```
-print("Shard:", address.get_shard())
+```py
+from multiversx_sdk import AddressComputer
+
+address_computer = AddressComputer(number_of_shards=3)
+print("Shard:", address_computer.get_shard_of_address(address))
 ```
 
 Checking whether an address is a smart contract:
 
-```
-address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+```py
+address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
 
 print("Is contract:", address.is_smart_contract())
 ```
-
-[comment]: # (mx-context-auto)
 
 ## EGLD / ESDT transfers
 
 Create an EGLD transfer:
 
-```
-from multiversx_sdk_core import Address, TokenPayment, Transaction
+```py
+from multiversx_sdk import Transaction, TransactionsConverter
 
-tx = Transaction(
-    nonce=90,
-    sender=Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
-    receiver=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
-    value=TokenPayment.egld_from_amount("1.0"),
+transaction = Transaction(
+    sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+    receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
     gas_limit=50000,
-    gas_price=1000000000,
     chain_id="D",
-    version=1
+    nonce=77,
+    value=1000000000000000000
 )
 
-print(tx.to_dictionary())
+transaction_converter = TransactionsConverter()
+print(transaction_converter.transaction_to_dictionary(transaction))
 ```
+
+In case you are using a **guarded** account you should also populate the `guardian` and `guardian_signature` fields after creating the transaction.
 
 We'll see later how to [sign](#signing-objects) and [broadcast](#broadcasting-transactions) a transaction.
 
 Create an EGLD transfer, but this time with a payload (data):
 
-```
-from multiversx_sdk_core import TransactionPayload
-
-data = TransactionPayload.from_str("for the book")
-
-tx = Transaction(
-    nonce=91,
-    sender=Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
-    receiver=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
-    value=TokenPayment.egld_from_amount("3.0"),
-    data=data,
-    gas_limit=50000 + 1500 * data.length(),
-    gas_price=1000000000,
+```py
+transaction = Transaction(
+    sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+    receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+    gas_limit=50000,
     chain_id="D",
-    version=1
+    nonce=77,
+    value=1000000000000000000,
+    data=b"for the book"
 )
 
-print(tx.to_dictionary())
+print(transaction_converter.transaction_to_dictionary(transaction))
 ```
 
-Alternatively, we can create an EGLD transfer using a **transaction builder** (as we will see below, transaction builders are more commonly used). But before that, we have to create a configuration object (for any builder that we might use):
+Alternatively, we can create an EGLD transfer using a **transaction factory** (as we will see below, transaction factories are more commonly used). But before that, we have to create a configuration object (for any factory that we might use):
 
+```py
+from multiversx_sdk import TransactionsFactoryConfig
+
+config = TransactionsFactoryConfig(chain_id="D")
 ```
-from multiversx_sdk_core.transaction_builders import DefaultTransactionBuildersConfiguration
 
-config = DefaultTransactionBuildersConfiguration(chain_id="D")
-```
+The **transaction factory** is parametrized at instantiation, and the transaction is obtained by invoking the `create_transaction...` method:
 
-The **transaction builder** is parametrized at instantiation, and the transaction is obtained by invoking the `build()` method:
+```py
+from multiversx_sdk import TransferTransactionsFactory
 
-```
-from multiversx_sdk_core.transaction_builders import EGLDTransferBuilder
-
-alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
-payment = TokenPayment.egld_from_amount("1.00")
+transfer_factory = TransferTransactionsFactory(config=config)
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
 # With "data" field
-builder = EGLDTransferBuilder(
-    config=config,
+transaction = transfer_factory.create_transaction_for_native_token_transfer(
     sender=alice,
     receiver=bob,
-    payment=payment,
-    data="for the book",
-    # Nonce can be set now, or later, prior signing
-    nonce=42
+    native_amount=1000000000000000000,
+    data="for the book"
 )
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
 ```
 
 Create a single ESDT transfer:
 
-```
-from multiversx_sdk_core.transaction_builders import ESDTTransferBuilder
+```py
+from multiversx_sdk import Token, TokenTransfer
 
-payment = TokenPayment.fungible_from_amount("TEST-8b028f", "100.00", 2)
+token = Token("TEST-8b028f")
+transfer = TokenTransfer(token, 10000)
 
-builder = ESDTTransferBuilder(
-    config=config,
+transaction = transfer_factory.create_transaction_for_esdt_token_transfer(
     sender=alice,
     receiver=bob,
-    payment=payment
+    token_transfers=[transfer]
 )
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
 ```
 
 Create a single NFT transfer:
 
-```
-from multiversx_sdk_core.transaction_builders import ESDTNFTTransferBuilder
+Keep in mind, since we are sending a NFT, we **should** set the amount to `1`.
 
-payment = TokenPayment.non_fungible("TEST-38f249", 1)
+```py
+token = Token(identifier="TEST-38f249", nonce=1)
+transfer = TokenTransfer(token=token, amount=1)
 
-builder = ESDTNFTTransferBuilder(
-    config=config,
+transaction = transfer_factory.create_transaction_for_esdt_token_transfer(
     sender=alice,
-    destination=bob,
-    payment=payment
+    receiver=bob,
+    token_transfers=[transfer]
 )
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
 ```
 
-Create a single SFT transfer (almost the same as above, the only difference being that for the token payment object we additionally use a quantity, as an integer):
+Create a single SFT transfer (almost the same as above, the only difference being that for the transfer we set the desired amount, as an integer):
 
-```
-payment = TokenPayment.semi_fungible("SEMI-9efd0f", 1, 5)
+```py
+token = Token(identifier="SEMI-9efd0f", nonce=1)
+transfer = TokenTransfer(token=token, amount=5)
 
-builder = ESDTNFTTransferBuilder(
-    config=config,
+transaction = transfer_factory.create_transaction_for_esdt_token_transfer(
     sender=alice,
-    destination=bob,
-    payment=payment
+    receiver=bob,
+    token_transfers=[transfer]
 )
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
 ```
 
 Create a multiple ESDT / NFT transfer:
 
-```
-from multiversx_sdk_core.transaction_builders import MultiESDTNFTTransferBuilder
+```py
+first_token = Token(identifier="TEST-38f249", nonce=1)
+first_transfer = TokenTransfer(token=first_token, amount=1)
 
-payment_one = TokenPayment.non_fungible("TEST-38f249", 1)
-payment_two = TokenPayment.fungible_from_amount("BAR-c80d29", "10.00", 18)
+second_token = Token(identifier="BAR-c80d29")
+second_transfer = TokenTransfer(token=second_token, amount=10000000000000000000)
 
-builder = MultiESDTNFTTransferBuilder(
-    config=config,
+transaction = transfer_factory.create_transaction_for_esdt_token_transfer(
     sender=alice,
-    destination=bob,
-    payments=[payment_one, payment_two]
+    receiver=bob,
+    token_transfers=[first_transfer, second_transfer]
 )
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
 ```
 
-[comment]: # (mx-context-auto)
+### Decoding Transactions
 
-## Contract deployments and interactions
+For example, when sending multiple ESDT and NFT tokens, the receiver field of the transaction is the same as the sender field and also the value is set to `0` because all the information is encoded in the `data` field of the transaction.
 
-Create a transaction to deploy a smart contract:
+For decoding the data field we have a so called `TransactionDecoder`. We fetch the transaction from the network and then use the decoder.
 
+```py
+from multiversx_sdk import ProxyNetworkProvider, TransactionDecoder
+
+proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
+transaction = proxy.get_transaction("3e7b39f33f37716186b6ffa8761d066f2139bff65a1075864f612ca05c05c05d")
+
+decoder = TransactionDecoder()
+decoded_transaction = decoder.get_transaction_metadata(transaction)
+
+print(decoded_transaction.to_dict())
 ```
+
+## Relayed Transactions
+
+First, we get the newtwork configuration using the network providers.
+
+```py
+from multiversx_sdk import ProxyNetworkProvider
+
+provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+network_config = provider.get_network_config()
+```
+
+### Relayed V1
+
+```py
 from pathlib import Path
 
-from multiversx_sdk_core import CodeMetadata
-from multiversx_sdk_core.transaction_builders import ContractDeploymentBuilder
+from multiversx_sdk import (Address, Transaction, TransactionComputer,
+                            RelayedTransactionsFactory, TransactionsFactoryConfig,
+                            UserSigner)
 
-metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
+signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/bob.pem"))
+transaction_computer = TransactionComputer()
 
-builder = ContractDeploymentBuilder(
-    config,
-    owner=alice,
-    deploy_arguments=[42, "test"],
-    code_metadata=metadata,
-    code=Path("./contracts/contract.wasm").read_bytes(),
-    gas_limit=10000000
+inner_tx = Transaction(
+    chain_id=network_config.chain_id,
+    sender="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+    receiver="erd1qqqqqqqqqqqqqpgqqczn0ccd2gh8eqdswln7w9vzctv0dwq7d8ssm4y34z",
+    gas_limit=60000000,
+    nonce=198,
+    data=b"add@05"
 )
+inner_tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(inner_tx))
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
-```
+config = TransactionsFactoryConfig(chain_id="D")
+factory = RelayedTransactionsFactory(config=config)
+relayer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
-Create a transaction to upgrade an existing smart contract:
-
-```
-from multiversx_sdk_core.transaction_builders import ContractUpgradeBuilder
-
-contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
-owner = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
-
-builder = ContractUpgradeBuilder(
-    config,
-    contract=contract_address,
-    owner=owner,
-    upgrade_arguments=[42, "test"],
-    code_metadata=metadata,
-    code=Path("./contracts/contract.wasm").read_bytes(),
-    gas_limit=10000000
+relayed_tx = factory.create_relayed_v1_transaction(
+    inner_transaction=inner_tx,
+    relayer_address=relayer
 )
+relayed_tx.nonce = 2627
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print(transaction_converter.transaction_to_dictionary(relayed_tx))
 ```
 
-Create a transaction that invokes a smart contract function:
+### Relayed V2
 
-```
-from multiversx_sdk_core.transaction_builders import ContractCallBuilder
+```py
+from pathlib import Path
 
-contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+from multiversx_sdk import (Address, Transaction, TransactionComputer,
+                            RelayedTransactionsFactory, TransactionsFactoryConfig,
+                            UserSigner)
 
-builder = ContractCallBuilder(
-    config,
-    contract=contract_address,
-    function_name="foo",
-    caller=alice,
-    call_arguments=[42, "test", bob],
-    gas_limit=10000000
+signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/bob.pem"))
+transaction_computer = TransactionComputer()
+
+# for the relayedV2 transactions, the gasLimit for the inner transaction should be 0
+inner_tx = Transaction(
+            chain_id=network_config.chain_id,
+            sender="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            receiver="erd1qqqqqqqqqqqqqpgqqczn0ccd2gh8eqdswln7w9vzctv0dwq7d8ssm4y34z",
+            gas_limit=0,
+            nonce=15,
+            data=b"add@05"
+        )
+inner_tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(inner_tx))
+
+config = TransactionsFactoryConfig(chain_id="D")
+factory = RelayedTransactionsFactory(config=config)
+relayer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+
+relayed_tx = factory.create_relayed_v2_transaction(
+    inner_transaction=inner_tx,
+    inner_transaction_gas_limit=60_000_000,
+    relayer_address=relayer
 )
+relayed_tx.nonce = 37
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print(transaction_converter.transaction_to_dictionary(relayed_tx))
 ```
 
-Now, let's create a call that also transfers one or more tokens (**transfer & execute**):
+## Contract ABIs
 
+A contract's ABI describes the endpoints, data structure and events that a contract exposes. While contract interactions are possible without the ABI, they are easier to implement when the definitions are available.
+
+### Load the ABI from a file
+
+```py
+from multiversx_sdk.abi import Abi, AbiDefinition
+
+abi_definition = AbiDefinition.load(Path("./contracts/adder.abi.json"))
+abi = Abi(abi_definition)
 ```
-transfers = [
-    TokenPayment.non_fungible("TEST-38f249", 1),
-    TokenPayment.fungible_from_amount("BAR-c80d29", "10.00", 18)
-]
 
-builder = ContractCallBuilder(
-    config,
-    contract=contract_address,
-    function_name="hello",
-    caller=alice,
-    call_arguments=[42, "test", bob],
+Or even simpler:
+
+```py
+abi = Abi.load(Path("./contracts/adder.abi.json"))
+```
+
+### Manually construct the ABI
+
+If an ABI file isn't directly available, but you do have knowledge of the contract's endpoints and types, you can manually construct the ABI. Let's see a simple example:
+
+```py
+abi_definition = AbiDefinition.from_dict({
+    "endpoints": [{
+        "name": "add",
+        "inputs": [
+            {
+                "name": "value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    }]
+})
+```
+
+An endpoint with both inputs and outputs:
+
+```py
+abi_definition = AbiDefinition.from_dict({
+    "endpoints": [
+        {
+            "name": "foo",
+            "inputs": [
+                { "type": "BigUint" },
+                { "type": "u32" },
+                { "type": "Address" }
+            ],
+            "outputs": [
+                { "type": "u32" }
+            ]
+        },
+        {
+            "name": "bar",
+            "inputs": [
+                { "type": "counted-variadic<utf-8 string>" },
+                { "type": "variadic<u64>" }
+            ],
+            "outputs": []
+        }
+    ]
+})
+```
+
+## Contract deployments
+
+### Load the bytecode from a file
+
+```py
+from pathlib import Path
+
+bytecode = Path("contracts/adder.wasm").read_bytes()
+```
+
+### Perform a contract deployment
+
+First, let's create a `SmartContractTransactionsFactory`:
+
+```py
+from multiversx_sdk import SmartContractTransactionsFactory
+
+factory = SmartContractTransactionsFactory(config)
+```
+
+If the contract ABI is available, provide it to the factory:
+
+```py
+abi = Abi.load(Path("contracts/adder.abi.json"))
+factory = SmartContractTransactionsFactory(config, abi)
+```
+
+Now, prepare the deploy transaction:
+
+```py
+from multiversx_sdk.abi import U32Value
+
+# For deploy arguments, use typed value objects if you haven't provided an ABI to the factory:
+args = [U32Value(42)]
+# Or use simple, plain Python values and objects if you have provided an ABI to the factory:
+args = [42]
+
+deploy_transaction = factory.create_transaction_for_deploy(
+    sender=alice,
+    bytecode=bytecode,
+    arguments=args,
     gas_limit=10000000,
-    esdt_transfers=transfers
+    is_upgradeable=True,
+    is_readable=True,
+    is_payable=True,
+    is_payable_by_sc=True
 )
 
-tx = builder.build()
-print("Transaction:", tx.to_dictionary())
-print("Transaction data:", tx.data)
+print("Transaction:", transaction_converter.transaction_to_dictionary(deploy_transaction))
+print("Transaction data:", deploy_transaction.data.decode())
 ```
 
-[comment]: # (mx-context-auto)
+:::tip
+When creating transactions using `SmartContractTransactionsFactory`, even if the ABI is available and provided,
+you can still use _typed value_ objects as arguments for deployments and interactions.
+
+Even further, you can use a mix of _typed value_ objects and plain Python values and objects. For example:
+```
+args = [U32Value(42), "hello", { "foo": "bar" }, TokenIdentifierValue("TEST-abcdef")];
+```
+:::
+
+:::note
+Setting the transaction nonce, signing a transaction and broadcasting it are depicted in a later section.
+:::
+
+### Computing the contract address
+
+Even before broadcasting, at the moment you know the sender address and the nonce for your deployment transaction, you can (deterministically) compute the (upcoming) address of the contract:
+
+```py
+from multiversx_sdk import AddressComputer
+
+address_computer = AddressComputer()
+contract_address = address_computer.compute_contract_address(
+    deployer=Address.new_from_bech32(deploy_transaction.sender),
+    deployment_nonce=deploy_transaction.nonce
+)
+
+print("Contract address:", contract_address.to_bech32())
+```
+
+### Parsing transaction outcome
+
+In the end, you can parse the results using a `SmartContractTransactionsOutcomeParser`. However, since the `parse_deploy` method requires a `TransactionOutcome` object as input, we need to first convert our `TransactionOnNetwork` object to a `TransactionOutcome`, by means of a `TransactionsConverter`.
+
+```py
+from multiversx_sdk import SmartContractTransactionsOutcomeParser, TransactionsConverter
+
+converter = TransactionsConverter()
+parser = SmartContractTransactionsOutcomeParser()
+
+transaction_on_network = proxy.get_transaction("0a7da74038244790b5bd4cd614c26cd5a6be76a6fcfcfb037974cc116b2ee9c6")
+transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
+parsed_outcome = parser.parse_deploy(transaction_outcome)
+
+print(parsed_outcome)
+```
+
+## Contract upgrades
+
+Contract upgrade transactions are similar to deployment transactions (see above), in the sense that they also require a contract bytecode. In this context, though, the contract address is already known.
+
+```py
+contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+bytecode = Path("./contracts/adder.wasm").read_bytes()
+
+upgrade_transaction = factory.create_transaction_for_upgrade(
+    sender=alice,
+    contract=contract_address,
+    bytecode=bytecode,
+    gas_limit=10000000,
+    arguments=[42],
+    is_upgradeable=True,
+    is_readable=True,
+    is_payable=True,
+    is_payable_by_sc=True
+)
+
+print("Transaction:", transaction_converter.transaction_to_dictionary(upgrade_transaction))
+print("Transaction data:", upgrade_transaction.data.decode())
+```
+
+## Contract interactions
+
+The recommended way to create transactions for calling (and, for that matter, deploying and upgrading) smart contracts is through a `SmartContractTransactionsFactory`.
+
+```py
+from multiversx_sdk import SmartContractTransactionsFactory
+
+factory = SmartContractTransactionsFactory(config)
+```
+
+If the contract ABI is available, provide it to the factory:
+
+```py
+abi = Abi.load(Path("contracts/adder.abi.json"))
+factory = SmartContractTransactionsFactory(config, abi)
+```
+
+### Regular interactions
+
+Now, let's prepare a contract transaction, to call the `add` function of our previously deployed smart contract:
+
+```py
+contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqws44xjx2t056nn79fn29q0rjwfrd3m43396ql35kxy")
+
+# For arguments, use typed value objects if you haven't provided an ABI to the factory:
+args = [U32Value(42)]
+# Or use simple, plain Python values and objects if you have provided an ABI to the factory:
+args = [42]
+
+transaction = factory.create_transaction_for_execute(
+    sender=alice,
+    contract=contract_address,
+    function="add",
+    gas_limit=10000000,
+    arguments=args
+)
+
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
+```
+
+:::tip
+When creating transactions using `SmartContractTransactionsFactory`, even if the ABI is available and provided,
+you can still use _typed value_ objects as arguments for deployments and interactions.
+
+Even further, you can use a mix of _typed value_ objects and plain Python values and objects. For example:
+```
+args = [U32Value(42), "hello", { "foo": "bar" }, TokenIdentifierValue("TEST-abcdef")];
+```
+:::
+
+:::note
+Setting the transaction nonce, signing a transaction and broadcasting it are depicted in a later section.
+:::
+
+### Transfer & execute
+
+At times, you may want to send some tokens (native EGLD or ESDT) along with the contract call.
+
+For transfer & execute with native EGLD, prepare your transaction as follows:
+
+```py
+transaction = factory.create_transaction_for_execute(
+    sender=alice,
+    contract=contract_address,
+    function="add",
+    gas_limit=10000000,
+    arguments=[42],
+    native_transfer_amount=1000000000000000000
+)
+```
+
+Above, we're sending 1 EGLD along with the contract call.
+
+For transfer & execute with ESDT tokens, prepare your transaction as follows:
+
+```py
+first_token = Token("TEST-38f249", 1)
+first_transfer = TokenTransfer(first_token, 1)
+
+second_token = Token("BAR-c80d29")
+second_transfer = TokenTransfer(second_token, 10000000000000000000)
+
+transfers = [first_transfer, second_transfer]
+
+transaction = factory.create_transaction_for_execute(
+    sender=alice,
+    contract=contract_address,
+    function="add",
+    gas_limit=10000000,
+    arguments=[42],
+    token_transfers=transfers
+)
+
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
+```
+
+### Parsing transaction outcome
+
+:::note
+Documentation in this section is preliminary and subject to change.
+:::
+
+### Decode transaction events
+
+:::note
+Documentation in this section is preliminary and subject to change.
+:::
 
 ## Contract queries
 
-In order to create a contract query and run it against a network provider (more details about **network providers** can be found below), do as follows:
+In order to perform Smart Contract queries, we recommend the use of `SmartContractQueriesController`.
+
+You will notice that the `SmartContractQueriesController` requires a `QueryRunner` object at initialization. A `NetworkProvider`, slighly adapted, is used to satisfy this requirement (more details about **network providers** can be found in a later section).
+
+```py
+from multiversx_sdk import (ProxyNetworkProvider, QueryRunnerAdapter,
+                            SmartContractQueriesController)
+
+contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4")
+query_runner = QueryRunnerAdapter(ProxyNetworkProvider("https://devnet-api.multiversx.com"))
+
+query_controller = SmartContractQueriesController(query_runner)
 
 ```
-from multiversx_sdk_core import ContractQueryBuilder
-from multiversx_sdk_core.interfaces import IAddress
-from multiversx_sdk_network_providers import ApiNetworkProvider
 
-contract: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqpgqnzm7yhayarylux045qlm4lgzmtcsgrqg396qr9kupx")
+If the contract ABI is available, provide it to the controller:
 
-builder = ContractQueryBuilder(
-    contract=contract,
+```py
+abi = Abi.load(Path("contracts/adder.abi.json"))
+query_controller = SmartContractQueriesController(query_runner, abi)
+```
+
+Query the contract as follows:
+
+```py
+data_parts = query_controller.query(
+    contract=contract.to_bech32(),
     function="getSum",
-    call_arguments=[],
-    caller=alice
+    arguments=[],
 )
 
-query = builder.build()
-
-network_provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
-response = network_provider.query_contract(query)
-
-print("Return code:", response.return_code)
-print("Return data:", response.return_data)
+print("Return data (parsed):", data_parts)
 ```
 
-[comment]: # (mx-context-auto)
+For finer control, first create a contract query, then run it and parse the outcome at a later time:
+
+```py
+query = query_controller.create_query(
+    contract=contract.to_bech32(),
+    function="getSum",
+    arguments=[],
+)
+
+response = query_controller.run_query(query)
+data_parts = query_controller.parse_query_response(response)
+
+print("Return code:", response.return_code)
+print("Return data (raw):", response.return_data_parts)
+print("Return data (parsed):", data_parts)
+```
 
 ## Creating wallets
 
 Mnemonic generation is based on [`trezor/python-mnemonic`](https://github.com/trezor/python-mnemonic) and can be achieved as follows:
 
-```
-from multiversx_sdk_wallet import Mnemonic
+```py
+from multiversx_sdk import Mnemonic
 
 mnemonic = Mnemonic.generate()
 words = mnemonic.get_words()
@@ -401,41 +696,52 @@ print(words)
 
 The mnemonic can be saved to a keystore file:
 
-```
-from multiversx_sdk_wallet import UserWallet
+```py
+from multiversx_sdk import UserWallet
+from pathlib import Path
+
+path = Path("./output")
+if not path.exists():
+    path.mkdir(parents=True, exist_ok=True)
 
 wallet = UserWallet.from_mnemonic(mnemonic.get_text(), "password")
-wallet.save(Path("./output/walletWithMnemonic.json"))
+wallet.save(path / "walletWithMnemonic.json")
 ```
 
 Given a mnemonic, one can derive keypairs:
 
-```
+```py
 secret_key = mnemonic.derive_key(0)
 public_key = secret_key.generate_public_key()
 
-print("Secret key", secret_key.hex())
-print("Public key", public_key.hex())
+print("Secret key:", secret_key.hex())
+print("Public key:", public_key.hex())
 ```
 
 A keypair can be saved as a JSON wallet:
 
-```
+```py
+path = Path("./output")
+if not path.exists():
+    path.mkdir(parents=True, exist_ok=True)
+
 wallet = UserWallet.from_secret_key(secret_key, "password")
-wallet.save(Path("./output/wallet.json"), address_hrp="erd")
+wallet.save(path / "wallet.json", address_hrp="erd")
 ```
 
 ... or as a PEM wallet (usually not recommended):
 
-```
-from multiversx_sdk_wallet import UserPEM
+```py
+from multiversx_sdk import Address, UserPEM
 
-label = Address(public_key.buffer, "erd").bech32()
+path = Path("./output")
+if not path.exists():
+    path.mkdir(parents=True, exist_ok=True)
+
+label = Address(public_key.buffer, "erd").to_bech32()
 pem = UserPEM(label=label, secret_key=secret_key)
-pem.save(Path("./output/wallet.pem"))
+pem.save(path / "wallet.pem")
 ```
-
-[comment]: # (mx-context-auto)
 
 ## Loading wallets
 
@@ -443,131 +749,114 @@ This is not a very common use-case - you might refer to [signing objects](#signi
 
 Load a keystore that holds an **encrypted mnemonic** (and perform wallet derivation at the same time):
 
-```
-from multiversx_sdk_wallet import UserWallet
+```py
+from multiversx_sdk import UserWallet
 
-secret_key = UserWallet.load_secret_key(Path("./testwallets/withMnemonic.json"), "password", address_index=0)
+secret_key = UserWallet.load_secret_key(Path("../multiversx_sdk/testutils/testwallets/withDummyMnemonic.json"), "password", address_index=0)
 address = secret_key.generate_public_key().to_address("erd")
 
-print("Secret key", secret_key.hex())
-print("Address", address)
+print("Secret key:", secret_key.hex())
+print("Address:", address.to_bech32())
 ```
 
 Load a keystore that holds an **encrypted secret** key:
 
-```
-secret_key = UserWallet.load_secret_key(Path("./testwallets/alice.json"), "password")
+```py
+secret_key = UserWallet.load_secret_key(Path("../multiversx_sdk/testutils/testwallets/alice.json"), "password")
 address = secret_key.generate_public_key().to_address("erd")
 
-print("Secret key", secret_key.hex())
-print("Address", address)
+print("Secret key:", secret_key.hex())
+print("Address:", address.to_bech32())
 ```
 
 Load the secret key from a PEM file:
 
+```py
+from multiversx_sdk import UserPEM
+
+pem = UserPEM.from_file(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+
+print("Secret key:", pem.secret_key.hex())
+print("Public key:", pem.public_key.hex())
 ```
-from multiversx_sdk_wallet import UserPEM
-
-pem = UserPEM.from_file(Path("./testwallets/alice.pem"))
-
-print("Secret key", pem.secret_key.hex())
-print("Public key", pem.public_key.hex())
-```
-
-[comment]: # (mx-context-auto)
 
 ## Signing objects
 
 Creating a `UserSigner` from a JSON wallet:
 
-```
-from multiversx_sdk_wallet import UserSigner
+```py
+from multiversx_sdk import UserSigner
 
-signer = UserSigner.from_wallet(Path("./testwallets/alice.json"), "password")
+signer = UserSigner.from_wallet(Path("../multiversx_sdk/testutils/testwallets/alice.json"), "password")
 ```
 
 Creating a `UserSigner` from a PEM file:
 
+```py
+signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
 ```
-signer = UserSigner.from_pem_file(Path("./testwallets/alice.pem"))
-```
-
-Signable objects (messages, transactions) must adhere to the following interface:
-
-```
-class ISignable(Protocol):
-    def serialize_for_signing(self) -> bytes: ...
-```
-
-Both `Transaction` and `Message` - defined in `multiversx_sdk_core` - implement `ISignable`.
 
 Signing a transaction:
 
-```
-from multiversx_sdk_core import Transaction
+```py
+from multiversx_sdk import Transaction, TransactionComputer
 
 tx = Transaction(
     nonce=90,
-    sender=Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
-    receiver=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
-    value=TokenPayment.egld_from_amount("1.0"),
+    sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+    receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+    value=1000000000000000000,
     gas_limit=50000,
-    gas_price=1000000000,
-    chain_id="D",
-    version=1
+    chain_id="D"
 )
 
-tx.signature = signer.sign(tx)
-print("Signature", tx.signature.hex())
+transaction_computer = TransactionComputer()
+
+tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(tx))
+print("Signature:", tx.signature.hex())
 ```
 
 Signing an arbitrary message:
 
+```py
+from multiversx_sdk import Message, MessageComputer
+
+signer_address = signer.get_pubkey().to_address(hrp="erd")
+message = Message(b"hello")
+message_computer = MessageComputer()
+
+message.signature = signer.sign(message_computer.compute_bytes_for_signing(message))
+
+print("Signature:", message.signature.hex())
 ```
-from multiversx_sdk_core import MessageV1
-
-message = MessageV1.from_string("hello")
-message.signature = signer.sign(message)
-
-print("Signature", message.signature.hex())
-```
-
-[comment]: # (mx-context-auto)
 
 ## Verifying signatures
 
 Creating a `UserVerifier`:
 
-```
-from multiversx_sdk_core import Address
-from multiversx_sdk_wallet import UserVerifier
+```py
+from multiversx_sdk import Address, UserVerifier
 
-alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+
 alice_verifier = UserVerifier.from_address(alice)
 bob_verifier = UserVerifier.from_address(bob)
 ```
 
-For objects to support signature verification, they must adhere to the following interface:
-
-```
-class IVerifiable(Protocol):
-    signature: ISignature
-    def serialize_for_signing(self) -> bytes: ...
-```
-
-Both `Transaction` and `Message` - defined in `multiversx_sdk_core` - implement `IVerifiable`.
-
 Verifying a signature:
 
-```
-print(f"Is signature of Alice?", alice_verifier.verify(tx))
-print(f"Is signature of Alice?", alice_verifier.verify(message))
-print(f"Is signature of Bob?", bob_verifier.verify(tx))
-print(f"Is signature of Bob?", bob_verifier.verify(message))
-```
+```py
+from multiversx_sdk import MessageComputer, TransactionComputer
 
-[comment]: # (mx-context-auto)
+transaction_computer = TransactionComputer()
+message_computer = MessageComputer()
+
+print(f"Is signature of Alice?", alice_verifier.verify(transaction_computer.compute_bytes_for_signing(tx), tx.signature))
+print(f"Is signature of Alice?", alice_verifier.verify(message_computer.compute_bytes_for_verifying(message), message.signature))
+print(f"Is signature of Bob?", bob_verifier.verify(transaction_computer.compute_bytes_for_signing(tx), tx.signature))
+print(f"Is signature of Bob?", bob_verifier.verify(message_computer.compute_bytes_for_verifying(message), message.signature))
+```
 
 ## Creating network providers
 
@@ -575,50 +864,46 @@ It's recommended to use the `multiversx_sdk_network_providers` components **as a
 
 Creating an API provider:
 
-```
-from multiversx_sdk_network_providers import ApiNetworkProvider
+```py
+from multiversx_sdk import ApiNetworkProvider
 
-provider = ApiNetworkProvider("https://devnet-api.multiversx.com");
+provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
 ```
 
 Creating a Proxy provider:
 
-```
-from multiversx_sdk_network_providers import ProxyNetworkProvider
+```py
+from multiversx_sdk import ProxyNetworkProvider
 
-provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com");
+provider = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 ```
-
-[comment]: # (mx-context-auto)
 
 ## Fetching network parameters
 
 In order to fetch network parameters, do as follows:
 
-```
-config = provider.get_network_config();
+```py
+config = provider.get_network_config()
 
-print("Chain ID", config.chain_id);
-print("Min gas price:", config.min_gas_price);
+print("Chain ID:", config.chain_id)
+print("Min gas price:", config.min_gas_price)
 ```
-
-[comment]: # (mx-context-auto)
 
 ## Fetching account state
 
 The following snippet fetches (from the Network) the **nonce** and the **balance** of an account:
 
-```
+```py
 account_on_network = provider.get_account(alice)
 
-print("Nonce", account_on_network.nonce)
-print("Balance", account_on_network.balance)
+print("Nonce:", account_on_network.nonce)
+print("Balance:", account_on_network.balance)
 ```
 
 When sending a number of transactions, you usually have to first fetch the account nonce from the network (see above), then manage it locally (e.g. increment upon signing & broadcasting a transaction):
 
-```
-from multiversx_sdk_core import AccountNonceHolder
+```py
+from multiversx_sdk import AccountNonceHolder
 
 nonce_holder = AccountNonceHolder(account_on_network.nonce)
 
@@ -628,18 +913,16 @@ tx.nonce = nonce_holder.get_nonce_then_increment()
 
 For further reference, please see [nonce management](/integrators/creating-transactions/#nonce-management).
 
-[comment]: # (mx-context-auto)
-
 ## Broadcasting transactions
 
 Broadcast a single transaction:
 
-```
-alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+```py
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
 
 tx = Transaction(
-    sender=alice,
-    receiver=alice,
+    sender=alice.to_bech32(),
+    receiver=alice.to_bech32(),
     gas_limit=50000,
     chain_id="D"
 )
@@ -647,7 +930,7 @@ tx = Transaction(
 alice_on_network = provider.get_account(alice)
 
 tx.nonce = alice_on_network.nonce
-tx.signature = signer.sign(tx)
+tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(tx))
 
 hash = provider.send_transaction(tx)
 print("Transaction hash:", hash)
@@ -655,24 +938,24 @@ print("Transaction hash:", hash)
 
 Broadcast multiple transactions:
 
-```
+```py
 tx_1 = Transaction(
-    sender=alice,
-    receiver=alice,
+    sender=alice.to_bech32(),
+    receiver=alice.to_bech32(),
     gas_limit=50000,
     chain_id="D"
 )
 
 tx_2 = Transaction(
-    sender=alice,
-    receiver=alice,
+    sender=alice.to_bech32(),
+    receiver=alice.to_bech32(),
     gas_limit=50000,
     chain_id="D"
 )
 
 tx_3 = Transaction(
-    sender=alice,
-    receiver=alice,
+    sender=alice.to_bech32(),
+    receiver=alice.to_bech32(),
     gas_limit=50000,
     chain_id="D"
 )
@@ -684,9 +967,9 @@ tx_1.nonce = nonce_holder.get_nonce_then_increment()
 tx_2.nonce = nonce_holder.get_nonce_then_increment()
 tx_3.nonce = nonce_holder.get_nonce_then_increment()
 
-tx_1.signature = signer.sign(tx_1)
-tx_2.signature = signer.sign(tx_2)
-tx_3.signature = signer.sign(tx_3)
+tx_1.signature = signer.sign(transaction_computer.compute_bytes_for_signing(tx_1))
+tx_2.signature = signer.sign(transaction_computer.compute_bytes_for_signing(tx_2))
+tx_3.signature = signer.sign(transaction_computer.compute_bytes_for_signing(tx_3))
 
 hashes = provider.send_transactions([tx_1, tx_2, tx_3])
 print("Transactions hashes:", hashes)
@@ -694,8 +977,8 @@ print("Transactions hashes:", hashes)
 
 Now let's fetch a previously-broadcasted transaction:
 
-```
-tx_on_network = provider.get_transaction("09e3b68d39f3759913239b927c7feb9ac871c8877e76bc56e1be45a2a597eb53")
+```py
+tx_on_network = provider.get_transaction("9270a6879b682a7b310c659f58b641ccdd5f083e5633669817130269e5b0939b", with_process_status=True)
 print("Status:", tx_on_network.status)
 print("Is completed:", tx_on_network.is_completed)
 ```

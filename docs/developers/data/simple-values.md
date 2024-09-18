@@ -5,10 +5,10 @@ title: Simple Values
 [comment]: # (mx-abstract)
 
 We will start by going through the basic types used in smart contracts:
+
 - Fixed-width numbers
 - Arbitrary width (big) numbers
 - Boolean values
-
 
 [comment]: # (mx-context-auto)
 
@@ -157,7 +157,7 @@ Booleans are serialized the same as a byte (`u8`) that can take values `1` or `0
 
 ### Byte slices and ASCII strings
 
-Byte slices are technically a special case of the [list types](developers/data/composite-values#lists-of-items), but they are usually thought of as basic types. Their encoding is, in any case, consistent with the rules for lists of "byte items".
+Byte slices are technically a special case of the [list types](/developers/data/composite-values#lists-of-items), but they are usually thought of as basic types. Their encoding is, in any case, consistent with the rules for lists of "byte items".
 
 :::important
 Strings are treated from the point of view of serialization as series of bytes. Using Unicode strings, while often a good practice in programming, tends to add unnecessary overhead to smart contracts. The difference is that Unicode strings get validated on input and concatenation.
@@ -182,9 +182,8 @@ We consider best practice to use Unicode on the frontend, but keep all messages 
 | `&'static str`  | `"abc"`                     | `0x616263`         | `0x00000003616263` | Unicode string (slice).                                           |
 | `String`        | `"abc".to_string()`         | `0x616263`         | `0x00000003616263` | Unicode string (owned).                                           |
 
-
 :::info Note
-Inside contracts, `ManagedBuffer` is [the only recommended type for generic bytes](developers/best-practices/the-dynamic-allocation-problem).
+Inside contracts, `ManagedBuffer` is [the only recommended type for generic bytes](/developers/best-practices/the-dynamic-allocation-problem).
 :::
 
 ---
@@ -207,9 +206,8 @@ They are top-encoded as is, the exact bytes and nothing else.
 
 Because of their variable length, they need to be serialized like variable length byte slices when nested, so the length is explicitly encoded at the start.
 
- Type            | Value                       | Top-level encoding | Nested encoding    |
+| Type            | Value                       | Top-level encoding | Nested encoding    |
 | --------------- | --------------------------- | ------------------ | ------------------ |
 | `TokenIdentifier` | `ABC-123456`                    | `0x4142432d313233343536`         | `0x0000000A4142432d313233343536` |
 
 ---
-

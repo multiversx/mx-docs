@@ -34,7 +34,7 @@ transaction.setOptions(TransactionOptions.withOptions({
 
 ### Signing the transaction
 
-Once these fields are set, the transaction must be signed by both Guardian (adding the `guardianSignuature` field) and UserSigner (adding the `signature` field).
+Once these fields are set, the transaction must be signed by both Guardian (adding the `guardianSignature` field) and UserSigner (adding the `signature` field).
 All signing providers (except Ledger) take care internally of formatting the transaction, as described above (excluding adding the extra `gasLimit`).
 
 [comment]: # (mx-context-auto)
@@ -46,7 +46,7 @@ After formatting the transaction and applying the signature provided by the Ledg
 ```js
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 
-const walletProvider = new WalletProvider('https://www.wallet.multiversx.com/dapp/init');
+const walletProvider = new WalletProvider('https://wallet.multiversx.com/dapp/init');
 walletProvider.guardTransactions(transactions, {
     callbackUrl: encodeURIComponent('https://my-dapp.com'),
 });
@@ -54,6 +54,6 @@ walletProvider.guardTransactions(transactions, {
 Once transactions are back from the web wallet, they can be retrieved as follows:
 
 ```js
-const signedTransactions = new WalletProvider('https://www.wallet.multiversx.com/dapp/init').getTransactionsFromWalletUrl();
+const signedTransactions = new WalletProvider('https://wallet.multiversx.com/dapp/init').getTransactionsFromWalletUrl();
 ```
 

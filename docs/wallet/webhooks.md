@@ -15,7 +15,7 @@ The web wallet webhooks are links that point the user of the wallet to either lo
 
 This is useful when you need to find the user's wallet address. A common use case is that, starting from this address you can query the API for the wallet's balance or recent transactions.
 
-__URL Parameters__
+### URL Parameters
 
 `https://wallet.multiversx.com/hook/login?callbackUrl=https://example.com/`
 
@@ -25,9 +25,9 @@ __URL Parameters__
 
 Upon a successful login, the user is redirected back to the callback URL along which the user's address is appended.
 
-__Callback URL Parameters__
+### Callback URL Parameters
 
-`https://example.com/?address=erd1cevsw7mq5uvqymjqzwqvpqtdrhckehwfz99n7praty3y7q2j7yps842mqh`
+`https://example.com/?address=erd1axhx4kenjlae6sknq7zjg2g4fvzavv979r2fg425p62wkl84avtqsf7vvv`
 
 | Param           | Description                     |
 | -------------   | ------------------------------- |
@@ -39,7 +39,7 @@ __Callback URL Parameters__
 
 This is useful when you need to prepopulate a transaction required to send an EGLD amount or pre-populate the transaction's data field with a smart contract function invocation.
 
-__URL Parameters__
+### URL Parameters {#send-transaction-url-parameters}
 
 `https://wallet.multiversx.com/hook/transaction?receiver=erd1qqqqqqqqqqqqqpgqxwakt2g7u9atsnr03gqcgmhcv38pt7mkd94q6shuwt&value=0&gasLimit=250000000&data=claimRewards&callbackUrl=https://example.com/`
 
@@ -51,9 +51,9 @@ __URL Parameters__
 | data          | <span class="text-normal">OPTIONAL</span> | The message (data) of the Transaction.                |
 | callbackUrl   | <span class="text-normal">OPTIONAL</span> | The URL the user should be redirected to after login. |
 
-__Callback URL Parameters__
+### Callback URL Parameters {#send-transaction-callback-url-parameters}
 
-`https://example.com/?status=success&txHash=48f68a2b1ca1c3a343cbe14c8b755934eb1a4bb3a4a5f7068bc8a0b52094cc89&address=erd1cevsw7mq5uvqymjqzwqvpqtdrhckehwfz99n7praty3y7q2j7yps842mqh`
+`https://example.com/?status=success&txHash=48f68a2b1ca1c3a343cbe14c8b755934eb1a4bb3a4a5f7068bc8a0b52094cc89&address=erd1axhx4kenjlae6sknq7zjg2g4fvzavv979r2fg425p62wkl84avtqsf7vvv`
 
 | Param           | Description                               |
 | -------------   | ----------------------------------------- |

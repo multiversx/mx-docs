@@ -146,6 +146,8 @@ A smart contract call that runs out of gas will revert all operations, so this f
 get_block_timestamp() -> u64
 ```
 
+Returns the timestamp of the current block, in seconds (UNIX timestamp).
+
 [comment]: # (mx-context-auto)
 
 ### get_block_nonce
@@ -153,6 +155,8 @@ get_block_timestamp() -> u64
 ```rust
 get_block_nonce() -> u64
 ```
+
+Returns the unique nonce of the block that includes the current transaction.
 
 [comment]: # (mx-context-auto)
 
@@ -162,6 +166,8 @@ get_block_nonce() -> u64
 get_block_round() -> u64
 ```
 
+Returns the round number of the current block. Each epoch consists of a fixed number of rounds. The round number resets to 1 at the start of every new epoch.
+
 [comment]: # (mx-context-auto)
 
 ### get_block_epoch
@@ -169,6 +175,8 @@ get_block_round() -> u64
 ```rust
 get_block_epoch() -> u64
 ```
+
+Returns the epoch of the current block. 
 
 These functions are mostly used for setting up deadlines, so they've been grouped together.
 
@@ -523,7 +531,7 @@ This API is accessible through `self.send()`. It provides functionalities like s
 
 We will not describe every single function in the API, as that would create confusion. We will only describe those that are recommended to be used (as they're mostly wrappers around more complicated low-level functions).
 
-For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](sc-contract-calls.md) section.
+For Smart Contract to Smart Contract calls, use the Proxies, as described in the [contract calls](/developers/transactions/tx-legacy-calls) section.
 
 Without further ado, let's take a look at the available functions:
 

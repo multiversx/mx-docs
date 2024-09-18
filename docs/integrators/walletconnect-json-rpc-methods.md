@@ -21,35 +21,45 @@ To get the transaction object into a ready-to-serialize, plain JavaScript object
 Sign a list of transactions.
 This method returns a signature and any additional properties ( e.g. Guardian info ) that must be applied to each of the provided Transactions before broadcasting them on the network.
 
+[comment]: # (mx-context-auto)
+
 ### Parameters
 
-    1. `Object` - Signing parameters:
-        1.1. `transactions` : `Array<Object>` - Array of Transactions
-            1.1.1 `Object` - Transaction Object
-                1.1.1.1  `nonce` : `String` - The Nonce of the Sender.
-                1.1.1.2  `value` : `String` - The Value to transfer, as a string representation of a Big Integer (can be "0").
-                1.1.1.3  `receiver` : `String` - The Address (bech32) of the Receiver.
-                1.1.1.4  `sender` : `String` - The Address (bech32) of the Sender.
-                1.1.1.5  `gasPrice` : `Number` - The desired Gas Price (per Gas Unit).
-                1.1.1.6  `gasLimit` : `Number` -  The maximum amount of Gas Units to consume.
-                1.1.1.7  `data` : `String | undefined` -  The base64 string representation of the Transaction's message (data).
-                1.1.1.8  `chainID` : `String` - The Chain identifier. ( `1` for Mainnet, `T` for Testnet, `D` for Devnet )
-                1.1.1.9  `version` : `String | undefined` -  The Version of the Transaction (e.g. 1).
-                1.1.1.10 `options` : `String | undefined` -  The Options of the Transaction (e.g. 1).
-                1.1.1.11 `guardian` : `String | undefined` -  The Address (bech32) of the Guardian.
-                1.1.1.12 `receiverUsername` : `String | undefined` - The base64 string representation of the Sender's username.
-                1.1.1.10 `senderUsername` : `String | undefined` - The base64 string representation of the Receiver's username.
+```text
+1. `Object` - Signing parameters:
+    1.1. `transactions` : `Array<Object>` - Array of Transactions
+        1.1.1 `Object` - Transaction Object
+            1.1.1.1  `nonce` : `String` - The Nonce of the Sender.
+            1.1.1.2  `value` : `String` - The Value to transfer, as a string representation of a Big Integer (can be "0").
+            1.1.1.3  `receiver` : `String` - The Address (bech32) of the Receiver.
+            1.1.1.4  `sender` : `String` - The Address (bech32) of the Sender.
+            1.1.1.5  `gasPrice` : `Number` - The desired Gas Price (per Gas Unit).
+            1.1.1.6  `gasLimit` : `Number` -  The maximum amount of Gas Units to consume.
+            1.1.1.7  `data` : `String | undefined` -  The base64 string representation of the Transaction's message (data).
+            1.1.1.8  `chainID` : `String` - The Chain identifier. ( `1` for Mainnet, `T` for Testnet, `D` for Devnet )
+            1.1.1.9  `version` : `String | undefined` -  The Version of the Transaction (e.g. 1).
+            1.1.1.10 `options` : `String | undefined` -  The Options of the Transaction (e.g. 1).
+            1.1.1.11 `guardian` : `String | undefined` -  The Address (bech32) of the Guardian.
+            1.1.1.12 `receiverUsername` : `String | undefined` - The base64 string representation of the Sender's username.
+            1.1.1.10 `senderUsername` : `String | undefined` - The base64 string representation of the Receiver's username.
+```
+
+[comment]: # (mx-context-auto)
 
 ### Returns
 
-    1. `Object`
-        1.1. `signatures` : `Array<Object>`
-            1.1.1 `Object` - corresponding signature and optional properties response for the provided transaction
-                1.1.1.1 `signature` :  The Signature (hex-encoded) of the Transaction.
-                1.1.1.2 `guardian` : `String | undefined` - The Address (bech32) of the Guardian.
-                1.1.1.3 `guardianSignature` : `String | undefined` -  The Guardian's Signature (hex-encoded) of the Transaction.
-                1.1.1.4 `options` : `Number | undefined` -  The Version of the Transaction (e.g. 1).
-                1.1.1.5 `version` : `Number | undefined` -  The Options of the Transaction (e.g. 1).
+```text
+1. `Object`
+    1.1. `signatures` : `Array<Object>`
+        1.1.1 `Object` - corresponding signature and optional properties response for the provided transaction
+            1.1.1.1 `signature` :  The Signature (hex-encoded) of the Transaction.
+            1.1.1.2 `guardian` : `String | undefined` - The Address (bech32) of the Guardian.
+            1.1.1.3 `guardianSignature` : `String | undefined` -  The Guardian's Signature (hex-encoded) of the Transaction.
+            1.1.1.4 `options` : `Number | undefined` -  The Version of the Transaction (e.g. 1).
+            1.1.1.5 `version` : `Number | undefined` -  The Options of the Transaction (e.g. 1).
+```
+
+[comment]: # (mx-context-auto)
 
 ### Example
 
@@ -112,34 +122,44 @@ This method returns a signature and any additional properties ( e.g. Guardian in
 Similar to `mvx_signTransactions`, but only one Transaction can be signed at a time instead of a list of transactions.
 The same logic applies to the Transaction Object here too.
 
-### Parameters
+[comment]: # (mx-context-auto)
 
-    1. `Object` - Signing parameters:
-        1.1. `transaction` : `Object` - Transaction Object
-            1.1.1  `nonce` : `String` - The Nonce of the Sender.
-            1.1.2  `value` : `String` - The Value to transfer, as a string representation of a Big Integer (can be "0").
-            1.1.3  `receiver` : `String` - The Address (bech32) of the Receiver.
-            1.1.4  `sender` : `String` - The Address (bech32) of the Sender.
-            1.1.5  `gasPrice` : `Number` - The desired Gas Price (per Gas Unit).
-            1.1.6  `gasLimit` : `Number` -  The maximum amount of Gas Units to consume.
-            1.1.7  `data` : `String | undefined` -  The base64 string representation of the Transaction's message (data).
-            1.1.8  `chainID` : `String` - The Chain identifier. ( `1` for Mainnet, `T` for Testnet, `D` for Devnet )
-            1.1.9  `version` : `String | undefined` -  The Version of the Transaction (e.g. 1).
-            1.1.10 `options` : `String | undefined` -  The Options of the Transaction (e.g. 1).
-            1.1.11 `guardian` : `String | undefined` -  The Address (bech32) of the Guardian.
-            1.1.12 `receiverUsername` : `String | undefined` - The base64 string representation of the Sender's username.
-            1.1.10 `senderUsername` : `String | undefined` - The base64 string representation of the Receiver's username.
+### Parameters {#mvx_signTransaction-parameters}
 
-### Returns
+```text
+1. `Object` - Signing parameters:
+    1.1. `transaction` : `Object` - Transaction Object
+        1.1.1  `nonce` : `String` - The Nonce of the Sender.
+        1.1.2  `value` : `String` - The Value to transfer, as a string representation of a Big Integer (can be "0").
+        1.1.3  `receiver` : `String` - The Address (bech32) of the Receiver.
+        1.1.4  `sender` : `String` - The Address (bech32) of the Sender.
+        1.1.5  `gasPrice` : `Number` - The desired Gas Price (per Gas Unit).
+        1.1.6  `gasLimit` : `Number` -  The maximum amount of Gas Units to consume.
+        1.1.7  `data` : `String | undefined` -  The base64 string representation of the Transaction's message (data).
+        1.1.8  `chainID` : `String` - The Chain identifier. ( `1` for Mainnet, `T` for Testnet, `D` for Devnet )
+        1.1.9  `version` : `String | undefined` -  The Version of the Transaction (e.g. 1).
+        1.1.10 `options` : `String | undefined` -  The Options of the Transaction (e.g. 1).
+        1.1.11 `guardian` : `String | undefined` -  The Address (bech32) of the Guardian.
+        1.1.12 `receiverUsername` : `String | undefined` - The base64 string representation of the Sender's username.
+        1.1.10 `senderUsername` : `String | undefined` - The base64 string representation of the Receiver's username.
+```
 
-    1. `Object` - corresponding signature and optional properties response for the provided transaction
-        1.1 `signature` :  The Signature (hex-encoded) of the Transaction.
-        1.2 `guardian` : `String | undefined` - The Address (bech32) of the Guardian.
-        1.3 `guardianSignature` : `String | undefined` -  The Guardian's Signature (hex-encoded) of the Transaction.
-        1.4 `options` : `Number | undefined` -  The Version of the Transaction (e.g. 1).
-        1.5 `version` : `Number | undefined` -  The Options of the Transaction (e.g. 1).
+[comment]: # (mx-context-auto)
 
-### Example
+### Returns {#mvx_signTransaction-returns}
+
+```text
+1. `Object` - corresponding signature and optional properties response for the provided transaction
+    1.1 `signature` :  The Signature (hex-encoded) of the Transaction.
+    1.2 `guardian` : `String | undefined` - The Address (bech32) of the Guardian.
+    1.3 `guardianSignature` : `String | undefined` -  The Guardian's Signature (hex-encoded) of the Transaction.
+    1.4 `options` : `Number | undefined` -  The Version of the Transaction (e.g. 1).
+    1.5 `version` : `Number | undefined` -  The Options of the Transaction (e.g. 1).
+```
+
+[comment]: # (mx-context-auto)
+
+### Example {#mvx_signTransaction-example}
 
 ```javascript
 // Request
@@ -178,18 +198,28 @@ The same logic applies to the Transaction Object here too.
 
 This method returns a signature for the provided message from the requested signer address.
 
-### Parameters
+[comment]: # (mx-context-auto)
 
-    1. `Object` - Signing parameters:
-        1.1. `message` : `String` -  the message to be signed
-        1.2. `address` : `String` -  bech32 formatted MultiversX address ( erd1... )
+### Parameters {#mvx_signMessage-parameters}
 
-### Returns
+```text
+1. `Object` - Signing parameters:
+    1.1. `message` : `String` -  the message to be signed
+    1.2. `address` : `String` -  bech32 formatted MultiversX address ( erd1... )
+```
 
-    1. `Object`
-        1.1. `signature` : `String` - corresponding signature for the signed message
+[comment]: # (mx-context-auto)
 
-### Example
+### Returns {#mvx_signMessage-returns}
+
+```text
+1. `Object`
+    1.1. `signature` : `String` - corresponding signature for the signed message
+```
+
+[comment]: # (mx-context-auto)
+
+### Example {#mvx_signMessage-example}
 
 ```javascript
 // Request
@@ -213,24 +243,36 @@ This method returns a signature for the provided message from the requested sign
 }
 ```
 
+[comment]: # (mx-context-auto)
+
 ## mvx_signNativeAuthToken
 
 A dApp (and its backend) might want to reliably assign an off-chain user identity to a MultiversX address. On this purpose, the signing providers allow a login token to be used within the login flow - this token is signed using the wallet of the user. Afterwards, a backend application would normally [verify the signature](/sdk-and-tools/sdk-js/sdk-js-signing-providers/#verifying-the-signature-of-a-login-token) of the token.
 
 The functionality is mostly the same as `mvx_signMessage`, only in this case instead of signing the provided message, the wallet will sign a special format including the requested signer address and the provided login token in the form of `${address}${token}`.
 
-### Parameters
+[comment]: # (mx-context-auto)
 
-    1. `Object` - Signing parameters:
-        1.1. `token` : `String` -  the loginToken to be signed
-        1.2. `address` : `String` -  bech32 formatted MultiversX address ( erd1... )
+### Parameters {#mvx_signNativeAuthToken-parameters}
 
-### Returns
+```text
+1. `Object` - Signing parameters:
+    1.1. `token` : `String` -  the loginToken to be signed
+    1.2. `address` : `String` -  bech32 formatted MultiversX address ( erd1... )
+```
 
-    1. `Object`
-        1.1. `signature` : `String` - corresponding signature for the signed token
+[comment]: # (mx-context-auto)
 
-### Example
+### Returns {#mvx_signNativeAuthToken-returns}
+
+```text
+1. `Object`
+    1.1. `signature` : `String` - corresponding signature for the signed token
+```
+
+[comment]: # (mx-context-auto)
+
+### Example {#mvx_signNativeAuthToken-example}
 
 ```javascript
 // Request
@@ -260,21 +302,30 @@ The functionality is mostly the same as `mvx_signMessage`, only in this case ins
 
 Exactly the same functionality as `mvx_signNativeAuthToken`, only the login token format differs. The Wallet can display a different UI based on the login token method request.
 
+[comment]: # (mx-context-auto)
+
 ## mvx_cancelAction
 
 Wallets can implement this method to improve the UX. It is used to transmit that the user wishes to renounce on a triggered action. Close a sign transaction modal or a sign message modal, etc.
 
-### Parameters
+[comment]: # (mx-context-auto)
 
-    1. `Object` - Action parameters
-        1.1. `action` : `String | undefined` -  Current action to be cancelled ( for ex. `cancelSignTx` )
+### Parameters {#mvx_cancelAction-parameters}
 
+```text
+1. `Object` - Action parameters
+    1.1. `action` : `String | undefined` -  Current action to be cancelled ( for ex. `cancelSignTx` )
+```
 
-### Returns
+[comment]: # (mx-context-auto)
 
-    void
+### Returns {#mvx_cancelAction-parameters}
 
-### Example
+`void`
+
+[comment]: # (mx-context-auto)
+
+### Example {#mvx_cancelAction-parameters}
 
 ```javascript
 // Request

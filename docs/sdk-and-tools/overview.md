@@ -23,7 +23,6 @@ Note that Rust is also the recommended programming language for writing Smart Co
 | [sdk-rs/core](https://github.com/multiversx/mx-sdk-rs/tree/master/sdk/core) |  Core components, accompanied by a set of usage examples. |
 | [sdk-rs/snippets](https://github.com/multiversx/mx-sdk-rs/tree/master/framework/snippets) |  Smart Contract interaction snippets - base components. Examples of usage: [adder](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/adder/interact), [multisig](https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/multisig/interact). |
 
-
 [comment]: # (mx-context-auto)
 
 ### sdk-js - Javascript SDK
@@ -31,7 +30,7 @@ Note that Rust is also the recommended programming language for writing Smart Co
 | Name                                                                                                     | Description                                         |
 |----------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
 | [sdk-js](/sdk-and-tools/sdk-js)                                                                          | High level overview about sdk-js.                   |
-| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook)                                                 | Learn how to handle common tasks by using sdk-js.   |
+| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13)                                             | Learn how to handle common tasks by using sdk-js.   |
 | [Extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js)                                               | How to extend and tailor certain modules of sdk-js. |
 | [Writing and testing sdk-js interactions](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions) | Write sdk-js interactions for Visual Studio Code    |
 | [sdk-js migration guides](/sdk-and-tools/sdk-js/sdk-js-migration-guides)                                 | Migrate from sdk-js v9.x to v10+                    |
@@ -43,6 +42,8 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 |-------------------------------------------------------|--------------------------------------------------------------|
 | [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli) | Lightweight CLI wrapper used to perform wallet interactions. |
 
+You might also want to have a look over [**xSuite**](https://xsuite.dev), a toolkit to init, build, test, deploy contracts using JavaScript, made by the [Arda team](https://arda.run).
+
 [comment]: # (mx-context-auto)
 
 ### sdk-dapp - core functional logic of a dApp
@@ -53,7 +54,15 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 [comment]: # (mx-context-auto)
 
-### mxpy - Python SDK
+### sdk-py - Python SDK
+
+| Name                                                                                       | Description                                              |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| [sdk-py](/sdk-and-tools/sdk-py/#sdk-py-the-python-libraries)                               | Python SDK that can be used to create wallets, create and send transactions, interact with Smart Contracts and with the MultiversX Network in general.                          |
+
+[comment]: # (mx-context-auto)
+
+### mxpy - Python SDK (CLI)
 
 | Name                                                                                       | Description                                              |
 |--------------------------------------------------------------------------------------------|----------------------------------------------------------|
@@ -70,23 +79,23 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 
 | Name                                     | Description                                                        |
 |------------------------------------------|--------------------------------------------------------------------|
-| [nesdtjs sdk](/sdk-and-tools/sdk-nestjs) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
+| [sdk-nestjs](/sdk-and-tools/sdk-nestjs) | NestJS SDK commonly used in the MultiversX Microservice ecosystem. |
 
 [comment]: # (mx-context-auto)
 
-### erdgo - Golang SDK
+### mx-sdk-go - Golang SDK
 
 | Name                          | Description                                                |
 |-------------------------------|------------------------------------------------------------|
-| [erdgo](/sdk-and-tools/erdgo) | Go/Golang SDK used to interact with the MultiversX Blockchain. |
+| [sdk-go](/sdk-and-tools/sdk-go) | Go/Golang SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
-### erdjava - Java SDK
+### mx-sdk-java - Java SDK
 
 | Name                              | Description                                           |
 |-----------------------------------|-------------------------------------------------------|
-| [erdjava](/sdk-and-tools/erdjava) | Java SDK used to interact with the MultiversX Blockchain. |
+| [mxjava](/sdk-and-tools/mxjava) | Java SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
@@ -103,6 +112,14 @@ In addition to sdk-js, one could use the following Javascript library for perfor
 | Name                                  | Description                                             |
 |---------------------------------------|---------------------------------------------------------|
 | [erdkotlin](/sdk-and-tools/erdkotlin) | Kotlin SDK used to interact with the MultiversX Blockchain. |
+
+[comment]: # (mx-context-auto)
+
+### nesdtjs-sdk - NestJS SDK
+
+| Name                                    | Description                                             |
+|-----------------------------------------|---------------------------------------------------------|
+| [sdk-nestjs](/sdk-and-tools/sdk-nestjs) | NestJS SDK used to interact with the MultiversX Blockchain. |
 
 [comment]: # (mx-context-auto)
 
@@ -151,6 +168,19 @@ Events notifier is an external service that can be used to fetch block events an
 | Name                                       | Description                          |
 |--------------------------------------------|--------------------------------------|
 | [Events notifier](/sdk-and-tools/notifier) | A notifier service for block events. |
+
+[comment]: # (mx-context-auto)
+
+### Chain simulator
+
+Chain simulator is designed to replicate the behavior of a local testnet. 
+It can also be pre-initialized / initialized with blockchain state from other networks, such as mainnet or something similar.
+
+| Name                                              | Description                  |
+|---------------------------------------------------|------------------------------|
+| [Chain simulator](/sdk-and-tools/chain-simulator) | A service for local testing. |
+
+[comment]: # (mx-context-auto)
 
 ### Devcontainers (for VSCode or GitHub Codespaces)
 

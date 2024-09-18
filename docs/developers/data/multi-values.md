@@ -26,8 +26,42 @@ In effect, all serializable types implement the multi-value traits.
 
 ## Parsing and limitations
 
-It is important to understand that arguments get read one by one from left to right, so there are some limitations as to how var-args can be positioned. Argument types also define how the arguments are consumed, so, for instance, if a type specifies that all remaining arguments will be consumed, it doesn't really make sense to have any other argument after that.
+It is important to understand that arguments get read one by one from left to right, so there are some limitations as to how var-args can be positioned. Argument types also define how the arguments are consumed, so, for instance, if a type specifies that all remaining arguments will be consumed, it doesn't really make sense to have any other argument after that. 
 
+For instance, let's consider the behavior of `MultiValueEncoded`, which consumes all subsequent arguments. Hence, it's advisable to place it as the last argument in the function, like so:
+
+```rust
+#[endpoint(myEndpoint)]
+fn my_endpoint(&self, first_arg: ManagedBuffer, second_arg: TokenIdentifier, last_arg: MultiValueEncoded<u64>)
+```
+Placing any argument after `MultiValueEncoded` will not initialize that argument, because `MultiValueEncoded` will consume all arguments following it. An important rule to remember is that an endpoint can have only one `MultiValueEncoded` argument, and it should always occupy the last position in order to achieve the desired outcome.
+
+Another scenario to consider involves the use of multiple `Option` arguments. Take, for instance, the following endpoint:
+
+```rust
+#[endpoint(myOptionalEndpoint)]
+fn my_optional_endpoint(&self, first_arg: OptionalValue<TokenIdentifier>, second_arg: OptionalValue<ManagedBuffer>)
+```
+In this context, both arguments (or none) should be provided at the same time in order to get the desired effect. Since arguments are processed sequentially from left to right, supplying a single value will automatically assign it to the first argument, making it impossible to determine which argument should receive that value.
+
+The same rule applies when any regular argument is placed after a var-arg, thus, a strong restriction regarding arguments' order has been enforced. Regular arguments `must not` be placed after var-args.
+
+To further enhance clarity and minimize potential errors related to var-args, starting from framework version `v0.44.0`, it is no longer allowed by default to have multiple var-args. This restriction can be lifted by using the #[allow_multiple_var_args] annotation.
+
+:::info Note
+`#[allow_multiple_var_args]` is required when using more than one var-arg in an endpoint and is placed at the endpoint level, alongside the `#[endpoint]` annotation. Utilizing `#[allow_multiple_var_args]` in any other manner will not work.
+
+Considering this, our optional endpoint from the example before becomes:
+```rust
+#[allow_multiple_var_args]
+#[endpoint(myOptionalEndpoint)]
+fn my_optional_endpoint(&self, first_arg: OptionalValue<TokenIdentifier>, second_arg: OptionalValue<ManagedBuffer>)
+``` 
+:::
+
+The absence of #[allow_multiple_var_args] as an endpoint attribute, along with the use of multiple var-args and/or the placement of regular arguments after var-args, leads to build failure, as the parsing validations now consider the count and positions of var-args.
+
+However, when `#[allow_multiple_var_args]` is used, there is no other parsing validation (except the ones from above) to enforce the var-args rules mentioned before. In simpler terms, using the annotation implies that the developer is assuming responsibility for handling multiple var-args and anticipating the outcomes, effectively placing trust in their ability to manage the situation.
 
 [comment]: # (mx-context-auto)
 
@@ -64,7 +98,6 @@ These are the common multi-values provided by the framework:
     - Sometimes, for backwards compatibility or other reasons it can happen to have (optional) arguments that are never used and not of interest. To avoid any useless deserialization, it is possible to define an argument of type `IgnoreValue` at the end.
     - By doing so, any number of arguments are allowed at the end, all of which will be completely ignored.
 
-
 So, to recap:
 
 | Managed Version                    | Unmanaged version    | What it represents              | Similar single value           |
@@ -76,8 +109,6 @@ So, to recap:
 | `MultiValueManagedVecCounted<T>`   |                      | Counted number of arguments     | `(usize, Vec<T>)`              |
 | `ManagedAsyncCallResult<T>`        | `AsyncCallResult<T>` | Async call result in callback   | `Result<T, String>`            |
 | `IgnoreValue`                      |                      | Any number of ignored arguments | Unit `()`                      |
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -103,8 +134,6 @@ These storage mappers are, in no particular order:
 
 ## Multi-values in action
 
-[comment]: # (mx-context-auto)
-
 To clarify the way multi-values work in real life, let's provide some examples of how one would go avout calling an endpoint with variadic arguments.
 
 [comment]: # (mx-context-auto)
@@ -126,7 +155,6 @@ fn my_opt_arg_endpoint_2(&self, token_id: TokenIdentifier, opt_nonce: OptionalVa
 We want to call these endpoints with arguments: `TOKEN-123456` (`0x544f4b454e2d313233343536`) and `5`. To contrast for the two endpoints:
 - Endpoint 1: `myOptArgEndpoint1@544f4b454e2d313233343536@010000000000000005`
 - Endpoint 2: `myOptArgEndpoint2@544f4b454e2d313233343536@05`
-
 
 :::info Note
 In the first case, we are dealing with an [Option](/developers/data/composite-values#options), whose first encoded byte needs to be `0x01`, to signal `Some`. In the second case there is no need for `Option`, `Some` is signalled simply by the fact that the argument was provided.
@@ -190,7 +218,6 @@ It is a lot more readable, for several reasons:
 
 Once again, the multi-value implementation is more efficient in terms of gas. All the contract needs to do is to make sure that the number of arguments is a multiple of 3, and then top-decode each value. Conversely, in the first example, a lot more memory needs to be moved around when splitting the large argument into pieces.
 
-
 [comment]: # (mx-context-auto)
 
 ## Implementation details
@@ -218,3 +245,4 @@ where
 ```
 
 To create a custom multi-value type, one needs to manually implement these two traits for the type. Unlike for single values, there is no [equivalent derive syntax](/developers/data/custom-types).
+

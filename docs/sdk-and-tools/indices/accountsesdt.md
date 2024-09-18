@@ -11,16 +11,18 @@ This page describes the structure of the `accounts-esdt` index (Elasticsearch), 
 
 ## _id
 
-The `_id` field of this index is composed in this way: `{bech32address}_{tokenIdentifier}_{nonce}` (example: `erd.._abcd-0123-01`).
+The `_id` field of this index is composed in this way: `{bech32address}-{tokenIdentifier}-{nonce}` (example: `erd..-abcd-0123-01`).
 
 [comment]: # (mx-context-auto)
 
 ## Fields
 
+[comment]: # (table:accountsesdt)
+
 | Field      | Description                                                                                                                           |
 |------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | identifier | The identifier field consists of `token` field and the `nonce` field hex encoded (example: `TOKEN-01abdc-01`).                        |
-| address    | The address field holds the address in a bech32 encoding.                                                                             |
+| address    | The address field holds the address in bech32 encoding.                                                                               |
 | balance    | The balance field holds the amount of ESDT token the address possesses. It includes the number of decimals.                           |
 | balanceNum | The balanceNum field holds the amount of ESDT tokens the address possesses, in a numeric format.                                      |
 | data       | The data field is a structure that contains extra data about a token, such as the creator of an NFT.                                  |
@@ -31,6 +33,8 @@ The `_id` field of this index is composed in this way: `{bech32address}_{tokenId
 | frozen     | The frozen field is set to true when the address possesses a current ESDT token that is in a frozen state.                            |
 
 Docs with a non-empty `tokenNonce` field will have the `data` field populated with the following structure:
+
+[comment]: # (table:accountsesdt.data)
 
 | data fields        | Description                                                                                                                                                                                                       |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -55,12 +59,12 @@ curl --request GET \
   --data '{
     "query": {
         "match": {
-         "identifier": {
+         "token": {
            "query": "MY-TOKEN-aaabbb",
            "operator": "AND"
          }
        }
-     }
+    },
     "sort": [
         {
             "balanceNum": {

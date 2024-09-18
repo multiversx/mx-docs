@@ -27,8 +27,6 @@ The build process is mostly configured using the [build configuration file](/dev
 
 It is also possible for the build process to produce [more than one contract per project crate](/developers/meta/sc-config#multi-contract-configuration).
 
-
-
 ---
 
 [comment]: # (mx-context-auto)
@@ -82,7 +80,7 @@ This is also the step where the meta crate parses and processes the `multicontra
 
 [comment]: # (mx-context-auto)
 
-### d. Meta crate: generating `wasm` crate code
+### d. Meta crate: generating wasm crate code
 
 Each contract must contain at least one `wasm` crate. This is separate from the contract crate because it has a different purpose: it only needs to be the basis for compiling wasm. Please take it as an intermediary step between the contract logic and the Rust to WASM compiler. This is also where the WASM compilation options are specified (e.g. the optimization level). These options can be seen in the `Cargo.toml` file of the `wasm` crate.
 

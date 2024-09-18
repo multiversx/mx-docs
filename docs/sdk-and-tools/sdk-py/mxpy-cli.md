@@ -9,11 +9,11 @@ title: mxpy CLI cookbook
 
 **mxpy**, as a command-line tool, can be used to simplify and automate the interaction with the MultiversX network - it can be easily used in shell scripts, as well. It implements a set of **commands**, organized within **groups**. 
 
-The complete Command Line Interface is listed [**here**](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md). Command usage and description are available through the `--help` or `-h` flags.
+The complete Command Line Interface is listed [**here**](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI). Command usage and description are available through the `--help` or `-h` flags.
 
 For example:
 
-```
+```sh
 mxpy --help
 mxpy tx --help
 mxpy tx new --help
@@ -25,14 +25,28 @@ This page will guide you through the process of handling common tasks using **mx
 
 ## Upgrading mxpy
 
-If you are using a older version of `mxpy` you can simply upgrade to a newer version by typing the following commands in a terminal:
+[comment]: # (mx-context-auto)
+
+### Upgrade using pipx
+
+In case you used **pipx** to install **mxpy**, to upgrade to a newer version, you can run the following command:
 
 ```sh
-wget -O mxpy-up.py https://raw.githubusercontent.com/multiversx/mx-sdk-py-cli/main/mxpy-up.py && python3 mxpy-up.py
+pipx upgrade multiversx-sdk-cli
 ```
 
-This will recreate the light Python virtual environment (based on `venv`) in `~/multiversx-sdk/mxpy-venv`. 
-Since you've had a previous `mxpy` version installed, you probably have already altered the **`$PATH`** variable so you don't have to re-alter it.
+[comment]: # (mx-context-auto)
+
+### Using the installation script
+
+If you've previously installed **mxpy** using the legacy **mxpy-up** installation script, you should switch to the **pipx** approach. Make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
+
+```sh
+rm ~/multiversx-sdk/mxpy
+rm -rf ~/multiversx-sdk/mxpy-venv
+```
+
+Additionally, you might want to cleanup the shell profile files, to not alter anymore the `PATH` variable with respect to `~/multiversx-sdk`: `~/.profile`, `~/.bashrc` and / or `~/.zshrc`.
 
 [comment]: # (mx-context-auto)
 
@@ -41,11 +55,13 @@ Since you've had a previous `mxpy` version installed, you probably have already 
 Using `mxpy` you can either check if a dependency is installed or install a new dependency.
 
 To check if a dependecy is installed you can use:
+
 ```sh
 mxpy deps check <dependecy-name>
 ```
 
 To install a new dependency you can use:
+
 ```sh
 mxpy deps install <dependency-name>
 ```
@@ -53,19 +69,22 @@ mxpy deps install <dependency-name>
 Both `mxpy deps check <dependecy-name>` and `mxpy deps install <dependency-name>` use the `<dependency-name>` as a positional argument.
 
 To find out which dependencies can be managed using `mxpy` you can type one of the following commands and you will see which positional arguments it accepts:
+
 ```sh
 mxpy deps check -h
 mxpy deps install -h
 ```
 
 For example, in order to check if `rust` is installed you would type:
+
 ```sh
 mxpy deps check rust
 ```
 
-When installing dependecies the `--overwrite` argument can be used to overwrite an existing version. Also the `--tag` argument can be used to specify the exact version you want to install.
+When installing dependecies the `--overwrite` argument can be used to overwrite an existing version.
 
 For example, to install `rust`, you can simply type the command:
+
 ```sh
 mxpy deps install rust
 ```
@@ -76,9 +95,19 @@ If no tag is provided **the default version** will be installed.
 Generally speaking, the default `rust` version installed by `mxpy` is the one referenced by [the latest Docker image](https://github.com/multiversx/mx-sdk-rust-contract-builder/blob/main/Dockerfile) used for reproducible builds.
 :::
 
+:::note
+On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` before running `mxpy deps install rust`:
+
+```bash
+sudo apt-get install build-essential pkg-config libssl-dev
+```
+
+:::
+
 Here's how to install a specific version of `rust` (example):
+
 ```sh
-mxpy deps install rust --tag nightly-2023-04-24 --overwrite
+mxpy deps install rust --overwrite
 ```
 
 [comment]: # (mx-context-auto)
@@ -86,6 +115,7 @@ mxpy deps install rust --tag nightly-2023-04-24 --overwrite
 ## Creating wallets
 
 There are a couple available wallet formats:
+
 - `raw-mnemonic` - secret phrase in plain text
 - `keystore-mnemonic` - secret phrase, as a password-encrypted JSON keystore file
 - `keystore-secret-key` - secret key (irreversibly derived from the secret phrase), as a password-encrypted JSON keystore file
@@ -94,9 +124,11 @@ There are a couple available wallet formats:
 For this example, we are going to create a `keystore-mnemonic` wallet.
 
 Let's create a keystore wallet:
+
 ```sh
 mxpy wallet new --format keystore-mnemonic --outfile test_wallet.json
 ```
+
 The wallet's mnemonic will appear, followed by a prompt to set a password for the file. Once you input the password and press "Enter", the file will be generated at the location specified by the `--outfile` argument.
 
 [comment]: # (mx-context-auto)
@@ -106,16 +138,18 @@ The wallet's mnemonic will appear, followed by a prompt to set a password for th
 As you have read above, there are multiple ways in which you can store your secret keys.
 
 To convert a wallet from a type to another you can use:
+
 ```sh
 mxpy wallet convert
 ```
 
 :::info
 Keep in mind that the conversion isn't always possible (due to irreversible derivations of the secret phrase):
- - `raw-mnemonic` can be converted to any other format
- - `keystore-mnemonic` can be converted to any other format
- - `keystore-secret-key` can only be converted to `pem`
- - `pem` can only be converted to `keystore-secret-key`
+
+- `raw-mnemonic` can be converted to any other format
+- `keystore-mnemonic` can be converted to any other format
+- `keystore-secret-key` can only be converted to `pem`
+- `pem` can only be converted to `keystore-secret-key`
 
 It's mandatory that you keep a backup of your secret phrase somewhere safe.
 :::
@@ -123,6 +157,7 @@ It's mandatory that you keep a backup of your secret phrase somewhere safe.
 Let's convert the previously created `keystore-mnemonic` to a `PEM` wallet. We discourage the use of PEM wallets for storing cryptocurrencies due to their lower security level. However, they prove to be highly convenient and user-friendly for application testing purposes.
 
 To convert the wallet we type the follwing command:
+
 ```sh
 mxpy wallet convert --infile test_wallet.json --in-format keystore-mnemonic --outfile converted_wallet.pem --out-format pem
 ```
@@ -130,6 +165,7 @@ mxpy wallet convert --infile test_wallet.json --in-format keystore-mnemonic --ou
 After being prompted to enter the password you've previously set for the wallet the new `.pem` file will be created.
 
 The command arguments can be found [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#walletconvert) or by typing:
+
 ```sh
 mxpy wallet convert --help
 ```
@@ -143,6 +179,7 @@ In order to deploy a smart contract on the network, you need to build it first.
 The contract we will be using for this examples can be found [here](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/adder).
 
 The `mxpy` command used for building contracts is:
+
 ```sh
 mxpy contract build --path <path to contract>
 ```
@@ -152,11 +189,12 @@ If our working directory is already the contract's directory we can skip the `--
 The generated `.wasm` file will be created in a directory called `output` inside the contract's directory.
 
 The command accepts a few parameters that you can check out [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#contractbuild) or by simply typing:
+
 ```sh
 mxpy contract build --help
 ```
 
-If you'd like to build a smart contract directly using `sc-meta` instead, please follow [this](/developers/developer-reference/sc-meta).
+If you'd like to build a smart contract directly using `sc-meta` instead, please follow [this](/developers/meta/sc-meta).
 
 [comment]: # (mx-context-auto)
 
@@ -165,6 +203,7 @@ If you'd like to build a smart contract directly using `sc-meta` instead, please
 After you've built your smart contract, it can be deployed on the network.
 
 For deploying a smart contract the following command can be used:
+
 ```sh
 mxpy contract deploy
 ```
@@ -176,6 +215,7 @@ The `--bytecode` argument specifies the path to your previously-built contract. 
 For example, if your contract is in `~/contracts/adder`, the generated bytecode file `adder.wasm` will be in `~/contracts/adder/output`. So, when providing the `--bytecode` argument the path should be `~/contracts/adder/output/adder.wasm`.
 
 The `mxpy contract deploy` command needs a multitude of other parameters that can be checked out [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#contractdeploy) or by simply typing the following:
+
 ```sh
 mxpy contract deploy --help
 ```
@@ -207,6 +247,7 @@ The `--pem` argument is used to provide the sender of the transaction, the payer
 After deploying our smart contract we can start interacting with it. The contract has a function called `add()` that we can call and it will increase the value stored in the contract with the value we provide.
 
 To call a function we use the `mxpy contract call` command. Here's an example of how we can do that:
+
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
@@ -248,11 +289,13 @@ We've modified our adder contract to add `1` to every value added to the contrac
 Before deploying the contract we need to build it again to make sure we are using the latest version. We then deploy the newly built contract, then we call it and query it.
 
 First we build the contract:
+
 ```sh
 mxpy contract build
 ```
 
 Then we upgrade the contract by running:
+
 ```sh
 mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --bytecode ~/contracts/adder/output/adder.wasm \
@@ -265,6 +308,7 @@ mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfk
 We provide as a positional argument the contract's address that we want to upgrade, in our case the previously deployed adder contract. The `--bytecode` is used to provide the new code that will replace the old code. We also set the `--arguments` to `0` as we didn't change the constructor and the contract will start counting from `0` again. The rest of the arguments you know from all the previous operations we've done.
 
 Now let's add `5` to the contract one more time. We do so by running the following:
+
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
@@ -274,6 +318,7 @@ mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv
 ```
 
 Now, if we query the contract we should see the value `6`. We added `5` in the contract but modified the contract code to add `1` to every value. Let's see!
+
 ```sh
 mxpy contract query erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 --proxy https://devnet-gateway.multiversx.com --function getSum
 ```
@@ -286,9 +331,10 @@ We see that we indeed got the value `6`. Our upgrade was sucessfull.
 
 Verifying a smart contract means ensuring that the contract deployed on the network matches a specific version of the original source code. That is done by an external service that, under the hood, performs a reproducible build of the given contract and compares the resulting bytecode with the one deployed on the network.
 
-To learn more about reproducible builds, please follow [**this page**](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [**this repository**](https://github.com/multiversx/mx-reproducible-contract-build-example-sc).
+To learn more about reproducible builds, please follow [**this page**](/developers/reproducible-contract-builds). If you'd like to set up a Github Workflow that performs a reproducible build of your smart contract, follow the examples in [**this repository**](https://github.com/multiversx/mx-contracts-rs).
 
 The command used for verifying contracts is:
+
 ```sh
 mxpy contract verify
 ```
@@ -310,7 +356,7 @@ The account that triggers the code verification process must be the owner of the
 :::
 
 :::info
-The _packaged source_ passed as `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-reproducible-contract-build-example-sc/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
+The _packaged source_ passed as `--packaged-src` can be obtained either from [the Github Workflows for reproducible builds](https://github.com/multiversx/mx-contracts-rs/tree/main/.github/workflows) set up on your own repository, or from locally invoking a reproducible build, as depicted [here](https://docs.multiversx.com/developers/reproducible-contract-builds/#reproducible-build-using-mxpy).
 :::
 
 [comment]: # (mx-context-auto)
@@ -318,6 +364,7 @@ The _packaged source_ passed as `--packaged-src` can be obtained either from [th
 ## Creating and sending transactions
 
 To create a new transaction we use the `mxpy tx new` command. Let's see how that works:
+
 ```sh
 mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
@@ -329,3 +376,119 @@ mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-n
 That's it! As easy as that. We sent a transaction from Alice to Bob. We choose the receiver of our transaction using the `--receiver` argument and set the gas limit to `50000` because that is the gas cost of a simple move balance transaction. Notice we used the `--value` argument to pass the value that we want to transfer but we passed in the denomintated value. We transferred 1 eGLD (1 * 10^18). We then specify the proxy and the chain ID for the network we want to send our transaction to and use the `--send` argument to broadcast it.
 
 In case you want to save the transaction you can also provide the `--outfile` argument and a `json` file containing the transaction will be saved at the specified location. If you just want to prepare the transaction without broadcasting it simply remove the `--send` argument.
+
+[comment]: # (mx-context-auto)
+
+## Guarded transactions
+
+If your address is guarded, you'll have to provide some additional arguments because your transaction needs to be co-signed. 
+
+The first extra argument we'll need is the `--guardian` argument. This specifies the guardian address of our address. Then, if our account is guarded by a service like our trusted co-signer service we have to provide the `--guardian-service-url` which specifies where the transaction is sent to be co-signed.
+
+Keep in mind that **mxpy** always calls the `/sign-transaction` endpoint of the `--guardian-service-url` you have provided. Another argment we'll need is `--guardian-2fa-code` which is the code generated by an external authenticator.
+
+Each guarded transaction needs an additional `50000` gas for the `gasLimit`. The `version` field needs to be set to `2`. The `options` field needs to have the second least significant bit set to "1".
+
+:::note
+Here are the urls to our hosted co-signer services:
+
+- Mainnet: [https://tools.multiversx.com/guardian](https://tools.multiversx.com/guardian)
+- Devnet: [https://devnet-tools.multiversx.com/guardian](https://devnet-tools.multiversx.com/guardian)
+- Testnet: [https://testnet-tools.multiversx.com/guardian](https://testnet-tools.multiversx.com/guardian)
+
+:::
+
+```sh
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+    --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
+    --gas-limit 200000 --value 1000000000000000000 \
+    --proxy https://devnet-gateway.multiversx.com --chain D \
+    --guardian erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
+    --guardian-service-url https://devnet-tools.multiversx.com/guardian \
+    --guardian-2fa-code 123456 --version 2 --options 2
+    --send
+```
+
+If your address is guarded by another wallet, you'll still need to provide the `--guardian` argument and the guardian's wallet that will co-sign the transaction, but you don't need to provide the 2fa code and the service url. You can provide the guardian's wallet using one of the following arguments: `--guardian-pem`, `--guardian-keyfile`, or `--guardian-ledger`.
+
+[comment]: # (mx-context-auto)
+
+## Using the Ledger hardware wallet
+
+You can sign any transaction (regular transfers, smart contract deployments and calls) using a Ledger hardware wallet by leveraging the `--ledger` command-line argument.
+
+First, connect your device to the computer, unlock it and open the MultiversX Ledger app.
+
+Then, you can perform a trivial connectivity check by running:
+
+```sh
+mxpy ledger version
+```
+
+The output should look like this:
+
+```sh
+MultiversX App version: ...
+```
+
+Another trivial check is to ask the device for the (first 10) MultiversX addresses it manages:
+
+```sh
+mxpy ledger addresses
+```
+
+The output should look like this:
+
+```sh
+account index = 0 | address index = 0 | address: erd1...
+account index = 0 | address index = 1 | address: erd1...
+account index = 0 | address index = 2 | address: erd1...
+...
+```
+
+Now let's sign and broadcast a transaction (EGLD transfer):
+
+```sh
+mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
+    --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
+    --gas-limit 50000 --value 1000000000000000000 \
+    --ledger \
+    --send
+```
+
+By default, the first MultiversX address managed by the device is used as the sender (signer) of the transaction. In order to select a different address, you can use the `--ledger-address-index` CLI parameter:
+
+```sh
+mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
+    --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
+    --gas-limit 50000 --value 1000000000000000000 \
+    --ledger --ledger-address-index=42 \
+    --send
+```
+
+:::info
+For MultiversX, **the account index should always be `0`**, while the address index is allowed to vary. Therefore, you should not use the `--ledger-account-index` CLI parameter (it will be removed in a future release).
+:::
+
+Now let's deploy a smart contract using the Ledger:
+
+```sh
+mxpy contract deploy --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --bytecode=counter.wasm --gas-limit=5000000 \
+    --ledger --ledger-address-index=42 \
+    --send
+```
+
+Then, perform a contract call:
+
+```sh
+mxpy contract call erd1qqqqqqqqqqqqqpgqwwef37kmegph97egvvrxh3nccx7xuygez8ns682zz0 \
+    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --function increment --gas-limit 5000000 \
+    --ledger --ledger-address-index=42 \
+    --send
+```
+
+:::note
+As of October 2023, on Windows (or WSL), you might encounter some issues when trying to use Ledger in `mxpy`.
+:::

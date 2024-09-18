@@ -6,8 +6,6 @@ title: Custom Types
 
 We sometimes create new types that we want to serialize and deserialize directly when interacting with contracts. For `struct`s and `enum`s it is very easy to set them up, with barely any code.
 
-
-
 [comment]: # (mx-context-auto)
 
 ### Custom structures

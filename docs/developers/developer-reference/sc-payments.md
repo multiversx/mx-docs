@@ -15,7 +15,6 @@ On MultiversX it is impossible to send both EGLD and any ESDT token at the same 
 For this reason you will see no syntax for transferring both, neither when sending, nor receiving.
 :::
 
-
 ---
 
 [comment]: # (mx-context-auto)
@@ -25,7 +24,6 @@ For this reason you will see no syntax for transferring both, neither when sendi
 There are two ways in which a smart contract can receive payments:
 1. Like any regular account, directly, without any contract code being called;
 2. Via an endpoint.
-
 
 [comment]: # (mx-context-auto)
 
@@ -37,7 +35,6 @@ However, not all smart contracts are allowed to receive tokens directly. There i
 
 The rationale for this is as follows: the MultiversX blockchain doesn't offer any mechanism to allow contracts to react to direct calls. This is because we wanted to keep direct calls simple, consistent, and with a predictable gas cost, in all contexts. Most contracts, however, will likely want to keep track of all the funds that are fed into them, so they do not want to accept payments without an opportunity to also change their internal state.
 
-
 [comment]: # (mx-context-auto)
 
 ### Receiving payments via endpoints
@@ -47,7 +44,6 @@ The most common way for contracts to accept payments is by having endpoints anno
 :::important important
 The "payable" flag in the code metadata only refers to direct transfers. Trasferring tokens via contract endpoint calls is not affected by it in any way.
 :::
-
 
 If an endpoint only accepts EGLD, it should be annotated with `#[payable("EGLD")]`:
 
@@ -85,59 +81,10 @@ Additional restrictions on the incoming tokens can be imposed in the body of the
 - `self.call_value().egld_or_single_fungible_esdt()` further restricts `egld_or_single_esdt` to fungible ESDT tokens. It will return a pair of `EgldOrEsdtTokenIdentifier` and an amount.
 - `self.call_value().any_payment()` is the most general payment retriever. Never stops execution. Returns an object of type `EgldOrMultiEsdtPayment`.
 
-
-
 ---
 
 [comment]: # (mx-context-auto)
 
 ## Sending payments
 
-
-We have seen how contracts can accomodate receiving tokens. Sending them is, in principle, even more straightforward, as it only involves calling methods from the `self.send()` component.
-
-
-[comment]: # (mx-context-auto)
-
-### Sending payments directly
-
-Contracts can send tokens directly, without calling any endpoint at the destination, by using several methods from the API.
-
-The following methods will perform a transfer-execute call. This is a type of asynchronous call that does not provide a callback, or any other feedback from the receiver. For direct transferring of funds, this call type is ideal. 
-
-- `self.send().direct_egld(to, amount)` sends EGLD directly to an address. If the amount is zero, execution will fail.
-- `self.send().direct_non_zero_egld(to, amount)` sends EGLD directly to an address, if the amount is non-zero. Does nothing otherwise.
-- `self.send().direct(to, token, nonce, amount)` sends EGLD or a single ESDT token directly to an address. The `token` argument is of type `EgldOrEsdtTokenIdentifier`. If the amount is zero, execution will fail.
-- `self.send().direct_non_zero(to, token, nonce, amount)` sends EGLD or a single ESDT token directly to an address, if the amount is non-zero. Does nothing otherwise.
-- `self.send().direct_esdt(to, token, nonce, amount)` sends a single ESDT token directly to an address. If the amount is zero, execution will fail.
-- `self.send().direct_non_zero_esdt_payment(to, payment)` sends a single ESDT token directly to an address, if the amount is non-zero. Does nothing otherwise.
-- `self.send().direct_multi(to, payments)` sends one or more ESDT tokens to destination. The `payments` argument is a list of such payments. If at least one of the amounts is zero, execution will fail.
-
-It is also possible to transfer tokens via an async call:
-- `self.send().transfer_esdt_via_async_call(to, token, nonce, amount)`
-- `self.send().transfer_esdt_non_zero_via_async_call(to, token, nonce, amount)`
-- `self.send().transfer_multiple_esdt_via_async_call(to, payments)`
-
-
-[comment]: # (mx-context-auto)
-
-### Sending payments to contract endpoints
-
-Sending tokens to a contract endpoint is a contract call, and we have a [type-safe and clean way of doing this](/developers/developer-reference/sc-contract-calls).
-
-Even if you do not know what the endpoint or the arguments will be at compile time, we still recommend creating a `ContractCall` first, and then decorating and sending it, as in [these examples](/developers/developer-reference/sc-contract-calls#no-proxy).
-
-However, a few direct API methods exist. Just to mention them:
-- `self.send().direct_esdt_with_gas_limit(to, token_identifier, nonce, amount, gas, endpoint_name, arguments)`
-- `self.send().direct_non_zero_esdt_with_gas_limit(to, token_identifier, nonce, amount, gas, endpoint_name, arguments)`
-- `self.send().direct_with_gas_limit(to, token, nonce, amount, gas, endpoint_name, arguments)`
-- `self.send().direct_non_zero_with_gas_limit(to, token, nonce, amount, gas, endpoint_name, arguments)`
-
-
-[comment]: # (mx-context-auto)
-
-### Low-level API
-
-In the unlikely case that you still could not find an appropriate method of sending tokens using the methods in this page or [the contract calls page](/developers/developer-reference/sc-contract-calls), it is also possible to use the methods in `self.send_raw()` directly.
-
-<!-- TODO: make SendRawWrapper public and post link to docs.rs. -->
+We have seen how contracts can accomodate receiving tokens. Sending them is, in principle, even more straightforward, as it only involves specializing the `Payment` generic of the transaction using specific methods, or better said, attaching a payload to a regular transaction. Read more about payments [here](../../developers/transactions/tx-payment).
