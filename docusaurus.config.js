@@ -513,6 +513,27 @@ const config = {
       },
     ],
     [
+      "@scalar/docusaurus",
+      {
+        label: "API",
+        route: "/api",
+        showNavLink: true, // optional, default is trueșcala
+        configuration: {
+          servers: [
+            { url: "https://api.multiversx.com", description: "Mainnet" },
+            { url: "https://devnet-api.multiversx.com", description: "Devnet" },
+            {
+              url: "https://testnet-api.multiversx.com",
+              description: "Testnet",
+            },
+          ],
+          spec: {
+            url: "https://api.multiversx.com/-json",
+          },
+        },
+      },
+    ],
+    [
       "pwa",
       {
         // debug: isDeployPreview,
