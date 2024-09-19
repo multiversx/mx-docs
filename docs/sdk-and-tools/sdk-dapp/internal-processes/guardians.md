@@ -44,16 +44,27 @@ All signing providers (except Ledger) take care internally of formatting the tra
 After formatting the transaction and applying the signature provided by the Ledger device, the transaction must be signed by the Guardian. This is done by sending the transaction (or transactions array) to the web wallet 2FA hook. The web wallet will then prompt the user to sign the transaction with the Guardian account, and respond with the signed transaction.
 
 ```js
-import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
+import { CrossWindowProvider } from "@multiversx/sdk-web-wallet-cross-window-provider";
 
-const walletProvider = new WalletProvider('https://wallet.multiversx.com/dapp/init');
-walletProvider.guardTransactions(transactions, {
-    callbackUrl: encodeURIComponent('https://my-dapp.com'),
-});
-```
-Once transactions are back from the web wallet, they can be retrieved as follows:
+// instantiate wallet cross-window provider
+await CrossWindowProvider.getInstance().init();
+const crossWindowProvider = CrossWindowProvider.getInstance();
+crossWindowProvider.setWalletUrl(WALLET_PROVIDER_URL);
 
-```js
-const signedTransactions = new WalletProvider('https://wallet.multiversx.com/dapp/init').getTransactionsFromWalletUrl();
+// set sender
+const ledgerSenderBech32 = await this.hwProvider.getAddress();
+const ledgerSender = new Address(senderBech32);
+const sender = ledgerSender; // or "erd1...abc" witohut awaiting `getAddress()`
+crossWindowProvider.setAddress(sender);
+
+// the user signs transactions on ledger so we need to perform an extra
+// user action with a confirmation popup so the browser opens the new tab
+crossWindowProvider.setShouldShowConsentPopup(true);
+
+const guardedTransactions = await crossWindowProvider.guardTransactions(
+    signedTransactions
+);
 ```
+
+For a working example see the code used in [signing-providers](https://github.com/multiversx/mx-sdk-js-examples/blob/594465208fd3a9d5c57bca8ecc94f2dc59cbf4a6/signing-providers/src/hw.js#L87)
 
