@@ -40,7 +40,7 @@ Integrators may choose to have a unified view of the network, leveraging the [hy
 
 ### What signature scheme does MultiversX use?
 
-For transactions, [ed25519](/developers/signing-transactions/signing-transactions) is used.
+For transactions, [ed25519](/developers/signing-transactions) is used.
 
 ### What BIP-0044 coin type is being used?
 
@@ -87,8 +87,9 @@ Regular user accounts get created on the blockchain when the corresponding addre
 ### How to distinguish between a normal account and a smart contract?
 
 Examples of addresses:
- - **regular user account:** `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
- - **smart contract:** `erd1qqqqqqqqqqqqqpgqq66xk9gfr4esuhem3jru86wg5hvp33a62jps2fy57p`
+
+- **regular user account:** `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th`
+- **smart contract:** `erd1qqqqqqqqqqqqqpgqq66xk9gfr4esuhem3jru86wg5hvp33a62jps2fy57p`
 
 If the address (decoded as bytes) has a prefix of 8 bytes of `0x00`, then it refers to a smart contract.
 
@@ -103,4 +104,3 @@ Look for events of type [`SCDeploy`](/developers/event-logs/contract-deploy-even
 ### Is it possible to upgrade a smart contract?
 
 Yes, if the `upgradeable` flag is set in the contract's [metadata](/developers/data/code-metadata). Also see [upgrading smart contracts](/developers/developer-reference/upgrading-smart-contracts).
-
