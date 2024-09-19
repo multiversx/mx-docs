@@ -1,6 +1,7 @@
 ---
 id: overview
 title: Developers - Overview
+displayed_sidebar: Developers
 ---
 
 [comment]: # (mx-abstract)

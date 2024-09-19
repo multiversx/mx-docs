@@ -1,6 +1,7 @@
 ---
 id: welcome-to-multiversx
 title: Welcome to MultiversX
+displayed_sidebar: docs
 ---
 
 [comment]: # (mx-abstract)
