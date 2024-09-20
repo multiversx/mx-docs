@@ -184,6 +184,14 @@ const sidebars = {
                       "developers/testing/testing-in-go",
                     ],
                   },
+                  {
+                    type: "category",
+                    label: "Architecture",
+                    items: [
+                      "developers/architecture/architecture-overview",
+                      "developers/architecture/architecture-api",
+                    ],
+                  },
                 ],
               },
             ],
