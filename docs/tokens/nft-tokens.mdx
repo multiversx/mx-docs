@@ -6,6 +6,7 @@ title: NFT & SFT tokens
 ```mdx-code-block
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+import TableWrapper from "@site/src/components/TableWrapper";
 ```
 
 [comment]: # (mx-context-auto)
@@ -428,6 +429,7 @@ Below you can find a table with the supported media types for NFTs available on 
 
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
 
+<TableWrapper>
 | Property       | Plain value                                            | Encoded value                                                                                            |
 |----------------|--------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | **NFT Name**   | Beautiful song                                         | 42656175746966756c20736f6e67                                                                             |
@@ -436,6 +438,7 @@ Below you can find a table representing an example of the fields for a non-fungi
 | **Hash**       | 00                                                     | 00                                                                                                       |
 | **Attributes** | metadata:_ipfsCID/song.json_;tags:song,beautiful,music | 6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963 |
 | **URI**        | _URL_to_decentralized_storage/song.mp3_                | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033                               |
+</TableWrapper>
 
 In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
 

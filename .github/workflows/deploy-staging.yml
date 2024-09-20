@@ -2,7 +2,7 @@ name: deploy-staging
 
 on:
   push:
-    branches: [development]
+    branches: [update-build-flow]
   repository_dispatch:
     types: deploy-staging
   workflow_dispatch:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: development
+          ref: update-build-flow
           fetch-depth: 0
       - name: Use Node.js
         uses: actions/setup-node@v1

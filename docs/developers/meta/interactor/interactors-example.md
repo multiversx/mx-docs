@@ -89,8 +89,7 @@ Following this command, the `state.toml` file becomes visible and contains the n
 
 ### Attach tracer (optional)
 
-Optionally, let's attach a [tracer](/developers/interactor/interactors-overview#traces) to the interactor. This records every action and writes it as a mandos step at a specified path.
-
+Optionally, let's attach a [tracer](/developers/meta/interactor/interactors-overview#traces) to the interactor. This records every action and writes it as a mandos step at a specified path.
 
 ```rust title=interactor_main.rs
 impl ContractInteract {
