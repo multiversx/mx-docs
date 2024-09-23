@@ -82,7 +82,7 @@ Make sure `mxpy` is installed by issuing this command on a terminal:
 mxpy --version
 ```
 
-The version reported by this command must be at least `mxpy 0.8.0`, or higher. If `mxpy` is not installed (`command not found`), or if the version is lower, please follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
+If `mxpy` is not installed (`command not found`), please follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
 
 Make sure `mxpy` is installed and has the latest version before continuing.
 
@@ -92,9 +92,9 @@ Make sure `mxpy` is installed and has the latest version before continuing.
 
 To send transactions on your behalf _without_ using the online MultiversX Wallet, `mxpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
-Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
+Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/mxpy-cli#converting-a-wallet). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
 
-After the PEM file was generated, you can issue transactions from `mxpy`directly.
+After the PEM file was generated, you can issue transactions from `mxpy` directly.
 
 [comment]: # (mx-context-auto)
 

@@ -463,16 +463,8 @@ const config = {
             to: "/sdk-and-tools/sdk-py/installing-mxpy",
           },
           {
-            from: "/sdk-and-tools/erdpy/configuring-erdpy",
-            to: "/sdk-and-tools/sdk-py/configuring-mxpy",
-          },
-          {
             from: "/sdk-and-tools/erdpy/erdpy-cli",
             to: "/sdk-and-tools/sdk-py/mxpy-cli",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
-            to: "/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
           },
           {
             from: "/sdk-and-tools/erdpy/smart-contract-interactions",
