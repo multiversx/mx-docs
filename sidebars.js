@@ -71,56 +71,6 @@ const sidebars = {
             type: "category",
             label: "Development Frameworks",
             items: [
-              "developers/developer-reference/sc-annotations",
-              "developers/developer-reference/sc-modules",
-              "developers/developer-reference/sc-payments",
-              "developers/developer-reference/upgrading-smart-contracts",
-              "developers/developer-reference/sc-api-functions",
-              "developers/developer-reference/storage-mappers",
-              "developers/developer-reference/sc-random-numbers",
-            ],
-          },
-          {
-            type: "category",
-            label: "Data",
-            items: [
-              "developers/data/serialization-overview",
-              "developers/data/simple-values",
-              "developers/data/composite-values",
-              "developers/data/custom-types",
-              "developers/data/defaults",
-              "developers/data/multi-values",
-              "developers/data/code-metadata",
-              "developers/data/abi",
-            ],
-          },
-          {
-            type: "category",
-            label: "Rust Developers Best Practices",
-            items: [
-              "developers/best-practices/best-practices-basics",
-              "developers/best-practices/biguint-operations",
-              "developers/best-practices/managed-decimal",
-              "developers/best-practices/the-dynamic-allocation-problem",
-            ],
-          },
-          {
-            type: "category",
-            label: "Configuration & Tooling",
-            items: [
-              "developers/meta/sc-meta",
-              "developers/meta/sc-build-reference",
-              "developers/meta/sc-config",
-              "developers/meta/sc-meta-cli",
-              "developers/meta/sc-allocator",
-              "developers/meta/rust-nightly",
-            ],
-          },
-          {
-            type: "category",
-            label: "Testing",
-            items: [
-              "developers/testing/testing-overview",
               {
                 type: "category",
                 label: "Rust Development Framework",
@@ -178,6 +128,7 @@ const sidebars = {
                     items: [
                       "developers/best-practices/best-practices-basics",
                       "developers/best-practices/biguint-operations",
+                      "developers/best-practices/managed-decimal",
                       "developers/best-practices/the-dynamic-allocation-problem",
                     ],
                   },
