@@ -126,7 +126,7 @@ Now that we have finished with the installation part, we can proceed to populate
 
 ## Reconstructing non-pruned databases
 
-An alternative to downloading the non-pruned history is to reconstruct it locally (on your own infrastructure). 
+The recommended method for populating a non-pruned database is to reconstruct it locally (on your own infrastructure). 
 
 There are also two options for reconstructing a non-pruned database:
 - Based on the **[import-db](/validators/import-db/)** feature, which re-processes past blocks - and, while doing so, retains the whole, non-pruned accounts history.
