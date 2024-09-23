@@ -603,6 +603,15 @@ table > tfoot:not(:last-child) {
   margin-top: calc(var(--ifm-heading-vertical-rhythm-top) * var(--ifm-leading));
 }
 
+.table-wrapper {
+  overflow-x: auto;
+  position: relative;
+  margin-bottom: var(--ifm-spacing-vertical);
+}
+.table-wrapper table {
+  margin-bottom: 0;
+}
+
 /* -------------------- End Markdown ------------------- */
 
 /* ------------------- Start Mermaid ------------------- */

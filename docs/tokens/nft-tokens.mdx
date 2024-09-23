@@ -6,6 +6,7 @@ title: NFT & SFT tokens
 ```mdx-code-block
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+import TableWrapper from "@site/src/components/TableWrapper";
 ```
 
 [comment]: # (mx-context-auto)
@@ -13,6 +14,10 @@ import TabItem from "@theme/TabItem";
 ## **Introduction**
 
 MultiversX NFTs(non-fungible tokens) are a breed of digital assets that are revolutionizing the world of art, collectibles, and more. These NFTs are unique, one-of-a-kind tokens that are built on blockchain technology, allowing for secure ownership and transfer of these assets. With MultiversX NFTs, every token is assigned a unique identification code(ticker) and metadata that distinguishes it from every other token, making each NFT truly one-of-a-kind. Read the full page for a comprehensive guide on how to brand, issue, transfer, assign roles and many other features, for both NFTs and SFTs.
+
+:::note
+Features related to dynamic NFTs are not yet available on **Mainnet**. See [Spica Protocol Upgrade](https://governance.multiversx.com/proposal/erd1qqqqqqqqqqqqqpgq4qvrwlr2e6ld50f3qfc94am38p8298kthg4s3f0vfn/1).
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -293,6 +298,11 @@ For NFT:
 - ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT
 - ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT
 - ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
+- ESDTRoleNFTUpdate : this role allows one to update meta data attributes of a specific NFT
+- ESDTRoleModifyRoyalties : this role allows one to modify royalities of a specific NFT
+- ESDTRoleSetNewURI : this role allows one to set new uris of a specific NFT
+- ESDTRoleModifyCreator : this role allows one to rewrite the creator of a specific token
+- ESDTRoleNFTRecreate : this role allows one to recreate the whole NFT with new attributes
 
 For SFT:
 
@@ -300,6 +310,11 @@ For SFT:
 - ESDTRoleNFTBurn : this role allows one to burn quantity of a specific SFT
 - ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
 - ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
+- ESDTRoleNFTUpdate : this role allows one to update meta data attributes of a specific SFT
+- ESDTRoleModifyRoyalties : this role allows one to modify royalities of a specific SFT
+- ESDTRoleSetNewURI : this role allows one to set new uris of a specific SFT
+- ESDTRoleModifyCreator : this role allows one to rewrite the creator of a specific token
+- ESDTRoleNFTRecreate : this role allows one to recreate the whole NFT with new attributes
 
 To see how roles can be assigned, please refer to [this](/tokens/nft-tokens#assigning-roles) section.
 
@@ -428,6 +443,7 @@ Below you can find a table with the supported media types for NFTs available on 
 
 Below you can find a table representing an example of the fields for a non-fungible token that resembles a song.
 
+<TableWrapper>
 | Property       | Plain value                                            | Encoded value                                                                                            |
 |----------------|--------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | **NFT Name**   | Beautiful song                                         | 42656175746966756c20736f6e67                                                                             |
@@ -436,6 +452,7 @@ Below you can find a table representing an example of the fields for a non-fungi
 | **Hash**       | 00                                                     | 00                                                                                                       |
 | **Attributes** | metadata:_ipfsCID/song.json_;tags:song,beautiful,music | 6d657461646174613a697066734349442f736f6e672e6a736f6e3b746167733a736f6e672c62656175746966756c2c6d75736963 |
 | **URI**        | _URL_to_decentralized_storage/song.mp3_                | 55524c5f746f5f646563656e7472616c697a65645f73746f726167652f736f6e672e6d7033                               |
+</TableWrapper>
 
 In this example we are creating a NFT represeting a song. Hash is left null, we are sharing media location URL and we are also providing the location of the extra metadata within the attributes field.
 
@@ -683,7 +700,7 @@ The manager of an ESDT token may wipe out a single NFT held by a frozen Account.
 
 ```rust
 WipeTransaction {
-    Sender: <account address of the token managers>
+    Sender: <account address of the token manager>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
     Value: 0
     GasLimit: 60000000
@@ -695,6 +712,231 @@ WipeTransaction {
 ```
 
 _For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Modify Royalties**
+
+The manager of an ESDT token may want to set new royalities. This operation will rewrite the royalities on the specified token ID.
+It requires `ESDTRoleNFTModifyRoyalties` role.
+This is done by performing a transaction like this:
+
+```rust
+ModifyRoyalitiesTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTModifyRoyalties" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <token nonce in hexadecimal encoding> +
+          "@" + <new royalties in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Set new URIs**
+
+The manager of an ESDT token may want to set new URIs. This operation will rewrite the URIs on the specified token ID.
+It requires `ESDTRoleNFTSetNewURIs` role.
+This is done by performing a transaction like this:
+
+```rust
+SetNewURIsTransaction {
+    Sender: <account address of the token manager>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTSetNewURIs" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <token nonce in hexadecimal encoding> +
+          "@" + <new URI1 in hexadecimal encoding> +
+          "@" + <new URI2 in hexadecimal encoding> +
+            ...
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Modify Creator**
+
+The creator of a token can be changed. For this, the token has to be moved to the new creator account. The new creator
+account requires `ESDTRoleModifyCreator` role. Also, the token has to be of dynamic type in order for this to work.
+
+The creator can be modified using a transaction like this:
+
+```rust
+ModifyCreatorTransaction {
+    Sender: <account address of the new creator that has `ESDTRoleModifyCreator` role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTModifyCreator" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <token nonce in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **MetaData Update**
+
+The manager of an ESDT token may want to update token metadata. This operation will update token metadata on the specified token ID.
+It requires `ESDTRoleNFTUpdate` role. If nothing is received for a given attribute, the old version of that attribute will be kept.
+
+This is done by performing a transaction like this:
+
+```rust
+MetaDataUpdateTransaction {
+    Sender: <account address that has `ESDTRoleNFTUpdate` role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTMetaDataUpdate" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <token nonce in hexadecimal encoding> +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <royalities in hexadecimal encoding> +
+          "@" + <hash in hexadecimal encoding> +
+          "@" + <attributes in hexadecimal encoding> +
+          "@" + <uris list in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **MetaData Recreate**
+
+The whole NFT can be recreated with new attributes using a transaction like this:
+
+The manager of an ESDT token may want to recreate the whole token with new attributes. This operation will recreate token attributes on the specified token ID.
+It requires `ESDTRoleNFTRecreate` role. If an argument is not being set, that field is set to zero.
+
+This is done by performing a transaction like this:
+
+```rust
+MetaDataRecreateTransaction {
+    Sender: <account address that has `ESDTRoleNFTRecreate` role>
+    Receiver: <same as sender>
+    Value: 0
+    GasLimit: 60000000
+    Data: "ESDTMetaDataRecreate" +
+          "@" + <token identifier in hexadecimal encoding> +
+          "@" + <NFT nonce in hexadecimal encoding> +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <royalities in hexadecimal encoding> +
+          "@" + <hash in hexadecimal encoding> +
+          "@" + <attributes in hexadecimal encoding> +
+          "@" + <uris list in hexadecimal encoding>
+}
+```
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Make token dynamic**
+
+The ESDT manager can change token type to dynamic using a transaction like this:
+
+```rust
+ChangeToDynamicTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "changeToDynamic" +
+          "@" + <token identifier in hexadecimal encoding>
+}
+```
+
+The following token types cannot be changed to dynamic: `FungibleESDT`, `NonFungibleESDT`, `NonFungibleESDTv2`
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Update token**
+
+The token type can be updated to the lastest version, which will update token type and propagate it to shard's
+system account. Currently, token type is correctly saved only on metachain and there is no type related information
+on shard level, the shard only knows if the token is non fungible with implicit type `NonFungibleESDT`, but it
+does not know specifically if it's `NonFungibleESDT`, `MetaESDT` or `SemiFungibleESDT`. So, the update operation will
+proceed in the following way:
+- if token type is `NonFungibleESDT` it will be set to `NonFungibleESDTv2`, and it will be propagated to shard's system account
+- if token type is `MetaESDT` or `SemiFungibleESDT` it will be propagated to shard's system account
+
+This can be done using a transaction like this:
+
+```rust
+UpdateTokenIDTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 0
+    GasLimit: 60000000
+    Data: "updateTokenID" +
+          "@" + <token identifier in hexadecimal encoding>
+}
+```
+
+The following token types cannot be changed to dynamic: `FungibleESDT`, `NonFungibleESDT`, `NonFungibleESDTv2`
+
+_For more details about how arguments have to be encoded, check [here](/developers/sc-calls-format)._
+
+[comment]: # (mx-context-auto)
+
+### **Register dynamic token**
+
+A token can be registered directly as dynamic.
+
+This can be done using a transaction like this:
+
+```rust
+RegisterDynamicTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
+    Data: "registerDynamic" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
+          "@" + <token compressed type (which can be `NFT`, `SFT`, `META`, `FNG`) in hexadecimal encoding>
+}
+```
+
+The following token types cannot be registered as dynamic: `FungibleESDT`
+
+[comment]: # (mx-context-auto)
+
+### **Register and set all roles to dynamic**
+
+A token can be registered directly as dynamic together will all roles set for the specific type.
+
+This can be done using a transaction like this:
+
+```rust
+RegisterAndSetAllRolesDynamicTransaction {
+    Sender: <account address of the token manager>
+    Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+    Value: 50000000000000000 # (0.05 EGLD)
+    GasLimit: 60000000
+    Data: "registerAndSetAllRolesDynamic" +
+          "@" + <token name in hexadecimal encoding> +
+          "@" + <token ticker in hexadecimal encoding> +
+          "@" + <token compressed type (which can be `NFT`, `SFT`, `META`, `FNG`) in hexadecimal encoding>
+}
+```
+
+The following token types cannot be registered as dynamic: `FungibleESDT`
 
 [comment]: # (mx-context-auto)
 
