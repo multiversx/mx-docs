@@ -60,7 +60,7 @@ For example, to install `rust`, you can simply type the command:
 mxpy deps install rust
 ```
 
-When installing dependecies the `--overwrite` argument can be used to overwrite an existing version.
+When installing dependencies, the `--overwrite` argument can be used to overwrite an existing version.
 
 For example, to overwrite your current `rust` installation, you can simply type the command:
 
@@ -68,7 +68,7 @@ For example, to overwrite your current `rust` installation, you can simply type 
 mxpy deps install rust --overwrite
 ```
 
-If the configuration is not altered **the default version** will be installed.
+If the configuration is not altered, **the default version** will be installed.
 
 :::note Default rust version
 Generally speaking, the default `rust` version installed by `mxpy` is the one referenced by [the latest Docker image](https://github.com/multiversx/mx-sdk-rust-contract-builder/blob/main/Dockerfile) used for reproducible builds.
@@ -177,7 +177,7 @@ mxpy wallet convert --help
 
 ## Building a smart contract
 
-In order to deploy a smart contract on the network, you need to build it first. The contract can be built using `mxpy`, but for a more granular approach [sc-meta](/developers/meta/sc-build-reference#how-to-basic-build) should be used. To learn more about `sc-meta` please check out [this page](/developers/meta/sc-meta).
+In order to deploy a smart contract on the network, you need to build it first. The contract can be built using `mxpy`, but for a more granular approach, [sc-meta](/developers/meta/sc-build-reference#how-to-basic-build) should be used. To learn more about `sc-meta`, please check out [this page](/developers/meta/sc-meta).
 
 The contract we will be using for this examples can be found [here](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/adder).
 
@@ -245,7 +245,7 @@ The `--pem` argument is used to provide the sender of the transaction, the payer
 
 ### Deploying a smart contract providing the ABI file
 
-For functions that have complex arguments we can use the ABI file generated when building the contract. The ABI can be provided using the `--abi` argument. When using the ABI, and only when using the ABI, the arguments should be written in a `json` file and should be provided via the `--arguments-file` argument.
+For functions that have complex arguments, we can use the ABI file generated when building the contract. The ABI can be provided using the `--abi` argument. When using the ABI, and only when using the ABI, the arguments should be written in a `json` file and should be provided via the `--arguments-file` argument.
 
 For this example, we'll use the [multisig contract](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig).
 
@@ -265,9 +265,9 @@ First, we'll prepare the file containing the constructors arguments. We'll refer
 ]
 ```
 
-Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the value `2` coresponds to the type `u32`. After that, we have another list that coresponds to the type `variadic`. Inside this list, we need to insert our addresses. For `mxpy`to encode addresses properly, we need to provide the address values inside a dictionary that can contain two keys: we can provide the address as the `bech32` representation or as the `hex encoded` public key.
+Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the value `2` corresponds to the type `u32`. After that, we have another list that coresponds to the type `variadic`. Inside this list, we need to insert our addresses. For `mxpy`to encode addresses properly, we need to provide the address values inside a dictionary that can contain two keys: we can provide the address as the `bech32` representation or as the `hex encoded` public key.
 
-After finishing the arguments file we can run the following command to deploy the contract:
+After finishing the arguments file, we can run the following command to deploy the contract:
 
 ```sh
 mxpy contract deploy --bytecode ~/contracts/multisig/output/multisig.wasm \
@@ -324,9 +324,9 @@ First, we'll prepare the file containing the endpoints arguments. We'll refer to
 ]
 ```
 
-Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the contract expects an address, so we provide the `bech32` representation. After that, we have a `BigUInt` value that we can provide as a number. The third value is `Option<u64>` so we provide it as a number, as well. In case we wanted to skip this value, we could've simply used `0`. The last parameter is of type `variadic<bytes>`. Because it's a variadic value we have to place the arguments inside a list and since we can't write bytes we `hex encode` the value and place it in a dictionary containing the key-value pair `"hex": "<hex_string>"`, same as we did above for the address.
+Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the contract expects an address, so we provide the `bech32` representation. After that, we have a `BigUInt` value that we can provide as a number. The third value is `Option<u64>`, so we provide it as a number, as well. In case we wanted to skip this value, we could've simply used `0`. The last parameter is of type `variadic<bytes>`. Because it's a variadic value, we have to place the arguments inside a list. Since we can't write bytes, we `hex encode` the value and place it in a dictionary containing the key-value pair `"hex": "<hex_string>"`, same as we did above for the address.
 
-After finishing the arguments file we can run the following command to call the endpoint:
+After finishing the arguments file, we can run the following command to call the endpoint:
 
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgqjsg84gq5e79rrc2rm5ervval3jrrfvvfd8sswc6xjy \

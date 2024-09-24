@@ -24,7 +24,7 @@ Before installing **mxpy**, please make sure you have a working **Python 3** env
 You'll need **pipx** installed on your machine. For more details on how to install **pipx** check out [**this page**](https://pipx.pypa.io/stable/#install-pipx).
 
 :::note
-If you've previously installed **mxpy** using **mxpy-up** we advise you to switch to **pipx**, but make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
+If you've previously installed **mxpy** using **mxpy-up**, we advise you to switch to **pipx**, but make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
 
 ```sh
 rm ~/multiversx-sdk/mxpy
@@ -59,7 +59,7 @@ To check that **mxpy** installed successfully you can run the following command:
 mxpy --version
 ```
 
-Aditionally, if you'd like to have shell completion for `bash` and `zsh` run the following command then restart the shell:
+Additionally, if you'd like to have shell completion for `bash` and `zsh`, run the following command, then restart the shell:
 
 ```sh
 activate-global-python-argcomplete
@@ -69,7 +69,7 @@ activate-global-python-argcomplete
 
 ## **Upgrade mxpy using pipx**
 
-To upgrade **mxpy** to a newer version you can simply run the following command:
+To upgrade **mxpy** to a newer version, you can simply run the following command:
 
 ```sh
 pipx upgrade multiversx-sdk-cli
