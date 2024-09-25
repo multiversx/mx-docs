@@ -53,18 +53,13 @@ crossWindowProvider.setWalletUrl(WALLET_PROVIDER_URL);
 
 // set sender
 const ledgerSenderBech32 = await this.hwProvider.getAddress();
-const ledgerSender = new Address(senderBech32);
-const sender = ledgerSender; // or "erd1...abc" witohut awaiting `getAddress()`
+const sender = Address.newFromBech32(ledgerSenderBech32); // or "erd1...abc" witohut awaiting `getAddress()`
 crossWindowProvider.setAddress(sender);
 
-// the user signs transactions on ledger so we need to perform an extra
-// user action with a confirmation popup so the browser opens the new tab
+// To complete the transaction, the user will sign using their Ledger device. This requires an additional step: a confirmation popup will appear, prompting the user to approve the action, after which a new tab will open in the browser.
 crossWindowProvider.setShouldShowConsentPopup(true);
 
 const guardedTransactions = await crossWindowProvider.guardTransactions(
     signedTransactions
 );
 ```
-
-For a working example see the code used in [signing-providers](https://github.com/multiversx/mx-sdk-js-examples/blob/594465208fd3a9d5c57bca8ecc94f2dc59cbf4a6/signing-providers/src/hw.js#L87)
-
