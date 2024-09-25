@@ -250,7 +250,7 @@ Decoding the arguments ([useful resources here](/developers/sc-calls-format/)) w
 ## Relayed transactions version 3
 
 :::note
-This feature is not available at the moment on Mainnet.
+This feature is not yet available on **Mainnet**. See [Spica Protocol Upgrade](https://governance.multiversx.com/proposal/erd1qqqqqqqqqqqqqpgq4qvrwlr2e6ld50f3qfc94am38p8298kthg4s3f0vfn/1).
 :::
 
 Relayed transactions v3 feature comes with a change on the entire transaction structure, adding a new optional field `InnerTransactions`, which is a collection of inner transactions. That being said, relayed transactions v3 allow the user to send multiple inner transactions on the same relayed transaction which will be executed as normal transactions, without the gas consuming data field of the old relayed transactions versions.
