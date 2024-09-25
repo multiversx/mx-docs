@@ -7,7 +7,7 @@ title: mxpy CLI cookbook
 
 ## mxpy (Command Line Interface)
 
-**mxpy**, as a command-line tool, can be used to simplify and automate the interaction with the MultiversX network - it can be easily used in shell scripts, as well. It implements a set of **commands**, organized within **groups**. 
+**mxpy**, as a command-line tool, can be used to simplify and automate the interaction with the MultiversX network - it can be easily used in shell scripts, as well. It implements a set of **commands**, organized within **groups**.
 
 The complete Command Line Interface is listed [**here**](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md). Command usage and description are available through the `--help` or `-h` flags.
 
@@ -20,33 +20,6 @@ mxpy tx new --help
 ```
 
 This page will guide you through the process of handling common tasks using **mxpy**.
-
-[comment]: # (mx-context-auto)
-
-## Upgrading mxpy
-
-[comment]: # (mx-context-auto)
-
-### Upgrade using pipx
-
-In case you used **pipx** to install **mxpy**, to upgrade to a newer version, you can run the following command:
-
-```sh
-pipx upgrade multiversx-sdk-cli
-```
-
-[comment]: # (mx-context-auto)
-
-### Using the installation script
-
-If you've previously installed **mxpy** using the legacy **mxpy-up** installation script, you should switch to the **pipx** approach. Make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
-
-```sh
-rm ~/multiversx-sdk/mxpy
-rm -rf ~/multiversx-sdk/mxpy-venv
-```
-
-Additionally, you might want to cleanup the shell profile files, to not alter anymore the `PATH` variable with respect to `~/multiversx-sdk`: `~/.profile`, `~/.bashrc` and / or `~/.zshrc`.
 
 [comment]: # (mx-context-auto)
 
@@ -68,7 +41,7 @@ mxpy deps install <dependency-name>
 
 Both `mxpy deps check <dependecy-name>` and `mxpy deps install <dependency-name>` use the `<dependency-name>` as a positional argument.
 
-To find out which dependencies can be managed using `mxpy` you can type one of the following commands and you will see which positional arguments it accepts:
+To find out which dependencies can be managed using `mxpy`, you can type one of the following commands to see the positional arguments it accepts:
 
 ```sh
 mxpy deps check -h
@@ -81,15 +54,21 @@ For example, in order to check if `rust` is installed you would type:
 mxpy deps check rust
 ```
 
-When installing dependecies the `--overwrite` argument can be used to overwrite an existing version.
-
 For example, to install `rust`, you can simply type the command:
 
 ```sh
 mxpy deps install rust
 ```
 
-If no tag is provided **the default version** will be installed.
+When installing dependencies, the `--overwrite` argument can be used to overwrite an existing version.
+
+For example, to overwrite your current `rust` installation, you can simply type the command:
+
+```sh
+mxpy deps install rust --overwrite
+```
+
+If the configuration is not altered, **the default version** will be installed.
 
 :::note Default rust version
 Generally speaking, the default `rust` version installed by `mxpy` is the one referenced by [the latest Docker image](https://github.com/multiversx/mx-sdk-rust-contract-builder/blob/main/Dockerfile) used for reproducible builds.
@@ -104,10 +83,34 @@ sudo apt-get install build-essential pkg-config libssl-dev
 
 :::
 
-Here's how to install a specific version of `rust` (example):
+## Configuring mxpy
 
-```sh
-mxpy deps install rust --overwrite
+The configuration can be altered using the `mxpy config` command.
+
+:::tip
+mxpy's configuration is stored in the file `~/multiversx-sdk/mxpy.json`.
+:::
+
+[comment]: # (mx-context-auto)
+
+### Viewing the current `mxpy` configuration
+
+In order to view the current configuration, one can issue the command `mxpy config dump`. Output example:
+
+```json
+{
+  "dependencies.rust.tag": ""
+}
+```
+
+[comment]: # (mx-context-auto)
+
+### Updating the `mxpy` configuration
+
+One can alter the current configuration using the command `mxpy config set`. For example, in order to set the **_rust version_** to be used, one would do the following:
+
+```bash
+$ mxpy config set dependencies.rust.tag stable
 ```
 
 [comment]: # (mx-context-auto)
@@ -174,7 +177,7 @@ mxpy wallet convert --help
 
 ## Building a smart contract
 
-In order to deploy a smart contract on the network, you need to build it first.
+In order to deploy a smart contract on the network, you need to build it first. The contract can be built using `mxpy`, but for a more granular approach, [sc-meta](/developers/meta/sc-build-reference#how-to-basic-build) should be used. To learn more about `sc-meta`, please check out [this page](/developers/meta/sc-meta).
 
 The contract we will be using for this examples can be found [here](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/adder).
 
@@ -193,8 +196,6 @@ The command accepts a few parameters that you can check out [here](https://githu
 ```sh
 mxpy contract build --help
 ```
-
-If you'd like to build a smart contract directly using `sc-meta` instead, please follow [this](/developers/meta/sc-meta).
 
 [comment]: # (mx-context-auto)
 
@@ -242,6 +243,44 @@ The `--pem` argument is used to provide the sender of the transaction, the payer
 
 [comment]: # (mx-context-auto)
 
+### Deploying a smart contract providing the ABI file
+
+For functions that have complex arguments, we can use the ABI file generated when building the contract. The ABI can be provided using the `--abi` argument. When using the ABI, and only when using the ABI, the arguments should be written in a `json` file and should be provided via the `--arguments-file` argument.
+
+For this example, we'll use the [multisig contract](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig).
+
+First, we'll prepare the file containing the constructors arguments. We'll refer to this file as `deploy_multisig_arguments.json`. The constructor requires two arguments, the first is of type `u32` and the second one is of type `variadic<Address>`. All the arguments in this file **should** be placed inside a list. The arguments file should look like this:
+
+```json
+[
+  2,
+  [
+    {
+      "bech32": "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    },
+    {
+      "hex": "8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+    }
+  ]
+]
+```
+
+Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the value `2` corresponds to the type `u32`. After that, we have another list that coresponds to the type `variadic`. Inside this list, we need to insert our addresses. For `mxpy`to encode addresses properly, we need to provide the address values inside a dictionary that can contain two keys: we can provide the address as the `bech32` representation or as the `hex encoded` public key.
+
+After finishing the arguments file, we can run the following command to deploy the contract:
+
+```sh
+mxpy contract deploy --bytecode ~/contracts/multisig/output/multisig.wasm \
+    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --abi ~/contracts/multisig/output/multisig.abi.json \
+    --arguments-file deploy_multisig_arguments.json \
+    --gas-limit 500000000 \
+    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --send
+```
+
+[comment]: # (mx-context-auto)
+
 ## Calling the Smart Contract
 
 After deploying our smart contract we can start interacting with it. The contract has a function called `add()` that we can call and it will increase the value stored in the contract with the value we provide.
@@ -262,7 +301,47 @@ Using the `--function` argument we specify the function we want to call and with
 
 [comment]: # (mx-context-auto)
 
-## Querying a Smart Contract
+### Calling the smart contract providing the ABI file
+
+Same as we did for deploying the contract, we can call functions by providing the ABI file and the arguments file.
+
+Since we deployed the [multisig contract](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig), we'll call the `proposeTransferExecute` endpoint.
+
+First, we'll prepare the file containing the endpoints arguments. We'll refer to this file as `call_multisig_arguments.json`. The `proposeTransferExecute` endpoint requires four arguments, the first is of type `Address`, the second one is of type `BigUInt`, the third is of type `Option<u64>` and the fourth is of type `variadic<bytes>`. All the arguments in this file **should** be placed inside a list. The arguments file should look like this:
+
+```json
+[
+  {
+    "bech32": "erd1qqqqqqqqqqqqqpgqs63rcpahnwtjnedj5y6uuqh096nzf75gczpsc4fgtu"
+  },
+  1000000000000000000,
+  5000000,
+  [
+    {
+      "hex": "616464403037"
+    }
+  ]
+]
+```
+
+Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the contract expects an address, so we provide the `bech32` representation. After that, we have a `BigUInt` value that we can provide as a number. The third value is `Option<u64>`, so we provide it as a number, as well. In case we wanted to skip this value, we could've simply used `0`. The last parameter is of type `variadic<bytes>`. Because it's a variadic value, we have to place the arguments inside a list. Since we can't write bytes, we `hex encode` the value and place it in a dictionary containing the key-value pair `"hex": "<hex_string>"`, same as we did above for the address.
+
+After finishing the arguments file, we can run the following command to call the endpoint:
+
+```sh
+mxpy contract call erd1qqqqqqqqqqqqqpgqjsg84gq5e79rrc2rm5ervval3jrrfvvfd8sswc6xjy \
+    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --abi ~/contracts/multisig/output/multisig.abi.json \
+    --arguments-file call_multisig_arguments.json \
+    --function proposeTransferExecute
+    --gas-limit 500000000 \
+    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --send
+```
+
+[comment]: # (mx-context-auto)
+
+## Querying the Smart Contract
 
 Querying a contract is done by calling a so called `view function`. We can get data from a contract without sending a transaction to the contract, basically without spending money.
 
@@ -277,6 +356,35 @@ mxpy contract query erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxj
 ```
 
 We see that `mxpy` returns our value as a base64 string, as a hex number and as a integer. Indee, we see the expected value.
+
+[comment]: # (mx-context-auto)
+
+### Querying the smart contract providing the ABI file
+
+We'll call the `signed` readonly endpoint of the [multisig contract](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig). This endpoint accepts two arguments: the first is the address, and the second is the proposal ID, which will be used to verify if the address has signed the proposal. The endpoint returns a `boolean` value, `true` if the address has signed the proposal and `false` otherwise.
+
+Let's prepare the arguments file. The first argument is of type `Address` and the second one is of type `u32`, so our file looks like this:
+
+```json
+[
+  {
+    "bech32": "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+  },
+  1
+]
+```
+
+As above, we encapsulate the address in a dictionary and the `u32` value is simply a number. We'll refer to this file as `query_multisig_arguments.json`.
+
+After preparing the file, we can run the following command:
+
+```sh
+mxpy contract query erd1qqqqqqqqqqqqqpgqjsg84gq5e79rrc2rm5ervval3jrrfvvfd8sswc6xjy \
+    --proxy https://devnet-gateway.multiversx.com \
+    --function signed \
+    --abi ~/contracts/multisig/output/multisig.abi.json \
+    --arguments-file query_multisig_arguments.json
+```
 
 [comment]: # (mx-context-auto)
 
@@ -306,6 +414,19 @@ mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfk
 ```
 
 We provide as a positional argument the contract's address that we want to upgrade, in our case the previously deployed adder contract. The `--bytecode` is used to provide the new code that will replace the old code. We also set the `--arguments` to `0` as we didn't change the constructor and the contract will start counting from `0` again. The rest of the arguments you know from all the previous operations we've done.
+
+As shown above, we can also upgrade the contract by providing the ABI file and the arguments file:
+
+```sh
+mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
+    --bytecode ~/contracts/adder/output/adder.wasm \
+    --proxy=https://devnet-gateway.multiversx.com --chain D \
+    --recall-nonce --gas-limit 5000000 \
+    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --abi=~/contracts/multisig/output/multisig.abi.json,
+    --arguments-file=upgrade_arguments.json
+    --send
+```
 
 Now let's add `5` to the contract one more time. We do so by running the following:
 
@@ -373,7 +494,7 @@ mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-n
     --send
 ```
 
-That's it! As easy as that. We sent a transaction from Alice to Bob. We choose the receiver of our transaction using the `--receiver` argument and set the gas limit to `50000` because that is the gas cost of a simple move balance transaction. Notice we used the `--value` argument to pass the value that we want to transfer but we passed in the denomintated value. We transferred 1 eGLD (1 * 10^18). We then specify the proxy and the chain ID for the network we want to send our transaction to and use the `--send` argument to broadcast it.
+That's it! As easy as that. We sent a transaction from Alice to Bob. We choose the receiver of our transaction using the `--receiver` argument and set the gas limit to `50000` because that is the gas cost of a simple move balance transaction. Notice we used the `--value` argument to pass the value that we want to transfer but we passed in the denomintated value. We transferred 1 eGLD (1 \* 10^18). We then specify the proxy and the chain ID for the network we want to send our transaction to and use the `--send` argument to broadcast it.
 
 In case you want to save the transaction you can also provide the `--outfile` argument and a `json` file containing the transaction will be saved at the specified location. If you just want to prepare the transaction without broadcasting it simply remove the `--send` argument.
 
@@ -381,7 +502,7 @@ In case you want to save the transaction you can also provide the `--outfile` ar
 
 ## Guarded transactions
 
-If your address is guarded, you'll have to provide some additional arguments because your transaction needs to be co-signed. 
+If your address is guarded, you'll have to provide some additional arguments because your transaction needs to be co-signed.
 
 The first extra argument we'll need is the `--guardian` argument. This specifies the guardian address of our address. Then, if our account is guarded by a service like our trusted co-signer service we have to provide the `--guardian-service-url` which specifies where the transaction is sent to be co-signed.
 
@@ -410,6 +531,40 @@ mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-n
 ```
 
 If your address is guarded by another wallet, you'll still need to provide the `--guardian` argument and the guardian's wallet that will co-sign the transaction, but you don't need to provide the 2fa code and the service url. You can provide the guardian's wallet using one of the following arguments: `--guardian-pem`, `--guardian-keyfile`, or `--guardian-ledger`.
+
+[comment]: # (mx-context-auto)
+
+## Relayed V3 transactions
+
+Relayed transactions are transactions with the fee paid by a so-called relayer. In other words, if a relayer is willing to pay for a transaction, it is not mandatory for the sender to have any EGLD for fees. To learn more about relayed transactions check out [this page](/developers/relayed-transactions/).
+
+In this section we'll see how we can send `Relayed V3` transactions using `mxpy`. For a more detailed look on `Relayed V3` transactions, take a look [here](/developers/relayed-transactions/#relayed-transactions-version-3). For these kind of transactions a new transaction field has been introduced, called `innerTransactions`. In this example we'll see how we can create both the inner transactions and the relayed transaction.
+
+### Creating the inner transactions
+
+We can simply create the inner transactions the same way we did above, by using the `mxpy tx new` command. The only difference is that we'll have to provide an additional argument called `--inner-transactions-outfile`, which represents the file where the inner transactions are saved to be later used by the relayer. To keep it simple, we'll send 1 EGLD from Alice to Bob and Carol will be the relayer. To create the EGLD transfer transaction from Alice to Bob we run the following command:
+
+```sh
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+    --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
+    --gas-limit 50000 --value 1000000000000000000 \
+    --proxy https://devnet-gateway.multiversx.com --chain D \
+    --relayer erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8
+    --inner-transactions-outfile inner_transactions.json
+```
+
+After creating the inner transaction, we are ready to create the relayed transaction. We have to keep in mind that for `Relayed V3` transactions, the receiver has to be the same as the relayer, in our case, Carol. Another requirement is that the relayed transaction has to have enough gas. The gas is computed by multiplying the base cost (50_000) with the number of inner transactions plus the gasLimit for each inner transaction. For more details on how the gas is computed, check out [this page](/developers/relayed-transactions/#relayed-transactions-version-3).
+
+We can create the relayed transaction by running the following command:
+
+```sh
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/carol.pem --recall-nonce \
+    --receiver erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
+    --gas-limit 1000000 --value 0 \
+    --proxy https://devnet-gateway.multiversx.com --chain D \
+    --inner-transactions inner_transactions.json \
+    --send
+```
 
 [comment]: # (mx-context-auto)
 

@@ -128,6 +128,7 @@ const sidebars = {
                     items: [
                       "developers/best-practices/best-practices-basics",
                       "developers/best-practices/biguint-operations",
+                      "developers/best-practices/managed-decimal",
                       "developers/best-practices/the-dynamic-allocation-problem",
                     ],
                   },
@@ -199,9 +200,7 @@ const sidebars = {
                   "sdk-and-tools/sdk-py/sdk-py",
                   "sdk-and-tools/sdk-py/sdk-py-cookbook",
                   "sdk-and-tools/sdk-py/installing-mxpy",
-                  "sdk-and-tools/sdk-py/configuring-mxpy",
                   "sdk-and-tools/sdk-py/mxpy-cli",
-                  "sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
                   "sdk-and-tools/sdk-py/smart-contract-interactions",
                   "sdk-and-tools/sdk-py/sdk-py-migration-guides",
                 ],

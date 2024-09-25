@@ -447,44 +447,12 @@ const config = {
             to: "/sdk-and-tools/sdk-js/sdk-js-signing-providers",
           },
           {
-            from: "/sdk-and-tools/erdpy",
-            to: "/sdk-and-tools/sdk-py",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/erdpy",
-            to: "/sdk-and-tools/sdk-py",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/erdpy-cookbook",
-            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/installing-erdpy",
-            to: "/sdk-and-tools/sdk-py/installing-mxpy",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/configuring-erdpy",
-            to: "/sdk-and-tools/sdk-py/configuring-mxpy",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/erdpy-cli",
+            from: "/sdk-and-tools/sdk-py/configuring-mxpy",
             to: "/sdk-and-tools/sdk-py/mxpy-cli",
           },
           {
-            from: "/sdk-and-tools/erdpy/deriving-the-wallet-pem-file",
-            to: "/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/smart-contract-interactions",
-            to: "/sdk-and-tools/sdk-py/smart-contract-interactions",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/sending-bulk-transactions",
-            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
-          },
-          {
-            from: "/sdk-and-tools/erdpy/writing-and-running-mxpy-scripts",
-            to: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+            from: "/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
+            to: "/sdk-and-tools/sdk-py/mxpy-cli",
           },
           {
             from: "/developers/log-events/esdt-events",

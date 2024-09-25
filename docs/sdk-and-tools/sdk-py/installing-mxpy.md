@@ -21,14 +21,10 @@ Before installing **mxpy**, please make sure you have a working **Python 3** env
 
 ## **Install using pipx**
 
-:::info
-Keep in mind that installing using **pipx** is only available for **mxpy v9.2.0** or later.
-:::
-
 You'll need **pipx** installed on your machine. For more details on how to install **pipx** check out [**this page**](https://pipx.pypa.io/stable/#install-pipx).
 
 :::note
-If you've previously installed **mxpy** using **mxpy-up** and you'd like to switch to **pipx**, make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
+If you've previously installed **mxpy** using **mxpy-up**, we advise you to switch to **pipx**, but make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
 
 ```sh
 rm ~/multiversx-sdk/mxpy
@@ -63,27 +59,18 @@ To check that **mxpy** installed successfully you can run the following command:
 mxpy --version
 ```
 
+Additionally, if you'd like to have shell completion for `bash` and `zsh`, run the following command, then restart the shell:
+
+```sh
+activate-global-python-argcomplete
+```
+
 [comment]: # (mx-context-auto)
 
 ## **Upgrade mxpy using pipx**
 
-To upgrade **mxpy** to a newer version you can simply run the following command:
+To upgrade **mxpy** to a newer version, you can simply run the following command:
 
 ```sh
 pipx upgrade multiversx-sdk-cli
 ```
-
-[comment]: # (mx-context-auto)
-
-## **Install using mxpy-up**
-
-Installing **mxpy** using **mxpy-up** is not recommended anymore. We recommend using **pipx** instead.
-
-If you've previously installed **mxpy** using the legacy **mxpy-up**, you should switch to the **pipx** approach. Make sure to remove the old `mxpy` shortcut and virtual Python environment beforehand:
-
-```sh
-rm ~/multiversx-sdk/mxpy
-rm -rf ~/multiversx-sdk/mxpy-venv
-```
-
-Additionally, you might want to cleanup the shell profile files, to not alter anymore the `PATH` variable with respect to `~/multiversx-sdk`: `~/.profile`, `~/.bashrc` and / or `~/.zshrc`.
