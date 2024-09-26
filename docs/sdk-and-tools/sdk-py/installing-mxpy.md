@@ -80,7 +80,7 @@ python3 -m ensurepip
 Once `pip` is installed, proceed by installing the required package with:
 
 ```sh
-pip3 install arcomplete
+pip3 install argcomplete
 ```
 
 Finally, activate shell completion with this command:
