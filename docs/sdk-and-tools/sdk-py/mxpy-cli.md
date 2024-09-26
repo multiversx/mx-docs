@@ -542,7 +542,7 @@ In this section we'll see how we can send `Relayed V3` transactions using `mxpy`
 
 ### Creating the inner transactions
 
-We can simply create the inner transactions the same way we did above, by using the `mxpy tx new` command. The only difference is that we'll have to provide an additional argument called `--inner-transactions-outfile`, which represents the file where the inner transactions are saved to be later used by the relayer. To keep it simple, we'll send 1 EGLD from Alice to Bob and Carol will be the relayer. To create the EGLD transfer transaction from Alice to Bob we run the following command:
+We can simply create the inner transactions the same way we did above, by using the `mxpy tx new` command. The only difference is that we'll have to provide an additional argument called `--inner-transactions-outfile`, which represents the file where the inner transactions are saved to be later used by the relayer. To keep it simple, we'll send 1 EGLD from Alice to Bob, and Carol will be the relayer. To create the EGLD transfer transaction from Alice to Bob, we run the following command:
 
 ```sh
 mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \

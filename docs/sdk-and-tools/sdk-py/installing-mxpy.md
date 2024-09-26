@@ -59,7 +59,31 @@ To check that **mxpy** installed successfully you can run the following command:
 mxpy --version
 ```
 
-Additionally, if you'd like to have shell completion for `bash` and `zsh`, run the following command, then restart the shell:
+As of version `v9.7.0`, **mxpy** includes support for shell completion on both Linux and macOS. To get started, first ensure that `pip` is installed by running the following command:
+
+```sh
+pip3 --version
+```
+
+If `pip` is not installed, we can install it on **Linux** with:
+
+```sh
+sudo apt install python3-pip
+```
+
+For **macOS** users, install `pip` by executing:
+
+```sh
+python3 -m ensurepip
+```
+
+Once `pip` is installed, proceed by installing the required package with:
+
+```sh
+pip3 install arcomplete
+```
+
+Finally, activate shell completion with this command:
 
 ```sh
 activate-global-python-argcomplete
