@@ -56,7 +56,7 @@ As an alternative, the installation can be triggered by executing the following 
 
 - When asked, indicate the number of nodes you want to run, i.e. `1`
 - When asked, indicate the name of your validator, i.e. `Valar`
-- Quit the menu without starting (we need keys first) by using `14 - quit`
+- Quit the menu without starting (we need keys first) by using `18 - quit`
 
 [comment]: # (mx-context-auto)
 
