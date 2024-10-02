@@ -21,7 +21,7 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 - 8 GB RAM
 - 200 GB SSD
 - 100 Mbit/s always-on internet connection, at least 4 TB/month data plan
-- Linux OS (Ubuntu 22.04 minimum) / MacOS
+- Linux OS (Ubuntu 22.04/Debian 12 minimum) / MacOS
 
 :::caution
 1. The CPUs must be `SSE4.1` and `SSE4.2` capable, otherwise the node won't be able to use the Wasmer 2 VM available through the VM 1.5 (and above) and the node will not be able to sync blocks from the network.
