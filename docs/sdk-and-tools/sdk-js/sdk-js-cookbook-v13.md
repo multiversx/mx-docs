@@ -18,7 +18,7 @@ This cookbook makes use of `sdk-js v13`. In order to migrate from `sdk-js v12.x`
 Creating an API provider:
 
 ```js
-import { ApiNetworkProvider } from "@multiversx/sdk-network-providers";
+import { ApiNetworkProvider } from "@multiversx/sdk-core";
 
 const apiNetworkProvider = new ApiNetworkProvider("https://devnet-api.multiversx.com", { clientName: "multiversx-your-client-name" });
 ```
@@ -26,12 +26,12 @@ const apiNetworkProvider = new ApiNetworkProvider("https://devnet-api.multiversx
 Creating a Proxy provider:
 
 ```js
-import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers";
+import { ProxyNetworkProvider } from "@multiversx/sdk-core";
 
 const proxyNetworkProvider = new ProxyNetworkProvider("https://devnet-gateway.multiversx.com", { clientName: "multiversx-your-client-name" });
 ```
 
-Use the classes from `@multiversx/sdk-network-providers` **only as a starting point**.
+Use the classes from `@multiversx/sdk-core/out/networkProviders` **only as a starting point**.
 As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements
 (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
