@@ -48,10 +48,6 @@ If you've installed Rust using `mxpy` with a version older than `v9`:
 rm -rf ~/multiversx-sdk/vendor-rust
 ```
 
-:::note
-Since `mxpy v9` (November of 2023), `mxpy deps install rust` does not create an isolated Rust installation anymore in `~/multiversx-sdk/vendor-rust`. Instead, [it installs Rust _globally_](https://www.rust-lang.org/tools/install).
-:::
-
 If you've installed Rust using `mxpy v9` or later:
 
 ```bash

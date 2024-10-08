@@ -48,40 +48,25 @@ mxpy deps check -h
 mxpy deps install -h
 ```
 
-For example, in order to check if `rust` is installed you would type:
+For example, in order to check if the `testwallets` dependency is installed, you would type:
 
 ```sh
-mxpy deps check rust
+mxpy deps check testwallets
 ```
 
-For example, to install `rust`, you can simply type the command:
+For example, to install the `testwallets` dependency, you can simply type the command:
 
 ```sh
-mxpy deps install rust
+mxpy deps install testwallets
 ```
 
 When installing dependencies, the `--overwrite` argument can be used to overwrite an existing version.
 
-For example, to overwrite your current `rust` installation, you can simply type the command:
+For example, to overwrite the installation of a dependency, you can simply type the command:
 
 ```sh
-mxpy deps install rust --overwrite
+mxpy deps install testwallets --overwrite
 ```
-
-If the configuration is not altered, **the default version** will be installed.
-
-:::note Default rust version
-Generally speaking, the default `rust` version installed by `mxpy` is the one referenced by [the latest Docker image](https://github.com/multiversx/mx-sdk-rust-contract-builder/blob/main/Dockerfile) used for reproducible builds.
-:::
-
-:::note
-On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` before running `mxpy deps install rust`:
-
-```bash
-sudo apt-get install build-essential pkg-config libssl-dev
-```
-
-:::
 
 ## Configuring mxpy
 
@@ -93,24 +78,24 @@ mxpy's configuration is stored in the file `~/multiversx-sdk/mxpy.json`.
 
 [comment]: # (mx-context-auto)
 
-### Viewing the current `mxpy` configuration
+### Viewing the current mxpy configuration
 
 In order to view the current configuration, one can issue the command `mxpy config dump`. Output example:
 
 ```json
 {
-  "dependencies.rust.tag": ""
+  "dependencies.testwallets.tag": ""
 }
 ```
 
 [comment]: # (mx-context-auto)
 
-### Updating the `mxpy` configuration
+### Updating the mxpy configuration
 
-One can alter the current configuration using the command `mxpy config set`. For example, in order to set the **_rust version_** to be used, one would do the following:
+One can alter the current configuration using the command `mxpy config set`. For example, in order to set the **_testwallets version_** to be used, one would do the following:
 
 ```bash
-$ mxpy config set dependencies.rust.tag stable
+mxpy config set dependencies.testwallets.tag v1.0.0
 ```
 
 [comment]: # (mx-context-auto)
@@ -468,7 +453,7 @@ export CONTRACT_ADDRESS="erd1qqqqqqqqqqqqqpgq6eynj8xra5v87qqzpjhc5fnzzh0fqqzld8s
 mxpy --verbose contract verify ${CONTRACT_ADDRESS} \
     --packaged-src=adder-0.0.0.source.json \
     --verifier-url="https://devnet-play-api.multiversx.com" \
-    --docker-image="multiversx/sdk-rust-contract-builder:v5.1.0" \
+    --docker-image="multiversx/sdk-rust-contract-builder:v8.0.1" \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem
 ```
 
