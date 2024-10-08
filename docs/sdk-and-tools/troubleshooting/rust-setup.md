@@ -68,30 +68,6 @@ rustup self uninstall
 
 [comment]: # (mx-context-auto)
 
-### With mxpy
-
-On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
-    
-```bash
-sudo apt-get install build-essential pkg-config libssl-dev
-```
-
-Install Rust and `sc-meta` using `mxpy`:
-
-```bash
-mxpy deps install rust --overwrite
-```
-
-:::note
-In addition to Rust and `sc-meta`, the above command also installs `twiggy` and `wasm-opt`.
-:::
-
-For more information, go to [managing dependencies using `mxpy`](/sdk-and-tools/sdk-py/mxpy-cli/#managing-dependencies).
-
-[comment]: # (mx-context-auto)
-
-### Without mxpy
-
 On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
     
 ```bash
@@ -106,8 +82,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Then, choose **Proceed with installation (default)**. 
 
-Once Rust is installed, open a new terminal (shell), then switch to a recent stable version and install the `wasm32-unknown-unknown` target:
-
 :::tip
 Generally speaking, you should install Rust `v1.78.0` (stable channel) or later, or `nightly-2024-05-22` (nightly channel) or later.
 :::
@@ -115,25 +89,30 @@ Generally speaking, you should install Rust `v1.78.0` (stable channel) or later,
 ```bash
 rustup update
 rustup default stable
-rustup target add wasm32-unknown-unknown
 ```
 
-Afterwards, install `sc-meta`:
+Afterwards, open a new terminal (shell) and install `sc-meta`:
 
 ```bash
 cargo install multiversx-sc-meta --locked
 ```
 
+Once `sc-meta` is ready, install the `wasm32` target (of the Rust compiler):
+
+```bash
+sc-meta install wasm32
+```
+
 Optionally, you may also want to install `wasm-opt` and `twiggy`:
 
 ```bash
-cargo install wasm-opt
+sc-meta install wasm-opt
 cargo install twiggy
 ```
 
 [comment]: # (mx-context-auto)
 
-### Without mxpy (CI / CD)
+### Within CI / CD
 
 On Ubuntu (or Windows with WSL), you might need to install the following dependencies of Rust and `sc-meta` first:
     
@@ -192,18 +171,4 @@ active toolchain
 
 [...]
 stable-x86_64-unknown-linux-gnu (default)
-```
-
-You can also check the status of your Rust installation using `mxpy`:
-
-```bash
-$ mxpy deps check rust
-
-INFO     cli.deps: Checking dependency: module = rust, tag = stable
-INFO     modules: which rustc: /home/ubuntu/.cargo/bin/rustc
-INFO     modules: which cargo: /home/ubuntu/.cargo/bin/cargo
-INFO     modules: which sc-meta: /home/ubuntu/.cargo/bin/sc-meta  
-INFO     modules: which wasm-opt: /home/ubuntu/.cargo/bin/wasm-opt
-INFO     modules: which twiggy: /home/ubuntu/.cargo/bin/twiggy
-INFO     cli.deps: [rust stable] is installed.
 ```
