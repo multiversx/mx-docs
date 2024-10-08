@@ -97,7 +97,7 @@ If broadcasted transactions have their nonces higher than the current account no
 
 ### **Issue: too many transactions from the same account**
 
-Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius), the transaction pool allows a maximum of **100** transactions from the same sender to exist, at a given moment.
+Starting with the [Sirius Mainnet Upgrade](https://github.com/multiversx/mx-specs/blob/main/releases/protocol/release-specs-v1.6.0-Sirius.md), the transaction pool allows a maximum of **100** transactions from the same sender to exist, at a given moment.
 
 For example, if an address broadcasts `120` transactions with nonces from `1` to `120`, then the transactions with nonces `1 - 100` will be accepted for processing, while the remaining `20` transactions will be dropped.
 
