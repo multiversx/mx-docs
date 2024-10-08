@@ -11,10 +11,6 @@ This tutorial will guide you through the process of writing, building and deploy
 The MultiversX Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
 :::
 
-:::important
-The current tutorial revolves around **multiversx-sc** version **0.39.0**, and will get updated as new versions of multiversx-sc are released.
-:::
-
 [comment]: # (mx-context-auto)
 
 ## **Introduction**
@@ -86,32 +82,10 @@ Straight away you get a project that works - `sc-meta` created your project out 
 
 The last line also opens the new project in a new VS Code instance.
 
-Let's have a quick look around the project.
-
-Open `Cargo.toml` in the text editor of your choice, and add the following content:
-
-```toml title=Cargo.toml
-[package]
-name = "crowdfunding"
-version = "0.0.0"
-authors = [ "you",]
-edition = "2018"
-
-[lib]
-path = "src/crowdfunding.rs"
-
-[dependencies.multiversx-sc]
-version = "0.43.0"
-
-[dev-dependencies.multiversx-sc-scenario]
-version = "0.43.0"
-
-```
-
-Let's see what this means:
+Let's inspect the file `Cargo.toml`:
 
 - The package is unsurprisingly named `crowdfunding`, and has the version `0.0.1`. You can set any version you like, just make sure it has 3 numbers separated by dots. It's a requirement.
-- This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the MultiversX Network, you'll need 3 special and very helpful packages, developed by MultiversX.
+- This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the MultiversX Network, you'll need a few special and very helpful packages, developed by MultiversX.
 - The file `src/crowdfunding.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
 - The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
