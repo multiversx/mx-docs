@@ -15,52 +15,25 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
-
 [comment]: # (mx-context-auto)
 
 ### mxpy
 
-We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check [here](/sdk-and-tools/sdk-py/smart-contract-interactions/) for more detailed explanations regarding what each command does.
+We're going to use [**mxpy**](/sdk-and-tools/sdk-py/mxpy-cli) for interacting with our contracts. Follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy) - make sure to use the latest version available.
 
 [comment]: # (mx-context-auto)
 
 ### Rust
 
-Once you have mxpy installed, you also have to install Rust through it, and the VM tools for testing:
-
-```
-mxpy deps install rust
-
-mxpy deps install vmtools --overwrite
-```
-[comment]: # (mx-context)
-
-If you installed Rust already without mxpy, you might run into some issues when building your smart contracts. It's recommended to uninstall Rust, and install it through mxpy instead.
-
-Example of error:
-
-```
-error[E0554]: #![feature] may not be used on the stable release channel
---> /home/user/multiversx-sdk/vendor-rust/registry/src/github.com-1ecc6299db9ec823/elrond-wasm-derive-0.33.0/src/lib.rs:4:12
-```
+Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](/sdk-and-tools/troubleshooting/rust-setup).
 
 [comment]: # (mx-context-auto)
 
-### VSCode and rust-analyser extension
+### VSCode
 
-VSCode: https://code.visualstudio.com/
-
-Assuming you're on Ubuntu, download the `.deb` version. Go to that folder:
-
-- open folder in terminal
-- run the following command: `sudo dpkg -i downloaded_file_name`
-
-rust-analyser: https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer
-
-MultiversX VSCode extension: https://marketplace.visualstudio.com/items?itemName=MultiversX.vscode-elrond-ide
-
-Both can be easily installed from the "Extensions" menu in VSCode.
+For contract developers, we recommend [**VSCode**](https://code.visualstudio.com) with the following extensions:
+ - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+ - [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) 
 
 [comment]: # (mx-context-auto)
 
@@ -69,26 +42,20 @@ Both can be easily installed from the "Extensions" menu in VSCode.
 Run the following command in the folder in which you want your smart contract to be created:
 
 ```
-mxpy contract new --name staking-contract --template empty
+sc-meta new --name staking-contract --template empty
 ```
 
-Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
-
-You should then have the following structure:  
-![img](/developers/staking-contract-tutorial-img/folder_structure.png)
-
-For now, comment all the code in the `./tests/empty_rust_test.rs` file (ctrl + "A", then ctrl + "/"). Otherwise, it will keep popping up errors as we modify the contract's code.
+Open VSCode, select **File > Open Folder**, and open the newly created `staking-contract` folder.
 
 [comment]: # (mx-context-auto)
 
-## Setting up the workspace
+## Building the contract
 
-Now, to have all the extensions work properly, we have to set up our workspace. This is done by pressing `ctrl + shift + P` and selecting the "MultiversX: Setup Workspace" option from the menu. Choose the "Yes" option on the pop-up menu.
+In the VSCode terminal, run the following command to build the contract:
 
-Now let's open the MultiversX VSCode extension and try building our contract, to see if everything is properly set up. Go to the extension's tab, right-click on "staking-contract" and select the "Build Contract" option:  
-![img](/developers/staking-contract-tutorial-img/ide_extension.png)
-
-Alternatively, you can run `mxpy --verbose contract build` yourself from the VSCode terminal. The command should be run inside the staking-contract folder.
+```bash
+sc-meta all build
+```
 
 After the building has completed, our folder should look like this:  
 ![img](/developers/staking-contract-tutorial-img/folder_structure_2.png)
@@ -101,7 +68,7 @@ A new folder, called `output` was created, which contains the compiled contract 
 
 Currently, we just have an empty contract. Not very useful, is it? So let's add some simple code for it. Since this is a staking contract, we'd expect to have a `stake` function, right?
 
-First, remove all the code in the `./src/empty.rs` file and replace it with this:
+First, remove all the code in the `./src/staking_contract.rs` file and replace it with this:
 
 ```rust
 #![no_std]
@@ -612,7 +579,7 @@ This makes it so if someone wants to perform a full unstake, they can simply not
 
 ### Unstaking our devnet tokens
 
-Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or mxpy directly, and add the unstake function to our snippets.rs file:
+Now that we've added the unstake function, let's test it out on devnet. Build your SC again, and add the unstake function to our snippets.rs file:
 
 ```bash
 UNSTAKE_AMOUNT=500000000000000000
