@@ -15,25 +15,25 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-First and foremost, you need to have `mxpy` installed. You can follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy). If you already have `mxpy` installed, make sure to update it to the latest version, using the same instructions as for the installation.
-
 [comment]: # (mx-context-auto)
 
 ### mxpy
 
-We're going to use mxpy for interacting with our contracts, so if you need more details about some of the steps we will perform, you can check [here](/sdk-and-tools/sdk-py/smart-contract-interactions/) for more detailed explanations regarding what each command does.
+We're going to use [**mxpy**](/sdk-and-tools/sdk-py/mxpy-cli) for interacting with our contracts. Follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy) - make sure to use the latest version available.
 
 [comment]: # (mx-context-auto)
 
 ### Rust
 
-Install **Rust** and [sc-meta](/developers/meta/sc-meta) as depicted [here](/sdk-and-tools/troubleshooting/rust-setup).
+Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](/sdk-and-tools/troubleshooting/rust-setup).
 
 [comment]: # (mx-context-auto)
 
 ### VSCode
 
-For contract developers, we recommend [VSCode](https://code.visualstudio.com) with the [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) extension. 
+For contract developers, we recommend [**VSCode**](https://code.visualstudio.com) with the following extensions:
+ - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+ - [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) 
 
 [comment]: # (mx-context-auto)
 
@@ -45,7 +45,7 @@ Run the following command in the folder in which you want your smart contract to
 sc-meta new --name staking-contract --template empty
 ```
 
-Open VSCode, select File -> Open Folder, and open the newly created `staking-contract` folder.
+Open VSCode, select **File > Open Folder**, and open the newly created `staking-contract` folder.
 
 [comment]: # (mx-context-auto)
 
