@@ -579,7 +579,7 @@ This makes it so if someone wants to perform a full unstake, they can simply not
 
 ### Unstaking our devnet tokens
 
-Now that we've added the unstake function, let's test it out on devnet. Build your SC again through the MultiversX IDE extension or mxpy directly, and add the unstake function to our snippets.rs file:
+Now that we've added the unstake function, let's test it out on devnet. Build your SC again, and add the unstake function to our snippets.rs file:
 
 ```bash
 UNSTAKE_AMOUNT=500000000000000000
