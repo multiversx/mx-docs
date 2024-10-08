@@ -93,16 +93,12 @@ Afterwards, open a new terminal (shell) and install `sc-meta`:
 cargo install multiversx-sc-meta --locked
 ```
 
-Once `sc-meta` is ready, install the `wasm32` target (of the Rust compiler):
+Once `sc-meta` is ready, install the `wasm32` target (for the Rust compiler), `wasm-opt`, and others dependencies as follows:
 
 ```bash
-sc-meta install wasm32
-```
+# Installs `wasm32`, `wasm-opt`, and others in one go:
+sc-meta install all
 
-Optionally, you may also want to install `wasm-opt` and `twiggy`:
-
-```bash
-sc-meta install wasm-opt
 cargo install twiggy
 ```
 

@@ -6,7 +6,7 @@ title: Devcontainers
 [comment]: # (mx-abstract)
 
 In **Visual Studio Code**, you use a **container** as a [full-featured **development environment**](https://code.visualstudio.com/docs/devcontainers/containers). As of September 2023, one MultiversX devcontainer is available:
- - [**MultiversX: Smart Contracts Development (Rust)**](https://containers.dev/templates). This one includes **mxpy**, **Rust**, **sc-meta**, the **MultiversX IDE** (Visual Studio Code extension) etc.
+ - [**MultiversX: Smart Contracts Development (Rust)**](https://containers.dev/templates). This one includes **mxpy**, **Rust**, **sc-meta**, a few Visual Studio Code extensions, and more.
 
 :::note
 The devcontainers for MultiversX are maintained in [**mx-template-devcontainers**](https://github.com/multiversx/mx-template-devcontainers).

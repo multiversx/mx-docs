@@ -12,8 +12,7 @@ written in _any programming language_ that can be compiled to WASM bytecode. **T
 
 Developers are encouraged to use Rust for their smart contracts, however. MultiversX provides a [Rust framework](https://github.com/multiversx/mx-sdk-rs) 
 which allows for unusually clean and efficient code in smart contracts, a rarity in the blockchain field.
-A declarative testing framework is bundled as well. For the best coding experience,
-developers have the [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide) at their disposal.
+A declarative testing framework is bundled as well.
 
 Read more about the MultiversX VM [here](/learn/space-vm).
 
