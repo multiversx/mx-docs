@@ -31,7 +31,7 @@ Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](
 
 ### VSCode
 
-For contract developers, we recommend [**VSCode**](https://code.visualstudio.com) with the following extensions:
+For contract developers, we generally recommend [**VSCode**](https://code.visualstudio.com) with the following extensions:
  - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
  - [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) 
 
