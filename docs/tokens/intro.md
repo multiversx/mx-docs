@@ -31,7 +31,7 @@ ESDT tokens can be issued, owned and held by any account on the MultiversX netwo
 
 | Name                                                                    | Description                                            |
 |-------------------------------------------------------------------------|--------------------------------------------------------|
-| [Specs](https://github.com/multiversx/mx-specs/blob/main/ESDT-specs) | Official specifications of MultiversX's token standard |
+| [Specs](https://github.com/multiversx/mx-specs/blob/main/ESDT-specs.md) | Official specifications of MultiversX's token standard |
 | [Fungible tokens](/tokens/fungible-tokens)                                  | Fungible ESDT tokens                                   |
 | [Semi-fungible tokens](/tokens/nft-tokens)                              | Semi-Fungible ESDT tokens                              |
 | [Non-fungible tokens](/tokens/nft-tokens)                               | Non-Fungible ESDT tokens                               |
