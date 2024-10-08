@@ -932,7 +932,9 @@ RegisterAndSetAllRolesDynamicTransaction {
     Data: "registerAndSetAllRolesDynamic" +
           "@" + <token name in hexadecimal encoding> +
           "@" + <token ticker in hexadecimal encoding> +
-          "@" + <token compressed type (which can be `NFT`, `SFT`, `META`, `FNG`) in hexadecimal encoding>
+          "@" + <token compressed type (which can be `NFT`, `SFT`, `META`) in hexadecimal encoding> +
+              # For META token type only (18 Decimals)
+          "@" + <denominator in hexadecimal encoding>
 }
 ```
 
