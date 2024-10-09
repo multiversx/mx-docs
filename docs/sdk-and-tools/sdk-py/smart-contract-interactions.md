@@ -39,7 +39,7 @@ Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](
 
 ## Deploy & Upgrade
 
-First things first. In order to deploy a new contract, we need to use **sc-meta** to build it, by invoking `sc-meta build all`. This will output the WASM bytecode, to be used within the interactions file:
+First things first. In order to deploy a new contract, we need to use **sc-meta** to build it, by invoking `sc-meta all build`. This will output the WASM bytecode, to be used within the interactions file:
 
 ```
 WASM_PATH="~/my-contract/output/my-contract.wasm"

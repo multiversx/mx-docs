@@ -162,7 +162,7 @@ mxpy wallet convert --help
 
 ## Building a smart contract
 
-In order to deploy a smart contract on the network, you need to build it first. On this purpose, [sc-meta](/developers/meta/sc-build-reference#how-to-basic-build) should be used. To learn more about `sc-meta`, please check out [this page](/developers/meta/sc-meta).
+In order to deploy a smart contract on the network, you need to build it first. For this purpose, [sc-meta](/developers/meta/sc-build-reference#how-to-basic-build) should be used. To learn more about `sc-meta`, please check out [this page](/developers/meta/sc-meta).
 
 The contract we will be using for this examples can be found [here](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/adder).
 
