@@ -7,7 +7,7 @@ The execution of SmartContracts plays a central role in modern blockchain networ
 
 Because the MultiversX VM executes [WebAssembly](https://en.wikipedia.org/wiki/WebAssembly), it also means that it can execute smart contracts written in _any programming language_ that can be compiled to WASM bytecode. **Though, we only provide support for writing contracts in Rust.**
 
-Developers are encouraged to use Rust for their smart contracts, however. MultiversX provides a [Rust framework](https://github.com/multiversx/mx-sdk-rs) which allows for unusually clean and efficient code in smart contracts, a rarity in the blockchain field. A declarative testing framework is bundled as well. For the best coding experience, developers have the [MultiversX IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide) at their disposal.
+Developers are encouraged to use Rust for their smart contracts, however. MultiversX provides a [Rust framework](https://github.com/multiversx/mx-sdk-rs) which allows for unusually clean and efficient code in smart contracts, a rarity in the blockchain field. A declarative testing framework is bundled as well.
 
 [comment]: # (mx-context-auto)
 
