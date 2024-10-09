@@ -5,11 +5,21 @@ title: Build a dApp in 15 minutes
 
 [comment]: # (mx-abstract)
 
-Let's build your first decentralized App on the MultiversX Blockchain
+Let's build your first decentralized App on the MultiversX Blockchain!
 
-:::important
-Also [make sure you have **mxpy installed**](/sdk-and-tools/sdk-py/installing-mxpy), as we will use it to compile, deploy and interact with MultiversX smart contracts.
-:::
+### Prerequisites
+
+[comment]: # (mx-context-auto)
+
+#### mxpy
+
+We're going to use [**mxpy**](/sdk-and-tools/sdk-py/mxpy-cli) to create a wallet and deploy a contract. Follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy) - make sure to use the latest version available.
+
+[comment]: # (mx-context-auto)
+
+#### Rust
+
+Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](/sdk-and-tools/troubleshooting/rust-setup). They are required to build smart contracts.
 
 [comment]: # (mx-context-auto)
 
@@ -118,16 +128,10 @@ Run the following command in order to build the rust smart contract into a _wasm
 
 ```sh
 cd contract/ping-pong
-mxpy contract build
+sc-meta all build
 ```
 
-On the last line of the output we'll have:
-
-```sh
-INFO:projects.core:WASM file generated: output/ping-pong.wasm
-```
-
-After running this command line, we see that a wasm file was generated. This file contains the runtime code for our smart contract.
+When running the build command, a WASM file gets created: `output/ping-pong.wasm`. This file contains the bytecode of our smart contract.
 
 [comment]: # (mx-context-auto)
 
@@ -205,7 +209,7 @@ Use the preferred editor and customize the Smart Contract Address located in `sr
 code .
 ```
 
-Then edit this instruction, and change it to the contract address that was shown after mxpy contract deploy:
+Then edit this instruction, and change it to the contract address that was shown after `mxpy contract deploy`:
 
 ![img](/developers/tutorial/config-screenshot.png)
 

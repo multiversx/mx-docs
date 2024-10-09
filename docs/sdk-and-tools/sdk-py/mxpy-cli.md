@@ -162,25 +162,19 @@ mxpy wallet convert --help
 
 ## Building a smart contract
 
-In order to deploy a smart contract on the network, you need to build it first. The contract can be built using `mxpy`, but for a more granular approach, [sc-meta](/developers/meta/sc-build-reference#how-to-basic-build) should be used. To learn more about `sc-meta`, please check out [this page](/developers/meta/sc-meta).
+In order to deploy a smart contract on the network, you need to build it first. On this purpose, [sc-meta](/developers/meta/sc-build-reference#how-to-basic-build) should be used. To learn more about `sc-meta`, please check out [this page](/developers/meta/sc-meta).
 
 The contract we will be using for this examples can be found [here](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/adder).
 
-The `mxpy` command used for building contracts is:
+Build a contract as follows:
 
 ```sh
-mxpy contract build --path <path to contract>
+sc-meta all build --path <path to contract>
 ```
 
 If our working directory is already the contract's directory we can skip the `--path` argument as by default the contract's directory is the _current working directory_.
 
 The generated `.wasm` file will be created in a directory called `output` inside the contract's directory.
-
-The command accepts a few parameters that you can check out [here](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md#contractbuild) or by simply typing:
-
-```sh
-mxpy contract build --help
-```
 
 [comment]: # (mx-context-auto)
 
@@ -384,7 +378,7 @@ Before deploying the contract we need to build it again to make sure we are usin
 First we build the contract:
 
 ```sh
-mxpy contract build
+sc-meta all build
 ```
 
 Then we upgrade the contract by running:
