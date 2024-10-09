@@ -193,7 +193,7 @@ You can skip this section if you already have a devnet wallet setup.
 
 Let's create a devnet wallet. Access the [Web Wallet](https://devnet-wallet.multiversx.com/), and select "create new wallet". Save your 24 words (in the given order!), and create a password for your keystore file.
 
-Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow [these instructions](/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file):
+Now, we could use the keystore file with a password, but it's more convenient to use a PEM file. To generate the PEM file from your secret phrase, follow [these instructions](/sdk-and-tools/sdk-py/mxpy-cli):
 
 TL;DR: open the terminal and run the following command. Write your secret phrase words in order:
 
