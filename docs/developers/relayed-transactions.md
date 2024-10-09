@@ -14,7 +14,7 @@ Relayed transactions (or meta-transactions) are transactions with the fee paid b
 In other words, if a relayer is willing to pay for an interaction, it is not mandatory that the address
 interacting with a Smart Contract has any EGLD for fees.
 
-More details and specifications can be found on [MultiversX Specs](https://github.com/multiversx/mx-specs/blob/main/sc-meta-transactions).
+More details and specifications can be found on [MultiversX Specs](https://github.com/multiversx/mx-specs/blob/main/sc-meta-transactions.md).
 
 [comment]: # (mx-context-auto)
 

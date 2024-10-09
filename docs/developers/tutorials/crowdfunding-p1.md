@@ -11,10 +11,6 @@ This tutorial will guide you through the process of writing, building and deploy
 The MultiversX Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
 :::
 
-:::important
-The current tutorial revolves around **multiversx-sc** version **0.39.0**, and will get updated as new versions of multiversx-sc are released.
-:::
-
 [comment]: # (mx-context-auto)
 
 ## **Introduction**
@@ -51,17 +47,21 @@ Automated testing is exceptionally important for the development of smart contra
 
 [comment]: # (mx-context-auto)
 
-## **Prerequisites**
+## Prerequisites
 
-The best way to build on MultiversX is using our [VS Code IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide), which you should install before proceeding.
+[comment]: # (mx-context-auto)
 
-MultiversX IDE is an extension for Visual Studio Code that offers development support for MultiversX Smart Contracts written in Rust.
+### Rust
 
-Follow the video guide for a detailed explanation about how to get started.
+Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](/sdk-and-tools/troubleshooting/rust-setup).
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bXbBfJCRVqE?playlist=bXbBfJCRVqE&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[comment]: # (mx-context-auto)
 
-The steps are covered in detail below.
+### VSCode
+
+For contract developers, we generally recommend [**VSCode**](https://code.visualstudio.com) with the following extensions:
+ - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+ - [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) 
 
 [comment]: # (mx-context-auto)
 
@@ -72,42 +72,20 @@ The source code of each smart contract requires its own folder. You'll need to c
 ```bash
 mkdir -p ~/MultiversX/SmartContracts
 cd ~/MultiversX/SmartContracts
-mxpy contract new --name crowdfunding --template empty
+sc-meta new --name crowdfunding --template empty
 code crowdfunding
 ```
 
 You may choose any location you want for your smart contract. The above is just an example. Either way, now that you are in the folder dedicated to the smart contract, we can begin.
 
-Straight away you get a project that works - `mxpy` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points.
+Straight away you get a project that works - `sc-meta` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points.
 
 The last line also opens the new project in a new VS Code instance.
 
-Let's have a quick look around the project.
-
-Open `Cargo.toml` in the text editor of your choice, and add the following content:
-
-```toml title=Cargo.toml
-[package]
-name = "crowdfunding"
-version = "0.0.0"
-authors = [ "you",]
-edition = "2018"
-
-[lib]
-path = "src/crowdfunding.rs"
-
-[dependencies.multiversx-sc]
-version = "0.43.0"
-
-[dev-dependencies.multiversx-sc-scenario]
-version = "0.43.0"
-
-```
-
-Let's see what this means:
+Let's inspect the file `Cargo.toml`:
 
 - The package is unsurprisingly named `crowdfunding`, and has the version `0.0.1`. You can set any version you like, just make sure it has 3 numbers separated by dots. It's a requirement.
-- This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the MultiversX Network, you'll need 3 special and very helpful packages, developed by MultiversX.
+- This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the MultiversX Network, you'll need a few special and very helpful packages, developed by MultiversX.
 - The file `src/crowdfunding.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
 - The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
 
@@ -175,10 +153,10 @@ After creating the file `src/crowdfunding.rs` with the content described in [the
 Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
 
 ```bash
-mxpy contract build
+sc-meta all build
 ```
 
-If this is the first time you build a Rust smart contract with the `mxpy` command, it will take a little while before it's done. Subsequent builds will be much faster.
+If this is the first time you build a Rust smart contract with the `sc-meta` command, it will take a little while before it's done. Subsequent builds will be much faster.
 
 When the command completes, a new folder will appear: `output`. This folder now contains two files: `crowdfunding.abi.json` and `crowdfunding.wasm`. We won't be doing anything with these files just yet - wait until we get to the deployment part. Along with `output`, there are a few other folders and files generated. You can safely ignore them for now, but do not delete the `wasm` folder - it's what makes the build command faster after the initial run.
 
@@ -272,7 +250,7 @@ Well, not quite. All of the stored values only actually end up in the storage if
 Whenever you want to make sure your code is in order, run the build command:
 
 ```bash
-mxpy contract build
+sc-meta all build
 ```
 There's one more thing: by default, none of the `fn` statements declare smart contract methods which are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. You can also think of `#[init]` as a special type of endpoint.
 
@@ -378,7 +356,7 @@ Let's define the first test scenario. Open the file `scenarios/crowdfunding-init
 Save the file. Do you want to try it out first? Go ahead and issue this command on your terminal:
 
 ```bash
-mxpy contract test
+cargo test
 ```
 
 If everything went well, you should see an all-capitals, loud `SUCCESS` being printed, like this:
@@ -476,7 +454,7 @@ This describes a deployment transaction. It was fictionally submitted by "you", 
 
 This deployment transaction contains the WASM bytecode of the Crowdfunding smart contract, which is read at runtime from the file `output/crowdfunding.wasm`.
 
-Remember to run `mxpy contract build` before running the test, especially if you made recent changes to the smart contract source code! The WASM bytecode will be read directly from the file you specify here, without rebuilding it automatically.
+Remember to run `sc-meta all build` before running the test, especially if you made recent changes to the smart contract source code! The WASM bytecode will be read directly from the file you specify here, without rebuilding it automatically.
 
 "You" also sent exactly `value: 0` EGLD out of the `1,000,000` to the deployed smart contract. It wouldn't need them anyway, because your Crowdfunding smart contract won't be transferring any EGLD to anyone, unless they donate it first.
 

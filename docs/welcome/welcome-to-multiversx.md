@@ -37,7 +37,6 @@ MultiversX is a [sharded](/learn/sharding) blockchain network, with a [PoS-based
  - [Tokens](/tokens/fungible-tokens) (FT, SFT, NFT) natively embedded into the protocol for maximum safety
  - [Developers](/developers/overview):
    - Royalties: 30% SC gas returned to SC authors
-   - [Full IDE](https://marketplace.visualstudio.com/items?itemName=Elrond.vscode-elrond-ide)
    - [Rust framework with debugger](/developers/smart-contracts)
  - [Validators](/validators/overview):
    - ~10% APR for running nodes
