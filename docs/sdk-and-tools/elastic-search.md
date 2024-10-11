@@ -17,6 +17,16 @@ Our implementation uses a concept of a queue and makes sure that everything is b
 
 [comment]: # (mx-context-auto)
 
+## Public instance
+
+We generally recommend setting up **your own indexing nodes (observers) and Elasticsearch instance**. However, if you would like to test the Elasticsearch integration or clone a cluster (see below), you can use the public MultiversX Elasticsearch instances. Please note that they are subject to rate limiting:
+
+- **Mainnet:** https://index.multiversx.com - 5 requests / IP / second
+- **Devnet:** https://devnet-index.multiversx.com - 5 requests / IP / second
+- **Testnet:** https://testnet-index.multiversx.com - 5 requests / IP / second
+
+[comment]: # (mx-context-auto)
+
 ## Setup
 
 [comment]: # (mx-context-auto)
