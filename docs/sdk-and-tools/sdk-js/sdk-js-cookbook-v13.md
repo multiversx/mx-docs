@@ -121,8 +121,7 @@ In real-world dApps, transactions are signed by end-users using their wallet, th
 :::
 
 ```js
-import { TransactionComputer } from "@multiversx/sdk-core";
-import { UserSigner } from "@multiversx/sdk-wallet";
+import { TransactionComputer, UserSigner } from "@multiversx/sdk-core";
 import { promises } from "fs";
 
 const fileContent = await promises.readFile("../testwallets/alice.json", { encoding: "utf8" });
@@ -947,7 +946,7 @@ You might also be interested into the language-agnostic overview on [signing tra
 Creating a `UserSigner` from a JSON wallet:
 
 ```js
-import { UserSigner } from "@multiversx/sdk-wallet";
+import { UserSigner } from "@multiversx/sdk-core";
 import { promises } from "fs";
 
 const fileContent = await promises.readFile("../testwallets/alice.json", { encoding: "utf8" });
@@ -1004,7 +1003,7 @@ console.log("Signature", Buffer.from(message.signature).toString("hex"));
 Creating a `UserVerifier`:
 
 ```js
-import { UserVerifier } from "@multiversx/sdk-wallet";
+import { UserVerifier } from "@multiversx/sdk-core";
 
 const aliceVerifier = UserVerifier.fromAddress(addressOfAlice);
 const bobVerifier = UserVerifier.fromAddress(addressOfBob);
