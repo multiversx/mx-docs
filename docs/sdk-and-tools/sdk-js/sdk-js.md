@@ -17,7 +17,7 @@ Base libraries:
 
 | Package                                                                                  | Source code                                                         | Description                                                                    |
 |------------------------------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| [sdk-core](https://www.npmjs.com/package/@multiversx/sdk-core)                           | [Github](https://github.com/multiversx/mx-sdk-js-core)              | The `sdk-core` package is a unification of the previous packages (multiversx/sdk-wallet and multiversx/sdk-network-providers into sdk-core). It has basic components for interacting with the blockchain and with smart contracts. |
+| [sdk-core](https://www.npmjs.com/package/@multiversx/sdk-core)                           | [Github](https://github.com/multiversx/mx-sdk-js-core)              | The `sdk-core` package is a unification of the previous packages (`multiversx/sdk-wallet` and `multiversx/sdk-network-providers` into `multiversx/sdk-core`). It has basic components for interacting with the blockchain and with smart contracts. |
 | [sdk-exchange](https://www.npmjs.com/package/@multiversx/sdk-exchange)                   | [Github](https://github.com/multiversx/mx-sdk-js-exchange)          | Utilities modules for xExchange interactions.                                  |
 
 Signing providers for dApps:
