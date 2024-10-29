@@ -547,15 +547,6 @@ In the end, you can parse the results using a [`SmartContractTransactionsOutcome
 However, since the `parseDeploy` method requires a [`TransactionOutcome`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionOutcome.html) object as input,
 we need to first convert our `TransactionOnNetwork` object to a [`TransactionOutcome`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionOutcome.html), by means of a [`TransactionsConverter`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionsConverter.html).
 
-:::important
-Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns.
-The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
-
-This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
-Currently, for the JavaScript / TypeScript SDKs, the _converters_ and _adapters_ are residents of the `sdk-core` package.
-However, this might change in the future - see the [sdk-specs](https://github.com/multiversx/mx-sdk-specs).
-:::
-
 ```js
 import { SmartContractTransactionsOutcomeParser, TransactionsConverter } from "@multiversx/sdk-core";
 
@@ -731,15 +722,6 @@ Once a transaction is completed, you can parse the results using a [`SmartContra
 However, since the `parseExecute` method requires a [`TransactionOutcome`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionOutcome.html) object as input,
 we need to first convert our `TransactionOnNetwork` object to a `TransactionOutcome`, by means of a [`TransactionsConverter`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TransactionsConverter.html).
 
-:::important
-Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns.
-The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
-
-This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
-Currently, for the JavaScript / TypeScript SDKs, the _converters_ and _adapters_ are residents of the `sdk-core` package.
-However, this might change in the future - see the [sdk-specs](https://github.com/multiversx/mx-sdk-specs).
-:::
-
 ```js
 import { SmartContractTransactionsOutcomeParser, TransactionsConverter } from "@multiversx/sdk-core";
 
@@ -794,15 +776,6 @@ The legacy approaches that rely on [`SmartContract.createQuery()`](https://multi
 
 You will notice that the [`SmartContractQueriesController`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/SmartContractQueriesController.html) requires a `QueryRunner` object at initialization.
 A `NetworkProvider`, slighly adapted, is used to satisfy this requirement.
-
-:::important
-Generally speaking, the components of `sdk-core` and `sdk-network-providers` have different concerns.
-The former aims to be agnostic to network providers, while the latter is designed to cover specifics of [the available REST APIs](/sdk-and-tools/rest-api).
-
-This being said, a certain impedance mismatch is expected between the two packages. This is resolved by means of specially crafted _converters_ and _adapters_.
-Currently, for the JavaScript / TypeScript SDKs, the _converters_ and _adapters_ are residents of the `sdk-core` package.
-However, this might change in the future - see the [sdk-specs](https://github.com/multiversx/mx-sdk-specs).
-:::
 
 ```js
 import { QueryRunnerAdapter, SmartContractQueriesController } from "@multiversx/sdk-core";
