@@ -18,7 +18,3 @@ See [migration support](https://github.com/multiversx/mx-sdk-py-cli/issues?q=lab
 ## Migrate to a newer sdk-core
 
 See [migration support](https://github.com/multiversx/mx-sdk-py-core/issues?q=label:migration).
-
-## Migrate to a newer sdk-wallet
-
-See [migration support](https://github.com/multiversx/mx-sdk-py-wallet/issues?q=label:migration).

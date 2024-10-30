@@ -16,7 +16,7 @@ Documentation in this section is preliminary and subject to change.
 
 ## Extending the Network Providers
 
-The default classes from `@multiversx/sdk-network-providers` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
+The default classes from `@multiversx/sdk-core/networkProviders` should **only be used as a starting point**. As your dApp matures, make sure you **switch to using your own network provider**, tailored to your requirements (whether deriving from the default ones or writing a new one, from scratch) that directly interacts with the MultiversX API (or Gateway).
 
 [comment]: # (mx-context-auto)
 

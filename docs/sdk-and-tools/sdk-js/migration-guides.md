@@ -14,7 +14,3 @@ Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookb
 ## Migrate to a newer sdk-core
 
 See [migration support](https://github.com/multiversx/mx-sdk-js-core/issues?q=label:migration).
-
-## Migrate to a newer sdk-wallet
-
-See [migration support](https://github.com/multiversx/mx-sdk-js-wallet/issues?q=label:migration).
