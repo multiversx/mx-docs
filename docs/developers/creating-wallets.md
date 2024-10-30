@@ -18,10 +18,10 @@ Using [mxjs-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet-cli), a
 mxjs-wallet new-mnemonic --mnemonic-file=mnemonicOfAlice.txt
 ```
 
-Programmatically using [sdk-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet), the same can be achieved through:
+Programmatically using [sdk-core](https://www.npmjs.com/package/@multiversx/sdk-core), the same can be achieved through:
 
 ```js
-import { Mnemonic } from "@multiversx/sdk-wallet/mnemonic";
+import { Mnemonic } from "@multiversx/sdk-core/mnemonic";
 
 let mnemonic = Mnemonic.generate();
 let words = mnemonic.getWords();
@@ -40,7 +40,7 @@ mxjs-wallet derive-key --mnemonic-file=mnemonicOfAlice.txt \
  --key-file=keyOfAlice.json --password-file=passwordOfAlice.txt
 ```
 
-Programmatically using [sdk-wallet](https://www.npmjs.com/package/@multiversx/sdk-wallet), the same can be achieved through:
+Programmatically using [sdk-core](https://www.npmjs.com/package/@multiversx/sdk-core), the same can be achieved through:
 
 ```js
 const mnemonic = Mnemonic.generate();
