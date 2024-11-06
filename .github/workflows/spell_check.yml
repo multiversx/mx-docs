@@ -19,4 +19,4 @@ jobs:
         run: pip install codespell
 
       - name: Run spell check
-        run: codespell docs/ --ignore-words-list="crate" --check-hidden
+        run: codespell docs/ --config .codespell
