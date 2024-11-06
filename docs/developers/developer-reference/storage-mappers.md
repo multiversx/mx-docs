@@ -124,7 +124,7 @@ Returns the raw byte length of the stored value. This should be rarely used.
 
 ## VecMapper
 
-Stores elements of the same type, each under their own storage key. Allows acces by index for said items. Keep in mind indexes start at 1 for VecMapper. Examples:
+Stores elements of the same type, each under their own storage key. Allows access by index for said items. Keep in mind indexes start at 1 for VecMapper. Examples:
 
 ```rust
 fn my_vec(&self) -> VecMapper<Type>;
@@ -678,7 +678,7 @@ Issues a new fungible token. `issue_cost` is 0.05 EGLD (5000000000000000) at the
 
 This mapper allows only one issue, so trying to issue multiple types will signal an error.
 
-`opt_callback` is an optional custom callback you can use for your issue call. We recommed using the default callback. To do so, you need to import multiversx-sc-modules in your Cargo.toml:
+`opt_callback` is an optional custom callback you can use for your issue call. We recommend using the default callback. To do so, you need to import multiversx-sc-modules in your Cargo.toml:
 ```toml
 [dependencies.multiversx-sc-modules]
 version = "0.39.0"
@@ -896,7 +896,7 @@ fn set_local_roles(roles: &[EsdtLocalRole], opt_callback: Option<CallbackClosure
 
 Sets the provided local roles for the token. By default, no callback is used for this call, but you may provide a custom callback if you want to.
 
-You don't need to call this function if you use `issue_and_set_all_roles` for issueing.
+You don't need to call this function if you use `issue_and_set_all_roles` for issuing.
 
 Same as the issue function, this will terminate execution when called.
 

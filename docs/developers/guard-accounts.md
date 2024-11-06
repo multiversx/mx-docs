@@ -102,7 +102,7 @@ A guarded transaction would look like:
     "guardian": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
     "gasPrice": 1000000000,
     "gasLimit": 1177500,
-    "data": "U2V0R3VhcmRpYW5AYjEzYTAxNzQyM2MzNjZjYWZmOGNlY2ZiNzdhMTI2MTBhMTMwZjQ4ODgxMzQxMjJjNzkzN2ZlYWUwZDZkN2QxN0A3NTc1Njk2NA==", #base64 representation of Seting a Guardian
+    "data": "U2V0R3VhcmRpYW5AYjEzYTAxNzQyM2MzNjZjYWZmOGNlY2ZiNzdhMTI2MTBhMTMwZjQ4ODgxMzQxMjJjNzkzN2ZlYWUwZDZkN2QxN0A3NTc1Njk2NA==", #base64 representation of Setting a Guardian
     "signature": "08e324107be096fa887d3a7679c1a612f138a7fb99936c60f767ac2ff98bd9cb1d161f738971da3934aac639de83870e03fdf0753f40b59b250334ffc881af03",
     "guardianSignature": "595a2fe26259c68789450f479515d40455b54507caf3a2e9bf62aa5e67ba45d38ea15c9ed06abb43a9a3644315ea2e3efefb83ce4a0f08ab89a99ac878049f01",
     "chainId": "local-testnet",
@@ -122,7 +122,7 @@ Both sender and guardian must sign the following serialized transaction:
     "guardian": "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
     "gasPrice": 1000000000,
     "gasLimit": 1177500,
-    "data": "U2V0R3VhcmRpYW5AYjEzYTAxNzQyM2MzNjZjYWZmOGNlY2ZiNzdhMTI2MTBhMTMwZjQ4ODgxMzQxMjJjNzkzN2ZlYWUwZDZkN2QxN0A3NTc1Njk2NA==", #base64 representation of Seting a Guardian
+    "data": "U2V0R3VhcmRpYW5AYjEzYTAxNzQyM2MzNjZjYWZmOGNlY2ZiNzdhMTI2MTBhMTMwZjQ4ODgxMzQxMjJjNzkzN2ZlYWUwZDZkN2QxN0A3NTc1Njk2NA==", #base64 representation of Setting a Guardian
     "signature": "",
     "guardianSignature": "",
     "chainId": "local-testnet",

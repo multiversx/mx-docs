@@ -51,7 +51,7 @@ Below is a list of tutorials for building on MultiversX:
 
 ### SDKs and Tools
 
-One can (programatically) interact with the MultiversX Network by leveraging a set of **SDKs (TypeScript, Go, Python, C++ etc.), tools and APIs**. For more details, please follow:
+One can (programmatically) interact with the MultiversX Network by leveraging a set of **SDKs (TypeScript, Go, Python, C++ etc.), tools and APIs**. For more details, please follow:
 
 | Name                                                 | Description                                |
 | ---------------------------------------------------- | ------------------------------------------ |

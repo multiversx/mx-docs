@@ -632,7 +632,7 @@ Documentation in this section is preliminary and subject to change.
 
 In order to perform Smart Contract queries, we recommend the use of `SmartContractQueriesController`.
 
-You will notice that the `SmartContractQueriesController` requires a `QueryRunner` object at initialization. A `NetworkProvider`, slighly adapted, is used to satisfy this requirement (more details about **network providers** can be found in a later section).
+You will notice that the `SmartContractQueriesController` requires a `QueryRunner` object at initialization. A `NetworkProvider`, slightly adapted, is used to satisfy this requirement (more details about **network providers** can be found in a later section).
 
 ```py
 from multiversx_sdk import (ProxyNetworkProvider, QueryRunnerAdapter,

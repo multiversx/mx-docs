@@ -17,7 +17,7 @@ Initially written manually, they were gradually superseded by Rust tests. The fo
 
 Let's think for a moment how an interaction with a blockchain might look like.
 
-The only way to change the blockchain state is by sending transctions. We might also need to query some contracts in between sending these transactions. We might also query the blockchain state (balances, for instance) directly. Let's call these actions "steps". In a simulated environment, we need at least an additional step: initializing the sandbox.
+The only way to change the blockchain state is by sending transactions. We might also need to query some contracts in between sending these transactions. We might also query the blockchain state (balances, for instance) directly. Let's call these actions "steps". In a simulated environment, we need at least an additional step: initializing the sandbox.
 
 Several steps form a scenario.
 

@@ -147,7 +147,7 @@ Each folder that has an exportable file will have an **`index.ts`** file for eas
 
 [comment]: # (mx-context-auto)
 
-### File length convetions
+### File length conventions
 - < 100 lines of code - ✅ OK
 - 100 - 200 lines of code - try to split the file into smaller files
 - 200 - 300 lines of code - should be split the file into smaller files
@@ -463,8 +463,8 @@ useEffect(() => {
 }, [lastExpiringNotificationMissionId]);
 ```
 
-👆 This piece of logic is a perfect candidate to be moved to a separate hook file, because it containes
-a very specific piece of logic, can be tested and the behaviour is easier to predict and debug.
+👆 This piece of logic is a perfect candidate to be moved to a separate hook file, because it contains
+a very specific piece of logic, can be tested and the behavior is easier to predict and debug.
 
 ```jsx
 const sanitizedHerotag = name ? sanitizeHerotag(name) : undefined; 

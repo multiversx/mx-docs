@@ -17,7 +17,7 @@ All tools are expected to work on Linux. They are generally tested on Ubuntu-bas
 
 ## MacOS
 
-All tools are expected to work on MacOS. Though, even if the tests within the continous integration flows cover MacOS, some inconveniences might still occur.
+All tools are expected to work on MacOS. Though, even if the tests within the continuous integration flows cover MacOS, some inconveniences might still occur.
 
 ### Apple Silicon (M1, M2)
 

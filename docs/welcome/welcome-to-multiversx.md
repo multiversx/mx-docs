@@ -58,7 +58,7 @@ The MultiversX network is the first of it's kind to present a viable solution wh
 
 In addition to horizontal scaling through sharding, MultiversX also approaches the consensus problem with a mechanism called Secure Proof of Stake, which mitigates potential attack vectors when compared to Proof of Work, while also enabling large throughput and fast execution. At the same time it manages to eliminate potential security issues found in sharded networks, by randomly shuffling validators after every epoch among all shards, provably mitigating shard takeover attacks. 
 
-By solving some of the hardest consensus and sharding problems in the blockchain space, MultiversX is able to provide a very high level of performance on a network made of inexpensive computers, resulting in a very low cost per transaction whilst maintaing high levels of security and incentivizing decentralization. In addition to performance and cost, MultiversX also stands out through the quality of the developer experience and the resulting boost in usability on the end-user side.
+By solving some of the hardest consensus and sharding problems in the blockchain space, MultiversX is able to provide a very high level of performance on a network made of inexpensive computers, resulting in a very low cost per transaction whilst maintaining high levels of security and incentivizing decentralization. In addition to performance and cost, MultiversX also stands out through the quality of the developer experience and the resulting boost in usability on the end-user side.
 
 [comment]: # (mx-context-auto)
 

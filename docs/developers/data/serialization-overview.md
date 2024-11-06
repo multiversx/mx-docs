@@ -47,5 +47,5 @@ This guide is split into several sections:
 - [Var-args and other multi-values](/developers/data/multi-values)
 - [The code metadata flag](/developers/data/code-metadata)
 
-There is a special section about [unitialized data and how defaults relate to serialization](/developers/data/defaults).
+There is a special section about [uninitialized data and how defaults relate to serialization](/developers/data/defaults).
 

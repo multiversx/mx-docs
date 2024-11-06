@@ -66,7 +66,7 @@ In general:
 ...                                  deep history not available
 CurrentEpoch - NumEpochsToKeep - 1:  deep history not available
 CurrentEpoch - NumEpochsToKeep:      deep history not available
-CurrentEpoch - NumEpochsToKeep + 1:  deep history parially available
+CurrentEpoch - NumEpochsToKeep + 1:  deep history partially available
 CurrentEpoch - NumEpochsToKeep + 2:  deep history available
 CurrentEpoch - NumEpochsToKeep + 3:  deep history available 
 ...                                  deep history available
@@ -79,7 +79,7 @@ In particular, for the public Gateway:
 ...                 deep history not available
 CurrentEpoch - 5:   deep history not available
 CurrentEpoch - 4    deep history not available
-CurrentEpoch - 3:   deep history parially available
+CurrentEpoch - 3:   deep history partially available
 CurrentEpoch - 2:   deep history available
 CurrentEpoch - 1:   deep history available
 CurrentEpoch:       deep history available
@@ -114,7 +114,7 @@ Apart from the flag mentioned above, the setup of a deep-history observer is ide
 :::
 
 :::warning
-Never attach a non-pruned database to a regular observer (i.e. that does not have the above **operation-mode**) - unless you are not interested into the deep-history features. The regular observer irremediably removes, trucates and prunes the data (as configured, for storage efficiency).
+Never attach a non-pruned database to a regular observer (i.e. that does not have the above **operation-mode**) - unless you are not interested into the deep-history features. The regular observer irremediably removes, truncates and prunes the data (as configured, for storage efficiency).
 :::
 
 Now that we have finished with the installation part, we can proceed to populate the non-pruned database. There are two options here:

@@ -7,7 +7,7 @@ title: SDKs and Tools - Overview
 
 ## Introduction
 
-One can (programatically) interact with the MultiversX Network by leveraging the following SDKs, tools and APIs:
+One can (programmatically) interact with the MultiversX Network by leveraging the following SDKs, tools and APIs:
 
 [comment]: # (mx-context-auto)
 

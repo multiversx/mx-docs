@@ -168,7 +168,7 @@ Creates a smart contract account. For `obj_builder`, you will have to pass `sc_n
 
 The `ContractObjWrapper` will be used whenever you interact with the SC, which will be through the execution functions. If you only need the address (for setting balance, for example), you can use the `address_ref` method to get a reference to the stored address.  
 
-`contract_wasm_path` is the path towards the wasm file. This path is relative to the `tests` folder that the current test file resides in. The most usual path will be `ouput/wasm_file_name.wasm`.  
+`contract_wasm_path` is the path towards the wasm file. This path is relative to the `tests` folder that the current test file resides in. The most usual path will be `output/wasm_file_name.wasm`.  
 
 [comment]: # (mx-context-auto)
 
@@ -355,7 +355,7 @@ Same as the function above, but executes a MultiESDTNFT transfer instead.
 execute_query(&mut self, sc_wrapper: &ContractObjWrapper<...>, query_fn: TxFn) -> TxResult
 ```
 
-Executes a SCQuery on the SC. None of the changes are commited into the state, but it still needs to be a mutable function to perform the temporary changes. Just like on the real blockchain, there is no caller and no token transfer for queries.  
+Executes a SCQuery on the SC. None of the changes are committed into the state, but it still needs to be a mutable function to perform the temporary changes. Just like on the real blockchain, there is no caller and no token transfer for queries.  
 
 [comment]: # (mx-context-auto)
 

@@ -43,7 +43,7 @@ required_gas =  save_key_value_cost +
                 move_balance_cost +
                 cost_per_byte * length(txData) +
                 persist_per_byte * length(key) +   // repeated if multiple pairs
-                persist_per_byte * length(value) + // repetead if multiple pairs
+                persist_per_byte * length(value) + // repeated if multiple pairs
                 store_per_byte * length(value) +   // repeated if multiple pairs
 ```
 

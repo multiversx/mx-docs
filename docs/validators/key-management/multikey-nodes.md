@@ -55,7 +55,7 @@ The code changes to support multikey nodes affected mainly the `consensus`, `key
 
 The group managing the set of keys (we will call them multikey nodes or multikey group), will pass the validators BLS 
 information tight to "virtual" peer IDs. A "virtual peer ID" is a generated p2p identity that the p2p network can not 
-connect to as it does not have a real address bind to. Consequentially, this feature brings a new layer of security as 
+connect to as it does not have a real address bind to. Consequently, this feature brings a new layer of security as 
 the multikey nodes will hide the relationship between the validator BLS keys and the host that manages those BLS keys.
 
 [comment]: # (mx-context-auto)

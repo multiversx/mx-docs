@@ -213,7 +213,7 @@ In this example, calling `.esdt(...)` will attach an ESDT payment load to the tr
 
 ## Single ESDT payment with references
 
-Sometimes we don't have ownership of the token identifier object, or amount, and we would like to avoid unnecessary clones. For this reason, we hava created the `EsdtTokenPaymentRefs`, which contains references and can be used as the payment object.
+Sometimes we don't have ownership of the token identifier object, or amount, and we would like to avoid unnecessary clones. For this reason, we have created the `EsdtTokenPaymentRefs`, which contains references and can be used as the payment object.
 
 For brevity, instead of `payment(EsdtTokenPaymentRefs::new(&token_identifier, token_nonce, &amount))`, we can use `.single_esdt(&token_identifier, token_nonce, &amount)`.
 

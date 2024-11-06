@@ -93,7 +93,7 @@ The oldest version currently supported is `0.28.0`. Any older than that, and the
 It is especially important when upgrading from `0.38` to `0.39.0`, since a lot of changes happened at that point.
 
 :::tip
-For projects with multiple contract crates, we recommend upgrading all of them at once. The upgrade algorithm goes step by step, version after version. For some of the major versions, it also checks that the project compiles before moving on. This is to give developers the chance to fix issues manually, if necessary, and not have those issues pile up. If there are local depdencies between contracts, the upgrader will not be able to do the check unless all of them are upgraded together.
+For projects with multiple contract crates, we recommend upgrading all of them at once. The upgrade algorithm goes step by step, version after version. For some of the major versions, it also checks that the project compiles before moving on. This is to give developers the chance to fix issues manually, if necessary, and not have those issues pile up. If there are local dependencies between contracts, the upgrader will not be able to do the check unless all of them are upgraded together.
 :::
 
 :::caution

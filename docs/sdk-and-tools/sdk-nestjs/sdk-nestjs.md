@@ -34,5 +34,5 @@ The following table contains the NPM packages that are included inside the NestJ
 | sdk-nestjs-elastic    | [@multiversx/sdk-nestjs-elastic](https://www.npmjs.com/package/@multiversx/sdk-nestjs-elastic)       | Elasticsearch interactions helpers.                                                  |
 | sdk-nestjs-redis      | [@multiversx/sdk-nestjs-redis](https://www.npmjs.com/package/@multiversx/sdk-nestjs-redis)           | Redis interactions helpers.                                                          |
 | sdk-nestjs-rabbitmq   | [@multiversx/sdk-nestjs-rabbitmq](https://www.npmjs.com/package/@multiversx/sdk-nestjs-rabbitmq)     | RabbitMQ interactions helpers.                                                       |
-| sdk-nestjs-cache      | [@multiversx/sdk-nestjs-cache](https://www.npmjs.com/package/@multiversx/sdk-nestjs-cache)           | Common cache operations utilites. [docs](/sdk-and-tools/sdk-nestjs/sdk-nestjs-cache) |
+| sdk-nestjs-cache      | [@multiversx/sdk-nestjs-cache](https://www.npmjs.com/package/@multiversx/sdk-nestjs-cache)           | Common cache operations utilities. [docs](/sdk-and-tools/sdk-nestjs/sdk-nestjs-cache) |
 

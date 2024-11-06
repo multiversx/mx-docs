@@ -54,7 +54,7 @@ graph LR
 
 Each one of these 7 fields has a trait that governs what types are allowed to occupy the respective position.
 
-All of these positions (except the environment `Env`) can be empty, unitialized. This is signaled at compile time by the unit type, `()`. In fact, a transaction always starts out with all fields empty, except for the environment.
+All of these positions (except the environment `Env`) can be empty, uninitialized. This is signaled at compile time by the unit type, `()`. In fact, a transaction always starts out with all fields empty, except for the environment.
 
 For instance, if we are in a contract and write `self.tx()`, the universal start of a transaction, the resulting type will be `Tx<TxScEnv<Self::Api>, (), (), (), (), (), ()>`, where `TxScEnv<Self::Api>` is simply the smart contract call environment. Of course, the transaction at this stage is unusable, it is up to the developer to add the required fields and send it.
 
