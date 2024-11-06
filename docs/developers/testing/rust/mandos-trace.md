@@ -304,4 +304,4 @@ fn trace_one_rs() {
     world().run("trace1.scen.json"); // run trace
 }
 ```
-The key advantage of Mandos tests is their seamless integration with the actual [Go VM](https://github.com/multiversx/mx-chain-vm-go). Mandos serves as the unified "language" across our systems, allowing us to run the same scenarios in differnt environments. To ensure comprehensive VM-related testing, we can simply add our generated `trace1.scen.json` file to the collection of Mandos tests already present and execute the entire scenario against the Go VM.
+The key advantage of Mandos tests is their seamless integration with the actual [Go VM](https://github.com/multiversx/mx-chain-vm-go). Mandos serves as the unified "language" across our systems, allowing us to run the same scenarios in different environments. To ensure comprehensive VM-related testing, we can simply add our generated `trace1.scen.json` file to the collection of Mandos tests already present and execute the entire scenario against the Go VM.

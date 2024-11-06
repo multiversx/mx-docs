@@ -218,7 +218,7 @@ Values can be interpolated into messages in several ways.
     // "Printing managed_address: fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefe"
     sc_print!("Printing managed_address: {:x}", managed_address);    
     ```
-    - For `ManagedByteArray`, it is the hexadecimal represenation for the ASCII characters.
+    - For `ManagedByteArray`, it is the hexadecimal representation for the ASCII characters.
     ```rust
     let managed_byte_array: ManagedByteArray<Self::Api, 3> = ManagedByteArray::new_from_bytes(b"MVX");
     // "Printing managed_byte_array: 4d5658"

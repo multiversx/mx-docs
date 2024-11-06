@@ -202,7 +202,7 @@ The old, legacy methods are still available (see below), thus existing client co
 
 :::note
 In `sdk-core v13`, the [`TokenTransfer`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TokenTransfer.html) class has changed, in a non-breaking manner.
-Though, from now on, it should only be used for prepairing ESDT token transfers, not native EGLD transfers.
+Though, from now on, it should only be used for preparing ESDT token transfers, not native EGLD transfers.
 
 A [`TokenTransfer`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/TokenTransfer.html) object can still be instantiated using the legacy methods, e.g. `fungibleFromAmount`, `nonFungible` (which are still available),
 but we recommend using the new approach instead (which, among others, makes abstraction of the number of decimals a token has).
@@ -775,7 +775,7 @@ In order to perform Smart Contract queries, we recommend the use of [`SmartContr
 The legacy approaches that rely on [`SmartContract.createQuery()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/SmartContract.html#createQuery) or [`Interaction.buildQuery()`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/Interaction.html#buildQuery) are still available, but they will be deprecated in the (distant) future.
 
 You will notice that the [`SmartContractQueriesController`](https://multiversx.github.io/mx-sdk-js-core/v13/classes/SmartContractQueriesController.html) requires a `QueryRunner` object at initialization.
-A `NetworkProvider`, slighly adapted, is used to satisfy this requirement.
+A `NetworkProvider`, slightly adapted, is used to satisfy this requirement.
 
 ```js
 import { QueryRunnerAdapter, SmartContractQueriesController } from "@multiversx/sdk-core";
@@ -1031,7 +1031,7 @@ The behavior can be overridden by setting the _sign using hash_ flag of `transac
 transactionComputer.applyOptionsForHashSigning(transaction);
 ```
 
-Then, the transaction should be serialzed and signed as follows:
+Then, the transaction should be serialized and signed as follows:
 
 ```js
 const bytesToSign = transactionComputer.computeHashForSigning(transaction);

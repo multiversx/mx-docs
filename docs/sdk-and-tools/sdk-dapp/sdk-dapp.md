@@ -277,7 +277,7 @@ The important parts that makes this component work are the flag **authenticatedR
 
 There are a couple of very handy React components that can be used to login the user and protect certain routes if the user is not logged in.
 
-Under the `DappUI` object mentioned above, you can find 4 buttons (one for each provider) which abstract away all the logic of loggin in the user and render the default UI. These buttons can be easily customized with a custom css class.
+Under the `DappUI` object mentioned above, you can find 4 buttons (one for each provider) which abstract away all the logic of logging in the user and render the default UI. These buttons can be easily customized with a custom css class.
 The exported buttons are:
 
 - ExtensionLoginButton
@@ -759,7 +759,7 @@ removeAllSignedTransactions();
 
 ## Unit testing with Jest
 
-The sdk-dapp library exposes bundles for both CommonJS and ESModules, however, in some enviornments, Jest might require manual mapping of the CommonJS output. To implement it, add the following snippet inside your jest config file.
+The sdk-dapp library exposes bundles for both CommonJS and ESModules, however, in some environments, Jest might require manual mapping of the CommonJS output. To implement it, add the following snippet inside your jest config file.
 
 ```typescript
 moduleNameMapper: {

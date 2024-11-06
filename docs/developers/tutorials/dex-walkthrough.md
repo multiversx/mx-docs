@@ -43,7 +43,7 @@ You can find the repository containing all the DEX contracts here:
 https://github.com/multiversx/mx-exchange-sc
 :::
 
-This walkthough was made based on a synchronous, intrashard contract calls flow as the suggested implementation. While you can still use async calls, that approach would complicate the implementation of any new projects building on top of the DEX contracts to some extent, with more complex gas handling requirements and callbacks logic. In order to have synchronous integration with the DEX contracts, the newly developed SCs need to be deployed on the same shard as the xExchange contracts.
+This walkthrough was made based on a synchronous, intrashard contract calls flow as the suggested implementation. While you can still use async calls, that approach would complicate the implementation of any new projects building on top of the DEX contracts to some extent, with more complex gas handling requirements and callbacks logic. In order to have synchronous integration with the DEX contracts, the newly developed SCs need to be deployed on the same shard as the xExchange contracts.
 
 Later on, with the launch of the AsyncV2 functionality, these kinds of contracts will be able to be deployed in other shards as well, as the protocol will support multiple asyncCalls.
 
@@ -177,7 +177,7 @@ In the end, the endpoint returns a __MultiValue__ of 2 __EsdtTokenPayment__.
 
 ## Router SC
 
-The __Router SC__ serves as a convenient tool for efficiently managing and monitoring Pair contracts in a decentralized environment. It enables the deployer to easily keep track of the existing Pair contracts and offers a wide array of settings functions, that makes the manangement of the liquidity pools much more easier.
+The __Router SC__ serves as a convenient tool for efficiently managing and monitoring Pair contracts in a decentralized environment. It enables the deployer to easily keep track of the existing Pair contracts and offers a wide array of settings functions, that makes the management of the liquidity pools much more easier.
 
 Taking into consideration that this tutorial is intended for developers who wish to import more easily the DEX contracts into their own projects, we will concentrate on the only public endpoint that can be particularly beneficial for external projects, the `multiPairSwap` endpoint.
 
@@ -409,7 +409,7 @@ It should be noted that the original LP tokens and Farm tokens are kept in the s
     ) -> ExitFarmProxyResultType<Self::Api> 
 ```
 
-The `exitFarmProxy` works exactly like its base contract couterpart, except it takes Wrapped Farm tokens as input. This includes the new __exit_amount__ logic, where the user sends his entire position and specifies the actual exit amount as an argument. The output of this endpoint consists of a __MultiValue__ of 3 __EsdtTokenPayment__, namely the __initial_proxy_farming_tokens__, the __reward_tokens__ and the __remaining_wrapped_tokens__, like with the base `exitFarm` endpoint.
+The `exitFarmProxy` works exactly like its base contract counterpart, except it takes Wrapped Farm tokens as input. This includes the new __exit_amount__ logic, where the user sends his entire position and specifies the actual exit amount as an argument. The output of this endpoint consists of a __MultiValue__ of 3 __EsdtTokenPayment__, namely the __initial_proxy_farming_tokens__, the __reward_tokens__ and the __remaining_wrapped_tokens__, like with the base `exitFarm` endpoint.
 
 [comment]: # (mx-context-auto)
 
@@ -655,7 +655,7 @@ Arguments:
 - first_token_amount_min: forwarded to the LP pool, may not be zero. 
 - second_token_amount_min: forwarded to the LP pool, may not be zero.
 
-After the endpoint succesfully provides liquidity in the __Pair SC__, it returns a __MultiValue__ of 3 __EsdtTokenPayment__: the refunded tokens from the first payment and from the second payment, as well as the LP_PROXY tokens, which can later be used to further interact with the LP pool through this SC.
+After the endpoint successfully provides liquidity in the __Pair SC__, it returns a __MultiValue__ of 3 __EsdtTokenPayment__: the refunded tokens from the first payment and from the second payment, as well as the LP_PROXY tokens, which can later be used to further interact with the LP pool through this SC.
 
 [comment]: # (mx-context-auto)
 

@@ -194,7 +194,7 @@ Make sure you have a look over [this page](/wallet/wallet-extension), in advance
 
 [`@multiversx/sdk-js-extension-provider`](https://github.com/multiversx/mx-sdk-sdk-js-extension-provider) allows the users of a dApp to log in and sign transactions using the [MultiversX DeFi Wallet](/wallet/wallet-extension).
 
-In order to aquire the instance (singleton) of the provider, do as follows:
+In order to acquire the instance (singleton) of the provider, do as follows:
 
 ```js
 import { ExtensionProvider } from "@multiversx/sdk-extension-provider";
@@ -279,7 +279,7 @@ console.log(message.toJSON());
 
 [`@multiversx/sdk-js-wallet-connect-provider`](https://github.com/multiversx/mx-sdk-js-wallet-connect-provider) allows the users of a dApp to log in and sign transactions using [xPortal](https://xportal.com/) (the mobile application).
 
-For this example we will use the WalletConnect 2.0 provider since 1.0 is no longer mantained and it is [deprecated](https://medium.com/walletconnect/weve-reset-the-clock-on-the-walletconnect-v1-0-shutdown-now-scheduled-for-june-28-2023-ead2d953b595)
+For this example we will use the WalletConnect 2.0 provider since 1.0 is no longer maintained and it is [deprecated](https://medium.com/walletconnect/weve-reset-the-clock-on-the-walletconnect-v1-0-shutdown-now-scheduled-for-june-28-2023-ead2d953b595)
 
 First, let's see a (simple) way to build a QR dialog using [`qrcode`](https://www.npmjs.com/package/qrcode) (and bootstrap):
 
@@ -526,7 +526,7 @@ console.log(message.toJSON());
 
 [`@multiversx/sdk-web-wallet-cross-window-provider`](https://github.com/multiversx/mx-sdk-js-web-wallet-cross-window-provider) allows the users of a dApp to log in and sign transactions using the MultiversX Web Wallet.
 
-In order to aquire the instance (singleton) of the provider, do as follows:
+In order to acquire the instance (singleton) of the provider, do as follows:
 
 ```js
 import { CrossWindowProvider } from "@multiversx/sdk-web-wallet-cross-window-provider";
@@ -612,7 +612,7 @@ console.log(message.toJSON());
 
 [`@multiversx/sdk-metamask-proxy-provider`](https://github.com/multiversx/mx-sdk-js-metamask-proxy-provider) allows the users of a dApp to log in and sign transactions using the Metamask wallet by using MultiversX Web Wallet as a proxy widget in iframe.
 
-In order to aquire the instance (singleton) of the provider, do as follows:
+In order to acquire the instance (singleton) of the provider, do as follows:
 
 ```js
 import { MetamaskProxyProvider } from "@multiversx/sdk-metamask-proxy-provider";

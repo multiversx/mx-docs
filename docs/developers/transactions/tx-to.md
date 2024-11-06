@@ -147,7 +147,7 @@ async fn print_sum(&mut self, adder_address: &Bech32Address) {
 
 ### ESDTSystemSCAddress
 This type indicates the system smart contract address, which is the same on any MultiversX blockchain.
-  - **`.to_managed_address()`**: converts the addresse to **ManagedAddress**.
+  - **`.to_managed_address()`**: converts the address to **ManagedAddress**.
   - **`.to_bech32_str()`**: returns the **str** value of the address.
   - **`.to_bech32_string()`**: returns the **String** value of the address.
 

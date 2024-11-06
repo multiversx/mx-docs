@@ -26,7 +26,7 @@ Even if you do work on an old project, you should strive to upgrade it to at lea
 
 ## Introduction
 
-As programmers, we are used to calling functions all the time. Smart contract calls, however, are slightly trickier. Beside code execution, there can also be transfers of EGLD and ESDT tokens involved, gas needs to be specificed, and, finally, there are different flavors of calls.
+As programmers, we are used to calling functions all the time. Smart contract calls, however, are slightly trickier. Beside code execution, there can also be transfers of EGLD and ESDT tokens involved, gas needs to be specified, and, finally, there are different flavors of calls.
 
 Any system for composing and sending these calls needs to be very versatile, to cater to all of the programmers' various needs.
 

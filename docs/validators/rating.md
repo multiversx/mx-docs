@@ -116,7 +116,7 @@ Observe that the loss is 4 times larger than the gain, which means that a propos
 
 Rating for proposers is even stricter: there is a compounding penalty rule, which makes the rating of a node drop even faster when it proposes unsuccessfuly.
 
-The amount of `0.92592` points is deducted from the rating of the proposer on the first unsuccesful proposal, but the second unsuccessful proposal will be penalized by `0.92592 × 1.1`. The third, by `0.92592 × 1.1 × 1.1`. The general formula is:
+The amount of `0.92592` points is deducted from the rating of the proposer on the first unsuccessful proposal, but the second unsuccessful proposal will be penalized by `0.92592 × 1.1`. The third, by `0.92592 × 1.1 × 1.1`. The general formula is:
 
 `0.92592 × 1.1^{cfp-1}0.92592×1.1^cfp^−1`
 
@@ -161,6 +161,6 @@ The compounding penalty rule also applies to block proposers of the metachain. S
 A validator taking part in consensus on the metachain will:
 
 - Gain `0.00057` points for a successful validation;
-- Lose `0.00231` points for an unsuccesful validation.
+- Lose `0.00231` points for an unsuccessful validation.
 
 The rules from [Rating the shard block validator](#rating-the-shard-block-validator) apply for the metashard validators as well.

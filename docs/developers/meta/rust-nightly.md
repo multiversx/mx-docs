@@ -15,7 +15,7 @@ Before this version, nightly Rust was required.
 
 ## Recommended compiler versions
 
-For everything after v0.50.0 we recommend running the latest stable version of Rust. Older versions have had compatiblity issues with certain framework dependencies, on certain versions of the compiler.
+For everything after v0.50.0 we recommend running the latest stable version of Rust. Older versions have had compatibility issues with certain framework dependencies, on certain versions of the compiler.
 
 Nightly Rust is still allowed, but not recommended. We will still be supporting nightly builds and running continuous integration on `nightly-2024-05-22`.
 

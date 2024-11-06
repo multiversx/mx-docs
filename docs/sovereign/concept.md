@@ -94,7 +94,7 @@ Gas-Free Execution
 
 #### 3. UI and Smart Contract on MultiversX Chain
 
-The intention is that the user should not feel the complexity of transfering a token from one chain to the other. That's why in 3 easy steps a cross-chain transaction should be felt as successful:
+The intention is that the user should not feel the complexity of transferring a token from one chain to the other. That's why in 3 easy steps a cross-chain transaction should be felt as successful:
 
 1. Users execute a transaction on the MultiversX chain directed towards the cross-chain contract.
 2. Upon successful transaction on the mainchain, the user receives tokens on the Sovereign Chain.
