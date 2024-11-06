@@ -1,2 +1,3 @@
 [codespell]
 ignore-words-list = crate
+ignore-regex=MANDOS is short for \*\*M\*\*ultiversX \*\*A\*\*ccount, \*\*N\*\*etwork and \*\*D\*\*ata \*\*O\*\*peration \*\*S\*\*cenarios\.

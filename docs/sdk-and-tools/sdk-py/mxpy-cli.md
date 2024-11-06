@@ -27,10 +27,10 @@ This page will guide you through the process of handling common tasks using **mx
 
 Using `mxpy` you can either check if a dependency is installed or install a new dependency.
 
-To check if a dependecy is installed you can use:
+To check if a dependency is installed you can use:
 
 ```sh
-mxpy deps check <dependecy-name>
+mxpy deps check <dependency-name>
 ```
 
 To install a new dependency you can use:
@@ -39,7 +39,7 @@ To install a new dependency you can use:
 mxpy deps install <dependency-name>
 ```
 
-Both `mxpy deps check <dependecy-name>` and `mxpy deps install <dependency-name>` use the `<dependency-name>` as a positional argument.
+Both `mxpy deps check <dependency-name>` and `mxpy deps install <dependency-name>` use the `<dependency-name>` as a positional argument.
 
 To find out which dependencies can be managed using `mxpy`, you can type one of the following commands to see the positional arguments it accepts:
 
@@ -144,7 +144,7 @@ It's mandatory that you keep a backup of your secret phrase somewhere safe.
 
 Let's convert the previously created `keystore-mnemonic` to a `PEM` wallet. We discourage the use of PEM wallets for storing cryptocurrencies due to their lower security level. However, they prove to be highly convenient and user-friendly for application testing purposes.
 
-To convert the wallet we type the follwing command:
+To convert the wallet we type the following command:
 
 ```sh
 mxpy wallet convert --infile test_wallet.json --in-format keystore-mnemonic --outfile converted_wallet.pem --out-format pem
@@ -216,7 +216,7 @@ The `--proxy` is used to specify the url of the proxy and the `--chain` is used 
 
 The `--recall-nonce` is used to get the nonce of the address so we don't search it manually. It simply makes an API request to get the nonce of the account. The `--arguments` is used in case our contract needs any arguments for the initialization. We know our `adder` needs a value to start adding from, so we set that to `0`.
 
-The `--gas-limit` is used to set the gas we are willing to pay so our transaction will be executed. 5 million gas is a bit too much because our contract is very small and simple, but better to be sure. In case our transaction doesn't have enough gas the network will not execute it, saying something like `Insufficent gas limit`.
+The `--gas-limit` is used to set the gas we are willing to pay so our transaction will be executed. 5 million gas is a bit too much because our contract is very small and simple, but better to be sure. In case our transaction doesn't have enough gas the network will not execute it, saying something like `Insufficient gas limit`.
 
 The `--pem` argument is used to provide the sender of the transaction, the payer of the fee. The sender will also be the owner of the contract.
 
@@ -244,7 +244,7 @@ First, we'll prepare the file containing the constructors arguments. We'll refer
 ]
 ```
 
-Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the value `2` corresponds to the type `u32`. After that, we have another list that coresponds to the type `variadic`. Inside this list, we need to insert our addresses. For `mxpy`to encode addresses properly, we need to provide the address values inside a dictionary that can contain two keys: we can provide the address as the `bech32` representation or as the `hex encoded` public key.
+Let's go a bit through our file and see why it looks like this. First, as mentioned above, we have to place all the arguments inside a list. Then, the value `2` corresponds to the type `u32`. After that, we have another list that corresponds to the type `variadic`. Inside this list, we need to insert our addresses. For `mxpy`to encode addresses properly, we need to provide the address values inside a dictionary that can contain two keys: we can provide the address as the `bech32` representation or as the `hex encoded` public key.
 
 After finishing the arguments file, we can run the following command to deploy the contract:
 
@@ -371,7 +371,7 @@ mxpy contract query erd1qqqqqqqqqqqqqpgqjsg84gq5e79rrc2rm5ervval3jrrfvvfd8sswc6x
 
 In case there's a new release of your Smart Contract, or perhaps you've patched a possible vulnerability you can upgrade the code of the Smart Contract deployed on the network.
 
-We've modified our adder contract to add `1` to every value added to the contract. Now everytime the `add()` function is called will add the value provided with `1`. In order to do that we access the source code and navigate to the `add()` endpoint. We can see that `value` is added to `sum` each time the endpoint is called. Modify the line to look something like this `self.sum().update(|sum| *sum += value + 1u32);`
+We've modified our adder contract to add `1` to every value added to the contract. Now every time the `add()` function is called will add the value provided with `1`. In order to do that we access the source code and navigate to the `add()` endpoint. We can see that `value` is added to `sum` each time the endpoint is called. Modify the line to look something like this `self.sum().update(|sum| *sum += value + 1u32);`
 
 Before deploying the contract we need to build it again to make sure we are using the latest version. We then deploy the newly built contract, then we call it and query it.
 
@@ -423,7 +423,7 @@ Now, if we query the contract we should see the value `6`. We added `5` in the c
 mxpy contract query erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 --proxy https://devnet-gateway.multiversx.com --function getSum
 ```
 
-We see that we indeed got the value `6`. Our upgrade was sucessfull.
+We see that we indeed got the value `6`. Our upgrade was successful.
 
 [comment]: # (mx-context-auto)
 
@@ -485,7 +485,7 @@ If your address is guarded, you'll have to provide some additional arguments bec
 
 The first extra argument we'll need is the `--guardian` argument. This specifies the guardian address of our address. Then, if our account is guarded by a service like our trusted co-signer service we have to provide the `--guardian-service-url` which specifies where the transaction is sent to be co-signed.
 
-Keep in mind that **mxpy** always calls the `/sign-transaction` endpoint of the `--guardian-service-url` you have provided. Another argment we'll need is `--guardian-2fa-code` which is the code generated by an external authenticator.
+Keep in mind that **mxpy** always calls the `/sign-transaction` endpoint of the `--guardian-service-url` you have provided. Another argument we'll need is `--guardian-2fa-code` which is the code generated by an external authenticator.
 
 Each guarded transaction needs an additional `50000` gas for the `gasLimit`. The `version` field needs to be set to `2`. The `options` field needs to have the second least significant bit set to "1".
 

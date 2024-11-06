@@ -21,13 +21,13 @@ But testing on a blockchain can be cumbersome. It's a great way to test a final 
 - something that can we can automate (continuous integration is important),
 - something that we might also debug.
 
-This is what integration tests are for. Conveniently, the MultiversX framework offers the possibility to run and debug smart contracts in a sandboxed environment that immitates a real blockchain. 
+This is what integration tests are for. Conveniently, the MultiversX framework offers the possibility to run and debug smart contracts in a sandboxed environment that imitates a real blockchain. 
 
 There are two flavors of integration tests:
-- Black-box tests: execution immitates the blockchain, no access to private contract functions;
+- Black-box tests: execution imitates the blockchain, no access to private contract functions;
 - White-box tests: the test has access to the inner workings of the contract.
 
-They both have their uses and we will see more about them furter on.
+They both have their uses and we will see more about them further on.
 
 There is a third type of test: the unit test. This is the most underrated type of test. It is ideal for testing a small function, or a small component of a smart contract. They are quick to write and quick to run. A healthy project should contain plenty of unit tests.
 
@@ -44,7 +44,7 @@ So, to recap, the ways to test a smart contract are as follows:
 
 Since smart contracts are written in **Rust**, it is most convenient to have the tests also written in Rust. The Rust framework currently supports all types of testing mentioned above.
 
-Let's, however, quickly go through all options avialable on MultiversX:
+Let's, however, quickly go through all options available on MultiversX:
 - On a blockchain:
     - Rust interactor framework;
     - [Any other SDK that can interact with the MultiversX blockchains](/sdk-and-tools/overview);

@@ -70,7 +70,7 @@ If the code source of your smart contract is hosted on GitHub, then it's a good 
 
 ### Choose an image tag
 
-For a new smart contract that isn't released yet (deployed on the network), it's recommended to pick the tag with the **largest index number**, which tipically includes recent versions of `rust` and other necessary dependencies.
+For a new smart contract that isn't released yet (deployed on the network), it's recommended to pick the tag with the **largest index number**, which typically includes recent versions of `rust` and other necessary dependencies.
 
 However, for minor releases or patches, it's wise to stick to the previously chosen image tag, for the same (nuanced) reasons you would not embrace an update of your development tools in the middle of fixing a critical bug (in any development context).
 

@@ -181,7 +181,7 @@ In the case of the interactor, the processing is similar to the integration test
 
 ### Sync Rust
 
-We also have a plan for adding support for a blocking interactor API, but this is currently not availalbe.
+We also have a plan for adding support for a blocking interactor API, but this is currently not available.
 
 
 

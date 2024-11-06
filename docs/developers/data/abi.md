@@ -134,7 +134,7 @@ Then, there are several standard [composite types](/developers/data/composite-va
 
 - Variable-length lists: `List<T>`, where `T` can be any type; e.g. `List<u32>`.
 - Fixed-length arrays: `arrayN<T>`, where `N` is a number and `T` can be any type; e.g. `array5<u8>` represents 5 bytes.
-- Heterogenous fixed-length tuples, `tuple<T1,T2,...,TN>`, no spaces, where `T1`, `T2` , ... , `TN` can be any types; e.g. `tuple<i16,bytes>`.
+- Heterogeneous fixed-length tuples, `tuple<T1,T2,...,TN>`, no spaces, where `T1`, `T2` , ... , `TN` can be any types; e.g. `tuple<i16,bytes>`.
 - Optional data, `Option<T>`, where `T` can be any type. Represented as either nothing, or a byte of `0x01` followed by the serialized contents.
 
 [comment]: # (mx-context-auto)
@@ -296,7 +296,7 @@ Similarly, [enums](/developers/data/custom-types#custom-enums) are defined by:
     - The __discriminant__. This is the index of the variant (starts from 0). It is always serialized as the first byte.
     - Optionally, __data fields__ associated with the enum.
         - It is most common to have single unnamed field, which will pe named `0`. There are, however, other options. Rust syntax allows:
-        - Tuple varians, named `0`, `1`, `2`, etc.
+        - Tuple variants, named `0`, `1`, `2`, etc.
         - Struct-like variants, with named fields.
 
 You can read more about Rust enums [here](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html).

@@ -170,7 +170,7 @@ fn init_test() {
 }
 ```
 
-And you're done for this step. You successfuly tested your contract's init function, and generated a scenario for it.
+And you're done for this step. You successfully tested your contract's init function, and generated a scenario for it.
 
 [comment]: # (mx-context-auto)
 

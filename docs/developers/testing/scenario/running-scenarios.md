@@ -72,7 +72,7 @@ At a minimum, the project needs to have `src`, `meta`, and `wasm` folders.
 
 Integration tests go into the `tests` folder. Scenario files, if present, should reside in a folder named `scenarios`. It is fine to also have sub-folders under `scenarios`, if needed.
 
-The Rust tests should go into 2 files ending in `*scenario_go_test.rs` and `*scenario_rs_test.rs`, respectively. It is also acceptable to simply use file names `scenario_go_test.rs` and `scenario_rs_test.rs` directy, with no prefix, but having a prefix can help developers orient themselves easier in projects with many contracts.
+The Rust tests should go into 2 files ending in `*scenario_go_test.rs` and `*scenario_rs_test.rs`, respectively. It is also acceptable to simply use file names `scenario_go_test.rs` and `scenario_rs_test.rs` directly, with no prefix, but having a prefix can help developers orient themselves easier in projects with many contracts.
 
 [comment]: # (mx-context-auto)
 
@@ -173,7 +173,7 @@ That is why we've build the [`sc-meta test-gen`](/developers/meta/sc-meta-cli#ca
 
 The tool works as follows:
 - If no `*scenario_go_file.rs` or `*scenario_rs_file.rs` are found, they can be created anew, but only if the `--create` flag is passed to the tool.
-- The Go VM tests can be fully generated, but the Rust VM environment setup (the `world()` function) cannot be generated automatically. When creating it for the first time, you will get a stub of thi function, and will have to fill in the implementation manually.
+- The Go VM tests can be fully generated, but the Rust VM environment setup (the `world()` function) cannot be generated automatically. When creating it for the first time, you will get a stub of this function, and will have to fill in the implementation manually.
 - If the `scenarios` folder is missing, the tool won't do anything.
 - You will always get a test function for each scenario in the `scenarios` folder.
 - The tool can be called any number of times, it is easy to update these tests whenever scenarios change. New scenario tests will be added and missing tests will be removed.
@@ -184,7 +184,7 @@ The tool works as follows:
 
 The test tool can handle multiple contract crates at once. In fact, it will try to update tests for all contracts it can find under a given folder.
 
-For reference, the tool paramters are:
+For reference, the tool parameters are:
 - `--path`
     - Target directory where to call all contract meta crates.
     - _default_: current directory.
