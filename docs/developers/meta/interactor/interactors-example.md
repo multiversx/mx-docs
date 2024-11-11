@@ -46,7 +46,6 @@ To compile and run the code, import the new project into the existing file hiera
 members = [
     ".",
     "meta",
-    "interact",
     "interactor"
 ]
 ```
@@ -93,12 +92,13 @@ Optionally, let's attach a [tracer](/developers/meta/interactor/interactors-over
 
 ```rust title=interactor_main.rs
 impl ContractInteract {
-    async fn new() -> Self {
-        let mut interactor = Interactor::new(GATEWAY)
+        async fn new() -> Self {
+        let config = Config::new();
+        let mut interactor = Interactor::new(config.gateway_uri(), config.use_chain_simulator())
             .await
             .with_tracer("trace1.scen.json") // file path
             .await;
-        let wallet_address = interactor.register_wallet(test_wallets::alice());
+        let wallet_address = interactor.register_wallet(test_wallets::alice()).await;
 
         let contract_code = BytesValue::interpret_from(
             "mxsc:../output/adder.mxsc.json",
