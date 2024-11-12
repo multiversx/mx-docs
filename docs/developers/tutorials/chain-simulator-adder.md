@@ -492,14 +492,14 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 [comment]: # (mx-context-auto)
 
 ### Stop
-In the **same** terminal window you ran the tests, stop Chain Simulator using the next command:
+In the **same** terminal window you ran the tests, **stop** Chain Simulator using the next command:
 ```bash
 my-adder/interact$ sc-meta cs stop
 Attempting to close the Chain Simulator...
 Successfully stopped the Chain Simulator.
 ```
 :::note
-If you encounter the following error while installing:
+If you encounter the following error while stopping:
 ```bash
 Attempting to close the Chain Simulator...
 Error: Failed to execute command: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
