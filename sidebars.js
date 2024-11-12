@@ -380,6 +380,7 @@ const sidebars = {
               "developers/guard-accounts",
               "developers/relayed-transactions",
               "developers/reproducible-contract-builds",
+              "developers/sc-calls",
               "developers/sc-calls-format",
               "developers/setup-local-testnet",
               "developers/setup-local-testnet-advanced",
