@@ -71,6 +71,8 @@ A standard sync call performs a direct, synchronous transaction to a contract on
     pub fn sync_call(self) -> <RH::ListReturns as NestedTupleFlatten>::Unpacked
 ```
 
+In this example, we are building a `sync call` to a `destination` smart contract address using the adder contract's proxy:
+
 ```rust title=adder.rs
     #[endpoint]
     fn sync(&self, destination: ManagedAddress, value: BigUint) {
@@ -92,6 +94,8 @@ This call operates in the same execution context as the source contract. Used, f
     /// Only works with contracts from the same shard.
     pub fn sync_call_same_context(self) -> <RH::ListReturns as NestedTupleFlatten>::Unpacked
 ```
+
+In this example, we are building a `sync call` using the `same execution context` to a `destination` smart contract address using the adder contract's proxy:
 
 ```rust title=adder.rs
     #[endpoint]
@@ -115,6 +119,8 @@ This type of call performs a synchronous call in `readonly` mode, meaning the de
     pub fn sync_call_readonly(self) -> <RH::ListReturns as NestedTupleFlatten>::Unpacked
 ```
 
+In this example, we are building a `sync call` in `readonly mode` to a `destination` smart contract address using the adder contract's proxy:
+
 ```rust title=adder.rs
     #[endpoint]
     fn sync_readonly(&self, destination: ManagedAddress, _value: BigUint) {
@@ -136,7 +142,7 @@ Sync calls can also be used to deploy new contracts. There are two primary metho
 
 Syntax-wise, both of these calls are executed using `.sync_call()`, but the transaction setup differs for each type.
 
-For a simple `raw deploy`, initiate a raw deploy transaction as shown below:
+For a simple `raw deploy`, initiate a raw deploy transaction using the `.raw_deploy()` function, as shown below:
 
 ```rust title=adder.rs
     #[endpoint]
@@ -175,12 +181,14 @@ Async calls are used when `cross-shard communication` is required, allowing tran
 The most common type of async call. This type of call can be executed with `.async_call_and_exit()`. As of framework version `0.50.2`, this replaces the deprecated `.async_call()` method.
 
 :::important
-This type of call uses the `async V1` mechanism.
+Async call uses the `async V1` mechanism.
 :::
 
 ```rust
 pub fn async_call_and_exit(self) -> ! 
 ```
+
+In this example, we are building an `async V1 call` to a `destination` smart contract address using the adder contract's proxy:
 
 ```rust title=adder.rs
     #[endpoint]
@@ -220,6 +228,8 @@ Register promise uses the `async V2` mechanism.
     pub fn register_promise(self)
 ```
 
+In this example, we are building an `async V2 call` to a `destination` smart contract address using the adder contract's proxy:
+
 ```rust title=adder.rs
     #[endpoint]
     fn register_promise(&self, destination: ManagedAddress, value: BigUint) {
@@ -240,6 +250,8 @@ This call executes a transaction asynchronously without waiting for a callback. 
     /// Sends transaction asynchronously, and doesn't wait for callback ("fire and forget".)
     pub fn transfer_execute(self)
 ```
+
+In this example, we are building an `async call` that `does not wait for a callback` (fire and forget) to a `destination` smart contract address using the adder contract's proxy:
 
 ```rust title=adder.rs
     #[endpoint]
