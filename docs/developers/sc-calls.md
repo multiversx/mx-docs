@@ -174,11 +174,11 @@ In the case of a `deploy from source` transaction, we would use the specific fun
 
 ## Async calls
 
-Async calls are used when `cross-shard communication` is required, allowing transactions to execute across multiple shards.
+Async calls are used when `cross-shard communication` is required, allowing transactions to execute across multiple shards. These type of calls support both intra-shard and cross-shard execution and can be used alongisde `callblacks` to capture the result of a transaction and trigger custom actions.
 
 ### Async call (V1)
 
-The most common type of async call. This type of call can be executed with `.async_call_and_exit()`. As of framework version `0.50.2`, this replaces the deprecated `.async_call()` method.
+The most common type of async call. This type of call can be executed with `.async_call_and_exit()`.
 
 :::important
 Async call uses the `async V1` mechanism.
@@ -201,10 +201,13 @@ In this example, we are building an `async V1 call` to a `destination` smart con
     }
 ```
 
+:::note
+Starting with framework version `0.50.2`, the previously used `.async_call()` method is deprecated and replaced with `.async_call_and_exit()`.
+:::
+
 ### Register promise (V2)
 
 Register promise performs an asynchronous promise call and allows multiple calls as such in a single transaction. To perform this type of call, use `.register_promise()`. 
-As of framework version `0.50.2`, this replaces the deprecated `.async_call_promise()` method.
 
 :::important
 Register promise uses the `async V2` mechanism.
@@ -241,6 +244,10 @@ In this example, we are building an `async V2 call` to a `destination` smart con
             .register_promise();
     }
 ```
+
+:::note
+Starting with framework version `0.50.2`, the method `.async_call_promise()` has been deprecated and replaced with `.register_promise()`.
+:::
 
 ### Transfer execute
 
