@@ -60,6 +60,7 @@ const sidebars = {
           "developers/tutorials/dex-walkthrough",
           "developers/tutorials/wallet-connect-v2-migration",
           "developers/tutorials/interactors-guide",
+          "developers/tutorials/chain-simulator-adder",
           "developers/tutorials/eth-to-mvx",
         ],
       },
