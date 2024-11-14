@@ -24,7 +24,7 @@ Smart contract calls on MultiversX fall into two main categories: synchronous (`
 
 A `sync` call is similar to regular function call in a program: it relies on a call stack, the current execution is paused, the call is executed immediately, and execution of the caller function resumes immediately after.
 
-An `async` call is similar to an asynchronous function call in a program, just like lauching it on a different thread. The async call is not added to the same stack and does not interrupt the execution of the caller function.
+An `async` call is similar to an asynchronous function call in a program, just like launching it on a different thread. The async call is not added to the same stack and does not interrupt the execution of the caller function.
 
 The main differences between the two are in this table: 
 
@@ -369,7 +369,7 @@ Register promise uses the `async V2` mechanism.
     pub fn register_promise(self)
 ```
 
-Unlike the oold async call, it is possible to have more than one `register_promise` call in a transaction. Execution is not terminated.
+Unlike the old async call, it is possible to have more than one `register_promise` call in a transaction. Execution is not terminated.
 
 In this example, we are building an `async V2 call` to a `destination` smart contract address using the adder contract's proxy:
 
