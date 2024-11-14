@@ -35,7 +35,7 @@ After running the command, you’ll see that the contract `my-adder` has been ge
 
 ```bash
 .
-├── interact
+├── interactor
 ├── meta
 ├── scenarios
 ├── src
@@ -52,7 +52,7 @@ After running the command, you’ll see that the contract `my-adder` has been ge
 
 ## Step 2: What is inside the interactor
 
-Our main focus will be the `interact` directory. Let’s take a closer look:
+Our main focus will be the `interactor` directory. Let’s take a closer look:
 
 The directory that makes the connection with Chain Simulator contains the following structures: 
 
@@ -60,14 +60,16 @@ The directory that makes the connection with Chain Simulator contains the follow
 .
 ├── Cargo.toml
 ├── config.toml
-└── src
-    ├── basic_interact_cli.rs
-    ├── basic_interact_config.rs
-    ├── basic_interact_main.rs
-    ├── basic_interact.rs
-    └── basic_interact_state.rs
+├── src
+│   ├── basic_interactor_cli.rs
+│   ├── basic_interactor_config.rs
+│   ├── basic_interactor_main.rs
+│   ├── basic_interactor.rs
+│   └── basic_interactor_state.rs
+└── tests
+    └── basic_interactor_cs_test.rs
 
-1 directory, 7 files
+2 directories, 8 files
 ```
 
 [comment]: # (mx-context-auto)
@@ -93,7 +95,7 @@ By default, the simulator runs on `http://localhost:8085`. However, depending on
 Make sure to set both `chain_type` and `gateway_uri` for the interactor to work.
 :::
 
-The configuration is parsed by `basic_interact_config.rs`. This file contains **two** functions that will be important for interacting with Chain Simulator:
+The configuration is parsed by `basic_interactor_config.rs`. This file contains **two** functions that will be important for interacting with Chain Simulator:
 - `use_chain_simulator()`: returns if the chain type is real or simulator;
 - `chain_simulator_config()`: initialize the proper configuration for simulator environment; this function is useful for **continuous integration tests**.
 
@@ -101,47 +103,41 @@ The configuration is parsed by `basic_interact_config.rs`. This file contains **
 
 ### Command Line Instructions
 
-The `basic_interact_cli.rs` file contains all the commands you can use to interact with the simulator.
+The `basic_interactor_cli.rs` file contains all the commands you can use to interact with the simulator.
 
 ```rust
 /// MyAdder Interact CLI Commands
 #[derive(Clone, PartialEq, Eq, Debug, Subcommand)]
 pub enum InteractCliCommand {
-    #[command(name = "add", about = "Add value")]
-    Add(AddArgs),
     #[command(name = "deploy", about = "Deploy contract")]
     Deploy,
-    #[command(name = "feed", about = "Feed contract EGLD")]
-    Feed,
-    #[command(name = "multi-deploy", about = "Multiple deploy contracts")]
-    MultiDeploy(MultiDeployArgs),
-    #[command(name = "sum", about = "Print sum")]
-    Sum,
     #[command(name = "upgrade", about = "Upgrade contract")]
     Upgrade(UpgradeArgs),
+    #[command(name = "sum", about = "Print sum")]
+    Sum,
+    #[command(name = "add", about = "Add value")]
+    Add(AddArgs),
 }
 ```
 
 Let's break down what these commands do on Chain Simulator:
 
 - `deploy`: uploads the contract to the blockchain;
-- `multi-deploy`: deploys multiple instances of the _Adder_ contract at once;
 - `upgrade`: upgrades the existing _Adder_ contract with a new version;
-- `add`: executes a transaction that calls the `add` endpoint of the _Adder_ contract, essentially adding a value to it;
 - `sum`: queries the contract's storage **getSum**;
-- `feed`: adds a specific amount of EGLD to the _Adder_ contract. 
+- `add`: executes a transaction that calls the `add` endpoint of the _Adder_ contract, essentially adding a value to it;
 
 [comment]: # (mx-context-auto)
 
 ### State Management for Interactions
 
-Module `basic_interact_state.rs` defines a State structure to help us keep track of our smart contract’s address. This information is saved in `state.toml` so even when you restart the interaction commands, it remembers the address you have set!
+Module `basic_interactor_state.rs` defines a State structure to help us keep track of our smart contract’s address. This information is saved in `state.toml` so even when you restart the interaction commands, it remembers the address you have set!
 
 [comment]: # (mx-context-auto)
 
 ### Interaction transactions
 
-The `basic_interact.rs` file is where you will find the functions triggered by each command you run from the command line. Each function represents either a **transaction** or a **query**. In the next sections, we will take a closer look at how these work!
+The `basic_interactor.rs` file is where you will find the functions triggered by each command you run from the command line. Each function represents either a **transaction** or a **query**. In the next sections, we will take a closer look at how these work!
 
 [comment]: # (mx-context-auto)
 
@@ -154,14 +150,15 @@ Each time you start the Chain Simulator, it creates a fresh, new blockchain from
 :::
 
 ```rust
-pub async fn init(config: Config) -> Self {
-    let mut interactor =
-        Interactor::new(config.gateway_uri(), config.use_chain_simulator()).await;
+pub async fn new(config: Config) -> Self {
+    let mut interactor = Interactor::new(config.gateway_uri())
+        .await
+        .use_chain_simulator(config.use_chain_simulator());
 
-    interactor.set_current_dir_from_workspace("interact");
+    interactor.set_current_dir_from_workspace("interactor");
 
-    let adder_owner_address = interactor.register_wallet(test_wallets::alice()).await;
-    let wallet_address = interactor.register_wallet(test_wallets::mike()).await;
+    let adder_owner_address = interactor.register_wallet(test_wallets::heidi()).await;
+    let wallet_address = interactor.register_wallet(test_wallets::ivan()).await;
 
     // generate blocks until ESDTSystemSCAddress is enabled
     interactor.generate_blocks_until_epoch(1).await.unwrap();
@@ -178,7 +175,7 @@ pub async fn init(config: Config) -> Self {
 Let's find out what is mandatory for initializing the Chain Simulator interactor. 
 
 ```rust
-let adder_owner_address = interactor.register_wallet(test_wallets::alice()).await;
+let adder_owner_address = interactor.register_wallet(test_wallets::heidi()).await;
 ```
 Every time you initialize an interactor, you’ll need to register a wallet. When a wallet is registered in the Chain Simulator, its associated account is automatically credited with a generous amount of EGLD. This way, you don’t have to worry about running out of tokens while testing!
 
@@ -199,20 +196,22 @@ Node enables `ESDTSystemSCAddress` in **epoch number one**. If you want to use f
 
 ## Step 4: Create tests that run on Chain Simulator
 
-One of the best parts about using the Chain Simulator with your interactor is that it lets you create **continuous integration tests in an environment that mirrors the real blockchain**. To set this up, start by creating a new directory in your interactor crate—let’s name it `tests` for clarity. This folder will hold all your test suites, where you’ll be able to verify your contract’s behaviour effectively.
+One of the best parts about using the Chain Simulator with your interactor is that it lets you create **continuous integration tests in an environment that mirrors the real blockchain**. 
+
+`tests/` holds all your test suites, where you are able to verify your contract’s behaviour effectively.
 
 ```bash
 .
 ├── Cargo.toml
 ├── config.toml
 ├── src
-│   ├── basic_interact_cli.rs
-│   ├── basic_interact_config.rs
-│   ├── basic_interact_main.rs
-│   ├── basic_interact.rs
-│   └── basic_interact_state.rs
+│   ├── basic_interactor_cli.rs
+│   ├── basic_interactor_config.rs
+│   ├── basic_interactor_main.rs
+│   ├── basic_interactor.rs
+│   └── basic_interactor_state.rs
 └── tests
-    └── basic_interact_cs_test.rs
+    └── basic_interactor_cs_test.rs
 ```
 
 :::important
@@ -242,16 +241,16 @@ version = "0.54.0"
 members = [
     ".",
     "meta",
-    "interact",
+    "interactor",
 ]
 
 [features]
 chain-simulator-tests = []
 ```
 
-With this already set up, you’re ready to start building and running tests for your contract!
+With this setup in place, you’re ready to start exploring the test building and execution process for your contract!
 
-In the `basic_interact_cs_test.rs`, create a test that will walk through the following steps:
+In the `basic_interactor_cs_test.rs`, you’ll find a test that goes through the following steps:
 
 1. **Deploy** the contract.
 2. **Add**: call the function that increments a stored number in the contract by 1.
@@ -263,10 +262,10 @@ In the `basic_interact_cs_test.rs`, create a test that will walk through the fol
 
 ### 0. The base
 
-Each test you write should include the `#[tokio::test]` attribute for asynchronous execution and **enable** the `chain-simulator-tests` feature flag. Here’s how your test setup should look:
+Each test you write should include the `#[tokio::test]` attribute for asynchronous execution and **enable** the `chain-simulator-tests` feature flag. Here’s what the test setup looks like:
 
 ```rust
-use basic_interact::{Config, MyAdderInteract};
+use basic_interactor::{Config, MyAdderInteract};
 
 #[tokio::test]
 #[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
@@ -279,7 +278,7 @@ async fn simulator_adder_test() {}
 
 **Deploy** on Chain Simulator _MyAdder_ contract which sets the initial sum with **zero**.
 ```rust
-use basic_interact::{Config, MyAdderInteract};
+use basic_interactor::{Config, MyAdderInteract};
 
 #[tokio::test]
 #[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
@@ -298,7 +297,7 @@ async fn simulator_adder_test() {
 Create a transaction that calls endpoint `add` which successfully **increments** the stored number in the contract by **one**.
 
 ```rust
-use basic_interact::{Config, MyAdderInteract};
+use basic_interactor::{Config, MyAdderInteract};
 
 #[tokio::test]
 #[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
@@ -318,7 +317,7 @@ async fn simulator_upgrade_test() {
 Query the storage where the number is stored. This way, you can verify if the stored value has been incremented.
 
 ```rust
-use basic_interact::{Config, MyAdderInteract};
+use basic_interactor::{Config, MyAdderInteract};
 
 #[tokio::test]
 #[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
@@ -342,7 +341,7 @@ async fn simulator_upgrade_test() {
 Upgrade successfully _MyAdder_ with **seven** as the new value stored in the `sum` storage mapper. To verify if the number was indeed changed, you need to query the `SingleValueMapper`.
 
 ```rust
-use basic_interact::{Config, MyAdderInteract};
+use basic_interactor::{Config, MyAdderInteract};
 
 #[tokio::test]
 #[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
@@ -357,9 +356,8 @@ async fn simulator_upgrade_test() {
     assert_eq!(sum, 1u32.into());
 
     ///////////////////////4///////////////////////
-    let adder_owner_address = basic_interact.adder_owner_address.clone();
     basic_interact
-        .upgrade(7u32, &adder_owner_address, None)
+        .upgrade(7u32, &basic_interact.adder_owner_address.clone(), None)
         .await;
 
     // Sum will be the updated value of 7
@@ -374,7 +372,7 @@ async fn simulator_upgrade_test() {
 Attempt to upgrade the contract with an unauthorized user to confirm that it results in a failed transaction. To ensure no changes occur, you need to query the storage again to check that the number remains unchanged.
 
 ```rust
-use basic_interact::{Config, MyAdderInteract};
+use basic_interactor::{Config, MyAdderInteract};
 
 #[tokio::test]
 #[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
@@ -388,9 +386,8 @@ async fn simulator_upgrade_test() {
     let sum = basic_interact.get_sum().await;
     assert_eq!(sum, 1u32.into());
 
-    let adder_owner_address = basic_interact.adder_owner_address.clone();
     basic_interact
-        .upgrade(7u32, &adder_owner_address, None)
+        .upgrade(7u32, &basic_interact.adder_owner_address.clone(), None)
         .await;
 
     // Sum will be the updated value of 7
@@ -398,10 +395,13 @@ async fn simulator_upgrade_test() {
     assert_eq!(sum, 7u32.into());
 
     ///////////////////////5///////////////////////
-    let wallet_address = basic_interact.wallet_address.clone();
-    let error_not_owner = (4, "upgrade is allowed only for owner");
+    // Upgrade fails
     basic_interact
-        .upgrade(10u32, &wallet_address, Some(error_not_owner))
+        .upgrade(
+            10u32,
+            &basic_interact.wallet_address.clone(),
+            Some("upgrade is allowed only for owner"),
+        )
         .await;
 
     // Sum will remain 7
@@ -417,10 +417,10 @@ async fn simulator_upgrade_test() {
 [comment]: # (mx-context-auto)
 
 ### Install
-To run the tests you just created, you will need to install the Docker image that includes the Chain Simulator.
+To run the test provided, you will need to install the Docker image that includes the Chain Simulator.
 
 ```bash
-my-adder/interact$ sc-meta cs install
+my-adder/interactor$ sc-meta cs install
 Attempting to install prerequisites for the Chain Simulator...
 Successfully pulled the latest Chain Simulator image.
 ```
@@ -434,7 +434,7 @@ Error: Failed to execute command: permission denied while trying to connect to t
 
 You will need to run the command with root privileges due to Docker usage:
 ```bash
-my-adder/interact$ sudo sc-meta cs install
+my-adder/interactor$ sudo sc-meta cs install
 ```
 
 If you get this error:
@@ -443,7 +443,7 @@ sudo: sc-meta: command not found
 ```
 You can find the sc-meta path and choose one of these solutions:
 ```bash
-my-adder/interact$ which sc-meta
+my-adder/interactor$ which sc-meta
 my-path/.cargo/bin/sc-meta
 ```
 
@@ -460,7 +460,7 @@ sudo my-path/.cargo/bin/sc-meta cs install
 
 Once you’ve successfully installed the Docker image, you can start the Chain Simulator.
 ```bash
-my-adder/interact$ sudo my-path/.cargo/bin/sc-meta cs start
+my-adder/interactor$ sudo my-path/.cargo/bin/sc-meta cs start
 Attempting to start the Chain Simulator...
 Successfully started the Chain Simulator.
 INFO [2024-11-11 13:09:15.683]   using the override config files          files = [./config/nodeOverrideDefault.toml] 
@@ -477,10 +477,10 @@ INFO [2024-11-11 13:09:15.699]   updated config value                     file =
 [comment]: # (mx-context-auto)
 
 ### Run
-While Chain Simulator is running, open a new terminal window in parallel. In this new terminal, you will run the test you created in [Step 4](./chain-simulator-adder.md#step-4-create-tests-that-run-on-chain-simulator).
+While Chain Simulator is running, open a new terminal window in parallel. In this new terminal, you will run the test provided in [Step 4](./chain-simulator-adder.md#step-4-create-tests-that-run-on-chain-simulator).
 
 ```bash
-my-adder/interact$ sc-meta test --chain-simulator
+my-adder/interactor$ sc-meta test --chain-simulator
 ```
 
 ```bash Output
@@ -494,7 +494,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 ### Stop
 In the **same** terminal window you ran the tests, **stop** Chain Simulator using the next command:
 ```bash
-my-adder/interact$ sc-meta cs stop
+my-adder/interactor$ sc-meta cs stop
 Attempting to close the Chain Simulator...
 Successfully stopped the Chain Simulator.
 ```
