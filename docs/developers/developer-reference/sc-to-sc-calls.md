@@ -340,11 +340,6 @@ In this example, we are building an `async V1 call` to a `destination` smart con
     }
 ```
 
-:::note
-Starting with framework version `0.50.2`, the previously used `.async_call()` method is deprecated and replaced with `.async_call_and_exit()`.
-:::
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -394,10 +389,6 @@ Just like the old async call, promises allow callbacks.
 
 :::important
 Promises callbacks must be annotated with `#[promises_callback]` instead of `#[callback]`.
-:::
-
-:::note
-Starting with framework version `0.50.2`, the method `.async_call_promise()` has been deprecated and replaced with `.register_promise()`.
 :::
 
 
