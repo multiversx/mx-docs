@@ -487,7 +487,7 @@ Returns the handled result from a SC call as a `Result<HandledType>`. Can be cha
 
 Acting as a wrapper over other result handlers, checks the status of the transaction and returns `Some(HandledType)` or `Err(TxResponseStatus)`. Especially useful in external programs that integrate the interactor in their operations such as microservices. This result handler makes sure that the external program keeps running and opens the door for a more elegant error handling.
 
-Usable only in the interactor environment.
+It is usable both in the interactor and testing environments.
 
 In this example, `ReturnsHandledOrError` checks the status of the transaction. If the status is `success`, the other result handler, `ReturnsNewBech32Address`, will try to extract the newly deployed SC address from the transaction on the blockchain. If successful, the new address is returned as a `Bech32Address`. Otherwise, a `TxResponseStatus` struct is returned, containing the error and the message.
 
