@@ -172,9 +172,8 @@ The interactors are Rust programs, used for interacting with the smart contract 
 const GATEWAY: &str = "https://devnet-gateway.multiversx.com";
 
 async fn example_scenario() {
-    // We use `false` as the argument for the chain simulator, 
-    // as we are using the real blockchain for this test
-    let mut interactor = Interactor::new(GATEWAY, false).await; // Interactor struct
+    // No chain simulator flag, as we are using the real blockchain for this test.
+    let mut interactor = Interactor::new(GATEWAY).await; // Interactor struct
 
     let _query_env = interactor.query(); // tx with InteractorQueryEnv
     let _tx_env = interactor.tx(); // tx with InteractorExecEnv
@@ -191,7 +190,7 @@ mod proxy;
 const GATEWAY: &str = "https://devnet-gateway.multiversx.com";
 
 async fn example_scenario() -> num_bigint::BigUint {
-    let mut interactor = Interactor::new(GATEWAY, false).await; // create Interactor struct
+    let mut interactor = Interactor::new(GATEWAY).await; // create Interactor struct
     let wallet_address = interactor.register_wallet(test_wallets::mike()); // register a test wallet from the framework
     let sc_address = Bech32Address::from_bech32_string(
         "erd1qqqqqqqqqqqqqpgqtsw8s3evhhyqqa2j2tfn9yvufqskdv236n9s2a06h9".to_string(),

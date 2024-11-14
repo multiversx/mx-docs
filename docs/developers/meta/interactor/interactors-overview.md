@@ -115,8 +115,9 @@ Running the `deploy` command for every contract will create a new `state.toml` f
 To enhance testing support, any instance of the `Interactor` struct implements the `.with_tracer(...)` method. This method enables the interactor to use a `tracer` and output the result to the specified path. A tracer records every action executed through the interactor, mapping each action to a `mandos step`.
 
 ```rust title=interact.rs
-    let mut interactor = Interactor::new(config.gateway_uri(), config.use_chain_simulator())
+    let mut interactor = Interactor::new(config.gateway_uri())
         .await
+        .use_chain_simulator(config.use_chain_simulator())
         .with_tracer("test_trace.scen.json")
         .await;
 ```

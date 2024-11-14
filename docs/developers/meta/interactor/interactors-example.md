@@ -94,8 +94,9 @@ Optionally, let's attach a [tracer](/developers/meta/interactor/interactors-over
 impl ContractInteract {
         async fn new() -> Self {
         let config = Config::new();
-        let mut interactor = Interactor::new(config.gateway_uri(), config.use_chain_simulator())
+        let mut interactor = Interactor::new(config.gateway_uri())
             .await
+            .use_chain_simulator(config.use_chain_simulator())
             .with_tracer("trace1.scen.json") // file path
             .await;
         let wallet_address = interactor.register_wallet(test_wallets::alice()).await;
