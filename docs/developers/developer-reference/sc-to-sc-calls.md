@@ -44,8 +44,8 @@ The main differences between the two are in this table:
 Transfer-execute calls are basically async calls without callback. You can think of them as a "fire and forget" mechanism.
 
 They come in two flavors:
-- Transfer-only - they are used to move EGLD or ESDT balance, and nothing else. Balance transfers can rarely fail, so they are very convenient to use.
-- Transfer-and-execute - used when the caller does not care what the result of the callee function is.
+- **Transfer-only** - they are used to move EGLD or ESDT balance, and nothing else. Balance transfers can rarely fail, so they are very convenient to use.
+- **Transfer-and-execute** - used when the caller does not care what the result of the callee function is.
 
 They were very important in async v1, because they were the only mechanism to have more than one call leaving a transaction.
 
@@ -81,10 +81,10 @@ Async calls can optionally register callbacks. The callbacks are called by the s
 The callback receives the following inputs:
 - The call result, which contains several values:
     - In case of success:
-        - The status code, 0 in this case, followed by
-        - One argument for each result returned by the callee.
+        - The status code, 0 in this case, in the first position.
+        - One argument for each result returned by the callee, after that.
     - In case of error:
-        - The status code, will be different than 0. For example, error code "4" indicates a failure in the smart contract execution.
+        - The status code, will be different from 0. For example, error code "4" indicates a failure in the smart contract execution. It is also in the first position.
         - One argument, containing the error message as string.
     - Note: it is customary to use type `ManagedAsyncCallResult<T>` since it knows how to conveniently decode this structure.
 - The callback closure:
