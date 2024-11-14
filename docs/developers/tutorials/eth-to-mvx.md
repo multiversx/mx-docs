@@ -202,7 +202,7 @@ In SpaceCraftSDK the transaction syntax is consistent, the only element differin
 
 In a contract, the options are `.transfer()`, `.transfer_execute()`, `.async_call_and_exit()`, `.sync_call()`, etc.
 In unit tests written in Rust just `.run()` is universal.
-In interactors, because of the use of async Rust, we need to write `.prepare_async().run().await()`.
+In interactors, we call `.run().await`. It's the same method name, but this time it's asynchronous Rust, so it can only be called in an `async` function, and `.await` is necessary.
 
 Let's dive into an example!
 
