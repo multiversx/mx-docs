@@ -46,6 +46,7 @@ Below is a list of tutorials for building on MultiversX:
 | [DEX Walkthrough](/developers/tutorials/dex-walkthrough)                            | In depth walkthrough of all the main DEX contracts.              |
 | [WalletConnect 2.0 Migration](/developers/tutorials/wallet-connect-v2-migration)    | WalletConnect 2.0 Migration Guide                                |
 | [Ethereum to MultiversX migration guide](/developers/tutorials/eth-to-mvx)          | Guide for Ethereum developers to start building on MultiversX.   |
+| [Chain Simulator in Adder - SpaceCraft interactors](/developers/tutorials/chain-simulator-adder)|  Guide on how to interact with Chain Simulator in one of the simplest SCs.| 
 
 [comment]: # (mx-context-auto)
 

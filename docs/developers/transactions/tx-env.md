@@ -172,6 +172,7 @@ The interactors are Rust programs, used for interacting with the smart contract 
 const GATEWAY: &str = "https://devnet-gateway.multiversx.com";
 
 async fn example_scenario() {
+    // No chain simulator flag, as we are using the real blockchain for this test.
     let mut interactor = Interactor::new(GATEWAY).await; // Interactor struct
 
     let _query_env = interactor.query(); // tx with InteractorQueryEnv

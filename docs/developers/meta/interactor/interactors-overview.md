@@ -66,8 +66,9 @@ adder % sc-meta all snippets
 This command performs the following actions:
 - **Compiles the contract** (still needs to be built).
 - **Creates a** `sc-config.toml` configuration file. If the file already exists, another proxy path is inserted (the path to the interactor) without changing the previous setup.
-- **Generates a proxy** based on the configuration path from the file.
+- **Generates a proxy** based on the configuration path from the file (`proxy.rs`).
 - **Creates an async Rust program with a CLI** based on the contract endpoints found in the proxy. Returns typed results for further processing. The new project will be under the newly created `interactor` folder, inside the contract root folder.
+- **Creates** `config.toml` and `config.rs` files used to setup and parse the chain simulator config.
 
 ::::note
 Make sure to include the newly generated interactor into the existing file hierarchy to be able to compile and run the code.
@@ -114,8 +115,9 @@ Running the `deploy` command for every contract will create a new `state.toml` f
 To enhance testing support, any instance of the `Interactor` struct implements the `.with_tracer(...)` method. This method enables the interactor to use a `tracer` and output the result to the specified path. A tracer records every action executed through the interactor, mapping each action to a `mandos step`.
 
 ```rust title=interact.rs
-    let mut interactor = Interactor::new(GATEWAY)
+    let mut interactor = Interactor::new(config.gateway_uri())
         .await
+        .use_chain_simulator(config.use_chain_simulator())
         .with_tracer("test_trace.scen.json")
         .await;
 ```
