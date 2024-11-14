@@ -398,7 +398,7 @@ Calling `cargo run snippets` in the meta crate or `sc-meta all snippets` in the 
 
 An interactor is a small tool, meant for developers to interact with the contract on-chain and write system tests. Being written in Rust, it is ideal for quick interactions and tinkering, directly from the contract project. 
 
-Inside the `interactor` project there is the small interactor file, `interact_main.rs`, as well as a newly generated contract proxy. The `sc-config.toml` file of the contract (if existent) will be updated with the newly created proxy path (to the interactor project) or created from scratch if not existent.
+Inside the `interactor` project there is the interactor source file called `interact_main.rs`, a `config.toml` state file containing the chain simulator config, a `config.rs` file containing the source code for parsing the config and a newly generated contract proxy (`proxy.rs`). The `sc-config.toml` file of the contract (if existent) will be updated with the newly created proxy path (to the interactor project) or created from scratch if not existent.
 
 After calling `sc-meta all snippets` in the `factorial` smart contract crate, we get:
 ![img](/img/snippets_folder_structure.png)

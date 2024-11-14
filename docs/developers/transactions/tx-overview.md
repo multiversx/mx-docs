@@ -137,7 +137,7 @@ Ultimately, the purpose of a transaction is to be executed. Simply constructing 
 The allowed execution methods depend on the environment. More specifically:
 - In a contract, the options are `.transfer()`, `.transfer_execute()`, `.async_call_and_exit()`, `.sync_call()`, etc.
 - In tests just `.run()` is universal.
-- In interactors, because if the use of async Rust, we need to write `.prepare_async().run().async`.
+- In interactors, we call `.run().await`. It's the same method name, but this time it's asynchronous Rust, so it can only be called in an `async` function, and `.await` is necessary.
 
 More on this in the [launch page](tx-run). 
 
