@@ -110,7 +110,7 @@ distribution remains unchanged.
 
 :::important Important notes
 
-Starting with this epoch:
+Each epoch:
 
 - Every **newly staked** node will be placed in the **auction list**.
 - Every **unjailed** node will be placed in the **auction list**.
@@ -149,9 +149,9 @@ Using the example above, this will resize each waiting list per shard from 400 n
 
 ## Staking v4. Step 3.
 
-Starting with this epoch:
+Each epoch:
 
-- Maximum number of nodes in the network will be changed from 3200 to 2880 (3200 - 320), consisting of:
+- The maximum number of nodes in the network will be:
     - a global number of 1600 active/eligible validators, split into 400 nodes/shard
     - a global number of 1280 waiting validators to join the active list, split into 320 nodes/shard
 - All **shuffled out** nodes from the eligible list will be sent to the auction list to take part in the auction
