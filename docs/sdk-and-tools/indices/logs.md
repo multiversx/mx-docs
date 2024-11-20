@@ -11,6 +11,15 @@ This page describes the structure of the `logs` index (Elasticsearch), and also 
 
 ## _id
 
+:::warning Important
+
+**The `logs` index will be deprecated and removed in the near future.**
+We recommend using the `events` index, which contains events included in a log.
+
+Please make the necessary updates to ensure a smooth transition.
+If you need further assistance, feel free to reach out.
+:::
+
 The `_id` field for this index is composed of hex-encoded hash of the transaction of the smart contract result that generated the log.
 
 [comment]: # (mx-context-auto)

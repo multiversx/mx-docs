@@ -11,6 +11,16 @@ This page describes the structure of the `transactions` index (Elasticsearch), a
 
 ## _id
 
+:::warning Important
+
+**The `transactions` index will be deprecated and removed in the near future.**
+We recommend using the `operations` index, which contains all the transaction data. 
+The only change required in your queries is to include the `type` field with the value `normal` to fetch all transactions.
+
+Please make the necessary updates to ensure a smooth transition. 
+If you need further assistance, feel free to reach out.
+:::
+
 The `_id` field for this index is composed of hex encoded transaction hash.
 (example: `cad4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
 
