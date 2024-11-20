@@ -1,4 +1,4 @@
----
+---35dd08b64984d5206a39c4fd9d020ba9f478951e75b0a6a6c62fbc1138c0d73e
 id: transactions
 title: Transactions
 ---
@@ -28,16 +28,16 @@ A ready-to-broadcast transaction is structured as follows:
 
 ```json
 {
-  "nonce": 42,
-  "value": "100000000000000000",
-  "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
-  "sender": "erd1ylzm22ngxl2tspgvwm0yth2myr6dx9avtx83zpxpu7rhxw4qltzs9tmjm9",
-  "gasPrice": 1000000000,
-  "gasLimit": 70000,
-  "data": "Zm9vZCBmb3IgY2F0cw==",
+  "nonce": 223
+  "value": "83.71985208746",
+  "receiver": "erd1q850mwlvny02wwcdf335wscfmftql5crm7ysfg08kg3ajm3djtuqv86tzh",
+  "sender": "erd1jryylqd3m8vmju8mz2jtv3yeen045e6f2gkhmw52hdtqqdhgug7s094u6v",
+  "gasPrice": 0.000000001,
+  "gasLimit": 50,000,
+  "data": "AAAAAAAAAAAFAJQmYAR2h4BkuthCtqYW5rDxdGy9sFU=",
   "chainID": "1",
   "version": 1,
-  "signature": "5845301de8ca3a8576166fb3b7dd25124868ce54b07eec7022ae3ffd8d4629540dbb7d0ceed9455a259695e2665db614828728d0f9b0fb1cc46c07dd669d2f0e"
+  "signature": "SetGuardian@0960f75f4b7201ed01dbef8f1d652477e950ca8b04a2b97514c8dd8e35f6d6dd@4d756c7469766572735854435353657276696365"
 }
 ```
 
