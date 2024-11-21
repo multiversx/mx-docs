@@ -71,7 +71,7 @@ cosmwasm_contract="axelar14a4ar5jh7ue4wg28jwsspf23r8k68j7g5d6d3fsttrhp42ajn4xq6z
 type="MultisigSigner"
 ```
 
-You need to configure aditional `handlers` for each chain you want to support. Check out the [ampd README file](https://github.com/axelarnetwork/axelar-amplifier/blob/main/ampd/README.md) for more information.
+You need to configure additional `handlers` for each chain you want to support. Check out the [ampd README file](https://github.com/axelarnetwork/axelar-amplifier/blob/main/ampd/README.md) for more information.
 Find below an example for configuring handlers for **MultiversX**.
 
 ### Activate and run the verifier
