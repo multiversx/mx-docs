@@ -518,6 +518,12 @@ const sidebars = {
       },
       {
         type: "category",
+        label: "Axelar Bridge",
+        items: [
+          "bridge/axelar",],
+      },
+      {
+        type: "category",
         label: "Sovereign Chains",
         items: [
           "sovereign/overview",
