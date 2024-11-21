@@ -14,7 +14,7 @@ This page describes the structure of the `logs` index (Elasticsearch), and also 
 :::warning Important
 
 **The `logs` index will be deprecated and removed in the near future.**
-We recommend using the `events` index, which contains all the events included in a log.
+We recommend using the [events](/sdk-and-tools/indices/es-index-events) index, which contains all the events included in a log.
 
 Please make the necessary updates to ensure a smooth transition.
 If you need further assistance, feel free to reach out.

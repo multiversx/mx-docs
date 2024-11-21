@@ -14,7 +14,7 @@ This page describes the structure of the `transactions` index (Elasticsearch), a
 :::warning Important
 
 **The `transactions` index will be deprecated and removed in the near future.**
-We recommend using the `operations` index, which contains all the transaction data. 
+We recommend using the [operations](/sdk-and-tools/indices/es-index-operations) index, which contains all the transaction data. 
 The only change required in your queries is to include the `type` field with the value `normal` to fetch all transactions.
 
 Please make the necessary updates to ensure a smooth transition. 

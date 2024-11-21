@@ -14,7 +14,7 @@ This page describes the structure of the `sc-results` index (Elasticsearch), and
 :::warning Important
 
 **The `scresults` index will be deprecated and removed in the near future.**
-We recommend using the `operations` index, which contains all the smart contract results data.
+We recommend using the [operations](/sdk-and-tools/indices/es-index-operations) index, which contains all the smart contract results data.
 The only change required in your queries is to include the `type` field with the value `normal` to fetch all smart contract results.
 
 Please make the necessary updates to ensure a smooth transition.
