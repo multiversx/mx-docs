@@ -44,7 +44,7 @@ The _id field of this index is represented by the transactions OR smart contract
 | tokens            | The tokens field contains a list of ESDT tokens that are transferred based on the data field. The indices from the `tokens` list are linked with the indices from `esdtValues` list. |
 | esdtValues        | The esdtValues field contains a list of ESDT values that are transferred based on the data field.                                                                                    |
 | receivers         | The receivers field contains a list of receiver addresses in case of ESDTNFTTransfer or MultiESDTTransfer.                                                                           |
-| receiversShardIDs | The receiversShardIDs field contains a list of receiver addresses shard IDs.                                                                                                         |
+| receiversShardIDs | The receiversShardIDs field contains a list of receiver addresses' shard IDs.                                                                                                        |
 | type              | The type field represents the type of the transaction based on the data field.                                                                                                       |
 | operation         | The operation field represents the operation of the transaction based on the data field.                                                                                             |
 | function          | The function field holds the name of the function that is called in case of a smart contract call.                                                                                   |

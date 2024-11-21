@@ -21,7 +21,7 @@ Please make the necessary updates to ensure a smooth transition.
 If you need further assistance, feel free to reach out.
 :::
 
-The `_id` field for this index is composed of hex encoded transaction hash.
+The `_id` field for this index is composed of hex-encoded transaction hash.
 (example: `cad4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
 
 [comment]: # (mx-context-auto)
