@@ -412,3 +412,11 @@ Parameters:
 - `--target-dir-meta` For the meta crates, allows specifying the target directory where the Rust compiler will build the intermediary files. Sharing the same target directory can speed up building multiple contract crates at once.
 - `--target-dir-all` Overrides both the --target-dir-meta and the --target-dir-wasm args.
 
+### Calling `cs`
+
+Calling `cargo run cs` in the meta crate or `sc-meta cs` in the root crate will start the interaction with the chain simulator. In order to start an action, one must choose between the following subcommands.
+
+Subcommands:
+- `install` Pulls the latest chain simulator docker image available. This command needs Docker to be installed and running on the current machine.
+- `start` Starts the chain simulator in verbose mode at `localhost:8085`.
+- `stop` Stops the chain simulator.
