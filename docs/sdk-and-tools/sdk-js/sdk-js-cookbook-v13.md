@@ -376,7 +376,7 @@ let abi = AbiRegistry.create(abiObj);
 ```js
 import axios from "axios";
 
-const response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/raw/main/src/testdata/counter.abi.json");
+const response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/raw/main/src/testdata/adder.abi.json");
 abi = AbiRegistry.create(response.data);
 ```
 
