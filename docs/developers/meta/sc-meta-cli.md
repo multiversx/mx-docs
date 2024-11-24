@@ -388,7 +388,7 @@ This command is similar to `build-dbg`, in that it provides a shorthand for buil
 
 ### Calling `clean`
 
-Calling `mxpy contract clean <project>` or `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
+Calling `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
 
 [comment]: # (mx-context-auto)
 
