@@ -54,7 +54,6 @@ const sidebars = {
           "developers/tutorials/your-first-microservice",
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
-          "developers/tutorials/counter",
           "developers/tutorials/staking-contract",
           "developers/tutorials/energy-dao",
           "developers/tutorials/dex-walkthrough",
@@ -515,6 +514,12 @@ const sidebars = {
           "bridge/transfer-flows",
           "bridge/multiple-chains",
           "bridge/whitelist-requirements",],
+      },
+      {
+        type: "category",
+        label: "Axelar Bridge",
+        items: [
+          "bridge/axelar",],
       },
       {
         type: "category",
