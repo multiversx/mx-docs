@@ -315,7 +315,7 @@ const tx4 = factory.createMultiESDTNFTTransfer({
 import { Code } from "@multiversx/sdk-core";
 import { promises } from "fs";
 
-let buffer = await promises.readFile("../contracts/counter.wasm");
+let buffer = await promises.readFile("../contracts/adder.wasm");
 let code = Code.fromBuffer(buffer);
 ```
 
@@ -326,7 +326,7 @@ let code = Code.fromBuffer(buffer);
 ```js
 import axios from "axios";
 
-let response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/raw/main/src/testdata/counter.wasm", {
+let response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/raw/main/src/testdata/adder.wasm", {
     responseType: "arraybuffer",
     transformResponse: [],
     headers: {
@@ -421,7 +421,7 @@ console.log("Return code:", returnCode);
 import { AbiRegistry, Address, SmartContract } from "@multiversx/sdk-core";
 import { promises } from "fs";
 
-let abiJson = await promises.readFile("../contracts/counter.abi.json", { encoding: "utf8" });
+let abiJson = await promises.readFile("../contracts/adder.abi.json", { encoding: "utf8" });
 let abiObj = JSON.parse(abiJson);
 let abiRegistry = AbiRegistry.create(abiObj);
 let existingContractAddress = Address.fromBech32("erd1qqqqqqqqqqqqqpgq5sup58y38q3pwyqklagxmuraetshrqwpd8ssh0ssph");
@@ -435,7 +435,7 @@ let existingContract = new SmartContract({ address: existingContractAddress, abi
 ```js
 import axios from "axios";
 
-const response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/raw/main/src/testdata/counter.abi.json");
+const response = await axios.get("https://github.com/multiversx/mx-sdk-js-core/raw/main/src/testdata/adder.abi.json");
 abiRegistry = AbiRegistry.create(response.data);
 existingContract = new SmartContract({ address: existingContractAddress, abi: abiRegistry });
 ```
@@ -742,13 +742,13 @@ console.log(untypedBundle.returnCode, untypedBundle.values.length);
 
 ```js
 let endpointDefinition = AbiRegistry.create({
-    "name": "counter",
+    "name": "adder",
     "endpoints": [{
-        "name": "increment",
-        "inputs": [],
-        "outputs": [{ "type": "i64" }]
+        "name": "add",
+        "inputs": [{ "type": "u64" }],
+        "outputs": [{ "type": "u64" }]
     }]
-}).getEndpoint("increment");
+}).getEndpoint("add");
 
 transactionOnNetwork = await networkProvider.getTransaction(txHash);
 let typedBundle = resultsParser.parseOutcome(transactionOnNetwork, endpointDefinition);

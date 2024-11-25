@@ -65,5 +65,5 @@ Make sure you migrate to the managed types **incrementally** and **thoroughly te
 :::
 
 :::tip
-You can use the `mxpy contract report` command to verify whether your contract still requires dynamic allocation or not.
+You can use the `sc-meta report` command to verify whether your contract still requires dynamic allocation or not.
 :::

@@ -608,7 +608,7 @@ Now let's deploy a smart contract using the Ledger:
 
 ```sh
 mxpy contract deploy --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
-    --bytecode=counter.wasm --gas-limit=5000000 \
+    --bytecode=adder.wasm --gas-limit=5000000 \
     --ledger --ledger-address-index=42 \
     --send
 ```
@@ -618,7 +618,7 @@ Then, perform a contract call:
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgqwwef37kmegph97egvvrxh3nccx7xuygez8ns682zz0 \
     --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
-    --function increment --gas-limit 5000000 \
+    --function add --arguments 42 --gas-limit 5000000 \
     --ledger --ledger-address-index=42 \
     --send
 ```
