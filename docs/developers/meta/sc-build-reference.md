@@ -149,9 +149,11 @@ After building the contracts, there are three more operations left to perform, b
 
 ### g. Cleaning a project
 
-Calling `cargo run clean` in the meta crate will run `cargo clean` in all wasm crates and delete the `output` folder.
+In order to clean a project and remove all build artifacts, run the following command:
 
-Note that even the clean operation relies on the ABI, in order to reach all the wasm crates.
+```sh
+sc-meta all clean
+```
 
 [comment]: # (mx-context-auto)
 

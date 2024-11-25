@@ -388,7 +388,7 @@ This command is similar to `build-dbg`, in that it provides a shorthand for buil
 
 ### Calling `clean`
 
-Calling `cargo run clean` in the meta crate will delete the `output` folder and clean outputs of the Rust crates.
+Calling `sc-meta all clean` in the contract folder will remove all build artifacts, including the `output` folder.
 
 [comment]: # (mx-context-auto)
 
