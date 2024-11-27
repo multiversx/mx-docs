@@ -328,6 +328,7 @@ const sidebars = {
                       "sdk-and-tools/indices/es-index-tokens",
                       "sdk-and-tools/indices/es-index-transactions",
                       "sdk-and-tools/indices/es-index-validators",
+                      "sdk-and-tools/indices/es-index-events",
                     ],
                   },
                 ],
