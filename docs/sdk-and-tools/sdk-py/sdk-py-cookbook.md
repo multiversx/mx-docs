@@ -251,7 +251,7 @@ print("Transaction data:", transaction.data.decode())
 
 Additionally, we also have a method that combines the above methods and is able to identify the kind of transfer that we intend to perform based on it's parameters. The method can be used as follows:
 
-For native token tranfers:
+For native token transfers:
 
 ```py
 from multiversx_sdk import TransferTransactionsFactory, TransactionsFactoryConfig
@@ -713,7 +713,7 @@ You might be interested into decoding events emitted by a contract. You can do s
 
 Suppose we'd like to decode a `startPerformAction` event emitted by the [multisig](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig) contract.
 
-Let's fetch an already processed [transaction](https://devnet-explorer.multiversx.com/transactions/05d445cdd145ecb20374844dcc67f0b1e370b9aa28a47492402bc1a150c2bab4), to serve as an exmple, and convert it to a [TransactionOutcome](https://multiversx.github.io/mx-sdk-py/_modules/multiversx_sdk/core/transactions_outcome_parsers/resources.html#TransactionOutcome).
+Let's fetch an already processed [transaction](https://devnet-explorer.multiversx.com/transactions/05d445cdd145ecb20374844dcc67f0b1e370b9aa28a47492402bc1a150c2bab4), to serve as an example, and convert it to a [TransactionOutcome](https://multiversx.github.io/mx-sdk-py/_modules/multiversx_sdk/core/transactions_outcome_parsers/resources.html#TransactionOutcome).
 
 ```py
 from multiversx_sdk import ApiNetworkProvider, TransactionsConverter
