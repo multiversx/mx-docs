@@ -36,7 +36,7 @@ address = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3
 
 print("Address (bech32-encoded)", address.to_bech32())
 print("Public key (hex-encoded):", address.to_hex())
-print("Public key (hex-encoded):", address.pubkey.hex())
+print("Public key (hex-encoded):", address.get_public_key().hex())
 ```
 
 ... or from a _hex-encoded_ string - note that you have to provide the address prefix, also known as the **HRP** (_human-readable part_ of the address):
@@ -86,6 +86,27 @@ Checking whether an address is a smart contract:
 address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
 
 print("Is contract:", address.is_smart_contract())
+```
+
+### Changing the default hrp
+
+We have a configuration class, called `LibraryConfig`, that only stores (for the moment) the **default hrp** of the addresses. The default value is `erd`. The hrp can be changed when instantiating an address, or it can be changed in the `LibraryConfig` class, and all the addresses created will have the newly set hrp.
+
+```py
+from multiversx_sdk import Address
+from multiversx_sdk import LibraryConfig
+
+
+print(LibraryConfig.default_address_hrp)
+address = Address.new_from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
+print(address.to_bech32())
+
+LibraryConfig.default_address_hrp = "test"
+address = Address.new_from_hex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
+print(address.to_bech32())
+
+# setting back the default value
+LibraryConfig.default_address_hrp = "erd"
 ```
 
 ## EGLD / ESDT transfers
@@ -228,6 +249,69 @@ print("Transaction:", transaction_converter.transaction_to_dictionary(transactio
 print("Transaction data:", transaction.data.decode())
 ```
 
+Additionally, we also have a method that combines the above methods and is able to identify the kind of transfer that we intend to perform based on it's parameters. The method can be used as follows:
+
+For native token transfers:
+
+```py
+from multiversx_sdk import TransferTransactionsFactory, TransactionsFactoryConfig
+
+transfer_factory = TransferTransactionsFactory(config=TransactionsFactoryConfig(chain_id="D"))
+
+alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+
+# With "data" field
+transaction = transfer_factory.create_transaction_for_transfer(
+    sender=alice,
+    receiver=bob,
+    native_amount=1000000000000000000,
+    data="for the book".encode()
+)
+
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
+```
+
+And for ESDT transfers:
+
+```py
+first_token = Token(identifier="TEST-38f249", nonce=1)
+first_transfer = TokenTransfer(token=first_token, amount=1)
+
+second_token = Token(identifier="BAR-c80d29")
+second_transfer = TokenTransfer(token=second_token, amount=10000000000000000000)
+
+transaction = transfer_factory.create_transaction_for_transfer(
+    sender=alice,
+    receiver=bob,
+    token_transfers=[first_transfer, second_transfer]
+)
+
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
+```
+
+Alternatively, the protocol will support (in the very near future) sending both native and esdt tokens in the same transaction. If a `native_amount` is provided together with `token_transfers`, the native token will also be included in the `MultiESDTNFTTrasfer` built-in function call.
+
+```py
+first_token = Token(identifier="TEST-38f249", nonce=1)
+first_transfer = TokenTransfer(token=first_token, amount=1)
+
+second_token = Token(identifier="BAR-c80d29")
+second_transfer = TokenTransfer(token=second_token, amount=10000000000000000000)
+
+transaction = transfer_factory.create_transaction_for_transfer(
+    sender=alice,
+    receiver=bob,
+    native_amount=1000000000000000000,
+    token_transfers=[first_transfer, second_transfer]
+)
+
+print("Transaction:", transaction_converter.transaction_to_dictionary(transaction))
+print("Transaction data:", transaction.data.decode())
+```
+
 ### Decoding Transactions
 
 For example, when sending multiple ESDT and NFT tokens, the receiver field of the transaction is the same as the sender field and also the value is set to `0` because all the information is encoded in the `data` field of the transaction.
@@ -262,8 +346,8 @@ network_config = provider.get_network_config()
 ```py
 from pathlib import Path
 
-from multiversx_sdk import (Address, Transaction, TransactionComputer,
-                            RelayedTransactionsFactory, TransactionsFactoryConfig,
+from multiversx_sdk import (Address, RelayedTransactionsFactory, Transaction,
+                            TransactionComputer, TransactionsFactoryConfig,
                             UserSigner)
 
 signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/bob.pem"))
@@ -297,8 +381,8 @@ print(transaction_converter.transaction_to_dictionary(relayed_tx))
 ```py
 from pathlib import Path
 
-from multiversx_sdk import (Address, Transaction, TransactionComputer,
-                            RelayedTransactionsFactory, TransactionsFactoryConfig,
+from multiversx_sdk import (Address, RelayedTransactionsFactory, Transaction,
+                            TransactionComputer, TransactionsFactoryConfig,
                             UserSigner)
 
 signer = UserSigner.from_pem_file(Path("../multiversx_sdk/testutils/testwallets/bob.pem"))
@@ -482,7 +566,8 @@ print("Contract address:", contract_address.to_bech32())
 In the end, you can parse the results using a `SmartContractTransactionsOutcomeParser`. However, since the `parse_deploy` method requires a `TransactionOutcome` object as input, we need to first convert our `TransactionOnNetwork` object to a `TransactionOutcome`, by means of a `TransactionsConverter`.
 
 ```py
-from multiversx_sdk import SmartContractTransactionsOutcomeParser, TransactionsConverter
+from multiversx_sdk import (SmartContractTransactionsOutcomeParser,
+                            TransactionsConverter)
 
 converter = TransactionsConverter()
 parser = SmartContractTransactionsOutcomeParser()
@@ -624,9 +709,36 @@ Documentation in this section is preliminary and subject to change.
 
 ### Decode transaction events
 
-:::note
-Documentation in this section is preliminary and subject to change.
-:::
+You might be interested into decoding events emitted by a contract. You can do so by using the [`TransactionEventsParser`](#).
+
+Suppose we'd like to decode a `startPerformAction` event emitted by the [multisig](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig) contract.
+
+Let's fetch an already processed [transaction](https://devnet-explorer.multiversx.com/transactions/05d445cdd145ecb20374844dcc67f0b1e370b9aa28a47492402bc1a150c2bab4), to serve as an example, and convert it to a [TransactionOutcome](https://multiversx.github.io/mx-sdk-py/_modules/multiversx_sdk/core/transactions_outcome_parsers/resources.html#TransactionOutcome).
+
+```py
+from multiversx_sdk import ApiNetworkProvider, TransactionsConverter
+
+api = ApiNetworkProvider("https://testnet-api.multiversx.com")
+converter = TransactionsConverter()
+
+transaction_on_network = api.get_transaction("6f006c99e45525c94629db2442d9ca27ff088ad113a09f0a3a3e24bcc164945a")
+transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
+```
+
+Now, lets find and parse the event we are interested in.
+
+```py
+from multiversx_sdk import TransactionEventsParser, find_events_by_first_topic
+from multiversx_sdk.abi import Abi
+
+abi = Abi.load(Path("./contracts/multisig-full.abi.json"))
+events_parser = TransactionEventsParser(abi)
+
+[event] = find_events_by_first_topic(transaction_outcome, "startPerformAction")
+parsed_event = events_parser.parse_event(event)
+
+print(parsed_event)
+```
 
 ## Contract queries
 
@@ -697,8 +809,8 @@ print(words)
 The mnemonic can be saved to a keystore file:
 
 ```py
-from multiversx_sdk import UserWallet
 from pathlib import Path
+from multiversx_sdk import UserWallet
 
 path = Path("./output")
 if not path.exists():
