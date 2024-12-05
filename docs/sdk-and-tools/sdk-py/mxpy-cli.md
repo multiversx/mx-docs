@@ -559,7 +559,7 @@ mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-n
     --outfile inner_tx.json
 ```
 
-After creating the inner transaction, we are ready to create the relayed transaction. We have to keep in mind that for `Relayed V3` transactions.
+After creating the inner transaction, we are ready to create the relayed transaction.
 
 ### Creating the relayed transaction
 
@@ -578,10 +578,10 @@ This can be done through `mxpy tx new` command, as follows:
 ```sh
 mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
+    --relayer erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
     --relayer-pem ~/multiversx-sdk/testwallets/latest/users/carol.pem \
     --gas-limit 100000 --value 1000000000000000000 \
     --proxy https://devnet-gateway.multiversx.com --chain D \
-    --relayer erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
     --send
 ```
 
