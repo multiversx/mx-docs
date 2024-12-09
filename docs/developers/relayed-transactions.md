@@ -257,7 +257,7 @@ Relayed transactions v3 feature comes with a change on the entire transaction st
 - `relayer`, which is the relayer address that will pay the fees.
 - `relayerSignature`, the signature of the relayer that proves the agreement of the relayer.
 
-That being said, relayed transactions v3 will look and behave very similar to a regular transaction, the only difference being the gas consumption from the relayer. So the consuming data field of the old relayed transactions versions was removed.
+That being said, relayed transactions v3 will look and behave very similar to a regular transaction, the only difference being the gas consumption from the relayer. It is no longer needed to specify the user transaction in the data field.
 
 In terms of gas limit computation, an extra base cost will be consumed. Let's consider the following example: relayed transaction with inner transaction of type move balance, that also has a data field `test` of length 4.
 ```js
@@ -306,6 +306,7 @@ Here's an example of a relayed v3 transaction. Its intent is to call the `add` m
   "value": "0",
   "receiver": "erd1qqqqqqqqqqqqqpgqeunf87ar9nqeey5ssvpqwe74ehmztx74qtxqs63nmx",
   "sender": "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+  "data": "YWRkQDAx",
   "gasPrice": 1000000000,
   "gasLimit": 5000000,
   "signature": "...",

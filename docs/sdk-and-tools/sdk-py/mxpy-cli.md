@@ -539,8 +539,8 @@ In this section we'll see how we can send `Relayed V3` transactions using `mxpy`
 For this, a new command `mxpy tx relay` has been added. The command can be used to relay a previously signed transaction. The saved transaction can be loaded from a file using the `--infile` argument.
 
 There are two options when creating the relayed transaction:
-1. Create the inner transaction separately. (Sender signature and relayer signature are added in different steps.)
-2. Create directly the relayed transaction. (Both signatures are added in one step.)
+1. Create the relayed transaction
+2. Add the signatures (sender and relayer)
 
 ### Creating the inner transaction
 
