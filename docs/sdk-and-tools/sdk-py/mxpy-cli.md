@@ -539,14 +539,14 @@ In this section we'll see how we can send `Relayed V3` transactions using `mxpy`
 For this, a new command `mxpy tx relay` has been added. The command can be used to relay a previously signed transaction. The saved transaction can be loaded from a file using the `--infile` argument.
 
 There are two options when creating the relayed transaction:
-1. Create the relayed transaction
-2. Add the signatures (sender and relayer)
+1. Create the relayed transaction separately. (Sender signature and relayer signature are added by different entities.)
+2. Create the complete relayed transaction. (Both signatures are added by the same entity.)
 
 ### Creating the inner transaction
 
 The inner transaction is any regular transaction, with the following notes:
 - relayer address must be added
-- extra 50000(base cost) gas must be added for the relayed operation. For more details on how the gas is computed, check out [this page](/developers/relayed-transactions/#relayed-transactions-version-3).
+- extra 50000 (base cost) gas must be added for the relayed operation. For more details on how the gas is computed, check out [this page](/developers/relayed-transactions/#relayed-transactions-version-3).
 
 This can be generated through `mxpy tx new` command. A new argument `--relayer` has been added for this feature.
 
