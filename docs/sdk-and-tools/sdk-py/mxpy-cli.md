@@ -530,35 +530,58 @@ If your address is guarded by another wallet, you'll still need to provide the `
 
 [comment]: # (mx-context-auto)
 
-## Relayed V3 transactions
+## Relayed transactions V3
 
 Relayed transactions are transactions with the fee paid by a so-called relayer. In other words, if a relayer is willing to pay for a transaction, it is not mandatory for the sender to have any EGLD for fees. To learn more about relayed transactions check out [this page](/developers/relayed-transactions/).
 
-In this section we'll see how we can send `Relayed V3` transactions using `mxpy`. For a more detailed look on `Relayed V3` transactions, take a look [here](/developers/relayed-transactions/#relayed-transactions-version-3). For these kind of transactions a new transaction field has been introduced, called `innerTransactions`. In this example we'll see how we can create both the inner transactions and the relayed transaction.
+In this section we'll see how we can send `Relayed V3` transactions using `mxpy`. For a more detailed look on `Relayed V3` transactions, take a look [here](/developers/relayed-transactions/#relayed-transactions-version-3). For these kind of transactions two new transaction fields were introduced, `relayer` and `relayerSignature`. In this example we'll see how we can create the relayed transaction.
 
-### Creating the inner transactions
+For this, a new command `mxpy tx relay` has been added. The command can be used to relay a previously signed transaction. The saved transaction can be loaded from a file using the `--infile` argument.
 
-We can simply create the inner transactions the same way we did above, by using the `mxpy tx new` command. The only difference is that we'll have to provide an additional argument called `--inner-transactions-outfile`, which represents the file where the inner transactions are saved to be later used by the relayer. To keep it simple, we'll send 1 EGLD from Alice to Bob, and Carol will be the relayer. To create the EGLD transfer transaction from Alice to Bob, we run the following command:
+There are two options when creating the relayed transaction:
+1. Create the relayed transaction separately. (Sender signature and relayer signature are added by different entities.)
+2. Create the complete relayed transaction. (Both signatures are added by the same entity.)
+
+### Creating the inner transaction
+
+The inner transaction is any regular transaction, with the following notes:
+- relayer address must be added
+- extra 50000 (base cost) gas must be added for the relayed operation. For more details on how the gas is computed, check out [this page](/developers/relayed-transactions/#relayed-transactions-version-3).
+
+This can be generated through `mxpy tx new` command. A new argument `--relayer` has been added for this feature.
 
 ```sh
 mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
-    --gas-limit 50000 --value 1000000000000000000 \
+    --gas-limit 100000 --value 1000000000000000000 \
     --proxy https://devnet-gateway.multiversx.com --chain D \
-    --relayer erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8
-    --inner-transactions-outfile inner_transactions.json
+    --relayer erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
+    --outfile inner_tx.json
 ```
 
-After creating the inner transaction, we are ready to create the relayed transaction. We have to keep in mind that for `Relayed V3` transactions, the receiver has to be the same as the relayer, in our case, Carol. Another requirement is that the relayed transaction has to have enough gas. The gas is computed by multiplying the base cost (50_000) with the number of inner transactions plus the gasLimit for each inner transaction. For more details on how the gas is computed, check out [this page](/developers/relayed-transactions/#relayed-transactions-version-3).
+After creating the inner transaction, we are ready to create the relayed transaction.
+
+### Creating the relayed transaction
 
 We can create the relayed transaction by running the following command:
 
 ```sh
-mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/carol.pem --recall-nonce \
-    --receiver erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
-    --gas-limit 1000000 --value 0 \
+mxpy tx relay --relayer-pem ~/multiversx-sdk/testwallets/latest/users/carol.pem \
     --proxy https://devnet-gateway.multiversx.com --chain D \
-    --inner-transactions inner_transactions.json \
+    --infile inner_tx.json \
+    --send
+```
+
+### Creating the relayed transaction in one step
+
+This can be done through `mxpy tx new` command, as follows:
+```sh
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+    --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
+    --relayer erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
+    --relayer-pem ~/multiversx-sdk/testwallets/latest/users/carol.pem \
+    --gas-limit 100000 --value 1000000000000000000 \
+    --proxy https://devnet-gateway.multiversx.com --chain D \
     --send
 ```
 
