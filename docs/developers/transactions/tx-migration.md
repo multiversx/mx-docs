@@ -5,14 +5,14 @@ title: Migration
 
 [comment]: # (mx-abstract)
 
-There is an older syntax for producing contract calls, detailed [here](tx-legacy-calls). It is already in use in many projects.
+There is an older syntax for producing contract calls, detailed [here](./tx-legacy-calls.md). It is already in use in many projects.
 
 Upgrading to framework version 0.49.0 is almost completely backwards compatible, but the new syntax is nicer and more reliable, so we encourage everyone to migrate.
 
 This will be a migration guide, as well as some frequently encountered pitfalls.
 
 :::caution
-Even though the syntax is backwards compatible, the implementation of the [old syntax](tx-legacy-calls) has been replaced.
+Even though the syntax is backwards compatible, the implementation of the [old syntax](./tx-legacy-calls.md) has been replaced.
 
 To the best of our knowledge, all code should continue to behave the same. However, if you upgrade beyond 0.49.0, please make sure to **test your smart contract fully** once again, even if you do not change a single line of code in your code base.
 
@@ -71,7 +71,7 @@ The solution in this case is simple: replace `Proxy` with `ProxyTo` in code.
 
 ## Replace `#[derive(TypeAbi)]` with `#[type_abi]`
 
-To use the new proxies, one must first [generate](tx-proxies#how-to-generate) them. The proxy is designed to be self-contained, so unless configured otherwise, it will also output a copy of the contract types involved in the ABI.
+To use the new proxies, one must first [generate](./tx-proxies.md#how-to-generate) them. The proxy is designed to be self-contained, so unless configured otherwise, it will also output a copy of the contract types involved in the ABI.
 
 No methods of these types are copied, but the annotations are important most of the time, so they need to be copied too. These types will need the encode/decode annotations, as well as `Clone`, `Eq`, etc.
 
@@ -81,14 +81,11 @@ The solution is to have another annotation, called `#[type_abi]` **before** the 
 
 Currently, `#[type_abi]` takes no arguments and works the same way as `#[derive(TypeAbi)]`, but it might be extended in the future.
 
-This is yet the case, but `#[derive(TypeAbi)]` might become deprecated at some point in the future, after most projects will have been migrate.
-
-
 [comment]: # (mx-context-auto)
 
 ## Generate the new proxies
 
-Just like for a new project, you will need to [generate](tx-proxies#how-to-generate) the new proxies and embed them in your project.
+Just like for a new project, you will need to [generate](./tx-proxies.md#how-to-generate) the new proxies and embed them in your project.
 
 
 [comment]: # (mx-context-auto)
@@ -98,53 +95,51 @@ Just like for a new project, you will need to [generate](tx-proxies#how-to-gener
 You might have this kind of syntax in your contract. You can easily find it by searching in your project for `#[proxy]` or `.contract(`.
 
 ```rust title="Variant A"
-    #[proxy]
-    fn vault_proxy(&self) -> vault::Proxy<Self::Api>;
+#[proxy]
+fn vault_proxy(&self) -> vault::Proxy<Self::Api>;
 
-    #[endpoint]
-    fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
-        self.vault_proxy()
-            .contract(to)
-            .echo_arguments(args)
-            .async_call()
-            .with_callback(self.callbacks().echo_args_callback())
-            .call_and_exit();
-    }
+#[endpoint]
+fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
+    self.vault_proxy()
+        .contract(to)
+        .echo_arguments(args)
+        .async_call()
+        .with_callback(self.callbacks().echo_args_callback())
+        .call_and_exit();
+}
 ```
 
 ```rust title="Variant B"
-    #[proxy]
-    fn vault_proxy(&self, sc_address: ManagedAddress) -> vault::Proxy<Self::Api>;
+#[proxy]
+fn vault_proxy(&self, sc_address: ManagedAddress) -> vault::Proxy<Self::Api>;
 
-    #[endpoint]
-    fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
-        self.vault_proxy(to)
-            .echo_arguments(args)
-            .async_call()
-            .with_callback(self.callbacks().echo_args_callback())
-            .call_and_exit();
-    }
-
-
+#[endpoint]
+fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
+    self.vault_proxy(to)
+        .echo_arguments(args)
+        .async_call()
+        .with_callback(self.callbacks().echo_args_callback())
+        .call_and_exit();
+}
 ```
 
 ```rust title="Replace by"
-    #[endpoint]
-    fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
-        self.tx()
-            .to(&to)
-            .typed(vault_proxy::VaultProxy)
-            .echo_arguments(args)
-            .async_call()
-            .with_callback(self.callbacks().echo_args_callback())
-            .call_and_exit();
-    }
+#[endpoint]
+fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
+    self.tx()
+        .to(&to)
+        .typed(vault_proxy::VaultProxy)
+        .echo_arguments(args)
+        .async_call()
+        .with_callback(self.callbacks().echo_args_callback())
+        .call_and_exit();
+}
 ```
 
 Both variants above should be replaced by this pattern.
 
 :::info
-The new proxies no longer have a recipient field in them. The [recipient (to) field](tx-to) is completely independent. It is set the same way for transactions with or without proxies.
+The new proxies no longer have a recipient field in them. The [recipient (to) field](./tx-to.md) is completely independent. It is set the same way for transactions with or without proxies.
 
 This feature has proven not worth the complication, we are happy to see it go.
 :::
@@ -168,21 +163,18 @@ A solution is planned for the near future.
 In case you want to migrate to the unified syntax and you cannot, or do not want to get rid of the old proxies, this is an alternative transitional syntax:
 
 ```rust title="Transitional variant"
-    #[proxy]
-    fn vault_proxy(&self, sc_address: ManagedAddress) -> vault::Proxy<Self::Api>;
+#[proxy]
+fn vault_proxy(&self, sc_address: ManagedAddress) -> vault::Proxy<Self::Api>;
 
-    #[endpoint]
-    fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
-        self.tx()
-            .legacy_proxy_call(self.vault_proxy(to).echo_arguments(args))
-            .async_call()
-            .with_callback(self.callbacks().echo_args_callback())
-            .call_and_exit();
-    }
+#[endpoint]
+fn do_call(&self, to: ManagedAddress, args: MultiValueEncoded<ManagedBuffer>) {
+    self.tx()
+        .legacy_proxy_call(self.vault_proxy(to).echo_arguments(args))
+        .async_call()
+        .with_callback(self.callbacks().echo_args_callback())
+        .call_and_exit();
+}
 ```
-
-
-
 
 [comment]: # (mx-context-auto)
 
@@ -206,23 +198,23 @@ To achieve backwards compatibility, all the old methods were kept (even though t
 
 We did not yet deprecate the old ones, but we encourage everyone to switch to the new ones. They have shorter names and tend to be more expressive.
 
-| Old method | New method | Comments |
-| ---------- | ---------- | -----|
-| `.with_egld_transfer(amount)` | `.egld(amount)` | |
-| `.with_esdt_transfer((token, nonce, amount))` | `.esdt((token, nonce, amount))`<br /> or <br />`.single_esdt(&token, nonce, &amount)` | `single_esdt` can deal with references, instead of taking owned objects. |
-| `.with_multi_token_transfer(p)` | `.payment(p)` | `payment` is universal. |
-| `.with_egld_or_single_esdt_transfer(p)` | `.payment(p)` | Method `payment` is universal. |
-| `.with_gas_limi(gas)` | `.gas(gas)` | |
-| `.with_extra_gas_for_callback(gas)` | `.gas_for_callback(gas)` | Method `payment` is universal. |
-| `.async_call()` | - | Does nothing, can be removed with no consequences. |
-| `.async_call_promise()` | - | Does nothing, can be removed with no consequences. |
-| `.with_callback(cb)` | `.callback(cb)` | |
-| `.deploy_contract(code, code_metadata)` | `.code(code)`<br />`.code_metadata(code_metadata)`<br />`.sync_call()` | Also add result handlers for decoding the result. |
-| `.deploy_from_source(address, code_metadata)` | `.from_source(code)`<br />`.code_metadata(code_metadata) .sync_call()` | Also add result handlers for decoding the result. |
-| `.upgrade_contract(code, code_metadata)` | `.code(code) .code_metadata(code_metadata) .upgrade_async_call_and_exit()` | Upgrades are async calls. |
-| `.upgrade_from_source(address, code_metadata)` | `.from_source(code)`<br />`.code_metadata(code_metadata)`<br />`.upgrade_async_call_and_exit()` | Upgrades are async calls. |
-| `.execute_on_dest_context()` | `.sync_call()` | Also add result handlers for decoding the result. |
-| `.execute_on_dest_context`<br />`_with_back_transfers()` | `.returns(ReturnsBackTransfers)`<br />`.sync_call()` | Add additional result handlers for decoding the result. |
+| Old method                                               | New method                                                                                      | Comments                                                                 |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `.with_egld_transfer(amount)`                            | `.egld(amount)`                                                                                 |                                                                          |
+| `.with_esdt_transfer((token, nonce, amount))`            | `.esdt((token, nonce, amount))`<br /> or <br />`.single_esdt(&token, nonce, &amount)`           | `single_esdt` can deal with references, instead of taking owned objects. |
+| `.with_multi_token_transfer(p)`                          | `.payment(p)`                                                                                   | `payment` is universal.                                                  |
+| `.with_egld_or_single_esdt_transfer(p)`                  | `.payment(p)`                                                                                   | Method `payment` is universal.                                           |
+| `.with_gas_limi(gas)`                                    | `.gas(gas)`                                                                                     |                                                                          |
+| `.with_extra_gas_for_callback(gas)`                      | `.gas_for_callback(gas)`                                                                        | Method `payment` is universal.                                           |
+| `.async_call()`                                          | -                                                                                               | Does nothing, can be removed with no consequences.                       |
+| `.async_call_promise()`                                  | -                                                                                               | Does nothing, can be removed with no consequences.                       |
+| `.with_callback(cb)`                                     | `.callback(cb)`                                                                                 |                                                                          |
+| `.deploy_contract(code, code_metadata)`                  | `.code(code)`<br />`.code_metadata(code_metadata)`<br />`.sync_call()`                          | Also add result handlers for decoding the result.                        |
+| `.deploy_from_source(address, code_metadata)`            | `.from_source(code)`<br />`.code_metadata(code_metadata) .sync_call()`                          | Also add result handlers for decoding the result.                        |
+| `.upgrade_contract(code, code_metadata)`                 | `.code(code) .code_metadata(code_metadata) .upgrade_async_call_and_exit()`                      | Upgrades are async calls.                                                |
+| `.upgrade_from_source(address, code_metadata)`           | `.from_source(code)`<br />`.code_metadata(code_metadata)`<br />`.upgrade_async_call_and_exit()` | Upgrades are async calls.                                                |
+| `.execute_on_dest_context()`                             | `.sync_call()`                                                                                  | Also add result handlers for decoding the result.                        |
+| `.execute_on_dest_context`<br />`_with_back_transfers()` | `.returns(ReturnsBackTransfers)`<br />`.sync_call()`                                            | Add additional result handlers for decoding the result.                  |
 
 
 
