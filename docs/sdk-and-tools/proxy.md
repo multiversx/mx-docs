@@ -76,6 +76,10 @@ The Proxy holds its configuration within the `config` folder:
 - `apiConfig/credentials.toml` - this file holds the configuration needed for enabling secured endpoints - only accessible by using BasicAuth.
 - `apiConfig/v1_0.toml` - this file contains all the endpoints with their settings (open, secured and rate limit).
 
+:::note
+If the provided observers' addresses from `config.toml` are not physical addresses of each observer, but rather addresses of providers that manage multiple observers for each shard, with self handling of health checks, the Proxy must be started with `--no-status-check` flag.
+:::
+
 [comment]: # (mx-context-auto)
 
 ## **Snapshotless observers support**
