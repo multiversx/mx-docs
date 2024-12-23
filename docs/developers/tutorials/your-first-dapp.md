@@ -193,8 +193,8 @@ deploy address: erd1qqqqqqqqqqqqqpgqymj43x6anzr38jfz7kw3td2ew33v9jtrd8sse5zzk6
 new address: erd1qqqqqqqqqqqqqpgqymj43x6anzr38jfz7kw3td2ew33v9jtrd8sse5zzk6
 ```
 Once the command runs, review the log output carefully. Two key details to note:
-- Contract Address: in the exemple presented below is erd1qqqqqqqqqqqqqpgqymj43x6anzr38jfz7kw3td2ew33v9jtrd8sse5zzk6
-- Transaction Hash: in the exemple presented below is b6ca6c8e6ac54ed168bcd6929e762610e2360674f562115107cf3702b8a22467
+- Contract Address: in the example presented below is erd1qqqqqqqqqqqqqpgqymj43x6anzr38jfz7kw3td2ew33v9jtrd8sse5zzk6
+- Transaction Hash: in the example presented below is b6ca6c8e6ac54ed168bcd6929e762610e2360674f562115107cf3702b8a22467
 
 We will take a look at the transaction details. Let's check them in the [Devnet Explorer](https://devnet-explorer.multiversx.com).
 
