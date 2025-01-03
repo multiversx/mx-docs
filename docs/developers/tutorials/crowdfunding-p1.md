@@ -1,45 +1,45 @@
 ---
 id: crowdfunding-p1
-title: The Crowdfunding Smart Contract (part 1)
+title: The Crowdfunding Smart Contract
 ---
 [comment]: # (mx-abstract)
-Write, build and deploy a simple smart contract written in Rust
+Write, build and deploy a simple smart contract written in Rust.
 
 This tutorial will guide you through the process of writing, building and deploying a very simple smart contract for the MultiversX Network, written in Rust.
 
 :::important
-The MultiversX Network supports smart contracts written in any programming language, but they must be compiled to WebAssembly.
+The MultiversX Network supports smart contracts written in any programming language that is compiled to WebAssembly.
 :::
 
 [comment]: # (mx-context-auto)
 
-## **Introduction**
+## Introduction
 
-Let's say you need to raise EGLD for a cause that you believe in. They will obviously be well spent, but you need to get the EGLD first. For this reason, you decided to run a crowdfunding campaign on the MultiversX Network, which naturally means that you'll use a smart contract for the campaign. This tutorial will teach you how to do just that: write a crowdfunding smart contract, how to deploy it and how to use it.
+Let's say you need to raise EGLD for a cause you believe in. They will obviously be well spent, but you need to get the EGLD first. For this reason, you decided to run a crowdfunding campaign on the MultiversX Network, which naturally means that you will use a smart contract for the campaign. This tutorial will teach you how to do just that: **write a crowdfunding smart contract, deploy it, and use it**.
 
-The idea is simple: the smart contract will accept transfers until a deadline is reached, and it will keep track of all the people who sent EGLD.
+The idea is simple: the smart contract will accept transfers until a deadline is reached, tracking all contributors.
 
-If the deadline is reached and the smart contract has gathered an amount of EGLD above the desired funds, then the smart contract will consider the crowdfunding a success, and it will consequently send all the EGLD to a predetermined account (you!).
+If the deadline is reached and the smart contract has gathered an amount of EGLD above the desired funds, then the smart contract will consider the crowdfunding a success and it will consequently send all the EGLD to a predetermined account (yours!).
 
-But if the total amount of EGLD is lower than the desired target, all the donated EGLD must be sent back to the people who donated.
+However, if the donations fall short of the target, the contract will return all the EGLD to the donors.
 
 [comment]: # (mx-context-auto)
 
-## **Design**
+## Design
 
-Here's how the smart contract is designed:
-
-- It will have an `init` method, which is automatically executed upon deployment. This method must receive from you the information on (1) the target amount of EGLD and (2) the crowdfunding deadline, expressed as a block nonce.
-- It will have a `fund` method, which people will call to send money to the smart contract. This method will receive the EGLD and will have to save all the information needed to return the EGLD in case the campaign does not reach the target.
-- It will have a `claim` method. If anyone calls this method _before_ the deadline, it will do nothing and return an error. But if called _after_ the deadline, it will do one of the following:
-  - When you call it, and the target amount has been reached, it will send all the EGLD to you. If the amount has not been reached, it will do nothing and return an error.
-  - When one of the donors calls it, and the target amount has been reached, it will do nothing and return an error. But if the amount has not been reached (the campaign failed), then the smart contract will send the correct amount of EGLD back to the donor.
-  - When anyone else calls it, the method will do nothing and will return an error.
-- It will have a `status` method, which will return information about the campaign, such as whether the campaign is ongoing or it has ended, and how much EGLD has been donated so far. You will probably call this method often, out of impatience.
-
-Four methods, then: `init`, `fund`, `claim` and `status`.
+Here is how the smart contract methods is designed:
+- `init`: automatically triggered when the contract is deployed. It takes two inputs from you: 
+  1. the target amount of EGLD you want to raise
+  2. the crowdfunding deadline, which is expressed as a block nonce.
+- `fund`: used by donors to contribute EGLD to the campaign. It will receive EGLD and save the necessary details so the contract can return funds if the campaign doesn't reach its goal.
+- `claim`: if called before the deadline, it does nothing and returns an error. If called after the deadline:
+  - By you (the campaign creator), it sends all the raised EGLD to your account if the target amount is met. Otherwise, it returns an error.
+  - By a donor, it refunds their contribution if the target amount isn’t reached. If the target is met, it does nothing and returns an error.
+  - By anyone else, it does nothing and returns an error.
+- `status`: Provides information about the campaign, such as whether it is still active or completed and how much EGLD has been raised so far. You will likely use this frequently to monitor progress.
 
 This tutorial will firstly focus on the `init` method, to get you acquainted with the development process and tools. You will implement `init` and also _write unit tests_ for it.
+In this part of the tutorial, we will start with the `init` method to familiarize you with the development process and tools. You wll not only implement the init method but also **create unit tests** to ensure it works as expected.
 
 :::note testing
 Automated testing is exceptionally important for the development of smart contracts, due to the sensitive nature of the information they must handle.
@@ -47,9 +47,11 @@ Automated testing is exceptionally important for the development of smart contra
 
 [comment]: # (mx-context-auto)
 
-## Prerequisites
+## Prerequisites TODO!
 
 [comment]: # (mx-context-auto)
+
+### sc-meta TODO
 
 ### Rust
 
@@ -65,92 +67,100 @@ For contract developers, we generally recommend [**VSCode**](https://code.visual
 
 [comment]: # (mx-context-auto)
 
-## **Step 1: prepare the workspace**
+## Step 1: prepare the workspace
 
-The source code of each smart contract requires its own folder. You'll need to create one for the crowdfunding smart contract presented here. Run these commands below in a terminal to create it:
+The source code of each smart contract requires its own folder. We will start the development of the **crowdfunding** contract from the **Empty** template. To get the development environment ready, simply run the following commands in your terminal:
 
 ```bash
 mkdir -p ~/MultiversX/SmartContracts
 cd ~/MultiversX/SmartContracts
 sc-meta new --name crowdfunding --template empty
-code crowdfunding
 ```
 
 You may choose any location you want for your smart contract. The above is just an example. Either way, now that you are in the folder dedicated to the smart contract, we can begin.
 
-Straight away you get a project that works - `sc-meta` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points.
+`sc-meta` created your project out of a template. These templates are contracts written and tested by MultiversX, which can be used by anybody as starting points.
 
-The last line also opens the new project in a new VS Code instance.
+```toml title=Cargo.toml
+[package]
+name = "crowdfunding"
+version = "0.0.0"
+publish = false
+edition = "2021"
+authors = ["you"]
 
-Let's inspect the file `Cargo.toml`:
+[lib]
+path = "src/crowdfunding.rs"
 
-- The package is unsurprisingly named `crowdfunding`, and has the version `0.0.1`. You can set any version you like, just make sure it has 3 numbers separated by dots. It's a requirement.
-- This package has dependencies. It will require other packages. Since you're writing a Rust smart contract for the MultiversX Network, you'll need a few special and very helpful packages, developed by MultiversX.
-- The file `src/crowdfunding.rs` will contain the source code of the smart contract, and that is what the `[lib]` section is declaring. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
-- The resulting binary will be named `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part), based on the crate name.
+[dependencies.multiversx-sc]
+version = "0.54.6"
+
+[dev-dependencies]
+num-bigint = "0.4"
+
+[dev-dependencies.multiversx-sc-scenario]
+version = "0.54.6"
+
+[workspace]
+members = [
+    ".",
+    "meta",
+]
+```
+
+Let's inspect the file found at path `~/MultiversX/SmartContracts/crowdfunding/Cargo.toml`:
+- The `[package]` represent the **project** which is unsurprisingly named `crowdfunding`, and has the version `0.0.0`. You can set any version you like, just make sure it has 3 numbers separated by dots. It is a requirement. The `publish` is set to **false** to prevent the package from being published to Rust’s central package registry, crates.io. It's useful for private or experimental projects.
+- `[lib]` declares the source code of the smart contracts, which in our case is `src/crowdfunding.rs`. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier organizing your code when the main code files bear the names of the contracts.
+- This project has `dependencies` and `dev-dependencies`. You'll need a few special and very helpful packages:
+  - `multiversx-sc`: developed by MultiversX, it is the interface that the smart contract sees and can use.
+  - `multiversx-sc-scenario`: developed by MultiversX, it is the interface that defines and runs blockchain scenarios involving smart contracts.
+  - `num-bigint`: for working with arbitrarily large integers.
+- `[workspace]` is a group of related Rust projects that share common dependencies or build settings.
+- The resulting binary will be the name of the project, which in our case is `crowdfunding` (actually, `crowdfunding.wasm`, but the compiler will add the `.wasm` part).
 
 [comment]: # (mx-context-auto)
 
-## **Step 2: write the code**
+## Step 2: write the code
 
-With the structure in place, you can now write the code and build it. Open `src/crowdfunding.rs` , remove the existing `Empty` code and insert the following:
+With the structure in place, you can now write the code and build it. 
 
-```rust title=hello-world.rs
-#![no_std]
+Open `src/crowdfunding.rs`:
 
-multiversx_sc::imports!();
+```rust
+#![no_std]                      //  [1]
 
-#[multiversx_sc::contract]
-pub trait Crowdfunding {
-    #[init]
-    fn init(&self) {
-    }
+#[allow(unused_imports)]        //  [2]
+use multiversx_sc::imports::*;  //  [3]
+
+/// An empty contract. To be used as a template when starting a new contract from scratch.
+#[multiversx_sc::contract]      //  [4]
+pub trait Crowdfunding {        //  [5]
+    #[init]                     //  [6]
+    fn init(&self) {}           //  [7]
+
+    #[upgrade]                  //  [8]
+    fn upgrade(&self) {}        //  [9]
 }
 ```
 
-Let's take a look at the code. The first three lines declare some characteristics of the code. You don't need to understand them (just skip ahead if you will), but here are some explanations:
+Let's take a look at the code:
 
-- `no_std` means that the smart contract **has no access to standard libraries**. That might sound restrictive, but the trade-off is that the code will be lean and very light. It is entirely possible to create a smart contract with the standard libraries, but that would add a lot of overhead, and is not recommended. Definitely not needed for the Crowdfunding smart contract.
+- **[1]**: means that the smart contract **has no access to standard libraries**. That will make the code lean and very light.
+- **[2]**: brings imports module from the the multiversx_sc crate into **crowdfunding** contract. It effectively grants you access to the [MultiversX framework for Rust smart contracts](https://github.com/multiversx/mx-sdk-rs), which is designed to simplify the code **enormously**. 
+- **[3]**: since the contract is still in an early stage of development, clippy (Rust's linter) will flag some imports as unused. For now, we will ignore this kind of errors.
+- **[4]**: processes the **Crowdfunding** trait definition as a **smart contract** that can be deployed on the MultiversX blockchain.
+- **[5]**: the contract [trait](https://doc.rust-lang.org/book/ch10-02-traits.html) where all the endpoints will be developed.
+- **[6]**: marks the following method (`init`) as the constructor function for the contract.
+- **[7]**: this is the constructor itself. It receives the contract's instance as parameter (_&self_). The method is called once the contract is deployed on the MultiversX blockchain. You can name it any way you wish, but it must be annotated with `#[init]`. For the moment, no initialization logic is defined. 
+- **[8]**: marks the following method (`upgrade`) as the upgrade function for the contract. It is called when the contract is re-deployed to the same address.
+- **[9]**: this is the upgrade method itself. Similar to [7], it takes a reference to the contract instance (_&self_) and performs no specific logic here.
 
-[comment]: # (mx-context-auto)
-
-### **Bring in the framework**
-
-The 3rd line contains the command `multiversx_sc::imports!();`. This command imports the dependencies we mentioned when we discussed the `Cargo.toml` file. It effectively grants you access to the MultiversX framework for Rust smart contracts, which is designed to simplify the code enormously.
-
-The framework itself is a topic for another day, but you should be aware that smart contracts written in Rust aren't normally this simple. It's the framework that does the heavy lifting, so that your code stays clean and readable. Line 5 is your first contact with the framework:
-
-```rust
-#[multiversx_sc::contract]
-```
-
-This line simply tells the framework to treat the next `trait` declaration (we'll get to it in a moment) as a smart contract. Because of this line, the framework will _automatically generate_ much of the code required. You won't see the generated code now (but you can).
 
 [comment]: # (mx-context-auto)
 
-### **Make it a trait**
+## Step 3: build
 
-Your smart contract effectively starts at line 9. We could have gotten here quicker, but you wanted to know what the code means, and it took a little while to explain. We're finally here, though. Let's look at the code again:
-
-It helps to know what a trait is in Rust, before continuing (the [Rust book explains it well](https://doc.rust-lang.org/book/ch10-02-traits.html)).
-
-For now, you only need to remember that you write your smart contract as the `trait Crowdfunding`, in order to allow the MultiversX framework to generate the support code for you, resulting in a hidden `struct CrowdfundingImpl`.
-
-[comment]: # (mx-context-auto)
-
-### **Init**
-
-Every smart contract must define a constructor method, which is run _once and only once_, upon deployment on the network. You can name it any way you wish, but it must be annotated with `#[init]` . The Crowdfunding smart contract needs to store some initial configuration, which will be read during subsequent calls to the other methods (these other methods are `fund`, `claim` and `status`, to refresh your memory).
-
-The `init` method of the Crowdfunding smart contract is currently empty. We'll add the actual code later. First, you want to build the whole project, to make sure everything has worked well so far, even if the smart contract does nothing right now.
-
-[comment]: # (mx-context-auto)
-
-## **Step 3: the build**
-
-After creating the file `src/crowdfunding.rs` with the content described in [the previous step](/developers/tutorials/crowdfunding-p1#step-2-write-the-code), you can issue the first build command. Make sure you save the file first.
-
-Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (use `pwd` for that), then issue the build command:
+Now go back to the terminal, make sure the current folder is the one containing the Crowdfunding smart contract (`~/MultiversX/SmartContracts/crowdfunding`), then issue the **build** command:
 
 ```bash
 sc-meta all build
@@ -158,15 +168,19 @@ sc-meta all build
 
 If this is the first time you build a Rust smart contract with the `sc-meta` command, it will take a little while before it's done. Subsequent builds will be much faster.
 
-When the command completes, a new folder will appear: `output`. This folder now contains two files: `crowdfunding.abi.json` and `crowdfunding.wasm`. We won't be doing anything with these files just yet - wait until we get to the deployment part. Along with `output`, there are a few other folders and files generated. You can safely ignore them for now, but do not delete the `wasm` folder - it's what makes the build command faster after the initial run.
+When the command completes, a new folder will appear: `/output`. This folder contains:
+1. `crowdfunding.abi.json` 
+2. `crowdfunding.imports.json`
+3. `crowdfunding.mxsc.json`
+4. `crowdfunding.wasm`
 
-The following can be safely deleted, as they are not important for this contract:
+We won't be doing anything with these files just yet - wait until we get to the deployment part. Along with `/output`, there are a few other folders and files generated. You can safely ignore them for now, but do not delete the `/wasm` folder - it's what makes the build command faster after the initial run.
 
-- the `tests` folder
+`/tests` can be safely deleted, as they are not important for this contract:
 
-The structure of your folder should be like this (output printed by the command `tree -L 3`):
+The structure of your folder should be like this (output printed using command `tree -L 3`):
 
-```text
+```bash
 .
 ├── Cargo.toml
 ├── meta
@@ -186,17 +200,18 @@ The structure of your folder should be like this (output printed by the command 
         └── lib.rs
 ```
 
-It's time to add some functionality to the `init` function now, because the next step will take you through a very important process: testing your smart contract.
+It's time to add some functionality to the `init` function now.
 
 [comment]: # (mx-context-auto)
 
-## **Step 4: the test**
+## Step 4: extend init
 
-In this step you will use the `init` method to persist some values in the storage of the Crowdfunding smart contract. Afterwards, we will write a test to make sure that these values were properly stored.
+In this step you will use the `init` method to persist some values in the storage of the Crowdfunding smart contract. 
+<!-- Afterwards, we will write a test to make sure that these values were properly stored. -->
 
 [comment]: # (mx-context-auto)
 
-### **Storage mappers**
+### Storage mappers
 
 Every smart contract is allowed to store key-value pairs into a persistent structure, created for the smart contract at the moment of its deployment on the MultiversX Network.
 
