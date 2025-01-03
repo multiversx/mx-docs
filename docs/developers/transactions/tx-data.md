@@ -16,7 +16,7 @@ The data field can hold arbitrary data, but for practical purposes, it is normal
 We can always give this data in raw form, however, we usually prefer using a proper type system, for safety.
 
 :::caution
-Always use [proxies](tx-proxies) when the target contract ABI is known. A contract proxy is a Rust equivalent of its ABI, and using adds invaluable type safety to your calls.
+Always use [proxies](./tx-proxies.md) when the target contract ABI is known. A contract proxy is a Rust equivalent of its ABI, and using adds invaluable type safety to your calls.
 
 Using raw data is acceptable only when we are forwarding calls to unknown contracts, for instance in contracts like the multisig, governance of other forwarders.
 :::
@@ -76,7 +76,7 @@ graph LR
 ```
 
 :::info
-These are diagrams for the raw calls, without proxies. You can find the one involving proxies [here](tx-proxies#diagram)
+These are diagrams for the raw calls, without proxies. You can find the one involving proxies [here](./tx-proxies.md#diagram).
 :::
 
 [comment]: # (mx-context-auto)
@@ -105,7 +105,7 @@ Transactions with no data are classified as simple transfers. These simple trans
 
 ## Untyped function call
 
-**`.raw_call(...)`** starts a contract call serialised by hand. It is used in proxy functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe.
+**`.raw_call(...)`** starts a contract call serialised by hand. It is used in proxy functions. It is safe to use [proxies](./tx-proxies.md) instead since manual serialisation is not type-safe.
 
 [comment]: # (mx-context-auto)
 
@@ -119,7 +119,7 @@ Can be called multiple times, once for each argument.
 tx().raw_call("example").argument(&arg1).argument(&arg2)
 ```
 
-It is safe to user [proxies](tx-proxies) instead, whenever possible.
+It is safe to user [proxies](./tx-proxies.md) instead, whenever possible.
 
 [comment]: # (mx-context-auto)
 
@@ -144,7 +144,7 @@ tx().raw_call("example").code_metadata(code_metadata)
 
 ## Untyped deploy
 
-**`.raw_deploy()`** starts a contract deploy call serialised by hand. It is used in proxy deployment functions. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. 
+**`.raw_deploy()`** starts a contract deploy call serialised by hand. It is used in proxy deployment functions. It is safe to use [proxies](./tx-proxies.md) instead since manual serialisation is not type-safe. 
 
 Deployment calls needs to set:
 
@@ -221,7 +221,7 @@ fn deploy(&mut self) {
 
 ## Untyped upgrade
 
-`.raw_upgrade()` starts a contract deployment upgrade serialised by hand. It is used in a proxy upgrade call. It is safe to use [proxies](tx-proxies) instead since manual serialisation is not type-safe. All upgrade calls require:
+`.raw_upgrade()` starts a contract deployment upgrade serialised by hand. It is used in a proxy upgrade call. It is safe to use [proxies](./tx-proxies.md) instead since manual serialisation is not type-safe. All upgrade calls require:
 
 [comment]: # (mx-context-auto)
 
