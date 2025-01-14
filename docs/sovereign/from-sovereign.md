@@ -15,7 +15,7 @@ When making the deposit, the user specifies:
 
 Each action that can be executed remotely through this contract is called an *Operation*. The endpoint responsible for executing those operations is called `execute_operations`.
 
-#### Execution from inside the Soverign Chain flow
+#### Execution from inside the Sovereign Chain flow
 1. User sends token to the ESDT-Safe smart contract on Sovereign.
 2. The validators generate a proof on the Sovereign Chain for a batch of transfers, which will be sent to the mainchain ESDT-Safe contract.
 3. Validators add this information to the sovereignChainBlockBody. Otherwise the block is not signed.

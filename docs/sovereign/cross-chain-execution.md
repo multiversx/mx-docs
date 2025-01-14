@@ -20,7 +20,7 @@ All the heavy lifting is being done by the *ESDT-Safe* Smart Contract. This is t
 There are two modules implemented in the bridging mechanism inside any Sovereign Chains, [*From Sovereign*](from-sovereign.md) and [*To Sovereign*](to-sovereign.md). We will go deeper into the most important endpoints in both modules in the following sections.
 
 :::note
-The naming for those modules has been chosen this way to represent the direction of the execution. In the following sections we will be refering to `FromSovereign` as the execution starts within the Sovereign Chain and `ToSovereign` as the destination of the execution is a Sovereign Chain.
+The naming for those modules has been chosen this way to represent the direction of the execution. In the following sections we will be referring to `FromSovereign` as the execution starts within the Sovereign Chain and `ToSovereign` as the destination of the execution is a Sovereign Chain.
 :::
 
 #### Fee-Market
