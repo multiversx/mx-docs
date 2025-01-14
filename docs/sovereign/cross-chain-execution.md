@@ -1,4 +1,4 @@
-# Context
+# Introduction
 
 When we take a look at the blockchain industry, we observe a segregated ecosystem lacking cohesion, interoperability, teamwork. Many strive to reach the top independently. The vision lead to the Blockchain Revolution, knows as “Web3” — a new era of the internet that is user-centered, emphasizing data ownership and decentralized trust.
 
@@ -17,9 +17,11 @@ This feature is enabled by using multiple smart contracts, each one with its uni
 #### ESDT-Safe
 All the heavy lifting is being done by the *ESDT-Safe* Smart Contract. This is the bridge contract, it will facilitate the transfer and mapping of assets and funds between Sovereign Chains and the MultiversX mainchain. As explained earlier, every transaction is being monitored and notarized inside the MultiversX mainchain when assets are moving outside the Sovereign chain.
 
-There are two modules implemented in the bridging mechanism inside any Sovereign Chains, [*From Sovereign*](from-sovereign.md) and [*To Sovereign*](to-sovereign.md). 
+There are two modules implemented in the bridging mechanism inside any Sovereign Chains, [*From Sovereign*](from-sovereign.md) and [*To Sovereign*](to-sovereign.md). We will go deeper into the most important endpoints in both modules in the following sections.
 
-> The naming for those modules has been chosen this way to represent the direction of the execution. In the following sections we will be refering to `FromSovereign` as the execution starts within the Sovereign Chain and `ToSovereign` as the destination of the execution is a Sovereign Chain.
+:::note
+The naming for those modules has been chosen this way to represent the direction of the execution. In the following sections we will be refering to `FromSovereign` as the execution starts within the Sovereign Chain and `ToSovereign` as the destination of the execution is a Sovereign Chain.
+:::
 
 #### Fee-Market
 Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. Rules such as: fee token, fee percentages, whitelists and blacklists are all stored inside this contract.
