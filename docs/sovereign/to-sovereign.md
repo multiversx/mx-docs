@@ -1,12 +1,21 @@
 # Execution going to a Sovereign Chain
-![To Sovereign](../../static/sovereign/ToSovereign.png)
+![To Sovereign](../../static/sovereign/to-sovereign.png)
 
 The ability to bridge tokens from the Mainchain to any Sovereign Chain is a required feature since any Sovereign will have the ability to be connected to the Main MultiversX Chain. With that the customizable Sovereign will have the ability to use any token used in the default network.
 
-The most innovative part of the bridging mechanism from the Mainchain is that it is completely off-chain. The transfer of tokens is done with events and with the deposit endpoint.
+The most innovative part of the bridging mechanism from the Mainchain is that it is completely off-chain. The transfer of tokens is done by the *ESDT-Safe* contract after calling the `deposit` endpoint inside the `to-sovereign` module. 
 
+#### Sovereign Chain depositing flow
+1. User deposits the tokens he wishes to bridge in the ESDT-Safe contract.
+2. Validators in the Sovereign Chain monitor the mainchain headers and push the header, the bridge transactions and the corresponding proofs to the Sovereign Chain.
+3. Leaders include proofs of execution from the mainchain. The notifier/proof system provides an abstracted interface through which Sovereign nodes can verify and validate the authenticity of data.
+4. After verifying the proofs, the Incoming Transactions Processor processes the incoming transactions, and the user receives the tokens on the Sovereign Chain.
 
-### `deposit` endpoint
+:::note
+Here is the [link](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/to_sovereign/create_tx.rs) to the `deposit` endpoint.
+:::
+
+### Depositing
 ```rust
     #[payable("*")]
     #[endpoint]

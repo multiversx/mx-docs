@@ -1,5 +1,5 @@
-# Execution coming from a Sovereign Chain
-![From Sovereign](../../static/sovereign/FromSovereign.png)
+# Execution starting from a Sovereign Chain
+![From Sovereign](../../static/sovereign/from-sovereign.png)
 
 For the user — whether an External Owned Account (EOA) like a user wallet or another smart contract — procedure is simple. An address will be able to perform a multiTransfer deposit for various types of tokens:
 1. Fungible Tokens
@@ -15,9 +15,21 @@ When making the deposit, the user specifies:
 
 Each action that can be executed remotely through this contract is called an *Operation*. The endpoint responsible for executing those operations is called `execute_operations`.
 
-Before talking about the logic of the endpoint, let’s give some more context about the operation.
+#### Execution from inside the Soverign Chain flow
+1. User sends token to the ESDT-Safe smart contract on Sovereign.
+2. The validators generate a proof on the Sovereign Chain for a batch of transfers, which will be sent to the mainchain ESDT-Safe contract.
+3. Validators add this information to the sovereignChainBlockBody. Otherwise the block is not signed.
+4. Leader will push the created txData to the mainchain
+5. The ESDT-Safe contract on the mainchain verifies the proof and executes the transfers.
+6. Sovereign validators notarize the completion of the transfer in the subsequent Sovereign block by receiving the attestation log event directly from the mainchain.
+
+Before talking about the logic of the endpoint, let’s give some more context about the *Operation*.
 
 This structure, derived with multiple traits for serialization, encoding, and type interfacing, represents a fundamental unit of execution within the bridging mechanism.
+
+:::note
+The source code for the following structures can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/common/transaction/src/lib.rs)
+:::
 
 ```rust
 #[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, ManagedVecItem, Clone)]
@@ -77,7 +89,10 @@ pub struct TransferData<M: ManagedTypeApi> {
 - `args`: the arguments for the calls.
 
 
-### `execute_operations` endpoint
+:::note
+The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/from_sovereign/transfer_tokens.rs)
+:::
+### Executing an *Operation*
 
 This endpoint serves as the key component in orchestrating cross-chain operations within the bridging mechanism.
 ```rust
