@@ -591,8 +591,16 @@ const sidebars = {
               "sovereign/ethereum-l2",
               "sovereign/bitcoin-l2",
               "sovereign/solana-l2",
-              "sovereign/cross-chain-execution"
             ],
+          },
+          {
+            type: "category",
+            label: "Cross-Chain Execution",
+            items: [
+              "sovereign/cross-chain-execution",
+              "sovereign/to-sovereign",
+              "sovereign/from-sovereign",
+            ]
           },
           "sovereign/validators",
         ],
