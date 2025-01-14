@@ -1,4 +1,4 @@
-# To Sovereign
+# Execution going to a Sovereign Chain
 ![To Sovereign](../../static/sovereign/ToSovereign.png)
 
 The ability to bridge tokens from the Mainchain to any Sovereign Chain is a required feature since any Sovereign will have the ability to be connected to the Main MultiversX Chain. With that the customizable Sovereign will have the ability to use any token used in the default network.
