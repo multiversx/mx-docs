@@ -1,14 +1,10 @@
-# Setup Guide
+# Full Local Setup Guide
 
 ## Deploy local Sovereign Chain
 
-:::note
- This guide is a preliminary version and not the final documentation for sovereign chains. It serves as a starting point for setting up a sovereign chain on a local machine.
-:::
+This guide will help you deploy a full sovereign local network connected to MultiversX network. This includes all the smart contracts and dependent services needed. Follow these steps carefully to ensure a successful deployment.
 
-This guide will help you deploy contract on main chain, set up configuration files and deploy sovereign chain and all dependent services. Follow these steps carefully to ensure a successful deployment.
-
-## Step 1: Get the ```mx-chain-go``` Repository
+### Step 1: Get the `mx-chain-go` Repository
 
 Before proceeding, ensure that a **SSH key** for GitHub is configured on your machine.
 
@@ -19,15 +15,19 @@ Before proceeding, ensure that a **SSH key** for GitHub is configured on your ma
 
 2. Checkout the specific sovereign chain sdk branch and navigate to testnet directory:
     ```bash
-    cd mx-chain-go && git fetch && git checkout feat/chain-go-sdk && cd scripts/testnet
+    cd mx-chain-go && git fetch && git checkout d699ffd6a29513c573b1d212861f932e037d8f67 && cd scripts/testnet
     ```
+
+:::info
+`d699ffd6a29513c573b1d212861f932e037d8f67` is the commit hash we recommend to be used. If you want to use the latest version you can use the branch `feat/chain-go-sdk`.
+:::
 
 3. Run the prerequisites script:
     ```bash
     ./prerequisites.sh
     ```
 
-:::note
+:::info
 The prerequisites script verifies and downloads the necessary packages to run the nodes and clones the required repositories:
 
 - **mx-chain-deploy-go**: Initializes the configuration for the chain and deployment parameters.
@@ -35,20 +35,19 @@ The prerequisites script verifies and downloads the necessary packages to run th
 - **mx-chain-sovereign-bridge-go**: Repository for the cross-chain service.
 :::
 
-## Step 2: Deploy Sovereign setup
+### Step 2: Deploy Sovereign setup
 
-First navigate to the sovereignBridge folder:
+1. Navigate to the `sovereignBridge` folder:
+    ```bash
+    cd sovereignBridge
+    ```
 
-```bash
-cd sovereignBridge
-```
-
-1. Install the [software dependencies](/sovereign/software-dependencies) and download the cross-chain contracts by running the sovereign bridge prerequisites script:
+2. Install the [software dependencies](/sovereign/software-dependencies) and download the cross-chain contracts by running the sovereign bridge prerequisites script:
     ```bash
     ./prerequisites.sh
     ```
 
-2. Create a new wallet:
+3. Create a new wallet:
     ```bash
     mxpy wallet new --format pem --outfile ~/wallet.pem
     ```
@@ -60,7 +59,7 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
 3. Get funds in the wallet on the chain you want the sovereign to be connected to.
 
 4. Update the configuration file `config/configs.cfg` with paths you want to use, wallet location and main chain constants. Example:
-    ```ini
+    ```
     # Sovereign Paths
     SOVEREIGN_DIRECTORY="~/sovereign"
     TXS_OUTFILE_DIRECTORY="${SOVEREIGN_DIRECTORY}/txsOutput"
@@ -78,10 +77,11 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
 - **SOVEREIGN_DIRECTORY, TXS_OUTFILE_DIRECTORY, CONTRACTS_DIRECTORY** - represent the paths to the location where the deploy scripts will generate the outputs.
 - **WALLET** - should represent the wallet generated at Step 1.
 - **PROXY** - in this case, for the purpose of the test, the used proxy is the testnet one. Of course that the proper proxy should be used when deploying your own set of contracts depending on the development phase of your project.
-- **CHAIN_ID** - should represent the chain ID of the chain where the contracts are to be deployed. The currently supported constants are:
+- **CHAIN_ID** - should represent the chain ID of the chain where the contracts are to be deployed.
     - **"1"** for Mainnet;
     - **"D"** for Devnet;
     - **"T"** for Testnet;
+    - or use you own local network ID
 :::
 
 5. Source the script:
@@ -94,9 +94,21 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
     deploySovereignWithCrossChainContracts
     ```
 
-## Stop and clean local Sovereign Chain
+:::info
+`deploySovereignWithCrossChainContracts` command will:
+- deploy all main chain smart contracts and update sovereign configs
+- deploy sovereign nodes and the main chain observer
+:::
 
-1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
+### Step 3: Deploy services
+
+You can find the documentation on how to deploy services [here](/sovereign/sovereign-api).
+
+___
+
+### Stop and clean local Sovereign Chain
+
+1. Navigate to `mx-chain-go/scripts/testnet/sovereignBridge`.
 
     Source the script:
     ```bash
@@ -108,9 +120,9 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
     stopAndCleanSovereign
     ```
 
-## Upgrade and reset local Sovereign Chain
+### Upgrade and reset local Sovereign Chain
 
-1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
+1. Navigate to `mx-chain-go/scripts/testnet/sovereignBridge`.
 
     Source the script:
     ```bash
@@ -121,28 +133,3 @@ You can use any wallet of your choice, but for the purpose of this guide we are 
     ```bash
     sovereignUpgradeAndReset
     ```
-
-## Restart local Sovereign Chain
-
-1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
-
-    Source the script:
-    ```bash
-    source script.sh
-    ```
-
-3. Restart Sovereign chain and all dependent services:
-    ```bash
-    sovereignRestart
-    ```
-
-:::important
-This version of the documentation focuses solely on the essential steps required to set up and deploy a sovereign chain on either a local or remote computer. It does not include instructions for configuring:
-
-- Round length
-- Gas token
-- Fee model
-- Consensus model
-- And other related settings
-:::
-

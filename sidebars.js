@@ -541,8 +541,23 @@ const sidebars = {
               "sovereign/system-requirements",
               "sovereign/software-dependencies",],
           },
-          "sovereign/setup",
-          "sovereign/deployment",
+          {
+            type: "category",
+            label: "Setup Guide",
+            items: [
+              "sovereign/one-click-setup",
+              "sovereign/local-setup",
+              "sovereign/distributed-setup",],
+          },
+          "sovereign/custom-configurations",
+          {
+            type: "category",
+            label: "Services",
+            items: [
+              "sovereign/sovereign-api",
+              "sovereign/sovereign-wallet",
+              "sovereign/sovereign-explorer",],
+          },
           {
             type: "category",
             label: "Managing a Sovereign Chain",
