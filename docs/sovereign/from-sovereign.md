@@ -1,4 +1,4 @@
-# From Sovereign
+# Execution coming from a Sovereign Chain
 ![From Sovereign](../../static/sovereign/FromSovereign.png)
 
 For the user — whether an External Owned Account (EOA) like a user wallet or another smart contract — procedure is simple. An address will be able to perform a multiTransfer deposit for various types of tokens:
