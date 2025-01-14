@@ -1,4 +1,4 @@
-# Creating Bridges
+# Context
 
 When we take a look at the blockchain industry, we observe a segregated ecosystem lacking cohesion, interoperability, teamwork. Many strive to reach the top independently. The vision lead to the Blockchain Revolution, knows as “Web3” — a new era of the internet that is user-centered, emphasizing data ownership and decentralized trust.
 
@@ -7,10 +7,8 @@ This cross-chain interoperability is crucial for fostering an environment where 
 
 ## What is Cross-Chain Execution?
 
-Being able to connect 2 different ecosystems opens up infinite possibilities for functionality. Cross-Chain Execution implies using the functionality of two different chains and combining both of them. In this context we can refer to: 
+Cross-Chain Execution is the ability of smart contracts or decentralized applications on one blockchain to invoke actions on another blockchain. This feature allows for seamless communication and interaction between different blockchain networks, enabling developers to build applications that are chain agnostic.
 
-1. Sending tokens from one chain to another
-2. Executing cross-chain endpoints for chain agnostic use cases
 
 ## Cross-Chain Execution within Sovereign Chains
 
@@ -20,6 +18,8 @@ This feature is enabled by using multiple smart contracts, each one with its uni
 All the heavy lifting is being done by the *ESDT-Safe* Smart Contract. This is the bridge contract, it will facilitate the transfer and mapping of assets and funds between Sovereign Chains and the MultiversX mainchain. As explained earlier, every transaction is being monitored and notarized inside the MultiversX mainchain when assets are moving outside the Sovereign chain.
 
 There are two modules implemented in the bridging mechanism inside any Sovereign Chains, [*From Sovereign*](from-sovereign.md) and [*To Sovereign*](to-sovereign.md). 
+
+> The naming for those modules has been chosen this way to represent the direction of the execution. In the following sections we will be refering to `FromSovereign` as the execution starts within the Sovereign Chain and `ToSovereign` as the destination of the execution is a Sovereign Chain.
 
 #### Fee-Market
 Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. Rules such as: fee token, fee percentages, whitelists and blacklists are all stored inside this contract.
