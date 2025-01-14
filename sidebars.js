@@ -591,6 +591,7 @@ const sidebars = {
               "sovereign/ethereum-l2",
               "sovereign/bitcoin-l2",
               "sovereign/solana-l2",
+              "sovereign/cross-chain-execution"
             ],
           },
           "sovereign/validators",
