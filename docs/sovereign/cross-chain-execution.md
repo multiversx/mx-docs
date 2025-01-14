@@ -7,7 +7,7 @@ This cross-chain interoperability is crucial for fostering an environment where 
 
 ## What is Cross-Chain Execution?
 
-Being able to connect 2 different ecosystems opens up infinite possibilites for functionality. Cross-Chain Execution implies using the functionality of two different chains and combining both of them. In this context we can refer to: 
+Being able to connect 2 different ecosystems opens up infinite possibilities for functionality. Cross-Chain Execution implies using the functionality of two different chains and combining both of them. In this context we can refer to: 
 
 1. Sending tokens from one chain to another
 2. Executing cross-chain endpoints for chain agnostic use cases
