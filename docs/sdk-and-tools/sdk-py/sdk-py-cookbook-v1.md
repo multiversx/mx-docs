@@ -114,7 +114,7 @@ account = Account.new_from_keypair(keypair)
 
 ### Managing the Account nonce
 
-The account has a `nonce` property that the user is responsible for keeping up to date. We can fetch the nonce of the account from the network once and then we can increment it with each transaction we create. Each transaction sent **must** have the correct nonce set, otherwise it will not be executed. For more details check out the [Creating Transactions](#creating-transactions) section bellow.
+The account has a `nonce` property that the user is responsible for keeping up to date. We can fetch the nonce of the account from the network once and then we can increment it with each transaction we create. Each transaction sent **must** have the correct nonce set, otherwise it will not be executed. For more details check out the [Creating Transactions](#creating-transactions) section below.
 
 ```py
 from multiversx_sdk import Account, DevnetEntrypoint, UserSecretKey
@@ -649,7 +649,7 @@ transactions = api.do_get_generic(url="transactions", url_parameters=url_params)
 
 ## Creating transactions
 
-In this section, we'll learn how to create different types of transactions. For creating transactions, we can use `controllers` or `factories`. The `controllers` can be used for scripts or quick network interactions, while the `factories` provide a more granular and lower-level approach, usually needed for DApps. Usually, the `controllers` use the same parameters as the `factories` but also take an `Account` and the `nonce` of the sender as arguments. The `controllers` also hold some extra functionality, like waiting for transaction completion and parsing transactions. The same functionality can be obtained for transactions built using the `factories` as well, we'll see how in the sections bellow. In the following section we'll learn how to create transactions using both.
+In this section, we'll learn how to create different types of transactions. For creating transactions, we can use `controllers` or `factories`. The `controllers` can be used for scripts or quick network interactions, while the `factories` provide a more granular and lower-level approach, usually needed for DApps. Usually, the `controllers` use the same parameters as the `factories` but also take an `Account` and the `nonce` of the sender as arguments. The `controllers` also hold some extra functionality, like waiting for transaction completion and parsing transactions. The same functionality can be obtained for transactions built using the `factories` as well, we'll see how in the sections below. In the following section we'll learn how to create transactions using both.
 
 ### Instantiating controllers and factories
 
@@ -921,7 +921,7 @@ abi = Abi(definition=abi_definition)
 
 ### Smart Contract deployments
 
-For creating smart contract deploy transactions, we have two options, as well: a `controler` and a `factory`. Both of these are similar to the ones presented above for transferring tokens.
+For creating smart contract deploy transactions, we have two options, as well: a `controller` and a `factory`. Both of these are similar to the ones presented above for transferring tokens.
 
 When creating transactions that interact with smart contracts, we should provide the ABI file to the `controller` or `factory` if possible, so we can pass the arguments as native values. If the abi is not provided and we know what types the contract expects, we can pass the arguments as `typed values` (ex: BigUIntValue, ListValue, StructValue, etc.) or `bytes`.
 
@@ -1092,7 +1092,7 @@ print(contract_address.to_bech32())
 
 ### Smart Contract calls
 
-In this section we'll see how we can call an endpoint of our previoulsy deployed smart contract using both approaches with the `controller` and the `factory`.
+In this section we'll see how we can call an endpoint of our previously deployed smart contract using both approaches with the `controller` and the `factory`.
 
 #### Calling a smart contract using the controller
 
@@ -1152,7 +1152,7 @@ values = contract_call_outcome.values
 
 #### Calling a smart contract and sending tokens (transfer & execute)
 
-Aditionally, if our endpoint requires a payment when called, we can also send tokens to the contract when creating a smart contract call transaction. We can send EGLD, ESDT tokens or both. This is supported both on the `controller` and the `factory`.
+Additionally, if our endpoint requires a payment when called, we can also send tokens to the contract when creating a smart contract call transaction. We can send EGLD, ESDT tokens or both. This is supported both on the `controller` and the `factory`.
 
 ```py
 from pathlib import Path
@@ -1492,7 +1492,7 @@ print(tx_hash.hex())
 
 ### Token management
 
-In this section, we're going to create transactions to issue fungible tokens, issue semi-fungible tokens, create NFTs, set token roles, but also parse these transactions to extract their outcome (e.g. get the token indentifier of the newly issued token).
+In this section, we're going to create transactions to issue fungible tokens, issue semi-fungible tokens, create NFTs, set token roles, but also parse these transactions to extract their outcome (e.g. get the token identifier of the newly issued token).
 
 Of course, the methods used here are available through the `TokenManagementController` or through the `TokenManagementTransactionsFactory`. The controller also contains methods for awaiting transaction completion and for parsing the transaction outcome. The same can be achieved for the transactions factory by using the `TokenManagementTransactionsOutcomeParser`. For scripts or quick network interactions we advise you use the controller, but for a more granular approach (e.g. DApps) we suggest using the factory.
 
@@ -2583,7 +2583,7 @@ transaction.signature = alice.sign_transaction(transaction)
 # relayer signs the transaction
 transaction.relayer_signature = carol.sign_transaction(transaction)
 
-# broadcast the transcation
+# broadcast the transaction
 entrypoint = DevnetEntrypoint()
 tx_hash = entrypoint.send_transaction(transaction)
 ```
@@ -3329,7 +3329,7 @@ If your project has multiple dependencies, we recommend using a `requirements.tx
 multiversx-sdk
 ```
 
-Aditionally, we can also install it directly from GitHub. Place this line on a new line of your `requirements.txt` file. In this example, we are going to install the version `1.0.0`:
+Additionally, we can also install it directly from GitHub. Place this line on a new line of your `requirements.txt` file. In this example, we are going to install the version `1.0.0`:
 
 ```sh
 git+https://git@github.com/multiversx/mx-sdk-py.git@v1.0.0#egg=multiversx_sdk
