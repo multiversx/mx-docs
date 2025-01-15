@@ -12,10 +12,10 @@ Cross-Chain Execution is the ability of smart contracts or decentralized applica
 
 ## Cross-Chain Execution within Sovereign Chains
 
-This feature is enabled by using multiple smart contracts, each one with its unique role and set of functionalities. Here is the high-level description for each main Sovereign Chains Smart Contract:
+This feature is enabled by using multiple smart contracts, each one with its unique role and set of functionalities. Here is the high-level description for some of the cross chain smart contracts:
 
 #### ESDT-Safe
-All the heavy lifting is being done by the *ESDT-Safe* Smart Contract. This is the bridge contract, it will facilitate the transfer and mapping of assets and funds between Sovereign Chains and the MultiversX mainchain. As explained earlier, every transaction is being monitored and notarized inside the MultiversX mainchain when assets are moving outside the Sovereign chain.
+All the heavy lifting is being done by the *ESDT-Safe* Smart Contract. This is the bridge contract, it will facilitate the transfer and mapping of assets and funds between Sovereign Chains and the MultiversX mainchain.
 
 There are two modules implemented in the bridging mechanism inside any Sovereign Chains, [*From Sovereign*](from-sovereign.md) and [*To Sovereign*](to-sovereign.md). We will go deeper into the most important endpoints in both modules in the following sections.
 
@@ -24,10 +24,10 @@ The naming for those modules has been chosen this way to represent the direction
 :::
 
 #### Fee-Market
-Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. Rules such as: fee token, fee percentages, whitelists and blacklists are all stored inside this contract.
+Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. Rules such as: fee token, fee percentages, whitelists are all stored inside this contract.
 
 #### Header-Verifier
-All the *blsKeys* of all the validator will be stored inside this contract, the main role for the Header-Verifier contract is to verify signatures for the operations that are created inside the Sovereign Chain. After the setup phase is completed, this contract will be the owner of all the other contracts and only through it any updates regarding configuration can be done.
+All the *BLS keys* of all the validator will be stored inside this contract. The main role for the Header-Verifier contract is to verify signatures for the operations that are created inside the Sovereign Chain.
 
 > The source code can be found at the official [MultiversX Sovereign Chain SCs repository](https://github.com/multiversx/mx-sovereign-sc). 
 
