@@ -564,7 +564,11 @@ const sidebars = {
           {
             type: "category",
             label: "VMs",
-            items: ["sovereign/vm",],
+            items: [
+              "sovereign/vm-intro",
+              "sovereign/standalone-evm",
+              "sovereign/other-vm",
+            ],
           },
           {
             type: "category",
