@@ -27,6 +27,54 @@ Each action that can be executed remotely through this contract is called an *Op
 5. Bridge service will send the operations to to header-verifier for verification then to ESDT-Safe for execution.
 6. At the end of the execution success/fail, a confirmation event will be added which will be received in sovereign through the observer and then the cross chain transfer will be completed.
 
+### Header-Verifier SC
+
+As mentioned in the [Introduction](cross-chain-execution.md) the Header-Verifier smart contract is to verify signatures, store the *BLS Keys* of the validators and register incoming *Operations*.
+
+```rust
+    #[endpoint(registerBridgeOps)]
+    fn register_bridge_operations(
+        &self,
+        signature: BlsSignature<Self::Api>,
+        bridge_operations_hash: ManagedBuffer,
+        operations_hashes: MultiValueEncoded<ManagedBuffer>,
+    )
+```
+
+Any transaction before being executed has to be registered in this smart contract. The reason behind registering any incoming *Operation* is to create a history of all already registered *Operations* and with that an already registered *Operation* doesn't need to be re-registered and re-executed by the validators.
+
+The registering endpoint follows this flow:
+1. If the incoming `bridge_operations_hash` is not in the `hash_of_hashes_history` storage mapper, otherwise, the endpoint will return a panic.
+2. If the hash of all `operations_hashes` and `bridge_operations_hash` are equal, otherwise, the endpoint will return a panic.
+3. All the `operations_hashes` are registered in the smart contract's storage with the `OperationsHashStatus::NotLocked` status.
+4. The `bridge_operations_hash` is inserted in the `hash_of_hashes_history` storage mapper.
+
+```rust
+    #[endpoint(lockOperationHash)]
+    fn lock_operation_hash(&self, hash_of_hashes: ManagedBuffer, operation_hash: ManagedBuffer)
+```
+
+The Header-Verifier has a system in place for locking *Operation* hashes. Locking those registered hashes prevents any unwanted behaviour when executing or removing an *Operation* hash. Remember that the execution of *Operations* can only be done by the ESDT-Safe smart contract. This endpoint when called will follow this flow:
+
+1. Check if the caller is the ESDT-Safe smart contract.
+2. Check if the *Operation* is registered.
+3. If the hash is not locked set the status in the storage as locked or else return panic.
+
+:::note
+The hash can be in two different states: `OperationHashStatus::NotLocked` or `OperationHashStatus::Locked`
+:::
+
+```rust
+    #[endpoint(removeExecutedHash)]
+    fn remove_executed_hash(&self, hash_of_hashes: &ManagedBuffer, operation_hash: &ManagedBuffer)
+```
+
+After registering and executing an *Operation* the status of the hash associated to it must be removed from the Header-Verifier's internal storage. This endpoint will be called by the ESDT-Safe smart contract after the execution of the *Operation* is successful. The steps are pretty clear:
+
+1. Check if the caller is the ESDT-Safe smart contract.
+2. Remove the status of the hash from storage.
+
+
 Before talking about the logic of the endpoint, let’s give some more context about the *Operation*.
 
 :::note
