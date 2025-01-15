@@ -21,10 +21,10 @@ Each action that can be executed remotely through this contract is called an *Op
 
 #### Execution from inside the Sovereign Chain to the MainChain flow
 1. User deposits token to the ESDT-Safe smart contract on Sovereign.
-2. The validators generate a proof on the Sovereign Chain for a batch of transfers, which will be sent to the mainchain ESDT-Safe contract.
-3. Validators add this information to the sovereignChainBlockBody. Otherwise the block is not signed.
-4. Leader will push the created txData to the mainchain
-5. Bridge service will send the operations to to header-verifier for verification then to ESDT-Safe for execution.
+2. Outgoing *Operations* are created at the end of the round.
+3. Validators sign all the outgoing *Operations*.
+4. Leader sends *Operations* to the bridge service.
+5. Bridge service sends the *Operations* to the Header-Verifier for registration and verification, and then to ESDT-Safe for execution.
 6. At the end of the execution success/fail, a confirmation event will be added which will be received in sovereign through the observer and then the cross chain transfer will be completed.
 
 ### Header-Verifier SC
