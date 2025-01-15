@@ -1,9 +1,9 @@
 # Execution going to a Sovereign Chain
 ![To Sovereign](../../static/sovereign/to-sovereign.png)
 
-The ability to transfer tokens from the Mainchain to any Sovereign Chain is essential, since every Sovereign can connect to the Main MultiversX Chain. As a result, the customizable Sovereign can leverage any token available on the default network.
+The ability to transfer tokens from the Main Chain to any Sovereign Chain is essential, since every Sovereign can connect to the Main MultiversX Chain. As a result, the customizable Sovereign can leverage any token available on the default network.
 
-The most innovative part of the bridging mechanism from the Mainchain is that it is completely off-chain. The transfer of tokens is done by the *ESDT-Safe* contract after calling the `deposit` endpoint inside the `to-sovereign` module. 
+The transfer of tokens is done by the *ESDT-Safe* contract after calling the `deposit` endpoint inside the `to-sovereign` module. 
 
 #### Main Chain deposit to Sovereign Chain depositing flow
 1. User deposits the tokens he wishes to transfer in the ESDT-Safe contract deployed on the Main Chain.
@@ -28,7 +28,7 @@ One key aspect of cross chain transfers from MultiversX Main Chain to a Sovereig
 - The gas limit must be under the specified limit.
 - The endpoint that has to be executed is not blacklisted.
 
-As mentioned in the diagram, the bridging process to the Sovereign Chain is being done with events. At the end of the deposit() endpoint, an event will be emitted and then the bridging process is complete.
+At the end of the `deposit()` endpoint, an event will be emitted and then the bridging process is complete.
 
 
 ```rust
