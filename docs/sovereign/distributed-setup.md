@@ -1,8 +1,8 @@
-# Distributed Setup Guide
+# Distributed Setup
 
-## Deploy distributed Sovereign Chain
+## Create distributed Sovereign Chain configuration
 
-This guide will help you deploy a public Sovereign Chain with real validators.
+This guide will help you deploy a public Sovereign Chain with real validators, enabling a truly decentralized setup. At its core, blockchain technology—and Sovereign Chains in particular—are designed to operate in a decentralized manner, powered by multiple independent validators. This ensures transparency, security, and resilience, as no single entity has control over the entire system. Unlike other guides we’ve provided, which focus on local setups, this solution emphasizes decentralization by involving multiple stakeholders in the validation process. By following the steps below, the owner can create the Sovereign Chain configuration for the network:
 
 ### Step 1: Get the ```mx-chain-go``` Repository
 
@@ -13,14 +13,14 @@ Before proceeding, ensure that a **SSH key** for GitHub is configured on your ma
     git clone git@github.com:multiversx/mx-chain-go.git
     ```
 
-2. Checkout the specific sovereign chain sdk branch and navigate to testnet directory:
+2. Checkout the specific Sovereign Chain SDK branch and navigate to testnet directory:
     ```bash
-    cd mx-chain-go && git fetch && git checkout d699ffd6a29513c573b1d212861f932e037d8f67 && cd scripts/testnet
+    cd mx-chain-go && git fetch && git checkout d699ffd && cd scripts/testnet
     ```
 
-:::info
-`d699ffd6a29513c573b1d212861f932e037d8f67` is the commit hash we recommend to be used. If you want to use the latest version you can use the branch `feat/chain-go-sdk`.
-:::
+   :::info
+   `d699ffd` is the commit hash we recommend to be used. If you want to use the latest version you can use the branch `feat/chain-go-sdk`.
+   :::
 
 ### Step 2: Seeder Build
 
@@ -31,18 +31,22 @@ go build
 ./seednode -rest-api-interface 127.0.0.1:9091 -log-level *:DEBUG -log-save
 ```
 
-The output will be something like this. The highlighted part is important and will be used later.
+You should have an output similar to the one displayed below. The highlighted part is important and will be used later.
 
-| Seednode addresses:                                                                        |
+| Seednode addresses:                                                                         |
 |---------------------------------------------------------------------------------------------|
 | `/ip4/`127.0.0.1`/tcp/10000/p2p/16Uiu2HAmSY5NpuqC8UuFHunJensFbBc632zWnMPCYfM2wNLuvAvL`      |
 | `/ip4/`192.168.10.100`/tcp/10000/p2p/16Uiu2HAmSY5NpuqC8UuFHunJensFbBc632zWnMPCYfM2wNLuvAvL` |
 
+:::info
+All the validator nodes will have to connect to this seed node.
+:::
 
 ### Step 3: Sovereign node build
 
 Build the sovereign node
 ```bash
+cd ..
 cd cmd/sovereignnode/
 go build -v -ldflags="-X main.appVersion=v0.0.1"
 ```
@@ -53,31 +57,35 @@ Use your own custom version instead of `v0.0.1`.
 
 ### Step 4: Edit the sovereign configuration
 
-Node configs and be found in `cmd/node/config`. Below are the files and folders:
-- gasSchedules folder
-- genesisContracts folder
-- genesis.json*
-- genesisSmartContracts.json
-- nodesSetup.json*
-- api.toml
-- config.toml
-- economics.toml
-- enableEpochs.toml
-- enableRounds.toml
-- external.toml
-- fullArchiveP2P.toml
-- p2p.toml
-- prefs.toml
-- ratings.toml
-- systemSmartContractsConfig.toml
+Node configs can be found in `cmd/node/config`. Below are the files and folders:
+```
+gasSchedules folder
+genesisContracts folder
+genesis.json*
+genesisSmartContracts.json
+nodesSetup.json*
+api.toml
+config.toml
+economics.toml
+enableEpochs.toml
+enableRounds.toml
+external.toml
+fullArchiveP2P.toml
+p2p.toml
+prefs.toml
+ratings.toml
+systemSmartContractsConfig.toml
+```
 
 _Note: Files marked with * will be discussed later in the document._
 
 Sovereign configs can be found in `cmd/sovereignnode/config`
-- economics.toml
-- enableEpochs.toml
-- prefs.toml
-- sovereignConfig.toml
+```
+economics.toml
+enableEpochs.toml
+prefs.toml
+sovereignConfig.toml
+```
 
 #### Minimum recommended changes
 
@@ -88,18 +96,18 @@ Sovereign configs can be found in `cmd/sovereignnode/config`
       2. EpochStartConfig.RoundsPerEpoch
    2. **p2p.toml**
       1. KadDhtPeerDiscovery:InitialPeerList = `[/ip4/PUBLIC_IP/tcp/10000/p2p/16Uiu2HAmSY5NpuqC8UuFHunJensFbBc632zWnMPCYfM2wNLuvAvL]`
-         - PUBLIC_IP is the IP of the machine where seed node is running, the other part is from seed node build
+         - PUBLIC_IP is the IP of the machine where seed node is running, the other part is seed node address
    3. **systemSmartContractsConfig.toml**
       1. ESDTSystemSCConfig.ESDTPrefix
       2. StakingSystemSCConfig.NodeLimitPercentage [[docs](https://docs.multiversx.com/validators/staking-v4/#how-does-the-dynamic-node-limitation-work)]
    4. **sovereignConfig.toml**
       1. GenesisConfig.NativeESDT
 3. Other changes:
-   - Use the [custom configuration](/sovereign/deployment) page to see more configs we recommend to be changed
+   - Use the [custom configuration](/sovereign/custom-configurations) page to see more configs we recommend to be changed
 
 ### Step 5: Genesis configuration
 
-#### **genesis.json**
+#### `genesis.json`
 
 This file should contain all the genesis addresses that will be funded and will be validators. Adjust as needed.
 
@@ -133,7 +141,7 @@ Example with 2 validators:
 ]
 ```
 
-#### **nodesSetup.json**
+#### `nodesSetup.json`
 
 This file contains all the initial nodes. Adjust as needed.
 
@@ -173,27 +181,28 @@ Example:
 
 ___
 
-At this point, a `config` folder should be created that will contain all the .toml files and genesis configuration.
+:::note
+At this point, a `config` folder should be created that will contain all the .toml files and genesis configuration. This folder should be shared with the other validators so they will be able to join the network.
+:::
 
-### Step 6: Validators setup
+## Join a Sovereign Chain as validator/observer
 
-#### Sovereign validator setup
+### Sovereign validator setup
 
 Each validator should have:
-- **walletKey.pem** - wallet that will be funded at genesis
-- **validatorKey.pem** (or **allValidatorsKey.pem** if multisig node) - validator pem used to deploy the node
-- **config** folder
+- **walletKey.pem** - wallet that will be funded at genesis [[docs](/validators/key-management/wallet-keys)]
+- **validatorKey.pem** (or **allValidatorsKey.pem** if multi key node) - validator key [[docs](/validators/key-management/validator-keys/#how-to-generate-a-new-key)]
+- **config** folder - received from Sovereign Chain creator
 
-#### Sovereign validator/observer node start
+### Sovereign validator/observer node start
 
 The following commands will start the sovereign validator node with the configuration from **config** folder and with the **validatorKey** (or multi key from **allValidatorsKey**).
 Adjust the flags as needed. You can find all the available flags in `/mx-chain-go/cmd/sovereignnode/flags.go`
 
-#### #single key
+#### # single key
 ```
 ./sovereignnode --validator-key-pem-file ./config/validatorKey.pem --profile-mode --log-save --log-level *:INFO --log-logger-name --log-correlation --use-health-service --rest-api-interface :8080 --working-directory ~/my_validator_node
 ```
-
 
 #### # multi key
 ```
@@ -205,6 +214,10 @@ Adjust the flags as needed. You can find all the available flags in `/mx-chain-g
 ./sovereignnode --profile-mode --log-save --log-level *:INFO --log-logger-name --log-correlation --use-health-service --rest-api-interface :8080 --working-directory ~/my_observer_node
 ```
 
+### Staking transaction
+
+Before staking, a node is a mere observer. After staking, the node becomes a validator, which means that it will be eligible for consensus and will earn rewards. You can find the documentation how to make the staking transaction with mxpy [here](/validators/staking#staking-through-mxpy).
+
 ## Deploy services
 
-You can find the documentation on how to deploy services at [this link](/sovereign/sovereign-api).
+You can find the documentation on how to deploy services [here](/sovereign/services).

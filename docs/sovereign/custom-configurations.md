@@ -27,12 +27,16 @@ The Sovereign Chain SDK is built with flexibility in mind, allowing you to tailo
 
 ### sovereignConfig.toml
 
-- `GenesisConfig.NativeESDT` - Native ESDT identifier for the sovereign chain
+- `GenesisConfig.NativeESDT` - Native ESDT identifier for the Sovereign Chain
 
 ### prefs.toml
 
 The `OverridableConfigTomlValues` will overwrite the parameters in the config files. Make sure that your new config parameters are not overwritten by this file.
 
 :::note
-These are just a few examples that you can adjust to make the sovereign chain unique. All the files you could adjust when creating a sovereign chain can be found in the [deployment guide](/sovereign/distributed-setup#step-4-edit-the-sovereign-configuration).
+These are just a few examples that you can adjust to make the Sovereign Chain unique. All the files you could adjust when creating a Sovereign Chain can be found in the [deployment guide](/sovereign/distributed-setup#step-4-edit-the-sovereign-configuration).
+:::
+
+:::note
+We will continue to add configurations for features such as token-less chains, gas-less chains, and other customizations at a later stage, following their implementation.
 :::

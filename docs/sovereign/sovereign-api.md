@@ -22,8 +22,8 @@
    ```
 
 2. Update the configuration files (we are starting from testnet configuration in this example):
-   - config.testnet.yaml` - enable/disable the services you need
-   - `dapp.config.testnet.json`
+   - `config.testnet.yaml` - enable/disable or configure the services you need
+   - `dapp.config.testnet.json` - dapp configuration file
 
 ### Step 3: Start Sovereign API service
 
