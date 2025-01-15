@@ -2,30 +2,32 @@
 ![From Sovereign](../../static/sovereign/from-sovereign.png)
 
 For the user — whether an External Owned Account (EOA) like a user wallet or another smart contract — procedure is simple. An address will be able to perform a multiTransfer deposit for various types of tokens:
-1. Fungible Tokens
-2. Non-Fungible Tokens
-3. Semi-Fungible Tokens
-4. Meta ESDT Tokens
+- Fungible Tokens
+- (Dynamic) Non-Fungible Tokens
+- (Dynamic) Semi-Fungible Tokens
+- (Dynamic) Meta ESDT Tokens
 
 When making the deposit, the user specifies:
 1. A destination address on the Sovereign Chain
-2. The function to call
-3. Any required arguments
-4. *gasLimit* if a smart contract execution is needed after the cross-chain operation
+2. `TransferData` if the execution contains a smart contract call, which contains gas, function and arguments
+
+For each deposit in the ESDT-Safe smart contract inside a Sovereign Chain, an outgoing operation will be sent to the bridge service that calls the Header-Verifier and ESDT-Safe contracts in the MultiversX MainChain.
+
+:::note
+Here is the [link](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/to_sovereign/create_tx.rs) to the `deposit` endpoint
+:::
 
 Each action that can be executed remotely through this contract is called an *Operation*. The endpoint responsible for executing those operations is called `execute_operations`.
 
-#### Execution from inside the Sovereign Chain flow
-1. User sends token to the ESDT-Safe smart contract on Sovereign.
+#### Execution from inside the Sovereign Chain to the MainChain flow
+1. User deposits token to the ESDT-Safe smart contract on Sovereign.
 2. The validators generate a proof on the Sovereign Chain for a batch of transfers, which will be sent to the mainchain ESDT-Safe contract.
 3. Validators add this information to the sovereignChainBlockBody. Otherwise the block is not signed.
 4. Leader will push the created txData to the mainchain
-5. The ESDT-Safe contract on the mainchain verifies the proof and executes the transfers.
-6. Sovereign validators notarize the completion of the transfer in the subsequent Sovereign block by receiving the attestation log event directly from the mainchain.
+5. Bridge service will send the operations to to header-verifier for verification then to ESDT-Safe for execution.
+6. At the end of the execution success/fail, a confirmation event will be added which will be received in sovereign through the observer and then the cross chain transfer will be completed.
 
 Before talking about the logic of the endpoint, let’s give some more context about the *Operation*.
-
-This structure, derived with multiple traits for serialization, encoding, and type interfacing, represents a fundamental unit of execution within the bridging mechanism.
 
 :::note
 The source code for the following structures can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/common/transaction/src/lib.rs)
@@ -44,8 +46,6 @@ pub struct Operation<M: ManagedTypeApi> {
 - `tokens`: represents one or more token transfers associated with the operation
 - `data`: encapsulates additional instructions or parameters that guide the execution of the operation
 
-Why do we need so many custom structures? This a question related to clean code principles, the answer is easy: to ensure that complex logic remains organized and maintainable, thus improving code extension and flexibility.
-
 ```rust
 pub struct OperationEsdtPayment<M: ManagedTypeApi> {
     pub token_identifier: TokenIdentifier<M>,
@@ -54,11 +54,15 @@ pub struct OperationEsdtPayment<M: ManagedTypeApi> {
 }
 ```
 
-This struct describes a single token transfer action within an Operation. Each Operation can have one or more of such payments, with that enabling the transfer of a variety of tokens during a cross-chain transaction.
+This struct describes a single token transfer action within an *Operation*. Each Operation can have one or more of such payments, with that enabling the transfer of a variety of tokens during a cross-chain transaction. 
 
 - `token_identifier`: used for the identification of the token
 - `token_nonce`: if the token is Non-Fungible or Semi-Fungible, it will have a custom nonce, if not the value will be 0
 - `token_data`: a structure holding metadata and additional token-related details used for minting, token creation (for more details about this structure, please visit the official ESDT Documentation)
+
+:::note
+You can use the [System SC API](../developers/developer-reference/sc-api-functions#get_esdt_token_data) method as reference.
+:::
 
 ```rust
 pub struct OperationData<M: ManagedTypeApi> {
@@ -82,7 +86,7 @@ pub struct TransferData<M: ManagedTypeApi> {
 }
 ```
 
-`TransferData` represents the description of the remove execution of another Smart Contract, one standout feature of the `executeBridgeOps` endpoint is the capability of executing multiple endpoint calls in one transaction.
+`TransferData` represents the description of the remote execution of another Smart Contract.
 
 - `gas_limit`: specifies the needed gas for the execution of all other endpoints.
 - `function`: the name of the endpoint that will be executed.
@@ -94,7 +98,6 @@ The source code for the endpoint can be found [here](https://github.com/multiver
 :::
 ### Executing an *Operation*
 
-This endpoint serves as the key component in orchestrating cross-chain operations within the bridging mechanism.
 ```rust
 #[endpoint(executeBridgeOps)]
  fn execute_operations(
@@ -103,9 +106,11 @@ This endpoint serves as the key component in orchestrating cross-chain operation
     operation: Operation<Self::Api>
 )
 ```
-- `hash_of_hashes`: the key for the hashes map used to track executed and non executed Operations
-- `operation`: the data and the behavior for the cross-chain execution that must happen
+- `hash_of_hashes`: hash of all hashes of the operations that were sent in a round
+- `operation`: the details of the cross-chain execution
 
-1. If the current chain isn’t a Sovereign Chain, execution must happen inside the Main Chain.
-2. Verify that the given Operation’s hash is registered by the Header-Verifier Smart Contract.
-3. Check if the given tokens from the Operation are registered. If they are not registered, a Fail Event will be emitted.
+1. Calculate the hash of the *Operation* received as a parameter.
+2. Verify that the given *Operation’s* hash is registered by the Header-Verifier Smart Contract.
+3. Mint tokens or get them from the account.
+4. Distribute the tokens.
+5. Emit confirmation event or fail event if needed.
