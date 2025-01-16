@@ -10,7 +10,7 @@ DOCS_URL_ROOT = "https://docs.multiversx.com"
 
 
 cookbooks: List[Path] = [
-    DOCS_ROOT / "sdk-and-tools/sdk-py/sdk-py-cookbook.md",
+    DOCS_ROOT / "sdk-and-tools/sdk-py/sdk-py-cookbook-v1.md",
 ]
 
 
