@@ -28,18 +28,18 @@ Without entering in too much details regarding the smart-contracts interactions,
 ## Ethereum Contracts
 The repository for the Solidity contracts used on the EVM-compatible side can be found here: https://github.com/multiversx/mx-bridge-eth-sc-sol
 The main contracts are described below: 
-1. **Safe**: A contract that allows users to deposit ERC20 tokens that they want to transfer to the MultiversX network.
+1. **Safe**: A contract that allows users to deposit ERC20 tokens that they want to transfer to the MultiversX network;
 2. **Bridge**: A contract that facilitates the transfer of tokens from MultiversX to EVM-compatible chain. Only the relayers are allowed to use this contract.
 
 [comment]: # (mx-context-auto)
 
 ## MultiversX Contracts
 The repository for the Rust contracts used on MultiversX side can be found here: https://github.com/multiversx/mx-bridge-eth-sc-rs
-1. **Safe**: A contract that allows users to deposit ESDT tokens that they want to transfer to the EVM-compatible networks.
+1. **Safe**: A contract that allows users to deposit ESDT tokens that they want to transfer to the EVM-compatible networks;
 2. **Bridge**: A contract that facilitates the transfer of tokens from EVM-compatible chain to MultiversX. As the Bridge contract on the EVM-compatible chain side, this
-contract is allowed to be operated by the registered relayers.
-3. **MultiTransfer**: A helper contract that is used to perform multiple token transfers at once.
-4. **BridgedTokensWrapper**: A helper contract that is used to support wrapping the same token from multiple chains into a single ESDT token.
+contract is allowed to be operated by the registered relayers;
+3. **MultiTransfer**: A helper contract that is used to perform multiple token transfers at once;
+4. **BridgedTokensWrapper**: A helper contract that is used to support wrapping the same token from multiple chains into a single ESDT token;
 5. **BridgeProxy**: A helper contract that is used to store and handle the smart-contract execution and the possible refund operation after the swap is done. 
 
 [comment]: # (mx-context-auto)
@@ -48,5 +48,5 @@ contract is allowed to be operated by the registered relayers.
 The repository for the code that the relayers use can be found here: https://github.com/multiversx/mx-bridge-eth-go
 
 For each existing bridge, the following list applies:
-- **5 Relayers** are managed by the MultiversX Foundation.
+- **5 Relayers** are managed by the MultiversX Foundation;
 - **5 Relayers** are distributed to the MultiversX validators community, with each validator having one relayer.
