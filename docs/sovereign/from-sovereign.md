@@ -19,7 +19,7 @@ Here is the [link](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-
 
 Each action that can be executed remotely through this contract is called an *Operation*. The endpoint responsible for executing those operations is called `execute_operations`.
 
-#### Execution from inside the Sovereign Chain to the MainChain flow
+## Sovereign Chain to Main Chain transfer flow
 1. User deposits token to the ESDT-Safe smart contract on Sovereign.
 2. Outgoing *Operations* are created at the end of the round.
 3. Validators sign all the outgoing *Operations*.
@@ -27,10 +27,11 @@ Each action that can be executed remotely through this contract is called an *Op
 5. Bridge service sends the *Operations* to the Header-Verifier for registration and verification, and then to ESDT-Safe for execution.
 6. At the end of the execution success/fail, a confirmation event will be added which will be received in sovereign through the observer and then the cross chain transfer will be completed.
 
-### Header-Verifier SC
+## Header-Verifier SC
 
-As mentioned in the [Introduction](cross-chain-execution.md) the Header-Verifier smart contract is to verify signatures, store the *BLS Keys* of the validators and register incoming *Operations*.
+As mentioned in the [Introduction](cross-chain-execution.md) the Header-Verifier smart contract is responsible to verify signatures, store the *BLS Keys* of the validators and register incoming *Operations*.
 
+### Registering a set of *Operations*
 ```rust
     #[endpoint(registerBridgeOps)]
     fn register_bridge_operations(
@@ -41,13 +42,13 @@ As mentioned in the [Introduction](cross-chain-execution.md) the Header-Verifier
     )
 ```
 
-Any transaction before being executed has to be registered in this smart contract. The reason behind registering any incoming *Operation* is to create a history of all already registered *Operations* and with that an already registered *Operation* doesn't need to be re-registered and re-executed by the validators.
+Any *Operation* before being executed has to be registered in this smart contract. The reason behind this is that the hash will be verified and it will be locked until the operation is executed by the ESDT-Safe contract.
 
-The registering endpoint follows this flow:
-1. If the incoming `bridge_operations_hash` is not in the `hash_of_hashes_history` storage mapper, otherwise, the endpoint will return a panic.
-2. If the hash of all `operations_hashes` and `bridge_operations_hash` are equal, otherwise, the endpoint will return a panic.
-3. All the `operations_hashes` are registered in the smart contract's storage with the `OperationsHashStatus::NotLocked` status.
-4. The `bridge_operations_hash` is inserted in the `hash_of_hashes_history` storage mapper.
+The registering endpoint operates as follows:
+1. Verifies that  `bridge_operations_hash` is not found in the `hash_of_hashes_history` storage mapper, otherwise it will return an error.
+2. Verifies that the hash of all `operations_hashes` matches the `bridge_operations_hash, otherwise, the endpoint will return an error.
+3. All `operations_hashes` are stored in the smart contract's storage with the status OperationsHashStatus::NotLocked.
+4. The `bridge_operations_hash` is added to the `hash_of_hashes_history` storage mapper.
 
 ```rust
     #[endpoint(lockOperationHash)]
@@ -74,8 +75,7 @@ After registering and executing an *Operation* the status of the hash associated
 1. Check if the caller is the ESDT-Safe smart contract.
 2. Remove the status of the hash from storage.
 
-
-Before talking about the logic of the endpoint, let’s give some more context about the *Operation*.
+## ESDT-Safe SC
 
 :::note
 The source code for the following structures can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/common/transaction/src/lib.rs)
@@ -106,11 +106,7 @@ This struct describes a single token transfer action within an *Operation*. Each
 
 - `token_identifier`: used for the identification of the token
 - `token_nonce`: if the token is Non-Fungible or Semi-Fungible, it will have a custom nonce, if not the value will be 0
-- `token_data`: a structure holding metadata and additional token-related details used for minting, token creation (for more details about this structure, please visit the official ESDT Documentation)
-
-:::note
-You can use the [System SC API](../developers/developer-reference/sc-api-functions#get_esdt_token_data) method as reference.
-:::
+- `token_data`: a structure holding metadata and other token properties
 
 ```rust
 pub struct OperationData<M: ManagedTypeApi> {
