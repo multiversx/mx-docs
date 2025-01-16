@@ -46,6 +46,7 @@ contract is allowed to be operated by the registered relayers.
 
 ## Relayers
 The repository for the code that the relayers use can be found here: https://github.com/multiversx/mx-bridge-eth-go
+
 For each existing bridge, the following list applies:
 - **5 Relayers** are managed by the MultiversX Foundation.
 - **5 Relayers** are distributed to the MultiversX validators community, with each validator having one relayer.
