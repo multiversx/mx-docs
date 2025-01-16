@@ -5,6 +5,8 @@ title: Markdown Examples
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import ThemedImage from "@theme/ThemedImage";
 
 ## Base Syntax
 
@@ -265,6 +267,29 @@ $$
 |x| = \begin{Bmatrix} x  & {if } x \geq 0 \\ -x & {if } x < 0 \end{Bmatrix}
 $$
 
+### Themed Images
+
+## First Version
+
+![Docusaurus themed image](/img/logo.svg#gh-light-mode-only)![Docusaurus themed image](/img/logo_dark.svg#gh-dark-mode-only)
+
+## Second Version
+
+Must Include
+
+```jsx
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import ThemedImage from "@theme/ThemedImage";
+```
+
+<ThemedImage
+  alt="Docusaurus themed image"
+  sources={{
+    light: useBaseUrl("/img/logo.svg"),
+    dark: useBaseUrl("/img/logo_dark.svg"),
+  }}
+/>
+
 ### YouTube Embed
 
 ## First Version
@@ -274,12 +299,12 @@ $$
 ## Second version
 
 <iframe
-    width="560"
-    height="315"
-    src="https://www.youtube-nocookie.com/embed/tv6OBimIX98?playlist=tv6OBimIX98"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
+  width="560"
+  height="315"
+  src="https://www.youtube-nocookie.com/embed/tv6OBimIX98?playlist=tv6OBimIX98"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
 ></iframe>
 
 ## Mermaid diagrams
