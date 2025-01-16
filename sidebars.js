@@ -199,7 +199,18 @@ const sidebars = {
                 label: "Python SDK",
                 items: [
                   "sdk-and-tools/sdk-py/sdk-py",
-                  "sdk-and-tools/sdk-py/sdk-py-cookbook",
+                  {
+                    type: "category",
+                    label: "Cookbook (versioned)",
+                    link: {
+                      type: "doc",
+                      id: "sdk-and-tools/sdk-py/sdk-py-cookbook"
+                    },
+                    items: [
+                      "sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
+                      "sdk-and-tools/sdk-py/sdk-py-cookbook",
+                    ]
+                  },
                   "sdk-and-tools/sdk-py/installing-mxpy",
                   "sdk-and-tools/sdk-py/mxpy-cli",
                   "sdk-and-tools/sdk-py/smart-contract-interactions",

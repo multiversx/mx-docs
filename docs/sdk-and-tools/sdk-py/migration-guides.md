@@ -15,6 +15,6 @@ Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-py/sdk-py-cookb
 
 See [migration support](https://github.com/multiversx/mx-sdk-py-cli/issues?q=label:migration).
 
-## Migrate to a newer sdk-core
+## Migrate to a newer sdk
 
-See [migration support](https://github.com/multiversx/mx-sdk-py-core/issues?q=label:migration).
+See [migration support](https://github.com/multiversx/mx-sdk-py/issues?q=label:migration).
