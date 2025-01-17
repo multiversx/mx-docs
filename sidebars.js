@@ -199,7 +199,18 @@ const sidebars = {
                 label: "Python SDK",
                 items: [
                   "sdk-and-tools/sdk-py/sdk-py",
-                  "sdk-and-tools/sdk-py/sdk-py-cookbook",
+                  {
+                    type: "category",
+                    label: "Cookbook (versioned)",
+                    link: {
+                      type: "doc",
+                      id: "sdk-and-tools/sdk-py/sdk-py-cookbook"
+                    },
+                    items: [
+                      "sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
+                      "sdk-and-tools/sdk-py/sdk-py-cookbook",
+                    ]
+                  },
                   "sdk-and-tools/sdk-py/installing-mxpy",
                   "sdk-and-tools/sdk-py/mxpy-cli",
                   "sdk-and-tools/sdk-py/smart-contract-interactions",
@@ -541,8 +552,24 @@ const sidebars = {
               "sovereign/system-requirements",
               "sovereign/software-dependencies",],
           },
-          "sovereign/setup",
-          "sovereign/deployment",
+          {
+            type: "category",
+            label: "Setup Guide",
+            items: [
+              "sovereign/one-click-deployment",
+              "sovereign/local-setup",
+              "sovereign/distributed-setup",],
+          },
+          "sovereign/custom-configurations",
+          {
+            type: "category",
+            label: "Services",
+            items: [
+              "sovereign/services",
+              "sovereign/sovereign-api",
+              "sovereign/sovereign-wallet",
+              "sovereign/sovereign-explorer",],
+          },
           {
             type: "category",
             label: "Managing a Sovereign Chain",

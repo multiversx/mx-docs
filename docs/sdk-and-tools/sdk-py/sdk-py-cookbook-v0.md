@@ -1,6 +1,7 @@
 ---
-id: sdk-py-cookbook
-title: Cookbook
+id: sdk-py-cookbook-v0
+title: Cookbook (v0)
+pagination_prev: sdk-and-tools/sdk-py/sdk-py
 ---
 
 [comment]: # (mx-abstract)
@@ -9,7 +10,7 @@ title: Cookbook
 
 ## Overview
 
-This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries).
+This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries) **v0 (legacy, previous version)**.
 
 :::note
 All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/main/examples/Cookbook.ipynb)**.
