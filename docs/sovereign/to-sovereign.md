@@ -24,7 +24,7 @@ The transfer of tokens is done by the *ESDT-Safe* contract after calling the `de
 
 One key aspect of cross chain transfers from MultiversX Main Chain to a Sovereign Chain is being able to transfer tokens and also execute a smart contract call within single transaction. The `#[payable("*")]` annotation means that the endpoint can receive any tokens that will transferred. If those tokens are from a Sovereign Chain they will be burned otherwise they will be saved in the Smart Contract`s account. The checks enabled for the transfer of tokens are the following:
 
-- If the token is whitelisted, in that case the fee is skipped.
+- If the token is whitelisted or not blacklisted, in that case the tokens can be transferred.
 - If the fee is enabled, the smart contract assures that the fee is paid.
 - If there are maximum 10 transfers in the transaction.
 

@@ -1,7 +1,7 @@
 # Execution starting from a Sovereign Chain
 ![From Sovereign](../../static/sovereign/from-sovereign.png)
 
-For the user — whether an External Owned Account (EOA) like a user wallet or another smart contract — procedure is simple. An address will be able to perform a multiTransfer deposit for various types of tokens:
+For the user — whether an External Owned Account (EOA) like a user wallet or another smart contract — procedure is simple. An address will be able to perform a multi tokens transfer with various types of tokens:
 - Fungible Tokens
 - (Dynamic) Non-Fungible Tokens
 - (Dynamic) Semi-Fungible Tokens
