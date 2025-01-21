@@ -5,14 +5,12 @@ title: Staking v4
 
 [comment]: # (mx-context-auto)
 
-# **Introduction**
+# **Staking v4. Introduction**
 
 Staking and delegation are processes that evolve over time. No system has to remain static. Our assumptions about how
 the market works and reacts can change, just as user behavior and market dynamics may evolve.
 
-[comment]: # (mx-context-auto)
-
-One of our primary objectives is to eliminate the additional queue and leverage the top-up value per node to determine
+One of our primary objectives with staking v4 is to eliminate the additional queue and leverage the top-up value per node to determine
 the best nodes. This ensures that we do not restrict the entry of new validators, as the current system requires an old
 validator to leave for a new one to enter. The market will determine the actual node price, operating as a soft auction
 where anyone paying the node price (2.500 eGLD) can register, but the node becomes a validator only if it has sufficient
