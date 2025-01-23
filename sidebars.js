@@ -54,7 +54,6 @@ const sidebars = {
           "developers/tutorials/your-first-microservice",
           "developers/tutorials/crowdfunding-p1",
           "developers/tutorials/crowdfunding-p2",
-          "developers/tutorials/counter",
           "developers/tutorials/staking-contract",
           "developers/tutorials/energy-dao",
           "developers/tutorials/dex-walkthrough",
@@ -200,7 +199,18 @@ const sidebars = {
                 label: "Python SDK",
                 items: [
                   "sdk-and-tools/sdk-py/sdk-py",
-                  "sdk-and-tools/sdk-py/sdk-py-cookbook",
+                  {
+                    type: "category",
+                    label: "Cookbook (versioned)",
+                    link: {
+                      type: "doc",
+                      id: "sdk-and-tools/sdk-py/sdk-py-cookbook"
+                    },
+                    items: [
+                      "sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
+                      "sdk-and-tools/sdk-py/sdk-py-cookbook",
+                    ]
+                  },
                   "sdk-and-tools/sdk-py/installing-mxpy",
                   "sdk-and-tools/sdk-py/mxpy-cli",
                   "sdk-and-tools/sdk-py/smart-contract-interactions",
@@ -329,6 +339,7 @@ const sidebars = {
                       "sdk-and-tools/indices/es-index-tokens",
                       "sdk-and-tools/indices/es-index-transactions",
                       "sdk-and-tools/indices/es-index-validators",
+                      "sdk-and-tools/indices/es-index-events",
                     ],
                   },
                 ],
@@ -518,6 +529,12 @@ const sidebars = {
       },
       {
         type: "category",
+        label: "Axelar Bridge",
+        items: [
+          "bridge/axelar",],
+      },
+      {
+        type: "category",
         label: "Sovereign Chains",
         items: [
           "sovereign/overview",
@@ -536,8 +553,24 @@ const sidebars = {
               "sovereign/system-requirements",
               "sovereign/software-dependencies",],
           },
-          "sovereign/setup",
-          "sovereign/deployment",
+          {
+            type: "category",
+            label: "Setup Guide",
+            items: [
+              "sovereign/one-click-deployment",
+              "sovereign/local-setup",
+              "sovereign/distributed-setup",],
+          },
+          "sovereign/custom-configurations",
+          {
+            type: "category",
+            label: "Services",
+            items: [
+              "sovereign/services",
+              "sovereign/sovereign-api",
+              "sovereign/sovereign-wallet",
+              "sovereign/sovereign-explorer",],
+          },
           {
             type: "category",
             label: "Managing a Sovereign Chain",
@@ -559,7 +592,11 @@ const sidebars = {
           {
             type: "category",
             label: "VMs",
-            items: ["sovereign/vm",],
+            items: [
+              "sovereign/vm-intro",
+              "sovereign/standalone-evm",
+              "sovereign/other-vm",
+            ],
           },
           {
             type: "category",

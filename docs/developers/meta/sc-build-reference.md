@@ -7,17 +7,11 @@ title: Build Reference
 
 ## How to: Basic build
 
-To build a contract, it is enough to navigate in your contract crate and run
+To build a contract, navigate to the contract folder and run the following command:
 
 ```sh
 sc-meta all build
 ```
-
-:::info Note
-The traditional way to trigger a build in console is to call `mxpy contract build --path <project>`, which works as well. However, mxpy currently just forwards commands to the [MultiversX Metaprogramming standalone tool](/developers/meta/sc-meta#introduction), so you might as well call it directly.
-:::
-
----
 
 [comment]: # (mx-exclude-context)
 
@@ -155,11 +149,11 @@ After building the contracts, there are three more operations left to perform, b
 
 ### g. Cleaning a project
 
-Calling `cargo run clean` in the meta crate will run `cargo clean` in all wasm crates and delete the `output` folder.
+In order to clean a project and remove all build artifacts, run the following command:
 
-`mxpy contract clean` also just forwards to this.
-
-Note that even the clean operation relies on the ABI, in order to reach all the wasm crates.
+```sh
+sc-meta all clean
+```
 
 [comment]: # (mx-context-auto)
 

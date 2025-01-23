@@ -22,7 +22,7 @@ If not specified otherwise, the localnet starts with two shards plus the metacha
 In order to install **mxpy**, follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
 
 :::note
-This guide assumes you are using `mxpy v7` or newer.
+This guide assumes you are using `mxpy v9.7.1` or newer.
 :::
 
 [comment]: # (mx-context-auto)
