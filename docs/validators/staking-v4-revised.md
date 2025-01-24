@@ -20,7 +20,7 @@ Compared to traditional staking mechanisms, MultiversX staking offers staking pr
 
 ## Audience and Purpose
 
-This document is intended for new staking providers that would like to start their journey with MultivesX and be part
+This document is intended for new staking providers that would like to start their journey with MultiversX and be part
  of our growing community of validators and providers.
 
 While reading this document, you will be able to quickly understand and grasp the advantages of starting a Staking Provider on our protocol and fully reap the benefits while participating in one of the most stable protocols out there.
