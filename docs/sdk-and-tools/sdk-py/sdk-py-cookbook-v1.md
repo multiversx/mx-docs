@@ -14,12 +14,12 @@ pagination_next: sdk-and-tools/sdk-py/installing-mxpy
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries) **v1 (latest, stable version)**.
 
 :::note
-All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/feat/next/examples/v1.ipynb)**.
+All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/main/examples/v1.ipynb)**.
 :::
 
 We are going to use the [multiversx-sdk-py](https://github.com/multiversx/mx-sdk-py) package. This package can be installed directly from GitHub or from [**PyPI**](https://pypi.org/project/multiversx-sdk/).
 
-<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py/refs/heads/feat/next/examples/v1.ipynb" } -->
+<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py/refs/heads/main/examples/v1.ipynb" } -->
 
 ## Creating an Entrypoint
 
@@ -690,7 +690,7 @@ account = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 account.nonce = entrypoint.recall_account_nonce(account.address)
 
 transfers_controller = entrypoint.create_transfers_controller()
@@ -721,7 +721,7 @@ alice = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 alice.nonce = entrypoint.recall_account_nonce(alice.address)
 
 bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
@@ -755,7 +755,7 @@ alice = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 alice.nonce = entrypoint.recall_account_nonce(alice.address)
 
 esdt = Token(identifier="TEST-123456")
@@ -794,7 +794,7 @@ alice = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 alice.nonce = entrypoint.recall_account_nonce(alice.address)
 
 bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
@@ -842,7 +842,7 @@ account = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 account.nonce = entrypoint.recall_account_nonce(account.address)
 
 esdt = Token(identifier="TEST-123456")
@@ -939,7 +939,7 @@ account = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 account.nonce = entrypoint.recall_account_nonce(account.address)
 
 # load the abi file
@@ -1066,7 +1066,7 @@ alice = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 alice.nonce = entrypoint.recall_account_nonce(alice.address)
 
 # set the nonce
@@ -1108,7 +1108,7 @@ account = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 account.nonce = entrypoint.recall_account_nonce(account.address)
 
 # load the abi file
@@ -1166,7 +1166,7 @@ account = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 account.nonce = entrypoint.recall_account_nonce(account.address)
 
 # load the abi file
@@ -1222,7 +1222,7 @@ account = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 account.nonce = entrypoint.recall_account_nonce(account.address)
 
 # load the abi file
@@ -1313,6 +1313,91 @@ events_parser = TransactionEventsParser(abi=abi)
 parsed_event = events_parser.parse_event(event)
 ```
 
+#### Encoding/Decoding custom types
+
+Whenever needed, the contract ABI can be used for manually encoding or decoding custom types.
+
+Let's encode a struct called `EsdtTokenPayment` (of [multisig](https://github.com/multiversx/mx-contracts-rs/tree/main/contracts/multisig) contract) into binary data.
+
+```py
+from pathlib import Path
+from multiversx_sdk.abi import Abi
+
+abi = Abi.load(Path("contracts/multisig-full.abi.json"))
+encoded = abi.encode_custom_type("EsdtTokenPayment", ["TEST-8b028f", 0, 10000])
+print(encoded)
+```
+
+Now, let's decode a struct using the ABI.
+
+```py
+from multiversx_sdk.abi import Abi, AbiDefinition
+
+abi_definition = AbiDefinition.from_dict(
+    {
+        "endpoints": [],
+        "events": [],
+        "types": {
+            "DepositEvent": {
+                "type": "struct",
+                "fields": [
+                    {"name": "tx_nonce", "type": "u64"},
+                    {"name": "opt_function", "type": "Option<bytes>"},
+                    {"name": "opt_arguments", "type": "Option<List<bytes>>"},
+                    {"name": "opt_gas_limit", "type": "Option<u64>"},
+                ],
+            }
+        },
+    }
+)
+abi = Abi(abi_definition)
+
+decoded_type = abi.decode_custom_type(name="DepositEvent", data=bytes.fromhex("00000000000003db000000"))
+print(decoded_type)
+```
+
+If you don't wish to use the ABI, there is another way to do it. First, let's encode a struct.
+
+```py
+from multiversx_sdk.abi import Serializer, U64Value, StructValue, Field, StringValue, BigUIntValue
+
+struct = StructValue([
+    Field(name="token_identifier", value=StringValue("TEST-8b028f")),
+    Field(name="token_nonce", value=U64Value()),
+    Field(name="amount", value=BigUIntValue(10000)),
+])
+
+serializer = Serializer()
+serialized_struct = serializer.serialize([struct])
+print(serialized_struct)
+```
+
+Now, let's decode a struct without using the ABI.
+
+```py
+from multiversx_sdk.abi import Serializer, U64Value, OptionValue, BytesValue, ListValue, StructValue, Field
+
+tx_nonce = U64Value()
+function = OptionValue(BytesValue())
+arguments = OptionValue(ListValue([BytesValue()]))
+gas_limit = OptionValue(U64Value())
+
+attributes = StructValue([
+    Field("tx_nonce", tx_nonce),
+    Field("opt_function", function),
+    Field("opt_arguments", arguments),
+    Field("opt_gas_limit", gas_limit)
+])
+
+serializer = Serializer()
+serializer.deserialize("00000000000003db000000", [attributes])
+
+print(tx_nonce.get_payload())
+print(function.get_payload())
+print(arguments.get_payload())
+print(gas_limit.get_payload())
+```
+
 ### Smart Contract queries
 
 When querying a smart contract, a **view function** is called. That function does not modify the state of the contract, thus we don't need to send a transaction.
@@ -1387,7 +1472,7 @@ account = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 account.nonce = entrypoint.recall_account_nonce(account.address)
 
 # load the abi file
@@ -1476,7 +1561,7 @@ alice = Account.new_from_keystore(
     password="password",
     address_index=0
 )
-# the user is responsible for managing the nonce
+# the developer is responsible for managing the nonce
 alice.nonce = entrypoint.recall_account_nonce(alice.address)
 
 # set the nonce
@@ -3356,5 +3441,4 @@ When interacting with smart contracts, we might want to make use of the abi file
 ```py
 from multiversx_sdk.abi import Abi, BigUIntValue, StringValue
 ```
-
 <!-- END_NOTEBOOK -->
