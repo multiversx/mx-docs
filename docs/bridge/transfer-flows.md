@@ -8,6 +8,8 @@ import ThemedImage from '@theme/ThemedImage';
 
 [comment]: # (mx-abstract)
 
+# Transfer Flows
+
 The main functionality of the bridge is to transfer tokens from one network to another. For example, a user can transfer tokens from an EVM-compatible chain to MultiversX or from MultiversX to an EVM-compatible chain.
 Besides the main functionality, there is the possibility to call a smart contract on MultiversX when doing a swap.
 

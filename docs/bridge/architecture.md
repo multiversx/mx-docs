@@ -8,6 +8,8 @@ import ThemedImage from '@theme/ThemedImage';
 
 [comment]: # (mx-abstract)
 
+# Architecture
+
 Ad-Astra Bridge is a system that allows the transfer of ERC20 tokens between EVM-compatible chains and the MultiversX network.
 Currently, there are 2 bridges available: between the Ethereum and MultiversX networks and between the BSC and MultiversX networks.
 The system is composed of several contracts and relayers that work together to facilitate the transfer of tokens.
