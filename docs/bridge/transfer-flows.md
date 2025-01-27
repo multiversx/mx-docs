@@ -3,6 +3,9 @@ id: transfer-flows
 title: Transfer Flows
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
 [comment]: # (mx-abstract)
 
 The main functionality of the bridge is to transfer tokens from a network to another. For example, a user can transfer tokens from an EVM-compatible chain to MultiversX or from MultiversX to an EVM-compatible chain. 
@@ -67,5 +70,37 @@ spend the gas for execution can call the endpoint. The minimum gas-limit for the
 As stated, the operations on the **BridgeProxy** can be done manually, or by using the **scCallsExecutor** tool provided here https://github.com/multiversx/mx-bridge-eth-go/tree/main/cmd/scCallsExecutor
 The README.md file contained in this directory is a good place to start on how to manually configure the tool and run it (on a dedicated host or VM)
 
-Notes regarding smart-contract invoked on MultiversX from an EVM-compatible chain:
-TODO: add notes here
+## Notes regarding smart-contract invoked on MultiversX from an EVM-compatible chain:
+
+The next diagram explains what happens with a token transfer with a smart-contract call in the direction EVM-compatible chain -> MultiversX when the tokens are unlocked/minted on the MultiversX chain.
+The transfer is stored in the **BridgeProxy** (Step 1) and then, anyone can initiate the execution (Step 2). The tokens reach the 3-rd party smart-contract along with the function required to be called 
+and the provided parameters.
+
+<!--- source file reference: /static/xbridge/xbridge-dark/light.drawio --->
+<ThemedImage
+    alt="SC bridge proxy happy flow"
+    sources={{
+        light: useBaseUrl('/xbridge/bridge-proxy-ok-call-light.png'),
+        dark: useBaseUrl('/xbridge/bridge-proxy-ok-call-dark.png'),
+    }}
+/>
+
+As stated above, this is the "happy flow" in which the smart-contract call succeed on the 3-rd party contract. But what 
+happens if the invoked function fails? This is described in the next diagram. Step 1 was identical with the previous diagram
+and it was omitted. Step 2 got a new step 2.c in which the tokens return to the **BridgeProxy** contract and the whole transfer 
+is marked as failed and ready to be refunded on the original source EVM-compatible chain **to the original sender address**.
+There is another Step 3 involved, in which, anyone can call the refund method. 
+
+<!--- source file reference: /static/xbridge/xbridge-dark/light.drawio --->
+<ThemedImage
+    alt="SC bridge proxy with refund flow"
+    sources={{
+        light: useBaseUrl('/xbridge/bridge-proxy-refund-call-light.png'),
+        dark: useBaseUrl('/xbridge/bridge-proxy-refund-call-dark.png'),
+    }}
+/>
+
+Step 2 and Step 3 can be automatically triggered with a help of a tool that will constantly monitor one or more **BridgeProxy** 
+smart-contract addresses. More info about this tool can be found [here](https://github.com/multiversx/mx-bridge-eth-go/tree/feat/v3.1/cmd/scCallsExecutor#readme)
+
+TODO: add info how to assemble the SC call data

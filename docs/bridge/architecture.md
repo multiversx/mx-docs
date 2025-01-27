@@ -16,7 +16,7 @@ Without entering in too much details regarding the smart-contracts interactions,
 
 <!--- source file reference: /static/xbridge/xbridge-dark/light.drawio --->
 <ThemedImage
-    alt="Docusaurus themed image"
+    alt="Bridge general architecture overview"
     sources={{
         light: useBaseUrl('/xbridge/general-architecture-light.png'),
         dark: useBaseUrl('/xbridge/general-architecture-dark.png'),
