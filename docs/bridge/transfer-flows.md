@@ -67,7 +67,7 @@ spend the gas for execution can call the endpoint. The minimum gas-limit for the
           as for any normal MultiversX to EVM-compatible chain transfer;
         * The transfer is placed in a MultiversX's batch and eventually, Alice will get her tokens back on the originating EVM-compatible chain minus the fee. 
 
-As stated, the operations on the **BridgeProxy** can be done manually, or by using the **scCallsExecutor** tool provided here https://github.com/multiversx/mx-bridge-eth-go/tree/main/cmd/scCallsExecutor
+As stated, the operations on the **BridgeProxy** can be done manually, or by using the **scCallsExecutor** tool provided here https://github.com/multiversx/mx-bridge-eth-go/blob/feat/v3.1/cmd/scCallsExecutor
 The README.md file contained in this directory is a good place to start on how to manually configure the tool and run it (on a dedicated host or VM)
 
 ## Notes regarding smart-contract invoked on MultiversX from an EVM-compatible chain:
@@ -100,7 +100,6 @@ There is another Step 3 involved, in which, anyone can call the refund method.
     }}
 />
 
-Step 2 and Step 3 can be automatically triggered with a help of a tool that will constantly monitor one or more **BridgeProxy** 
-smart-contract addresses. More info about this tool can be found [here](https://github.com/multiversx/mx-bridge-eth-go/tree/feat/v3.1/cmd/scCallsExecutor#readme)
+Step 2 and Step 3 can be automatically triggered with the help of the **scCallsExecutor** tool referenced above.
 
 TODO: add info how to assemble the SC call data
