@@ -2172,7 +2172,7 @@ tx_hash = entrypoint.send_transaction(transaction)
 
 #### Saving a key-value pair to an account using the controller
 
-We can store key-value pairs for an acoount on the network. To do so, we create the following transaction:
+We can store key-value pairs for an account on the network. To do so, we create the following transaction:
 
 ```py
 from pathlib import Path
