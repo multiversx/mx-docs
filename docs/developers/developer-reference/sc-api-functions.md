@@ -140,6 +140,67 @@ A smart contract call that runs out of gas will revert all operations, so this f
 
 [comment]: # (mx-context-auto)
 
+### get_back_transfers
+
+```rust
+get_back_transfers() - > BackTransfers<Self::Api>
+```
+
+Retrieves back-transfers from the VM, after a contract call. This functionality is available for both synchoronous calls and asynchronous calls (in callbacks).
+
+All previous transfers are gathered in the `BackTransfers` struct:
+
+```rust
+/// Holding back-transfer data, as retrieved from the VM.
+pub struct BackTransfers<A>
+where
+    A: ManagedTypeApi,
+{
+    pub total_egld_amount: BigUint<A>,
+    pub esdt_payments: MultiEsdtPayment<A>,
+}
+
+pub type MultiEsdtPayment<A> = ManagedVec<A, EsdtTokenPayment<A>>;
+```
+
+:::important
+The `back_transfers` function retrieves **all** previous transfers **without performing any prior shuffling**. To obtain the exact back transfers corresponding to a specific call when multiple calls are executed, you must explicitly invoke the function after each individual call.
+:::
+
+#### Example
+```rust
+    // SC A
+    #[endpoint]
+    fn calls_then_back_transfers(
+        &self,
+        to: ManagedAddress,
+        egld_values: MultiValueEncoded<BigUint>,
+    ) {
+        for egld_value in egld_values {
+            let _back_transfers_after_one_call = self
+                .tx()
+                .to(&to)
+                .typed(contract_proxy::ContractProxy)
+                .send_back_egld_value(egld_value.clone())
+                .returns(ReturnsBackTransfers)
+                .sync_call();
+        }
+    }
+
+    // SC B
+    #[endpoint]
+    fn send_back_egld_value(&self, egld_value: BigUint) {
+        self.tx().to(ToCaller).egld(egld_value).transfer();
+    }
+```
+
+In this case, the `ReturnsBackTransfers` result handler calls the `get_back_transfers` function from the blockchain API after each call. Otherwise, the same type of call can be executed as such:
+```rust
+    let _back_transfers_after_one_call = self.blockchain().get_back_transfers();
+```
+
+[comment]: # (mx-context-auto)
+
 ### get_block_timestamp
 
 ```rust
