@@ -66,3 +66,7 @@ as described (an operation that consumes time & fees).
         dark: useBaseUrl('/xbridge/lock-unlock-tokens-dark.png'),
     }}
 />
+
+**Note:** The diagram above is a little misleading because the ERC20 contracts hold the address/balance ledgers inside 
+the contracts. For the sake of simplicity, the tokens are depicted stored inside the bridge **Safe** contracts 
+(just as MultiversX ESDTs).
