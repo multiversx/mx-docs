@@ -67,6 +67,6 @@ as described (an operation that consumes time & fees).
     }}
 />
 
-**Note:** The diagram above is a little misleading because the ERC20 contracts hold the address/balance ledgers inside 
-the contracts. For the sake of simplicity, the tokens are depicted stored inside the bridge **Safe** contracts 
+**Note:** The diagram above is a little bit misleading because the ERC20 contracts hold the address/balance ledgers inside 
+them. For the sake of simplicity, the tokens are depicted stored inside the bridge **Safe** contracts 
 (just as MultiversX ESDTs).
