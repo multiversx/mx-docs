@@ -20,7 +20,7 @@ the marketing decision of "on which chain the token should be native (a.k.a. whe
 **1. Mint/Burn & Native on MultiversX < - > EVM-chain has Mint/Burn & Non-Native**
 
 This bridge token-type configuration has the advantage of not holding a single token in the bridge.
-The swapped tokens are minted/burned on both sides. The total token quantity of tokens equals the (minted - burned) on MultiversX
+The swapped tokens are minted/burned on both sides. The total token quantity on both chains equals the (minted - burned) on MultiversX
 added with the (minted - burned) on the EVM-compatible chain side. The initial supply & mint is done on MultiversX.
 
 <!--- source file reference: /static/xbridge/xbridge-dark/light.drawio --->
@@ -45,7 +45,7 @@ This has the same advantages as 1. but the initial minting is done on the EVM-co
 This bridge token configuration type will need to be initiated on the EVM-compatible chain side and the tokens transferred to
 MultiversX will be locked in the bridge contract (no minter role is needed on the EVM-compatible chain as opposed to 1 & 2) and
 will be unlocked when swaps from MultiversX to the EVM-compatible chain are done. On the MultiversX side, there will be mint/burn
-actions. The total value of tokens in both systems will be computed as: supply on EVM-compatible chain. Everything that is
+actions. The total quantity of tokens on both chains will be equal to the supply on the EVM-compatible chain. Everything that is
 locked in the bridge contract will equal to what was minted - burned on MultiversX side.
 
 :::warning
