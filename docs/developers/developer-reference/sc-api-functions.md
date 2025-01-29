@@ -146,7 +146,7 @@ A smart contract call that runs out of gas will revert all operations, so this f
 get_back_transfers() - > BackTransfers<Self::Api>
 ```
 
-Retrieves back-transfers from the VM, after a contract call. This functionality is available for both synchoronous calls and asynchronous calls (in callbacks).
+Retrieves back-transfers from the VM, after a contract call. This functionality is available for both synchronous calls and asynchronous calls (in callbacks).
 
 All previous transfers are gathered in the `BackTransfers` struct:
 
