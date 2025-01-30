@@ -57,12 +57,12 @@ The APR is also directly influenced by the service fee decided by the Staking Pr
 
 #### Service Fee
 
-This fee represents the percentage of validator rewards the Staking Provider is gaining in order to keept heir service up, nodes updated, infrastructure paid and more. This is calculated directly from each Epoch reward and influences the overall Staking Provider APR. A high Service Fee will lower the APR and a lower or zero Service Fee will maximize APR.
+This fee represents the percentage of validator rewards the Staking Provider is gaining in order to kept heir service up, nodes updated, infrastructure paid and more. This is calculated directly from each Epoch reward and influences the overall Staking Provider APR. A high Service Fee will lower the APR and a lower or zero Service Fee will maximize APR.
 
-For exmple if at the end of the Epoch, the statking provider delegators will receive a total of 100 EGLD in rewards, and the Staking Provider Service Fee is set at 10%, 10 EGLD will go to the Staking Provider Rewards Address and the 90 EGLD will be split between the delegators accordingly.
+For example if at the end of the Epoch, the statking provider delegators will receive a total of 100 EGLD in rewards, and the Staking Provider Service Fee is set at 10%, 10 EGLD will go to the Staking Provider Rewards Address and the 90 EGLD will be split between the delegators accordingly.
 
 The Service Fee can be changed at any time by the owner of the Staking Provider wallet. This can range between 0% and 100%.
-However, we recommend a service fee between 10% and 12% but every Staking Provider should keep and eye on the others and ajust as it is a competitive space and we do not impose any restrictions, only suggest fair fees to our Staking Providers.
+However, we recommend a service fee between 10% and 12% but every Staking Provider should keep and eye on the others and adjust as it is a competitive space and we do not impose any restrictions, only suggest fair fees to our Staking Providers.
 
 #### Service Fee Examples
 
@@ -80,7 +80,7 @@ Also, the Service Fee is set at 0% so the optimization is maximized to favor del
 
 Here is another example where this Staking Provider has chosen a 10% Service Fee. Althouhg the screenshot shows 50 nodes, because of the Network NQT they can only run 47 but the optimization is good with 47 Nodes as well offering their delegators 
 6.9% APR. The calculation is the same, 196,805 staked EGLD for 47 Eligible Nodes gives a Node NQT of 4,187 EGLD very close to the Network NQT, but here the Service Fee is lowering the APR as you see compared to the previous example, is 0.84% lower.
-This is how the Serice Fee can impact as Staking Provider's APR.
+This is how the Service Fee can impact as Staking Provider's APR.
 
 ![](/validators/stakingV4/Balanced10Fees.png)
 
@@ -112,7 +112,7 @@ Who are the Delegators
 
 ### Reward Distribution
 
-Rewards distributed from Validators participating in Consensus are received at each Epoch end, roughtly once per day at 18:45 GMT+1. The rewards are automatically distributed to Delegators according to their Stake and to the Staking Provider according to their set Service Fee.
+Rewards distributed from Validators participating in Consensus are received at each Epoch end, roughly once per day at 18:45 GMT+1. The rewards are automatically distributed to Delegators according to their Stake and to the Staking Provider according to their set Service Fee.
 
 
 ## Protocol Design Principles
