@@ -80,7 +80,7 @@ While reading this document, you will be able to quickly understand and grasp th
 **Explorer Interface**
 
 
-## Staking Mechanisms 
+## Staking Mechanisms
 
 **Node Qualification Threshold** also known as NQT, it is a dynamically calculated number by the network approximately every 10 minutes. It is directly influenced by the numbers of validator nodes leaving or joining the network and the overall EGLD staked in the protocol. 
 
@@ -96,7 +96,7 @@ We can split the Stake like so:
 EGLD: 25,000 Node Stake
 EGLD: 15,000 Top-up
 
-The NQT calculation is fairly simple as we divide the overall 40,000 EGLD stake by the number of nodes 10 and results in an NQT of 4,000. This examples is simplified for the sake of the example. Now this NQT can be compared to the actual network NQT so that the Staking Provider owner can decide on wether to adjust top-up or nodes.
+The NQT calculation is fairly simple as we divide the overall 40,000 EGLD stake by the number of nodes 10 and results in an NQT of 4,000. This examples is simplified for the sake of the example. Now this NQT can be compared to the actual network NQT so that the Staking Provider owner can decide on whether to adjust top-up or nodes.
 
 
 **Auction List**
@@ -157,7 +157,7 @@ The Waiting List represents the list of nodes that have been Qualified from the 
 All the nodes that have passed the Qualified Status will then go to the Waiting List, they will remain in the Waitning List for 4 epochs which represents roughly four days.
 
 After the 4 epochs, these nodes are moved to participate in the consensus for validating.
-As a side note, even if the Network NQT changes in the 4 waiting Epochs the already selected nodes will still participate in the consensus even if they would presumambly have lower Node NQT after the aformentioned 4 epochs in the Waiting List.
+As a side note, even if the Network NQT changes in the 4 waiting Epochs the already selected nodes will still participate in the consensus even if they would presumambly have lower Node NQT after the aforementioned 4 epochs in the Waiting List.
 
 
 **Waiting Status**
@@ -177,7 +177,7 @@ This Status means that the Validator Node can validate or propose blocks in the 
 **Automatic Node Qualification**
 
 This mechanism automatically distributes a Staking Provider's total top-up amount to the Validator Nodes they own.
-It focuses on redistributing the top-up based on the Network NQT in order to Qualify as many Nodes as possible fro each staking provier.
+It focuses on redistributing the top-up based on the Network NQT in order to Qualify as many Nodes as possible from each staking provider.
 
 
 **Top-up Balancing**
