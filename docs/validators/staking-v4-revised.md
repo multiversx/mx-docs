@@ -80,7 +80,7 @@ While reading this document, you will be able to quickly understand and grasp th
 **Explorer Interface**
 
 
-## Staking Mechanisms
+## Staking Mechanisms 
 
 **Node Qualification Threshold** also known as NQT, it is a dynamically calculated number by the network approximately every 10 minutes. It is directly influenced by the numbers of validator nodes leaving or joining the network and the overall EGLD staked in the protocol. 
 
