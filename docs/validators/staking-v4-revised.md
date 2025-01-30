@@ -59,7 +59,7 @@ The APR is also directly influenced by the service fee decided by the Staking Pr
 
 This fee represents the percentage of validator rewards the Staking Provider is gaining in order to kept heir service up, nodes updated, infrastructure paid and more. This is calculated directly from each Epoch reward and influences the overall Staking Provider APR. A high Service Fee will lower the APR and a lower or zero Service Fee will maximize APR.
 
-For example if at the end of the Epoch, the statking provider delegators will receive a total of 100 EGLD in rewards, and the Staking Provider Service Fee is set at 10%, 10 EGLD will go to the Staking Provider Rewards Address and the 90 EGLD will be split between the delegators accordingly.
+For example if at the end of the Epoch, the Staking Provider delegators will receive a total of 100 EGLD in rewards, and the Staking Provider Service Fee is set at 10%, 10 EGLD will go to the Staking Provider Rewards Address and the 90 EGLD will be split between the delegators accordingly.
 
 The Service Fee can be changed at any time by the owner of the Staking Provider wallet. This can range between 0% and 100%.
 However, we recommend a service fee between 10% and 12% but every Staking Provider should keep and eye on the others and adjust as it is a competitive space and we do not impose any restrictions, only suggest fair fees to our Staking Providers.
@@ -68,17 +68,17 @@ However, we recommend a service fee between 10% and 12% but every Staking Provid
 
 Here are a few examples from our current setup of Staking Providers and their APR according to their NQT and Service Fee:
 
-#### Delegator Optimized Staking Provider 0% Service Fee for 4,018 EGLD Netqwork NQT
+#### Delegator Optimized Staking Provider 0% Service Fee for 4,018 EGLD Network NQT
 
 In this case for 36 Nodes with 145,910 EGLD Stake the Node NQT is 4,053 EGLD very close to 4,018.
-Also, the Service Fee is set at 0% so the optimization is maximized to favor delegator rewards the Staking Provider taking zero rewards but ofeering the highest APR to their delegators of 7.74%.
+Also, the Service Fee is set at 0% so the optimization is maximized to favor delegator rewards the Staking Provider taking zero rewards but offering the highest APR to their delegators of 7.74%.
 
 ![](/validators/stakingV4/DelegatorOptimized0Fees.png)
 
 
-#### Balanced Optimized Staking Provider 10% Service Fee for 4,018 EGLD Netqwork NQT
+#### Balanced Optimized Staking Provider 10% Service Fee for 4,018 EGLD Network NQT
 
-Here is another example where this Staking Provider has chosen a 10% Service Fee. Althouhg the screenshot shows 50 nodes, because of the Network NQT they can only run 47 but the optimization is good with 47 Nodes as well offering their delegators 
+Here is another example where this Staking Provider has chosen a 10% Service Fee. Although the screenshot shows 50 nodes, because of the Network NQT they can only run 47 but the optimization is good with 47 Nodes as well offering their delegators 
 6.9% APR. The calculation is the same, 196,805 staked EGLD for 47 Eligible Nodes gives a Node NQT of 4,187 EGLD very close to the Network NQT, but here the Service Fee is lowering the APR as you see compared to the previous example, is 0.84% lower.
 This is how the Service Fee can impact as Staking Provider's APR.
 
@@ -87,7 +87,7 @@ This is how the Service Fee can impact as Staking Provider's APR.
 
 #### Delegation Cap
 
-The Delegation Cap is an option a Staking Provider can choose to use. This gives the Staking Provider mode granular control over the amount that can be delegated to their contract. This could potentially help prevent overdelegating which in turn could mean a lower APR if the overall EGLD staked per Node is much higher than the Network NQT.
+The Delegation Cap is an option a Staking Provider can choose to use. This gives the Staking Provider mode granular control over the amount that can be delegated to their contract. This could potentially help prevent over-delegating which in turn could mean a lower APR if the overall EGLD staked per Node is much higher than the Network NQT.
 
 
 # **2. Staking Protocol Overview**
@@ -157,7 +157,7 @@ Also known as NQT, it is a dynamically calculated number by the network approxim
 
 From a Staking Provider perspective you can calculate this as an average between the total EGLD staked, adding the top-up and dividing it by the number of nodes for your Staking Provider. This will show your status or customized NQT that you can compare against the network NQT.
 
-For example, let's assume this ficitonal Staking Provider with the following parameters:
+For example, let's assume this fictional Staking Provider with the following parameters:
 
 Number of Nodes: 10
 EGLD Stake: 40,000
@@ -225,10 +225,10 @@ is lower as compared to the Network NQT, the active period for the Validator Nod
 ### Waiting List
 
 The Waiting List represents the list of nodes that have been Qualified from the Auction List.
-All the nodes that have passed the Qualified Status will then go to the Waiting List, they will remain in the Waitning List for 4 epochs which represents roughly four days.
+All the nodes that have passed the Qualified Status will then go to the Waiting List, they will remain in the Waiting List for 4 epochs which represents roughly four days.
 
 After the 4 epochs, these nodes are moved to participate in the consensus for validating.
-As a side note, even if the Network NQT changes in the 4 waiting Epochs the already selected nodes will still participate in the consensus even if they would presumambly have lower Node NQT after the aforementioned 4 epochs in the Waiting List.
+As a side note, even if the Network NQT changes in the 4 waiting Epochs the already selected nodes will still participate in the consensus even if they would presumably have lower Node NQT after the aforementioned 4 epochs in the Waiting List.
 
 
 ### Waiting Status
@@ -263,5 +263,5 @@ This allows for monitoring the status of the nodes and preparing for the Epoch S
 
 ## Validator Node Setup
 
-## Multikey Setup
+## Multi-key Setup
 
