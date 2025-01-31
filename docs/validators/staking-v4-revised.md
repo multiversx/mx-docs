@@ -10,37 +10,40 @@ title: Staking v4
 
 ## What is MultiversX staking?
 
-Staking on MultiversX has reached its fourth iteration; also known as Staking v4 it now offers improved validator security and introduces a few new features designed to improve the staking experience and provide a non-biased 
-validator rotation.
+Staking on MultiversX has reached its fourth iteration; also known as Staking v4 it now offers improved validator security and introduces a few new features 
+designed to improve the staking experience and provide a non-biased validator rotation.
 
-The core benefits Staking v4 offers for staking providers are mainly the intuitive validator dashboard, 
+The core benefits Staking v4 offers for staking providers are include the intuitive validator dashboard, 
 easy node management, and quick staking provider identity creation. Staking providers also have the ability to add 
 or remove validator nodes easily and change network fees on the fly.
 
-Compared to traditional staking mechanisms, MultiversX staking offers staking providers easy access, developer and technical support plus the ability to participate in protocol governance.
+Compared to traditional staking mechanisms, MultiversX staking offers staking providers easy access, developer and technical support with the ability
+ to participate in protocol governance.
 
 
 ## Audience and Purpose
 
 This document is intended for new staking providers that would like to start their journey with MultiversX and be part
- of our growing community of validators and providers.
+ of our growing community of validators and staking providers.
 
-While reading this document, you will be able to quickly understand and grasp the advantages of starting a Staking Provider on our protocol and fully reap the benefits while participating in one of the most stable protocols out there.
-
-
+While reading this document, you will be able to quickly understand and grasp the advantages of starting your journey as a Staking Provider 
+on the MultiversX protocol and fully reap the benefits, while participating in one of the most stable protocols in web3.
 
 
 ## Key Features and Advantages
 
 ### Security 
 
-Ensured by our Auction List mechanism that randomly selects 320 nodes, 80 nodes from each shard at every epoch start.The nodes are shuffled randomly to avoid collusion and to distribute the nodes across the shards. This contributes to the protocol security by maintaining a balanced network and avoiding concentration of power. 
+Ensured by our Auction List mechanism - that randomly selects 320 nodes, 80 nodes from each shard at every epoch start - the nodes are shuffled randomly 
+to avoid collusion and to distribute the nodes randomly across the four shards. This contributes to the protocol security by maintaining a balanced network 
+and avoiding concentration of power. 
 
 
 ### Scalability 
 
-Describe Scalability
-
+MultiversX's sharded architecture allows the network to scale by distributing the workload across multiple shards that allows the parallel processing of 
+transactions. This design improves throughput and reduces latency, benefiting staking providers with a robust and responsive network. Sharding allows the 
+network to grow seamlessly scaling performance and security.  
 
 ### Rewards
 
@@ -87,7 +90,10 @@ This is how the Service Fee can impact as Staking Provider's APR.
 
 #### Delegation Cap
 
-The Delegation Cap is an option a Staking Provider can choose to use. This gives the Staking Provider mode granular control over the amount that can be delegated to their contract. This could potentially help prevent over-delegating which in turn could mean a lower APR if the overall EGLD staked per Node is much higher than the Network NQT.
+The Delegation Cap is an option a Staking Provider can choose to use. This gives the Staking Provider mode granular control over the amount that can be delegated
+ to their contract. 
+ 
+ This could potentially help prevent over-delegating which in turn could mean a lower APR if the overall EGLD staked per Node is much higher than the Network NQT.
 
 
 # **2. Staking Protocol Overview**
@@ -97,22 +103,42 @@ The Delegation Cap is an option a Staking Provider can choose to use. This gives
 
 ### Staking Providers
 
-What is a Staking Provider
+A Staking Provider can be a company or an individual, someone that wants to start their journey with MultiversX from the perspective of running validator nodes,
+investing or contributing to the Decentralization of the protocol.
+
+The main aspect of becoming a Staking Provider is offering users on the MultiversX protocol the possibility of Staking their EGLD for rewards and participating
+to the protocol's safety.
+
+Either a company or individual running a Staking Provider, MultiversX is offering Technical and Business support for new and existing Staking Providers. 
+
+In Staking v4, there is a 50 Validator Node limit for each new Staking Provider joining the network. 
 
 
 ### Validators 
 
-What is a Validator
+A Validator is crucial Node running on the MultiversX protocol, it serves as a processor of transactions, securing the network and participating in consensus
+while earning rewards. In simple terms it is a server running the MultiversX protocol through a WASM virtual machine.
+
+From a Staking Provider's perspective, validators play a key role in maintaining network decentralization and performance. The Adaptive State Sharding model makes 
+validators operate efficiently by distributing load dynamically, optimizing resources while maintaining high throughput and low latency.
+
+This enables Staking Providers to scale their operations ensuring reliable a reliable staking experience for delegators.
 
 
 ### Delegators
 
-Who are the Delegators
+A Delegator is someone that choses to Stake their EGLD to secure the network and earn rewards, by using the service of existing Staking Providers but without 
+having to run their own Validator node.
+
+From a Staking Provider's perspective, a Delegator is essential for decentralization and network security but also in a way a customer that trusts the 
+stability and reliability of a Staking Provider to have their Nodes running the latest protocol version and optimizing their rewards based on their Staking.
 
 
 ### Reward Distribution
 
-Rewards distributed from Validators participating in Consensus are received at each Epoch end, roughly once per day at 18:45 GMT+1. The rewards are automatically distributed to Delegators according to their Stake and to the Staking Provider according to their set Service Fee.
+Rewards distributed from Validators participating in Consensus are received at each Epoch end, roughly once per day at 18:45 GMT+1. 
+
+The rewards are automatically distributed to Delegators according to their Stake and to the Staking Provider according to their set Service Fee.
 
 
 ## Protocol Design Principles
@@ -138,7 +164,21 @@ Rewards distributed from Validators participating in Consensus are received at e
 
 ## Creating Your Staking Provider Identity
 
+You start by creating your Staking Provider identity from the web wallet interface, the wallet you will use to create this identity will be the master wallet controlling
+the provider and has the permissions to change the identity's parameters accordingly and dynamically.
+
+*snip of the wallet staking provider interface*
+
+
 ## The Staking Smart Contract
+
+The Staking Smart Contract manages the delegation and staking processes in the network. It allows Staking Providers to automatically handle delegations from 
+multiple users. The contract automates tasks as tracking delegator contributions, distributing rewards and managing validator nodes. 
+
+This allows Staking Providers to manage their operations seamlessly.
+
+*staking smart contract address*
+
 
 ## Adding Nodes to Your Staking Provider
 
