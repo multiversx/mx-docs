@@ -44,9 +44,9 @@ This has the same advantages as 1. but the initial minting is done on the EVM-co
 
 This bridge token configuration type will need to be initiated on the EVM-compatible chain side and the tokens transferred to
 MultiversX will be locked in the bridge contract (no minter role is needed on the EVM-compatible chain as opposed to 1 & 2) and
-will be unlocked when swaps from MultiversX to the EVM-compatible chain are done. On the MultiversX side, there will be mint/burn
-actions. The total quantity of tokens on both chains will be equal to the supply on the EVM-compatible chain. Everything that is
-locked in the bridge contract will equal to what was minted - burned on MultiversX side.
+will be unlocked when swaps from MultiversX to the EVM-compatible chain are done. On the MultiversX side, mint/burn
+actions will be performed. The total quantity of tokens on both chains will be equal to the supply on the EVM-compatible chain. Everything that is
+locked in the bridge contract will equal to what was (minted - burned) on MultiversX side.
 
 :::warning
 This configuration will also require an intermediate token as to allow the bridging on more than one EVM-compatible chain. 
@@ -68,5 +68,5 @@ as described (an operation that consumes time & fees).
 />
 
 **Note:** The diagram above is a little bit misleading because the ERC20 contracts hold the address/balance ledgers inside 
-them. For the sake of simplicity, the tokens are depicted stored inside the bridge **Safe** contracts 
+them. For the sake of simplicity, the tokens are depicted as stored inside the bridge **Safe** contracts 
 (just as MultiversX ESDTs).
