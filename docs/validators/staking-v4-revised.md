@@ -141,57 +141,10 @@ Rewards distributed from Validators participating in Consensus are received at e
 The rewards are automatically distributed to Delegators according to their Stake and to the Staking Provider according to their set Service Fee.
 
 
-## Protocol Design Principles
 
-### Security and Decentralization
+# **3. Staking Mechanisms**
 
-### Economic Incentives
-
-### Fault Tolerance and Slashing
-
-
-## Ecosystem Roles
-
-### Staking Providers
-
-### Node Operators
-
-### Developers
-
-
-
-# **3. How Staking Works**
-
-## Creating Your Staking Provider Identity
-
-You start by creating your Staking Provider identity from the web wallet interface, the wallet you will use to create this identity will be the master wallet controlling
-the provider and has the permissions to change the identity's parameters accordingly and dynamically.
-
-*snip of the wallet staking provider interface*
-
-
-## The Staking Smart Contract
-
-The Staking Smart Contract manages the delegation and staking processes in the network. It allows Staking Providers to automatically handle delegations from 
-multiple users. The contract automates tasks as tracking delegator contributions, distributing rewards and managing validator nodes. 
-
-This allows Staking Providers to manage their operations seamlessly.
-
-*staking smart contract address*
-
-
-## Adding Nodes to Your Staking Provider
-
-## Staking Provider Dashboard
-
-## Web Wallet Dashboard
-
-## Explorer Interface
-
-
-## Staking Mechanisms
-
-### Node Qualification Threshold
+## Node Qualification Threshold
 
 Also known as NQT, it is a dynamically calculated number by the network approximately every 10 minutes. It is directly influenced by the numbers of validator nodes leaving or joining the network and the overall EGLD staked in the protocol. 
 
@@ -210,12 +163,12 @@ EGLD: 15,000 Top-up
 The NQT calculation is fairly simple as we divide the overall 40,000 EGLD stake by the number of nodes 10 and results in an NQT of 4,000. This examples is simplified for the sake of the example. Now this NQT can be compared to the actual network NQT so that the Staking Provider owner can decide on whether to adjust top-up or nodes.
 
 
-### Auction List
+## Auction List
 
-The Auction List has been introduced with Staking v4, here is an example from our explorer.
+The Auction List has been introduced with Staking v4, below an example from our explorer.
 
 
-#### Auction List Explorer Example**
+### Auction List Explorer Example**
 
 The mechanism of the Auction List selects a list of 320 random nodes, 80 from each shard, at epoch start.
 These selected nodes remain in the Auction List for one epoch. 
@@ -228,13 +181,14 @@ There are three different status titles for nodes in the Auction List, Qualified
 ![](/validators/stakingV4/AuctionList.png)
 
 
-### Epoch Start
+## Epoch Start
 
-320 Nodes are randomly shuffled out from the consensus and moved to the Auction List.
+Every Epoch Start 320 Nodes are randomly shuffled out from the consensus and moved to the Auction List.
+
 This includes jailed nodes, but the mechanism compensates for each jailed node by selecting the same number of nodes that are not jailed.  
 
 
-### Qualified Status
+## Qualified Status
 
 A Node gets the Qualified status if the Node NQT calculated for it, from the stake of Staking Provider and top-up, is the same or higher as compared to the Network NQT.
 
@@ -243,7 +197,7 @@ A Node gets the Qualified status if the Node NQT calculated for it, from the sta
 ![](/validators/stakingV4/QualifiedDetail.png)
 
 
-### Danger Status 
+## Danger Status 
 
 A Node gets the Danger status if the Node NQT calculated for it, from the stake of Staking Provider and top-up, is dangerously close or exactly the same as the Network NQT.
 
@@ -252,7 +206,7 @@ A Node gets the Danger status if the Node NQT calculated for it, from the stake 
 ![](/validators/stakingV4/DangerDetail.png)
 
 
-### Not Qualified Status
+## Not Qualified Status
 
 A Node gets the Not Qualified status when the Node NQT calculated for it, from the stake of Staking Provider and top-up,
 is lower as compared to the Network NQT, the active period for the Validator Node.
@@ -262,7 +216,7 @@ is lower as compared to the Network NQT, the active period for the Validator Nod
 ![](/validators/stakingV4/NotQualifiedDetail.png)
 
 
-### Waiting List
+## Waiting List
 
 The Waiting List represents the list of nodes that have been Qualified from the Auction List.
 All the nodes that have passed the Qualified Status will then go to the Waiting List, they will remain in the Waiting List for 4 epochs which represents roughly four days.
@@ -271,37 +225,29 @@ After the 4 epochs, these nodes are moved to participate in the consensus for va
 As a side note, even if the Network NQT changes in the 4 waiting Epochs the already selected nodes will still participate in the consensus even if they would presumably have lower Node NQT after the aforementioned 4 epochs in the Waiting List.
 
 
-### Waiting Status
+## Waiting Status
 
 This Status means that the Validator Node has been Qualified from the Auction List and is in the 4 Epoch waiting time before joining the consensus to start validating.
 
 ![](/validators/stakingV4/WaitingDetail.png)
 
 
-### Eligible Status
+## Eligible Status
 
 This Status means that the Validator Node can validate or propose blocks in the current Epoch. It can be part of the Consensus in certain rounds.
 
 ![](/validators/stakingV4/EligibleDetail.png)
 
 
-### Automatic Node Qualification
+## Automatic Node Qualification
 
 This mechanism automatically distributes a Staking Provider's total top-up amount to the Validator Nodes they own.
 It focuses on redistributing the top-up based on the Network NQT in order to Qualify as many Nodes as possible from each staking provider.
 
 
-### Top-up Balancing
+## Top-up Balancing
 
 The point of this mechanism is to show Staking Providers their Nodes' status based on the Network NQT allowing them to adjust their number of nodes or the amount of top-up, either manually or automatically.
 
 This allows for monitoring the status of the nodes and preparing for the Epoch Start.
-
-
-
-# **4. Technical Setup**
-
-## Validator Node Setup
-
-## Multi-key Setup
 
