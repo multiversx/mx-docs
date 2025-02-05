@@ -11,12 +11,6 @@ When making the deposit, the user specifies:
 1. A destination address on the Sovereign Chain
 2. `TransferData` if the execution contains a smart contract call, which contains gas, function and arguments
 
-For each deposit in the ESDT-Safe smart contract inside a Sovereign Chain, an outgoing operation will be sent to the bridge service that calls the Header-Verifier and ESDT-Safe contracts in the MultiversX MainChain.
-
-:::note
-Here is the [link](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/to_sovereign/create_tx.rs) to the `deposit` endpoint
-:::
-
 Each action that can be executed remotely through this contract is called an *Operation*. The endpoint responsible for executing those operations is called `execute_operations`.
 
 ## Sovereign Chain to Main Chain transfer flow
@@ -26,8 +20,7 @@ Each action that can be executed remotely through this contract is called an *Op
 4. Leader sends *Operations* to the bridge service.
 5. Bridge service sends the *Operations* to the Header-Verifier for registration and verification, and then to ESDT-Safe for execution.
 6. At the end of the execution success/fail, a confirmation event will be added which will be received in sovereign through the observer and then the cross chain transfer will be completed.
-## ESDT-Safe SC
-### Executing an Operation
+## Executing an Operation
 
 ```rust
 #[endpoint(executeBridgeOps)]
@@ -40,15 +33,21 @@ Each action that can be executed remotely through this contract is called an *Op
 - `hash_of_hashes`: hash of all hashes of the operations that were sent in a round
 - `operation`: the details of the cross-chain execution
 
+Since this endpoint can be found inside the _From Sovereign_ module, we are safe to say that the cross-chain execution will start from within a Sovereign Chain. The execution flow of this endpoint is at follows:
+
 1. Calculate the hash of the *Operation* received as a parameter.
-2. Verify that the given *Operation’s* hash is registered by the Header-Verifier Smart Contract.
+2. Verify that the given *Operation’s* hash is registered by the Header-Verifier smart contract.
 3. Mint tokens or get them from the account.
 4. Distribute the tokens.
 5. Emit confirmation event or fail event if needed.
+
+As the 2nd point specifies, the [Header-Verifier](#header-verifier-sc) smart contract plays an important role in the cross-chain execution mechanism. In this section there will also be a description for the important endpoints within this contract.
+
 :::note
-The source code for the following structures can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/common/transaction/src/lib.rs)
+The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/from_sovereign/transfer_tokens.rs).
 :::
 
+### Important structs
 ```rust
 #[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, ManagedVecItem, Clone)]
 pub struct Operation<M: ManagedTypeApi> {
@@ -104,7 +103,10 @@ pub struct TransferData<M: ManagedTypeApi> {
 - `function`: the name of the endpoint that will be executed.
 - `args`: the arguments for the calls.
 
-> The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/from_sovereign/transfer_tokens.rs)
+:::note
+The source code for structures can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/common/transaction/src/lib.rs)
+:::
+
 
 ## Header-Verifier SC
 
