@@ -15,9 +15,9 @@ Cross-Chain execution is the ability of smart contracts or decentralized applica
 This feature is enabled by using multiple smart contracts, each one with its unique role and set of functionalities. The current Sovereign Chain suite consists of three main contracts, here is the high-level description for some of the cross chain smart contracts:
 
 #### ESDT-Safe
-The *ESDT-Safe* Smart Contract performs all the heavy lifting. This is the cross-chain execution contract, it will facilitate the transfer and mapping of assets and funds between Sovereign Chains and the MultiversX mainchain.
+The *ESDT-Safe* Smart Contract performs all the heavy lifting. This is the cross-chain execution contract, this execution will be done between either any Sovereign Chain and the MultiversX mainchain or between any Sovereign Chains.
 
-There are two modules implemented for this contract: [*From Sovereign*](from-sovereign.md), [*To Sovereign*](to-sovereign.md) and two important endpoints: `execute_operation`, `deposit`. Both of them allow the caller to transfer tokens and also execute smart contracts within a single transaction. The only difference is where the sender and receiver of the cross-chain execution are situated. 
+There are two modules implemented for this contract: [*From Sovereign*](from-sovereign.md), [*To Sovereign*](to-sovereign.md) and two important endpoints: [`execute_operation`](from-sovereign.md#executing-an-operation), [`deposit`](to-sovereign.md#deposit-tokens). Both of them allow the caller to transfer tokens and also execute smart contracts within a single transaction. The only difference is where the sender and receiver of the cross-chain execution are situated. 
 
 The scenarios for what endpoint to choose look like this:
 1. If the receiver is in a Sovereign Chain, the call should be to the `deposit` endpoint. (_To Sovereign_) 
