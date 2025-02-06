@@ -168,7 +168,7 @@ Follow on details about web-wallet [here](/wallet/web-wallet.md#guardian).
 
 ### xPortal
 
-**xPortal** fully supports the guardians feature. For more details, see [**invisible guardians**](/wallet/xportal/#what-are-invisible-guardians). 
+**xPortal** fully supports the guardians feature. For more details, see [**invisible guardians**](/wallet/xportal/#what-are-invisible-guardians).
 
 [comment]: # (mx-context-auto)
 
