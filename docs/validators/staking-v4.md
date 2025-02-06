@@ -5,14 +5,23 @@ title: Staking v4
 
 [comment]: # (mx-context-auto)
 
-# **Current Implementation**
-
-# **Staking v4. Introduction**
+# **Introduction**
 
 Staking and delegation are processes that evolve over time. No system has to remain static. Our assumptions about how
-the market works and reacts can change, just as user behavior and market dynamics may evolve.
+the market works and reacts can change, just as user behavior and market dynamics may evolve. Currently, we have
+approximately 400 validators, with some acting as staking providers and others as individual validator operators. While
+most nodes have a comfortable top-up on the base stake of 2.500 eGLD, some do not contribute to the network's security by
+adding more top-up.
 
-One of our primary objectives with staking v4 is to eliminate the additional queue and leverage the top-up value per node to determine
+[comment]: # (mx-context-auto)
+
+# **Limitations of the Current Implementation**
+
+- Limiting the number of nodes to 3200, creating an additional queue. New validators can join the network only if
+  someone leaves the system.
+- Concentration of power among large providers, hindering decentralization. Top 11 staking agencies control 33%.
+
+One of our primary objectives is to eliminate the additional queue and leverage the top-up value per node to determine
 the best nodes. This ensures that we do not restrict the entry of new validators, as the current system requires an old
 validator to leave for a new one to enter. The market will determine the actual node price, operating as a soft auction
 where anyone paying the node price (2.500 eGLD) can register, but the node becomes a validator only if it has sufficient
@@ -42,13 +51,42 @@ Since this selection occurs at the end of every epoch, staking providers near th
 and adjust their nodes, unstaking or staking nodes based on the topUp per node of other providers. Sorting nodes based
 on topUp does not provide adequate protection for staking providers, requiring constant supervision and action.
 
+**The second version**, currently implemented and explained in the following chapters, addresses the shortcomings of the
+first version.
+
 [comment]: # (mx-context-auto)
 
+# **Current Implementation**
 
 :::note
 Please note that the numbers below are indicative and only used to better exemplify the model.
 :::
 
+In the current implementation (staking 3.5), we have:
+
+1. A capped number of 3200 **nodes in the network**, including:
+    - 1600 active/eligible validators globally, split into 400 nodes per shard
+    - 1600 waiting validators globally, split into 400 nodes per shard
+2. An uncapped `FIFO` queue where newly staked nodes are placed and await participation in the network.
+
+:::important
+
+Currently, a queued node can participate in the network only if an existing node is either unstaked or jailed.
+
+:::
+
+![Current Staking](/validators/stakingV4/current-staking.png)
+
+Nodes are distributed in the following steps:
+
+1. Randomly shuffle out 80 eligible validators for each shard, resulting in 320 (80 validators per 4 shards)
+   shuffled-out validators.
+2. Select these 320 shuffled-out validators to be randomly but evenly distributed at the end of each shard's waiting
+   list.
+3. For each shard, replace the previously shuffled-out validators with 80 waiting validators from the top of each
+   shard's waiting list.
+
+In the current implementation, each node, regardless of its top-up, has equal chances of participating in the consensus.
 Starting with staking phase 4, the probability of validators entering the validation process will be significantly
 influenced by the amount of their staked top-up. Validators with a higher staked top-up will have considerably greater
 chances of participation, while those with little or no top-up will find their chances of entering into validation
@@ -58,12 +96,21 @@ markedly reduced.
 
 # **Staking V4**
 
+Staking phase 4 will unfold in three consecutive steps, each corresponding to a specific epoch.
+
 [comment]: # (mx-context-auto)
 
+## Staking v4. Step 1.
+
+In the first step, we will completely **remove the staking queue** and place all nodes in an **auction list**. This
+process will occur automatically at the end of the epoch and requires no interaction from validators. Nodes'
+distribution remains unchanged.
+
+![Staking V4 Step 1](/validators/stakingV4/stakingV4-step1.png)
 
 :::important Important notes
 
-Each epoch:
+Starting with this epoch:
 
 - Every **newly staked** node will be placed in the **auction list**.
 - Every **unjailed** node will be placed in the **auction list**.
@@ -77,15 +124,34 @@ For example, if an owner has insufficient base stake for their nodes, the nodes 
 end of the epoch based on the order: `auction` -> `waiting` -> `eligible`. This ensures that nodes contributing to the
 ecosystem with a healthy top-up will not be adversely affected.
 
+Below is an example of how nodes are unstaked based on insufficient base stake. Suppose an owner has four nodes:
+
+- 1 eligible: `node1`
+- 2 waiting: `node2`, `node3`
+- 1 auction: `node4`
+
+Assuming a minimum price of 2500 EGLD per staked node, the owner should have a minimum base stake of 10,000 EGLD (4 *
+2500 EGLD). If, during the epoch, the owner unstakes 4000 EGLD, resulting in a base stake of 6000 EGLD, only two staked
+nodes can be covered. At the end of the epoch, the nodes `node4` and `node3` will be unstaked in the specified order.
 
 [comment]: # (mx-context-auto)
 
+## Staking v4. Step 2.
 
-## Staking v4.
+In the second step, all **shuffled-out** nodes from the **eligible list** will be sent to the **auction list**. Waiting
+lists will not be filled by any shuffled-out nodes.
 
-Each epoch:
+Using the example above, this will resize each waiting list per shard from 400 nodes to 320 nodes.
 
-- The maximum number of nodes in the network will be:
+![Staking V4 Step 2](/validators/stakingV4/stakingV4-step2.png)
+
+[comment]: # (mx-context-auto)
+
+## Staking v4. Step 3.
+
+Starting with this epoch:
+
+- Maximum number of nodes in the network will be changed from 3200 to 2880 (3200 - 320), consisting of:
     - a global number of 1600 active/eligible validators, split into 400 nodes/shard
     - a global number of 1280 waiting validators to join the active list, split into 320 nodes/shard
 - All **shuffled out** nodes from the eligible list will be sent to the auction list to take part in the auction
