@@ -5,6 +5,8 @@ title: Staking v4
 
 [comment]: # (mx-context-auto)
 
+# **Current Implementation**
+
 # **Staking v4. Introduction**
 
 Staking and delegation are processes that evolve over time. No system has to remain static. Our assumptions about how

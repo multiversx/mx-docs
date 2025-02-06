@@ -47,13 +47,15 @@ network to grow seamlessly scaling performance and security.
 
 ### Rewards
 
+
 #### APR (Annual Percentage Rate)
 
-The APR of a Staking Provider is influenced by a few factors. The most important is how their Node NQT is aligned with the Network NQT. That means, the closer your Node NQT is to the Network NQT the better your APR.
+The APR of a Staking Provider is influenced by a few factors. The most important is how their Validator NQT is aligned with the Network NQT. That means, the closer your Validator
+NQT is to the Network NQT the better your APR.
 
 An easy way to calculate this is to divide the total amount of EGLD locked in your Staking Provider contract by the number of nodes and compare it to the Network NQT. If your Staking Provider has a very high NQT compare to the Network, then your APR will be lower because the proportion of EGLD per node is not optimized.
 
-![](/validators/stakingV4/LowAPRDetail.png)
+![](/validators/stakingV4/low-apr.png)
 
 The APR is also directly influenced by the service fee decided by the Staking Provider, more about this in the dedicated section below.
 
@@ -73,19 +75,19 @@ Here are a few examples from our current setup of Staking Providers and their AP
 
 #### Delegator Optimized Staking Provider 0% Service Fee for 4,018 EGLD Network NQT
 
-In this case for 36 Nodes with 145,910 EGLD Stake the Node NQT is 4,053 EGLD very close to 4,018.
+In this case for 36 Nodes with 145,910 EGLD Stake the Validator NQT is 4,053 EGLD very close to 4,018.
 Also, the Service Fee is set at 0% so the optimization is maximized to favor delegator rewards the Staking Provider taking zero rewards but offering the highest APR to their delegators of 7.74%.
 
-![](/validators/stakingV4/DelegatorOptimized0Fees.png)
+![](/validators/stakingV4/delegator-no-fees.png)
 
 
 #### Balanced Optimized Staking Provider 10% Service Fee for 4,018 EGLD Network NQT
 
 Here is another example where this Staking Provider has chosen a 10% Service Fee. Although the screenshot shows 50 nodes, because of the Network NQT they can only run 47 but the optimization is good with 47 Nodes as well offering their delegators 
-6.9% APR. The calculation is the same, 196,805 staked EGLD for 47 Eligible Nodes gives a Node NQT of 4,187 EGLD very close to the Network NQT, but here the Service Fee is lowering the APR as you see compared to the previous example, is 0.84% lower.
+6.9% APR. The calculation is the same, 196,805 staked EGLD for 47 Eligible Nodes gives a Validator NQT of 4,187 EGLD very close to the Network NQT, but here the Service Fee is lowering the APR as you see compared to the previous example, is 0.84% lower.
 This is how the Service Fee can impact as Staking Provider's APR.
 
-![](/validators/stakingV4/Balanced10Fees.png)
+![](/validators/stakingV4/delegator-tenpercent-fees.png)
 
 
 #### Delegation Cap
@@ -178,7 +180,7 @@ giving Staking Providers a fair change for validating and also keeps the Shards 
 
 There are three different status titles for nodes in the Auction List, Qualified, Danger and Not Qualified.
 
-![](/validators/stakingV4/AuctionList.png)
+![](/validators/stakingV4/auction-list.png)
 
 
 ## Epoch Start
@@ -190,30 +192,30 @@ This includes jailed nodes, but the mechanism compensates for each jailed node b
 
 ## Qualified Status
 
-A Node gets the Qualified status if the Node NQT calculated for it, from the stake of Staking Provider and top-up, is the same or higher as compared to the Network NQT.
+A Node gets the Qualified status if the Validator NQT calculated for it, from the stake of Staking Provider and top-up, is the same or higher as compared to the Network NQT.
 
-![](/validators/stakingV4/QualifiedSimple.png)
+![](/validators/stakingV4/qualified-status-example-one.png)
 
-![](/validators/stakingV4/QualifiedDetail.png)
+![](/validators/stakingV4/qualified-status-example-two.png)
 
 
 ## Danger Status 
 
-A Node gets the Danger status if the Node NQT calculated for it, from the stake of Staking Provider and top-up, is dangerously close or exactly the same as the Network NQT.
+A Node gets the Danger status if the Validator NQT calculated for it, from the stake of Staking Provider and top-up, is dangerously close or exactly the same as the Network NQT.
 
-![](/validators/stakingV4/DangerSimple.png)
+![](/validators/stakingV4/danger-status-example-one.png)
 
-![](/validators/stakingV4/DangerDetail.png)
+![](/validators/stakingV4/danger-status-example-two.png)
 
 
 ## Not Qualified Status
 
-A Node gets the Not Qualified status when the Node NQT calculated for it, from the stake of Staking Provider and top-up,
+A Node gets the Not Qualified status when the Validator NQT calculated for it, from the stake of Staking Provider and top-up,
 is lower as compared to the Network NQT, the active period for the Validator Node.
 
-![](/validators/stakingV4/NotQualifiedSimple.png)
+![](/validators/stakingV4/not-qualified-status-example-one.png)
 
-![](/validators/stakingV4/NotQualifiedDetail.png)
+![](/validators/stakingV4/not-qualified-status-example-two.png)
 
 
 ## Waiting List
@@ -222,32 +224,39 @@ The Waiting List represents the list of nodes that have been Qualified from the 
 All the nodes that have passed the Qualified Status will then go to the Waiting List, they will remain in the Waiting List for 4 epochs which represents roughly four days.
 
 After the 4 epochs, these nodes are moved to participate in the consensus for validating.
-As a side note, even if the Network NQT changes in the 4 waiting Epochs the already selected nodes will still participate in the consensus even if they would presumably have lower Node NQT after the aforementioned 4 epochs in the Waiting List.
+
+As a side note, even if the Network NQT changes in the 4 waiting Epochs, the selected nodes from the Waiting List will still participate in the consensus even if
+they would presumably have lower Validator NQT after the aforementioned 4 epochs.
 
 
 ## Waiting Status
 
 This Status means that the Validator Node has been Qualified from the Auction List and is in the 4 Epoch waiting time before joining the consensus to start validating.
 
-![](/validators/stakingV4/WaitingDetail.png)
+![](/validators/stakingV4/waiting-status.png)
 
 
 ## Eligible Status
 
 This Status means that the Validator Node can validate or propose blocks in the current Epoch. It can be part of the Consensus in certain rounds.
 
-![](/validators/stakingV4/EligibleDetail.png)
+![](/validators/stakingV4/eligible-status.png)
 
 
 ## Automatic Node Qualification
 
-This mechanism automatically distributes a Staking Provider's total top-up amount to the Validator Nodes they own.
-It focuses on redistributing the top-up based on the Network NQT in order to Qualify as many Nodes as possible from each staking provider.
+This mechanism automatically distributes a Staking Provider's total top-up amount between the Validator Nodes they own.
+It focuses on redistributing the top-up based on the Network NQT in order to Qualify as many Nodes as possible for each staking provider.
 
 
 ## Top-up Balancing
 
-The point of this mechanism is to show Staking Providers their Nodes' status based on the Network NQT allowing them to adjust their number of nodes or the amount of top-up, either manually or automatically.
+This happens in the background, automatically and can be seen by checking how many Nodes your Staking Provider has and their Validation Status.
+
+The point of Top-up Balancing is to give Staking Providers their Node Status based on the Network NQT allowing them to adjust their number of Nodes or 
+the amount of Top-up, either manually or automatically.
 
 This allows for monitoring the status of the nodes and preparing for the Epoch Start.
+
+![](/validators/stakingV4/nodes-validation-status.png)
 
