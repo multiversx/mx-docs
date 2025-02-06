@@ -168,33 +168,13 @@ Follow on details about web-wallet [here](/wallet/web-wallet.md#guardian).
 
 ### xPortal
 
-The development of the **xPortal Wallet** solution for Guardians is currently in progress. Once the development and testing phase is completed, documentation and references will be provided at this location.
+**xPortal** fully supports the guardians feature. For more details, see [**invisible guardians**](/wallet/xportal/#what-are-invisible-guardians). 
 
 [comment]: # (mx-context-auto)
 
 ### Ledger
 
-There is no official solution released for the **Ledger**. As soon as there is one, it will be documented and referenced here.
-
-:::note
-In the meantime you can use the **MultiversX Guardians Test - BETA** version:
-
-**How to activate it?**
-
-1. In Ledger Live
-2. Go to My Ledger
-3. Go to Settings (⚙️)
-4. Go to Experimental features
-5. Enable Developer Mode - ✅
-6. Search and install MultiversX Guardians Test
-
-:::
-
-:::important
-This application is not yet approved and/or reviewed by Ledger and should only be used for testing, such as **The Great Heist** campaign. It is not recommended for production use.
-:::
-
-![img](/wallet/ledger/guardians_ledger.png)
+The **MultiversX App** for **Ledger** supports the guardians feature (since version **v2.2.2**, released in August 2023). To set up a guardian for a Ledger account, follow [these steps](/wallet/web-wallet.md#guardian).
 
 [comment]: # (mx-context-auto)
 
