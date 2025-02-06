@@ -524,7 +524,7 @@ const sidebars = {
         items: [
           "bridge/architecture",
           "bridge/transfer-flows",
-          "bridge/multiple-chains",
+          "bridge/token-types",
           "bridge/whitelist-requirements",],
       },
       {
