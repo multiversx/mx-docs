@@ -78,7 +78,7 @@ These are the common multi-values provided by the framework:
 - Multi-value tuples.
     - Defined as `MultiValueN<T1, T2, ..., TN>`, where N is a number between 2 and 16, and `T1`, `T2`, ..., `TN` can be any serializable types, either single or multi-value; e.g. `MultiValue3<BigUint, ManagedBuffer, u32>`.
     - It doesn't make much sense to use them as arguments on their own (it is easier and equivalent to just have separate named arguments), but they do have the following uses:
-        - They can be embedded in a regular var-arg to obtain groups of arguments. For example `MultiValueVec<MultiValue3<BigUint, BigUint>>` defines pairs of numbers. There is no more need to check in code that an even number of arguments was passed, the deserializer resolves this on its own.
+        - They can be embedded in a regular var-arg to obtain groups of arguments. For example `MultiValueVec<MultiValue2<BigUint, BigUint>>` defines pairs of numbers. There is no more need to check in code that an even number of arguments was passed, the deserializer resolves this on its own.
         - Rust does not allow returning more than one result, but by returning a multi-value tuple we can have an endpoint return several values, of different types.
 - Optional arguments.
     - Defined as `OptionalValue<T>`, where `T` can be any serializable type, either single or multi-value.
@@ -134,7 +134,7 @@ These storage mappers are, in no particular order:
 
 ## Multi-values in action
 
-To clarify the way multi-values work in real life, let's provide some examples of how one would go avout calling an endpoint with variadic arguments.
+To clarify the way multi-values work in real life, let's provide some examples of how one would go about calling an endpoint with variadic arguments.
 
 [comment]: # (mx-context-auto)
 
