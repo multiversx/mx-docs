@@ -523,7 +523,7 @@ const sidebars = {
         items: [
           "bridge/architecture",
           "bridge/transfer-flows",
-          "bridge/multiple-chains",
+          "bridge/token-types",
           "bridge/whitelist-requirements",],
       },
       {
@@ -591,7 +591,11 @@ const sidebars = {
           {
             type: "category",
             label: "VMs",
-            items: ["sovereign/vm",],
+            items: [
+              "sovereign/vm-intro",
+              "sovereign/standalone-evm",
+              "sovereign/other-vm",
+            ],
           },
           {
             type: "category",
