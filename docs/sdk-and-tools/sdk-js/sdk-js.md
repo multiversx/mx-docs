@@ -37,7 +37,7 @@ Signing SDKs:
 
 | Package                                                                                          | Source code                                                               | Description                                                                                   |
 |--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| [sdk-dapp](https://www.npmjs.com/package/@multiversx/sdk-dapp)                                   | [Github](https://github.com/multiversx/mx-sdk-dapp)                       | A library that holds the core functional & signing logic of a dapp on the MultiversX Network. |
+| [sdk-dapp-core](https://www.npmjs.com/package/@multiversx/sdk-dapp-core)                                   | [Github](https://github.com/multiversx/mx-sdk-dapp-core)                       | A library that holds the core functional & signing logic of a dapp on the MultiversX Network. |
 | [sdk-guardians-provider](https://www.npmjs.com/package/@multiversx/sdk-guardians-provider)       | [Github](https://github.com/multiversx/mx-sdk-js-guardians-provider)      | Helper library for integrating a co-signing provider (Guardian) into dApps.                   |
 
 
