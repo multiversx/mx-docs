@@ -175,6 +175,8 @@ let alice_wallet_address = interactor
     .register_wallet(Wallet::from_pem_file("/ping-pong/wallet/wallet-owner.pem").unwrap())
     .await;
 ```
+Make sure to add the absolute path at `Wallet::from_pem_file("/ping-pong/wallet/wallet-owner.pem")`, completing the missing directories above "ping-pong".
+
 This next command deploys the Ping-Pong contract with the following settings:
 - Ping Amount: **1 EGLD**.
 - Lock Duration: **180 seconds** (3 minutes).
