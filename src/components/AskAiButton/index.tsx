@@ -2,7 +2,8 @@ import React from "react";
 import { useState } from "react";
 import Modal from "react-modal";
 import ChatWindow from "./ChatWindow";
-import assistantAvatar from "@site/static/img/favicons/android-chrome-192x192.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRobot } from "@fortawesome/free-solid-svg-icons";
 
 const AskAiButton = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -20,9 +21,20 @@ const AskAiButton = () => {
 
   return (
     <div>
-      <button className="" onClick={openModal}>
+      {/* <button className="" onClick={openModal}>
         <img width="15" src={assistantAvatar} />{" "}
         <span className="leading-[20px]">Ask AI</span>
+      </button> */}
+
+      <button
+        className="rounded-lg bg-black dark:bg-teal-400 px-2.5 py-1.5 text-sm font-semibold text-teal-300 dark:text-black shadow-sm hover:bg-neutral-800 dark:hover:bg-teal-500 outline-none border-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 inline-flex items-center justify-center"
+        onClick={openModal}
+      >
+        <FontAwesomeIcon
+          icon={faRobot}
+          className="text-center text-primary text-sm dark:text-black text-teal-300"
+        />
+        <span className="pl-2">Ask AI</span>
       </button>
       <Modal
         isOpen={modalIsOpen}
