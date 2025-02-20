@@ -20,10 +20,7 @@ export const useChat = () => {
   const sendMessage = async (message: string) => {
     setIsLoading(true);
     setError(null);
-    console.log({
-      message,
-      threadId,
-    });
+
     try {
       const response = await fetch(CHAT_ENDPOINT, {
         method: "POST",
@@ -45,7 +42,6 @@ export const useChat = () => {
 
       return data;
     } catch (err) {
-      console.log("eeeeerrr");
       const error = err as Error;
       setError({ message: error.message });
       return null;

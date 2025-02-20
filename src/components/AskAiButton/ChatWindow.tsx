@@ -17,7 +17,6 @@ const ChatWindow = ({ onClose }) => {
   // Called when the user hits "Send". Adds a user message then simulates an assistant reply.
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const handleSend = async (message?: string) => {
-    console.log("hererere", message, input);
     const msg = message || input;
     if (!msg || isLoading) return;
 
