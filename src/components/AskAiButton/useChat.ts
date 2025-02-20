@@ -11,6 +11,7 @@ interface ChatError {
   status?: number;
 }
 
+const CHAT_ENDPOINT = "https://tools.multiversx.com/ai-docs-api/chat";
 export const useChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ChatError | null>(null);
@@ -24,20 +25,16 @@ export const useChat = () => {
       threadId,
     });
     try {
-      const response = await fetch(
-        // "https://kv0txnlt-3005.euw.devtunnels.ms/ai-docs-api/chat",
-        "https://tools.multiversx.com/ai-docs-api/chat",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message,
-            threadId,
-          }),
-        }
-      );
+      const response = await fetch(CHAT_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+          threadId,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
