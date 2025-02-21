@@ -11,7 +11,17 @@ This page describes the structure of the `sc-results` index (Elasticsearch), and
 
 ## _id
 
-The `_id` field for this index is composed of hex encoded smart contract result hash.
+:::warning Important
+
+**The `scresults` index will be deprecated and removed in the near future.**
+We recommend using the [operations](/sdk-and-tools/indices/es-index-operations) index, which contains all the smart contract results data.
+The only change required in your queries is to include the `type` field with the value `normal` to fetch all smart contract results.
+
+Please make the necessary updates to ensure a smooth transition.
+If you need further assistance, feel free to reach out.
+:::
+
+The `_id` field for this index is composed of hex-encoded smart contract result hash.
 (example: `cbd4692a092226d68fde24840586bdf36b30e02dc4bf2a73516730867545d53c`)
 
 [comment]: # (mx-context-auto)
