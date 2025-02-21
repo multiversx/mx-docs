@@ -38,7 +38,7 @@ The `_id` field of this index is represented by the block hash, in a hexadecimal
 | shardId               | The shardId field represents the shard this block belongs to.                                                                                                      |
 | txCount               | The txCount field represents the number of transactions that were executed in the block.                                                                           |
 | notarizedTxsCount     | The notarizedTxsCount field represents the number of transactions that were notarized in the block.                                                                |
-| accumulatedFees       | The accumulatedFees field represents the accumulated fees that were paid in the block.                                                                            |
+| accumulatedFees       | The accumulatedFees field represents the accumulated fees that were paid in the block.                                                                             |
 | developerFees         | The developerFees field represents the developer fees that were accumulated in the block.                                                                          |
 | epochStartBlock       | The epochStartBlock field is true if the current block is an epoch-start block.                                                                                    |
 | epochStartInfo        | The epochStartInfo field is a structure that contains economic data, such as total supply.                                                                         |
