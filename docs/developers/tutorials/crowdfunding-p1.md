@@ -1,6 +1,6 @@
 ---
 id: crowdfunding-p1
-title: The Crowdfunding Smart Contract
+title: Building a Crowdfunding Smart Contract
 ---
 [comment]: # (mx-abstract)
 Write, build and deploy a simple smart contract written in Rust.
@@ -28,7 +28,8 @@ However, if the donations fall short of the target, the contract will return all
 ## Design
 
 Here is how the smart contract methods are designed:
-- `init`: automatically triggered when the contract is deployed. It takes two inputs from you: 
+
+- `init`: automatically triggered when the contract is deployed. It takes two inputs from you:
   1. The target amount of EGLD you want to raise;
   2. The crowdfunding deadline, which is expressed as a block nonce.
 - `fund`: used by donors to contribute EGLD to the campaign. It will receive EGLD and save the necessary details so the contract can return funds if the campaign doesn't reach its goal;
@@ -46,17 +47,20 @@ Automated testing is exceptionally important for the development of smart contra
 
 [comment]: # (mx-context-auto)
 
-## Prerequisites 
+## Prerequisites
 
 :::important
 Before starting this tutorial, make sure you have the following:
+
 - `stable` **Rust** version `≥ 1.78.0` (install via [rustup](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
 - `sc-meta` (install [multiversx-sc-meta](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
+
 :::
 
 For contract developers, we generally recommend [**VSCode**](https://code.visualstudio.com) with the following extensions:
- - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
- - [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) 
+
+- [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
 
 [comment]: # (mx-context-auto)
 
@@ -84,13 +88,13 @@ authors = ["you"]
 path = "src/crowdfunding.rs"
 
 [dependencies.multiversx-sc]
-version = "0.55.0"
+version = "0.56.1"
 
 [dev-dependencies]
 num-bigint = "0.4"
 
 [dev-dependencies.multiversx-sc-scenario]
-version = "0.55.0"
+version = "0.56.1"
 
 [workspace]
 members = [
@@ -100,8 +104,9 @@ members = [
 ```
 
 Let's inspect the file found at path `crowdfunding/Cargo.toml`:
+
 - `[package]` represents the **project** which is unsurprisingly named `crowdfunding`, and has version `0.0.0`. You can set any version you like, just make sure it has 3 numbers separated by dots. It is a requirement. The `publish` is set to **false** to prevent the package from being published to Rust’s central package registry. It's useful for private or experimental projects;
-- `[lib]` declares the source code of the smart contracts, which in our case is `src/crowdfunding.rs`. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier to organise your code when the main code files bear the names of the contracts;
+- `[lib]` declares the source code of the smart contracts, which in our case is `src/crowdfunding.rs`. You can name this file anything you want. The default Rust naming is `lib.rs`, but it can be easier to organize your code when the main code files bear the names of the contracts;
 - This project has `dependencies` and `dev-dependencies`. You'll need a few special and very helpful packages:
   - `multiversx-sc`: developed by MultiversX, it is the interface that the smart contract sees and can use;
   - `multiversx-sc-scenario`: developed by MultiversX, it is the interface that defines and runs blockchain scenarios involving smart contracts;
@@ -113,7 +118,7 @@ Let's inspect the file found at path `crowdfunding/Cargo.toml`:
 
 ## Step 2: develop
 
-With the structure in place, you can now write the code and build it. 
+With the structure in place, you can now write the code and build it.
 
 Open `src/crowdfunding.rs`:
 
@@ -137,15 +142,14 @@ pub trait Crowdfunding {        //  [5]
 Let's take a look at the code:
 
 - **[1]**: means that the smart contract **has no access to standard libraries**. That will make the code lean and very light.
-- **[2]**: brings imports module from the [multiversx_sc](https://crates.io/crates/multiversx-sc) crate into **Crowdfunding** contract. It effectively grants you access to the [MultiversX framework for Rust smart contracts](https://github.com/multiversx/mx-sdk-rs), which is designed to simplify the code **enormously**. 
+- **[2]**: brings imports module from the [multiversx_sc](https://crates.io/crates/multiversx-sc) crate into **Crowdfunding** contract. It effectively grants you access to the [MultiversX framework for Rust smart contracts](https://github.com/multiversx/mx-sdk-rs), which is designed to simplify the code **enormously**.
 - **[3]**: since the contract is still in an early stage of development, clippy (Rust's linter) will flag some imports as unused. For now, we will ignore this kind of error.
 - **[4]**: processes the **Crowdfunding** trait definition as a **smart contract** that can be deployed on the MultiversX blockchain.
 - **[5]**: the contract [trait](https://doc.rust-lang.org/book/ch10-02-traits.html) where all the endpoints will be developed.
 - **[6]**: marks the following method (`init`) as the constructor function for the contract.
-- **[7]**: this is the constructor itself. It receives the contract's instance as a parameter (_&self_). The method is called once the contract is deployed on the MultiversX blockchain. You can name it any way you wish, but it must be annotated with `#[init]`. For the moment, no initialization logic is defined. 
+- **[7]**: this is the constructor itself. It receives the contract's instance as a parameter (_&self_). The method is called once the contract is deployed on the MultiversX blockchain. You can name it any way you wish, but it must be annotated with `#[init]`. For the moment, no initialization logic is defined.
 - **[8]**: marks the following method (`upgrade`) as the upgrade function for the contract. It is called when the contract is re-deployed to the same address.
 - **[9]**: this is the upgrade method itself. Similar to [7], it takes a reference to the contract instance (_&self_) and performs no specific logic here.
-
 
 [comment]: # (mx-context-auto)
 
@@ -160,7 +164,8 @@ sc-meta all build
 If this is the first time you build a Rust smart contract with the `sc-meta` command, it will take a little while before it's done. Subsequent builds will be much faster.
 
 When the command completes, a new folder will appear: `crowdfunding/output/`. This folder contains:
-1. `crowdfunding.abi.json` 
+
+1. `crowdfunding.abi.json`
 2. `crowdfunding.imports.json`
 3. `crowdfunding.mxsc.json`
 4. `crowdfunding.wasm`
@@ -168,6 +173,7 @@ When the command completes, a new folder will appear: `crowdfunding/output/`. Th
 We won't be doing anything with these files just yet - wait until we get to the deployment part. Along with `crowdfunding/output/`, there are a few other folders and files generated. You can safely ignore them for now, but do not delete the `/crowdfunding/wasm/` folder - it's what makes the build command faster after the initial run.
 
 The following can be safely deleted, as they are not important for this contract:
+
 - The `scenarios/` folder;
 - The `crowdfunding/tests/crowdfunding_scenario_go_test.rs` file;
 - The `crowdfunding/tests/crowdfunding_scenario_rs_test.rs` file.
@@ -208,7 +214,7 @@ It's time to add some functionality to the `init` function now.
 
 ## Step 4: persisting values
 
-In this step, you will use the `init` method to persist some values in the storage of the Crowdfunding smart contract. 
+In this step, you will use the `init` method to persist some values in the storage of the Crowdfunding smart contract.
 
 [comment]: # (mx-context-auto)
 
@@ -218,7 +224,7 @@ Every smart contract can store key-value pairs in a persistent structure, create
 
 The storage of a smart contract is, for all intents and purposes, **a generic hash map or dictionary**. When you want to store some arbitrary value, you store it under a specific key. To get the value back, you need to know the key you stored it under.
 
-To help you keep the code clean, the framework enables you to write **setter** and **getter** methods for individual key-value pairs. There are several ways to interact with storage from a contract, but the simplest one is by using [**storage mappers**](/docs/developers/developer-reference/storage-mappers.md). 
+To help you keep the code clean, the framework enables you to write **setter** and **getter** methods for individual key-value pairs. There are several ways to interact with storage from a contract, but the simplest one is by using [**storage mappers**](/docs/developers/developer-reference/storage-mappers.md).
 
 Next, you will declare a [_SingleValueMapper_](/docs/developers/developer-reference/storage-mappers.md#singlevaluemapper) that has the purpose of storing a [_BigUint_](/docs/developers/best-practices/biguint-operations.md) number. This storage mapper is dedicated to storing/retrieving the value stored under the key `target`:
 
@@ -264,10 +270,9 @@ Whenever you want to make sure your code is in order, run the build command:
 sc-meta all build
 ```
 
-There's one more thing: by default, none of the `fn` statements declare smart contract methods that are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out. 
+There's one more thing: by default, none of the `fn` statements declare smart contract methods that are _externally callable_. All the data in the contract is publicly available, but it can be cumbersome to search through the contract storage manually. That is why it is often nice to make getters public, so people can call them to get specific data out.
 
-Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state. 
-
+Public methods are annotated with either `#[endpoint]` or `#[view]`. There is currently no difference in functionality between them (but there might be at some point in the future). Semantically, `#[view]` indicates readonly methods, while `#[endpoint]` suggests that the method also changes the contract state.
 
 ```rust
   #[view]
@@ -284,6 +289,7 @@ You can also think of `#[init]` as a special type of endpoint.
 You must always make sure that the code you write functions as intended. That's what **automatic testing** is for.
 
 For now, this is how your contract looks:
+
 ```rust
 #![no_std]
 
@@ -352,6 +358,7 @@ Your folder should look like this (output from the command `tree -L 2`):
 ```
 
 Before creating the first test, we need to [set up the environment](/docs/developers/testing/rust/sc-test-setup.md). We will:
+
 1. Generate the smart contract's proxy;
 2. Register the contract;
 3. Set up accounts.
@@ -437,7 +444,7 @@ fn crowdfunding_deploy_test() {
 }
 ```
 
-In the snippet above, we've added only one account to the fictional universe of Crowdfunding smart contract. It is an account with the address `owner`, which the testing environment will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000`. 
+In the snippet above, we've added only one account to the fictional universe of Crowdfunding smart contract. It is an account with the address `owner`, which the testing environment will use to pretend it's you. Note that in this fictional universe, your account nonce is `0` (meaning you've never used this account yet) and your `balance` is `1,000,000`.
 
 :::important
 No transaction can start if that account does not exist in the mocked blockchain. More explanations can be found [here](/docs/developers/testing/rust/sc-test-setup.md#setting-accounts).
@@ -468,11 +475,11 @@ fn crowdfunding_deploy_test() {
 }
 ```
 
-The transaction above is a deploy call that stores in `target` value `500,000,000,000`. It was fictionally submitted by "you", using your account with the address `owner`. 
+The transaction above is a deploy call that stores in `target` value `500,000,000,000`. It was fictionally submitted by "you", using your account with the address `owner`.
 
-`.new_address(CROWDFUNDING_ADDRESS)` marks that the address of the deployed contracts will be the value stored in the **CROWDFUNDING_ADDRESS** constant. 
+`.new_address(CROWDFUNDING_ADDRESS)` marks that the address of the deployed contracts will be the value stored in the **CROWDFUNDING_ADDRESS** constant.
 
-`.code(CODE_PATH)` explicitly sets the deployment Crowdfunding's code source as bytes. 
+`.code(CODE_PATH)` explicitly sets the deployment Crowdfunding's code source as bytes.
 
 :::note
 Deploy calls are specified by the code source. You can find more details about what data needs a transaction [here](/docs/developers/transactions/tx-data.md).
@@ -487,6 +494,7 @@ Remember to run `sc-meta all build` before running the test, especially if you m
 What's the purpose of testing if we do not validate the behavior of the entities interacting with the blockchain? Let's take the next step by enhancing the `crowdfunding_deploy_test()` function to include verification operations.
 
 Once the deployment is executed, we will verify if:
+
 - The **contract address** is **CROWDFUNDING_ADDRESS**;
 - The **owner** has no less EGLD than the value with which it was initialized: `1,000,000`;
 - `target` contains the value set at deployment: `500,000,000,000`.
@@ -512,7 +520,8 @@ fn crowdfunding_deploy_test() {
         .run();
 }
 ```
-Notice that there are two accounts now, not just one. There's evidently the account `owner` and the new account `crowdfunding`, as a result of the deployment transaction. 
+
+Notice that there are two accounts now, not just one. There's evidently the account `owner` and the new account `crowdfunding`, as a result of the deployment transaction.
 
 :::important
 Smart contracts _are_ accounts in the MultiversX Network, accounts with associated code, which can be executed when transactions are sent to them.
@@ -525,7 +534,9 @@ The `.check_account(OWNER)` method verifies whether an account exists at the spe
 :::
 
 :::note
-The `.query()` method is used to interact with the smart contract's view functions via the proxy, retrieving information without modifying the blockchain state. Details available [here](/docs/developers/testing/rust/sc-blackbox-calls.md#query).
+The `.query()` method is used to interact with the smart contract's view functions via the proxy, retrieving information without modifying the blockchain state.
+
+There is no caller, no payment, and gas price/gas limit. On the real blockchain, a smart contract query does not create a transaction on the blockchain, so no account is needed. Details available [here](/docs/developers/testing/rust/sc-blackbox-calls.md#query).
 :::
 
 ## Run test
