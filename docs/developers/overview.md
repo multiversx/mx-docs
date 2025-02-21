@@ -40,7 +40,7 @@ Below is a list of tutorials for building on MultiversX:
 | [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.       |
 | [Cryptozombies Tutorials](https://cryptozombies.io/en/multiversx)        | Interactive way of learning how to write MultiversX Smart Contracts.       |
 | [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.     |
-| [Building a Crowdfunding Smart Contract](/docs/developers/tutorials/crowdfunding-p2.md)                | Write, build, and test a simple smart contract.                                  |
+| [Building a Crowdfunding Smart Contract](/docs/developers/tutorials/crowdfunding-p1.md)                | Write, build and test a simple smart contract.                                  |
 | [Enhancing the Crowdfunding Smart Contract](/docs/developers/tutorials/crowdfunding-p2.md)                | Expand and refine the functionality of an existing contract.|
 | [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract. |
 | [Energy DAO Tutorial](/developers/tutorials/energy-dao)                             | In depth analysis of the Energy DAO SC template.                 |
