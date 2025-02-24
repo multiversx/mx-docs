@@ -478,6 +478,35 @@ html[data-theme="dark"] .DocSearch {
   font-weight: 600;
 }
 
+.copy-as-markdown-button {
+  position: absolute;
+  right: 0;
+  top: -7.3rem;
+  color: #737373;
+  cursor: pointer;
+}
+
+.copy-as-markdown-button:hover {
+  color: #23f7dd;
+  transition: color 0.2s;
+}
+
+.copy-as-markdown-button.check {
+  color: #23f7dd;
+}
+
+@media (max-width: 372px) {
+  .copy-as-markdown-button {
+    top: -13rem;
+  }
+}
+
+@media (max-width: 997px) {
+  .copy-as-markdown-button {
+    top: -10.6rem;
+  }
+}
+
 /* -------------------- End Docsearch ------------------- */
 
 /* ====================================== GLOBAL ================================ */
