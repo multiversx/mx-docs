@@ -38,6 +38,8 @@ const CopyMarkdownButton = () => {
    className={`copy-as-markdown-button ${isCopied ? 'check' : ''}`}
    onClick={copyMarkdownToClipboard}
    icon={!isCopied ? faClone : faCheck}
+   width="16px"
+   height="16px"
    />
   );
 };
