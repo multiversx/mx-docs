@@ -495,15 +495,15 @@ html[data-theme="dark"] .DocSearch {
   color: #23f7dd;
 }
 
-@media (max-width: 372px) {
+@media (max-width: 996px) {
   .copy-as-markdown-button {
-    top: -13rem;
+    top: -10.6rem;
   }
 }
 
-@media (max-width: 997px) {
+@media (max-width: 375px) {
   .copy-as-markdown-button {
-    top: -10.6rem;
+    top: -13rem;
   }
 }
 
