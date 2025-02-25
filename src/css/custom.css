@@ -478,6 +478,22 @@ html[data-theme="dark"] .DocSearch {
   font-weight: 600;
 }
 
+body.no-scroll {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+.chat-send-button {
+  transition: all 200ms ease;
+}
+
+.chat-send-button:hover {
+  opacity: 0.75;
+}
+/* .chat-modal-body::-webkit-scrollbar {
+display: none;
+} */
+
 .copy-as-markdown-button {
   position: absolute;
   right: 0;

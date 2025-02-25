@@ -17,8 +17,8 @@ This guide provides detailed instructions on setting up, deploying, and managing
 
 1. [Introduction](/sovereign/concept)
 2. [Prerequisites](/sovereign/system-requirements)
-3. [Setup Guide](/sovereign/setup)
-4. [Custom Configurations](/sovereign/deployment)
+3. [Setup Guide](/sovereign/local-setup)
+4. [Custom Configurations](/sovereign/custom-configurations)
 5. [Managing a Sovereign Chain](/sovereign/managing-sovereign)
 6. [Economics](/sovereign/token-economics)
 7. [Governance](/sovereign/governance)
