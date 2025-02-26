@@ -11,7 +11,7 @@ interface ChatError {
   status?: number;
 }
 
-const STREAM_ENDPOINT = "http://localhost:3005/ai-docs-api/chat/stream";
+const STREAM_ENDPOINT = "https://tools.multiversx.com/ai-docs-api/chat/stream";
 
 export const useChat = () => {
   const [isLoading, setIsLoading] = useState(false);
