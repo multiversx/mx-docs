@@ -12,13 +12,21 @@ const CopyMarkdownButton = () => {
     return;
   }
 
-  const url = `https://raw.githubusercontent.com/multiversx/mx-docs/refs/heads/main/docs${location.pathname}.md`;
+  const pathname = location.pathname.replace(/\/$/, "");
+  const docsUrl = 'https://raw.githubusercontent.com/multiversx/mx-docs/refs/heads/main/docs'
+  const mdUrl = `${docsUrl}${pathname}.md`
+  const mdxUrl = `${docsUrl}${pathname}.mdx`
 
   const copyMarkdownToClipboard = async () => {
     try {
-      const response = await fetch(url);
+      let response = await fetch(mdUrl);
+
       if (!response.ok) {
+        response = await fetch(mdxUrl);
+        
+        if (!response.ok) {
         throw new Error("Markdown file not found!");
+        }
       }
 
       const markdown = await response.text();
