@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import CodeBlock from "@theme/CodeBlock"; // Docusaurus built–in CodeBlock
 import userAvatar from "@site/static/ask_ai/ask_ai_user_avatar.png";
@@ -12,7 +12,31 @@ const ChatWindow = ({ onClose }) => {
   >([{ role: "assistant", content: "Ask me anything about MultiversX!" }]);
   const [input, setInput] = useState("");
 
-  const { sendMessage, isLoading, error } = useChat();
+  const [streamMessage, setStreamMessage] = useState<
+    { role: string; content: string } | undefined
+  >(undefined);
+
+  const { sendMessage, isLoading, error, messages: chatMessages } = useChat();
+
+  // Update the messages state as new data arrives
+  useEffect(() => {
+    setStreamMessage({
+      role: "assistant",
+      content: chatMessages.map((msg) => msg.content).join(" "),
+    });
+
+    chatBodyRef.current?.scrollTo({
+      top: chatBodyRef.current.scrollHeight * 10,
+      behavior: "smooth",
+    });
+
+    if (isLoading) return;
+
+    if (!isLoading && streamMessage) {
+      setMessages([...messages, streamMessage]);
+      setStreamMessage(undefined);
+    }
+  }, [isLoading, chatMessages]);
 
   // Called when the user hits "Send". Adds a user message then simulates an assistant reply.
   const chatBodyRef = useRef<HTMLDivElement>(null);
@@ -141,6 +165,37 @@ const ChatWindow = ({ onClose }) => {
               </div>
             </div>
           ))}
+
+          {streamMessage && streamMessage.content?.length > 0 && (
+            <div
+              style={{
+                marginBottom: "15px",
+                marginTop: "auto",
+              }}
+            >
+              <div>
+                <img width="40" src={assistantAvatar} />
+                <ReactMarkdown
+                  components={{
+                    code({ node, inline, className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline && match ? (
+                        <CodeBlock language={match[1]}>
+                          {String(children).replace(/\n$/, "")}
+                        </CodeBlock>
+                      ) : (
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
+                  }}
+                >
+                  {streamMessage.content}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
           {isLoading && <div className="animate-pulse"> Thinking...</div>}
         </div>
       </div>
