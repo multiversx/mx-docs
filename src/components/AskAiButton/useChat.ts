@@ -56,7 +56,7 @@ export const useChat = () => {
           setThreadId(threadId);
           chunk = "";
         } catch {}
-        accumulatedContent += chunk;
+        accumulatedContent += chunk === "file_search" ? "" : chunk;
 
         // Update the last message with the new content
         setMessages((prevMessages) => {
