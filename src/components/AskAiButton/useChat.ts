@@ -51,7 +51,6 @@ export const useChat = () => {
 
         let chunk = decoder.decode(value, { stream: true });
 
-        console.log(chunk);
         try {
           const { threadId } = JSON.parse(chunk);
           setThreadId(threadId);
