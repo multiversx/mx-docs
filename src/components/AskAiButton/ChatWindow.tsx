@@ -99,7 +99,6 @@ const ChatWindow = ({ onClose }) => {
           style={{
             background: "transparent",
             border: "none",
-            color: "#fff",
             fontWeight: "bold",
             fontSize: "18px",
             cursor: "pointer",
@@ -234,7 +233,6 @@ const ChatWindow = ({ onClose }) => {
             padding: "8px 16px",
             fontSize: "16px",
             border: "none",
-            color: "#fff",
             cursor: "pointer",
             backgroundColor: "transparent",
             borderRadius: "12px",
