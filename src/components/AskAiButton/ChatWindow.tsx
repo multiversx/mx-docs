@@ -72,20 +72,17 @@ const ChatWindow = ({ onClose }) => {
 
   return (
     <div
-      className="chat-modal"
+      className="chat-modal bg-white dark:bg-neutral-900"
       style={{
         height: "50%",
-        backgroundColor: "#171717",
         borderRadius: "16px",
         overflow: "hidden",
       }}
     >
       {/* Modal Header */}
       <div
-        className="chat-modal-header"
+        className="chat-modal-header bg-white  dark:bg-neutral-900 text-neutral-900 dark:text-white"
         style={{
-          backgroundColor: "#171717",
-          color: "#fff",
           padding: "32px 0px 16px",
           margin: "0px 16px",
           borderBottom: "1px solid #333",
@@ -207,7 +204,7 @@ const ChatWindow = ({ onClose }) => {
           display: "flex",
           position: "relative",
           padding: "0px 16px 32px",
-          boxShadow: " 0px -8px 32px 0px rgba(23,23,23,1)",
+          // boxShadow: " 0px -8px 32px 0px rgba(23,23,23,1)",
         }}
       >
         <input
