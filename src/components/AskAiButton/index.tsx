@@ -36,17 +36,12 @@ const AskAiButton = () => {
           className="text-center text-primary text-sm dark:text-black text-teal-300"
         />
         <span className="pl-2">Ask AI</span>
-        <div
-          className="betaBadge-wrapper rainbow"
-          style={{
-            position: "absolute",
-            color: "var(--body-color)",
-            left: "100%",
-            bottom: "100%",
-            transform: "translate(-50%, 50%)",
-          }}
-        >
-          <div className="betaBadge">Beta</div>
+        <div className="absolute -top-2 right-full lg:left-full lg:right-auto -mr-3 lg:-ml-5 lg:mr-0 h-5 px-1 bg-gradient-to-tr from-[#bc82f3] via-[#FFAC73] to-[#c686ff] rounded-lg justify-center items-center inline-flex pointer-events-none">
+          <div className="p-0.5 rounded-lg justify-center items-center flex">
+            <span className="text-center text-black text-xs font-bold leading-none">
+              BETA
+            </span>
+          </div>
         </div>
       </button>
       <Modal
