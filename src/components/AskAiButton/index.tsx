@@ -29,12 +29,20 @@ const AskAiButton = () => {
       <button
         className="rounded-lg bg-black dark:bg-teal-400 px-2.5 py-1.5 text-sm font-semibold text-teal-300 dark:text-black shadow-sm hover:bg-neutral-800 dark:hover:bg-teal-500 outline-none border-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 inline-flex items-center justify-center"
         onClick={openModal}
+        style={{ position: "relative", marginRight: "auto" }}
       >
         <FontAwesomeIcon
           icon={faRobot}
           className="text-center text-primary text-sm dark:text-black text-teal-300"
         />
         <span className="pl-2">Ask AI</span>
+        <div className="absolute -top-2 right-full lg:left-full lg:right-auto -mr-3 lg:-ml-5 lg:mr-0 h-5 px-1 bg-gradient-to-tr from-[#bc82f3] via-[#FFAC73] to-[#c686ff] rounded-lg justify-center items-center inline-flex pointer-events-none">
+          <div className="p-0.5 rounded-lg justify-center items-center flex">
+            <span className="text-center text-black text-xs font-bold leading-none">
+              BETA
+            </span>
+          </div>
+        </div>
       </button>
       <Modal
         isOpen={modalIsOpen}

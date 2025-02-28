@@ -91,8 +91,15 @@ const ChatWindow = ({ onClose }) => {
           alignItems: "center",
         }}
       >
-        <div className="chat-modal-title" style={{ fontSize: "18px" }}>
-          Ask MultiversX AI
+        <div
+          className="chat-modal-title"
+          style={{
+            fontSize: "18px",
+            position: "relative",
+            marginRight: "auto",
+          }}
+        >
+          <span>Ask MultiversX AI</span>
         </div>
         <button
           onClick={onClose}
