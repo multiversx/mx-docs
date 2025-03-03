@@ -154,7 +154,7 @@ await proxyProvider.sendTransaction(transaction);
 :::important
 Note that the transactions **must be signed before being broadcasted**.
 On the front-end, signing can be achieved using a signing provider.
-On this purpose, **we recommend using [sdk-dapp](/sdk-and-tools/sdk-dapp)** instead of integrating the signing providers on your own.
+On this purpose, **we recommend using [sdk-dapp-core](/sdk-and-tools/sdk-dapp-core)** instead of integrating the signing providers on your own.
 :::
 
 :::important
