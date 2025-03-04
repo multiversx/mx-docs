@@ -233,7 +233,7 @@ const ChatWindow = ({ onClose }) => {
           }}
         />
         <button
-          onClick={handleSend}
+          onClick={() => handleSend()}
           disabled={isLoading}
           className="chat-send-button"
           style={{
