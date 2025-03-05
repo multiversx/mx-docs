@@ -51,19 +51,19 @@ const AskAiButton = () => {
         onRequestClose={closeModal}
         contentLabel="Example Popup"
         style={{
-          overlay: { backgroundColor: "rgba(0,0,0,0.5)" },
+          overlay: { backgroundColor: "rgba(0,0,0,0.5)", zIndex: 200 },
           content: {
-            maxWidth: "min(1200px, calc(100% - 32px))",
             position: "fixes",
-            margin: "auto",
-            marginTop: "70px",
-            minHeight: "80vh",
-            maxHeight: "80vh",
             zIndex: "10000",
+            backgroundColor: "rgba(0,0,0,0.15)",
+            height: "100vh",
             padding: "0px",
             background: "none",
             border: "none",
             overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           },
         }}
       >

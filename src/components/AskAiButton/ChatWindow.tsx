@@ -74,8 +74,13 @@ const ChatWindow = ({ onClose }) => {
     <div
       className="chat-modal bg-white dark:bg-neutral-900"
       style={{
-        height: "50%",
+        maxWidth: "min(960px, calc(100% - 32px))",
+        maxHeight: "min(640px, calc(100% - 32px))",
+        height: "100%",
+        width: "100%",
         borderRadius: "16px",
+        display: "flex",
+        flexDirection: "column",
         overflow: "hidden",
       }}
     >
@@ -83,7 +88,7 @@ const ChatWindow = ({ onClose }) => {
       <div
         className="chat-modal-header bg-white  dark:bg-neutral-900 text-neutral-900 dark:text-white"
         style={{
-          padding: "32px 0px 16px",
+          padding: "16px 0px",
           margin: "0px 16px",
           borderBottom: "1px solid #333",
           display: "flex",
@@ -118,10 +123,11 @@ const ChatWindow = ({ onClose }) => {
       {/* Chat Messages Area */}
       <div
         style={{
-          height: "60vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
+          overflow: "auto",
+          flex: 1,
         }}
       >
         <div
@@ -129,7 +135,6 @@ const ChatWindow = ({ onClose }) => {
           ref={chatBodyRef}
           style={{
             padding: "16px 16px 32px",
-
             overflowY: "auto",
           }}
         >
@@ -209,8 +214,7 @@ const ChatWindow = ({ onClose }) => {
         style={{
           display: "flex",
           position: "relative",
-          padding: "0px 16px 32px",
-          // boxShadow: " 0px -8px 32px 0px rgba(23,23,23,1)",
+          padding: "0px 16px 16px",
         }}
       >
         <input
@@ -226,6 +230,7 @@ const ChatWindow = ({ onClose }) => {
             outline: "none",
             border: "1px solid #333",
             borderRadius: "12px",
+            paddingRight: 64,
             background: "transparent",
           }}
           onKeyDown={(e) => {
@@ -246,7 +251,7 @@ const ChatWindow = ({ onClose }) => {
             position: "absolute",
             right: "20px",
             bottom: "50%",
-            transform: "translateY(calc(50% - 16px))",
+            transform: "translateY(calc(50% - 8px))",
           }}
         >
           Send
