@@ -63,3 +63,12 @@ For reference, this is the list of the known smart contracts:
 * **Wrapper** `erd1qqqqqqqqqqqqqpgq305jfaqrdxpzjgf9y5gvzh60mergh866yfkqzqjv2h`
 * **Ethereum Safe** `erd1qqqqqqqqqqqqqpgqf2cu60ffz9v68r0h62sufxxf67n7xprue3yq4ap4k2`
 * **BSC Safe** `erd1qqqqqqqqqqqqqpgqa89ts8s3un2tpxcml340phcgypyyr609e3yqv4d8nz`
+
+:::warning
+To ensure the correct functioning of the bridge, as a MultiversX token owner please ensure the following points are met:
+* if you make use of the transfer-role on your token, remember to grant the role also on the **Safe**, **MultiTransfer**, **BridgedTokensWrapper**, and **BridgeProxy** contracts; 
+* do not freeze the above-mentioned contracts;
+* do not wipe tokens on the above-mentioned contracts.
+
+Failure to comply with these rules will force the bridge owner to blacklist the token in order to restore the correct functioning of the bridge.
+:::
