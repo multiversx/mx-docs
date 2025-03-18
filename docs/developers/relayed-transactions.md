@@ -30,6 +30,10 @@ Once all applications will completely transition to relayed v3 model, v1 and v2 
 
 ## Relayed transactions version 1
 
+:::note
+Legacy version. Please use [version 3](#relayed-transactions-version-3), instead.
+:::
+
 A relayed transaction version 1 relies on having the inner transaction JSON serialized and given as an argument to the `relayedTx` protocol function.
 
 It would look like:
@@ -165,6 +169,10 @@ gasLimit = 61040000  // just like the gas limit set in the relayed transaction
 
 ## Relayed transactions version 2
 
+:::note
+Legacy version. Please use [version 3](#relayed-transactions-version-3), instead.
+:::
+
 In contrast with version 1, relayed transactions version 2 have only certain fields of the inner transaction included
 in the data field, making the payload smaller, therefore the tx fee smaller. It also eliminates the need of calculating
 the matching gas limit values between the relayed and inner transactions.
@@ -249,10 +257,6 @@ Decoding the arguments ([useful resources here](/developers/sc-calls-format/)) w
 
 ## Relayed transactions version 3
 
-:::note
-This feature is not yet available on **Mainnet**. See [Spica Protocol Upgrade](https://governance.multiversx.com/proposal/erd1qqqqqqqqqqqqqpgq4qvrwlr2e6ld50f3qfc94am38p8298kthg4s3f0vfn/1).
-:::
-
 Relayed transactions v3 feature comes with a change on the entire transaction structure, adding two new optional fields: 
 - `relayer`, which is the relayer address that will pay the fees.
 - `relayerSignature`, the signature of the relayer that proves the agreement of the relayer.
@@ -316,3 +320,11 @@ Here's an example of a relayed v3 transaction. Its intent is to call the `add` m
   "relayerSignature": "..."
 }
 ```
+
+### Preparing relayed transactions using the SDKs
+
+The SDKs have built-in support for relayed transactions. Please follow:
+ - [mxpy support](/sdk-and-tools/sdk-py/mxpy-cli/#relayed-transactions-v3)
+ - [sdk-py support](/sdk-and-tools/sdk-py/sdk-py-cookbook/#relayed-transactions)
+ - [sdk-js v14 support](/sdk-and-tools/sdk-js/sdk-js-cookbook-v14#relayed-transactions)
+ - [sdk-js v13 support (legacy)](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13#preparing-a-relayed-transaction)
