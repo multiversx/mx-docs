@@ -180,7 +180,7 @@ The `Account` implements the `IAccount` interface, making it compatible with tra
 
 ## Calling the Faucet
 
-This functionality is not yet available through the entrypoint, but we recommend using the faucet available within the Web Wallet. For more details about hthe faucet [see this](/wallet/web-wallet/#testnet-and-devnet-faucet).
+This functionality is not yet available through the entrypoint, but we recommend using the faucet available within the Web Wallet. For more details about the faucet [see this](/wallet/web-wallet/#testnet-and-devnet-faucet).
 
 - [Testnet Wallet](https://testnet-wallet.multiversx.com/).
 - [Devnet Wallet](https://devnet-wallet.multiversx.com/).
