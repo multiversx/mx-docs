@@ -608,6 +608,15 @@ const sidebars = {
               "sovereign/solana-l2",
             ],
           },
+          {
+            type: "category",
+            label: "Cross-Chain Execution",
+            items: [
+              "sovereign/cross-chain-execution",
+              "sovereign/to-sovereign",
+              "sovereign/from-sovereign",
+            ]
+          },
           "sovereign/validators",
         ],
       },
