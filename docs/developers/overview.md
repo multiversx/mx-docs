@@ -7,7 +7,8 @@ title: Developers - Overview
 
 This page serves as the landing destination for builders seeking to construct on the Multiversx platform.
 
-If anything is missing, or you want to get more support, please refer to Discord or Telegram developers chats: 
+If anything is missing, or you want to get more support, please refer to Discord or Telegram developers chats:
+
 - [Discord: MultiversX Builders](https://discord.gg/multiversxbuilders)
 - [Telegram: MultiversX Developers](https://t.me/MultiversXDevelopers)
 
@@ -25,6 +26,7 @@ For interacting with MultiversX Blockchain via SDKs or Rest API, please refer to
 [comment]: # (mx-context-auto)
 
 ## Table of contents
+
 A list with everything that you can explore as a developer on MultiversX.
 
 [comment]: # (mx-context-auto)
@@ -38,14 +40,14 @@ Below is a list of tutorials for building on MultiversX:
 | [Build your first dApp in 15 minutes](/developers/tutorials/your-first-dapp)        | Video + written tutorial on how to create your first dApp.       |
 | [Cryptozombies Tutorials](https://cryptozombies.io/en/multiversx)        | Interactive way of learning how to write MultiversX Smart Contracts.       |
 | [Build a microservice for your dApp](/developers/tutorials/your-first-microservice) | Video + written tutorial on how to create your microservice.     |
-| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p1)                | Crowdfunding tutorial (Part 1).                                  |
-| [Crowdfunding Smart Contract](/developers/tutorials/crowdfunding-p2)                | Crowdfunding tutorial (Part 2).                                  |
+| [Building a Crowdfunding Smart Contract](/docs/developers/tutorials/crowdfunding-p1.md)                | Write, build and test a simple smart contract.                                  |
+| [Enhancing the Crowdfunding Smart Contract](/docs/developers/tutorials/crowdfunding-p2.md)                | Expand and refine the functionality of an existing contract.|
 | [Staking contract Tutorial](/developers/tutorials/staking-contract)                 | Step by step tutorial on how to create a Staking Smart Contract. |
 | [Energy DAO Tutorial](/developers/tutorials/energy-dao)                             | In depth analysis of the Energy DAO SC template.                 |
 | [DEX Walkthrough](/developers/tutorials/dex-walkthrough)                            | In depth walkthrough of all the main DEX contracts.              |
 | [WalletConnect 2.0 Migration](/developers/tutorials/wallet-connect-v2-migration)    | WalletConnect 2.0 Migration Guide                                |
 | [Ethereum to MultiversX migration guide](/developers/tutorials/eth-to-mvx)          | Guide for Ethereum developers to start building on MultiversX.   |
-| [Chain Simulator in Adder - SpaceCraft interactors](/developers/tutorials/chain-simulator-adder)|  Guide on how to interact with Chain Simulator in one of the simplest SCs.| 
+| [Chain Simulator in Adder - SpaceCraft interactors](/developers/tutorials/chain-simulator-adder)|  Guide on how to interact with Chain Simulator in one of the simplest SCs.|
 
 [comment]: # (mx-context-auto)
 
@@ -123,7 +125,6 @@ Learn about transaction's gas and how a fee is calculated:
 | [Whitebox framework functions reference](/developers/testing/rust/whitebox-legacy-functions-reference) | A list of available functions to be used when using the whitebox framework.              |
 | [Debugging](/developers/testing/sc-debugging)                        | How to debug your smart contract tests.   |
 
-
 [comment]: # (mx-context-auto)
 
 ### Scenarios Reference
@@ -156,7 +157,7 @@ the execution of smart contract, information about ESDT transfers or built-in fu
 
 [comment]: # (mx-context-auto)
 
-#### Event logs can be categorized into the following types:
+#### Event logs can be categorized into the following types
 
 | Name                                                                          | Description                                                                                                                                                                                                         |
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
