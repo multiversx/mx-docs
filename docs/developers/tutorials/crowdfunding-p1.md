@@ -52,7 +52,7 @@ Automated testing is exceptionally important for the development of smart contra
 :::important
 Before starting this tutorial, make sure you have the following:
 
-- `stable` **Rust** version `≥ 1.78.0` (install via [rustup](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
+- `stable` **Rust** version `≥ 1.83.0` (install via [rustup](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
 - `sc-meta` (install [multiversx-sc-meta](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
 
 :::
@@ -88,13 +88,13 @@ authors = ["you"]
 path = "src/crowdfunding.rs"
 
 [dependencies.multiversx-sc]
-version = "0.56.1"
+version = "0.57.0"
 
 [dev-dependencies]
 num-bigint = "0.4"
 
 [dev-dependencies.multiversx-sc-scenario]
-version = "0.56.1"
+version = "0.57.0"
 
 [workspace]
 members = [
