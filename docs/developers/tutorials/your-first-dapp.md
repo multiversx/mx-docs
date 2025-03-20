@@ -199,6 +199,8 @@ The interactor crate is located at `ping-pong/contract/ping-pong/interactor` and
 To access `wallet-owner.pem` you must navigate up three folders: `../../../`, then into the **wallet** directory.
 :::
 
+Make sure to add the absolute path at `Wallet::from_pem_file("/ping-pong/wallet/wallet-owner.pem")`, completing the missing directories above "ping-pong".
+
 This next command deploys the Ping-Pong contract with the following settings:
 
 - Ping Amount: **1 EGLD**.

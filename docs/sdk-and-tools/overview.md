@@ -30,7 +30,7 @@ Note that Rust is also the recommended programming language for writing Smart Co
 | Name                                                                                                     | Description                                         |
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
 | [sdk-js](/sdk-and-tools/sdk-js)                                                                          | High level overview about sdk-js.                   |
-| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13)                                             | Learn how to handle common tasks by using sdk-js.   |
+| [sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook-v14)                                             | Learn how to handle common tasks by using sdk-js.   |
 | [Extending sdk-js](/sdk-and-tools/sdk-js/extending-sdk-js)                                               | How to extend and tailor certain modules of sdk-js. |
 | [Writing and testing sdk-js interactions](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions) | Write sdk-js interactions for Visual Studio Code    |
 | [sdk-js migration guides](/sdk-and-tools/sdk-js/sdk-js-migration-guides)                                 | Migrate from sdk-js v9.x to v10+                    |

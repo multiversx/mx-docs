@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import CodeBlock from "@theme/CodeBlock"; // Docusaurus built–in CodeBlock
 import userAvatar from "@site/static/ask_ai/ask_ai_user_avatar.png";
@@ -12,7 +12,31 @@ const ChatWindow = ({ onClose }) => {
   >([{ role: "assistant", content: "Ask me anything about MultiversX!" }]);
   const [input, setInput] = useState("");
 
-  const { sendMessage, isLoading, error } = useChat();
+  const [streamMessage, setStreamMessage] = useState<
+    { role: string; content: string } | undefined
+  >(undefined);
+
+  const { sendMessage, isLoading, error, messages: chatMessages } = useChat();
+
+  // Update the messages state as new data arrives
+  useEffect(() => {
+    setStreamMessage({
+      role: "assistant",
+      content: chatMessages.map((msg) => msg.content).join(" "),
+    });
+
+    chatBodyRef.current?.scrollTo({
+      top: chatBodyRef.current.scrollHeight * 10,
+      behavior: "smooth",
+    });
+
+    if (isLoading) return;
+
+    if (!isLoading && streamMessage) {
+      setMessages([...messages, streamMessage]);
+      setStreamMessage(undefined);
+    }
+  }, [isLoading, chatMessages]);
 
   // Called when the user hits "Send". Adds a user message then simulates an assistant reply.
   const chatBodyRef = useRef<HTMLDivElement>(null);
@@ -48,21 +72,23 @@ const ChatWindow = ({ onClose }) => {
 
   return (
     <div
-      className="chat-modal"
+      className="chat-modal bg-white dark:bg-neutral-900"
       style={{
-        height: "50%",
-        backgroundColor: "#171717",
+        maxWidth: "min(960px, calc(100% - 32px))",
+        maxHeight: "min(640px, calc(100% - 32px))",
+        height: "100%",
+        width: "100%",
         borderRadius: "16px",
+        display: "flex",
+        flexDirection: "column",
         overflow: "hidden",
       }}
     >
       {/* Modal Header */}
       <div
-        className="chat-modal-header"
+        className="chat-modal-header bg-white  dark:bg-neutral-900 text-neutral-900 dark:text-white"
         style={{
-          backgroundColor: "#171717",
-          color: "#fff",
-          padding: "32px 0px 16px",
+          padding: "16px 0px",
           margin: "0px 16px",
           borderBottom: "1px solid #333",
           display: "flex",
@@ -70,15 +96,21 @@ const ChatWindow = ({ onClose }) => {
           alignItems: "center",
         }}
       >
-        <div className="chat-modal-title" style={{ fontSize: "18px" }}>
-          Ask MultiversX AI
+        <div
+          className="chat-modal-title"
+          style={{
+            fontSize: "18px",
+            position: "relative",
+            marginRight: "auto",
+          }}
+        >
+          <span>Ask MultiversX AI</span>
         </div>
         <button
           onClick={onClose}
           style={{
             background: "transparent",
             border: "none",
-            color: "#fff",
             fontWeight: "bold",
             fontSize: "18px",
             cursor: "pointer",
@@ -91,10 +123,11 @@ const ChatWindow = ({ onClose }) => {
       {/* Chat Messages Area */}
       <div
         style={{
-          height: "60vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
+          overflow: "auto",
+          flex: 1,
         }}
       >
         <div
@@ -102,7 +135,6 @@ const ChatWindow = ({ onClose }) => {
           ref={chatBodyRef}
           style={{
             padding: "16px 16px 32px",
-
             overflowY: "auto",
           }}
         >
@@ -141,6 +173,37 @@ const ChatWindow = ({ onClose }) => {
               </div>
             </div>
           ))}
+
+          {streamMessage && streamMessage.content?.length > 0 && (
+            <div
+              style={{
+                marginBottom: "15px",
+                marginTop: "auto",
+              }}
+            >
+              <div>
+                <img width="40" src={assistantAvatar} />
+                <ReactMarkdown
+                  components={{
+                    code({ node, inline, className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline && match ? (
+                        <CodeBlock language={match[1]}>
+                          {String(children).replace(/\n$/, "")}
+                        </CodeBlock>
+                      ) : (
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
+                  }}
+                >
+                  {streamMessage.content}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
           {isLoading && <div className="animate-pulse"> Thinking...</div>}
         </div>
       </div>
@@ -151,8 +214,7 @@ const ChatWindow = ({ onClose }) => {
         style={{
           display: "flex",
           position: "relative",
-          padding: "0px 16px 32px",
-          boxShadow: " 0px -8px 32px 0px rgba(23,23,23,1)",
+          padding: "0px 16px 16px",
         }}
       >
         <input
@@ -168,6 +230,7 @@ const ChatWindow = ({ onClose }) => {
             outline: "none",
             border: "1px solid #333",
             borderRadius: "12px",
+            paddingRight: 64,
             background: "transparent",
           }}
           onKeyDown={(e) => {
@@ -175,21 +238,20 @@ const ChatWindow = ({ onClose }) => {
           }}
         />
         <button
-          onClick={handleSend}
+          onClick={() => handleSend()}
           disabled={isLoading}
           className="chat-send-button"
           style={{
             padding: "8px 16px",
             fontSize: "16px",
             border: "none",
-            color: "#fff",
             cursor: "pointer",
             backgroundColor: "transparent",
             borderRadius: "12px",
             position: "absolute",
             right: "20px",
             bottom: "50%",
-            transform: "translateY(calc(50% - 16px))",
+            transform: "translateY(calc(50% - 8px))",
           }}
         >
           Send
