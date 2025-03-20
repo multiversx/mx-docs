@@ -5,8 +5,8 @@
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
 import { themes as prismThemes } from "prism-react-renderer";
-import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -432,7 +432,7 @@ const config = {
           },
           {
             from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
           },
           {
             from: "/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
