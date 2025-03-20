@@ -21,7 +21,7 @@ The idea is simple: the smart contract will accept transfers until a deadline is
 
 If the deadline is reached and the smart contract has gathered an amount of EGLD above the desired funds, then the smart contract will consider the crowdfunding a success, and it will consequently send all the EGLD to a predetermined account (yours!).
 
-However, if the donations fall short of the target, the contract will return all the EGLDs to the donors.
+However, if the donations fall short of the target, the contract will return all the all EGLD tokens to the donors.
 
 [comment]: # (mx-context-auto)
 
@@ -286,7 +286,7 @@ You can also think of `#[init]` as a special type of endpoint.
 
 ## Step 5: testing
 
-You must always make sure that the code you write functions as intended. That's what **automatic testing** is for.
+You must always make sure that the code you write functions as intended. That's what **automated testing** is for.
 
 For now, this is how your contract looks:
 
@@ -452,7 +452,7 @@ No transaction can start if that account does not exist in the mocked blockchain
 
 ### Deploy
 
-The purpose of the account created one step ago is to act as the owner of the Crowdfunding smart contract. To make this happen, the **OWNER** constant will serve as the transaction **sender**.
+The purpose of the account created previously is to act as the owner of the Crowdfunding smart contract. To make this happen, the **OWNER** constant will serve as the transaction **sender**.
 
 ```rust
 const CROWDFUNDING_ADDRESS: TestSCAddress = TestSCAddress::new("crowdfunding");

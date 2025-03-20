@@ -302,7 +302,7 @@ Process finished with: exit status: 0
 
 ## Validation
 
-It doesn't make sense to create a funding what has the target 0 or a negative number, so target needs to be more than 0. Similarly, it’s unreasonable to create a fundraiser with a deadline in the past, so the deadline must be in the future relative to when the contract is deployed.
+It doesn't make sense to create a funding that has the target 0 or a negative number, so target needs to be more than 0. Similarly, it’s unreasonable to create a fundraiser with a deadline in the past, so the deadline must be in the future relative to when the contract is deployed.
 
 ```rust
 #[init]
