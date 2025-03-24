@@ -13,7 +13,7 @@ RunSmartContractCreate(input *ContractCreateInput) (*VMOutput, error)
 // RunSmartContractCall computes the result of a smart contract call and how the system must change after the execution
 RunSmartContractCall(input *ContractCallInput) (*VMOutput, error)
 ```
-The **SCProcessor** from `mx-chain-go` prepares the input information for these functions. We aim to avoid modifying the **SCProcessor** itself; instead, all necessary abstractions will be implemented at the EVM level.
+The **SCProcessor** from `mx-chain-sovereign-go` prepares the input information for these functions. We aim to avoid modifying the **SCProcessor** itself; instead, all necessary abstractions will be implemented at the EVM level.
 
 ## 2. Input Preparation: EVMInputCreator
 
@@ -35,7 +35,7 @@ To allow the EVM to function within MultiversX, we introduce a layer that bridge
 
 ### 3.2 Finalizing State Changes
 
-After EVM execution finishes, we need to commit the resulting state changes to the blockchain. The EVM will use the `outputContext` component, which (together with the `storageContext`) tracks modified accounts and storages. It also creates the final `vmOutput`, which the `scProcessor` in `mx-chain-go` will then validate and apply to the blockchain (the trie) if everything is correct.
+After EVM execution finishes, we need to commit the resulting state changes to the blockchain. The EVM will use the `outputContext` component, which (together with the `storageContext`) tracks modified accounts and storages. It also creates the final `vmOutput`, which the `scProcessor` in `mx-chain-sovereign-go` will then validate and apply to the blockchain (the trie) if everything is correct.
 
 ## 4. Gas Metering
 

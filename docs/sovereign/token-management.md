@@ -2,7 +2,7 @@
 
 ## Main Chain -> Sovereign Chain
 
-1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
+1. Navigate to `/mx-chain-sovereign-go/scripts/testnet/sovereignBridge`.
 
     Update the configuration file `config/configs.cfg` with the token settings you prefer. Example:
     ```ini
@@ -30,7 +30,7 @@
 
 ## Sovereign Chain -> Main Chain
 
-1. Navigate to `/mx-chain-go/scripts/testnet/sovereignBridge`.
+1. Navigate to `/mx-chain-sovereign-go/scripts/testnet/sovereignBridge`.
 
     Update the configuration file `config/configs.cfg` with the sovereign token settings you prefer. Example:
     ```ini

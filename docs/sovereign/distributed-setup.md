@@ -4,23 +4,19 @@
 
 This guide will help you deploy a public Sovereign Chain with real validators, enabling a truly decentralized setup. At its core, blockchain technology—and Sovereign Chains in particular—are designed to operate in a decentralized manner, powered by multiple independent validators. This ensures transparency, security, and resilience, as no single entity has control over the entire system. Unlike other guides we’ve provided, which focus on local setups, this solution emphasizes decentralization by involving multiple stakeholders in the validation process. By following the steps below, the owner can create the Sovereign Chain configuration for the network:
 
-### Step 1: Get the ```mx-chain-go``` Repository
+### Step 1: Get the `mx-chain-sovereign-go` Repository
 
 Before proceeding, ensure that a **SSH key** for GitHub is configured on your machine.
 
 1. Clone the GitHub repository:
     ```bash
-    git clone git@github.com:multiversx/mx-chain-go.git
+    git clone git@github.com:multiversx/mx-chain-sovereign-go.git
     ```
 
-2. Checkout the specific Sovereign Chain SDK branch and navigate to testnet directory:
+2. Navigate to testnet directory:
     ```bash
-    cd mx-chain-go && git fetch && git checkout d699ffd && cd scripts/testnet
+    cd mx-chain-sovereign-go/scripts/testnet
     ```
-
-   :::info
-   `d699ffd` is the commit hash we recommend to be used. If you want to use the latest version you can use the branch `feat/chain-go-sdk`.
-   :::
 
 ### Step 2: Seeder Build
 
@@ -81,7 +77,6 @@ _Note: Files marked with * will be discussed later in the document._
 
 Sovereign configs can be found in `cmd/sovereignnode/config`
 ```
-economics.toml
 enableEpochs.toml
 prefs.toml
 sovereignConfig.toml
@@ -197,7 +192,7 @@ Each validator should have:
 ### Sovereign validator/observer node start
 
 The following commands will start the sovereign validator node with the configuration from **config** folder and with the **validatorKey** (or multi key from **allValidatorsKey**).
-Adjust the flags as needed. You can find all the available flags in `/mx-chain-go/cmd/sovereignnode/flags.go`
+Adjust the flags as needed. You can find all the available flags in `/mx-chain-sovereign-go/cmd/sovereignnode/flags.go`
 
 #### # single key
 ```
