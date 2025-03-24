@@ -7,21 +7,27 @@ This cross-chain interoperability is crucial for fostering an environment where 
 
 ## What is Cross-Chain Execution?
 
-Cross-Chain execution is the ability of smart contracts or decentralized applications on one blockchain to invoke actions on another blockchain. This feature allows for seamless communication and interaction between different blockchain networks, enabling developers to build applications that are chain agnostic.
+Cross-Chain execution is the ability of a smart contracts or a decentralized applications on one blockchain to invoke actions on another blockchain. This feature allows for seamless communication and interaction between different blockchain networks, enabling developers to build applications that are chain agnostic.
 
 
 ## Cross-Chain Execution within Sovereign Chains
 
-This feature is enabled by using multiple smart contracts, each one with its unique role and set of functionalities. The current Sovereign Chain suite consists of three main contracts, here is the high-level description for some of the cross chain smart contracts:
+Since a Sovereign Chain is a separate blockchain with a different rule-set from the MultiversX blockchain, there has to be a way of communication between them. The interaction is being done by Smart Contracts, the Sovereign Bridge Service and Nodes. 
 
-#### ESDT-Safe
-The *ESDT-Safe* Smart Contract performs all the heavy lifting. This contract facilitates the cross-chain transfer between either any Sovereign Chain and the MultiversX mainchain or the other way around.
+![To Sovereign](../../static/sovereign/to-sovereign.png)
 
-There are two modules implemented for this contract: [*From Sovereign*](from-sovereign.md), [*To Sovereign*](to-sovereign.md) and two important endpoints: [`execute_operation`](from-sovereign.md#executing-an-operation), [`deposit`](to-sovereign.md#deposit-tokens).
+When a transaction starts from the MultiversX Mainchain, either from an user or a smart contract, it goes through the `Mvx-ESDT-Safe` smart contract. The Observer nodes pay attention to the events that the deposit transaction emits and then the Sovereign Nodes notarize the state changes inside the Sovereign Chain. This notarization means the end of either the Cross-Chain execution or Cross-Chain transfer.
 
-:::note
-The naming for those modules has been chosen this way to represent the direction of the execution. In the following sections we will be referring to `FromSovereign` as the execution starts within the Sovereign Chain and `ToSovereign` as the destination of the execution is a Sovereign Chain. 
-:::
+![From Sovereign](../../static/sovereign/from-sovereign.png)
+
+If the transaction starts from the Sovereign Chain the call will be to the `Sov-ESDT-Safe` smart contract. The difference is that the output of the transaction is read by the Sovereign Bridge Service. From that point there are two possible outcomes:
+1. If the operation is not registered it has to be verified and registered by the `Header-Verifier` smart contract.
+2. The Bridge Service calls the `Mvx-ESDT-Safe` smart contract deployed on the MultiversX Mainchain to continue the transaction.
+
+This is a high-level description of the whole process, the smart contracts that take place in it are far more detailed and have a lot of specific scenarios and behaviours. The current Sovereign Chain suite consists of four main contracts, here is the high-level description for some of the cross chain smart contracts:
+
+#### Mvx-ESDT-Safe & Sov-ESDT-Safe
+Those two contracts have the same role: to facilitate a cross-chain execution depending on what side the process starts. There will be an in-depth description of each smart contract in the upcoming modules.
 
 #### Fee-Market
 Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. Rules such as: fee per transferred token, fee per gas unit and users whitelist to bypass the fee are set here. This contract is also present in the MultiversX mainchain and in any Sovereign Chain.
