@@ -20,6 +20,7 @@ Each action that can be executed remotely through this contract is called an *Op
 4. Leader sends *Operations* to the bridge service.
 5. Bridge service sends the *Operations* to the Header-Verifier for registration and verification, and then to ESDT-Safe for execution.
 6. At the end of the execution success/fail, a confirmation event will be added which will be received in sovereign through the observer and then the cross chain transfer will be completed.
+
 ## Executing an Operation
 
 ```rust

@@ -614,8 +614,8 @@ const sidebars = {
             items: [
               "sovereign/cross-chain-execution",
               "sovereign/mvx-esdt-safe",
-              "sovereign/to-sovereign",
-              "sovereign/from-sovereign",
+              "sovereign/sov-esdt-safe",
+              "sovereign/header-verifier",
             ]
           },
           "sovereign/validators",

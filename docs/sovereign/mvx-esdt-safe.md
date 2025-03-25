@@ -52,7 +52,7 @@ fn deposit_event(
 This log event will emit the destination address and the tokens which will be transferred to the Sovereign Chain.
 
 :::note
-Here is the [link](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/to_sovereign/create_tx.rs) to the `deposit` endpoint.
+The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/mvx-esdt-safe/src/deposit.rs).
 :::
 
 ## Executing an Operation
@@ -79,7 +79,7 @@ Since this endpoint can be found inside the _From Sovereign_ module, we are safe
 As the 2nd point specifies, the [Header-Verifier](#header-verifier-sc) smart contract plays an important role in the cross-chain execution mechanism. In this section there will also be a description for the important endpoints within this contract.
 
 :::note
-The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/esdt-safe/src/from_sovereign/transfer_tokens.rs).
+The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/mvx-esdt-safe/src/execute.rs).
 :::
 
 ## Important structs
@@ -139,7 +139,7 @@ pub struct TransferData<M: ManagedTypeApi> {
 - `args`: the arguments for the calls.
 
 :::note
-The source code for structures can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/common/transaction/src/lib.rs).
+The source code for structures can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/common/structs/src/operation.rs).
 :::
 
 ## Registering tokens
