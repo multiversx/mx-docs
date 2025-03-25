@@ -145,10 +145,6 @@ The source code for structures can be found [here](https://github.com/multiversx
 ## Registering tokens
 In the scope a Sovereign Chain, a token that already exists inside the MultiversX Mainchain has to be firstly registered inside the `Mvx-ESDT-Safe` smart contract. The `register_token` module has the role of registering any token that will be later used inside the Sovereign Chain.
 
-:::note
-The source code for this module can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/mvx-esdt-safe/src/register_token.rs).
-:::
-
 ### Register any token
 
 ```rust
@@ -187,3 +183,7 @@ Since a Sovereign Chain is a separate blockchain from the MultiversX Mainchain, 
 ```
 
 The owner will have to call the `register_native_token` from the `Mvx-ESDT-Safe` smart contract in order to register the token identifier that will be used inside the Sovereign Chain as the native one. There can only be one native token so the endpoint firstly checks if if was not already registered. The amount for registering is the same as registering any token, 0.05 EGLD. The parameters include the `token_ticker` and `token_name`. The endpoint then creates an asynchronous call to the _ESDTSystemSC_ to `issue_and_set_all_roles`. The newly created token is always fungible with 18 decimals. After the issue call is finished the callback inside the `Mvx-ESDT-Safe` smart contract inserts the newly issued token identifier inside its storage.
+
+:::note
+The source code for this module can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/mvx-esdt-safe/src/register_token.rs).
+:::
