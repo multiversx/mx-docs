@@ -613,6 +613,7 @@ const sidebars = {
             label: "Cross-Chain Execution",
             items: [
               "sovereign/cross-chain-execution",
+              "sovereign/mvx-esdt-safe",
               "sovereign/to-sovereign",
               "sovereign/from-sovereign",
             ]
