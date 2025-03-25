@@ -13,7 +13,7 @@ As mentioned in the [Introduction](cross-chain-execution.md) the Header-Verifier
     )
 ```
 
-Any *Operation* before being executed has to be registered in this smart contract. The reason behind this is that the hash will be verified and it will be locked until the operation is executed by the ESDT-Safe contract.
+Any *Operation* before being executed has to be registered in this smart contract. The reason behind this is that the hash will be verified and it will be locked until the operation is executed by the `Mvx-ESDT-Safe` contract.
 
 The registering endpoint operates as follows:
 1. Verifies that  `bridge_operations_hash` is not found in the `hash_of_hashes_history` storage mapper, otherwise it will return an error.
@@ -26,9 +26,9 @@ The registering endpoint operates as follows:
     fn lock_operation_hash(&self, hash_of_hashes: ManagedBuffer, operation_hash: ManagedBuffer)
 ```
 
-The Header-Verifier has a system in place for locking *Operation* hashes. Locking those registered hashes prevents any unwanted behaviour when executing or removing an *Operation* hash. Remember that the execution of *Operations* can only be done by the ESDT-Safe smart contract. This endpoint when called will follow this flow:
+The Header-Verifier has a system in place for locking *Operation* hashes. Locking those registered hashes prevents any unwanted behaviour when executing or removing an *Operation* hash. Remember that the execution of *Operations* can only be done by the `Mvx-ESDT-Safe` smart contract. This endpoint when called will follow this flow:
 
-1. Check if the caller is the ESDT-Safe smart contract.
+1. Check if the caller is the `Mvx-ESDT-Safe` smart contract.
 2. Check if the *Operation* is registered.
 3. If the hash is not locked set the status in the storage as locked or else return panic.
 
@@ -41,9 +41,9 @@ The hash can be in two different states: `OperationHashStatus::NotLocked` or `Op
     fn remove_executed_hash(&self, hash_of_hashes: &ManagedBuffer, operation_hash: &ManagedBuffer)
 ```
 
-After registering and executing an *Operation* the status of the hash associated to it must be removed from the Header-Verifier's internal storage. This endpoint will be called by the ESDT-Safe smart contract after the execution of the *Operation* is successful. The steps are pretty clear:
+After registering and executing an *Operation* the status of the hash associated to it must be removed from the Header-Verifier's internal storage. This endpoint will be called by the `Mvx-ESDT-Safe` smart contract after the execution of the *Operation* is successful. The steps are pretty clear:
 
-1. Check if the caller is the ESDT-Safe smart contract.
+1. Check if the caller is the `Mvx-ESDT-Safe` smart contract.
 2. Remove the status of the hash from storage.
 
 :::note
