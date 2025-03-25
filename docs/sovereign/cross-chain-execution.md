@@ -7,7 +7,7 @@ This cross-chain interoperability is crucial for fostering an environment where 
 
 ## What is Cross-Chain Execution?
 
-Cross-Chain execution is the ability of a smart contracts or a decentralized applications on one blockchain to invoke actions on another blockchain. This feature allows for seamless communication and interaction between different blockchain networks, enabling developers to build applications that are chain agnostic.
+Cross-Chain execution is the ability of a smart contracts or a decentralized applications on one blockchain to invoke actions on another blockchain. This feature allows for smart contract execution or transfer of funds from one chain to another, enabling developers to build applications that are chain agnostic.
 
 
 ## Cross-Chain Execution within Sovereign Chains
@@ -20,17 +20,22 @@ When a transaction starts from the MultiversX Mainchain, either from an user or 
 
 ![From Sovereign](../../static/sovereign/from-sovereign.png)
 
-If the transaction starts from the Sovereign Chain the call will be to the `Sov-ESDT-Safe` smart contract. The difference is that the output of the transaction is read by the Sovereign Bridge Service. From that point there are two possible outcomes:
+When the transaction sender is from the Sovereign Chain, the `Sov-ESDT-Safe` smart contract must be used. The output of the transaction is read by the Sovereign Bridge Service. From that point there are two possible outcomes:
 1. If the operation is not registered it has to be verified and registered by the `Header-Verifier` smart contract.
 2. The Bridge Service calls the `Mvx-ESDT-Safe` smart contract deployed on the MultiversX Mainchain to continue the transaction.
 
 This is a high-level description of the whole process, the smart contracts that take place in it are far more detailed and have a lot of specific scenarios and behaviours. The current Sovereign Chain suite consists of four main contracts, here is the high-level description for some of the cross chain smart contracts:
 
 #### Mvx-ESDT-Safe & Sov-ESDT-Safe
-Those two contracts have the same role: to facilitate a cross-chain execution depending on what side the process starts. There will be an in-depth description of each smart contract in the upcoming modules.
+The two contracts have the same role: to facilitate a cross-chain execution depending on what side the process starts. There will be an in-depth description of each smart contract in the upcoming modules.
 
 #### Fee-Market
-Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. Rules such as: fee per transferred token, fee per gas unit and users whitelist to bypass the fee are set here. This contract is also present in the MultiversX mainchain and in any Sovereign Chain.
+Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. There rules set inside this contract are: 
+* fee per transferred token 
+* fee per gas unit 
+* users whitelist to bypass the fee
+
+This contract is also present in the MultiversX mainchain and in any Sovereign Chain.
 
 #### Header-Verifier
 When any transaction happens inside a Sovereign Chain is called and *operation*. The main role of this contract is to verify operations. They have to be signed by the validators of the Sovereign Chain. If the operation is successfully verified it will be registered and then can be executed by the ESDT-Safe contract. All the *BLS keys* of the validator will be stored inside this contract.
