@@ -45,3 +45,7 @@ After registering and executing an *Operation* the status of the hash associated
 
 1. Check if the caller is the ESDT-Safe smart contract.
 2. Remove the status of the hash from storage.
+
+:::note
+The source code for this contract can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/header-verifier/src/lib.rs).
+:::
