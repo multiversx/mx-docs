@@ -8,7 +8,7 @@ title: Migration guides
 This page links to resources which are helpful in upgrading to newer versions of a **sdk-js** package.
 
 :::important
-Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13), in advance.
+Make sure you have a look over the [cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook-v14), in advance.
 :::
 
 ## Migrate to a newer sdk-core

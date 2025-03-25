@@ -225,7 +225,7 @@ const sidebars = {
                   {
                     label: "Cookbook",
                     type: "doc",
-                    id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                    id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
                   },
                   {
                     type: "category",
@@ -235,8 +235,8 @@ const sidebars = {
                       id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
                     },
                     items: [
-                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v12",
                       "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
                     ]
                   },
                   "sdk-and-tools/sdk-js/extending-sdk-js",
@@ -339,6 +339,7 @@ const sidebars = {
                       "sdk-and-tools/indices/es-index-tokens",
                       "sdk-and-tools/indices/es-index-transactions",
                       "sdk-and-tools/indices/es-index-validators",
+                      "sdk-and-tools/indices/es-index-events",
                     ],
                   },
                 ],

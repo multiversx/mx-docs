@@ -20,7 +20,7 @@ This guide has been made available in video format as well:
 
 ## Ping Pong Microservice
 
-This guide extends the decentralized app we have built in our previous guide [**Build a dApp in 15 minutes**](/developers/tutorials/your-first-dapp). If you haven't followed it so far, [please do it now](https://www.youtube.com/watch?v=IdkgvlK3rb8).
+This guide extends the decentralized app we have built in our previous guide [**Build a dApp in 15 minutes**](/developers/tutorials/your-first-dapp). If you haven't followed it so far, please do it now.
 
 In this guide we're going to build a microservice (an API), which is an intermediary layer between the blockchain layer and the app layer. Our app will consume this microservice instead of making requests directly on the blockchain.
 
@@ -97,7 +97,7 @@ We'll find a configuration file specific for every network we want to deploy the
 
 First we're going to configure the redis server url. If we run a redis-server on the same machine (or on our development machine) then we can leave the default value.
 
-Now we'll move on to the smart contract address. We can find it in our `dapp` repository (if we followed the previous guide ["Build a dApp in 15 minutes"](https://www.youtube.com/watch?v=IdkgvlK3rb8)). If you don't have a smart contract deployed on devnet, then we suggest to follow the previous guide first and then get back to this step.
+Now we'll move on to the smart contract address. We can find it in our `dapp` repository (if we followed the previous guide ["Build a dApp in 15 minutes"](/docs/developers/tutorials/your-first-dapp.md)). If you don't have a smart contract deployed on devnet, then we suggest to follow the previous guide first and then get back to this step.
 
 Set the `contracts.pingPong` key with the value for the smart contract address and we're done with configuring the microservice.
 
@@ -107,13 +107,13 @@ Set the `contracts.pingPong` key with the value for the smart contract address a
 
 We'll install the dependencies using npm
 
-```
+``` sh
 npm install
 ```
 
 and then we will start the microservice for the devnet:
 
-```
+``` sh
 npm run start:devnet
 ```
 
@@ -211,29 +211,29 @@ We can now verify that on the dashboard we still have the countdown and the Pong
 
 You can also find the complete code on our public repository for the dApp in the branch `microservice`:
 
-```
+```sh
 https://github.com/multiversx/mx-template-dapp/blob/microservice/src/pages/Dashboard/Actions/index.tsx
 ```
 
 [comment]: # (mx-context-auto)
 
-### Let's deep dive into the microservice code and explain the 2 basic features we implemented.
+## Let's deep dive into the microservice code and explain the 2 basic features we implemented
 
 We want to minimize the number of requests done directly on the blockchain because of the overhead they incur, so we'll first read the time to `pong` from the blockchain, we'll cache that value and all the subsequent reads will be done from the cache. That value won't change over time. It will only reset AFTER we `pong`.
 
 [comment]: # (mx-context-auto)
 
-## The Cache
+### The Cache
 
 So the caching part is done in
 
-```
+```sh
 ping-pong/microservice/src/endpoints/ping.pong/ping.pong.controller.ts
 ```
 
 which uses
 
-```
+```sh
 ping-pong/microservice/src/endpoints/ping.pong/ping.pong.service.ts
 ```
 
@@ -257,7 +257,7 @@ The function `this.getPongDeadlineRaw` will invoke the only read action on the b
 
 [comment]: # (mx-context-auto)
 
-## The Transaction Processor
+### The Transaction Processor
 
 After the user clicks the `Pong` button and performs the `pong` transaction, we have to invalidate the cache and we will use the transaction processor to identify all the `pong` transactions on the blockchain that have the receiver set to our smart contract address.
 

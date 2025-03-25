@@ -4,23 +4,19 @@
 
 This guide will help you deploy a full sovereign local network connected to MultiversX network. This includes all the smart contracts and dependent services needed. Follow these steps carefully to ensure a successful deployment.
 
-### Step 1: Get the `mx-chain-go` Repository
+### Step 1: Get the `mx-chain-sovereign-go` Repository
 
 Before proceeding, ensure that a **SSH key** for GitHub is configured on your machine.
 
 1. Clone the GitHub repository:
     ```bash
-    git clone git@github.com:multiversx/mx-chain-go.git
+    git clone git@github.com:multiversx/mx-chain-sovereign-go.git
     ```
 
-2. Checkout the specific Sovereign Chain SDK branch and navigate to testnet directory:
+2. Navigate to testnet directory:
     ```bash
-    cd mx-chain-go && git fetch && git checkout d699ffd6a29513c573b1d212861f932e037d8f67 && cd scripts/testnet
+    cd mx-chain-sovereign-go/scripts/testnet
     ```
-
-    :::info
-    `d699ffd6a29513c573b1d212861f932e037d8f67` is the commit hash we recommend to be used. If you want to use the latest version you can use the branch `feat/chain-go-sdk`.
-    :::
 
 3. Run the prerequisites script:
     ```bash
@@ -30,8 +26,8 @@ Before proceeding, ensure that a **SSH key** for GitHub is configured on your ma
     :::info
     The prerequisites script verifies and downloads the necessary packages to run the nodes and clones the required repositories:
 
-    - **mx-chain-deploy-go**: Initializes the configuration for the chain and deployment parameters.
-    - **mx-chain-proxy-go**: Repository for the proxy.
+    - **mx-chain-deploy-sovereign-go**: Initializes the configuration for the chain and deployment parameters.
+    - **mx-chain-proxy-sovereign-go**: Repository for the sovereign proxy.
     - **mx-chain-sovereign-bridge-go**: Repository for the cross-chain service.
     - **mx-chain-tools-go**: Repository for updating elastic indices.
     :::
@@ -74,19 +70,27 @@ cd sovereignBridge
     WALLET="~/wallet.pem"
 
     # Main Chain Constants
+    MAIN_CHAIN_ELASTIC=https://testnet-index.multiversx.com
     PROXY = https://testnet-gateway.multiversx.com
     CHAIN_ID = T
+
+    # Native token
+    NATIVE_ESDT_TICKER=SOV
+    NATIVE_ESDT_NAME=SovToken
     ```
 
     :::note
     - **SOVEREIGN_DIRECTORY, TXS_OUTFILE_DIRECTORY, CONTRACTS_DIRECTORY** - represent the paths to the location where the deployment scripts will generate the outputs.
     - **WALLET** - should represent the wallet generated at Step 2.2.
+    - **MAIN_CHAIN_ELASTIC** - represents the elasticsearch db from the main chain
     - **PROXY** - in this case, for the purpose of the test, the used proxy is the testnet one. Of course that the proper proxy should be used when deploying your own set of contracts depending on the development phase of your project.
     - **CHAIN_ID** - should represent the chain ID of the chain where the contracts are to be deployed.
         - **"1"** for Mainnet;
         - **"D"** for Devnet;
         - **"T"** for Testnet;
         - or use you own local network ID
+    - **NATIVE_ESDT_TICKER** - represents the ticker from which the native esdt will be generated, and updated in configs
+    - **NATIVE_ESDT_NAME** - represents the native esdt name
     :::
 
 5. Source the script:
@@ -96,13 +100,14 @@ cd sovereignBridge
 
 6. Deploy all cross-chain contracts on main chain and deploy Sovereign Chain with all required services:
     ```bash
-    deploySovereignWithCrossChainContracts
+    deploySovereignWithCrossChainContracts sov
     ```
 
     :::info
     `deploySovereignWithCrossChainContracts` command will:
     - deploy all main chain smart contracts and update sovereign configs
     - deploy sovereign nodes and the main chain observer
+    - `sov` is the prefix for ESDT tokens in the sovereign chain - it can be changed to any string consisting of 4 lowercase alphanumeric characters
     :::
 
 ### Step 3: Deploy services
@@ -113,7 +118,7 @@ ___
 
 ## Stop and clean local Sovereign Chain
 
-1. Navigate to `mx-chain-go/scripts/testnet/sovereignBridge`.
+1. Navigate to `mx-chain-sovereign-go/scripts/testnet/sovereignBridge`.
     Source the script:
     ```bash
     source script.sh
@@ -126,7 +131,7 @@ ___
 
 ## Upgrade and reset local Sovereign Chain
 
-1. Navigate to `mx-chain-go/scripts/testnet/sovereignBridge`.
+1. Navigate to `mx-chain-sovereign-go/scripts/testnet/sovereignBridge`.
     Source the script:
     ```bash
     source script.sh

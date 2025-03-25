@@ -92,7 +92,7 @@ Awesome, your transaction is now sent using your Ledger device.
 
 [comment]: # (mx-context-auto)
 
-## **Receiving EGLD in your wallet**
+## Receiving EGLD in your wallet
 
 After logging into your wallet, as described above, you will be able to see your wallet address and share it with others, so they can send you EGLD.‌
 
@@ -103,6 +103,10 @@ You can also click "Receive" on the right-hand side to see a QR code for the add
 ![img](/wallet/ledger/receive.png)
 
 [comment]: # (mx-context-auto)
+
+## Guardians
+
+To set up a guardian for a Ledger account, follow [these steps](/wallet/web-wallet.md#guardian).
 
 ## **Need help?**
 
