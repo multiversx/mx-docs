@@ -8,7 +8,7 @@ This contract has three main modules: `deposit`, `execute_operation` and `regist
 
 ## Deposit
 ### Main Chain deposit to Sovereign Chain transfer flow
-1. User deposits the tokens he wishes to transfer in the Mvx-ESDT-Safe contract deployed on the Main Chain.
+1. User deposits the tokens he wishes to transfer in the `Mvx-ESDT-Safe` contract deployed on the Main Chain.
 2. An observer is monitoring the Main Chain.
 3. Sovereign network receives extended shard header.
 4. Incoming transactions processor handles and processes the new transaction.
@@ -68,7 +68,7 @@ The source code for the endpoint can be found [here](https://github.com/multiver
 - `hash_of_hashes`: hash of all hashes of the operations that were sent in a round
 - `operation`: the details of the cross-chain execution
 
-Since this endpoint can be found inside the _From Sovereign_ module, we are safe to say that the cross-chain execution will start from within a Sovereign Chain. The execution flow of this endpoint is at follows:
+To ensure that the cross-chain execution is will be successful, the following checks must be passed: 
 
 1. Calculate the hash of the *Operation* received as a parameter.
 2. Verify that the given *Operation’s* hash is registered by the Header-Verifier smart contract.
@@ -76,13 +76,14 @@ Since this endpoint can be found inside the _From Sovereign_ module, we are safe
 4. Distribute the tokens.
 5. Emit confirmation event or fail event if needed.
 
-As the 2nd point specifies, the [Header-Verifier](#header-verifier-sc) smart contract plays an important role in the cross-chain execution mechanism. In this section there will also be a description for the important endpoints within this contract.
+As the 2nd point specifies, the `Header-Verifier` smart contract plays an important role in the cross-chain execution mechanism. In the [`Header-Verifier`](header-verifier.md) section there will also be a description for the important endpoints within this contract.
 
 :::note
 The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/mvx-esdt-safe/src/execute.rs).
 :::
 
 ## Important structs
+This subsection outlines the key data structures that enable robust cross-chain operations. It details how an *Operation* is composed of its destination address, one or more token transfers defined by `OperationEsdtPayment`, and the contextual metadata provided by `OperationData`. Additionally, `TransferData` specifies the parameters needed for executing remote smart contract calls, collectively ensuring precise control over cross-chain interactions.
 ```rust
 #[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, ManagedVecItem, Clone)]
 pub struct Operation<M: ManagedTypeApi> {
@@ -143,7 +144,7 @@ The source code for structures can be found [here](https://github.com/multiversx
 :::
 
 ## Registering tokens
-In the scope a Sovereign Chain, a token that already exists inside the MultiversX Mainchain has to be firstly registered inside the `Mvx-ESDT-Safe` smart contract. The `register_token` module has the role of registering any token that will be later used inside the Sovereign Chain.
+As mentioned at the start of this section, in the scope a Sovereign Chain, a token that already exists inside the MultiversX Mainchain can be leveraged within the custom blockchain. It has to be firstly registered inside the `Mvx-ESDT-Safe` smart contract. The `register_token` module has the role of registering any token that will be later used inside the Sovereign Chain.
 
 ### Register any token
 
@@ -170,7 +171,7 @@ If everything is in order, the `Mvx-ESDT-Safe` smart contract will initiate an a
 * `sovereign_to_multiversx_token_id_mapper(sov_token_id)` -> mvx_token_id
 * `multiversx_to_sovereign_token_id_mapper(mvx_token_id)` -> sov_token_id
 
-> After the execution of this endpoint, the `Mvx-ESDT-Safe` smart contract will have in its storage a pair of token identifiers. **Example**: `Sov-TOKEN-123456` is the corresponding sovereign identifier for the `TOKEN-123456` identifier from the MultiversX Mainchain.
+> After the execution of this endpoint, the `Mvx-ESDT-Safe` smart contract will have in its storage a pair of token identifiers. **Example**: `Sov-TOKEN-123456` is the corresponding sovereign identifier for the `TOKEN-123456` identifier from the MultiversX Mainchain. You can view this feature as creating copies of MultiversX Mainchain tokens inside the Sovereign Chain.
 
 ### Register the native token
 Since a Sovereign Chain is a separate blockchain from the MultiversX Mainchain, it has to have a its own native token. Registering the native token is a straightforward process of just one endpoint call.
@@ -182,7 +183,7 @@ Since a Sovereign Chain is a separate blockchain from the MultiversX Mainchain, 
     fn register_native_token(&self, token_ticker: ManagedBuffer, token_name: ManagedBuffer)
 ```
 
-The owner will have to call the `register_native_token` from the `Mvx-ESDT-Safe` smart contract in order to register the token identifier that will be used inside the Sovereign Chain as the native one. There can only be one native token so the endpoint firstly checks if if was not already registered. The amount for registering is the same as registering any token, 0.05 EGLD. The parameters include the `token_ticker` and `token_name`. The endpoint then creates an asynchronous call to the _ESDTSystemSC_ to `issue_and_set_all_roles`. The newly created token is always fungible with 18 decimals. After the issue call is finished the callback inside the `Mvx-ESDT-Safe` smart contract inserts the newly issued token identifier inside its storage.
+The owner will have to call the `register_native_token` from the `Mvx-ESDT-Safe` smart contract in order to register the token identifier that will be used inside the Sovereign Chain as the native one. There can only be one native token so the endpoint firstly checks if if was not already registered. The fee amount for registering is the same as registering any token, 0.05 EGLD. The parameters include the `token_ticker` and `token_name`. The endpoint then initiates an asynchronous call to the _ESDTSystemSC_ to `issue_and_set_all_roles`. The newly created token is always fungible and has 18 decimals. After the issue call is finished the callback inside the `Mvx-ESDT-Safe` smart contract inserts the newly issued token identifier inside its storage.
 
 :::note
 The source code for this module can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/mvx-esdt-safe/src/register_token.rs).

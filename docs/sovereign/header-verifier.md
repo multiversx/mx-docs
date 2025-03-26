@@ -1,8 +1,8 @@
-# Header-Verifier SC
+# Header-Verifier
 
-As mentioned in the [Introduction](cross-chain-execution.md) the Header-Verifier smart contract is responsible to verify signatures, store the *BLS Keys* of the validators and register incoming *Operations*.
+As mentioned in the [Introduction](cross-chain-execution.md) the `Header-Verifier` smart contract is responsible to verify signatures, store the *BLS Keys* of the validators and register incoming *Operations*.
 
-### Registering a set of *Operations*
+## Registering a set of *Operations*
 ```rust
     #[endpoint(registerBridgeOps)]
     fn register_bridge_operations(
@@ -17,10 +17,11 @@ Any *Operation* before being executed has to be registered in this smart contrac
 
 The registering endpoint operates as follows:
 1. Verifies that  `bridge_operations_hash` is not found in the `hash_of_hashes_history` storage mapper, otherwise it will return an error.
-2. Verifies that the hash of all `operations_hashes` matches the `bridge_operations_hash, otherwise, the endpoint will return an error.
-3. All `operations_hashes` are stored in the smart contract's storage with the status OperationsHashStatus::NotLocked.
+2. Verifies that the hash of all `operations_hashes` matches the `bridge_operations_hash`, otherwise, the endpoint will return an error.
+3. All `operations_hashes` are stored in the smart contract's storage with the status `OperationsHashStatus::NotLocked`.
 4. The `bridge_operations_hash` is added to the `hash_of_hashes_history` storage mapper.
 
+## Locking *Operations*
 ```rust
     #[endpoint(lockOperationHash)]
     fn lock_operation_hash(&self, hash_of_hashes: ManagedBuffer, operation_hash: ManagedBuffer)
@@ -36,6 +37,7 @@ The Header-Verifier has a system in place for locking *Operation* hashes. Lockin
 The hash can be in two different states: `OperationHashStatus::NotLocked` or `OperationHashStatus::Locked`
 :::
 
+## Removing *Operations*
 ```rust
     #[endpoint(removeExecutedHash)]
     fn remove_executed_hash(&self, hash_of_hashes: &ManagedBuffer, operation_hash: &ManagedBuffer)

@@ -1,23 +1,23 @@
 # Sov-ESDT-Safe
 ![From Sovereign](../../static/sovereign/from-sovereign.png)
 
-Whether an External Owned Account (EOA) like a user wallet or another smart contract the procedure is simple. An address will be able to perform a multi tokens transfer with various types of tokens:
+Whether an External Owned Account (EOA) like an user wallet or another smart contract the procedure is simple. An address will be able to perform a multi tokens transfer with various types of tokens:
 - Fungible Tokens
 - (Dynamic) Non-Fungible Tokens
 - (Dynamic) Semi-Fungible Tokens
 - (Dynamic) Meta ESDT Tokens
 
 When making the deposit, the user specifies:
-1. A destination address on the Sovereign Chain
+1. A destination address 
 2. `TransferData` if the execution contains a smart contract call, which contains gas, function and arguments
 
 ## Sovereign Chain to Main Chain transfer flow
 1. User deposits token to the `Sov-ESDT-Safe` smart contract.
 2. Outgoing *Operations* are created at the end of the round.
 3. Validators sign all the outgoing *Operations*.
-4. Leader sends *Operations* to the bridge service.
-5. Bridge service sends the *Operations* to the Header-Verifier for registration and verification, and then to `Mvx-ESDT-Safe` for execution.
-6. At the end of the execution success/fail, a confirmation event will be added which will be received in sovereign through the observer and then the cross chain transfer will be completed.
+4. Leader sends *Operations* to the Sovereign Bridge Service.
+5. Sovereign Bridge Service sends the *Operations* to the Header-Verifier for registration and verification, and then to `Mvx-ESDT-Safe` for execution.
+6. At the end of the execution success/fail, a confirmation event will be added which will be received in Sovereign through the observer and then the cross chain transfer will be completed.
 
 ### Deposit Endpoint
 ```rust
@@ -29,7 +29,7 @@ When making the deposit, the user specifies:
         optional_transfer_data: OptionalValueTransferDataTuple<Self::Api>,
     )
 ```
-As you can see both the `Mvx-ESDT-Safe` and `Sov-ESDT-Safe` smart contracts have the `deposit` endpoint. At a high level, they do the same process, depositing funds or calling other smart contracts. The main differences are when each payments is processed. Since the `Sov-ESDT-Safe` smart contract doesn't have the storage mapper for the native token, the payments won't be verified if they include any payment with the native token. The enabled checks are the same:
+As you can see both the `Mvx-ESDT-Safe` and `Sov-ESDT-Safe` smart contracts have the `deposit` endpoint. At a high level, the process is the same, depositing funds or calling other smart contracts. The main differences are when each payments is processed. Since the `Sov-ESDT-Safe` smart contract doesn't have the storage mapper for the native token, the payments won't be verified if they include any payment with the native token. The enabled checks are the same:
 
 - If the token is whitelisted or not blacklisted, in that case the tokens can be transferred.
 - If the fee is enabled, the smart contract assures that the fee is paid.
