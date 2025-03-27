@@ -3,7 +3,7 @@
 
 The ability to transfer tokens from the Main Chain to any Sovereign Chain is essential, since every Sovereign can connect to the Main MultiversX Chain. As a result, the customizable Sovereign can leverage any token available on the default network. Another great feature is the possibility of executing smart contracts inside the Sovereign Chain through this contract.
 
-This contract has three main modules: `deposit`, `execute_operation` and `register_token`.
+This contract has three main modules: [`deposit`](#deposit), [`execute_operation`](#executing-an-operation) and [`register_token`](#registering-tokens).
 
 
 ## Deposit
@@ -82,7 +82,7 @@ As the 2nd point specifies, the `Header-Verifier` smart contract plays an import
 The source code for the endpoint can be found [here](https://github.com/multiversx/mx-sovereign-sc/blob/main/mvx-esdt-safe/src/execute.rs).
 :::
 
-## Important structs
+## Important Endpoint Related Structures
 This subsection outlines the key data structures that enable robust cross-chain operations. It details how an *Operation* is composed of its destination address, one or more token transfers defined by `OperationEsdtPayment`, and the contextual metadata provided by `OperationData`. Additionally, `TransferData` specifies the parameters needed for executing remote smart contract calls, collectively ensuring precise control over cross-chain interactions.
 ```rust
 #[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, ManagedVecItem, Clone)]
