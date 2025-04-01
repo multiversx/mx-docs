@@ -106,13 +106,13 @@ mxpy config set dependencies.testwallets.tag v1.0.0
 
 The default config contains the **default address hrp** which depending on the network (e.g Sovereign Chain) might need to be altered.
 
-Most of the commands that might need the `address hrp` already provide a parameter called `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If that addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test` :
+Most of the commands that might need the `address hrp` already provide a parameter called `--hrp` or `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If that addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test` :
 ```sh
 mxpy config set default_address_hrp test
 ```
 
 :::note
-Explicitly providing `--address-hrp` will **always** be used over the `hrp` set in the config.
+Explicitly providing `--hrp` will **always** be used over the one fetched from the network or the `hrp` set in the config.
 :::
 
 [comment]: # (mx-context-auto)
