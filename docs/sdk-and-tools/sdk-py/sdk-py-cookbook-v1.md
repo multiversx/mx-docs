@@ -251,7 +251,7 @@ from multiversx_sdk import NetworkProviderConfig, ApiNetworkProvider, RequestsRe
 retry_options = RequestsRetryOptions(
     retries=5,
     backoff_factor=0.1,
-    status_forecelist=[500, 502, 503]
+    status_forcelist=[500, 502, 503]
 )
 
 config = NetworkProviderConfig(
