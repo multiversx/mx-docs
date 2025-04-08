@@ -54,7 +54,7 @@ Open VSCode, select **File > Open Folder**, and open the newly created `staking-
 
 ## Building the contract
 
-In the VSCode terminal, run the following command to build the contract:
+In the terminal, run the following command to build the contract:
 
 ```bash
 sc-meta all build
@@ -93,13 +93,13 @@ After the building has completed, our folder should look like this:
     └── src
 ```
 
-A new folder, called `output` was created, which contains the compiled contract code. More on this is used later. For now, let's continue.
+A new folder, called `output` was created, which contains the compiled contract code. More on this is used later.
 
 [comment]: # (mx-context-auto)
 
 ## Your first lines of Rust
 
-Currently, we just have an empty contract. Not very useful, is it? So let's add some simple code for it. Since this is a staking contract, we'd expect to have a `stake` function, right?
+Currently, we just have an empty contract. Not very useful, is it? So let's add some simple code for it. Since this is a staking contract, we would expect to have a `stake` function, right?
 
 First, remove all the code in the `./src/staking_contract.rs` file and replace it with this:
 
@@ -122,18 +122,20 @@ pub trait StakingContract {
 }
 ```
 
-Since we want this function to be callable by users, we have to annotate it with `#[endpoint]`. Also, since we want to be able to receive a payment, we mark it also as `#[payable("EGLD)]`. For now, we'll use EGLD as our staking token.
+Since we want this function to be callable by users, we have to annotate it with `#[endpoint]`. Also, since we want to be able to [receive a payment](/docs/developers/developer-reference/sc-payments.md#receiving-payments), we mark it also as `#[payable("EGLD)]`. For now, we'll use EGLD as our staking token.
 
-:::note
+:::important
 The contract **does NOT** need to be payable for it to receive payments on endpoint calls. The payable flag at contract level is only for receiving payments without endpoint invocation.
 :::
 
-Now, it's time to add an implementation for the function. We need to see how much a user paid, and save their staking information in storage. We end up with this code:
+Let's add an implementation for the function! We need to see how much a user paid, and save their staking information in storage.
+
+We end up with this code:
 
 ```rust
 #![no_std]
 
-multiversx_sc::imports!();
+use multiversx_sc::imports::*;
 
 #[multiversx_sc::contract]
 pub trait StakingContract {
@@ -146,7 +148,7 @@ pub trait StakingContract {
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
-        let payment_amount = self.call_value().egld().clone_value();
+        let payment_amount = self.call_value().egld().clone();
         require!(payment_amount > 0, "Must pay more than 0");
 
         let caller = self.blockchain().get_caller();
@@ -170,33 +172,36 @@ We've also added [`#[view]`](/docs/developers/developer-reference/sc-annotations
 
 Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
 
-- [https://docs.multiversx.com/developers/developer-reference/sc-api-functions](/developers/developer-reference/sc-api-functions)
-- [https://docs.multiversx.com/developers/developer-reference/storage-mappers](/developers/developer-reference/storage-mappers)
+- [Smart Contract API Functions](/developers/developer-reference/sc-api-functions)
+- [Storage Mappers](/developers/developer-reference/storage-mappers)
 
-Now, I've intentionally written some bad code here. Can you spot the improvements we can make?
+Now, there is intentionally written some bad code here. Can you spot the improvements we can make?
 
-1. The last `clone()` from `stake()` function is not needed. If you clone variables all the time, then you need to take some time to read the Rust ownership chapter of the Rust book: [https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) and also about the implications of cloning types from the Rust framework: [https://docs.multiversx.com/developers/best-practices/biguint-operations](/developers/best-practices/biguint-operations).
+1. The last `clone()` from `stake()` function is not needed. If you clone variables all the time, then you need to take some time to read the [ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) chapter of the Rust book and also about the [implications of cloning](/developers/best-practices/biguint-operations) types from the Rust framework.
 
 2. The `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
 
-3. There's a logic error. What happens if a user stakes twice? That's right, their position will be overwritten with the newest value. So instead, we need to add the newest stake amount over their current amount, using the [`update`](/docs/developers/developer-reference/storage-mappers.md#update) method.
+3. There is a logic error. What happens if an user stakes twice? Then, their position will be overwritten with the newest value. Instead, we need to add the newest stake amount over their current amount, using the [`update`](/docs/developers/developer-reference/storage-mappers.md#update) method.
 
 After fixing the above problems, we end up with the following code:
 
 ```rust
 #![no_std]
 
-multiversx_sc::imports!();
+use multiversx_sc::imports::*;
 
 #[multiversx_sc::contract]
 pub trait StakingContract {
     #[init]
     fn init(&self) {}
 
+    #[upgrade]
+    fn upgrade(&self) {}
+
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
-        let payment_amount = self.call_value().egld().clone_value();
+        let payment_amount = self.call_value().egld().clone();
         require!(payment_amount > 0, "Must pay more than 0");
 
         let caller = self.blockchain().get_caller();
@@ -225,7 +230,7 @@ Every smart contract needs to have a function annotated with [`#[init]`](/docs/d
 
 [comment]: # (mx-context-auto)
 
-### Creating a wallet
+## Creating a wallet
 
 :::note  
 You can skip this section if you already have a devnet wallet setup.
@@ -235,7 +240,7 @@ Open the terminal and run the following commands:
 
 ```sh
 mkdir -p ~/MyTestWallets
-sc-meta wallet new --format pem --outfile ./MyTestWallets/tutorialKey.pem
+sc-meta wallet new --format pem --outfile ~/MyTestWallets/tutorialKey.pem
 ```
 
 <!-- To initiate transactions on the blockchain, your wallet needs funds.
@@ -252,7 +257,7 @@ Faucet is available also on **testnet**. Go to [Testnet Wallet Multiversx](https
 
 [comment]: # (mx-context-auto)
 
-### Deploying the contract on devnet
+## Deploy the contract
 
 Now that we've created a wallet, it's time to deploy our contract.
 
@@ -271,7 +276,7 @@ After the contract is built, generate the interactor:
 sc-meta all snippets
 ```
 
-add the interactor to the project; at `staking-contract/Cargo.toml` add `interactor` as a member to the workspace:
+Add the interactor to the project. At `staking-contract/Cargo.toml` add `interactor` as a member to the workspace:
 
 ```toml
 [package]
@@ -294,7 +299,7 @@ members = [
 ]
 ```
 
-update the sender of the transactions. In the file `staking-contract/interact.rs` modify variable `wallet_address` from `new` function with the [absolute path](https://www.redhat.com/en/blog/linux-path-absolute-relative) to your wallet:
+Then, update the sender of the transactions. In the file `staking-contract/interactor/src/interact.rs` **modify** variable `wallet_address` from function `new(config: Config)` with the [absolute path](https://www.redhat.com/en/blog/linux-path-absolute-relative) to your wallet:
 
 ```rust
 let wallet_address = interactor
@@ -304,7 +309,7 @@ let wallet_address = interactor
     .await;
 ```
 
-finally, deploy the contract on devnet:
+Finally, deploy the contract on devnet:
 
 ```bash
 cd interactor/
@@ -312,23 +317,19 @@ cargo run deploy
 ```
 
 :::note  
-If you wanted to use testnet, the `gateway_uri` from `staking-contract/interactor/config.toml` would be `https://testnet-gateway.multiversx.com`. For mainnet, it would be `https://gateway.multiversx.com`.
+If you want to use testnet, change `gateway_uri` from `staking-contract/interactor/config.toml` to `https://testnet-gateway.multiversx.com`. For mainnet, it would be `https://gateway.multiversx.com`.
 
 More details can be found [here](/developers/constants/).
 :::
 
-[comment]: # (mx-context-auto)
-
-### Account was not found? But I just created the wallet
-
 You're going to see an error like the following:
 
 ```bash
-error sending tx (possible API failure): transaction generation failed: insufficient funds for address erd1vx8tcqgrkytf3yr3kjqux22ze27mzcgds067dnegxzp3u2dj253qwy7jjf
+error sending tx (possible API failure): transaction generation failed: insufficient funds for address erd1...
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
 
-This is because your account has no EGLD in it. For now, the blockchain is concerned because the account does not exist, as it has no transactions from or to it.
+This is because your account has no EGLD in it.
 
 [comment]: # (mx-context-auto)
 
@@ -345,10 +346,10 @@ There are many ways of getting EGLD on devnet:
 
 #### Getting EGLD through devnet wallet
 
-Go to [https://devnet-wallet.multiversx.com](https://devnet-wallet.multiversx.com) and login to your devnet account with your PEM file. On the left side menu, select the "faucet" option:  
+Go to [Devnet Wallet](https://devnet-wallet.multiversx.com) and login to your account with your PEM file. On the left side menu, select the *Faucet* option:  
 ![img](/developers/staking-contract-tutorial-img/wallet_faucet.png)
 
-Request the tokens. After a couple seconds, refresh the page, and you should have 5 xEGLD in your wallet.
+Request the tokens. After a couple seconds, refresh the page, and you should have **5 xEGLD** in your wallet.
 
 [comment]: # (mx-context-auto)
 
@@ -357,13 +358,13 @@ Request the tokens. After a couple seconds, refresh the page, and you should hav
 Go to [https://r3d4.fr/faucet](https://r3d4.fr/faucet) and submit a request:  
 ![img](/developers/staking-contract-tutorial-img/external_faucet.png)
 
-Make sure you selected "devnet" and input your address! It might take a bit depending on how "busy" the faucet is.
+Make sure you selected `Devnet` and input **your** address! It might take a bit depending on how "busy" the faucet is.
 
 [comment]: # (mx-context-auto)
 
 ### Deploying the contract, second try
 
-Now that the blockchain knows about our account, it's time to try the deploy again. Run the `deploy` command again and let's see the results. Make sure you save the contract address:
+Run the `deploy` command again and let's see the results:
 
 ```bash
 sender's recalled nonce: 0
@@ -373,7 +374,7 @@ deploy address: erd1qqqqqqqqqqqqq...
 new address: erd1qqqqqqqqqqqqq...
 ```
 
-Alternatively, you can check the address in the logs tab in [explorer](https://devnet-explorer.multiversx.com/transactions), namely the `SCDeploy` method.
+Alternatively, you can check the address in the logs tab on [Devnet Explorer](https://devnet-explorer.multiversx.com/transactions), namely the `SCDeploy` method.
 
 [comment]: # (mx-context-auto)
 
@@ -382,13 +383,15 @@ Alternatively, you can check the address in the logs tab in [explorer](https://d
 Everything should work just fine, but you'll see this message:  
 ![img](/developers/staking-contract-tutorial-img/too_much_gas.png)
 
-This is NOT an error. This simply means you provided way more gas than needed, so all the gas was consumed instead of the leftover being returned to you. This is done to protect the network against certain attacks. For instance, one could always provide the max gas limit and only use very little, decreasing the network's throughput significantly.
+This is **not** an error. This simply means you provided way more gas than needed, so all the gas was consumed instead of the leftover being returned to you.
+
+This is done to protect the network against certain attacks. For instance, one could always provide the max gas limit and only use very little, decreasing the network's throughput significantly.
 
 [comment]: # (mx-context-auto)
 
 ## The first stake
 
-Let's update the stake function from `staking-contract/interactor/src/interact.rs` to do the first stake
+Let's update the stake function from `staking-contract/interactor/src/interact.rs` to do the first stake.
 
 Initialize variable `egld_amount` with `1` instead of `0`:
 
@@ -971,7 +974,7 @@ A block is produced about every 6 seconds, so total blocks in a year would be se
 pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
 ```
 
-More specifically: 60 seconds per minute _60 minutes per hour_ 24 hours per day \* 365 days, divided by the 6-second block duration.
+More specifically: 60 seconds per minute *60 minutes per hour* 24 hours per day \* 365 days, divided by the 6-second block duration.
 
 :::note
 This is calculated and replaced with the exact value at compile time, so there is no performance penalty of having a constant with mathematical operations in its value definition.
@@ -1119,7 +1122,7 @@ pub trait StakingContract {
         staking_pos.last_action_block = current_block;
 
         if reward_amount > 0 {
-            self.send().direct_egld(user, &reward_amount);
+            self.tx().to(user).egld(&reward_amount).transfer();
         }
     }
 
@@ -1168,250 +1171,270 @@ sc-meta all proxy
 Let's update our test, to use our new `StakingPosition` struct, and also provide the `APY` as argument for the `init` function.
 
 ```rust
-use multiversx_sc::{codec::multi_types::OptionalValue, types::Address};
-use multiversx_sc_scenario::{
-    managed_address, managed_biguint, rust_biguint, whitebox::*, DebugApi,
+use multiversx_sc::{
+    imports::OptionalValue,
+    types::{BigUint, ReturnsResult, TestAddress, TestSCAddress},
 };
-use staking_contract::*;
+use multiversx_sc_scenario::{imports::MxscPath, ScenarioTxRun, ScenarioWorld};
+use staking_contract::staking_contract_proxy::{self, StakingPosition};
 
-const WASM_PATH: &'static str = "output/staking-contract.wasm";
+const OWNER_ADDRESS: TestAddress = TestAddress::new("owner");
+const STAKING_CONTRACT_ADDRESS: TestSCAddress = TestSCAddress::new("staking-contract");
+const USER_ADDRESS: TestAddress = TestAddress::new("user");
+const WASM_PATH: MxscPath = MxscPath::new("output/staking-contract.mxsc.json");
 const USER_BALANCE: u64 = 1_000_000_000_000_000_000;
 const APY: u64 = 1_000; // 10%
 
-struct ContractSetup<ContractObjBuilder>
-where
-    ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
-{
-    pub b_mock: BlockchainStateWrapper,
-    pub owner_address: Address,
-    pub user_address: Address,
-    pub contract_wrapper:
-        ContractObjWrapper<staking_contract::ContractObj<DebugApi>, ContractObjBuilder>,
+struct ContractSetup {
+    pub world: ScenarioWorld,
 }
 
-impl<ContractObjBuilder> ContractSetup<ContractObjBuilder>
-where
-    ContractObjBuilder: 'static + Copy + Fn() -> staking_contract::ContractObj<DebugApi>,
-{
-    pub fn new(sc_builder: ContractObjBuilder) -> Self {
-        let rust_zero = rust_biguint!(0u64);
-        let mut b_mock = BlockchainStateWrapper::new();
-        let owner_address = b_mock.create_user_account(&rust_zero);
-        let user_address = b_mock.create_user_account(&rust_biguint!(USER_BALANCE));
-        let sc_wrapper =
-            b_mock.create_sc_account(&rust_zero, Some(&owner_address), sc_builder, WASM_PATH);
+impl ContractSetup {
+    pub fn new() -> Self {
+        let mut world = ScenarioWorld::new();
+        world.set_current_dir_from_workspace("staking-contract");
+        world.register_contract(WASM_PATH, staking_contract::ContractBuilder);
+
+        world.account(OWNER_ADDRESS).nonce(1).balance(0);
+        world.account(USER_ADDRESS).nonce(1).balance(USER_BALANCE);
 
         // simulate deploy
-        b_mock
-            .execute_tx(&owner_address, &sc_wrapper, &rust_zero, |sc| {
-                sc.init(APY);
-            })
-            .assert_ok();
+        world
+            .tx()
+            .from(OWNER_ADDRESS)
+            .typed(staking_contract_proxy::StakingContractProxy)
+            .init(APY)
+            .code(WASM_PATH)
+            .new_address(STAKING_CONTRACT_ADDRESS)
+            .run();
 
-        ContractSetup {
-            b_mock,
-            owner_address,
-            user_address,
-            contract_wrapper: sc_wrapper,
-        }
+        ContractSetup { world }
     }
 }
 
 #[test]
 fn stake_unstake_test() {
-    let mut setup = ContractSetup::new(staking_contract::contract_obj);
-    let user_addr = setup.user_address.clone();
+    let mut setup = ContractSetup::new();
 
     setup
-        .b_mock
-        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
-    setup
-        .b_mock
-        .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
+        .world
+        .check_account(USER_ADDRESS)
+        .balance(USER_BALANCE);
+    setup.world.check_account(OWNER_ADDRESS).balance(0);
 
     // stake full
     setup
-        .b_mock
-        .execute_tx(
-            &user_addr,
-            &setup.contract_wrapper,
-            &rust_biguint!(USER_BALANCE),
-            |sc| {
-                sc.stake();
+        .world
+        .tx()
+        .from(USER_ADDRESS)
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .stake()
+        .egld(USER_BALANCE)
+        .run();
 
-                assert_eq!(
-                    sc.staking_position(&managed_address!(&user_addr)).get(),
-                    StakingPosition {
-                        stake_amount: managed_biguint!(USER_BALANCE),
-                        last_action_block: 0
-                    }
-                );
-            },
-        )
-        .assert_ok();
+    let result = setup
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staking_position(USER_ADDRESS.to_managed_address())
+        .returns(ReturnsResult)
+        .run();
 
+    let expected_result = StakingPosition {
+        stake_amount: BigUint::from(USER_BALANCE),
+        last_action_block: 0,
+    };
+
+    assert_eq!(result, expected_result);
+
+    setup.world.check_account(USER_ADDRESS).balance(0);
     setup
-        .b_mock
-        .check_egld_balance(&user_addr, &rust_biguint!(0));
-    setup.b_mock.check_egld_balance(
-        setup.contract_wrapper.address_ref(),
-        &rust_biguint!(USER_BALANCE),
-    );
+        .world
+        .check_account(STAKING_CONTRACT_ADDRESS)
+        .balance(USER_BALANCE);
 
     // unstake partial
     setup
-        .b_mock
-        .execute_tx(
-            &user_addr,
-            &setup.contract_wrapper,
-            &rust_biguint!(0),
-            |sc| {
-                sc.unstake(OptionalValue::Some(managed_biguint!(USER_BALANCE / 2)));
+        .world
+        .tx()
+        .from(USER_ADDRESS)
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .unstake(OptionalValue::Some(USER_BALANCE / 2))
+        .run();
 
-                assert_eq!(
-                    sc.staking_position(&managed_address!(&user_addr)).get(),
-                    StakingPosition {
-                        stake_amount: managed_biguint!(USER_BALANCE / 2),
-                        last_action_block: 0
-                    }
-                );
-            },
-        )
-        .assert_ok();
+    let result = setup
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staking_position(USER_ADDRESS)
+        .returns(ReturnsResult)
+        .run();
+
+    let expected_result = StakingPosition {
+        stake_amount: BigUint::from(USER_BALANCE / 2),
+        last_action_block: 0,
+    };
+
+    assert_eq!(result, expected_result);
 
     setup
-        .b_mock
-        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE / 2));
-    setup.b_mock.check_egld_balance(
-        setup.contract_wrapper.address_ref(),
-        &rust_biguint!(USER_BALANCE / 2),
-    );
+        .world
+        .check_account(USER_ADDRESS)
+        .balance(USER_BALANCE / 2);
+    setup
+        .world
+        .check_account(STAKING_CONTRACT_ADDRESS)
+        .balance(USER_BALANCE / 2);
 
     // unstake full
     setup
-        .b_mock
-        .execute_tx(
-            &user_addr,
-            &setup.contract_wrapper,
-            &rust_biguint!(0),
-            |sc| {
-                sc.unstake(OptionalValue::None);
+        .world
+        .tx()
+        .from(USER_ADDRESS)
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .unstake(OptionalValue::None::<u64>)
+        .run();
 
-                assert!(sc
-                    .staking_position(&managed_address!(&user_addr))
-                    .is_empty());
-            },
-        )
-        .assert_ok();
+    let result = setup
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staking_position(USER_ADDRESS)
+        .returns(ReturnsResult)
+        .run();
+
+    let expected_result = StakingPosition {
+        stake_amount: BigUint::from(USER_BALANCE / 2),
+        last_action_block: 0,
+    };
+
+    assert_eq!(result, expected_result);
 
     setup
-        .b_mock
-        .check_egld_balance(&user_addr, &rust_biguint!(USER_BALANCE));
+        .world
+        .check_account(USER_ADDRESS)
+        .balance(USER_BALANCE);
     setup
-        .b_mock
-        .check_egld_balance(setup.contract_wrapper.address_ref(), &rust_biguint!(0));
+        .world
+        .check_account(STAKING_CONTRACT_ADDRESS)
+        .balance(0);
 }
 ```
 
-Now let's run the test... it didn't work. You should see the following error:
+Now let's run the test... **it didn't work**. You should see the following error:
 
-[comment]: # (mx-context-auto)
-
-### Storage decode error: input too short
-
-But why? Everything worked fine before. This is because instead of using a simple `BigUint` for staking positions, we now use the `StakingPosition` struct. If you follow the error trace, you will see exactly where it failed:
-
+```bash
+Error: result code mismatch.
+Tx id: ''
+Want: "0"
+Have: 4
+Message: storage decode error (key: stakingPositionuser____________________________): input too short
 ```
-17: staking_contract::StakingContract::stake
-             at ./src/empty.rs:29:9
+
+But why? Everything worked fine before.
+
+This is because instead of using a simple `BigUint` for staking positions, we now use the `StakingPosition` structure. If you follow the error trace, you will see exactly where it failed:
+
+```bash
+28: staking_contract::StakingContract::stake
+             at ./src/staking_contract.rs:34:9
 ```
 
 Which leads to the following line:
 
 ```rust
 self.staking_position(&caller).update(|staking_pos| {
-            self.claim_rewards_for_user(&caller, staking_pos);
+    self.claim_rewards_for_user(&caller, staking_pos);
 
-            staking_pos.stake_amount += payment_amount
-        });
+    staking_pos.stake_amount += payment_amount
+});
 ```
 
-Because we're trying to add a new user, which has no staking entry yet, the decoding fails. For a simple `BigUint`, decoding from an empty storage yields the `0` value, which is exactly what we want, but for a struct type, it cannot give us any default value.
+Because we're trying to add a new user, which has no staking entry yet, the decoding fails.
+
+For a simple `BigUint`, decoding from an empty storage yields the `0` value, which is exactly what we want, but for a struct type, it cannot give us any default value.
 
 For this reason, we have to add some additional checks. The endpoint implementations will have to be changed to the following (the rest of the code remains the same):
 
 ```rust
-    #[payable("EGLD")]
-    #[endpoint]
-    fn stake(&self) {
-        let payment_amount = self.call_value().egld_value().clone_value();
-        require!(payment_amount > 0, "Must pay more than 0");
+#[payable("EGLD")]
+#[endpoint]
+fn stake(&self) {
+    let payment_amount = self.call_value().egld().clone_value();
+    require!(payment_amount > 0, "Must pay more than 0");
 
-        let caller = self.blockchain().get_caller();
-        let stake_mapper = self.staking_position(&caller);
+    let caller = self.blockchain().get_caller();
+    let stake_mapper = self.staking_position(&caller);
 
-        let new_user = self.staked_addresses().insert(caller.clone());
-        let mut staking_pos = if !new_user {
-            stake_mapper.get()
-        } else {
-            let current_block = self.blockchain().get_block_epoch();
-            StakingPosition {
-                stake_amount: BigUint::zero(),
-                last_action_block: current_block,
-            }
-        };
-
-        self.claim_rewards_for_user(&caller, &mut staking_pos);
-        staking_pos.stake_amount += payment_amount;
-
-        stake_mapper.set(&staking_pos);
-    }
-
-    #[endpoint]
-    fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
-        let caller = self.blockchain().get_caller();
-        self.require_user_staked(&caller);
-
-        let stake_mapper = self.staking_position(&caller);
-        let mut staking_pos = stake_mapper.get();
-
-        let unstake_amount = match opt_unstake_amount {
-            OptionalValue::Some(amt) => amt,
-            OptionalValue::None => staking_pos.stake_amount.clone(),
-        };
-        require!(
-            unstake_amount > 0 && unstake_amount <= staking_pos.stake_amount,
-            "Invalid unstake amount"
-        );
-
-        self.claim_rewards_for_user(&caller, &mut staking_pos);
-        staking_pos.stake_amount -= &unstake_amount;
-
-        if staking_pos.stake_amount > 0 {
-            stake_mapper.set(&staking_pos);
-        } else {
-            stake_mapper.clear();
-            self.staked_addresses().swap_remove(&caller);
+    let new_user = self.staked_addresses().insert(caller.clone());
+    let mut staking_pos = if !new_user {
+        stake_mapper.get()
+    } else {
+        let current_block = self.blockchain().get_block_epoch();
+        StakingPosition {
+            stake_amount: BigUint::zero(),
+            last_action_block: current_block,
         }
+    };
 
-        self.send().direct_egld(&caller, &unstake_amount);
-    }
+    self.claim_rewards_for_user(&caller, &mut staking_pos);
+    staking_pos.stake_amount += payment_amount;
 
-    #[endpoint(claimRewards)]
-    fn claim_rewards(&self) {
-        let caller = self.blockchain().get_caller();
-        self.require_user_staked(&caller);
+    stake_mapper.set(&staking_pos);
+}
 
-        let stake_mapper = self.staking_position(&caller);
-        let mut staking_pos = stake_mapper.get();
-        self.claim_rewards_for_user(&caller, &mut staking_pos);
+#[endpoint]
+fn unstake(&self, opt_unstake_amount: OptionalValue<BigUint>) {
+    let caller = self.blockchain().get_caller();
+    self.require_user_staked(&caller);
 
+    let stake_mapper = self.staking_position(&caller);
+    let mut staking_pos = stake_mapper.get();
+
+    let unstake_amount = match opt_unstake_amount {
+        OptionalValue::Some(amt) => amt,
+        OptionalValue::None => staking_pos.stake_amount.clone(),
+    };
+    require!(
+        unstake_amount > 0 && unstake_amount <= staking_pos.stake_amount,
+        "Invalid unstake amount"
+    );
+
+    self.claim_rewards_for_user(&caller, &mut staking_pos);
+    staking_pos.stake_amount -= &unstake_amount;
+
+    if staking_pos.stake_amount > 0 {
         stake_mapper.set(&staking_pos);
+    } else {
+        stake_mapper.clear();
+        self.staked_addresses().swap_remove(&caller);
     }
 
-    fn require_user_staked(&self, user: &ManagedAddress) {
-        require!(self.staked_addresses().contains(user), "Must stake first");
-    }
+    self.tx().to(caller).egld(unstake_amount).transfer();
+}
+
+#[endpoint(claimRewards)]
+fn claim_rewards(&self) {
+    let caller = self.blockchain().get_caller();
+    self.require_user_staked(&caller);
+
+    let stake_mapper = self.staking_position(&caller);
+
+    let mut staking_pos = stake_mapper.get();
+    self.claim_rewards_for_user(&caller, &mut staking_pos);
+
+    stake_mapper.set(&staking_pos);
+}
+
+fn require_user_staked(&self, user: &ManagedAddress) {
+    require!(self.staked_addresses().contains(user), "Must stake first");
+}
 ```
 
 For the `stake` endpoint, in case the user was not previously staked, we provide a default entry. The `insert` method of `UnorderedSetMapper` returns `true` if the entry is new, `false` if the user was already in the list, so we can use that result instead of checking for `stake_mapper.is_empty()`.
