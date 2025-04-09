@@ -17,26 +17,18 @@ If you find anything not answered here, feel free to ask further questions on th
 
 ## Prerequisites
 
-<!-- [comment]: # (mx-context-auto) -->
+:::important
+Before starting this tutorial, make sure you have the following:
 
-<!-- ### mxpy
+- `stable` **Rust** version `≥ 1.83.0` (install via [rustup](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
+- `sc-meta` (install [multiversx-sc-meta](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
 
-We're going to use [**mxpy**](/sdk-and-tools/sdk-py/mxpy-cli) for interacting with our contracts. Follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy) - make sure to use the latest version available. -->
-
-<!-- [comment]: # (mx-context-auto)
-
-### Rust
-
-Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](/sdk-and-tools/troubleshooting/rust-setup). -->
-<!-- 
-[comment]: # (mx-context-auto)
-
-### VSCode
+:::
 
 For contract developers, we generally recommend [**VSCode**](https://code.visualstudio.com) with the following extensions:
 
 - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
-- [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) -->
+- [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
 
 [comment]: # (mx-context-auto)
 
@@ -97,11 +89,11 @@ A new folder, called `output` was created, which contains the compiled contract 
 
 [comment]: # (mx-context-auto)
 
-## Your first lines of Rust
+## First lines of Rust
 
 Currently, we just have an empty contract. Not very useful, is it? So let's add some simple code for it. Since this is a staking contract, we would expect to have a `stake` function, right?
 
-First, remove all the code in the `./src/staking_contract.rs` file and replace it with this:
+First, remove all the code in the `staking-contract/src/staking_contract.rs` file and replace it with this:
 
 ```rust
 #![no_std]
@@ -128,9 +120,7 @@ Since we want this function to be callable by users, we have to annotate it with
 The contract **does NOT** need to be payable for it to receive payments on endpoint calls. The payable flag at contract level is only for receiving payments without endpoint invocation.
 :::
 
-Let's add an implementation for the function! We need to see how much a user paid, and save their staking information in storage.
-
-We end up with this code:
+We need to see how much a user paid, and save their staking information in storage.
 
 ```rust
 #![no_std]
@@ -168,22 +158,22 @@ pub trait StakingContract {
 
 [`require!`](/docs/developers/developer-reference/sc-messages.md#require) is a macro that is a shortcut for `if !condition { signal_error(msg) }`. Signalling an error will terminate the execution and revert any changes made to the internal state, including token transfers from and to the smart contract. In this case, there is no reason to continue if the user did not pay anything.
 
-We've also added [`#[view]`](/docs/developers/developer-reference/sc-annotations.md#endpoint-and-view) annotation for the storage mappers, so we can later perform queries on those storage entries. You can read more about annotations [here](/developers/developer-reference/sc-annotations/).
+We've also added [`#[view]`](/docs/developers/developer-reference/sc-annotations.md#endpoint-and-view) annotation for the storage mappers, allowing us to later perform queries on those storage entries. You can read more about annotations [here](/developers/developer-reference/sc-annotations/).
 
-Also, if you're confused about some of the functions used or the storage mappers, you can read more here:
+If you're confused about some of the functions used or the storage mappers, you can read more here:
 
 - [Smart Contract API Functions](/developers/developer-reference/sc-api-functions)
 - [Storage Mappers](/developers/developer-reference/storage-mappers)
 
-Now, there is intentionally written some bad code here. Can you spot the improvements we can make?
+Now, there is intentionally written some bad code here. Can you spot any improvements we could make?
 
-1. The last `clone()` from `stake()` function is not needed. If you clone variables all the time, then you need to take some time to read the [ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) chapter of the Rust book and also about the [implications of cloning](/developers/best-practices/biguint-operations) types from the Rust framework.
+1. The last `clone()` from `stake()` function is unnecessary. If you're cloning variables all the time,s then you need to take some time to read the [ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) chapter of the Rust book and also about the [implications of cloning](/developers/best-practices/biguint-operations) types from the Rust framework.
 
-2. The `staking_position` does not need an owned value of the `addr` argument. We can take a reference instead.
+2. The `staking_position` does not need an owned value of the `addr` argument. We can pass a reference instead.
 
-3. There is a logic error. What happens if an user stakes twice? Then, their position will be overwritten with the newest value. Instead, we need to add the newest stake amount over their current amount, using the [`update`](/docs/developers/developer-reference/storage-mappers.md#update) method.
+3. There is a logic error: what happens if an user stakes twice? Their position will be overwritten with the new value. Instead, we should add the new stake amount to their existing amount, using the [`update`](/docs/developers/developer-reference/storage-mappers.md#update) method.
 
-After fixing the above problems, we end up with the following code:
+After fixing these issues, we end up with the following code:
 
 ```rust
 #![no_std]
@@ -224,16 +214,16 @@ pub trait StakingContract {
 
 ### What's with the empty init and upgrade function?
 
-Every smart contract needs to have a function annotated with [`#[init]`](/docs/developers/developer-reference/sc-annotations.md#init) and `#[upgrade]`.
+Every smart contract must include a function annotated with [`#[init]`](/docs/developers/developer-reference/sc-annotations.md#init) and another with `#[upgrade]`.
 
-`init()` is called on deploy, while `upgrade()` on upgrade. For now, we need no logic inside it, but we still need to have those functions.
+The `init()` function is called when the contract is first deployed, while `upgrade()` is triggered during an upgrade. For now, we need no logic inside it, but we still need to have those functions.
 
 [comment]: # (mx-context-auto)
 
 ## Creating a wallet
 
 :::note  
-You can skip this section if you already have a devnet wallet setup.
+You can skip this section if you already have a Devnet wallet setup.
 :::
 
 Open the terminal and run the following commands:
@@ -243,18 +233,6 @@ mkdir -p ~/MyTestWallets
 sc-meta wallet new --format pem --outfile ~/MyTestWallets/tutorialKey.pem
 ```
 
-<!-- To initiate transactions on the blockchain, your wallet needs funds.
-
-Here’s how to fund your wallet on **devnet**:
-
-1. Go to [Devnet Wallet MultiversX](https://devnet-wallet.multiversx.com/unlock) and log in using `tutorialKey.pem`.
-2. Once logged in, open the Faucet from the Tools;
-3. Request 5 xEGLD to top up your wallet with test EGLD.
-
-:::note
-Faucet is available also on **testnet**. Go to [Testnet Wallet Multiversx](https://testnet-wallet.multiversx.com/unlock) and do the same steps presented previously to request 30 xEGLD.
-::: -->
-
 [comment]: # (mx-context-auto)
 
 ## Deploy the contract
@@ -262,7 +240,7 @@ Faucet is available also on **testnet**. Go to [Testnet Wallet Multiversx](https
 Now that we've created a wallet, it's time to deploy our contract.
 
 :::important
-Make sure you build the contract before deploying it. Open the terminal and run the following command in the contract root:
+Make sure you build the contract before deploying it. Open the terminal and run the following command from the contract root directory:
 
 ```bash
 sc-meta all build
@@ -270,27 +248,15 @@ sc-meta all build
 
 :::
 
-After the contract is built, generate the interactor:  
+Once the contract is built, generate the interactor:
 
 ```bash
 sc-meta all snippets
 ```
 
-Add the interactor to the project. At `staking-contract/Cargo.toml` add `interactor` as a member to the workspace:
+Add the interactor to your project. In `staking-contract/Cargo.toml`, add `interactor` as a member of the workspace:
 
 ```toml
-[package]
-# package info
-
-[lib]
-# lib path
-
-[dependencies.multiversx-sc]
-# multiversx-sc version
-
-[dev-dependencies]
-# components
-
 [workspace]
 members = [
     ".",
@@ -299,17 +265,19 @@ members = [
 ]
 ```
 
-Then, update the sender of the transactions. In the file `staking-contract/interactor/src/interact.rs` **modify** variable `wallet_address` from function `new(config: Config)` with the [absolute path](https://www.redhat.com/en/blog/linux-path-absolute-relative) to your wallet:
+Next, update the wallet path for sending transactions. In `staking-contract/interactor/src/interact.rs` locate the function `new(config: Config)` and **modify** the `wallet_address` variable with the [absolute path](https://www.redhat.com/en/blog/linux-path-absolute-relative) to your wallet:
 
 ```rust
 let wallet_address = interactor
     .register_wallet(
-        Wallet::from_pem_file("/MyTestWallets/tutorialKey.pem").expect("wallet cannot be found"),
+        Wallet::from_pem_file("/MyTestWallets/tutorialKey.pem").expect(
+            "Unable to load wallet. Please ensure the file exists.",
+        ),
     )
     .await;
 ```
 
-Finally, deploy the contract on devnet:
+Finally, deploy the contract to Devnet:
 
 ```bash
 cd interactor/
@@ -317,7 +285,9 @@ cargo run deploy
 ```
 
 :::note  
-If you want to use testnet, change `gateway_uri` from `staking-contract/interactor/config.toml` to `https://testnet-gateway.multiversx.com`. For mainnet, it would be `https://gateway.multiversx.com`.
+To use Testnet instead, update `gateway_uri` in `staking-contract/interactor/config.toml` to: `https://testnet-gateway.multiversx.com`.
+
+For  mainnet, use: `https://gateway.multiversx.com`.
 
 More details can be found [here](/developers/constants/).
 :::
@@ -333,23 +303,23 @@ This is because your account has no EGLD in it.
 
 [comment]: # (mx-context-auto)
 
-### Getting EGLD on devnet
+### Getting EGLD on Devnet
 
-There are many ways of getting EGLD on devnet:
+There are many ways of getting EGLD on Devnet:
 
-- through the devnet wallet
-- through an external faucet
-- through the [MultiversX Builders Discord Server faucet](https://discord.gg/multiversxbuilders)
-- asking a team member on [Telegram](https://t.me/MultiversXDevelopers)
+- Through the Devnet wallet;
+- Using an external faucet;
+- From the [MultiversX Builders Discord Server faucet](https://discord.gg/multiversxbuilders);
+- By asking a team member on [Telegram](https://t.me/MultiversXDevelopers).
 
 [comment]: # (mx-context-auto)
 
 #### Getting EGLD through devnet wallet
 
-Go to [Devnet Wallet](https://devnet-wallet.multiversx.com) and login to your account with your PEM file. On the left side menu, select the *Faucet* option:  
+Go to [Devnet Wallet](https://devnet-wallet.multiversx.com) and login to your account using your PEM file. From the left side menu, select *Faucet*:
 ![img](/developers/staking-contract-tutorial-img/wallet_faucet.png)
 
-Request the tokens. After a couple seconds, refresh the page, and you should have **5 xEGLD** in your wallet.
+Request the tokens. After a few seconds you should have **5 xEGLD** in your wallet.
 
 [comment]: # (mx-context-auto)
 
@@ -358,7 +328,9 @@ Request the tokens. After a couple seconds, refresh the page, and you should hav
 Go to [https://r3d4.fr/faucet](https://r3d4.fr/faucet) and submit a request:  
 ![img](/developers/staking-contract-tutorial-img/external_faucet.png)
 
-Make sure you selected `Devnet` and input **your** address! It might take a bit depending on how "busy" the faucet is.
+Make sure you selected `Devnet` and input **your** address!
+
+It might take a little while, depending on how "busy" the faucet is.
 
 [comment]: # (mx-context-auto)
 
@@ -385,50 +357,52 @@ Everything should work just fine, but you'll see this message:
 
 This is **not** an error. This simply means you provided way more gas than needed, so all the gas was consumed instead of the leftover being returned to you.
 
-This is done to protect the network against certain attacks. For instance, one could always provide the max gas limit and only use very little, decreasing the network's throughput significantly.
+This is done to protect the network against certain attacks. For instance, one could always provide the maximum gas limit and only use very little, decreasing the network's throughput significantly.
 
 [comment]: # (mx-context-auto)
 
 ## The first stake
 
-Let's update the stake function from `staking-contract/interactor/src/interact.rs` to do the first stake.
+Let's update the `stake` function from `staking-contract/interactor/src/interact.rs` to do the first stake.
 
-Initialize variable `egld_amount` with `1` instead of `0`:
+Initialize the `egld_amount` variable with `1` instead of `0`:
 
 ```rust
 let egld_amount = BigUint::<StaticApi>::from(1u128);
 ```
 
-This variable holds the EGLD value that will be paid.
+This variable represents the amount of EGLD to be sent with the transaction.
 
-Let's stake! At path `staking-contract/interactor` run the next command:
+Let's stake! At path `staking-contract/interactor` run the following command:
 
 ```bash
 cargo run stake
 ```
 
-We've now successfully staked 1 EGLD... or have we? If we look at the transaction, that's not quite the case:  
+We've now successfully staked 1 EGLD... or have we?
+
+If we look at the transaction, that's not quite the case:  
 ![img](/developers/staking-contract-tutorial-img/first_stake.png)
 
 [comment]: # (mx-context-auto)
 
-### Why was a smaller amount of EGLD sent to the SC?
+### Why was a smaller amount of EGLD sent?
 
-This is because EGLD has 18 decimals. So to send 1 EGLD, you actually have to send a value equal to `1000000000000000000` (i.e. 10<sup>18</sup>).
+This happens because EGLD uses **18 decimals**. So, to send 1 EGLD, you actually need to send the value `1000000000000000000` (i.e. 10<sup>18</sup>).
 
-The blockchain only works with unsigned numbers. Floating point numbers are not allowed. The only reason the explorer displays the balances with a floating point is because it's much more user-friendly to tell someone they have 1 EGLD instead of 1000000000000000000 EGLD, but internally, only the integer value is used.
+The blockchain works only with unsigned integers. Floating point numbers are not allowed. The only reason the explorer displays the balances with a floating point is because it's much more user-friendly to tell someone they have 1 EGLD instead of 1000000000000000000 EGLD, but internally, only the integer value is used.
 
 [comment]: # (mx-context-auto)
 
-### But how do I send 0.5 EGLD to the SC?
+### But how do I send 0.5 EGLD?
 
 Since we know EGLD has 18 decimals, we have to simply multiply 0.5 by 10<sup>18</sup>, which yields 500000000000000000.
 
 [comment]: # (mx-context-auto)
 
-## Actually staking 1 EGLD
+### Actually staking 1 EGLD
 
-To do this, we simply have to update `egld_amount` that is in `stake` function from `staking-contract/interactor/src/interact.rs` with:
+To stake 1 EGLD, simply update the `egld_amount` in the `stake` function from `staking-contract/interactor/src/interact.rs` with the following:
 
 ```rust
 let egld_amount = BigUint::<StaticApi>::from(1000000000000000000u128);
@@ -439,40 +413,35 @@ Now let's try staking again:
 
 [comment]: # (mx-context-auto)
 
-## Querying the view functions
+## Performing contract queries
 
-To perform smart contract queries for `getStakingPosition` view, you need to update `addr` variable with the address of the wallet you did the stake transaction:
+To perform smart contract queries for the `getStakingPosition` view, update the `addr` variable in the `staking_position` function from `staking-contract/interactor/src/interact.rs` with the address of the wallet you used for the staking transaction:
 
 ```rust
 let addr = bech32::decode("erd1vx...");
 ```
 
-Then perform the query, running in terminal in `staking-contract/interactor` directory:
+Query the staking position by running the following command in the terminal, inside the `staking-contract/interactor` directory:
 
 ```bash
 cargo run getStakingPosition
 ```
 
-:::note
-Attempting to use `self.blockchain().get_caller()` in a query function will return the SC's own address.
-:::
-
-Now let's see our staking amount, according to the SC's internal state:
+This will show the staking amount according to the smart contract's internal state:
 
 ```bash
 Result: 1000000000000000001
 ```
 
-We get the expected amount, 1 EGLD, plus the initial 10<sup>-18</sup> EGLD we sent.
+The result includes 1 EGLD plus the initial 10<sup>-18</sup> EGLD that was sent.
 
-Now let's also query the **stakers list**. Replace the next line from `staked_address` **function** that is at `staking-contract/interactor/src/interact.rs`:
+Next, query the **stakers list**. Replace the next line from `staked_addresses` **function** in `staking-contract/interactor/src/interact.rs`:
 
 ```rust
-        println!("Result: {result_value:?}");
-
+println!("Result: {result_value:?}");
 ```
 
-with:
+with the following:
 
 ```rust
 for result in result_value.iter() {
@@ -480,7 +449,7 @@ for result in result_value.iter() {
 } 
 ```
 
-It is necessary to iterate through `result_value` because it is a [`MultiValueVec`](/docs/developers/data/multi-values.md#standard-multi-values) of `Address`. Additionally, each address is converted to `Bech32Address` to ensure it is not printed in **ASCII** format.
+It is necessary to iterate through `result_value` because it is a [`MultiValueVec`](/docs/developers/data/multi-values.md#standard-multi-values) of `Address`. Each address is converted to `Bech32Address` to ensure it’s printed in Bech32 format, not as raw ASCII.
 
 Run in terminal at path `staking-contract/interactor`:
 
@@ -491,14 +460,14 @@ cargo run getStakedAddresses
 Running this function should yield a result like this:
 
 ```bash
-Result: erd1vx8tcqgrkytf3yr3kjqux22ze27mzcgds067dnegxzp3u2dj253qwy7jjf
+Result: erd1vx...
 ```
 
 [comment]: # (mx-context-auto)
 
 ## Adding unstake functionality
 
-For now, users can only stake, but they cannot actually get their EGLD back... at all. Let's add the unstake endpoint in our SC:
+Currently, users can only stake, but they cannot actually get their EGLD back... at all. Let's add the unstake functionality in our smart contract:
 
 ```rust
 #[endpoint]
@@ -518,14 +487,14 @@ fn unstake(&self) {
 }
 ```
 
-You might notice the variable `stake_mapper`. Just to remind you, the mapper's definition looks like this:
+You might notice the `stake_mapper` variable. Just to remind you, the mapper's definition looks like this:
 
 ```rust
 #[storage_mapper("stakingPosition")]
 fn staking_position(&self, addr: &ManagedAddress) -> SingleValueMapper<BigUint>;
 ```
 
-In pure Rust terms, this is a method of our contract trait, with one argument, that returns a [`SingleValueMapper<BigUint>`](/docs/developers/developer-reference/storage-mappers.md#singlevaluemapper). All [mappers](/docs/developers/developer-reference/storage-mappers.md) are nothing more than struct types that provide an interface to the storage API.
+In Rust terms, this is a method of our contract trait, with one argument, that returns a [`SingleValueMapper<BigUint>`](/docs/developers/developer-reference/storage-mappers.md#singlevaluemapper). All [mappers](/docs/developers/developer-reference/storage-mappers.md) are nothing more than structure types that provide an interface to the storage API.
 
 So then, why save the mapper in a variable?
 
@@ -571,7 +540,10 @@ fn unstake(&self, unstake_amount: BigUint) {
 }
 ```
 
-As you might notice, the code changed quite a bit. We also need to account for invalid user input, so we add a `require!` statement. Additionally, since we no longer need to simply "clear" the storage, we use the `update` method, which allows us to change the currently stored value through a mutable reference.
+As you might notice, the code changed quite a bit:
+
+1. To handle invalid user input, we used the `require!` statement;
+2. Previously, we used `clear` to reset the staking position. However, now that we need to modify the stored value, we use the `update` method, which allows us to change the currently stored value through a mutable reference.
 
 [`update`](/docs/developers/developer-reference/storage-mappers.md#update) is the same as doing [`get`](/docs/developers/developer-reference/storage-mappers.md#get), followed by computation, and then [`set`](/docs/developers/developer-reference/storage-mappers.md#set), but it's just a lot more compact. Additionally, it also allows us to return anything we want from the given closure, so we use that to detect if this was a full unstake.
 
@@ -612,15 +584,15 @@ This makes it so if someone wants to perform a full unstake, they can simply not
 
 [comment]: # (mx-context-auto)
 
-### Unstaking our devnet tokens
+### Unstaking our Devnet tokens
 
-Now that we've added the unstake function, let's test it out on devnet. Build your SC again. In contract root, at path `staking-contract/` run:
+Now that the unstake function has been added, let's test it out on Devnet. Build the smart contract again. In the contract root (`staking-contract/`), run the next command:
 
 ```bash
 sc-meta all build
 ```
 
-And then regenerate the interactor, running in terminal, also in contract root:
+After building the contract, regenerate the interactor by running the following command in the terminal, also in the contract root:
 
 ```bash
 sc-meta all snippets
@@ -630,13 +602,13 @@ sc-meta all snippets
 Make sure `wallet_address` stores the wallet that has to execute the transactions.
 :::
 
-Let's unstake some EGLD! Replace variable `opt_unstake_amount` from `unstake` function that is at `staking-contract/interactor/src/interact.rs` with:
+Let's unstake some EGLD! Replace variable `opt_unstake_amount` from `unstake` function in `staking-contract/interactor/src/interact.rs` with:
 
 ```rust
 let opt_unstake_amount = OptionalValue::Some(BigUint::<StaticApi>::from(500000000000000000u128));
 ```
 
-And the run in terminal at path `staking-contract/interactor`:
+Then, run in terminal at path `staking-contract/interactor`:
 
 ```bash
 cargo run unstake
@@ -645,7 +617,9 @@ cargo run unstake
 Now run this function, and you'll get this result:  
 ![img](/developers/staking-contract-tutorial-img/first_unstake.png)
 
-...but why? We just added the function! Well, we might've added it to our code, but the contract on the devnet still has our old code. So, how do we upload our new code?
+...but why? We just added the function!
+
+Well, we might've added it to our code, but the contract on the Devnet still has our old code. So, how do we upload our new code?
 
 [comment]: # (mx-context-auto)
 
@@ -658,16 +632,16 @@ cargo run upgrade
 ```
 
 :::note Attention required
-All the storage is kept on upgrade, so make sure any storage changes you make to storage mapping are backwards compatible!
+All the storage is kept on upgrade, so make sure any storage changes you make to storage mapping are **backwards compatible**!
 :::
 
 [comment]: # (mx-context-auto)
 
 ## Try unstaking again
 
-Try running the `unstake` snippet again. This time, it should work just fine. Afterwards, let's query our staked amount through `getStakingPosition`, to see if it updated our amount properly.
+Run the `unstake` snippet again. This time, it should work just fine. Afterwards, let's query our staked amount through `getStakingPosition`, to see if it updated our amount properly.
 
-:::tip
+:::warning
 Make sure that function `staking_position` has the changes previously made.
 :::
 
@@ -679,13 +653,15 @@ cargo run getStakingPosition
 Result: 500000000000000001
 ```
 
-We had 1 EGLD, and we've unstaked 0.5 EGLD. Now we have 0.5 EGLD staked. (with the extra 1 fraction of EGLD we've staked initially).
+We had 1 EGLD, and we unstaked 0.5 EGLD. Now, we have 0.5 EGLD staked. (with the extra 1 fraction of EGLD we've staked initially).
 
 [comment]: # (mx-context-auto)
 
-## Unstake with no arguments
+### Unstake with no arguments
 
-Let's also test the optional argument functionality. Replace `opt_unstake_amount` variable from `unstake` function that is inside `staking-contract/interactor/src/interact.rs` with:
+Now let’s test how the contract behaves when no amount is explicitly provided. This will confirm that the `OptionalValue::None` path works as expected.
+
+In `staking-contract/interactor/src/interact.rs`, update the `unstake` function. Replace the `opt_unstake_amount` variable with:
 
 ```rust
 let opt_unstake_amount: OptionalValue<BigUint<StaticApi>> = OptionalValue::None;
@@ -697,69 +673,56 @@ And then unstake:
 cargo run unstake
 ```
 
-Let's also query `stakingPosition` and `stakedAddresses` afterwards to see if the state was cleaned up properly:
+After unstaking, query `stakingPosition` and `stakedAddresses`    to see if the state was cleaned up properly:
 
-```bash
-cargo run getStakingPosition
-```
+These should show that:
 
-```bash
-Result: 0
-```
-
-```bash
-cargo run getStakedAddresses
-```
-
-As you can see, we get an empty result (which means the value 0), and an empty array respectively.
+- Your staking position is now empty: 0 EGLD;
+- Your address has been removed from the stakers list.
 
 [comment]: # (mx-context-auto)
 
 ## Writing tests
 
-As you might've noticed, it can be quite a chore to keep upgrading the contract after every little change, especially if all we want to do is test a new feature. So let's recap what we've done until now:
+As you might've noticed, it can be quite a chore to keep upgrading the contract after every little change, especially if all we want to do is test a new feature. So, let's recap what we've done until now:
 
 - deploy our contract
 - stake
 - partial unstake
 - full unstake
 
-:::note
+:::tip
 A more detailed explanation of Rust tests can be found [here](https://docs.multiversx.com/developers/testing/rust/sc-test-overview/).
 :::
 
 Before developing the tests, you will have to generate the contract's [proxy](/docs/developers/transactions/tx-proxies.md).
 
-You will add to `./staking-contract/sc-config.toml`:
+You will add to `staking-contract/sc-config.toml`:
 
 ```toml
 [[proxy]]
-path = "src/staking_contract_proxy.rs"
+path = "tests/staking_contract_proxy.rs"
 ```
 
-Then run in terminal at path `./staking-contract`:
+Then run in terminal at path `staking-contract/`:
 
 ```bash
 sc-meta all proxy
 ```
 
-You will see at path `./staking-contract` the contract's proxy that will help us in developing tests: `staking_contract_proxy.rs`.
+You’ll find the contract’s proxy in `staking-contract/tests`, inside the file `staking_contract_proxy.rs`. This proxy will be used to help us write and run tests for the smart contract.
 
-Lastly, link the proxy to the project. In the import section of file `./staking-contract/src/staking_contract.rs` add:
+To test the previously described scenario, we're going to need a user address, and a new test function.
 
-```rust
-pub mod staking_contract_proxy;
-```
-
-To test the previously described scenario, we're going to need a user address, and a new test function. **Create** file `staking_contract_blackbox_test.rs` in `staking-contract/tests` with the following:
+**Create** file `staking_contract_blackbox_test.rs` in `staking-contract/tests` with the following:
 
 ```rust
+mod staking_contract_proxy;
 use multiversx_sc::{
     imports::OptionalValue,
     types::{TestAddress, TestSCAddress},
 };
-use multiversx_sc_scenario::{imports::MxscPath, ExpectValue, ScenarioTxRun, ScenarioWorld};
-use staking_contract::staking_contract_proxy;
+use multiversx_sc_scenario::imports::*;
 
 const OWNER_ADDRESS: TestAddress = TestAddress::new("owner");
 const STAKING_CONTRACT_ADDRESS: TestSCAddress = TestSCAddress::new("staking-contract");
@@ -888,7 +851,7 @@ fn stake_unstake_test() {
 }
 ```
 
-We've added a `USER_ADDRESS` constant, which is initiated with `USER_BALANCE` EGLD in their account.
+We've added a `USER_ADDRESS` constant, which is initialized with `USER_BALANCE` EGLD in their account.
 
 :::note
 For the test we're going to use small numbers for balances, since there is no reason to work with big numbers. For this test, we're using 1 EGLD for user balance.
@@ -906,7 +869,7 @@ To run a test, you can use click on the `Run Test` button from under the test na
 
 There is also a `Debug` button, which can be used to debug smart contracts. More details on that [here](/developers/testing/sc-debugging/).
 
-Alternatively, you can run all the tests in the file by running the following command in the terminal, in the `./staking-contract` folder:
+Alternatively, you can run all the tests in the file by running the following command in the terminal, in the `staking-contract/` folder:
 
 ```bash
 sc-meta test
@@ -916,7 +879,7 @@ sc-meta test
 
 ## Staking Rewards
 
-Right now, there is no incentive to stake EGLD into this smart contract. Let's say we want to give every staker 10% APY (Annual Percentage Yield). For example, if someone staked 100 EGLD, they will receive a total of 10 EGLD per year.
+Right now, there is no incentive to stake EGLD in this smart contract. Let's say we want to give every staker 10% APY (Annual Percentage Yield). For example, if someone staked 100 EGLD, they will receive a total of 10 EGLD per year.
 
 For this, we're also going to need to save the time at which each user staked. Also, we can't simply make each user wait one year to get their rewards. We need a more fine-tuned solution, so we're going to calculate rewards per block instead of per year.
 
@@ -930,7 +893,7 @@ You can also use rounds, timestamp, epochs etc. for time keeping in smart contra
 
 A single `BigUint` for each user is not enough anymore. As stated before, we need to also store the stake block, and we need to update this block number on every action.
 
-So we're going to use a struct:
+So, we're going to use a struct:
 
 ```rust
 pub struct StakingPosition<M: ManagedTypeApi> {
@@ -962,19 +925,19 @@ We've also added `#[type_abi]`, since this is required for ABI generation. ABIs 
 
 Additionally, we've added `PartialEq` and `Debug` derives, for easier use within tests. This will not affect performance in any way, as the code for these is only used during testing/debugging. `PartialEq` allows us to use `==` for comparing instances, while `Debug` will pretty-print the struct, field by field, in case of errors.
 
-If you want to learn more about how such a struct is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/data/serialization-overview).
+If you want to learn more about how such a structure is encoded, and the difference between top and nested encoding/decoding, you can read more [here](/developers/data/serialization-overview).
 
 [comment]: # (mx-context-auto)
 
 ### Rewards formula
 
-A block is produced about every 6 seconds, so total blocks in a year would be seconds in year, divided by 6. More specifically:
+A block is produced about every 6 seconds, so total blocks in a year would be seconds in year, divided by 6:
 
 ```rust
 pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
 ```
 
-More specifically: 60 seconds per minute *60 minutes per hour* 24 hours per day \* 365 days, divided by the 6-second block duration.
+More specifically: *60 seconds per minute* x *60 minutes per hour* x *24 hours per day*  x *365 days*, divided by the 6-second block duration.
 
 :::note
 This is calculated and replaced with the exact value at compile time, so there is no performance penalty of having a constant with mathematical operations in its value definition.
@@ -988,9 +951,11 @@ Having defined this constant, rewards formula should look like this:
 let reward_amt = apy / 100 * user_stake * blocks_since_last_claim / BLOCKS_IN_YEAR;
 ```
 
-Using 10% as APY, and assuming exactly one year has passed since last claim, the reward amount would be `10/100 * user_stake`, which is exactly 10% APY.
+Using 10% as the APY, and assuming exactly one year has passed since last claim.
 
-But there is something wrong with the current formula. We will always get `reward_amt` = 0.
+In this case, the reward should be calculated as: `10/100 * user_stake`, which is exactly 10% APY.
+
+However, there is something wrong with the current formula. We will always get `reward_amt` = 0.
 
 [comment]: # (mx-context-auto)
 
@@ -1008,27 +973,31 @@ let reward_amt = user_stake * apy / 100 * blocks_since_last_claim / BLOCKS_IN_YE
 
 ### How to express percentages like 50.45%?
 
-In this case, we need to extend our precision by using fixed point precision. Instead of having `100` as the maximum percentage, we will extend it to `10_000`, and give `50.45%` as `5_045`. Updating our above formula results in this:
+In this case, we need to extend our precision by using fixed point precision. Instead of having `100` as the maximum percentage, we will extend it to `100_00`, and give `50.45%` as `50_45`. Updating our above formula results in this:
 
 ```rust
-pub const MAX_PERCENTAGE: u64 = 10_000;
+pub const MAX_PERCENTAGE: u64 = 100_00;
 
 let reward_amt = user_stake * apy / MAX_PERCENTAGE * blocks_since_last_claim / BLOCKS_IN_YEAR;
 ```
 
-For example, let's assume the user stake is 100, and 1 year has passed. Using `5_045` as APY value, the formula would become:
+For example, let's assume the user stake is 100, and 1 year has passed. Using `50_45` as APY value, the formula would become:
 
 ```rust
-reward_amt = 100 * 5_045 / 10_000 = 504_500 / 10_000 = 50
+reward_amt = 100 * 50_45 / 100_00 = 5045_00 / 100_00 = 50
 ```
 
 :::note
-Since we're still using BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the `MAX_PERCENTAGE` and the respective APY, but this is also "inheritly fixed" on the blockchain, because we work with very big numbers for `user_stake`.
+Since we're still using the BigUint division, we don't get `50.45`, but `50`. This precision can be increased by using more zeroes for the `MAX_PERCENTAGE` and the respective APY, but this is also "inherently fixed" on the blockchain because we work with very big numbers for `user_stake`.
 :::
 
 [comment]: # (mx-exclude-context)
 
-## Rewards implementation
+## Rewards functionality
+
+[comment]: # (mx-exclude-context)
+
+### Implementation
 
 Now let's see how this would look in our Rust smart contract code. The smart contract looks like this after doing all the specified changes:
 
@@ -1037,7 +1006,6 @@ Now let's see how this would look in our Rust smart contract code. The smart con
 
 use multiversx_sc::derive_imports::*;
 use multiversx_sc::imports::*;
-pub mod staking_contract_proxy;
 
 pub const BLOCKS_IN_YEAR: u64 = 60 * 60 * 24 * 365 / 6;
 pub const MAX_PERCENTAGE: u64 = 10_000;
@@ -1062,7 +1030,7 @@ pub trait StakingContract {
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
-        let payment_amount = self.call_value().egld().clone_value();
+        let payment_amount = self.call_value().egld().clone();
         require!(payment_amount > 0, "Must pay more than 0");
 
         let caller = self.blockchain().get_caller();
@@ -1168,22 +1136,23 @@ sc-meta all build
 sc-meta all proxy
 ```
 
-Let's update our test, to use our new `StakingPosition` struct, and also provide the `APY` as argument for the `init` function.
+Let's update our test, to use our new `StakingPosition` structure, and also provide the `APY` as an argument for the `init` function.
 
 ```rust
+mod staking_contract_proxy;
 use multiversx_sc::{
     imports::OptionalValue,
-    types::{BigUint, ReturnsResult, TestAddress, TestSCAddress},
+    types::{BigUint, TestAddress, TestSCAddress},
 };
-use multiversx_sc_scenario::{imports::MxscPath, ScenarioTxRun, ScenarioWorld};
-use staking_contract::staking_contract_proxy::{self, StakingPosition};
+use multiversx_sc_scenario::imports::*;
+use staking_contract_proxy::StakingPosition;
 
 const OWNER_ADDRESS: TestAddress = TestAddress::new("owner");
-const STAKING_CONTRACT_ADDRESS: TestSCAddress = TestSCAddress::new("staking-contract");
 const USER_ADDRESS: TestAddress = TestAddress::new("user");
+const STAKING_CONTRACT_ADDRESS: TestSCAddress = TestSCAddress::new("staking-contract");
 const WASM_PATH: MxscPath = MxscPath::new("output/staking-contract.mxsc.json");
 const USER_BALANCE: u64 = 1_000_000_000_000_000_000;
-const APY: u64 = 1_000; // 10%
+const APY: u64 = 10_00; // 10%
 
 struct ContractSetup {
     pub world: ScenarioWorld,
@@ -1233,21 +1202,19 @@ fn stake_unstake_test() {
         .egld(USER_BALANCE)
         .run();
 
-    let result = setup
-        .world
-        .query()
-        .to(STAKING_CONTRACT_ADDRESS)
-        .typed(staking_contract_proxy::StakingContractProxy)
-        .staking_position(USER_ADDRESS.to_managed_address())
-        .returns(ReturnsResult)
-        .run();
-
-    let expected_result = StakingPosition {
+    let expected_result_1 = StakingPosition {
         stake_amount: BigUint::from(USER_BALANCE),
         last_action_block: 0,
     };
 
-    assert_eq!(result, expected_result);
+    setup
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staking_position(USER_ADDRESS)
+        .returns(ExpectValue(expected_result_1))
+        .run();
 
     setup.world.check_account(USER_ADDRESS).balance(0);
     setup
@@ -1265,21 +1232,31 @@ fn stake_unstake_test() {
         .unstake(OptionalValue::Some(USER_BALANCE / 2))
         .run();
 
-    let result = setup
+    let expected_result_2 = StakingPosition {
+        stake_amount: BigUint::from(USER_BALANCE / 2),
+        last_action_block: 0,
+    };
+    setup
         .world
         .query()
         .to(STAKING_CONTRACT_ADDRESS)
         .typed(staking_contract_proxy::StakingContractProxy)
         .staking_position(USER_ADDRESS)
-        .returns(ReturnsResult)
+        .returns(ExpectValue(expected_result_2))
         .run();
 
-    let expected_result = StakingPosition {
-        stake_amount: BigUint::from(USER_BALANCE / 2),
-        last_action_block: 0,
-    };
+    let staked_addresses_1 = setup
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staked_addresses()
+        .returns(ReturnsResultUnmanaged)
+        .run();
 
-    assert_eq!(result, expected_result);
+    assert!(staked_addresses_1
+        .into_vec()
+        .contains(&USER_ADDRESS.to_address()));
 
     setup
         .world
@@ -1300,21 +1277,15 @@ fn stake_unstake_test() {
         .unstake(OptionalValue::None::<u64>)
         .run();
 
-    let result = setup
+    let staked_addresses_2 = setup
         .world
         .query()
         .to(STAKING_CONTRACT_ADDRESS)
         .typed(staking_contract_proxy::StakingContractProxy)
-        .staking_position(USER_ADDRESS)
-        .returns(ReturnsResult)
+        .staked_addresses()
+        .returns(ReturnsResultUnmanaged)
         .run();
-
-    let expected_result = StakingPosition {
-        stake_amount: BigUint::from(USER_BALANCE / 2),
-        last_action_block: 0,
-    };
-
-    assert_eq!(result, expected_result);
+    assert!(staked_addresses_2.is_empty());
 
     setup
         .world
@@ -1343,7 +1314,7 @@ This is because instead of using a simple `BigUint` for staking positions, we no
 
 ```bash
 28: staking_contract::StakingContract::stake
-             at ./src/staking_contract.rs:34:9
+             at ./src/staking_contract.rs:33:9
 ```
 
 Which leads to the following line:
@@ -1366,7 +1337,7 @@ For this reason, we have to add some additional checks. The endpoint implementat
 #[payable("EGLD")]
 #[endpoint]
 fn stake(&self) {
-    let payment_amount = self.call_value().egld().clone_value();
+    let payment_amount = self.call_value().egld().clone();
     require!(payment_amount > 0, "Must pay more than 0");
 
     let caller = self.blockchain().get_caller();
@@ -1437,138 +1408,164 @@ fn require_user_staked(&self, user: &ManagedAddress) {
 }
 ```
 
-For the `stake` endpoint, in case the user was not previously staked, we provide a default entry. The `insert` method of `UnorderedSetMapper` returns `true` if the entry is new, `false` if the user was already in the list, so we can use that result instead of checking for `stake_mapper.is_empty()`.
+For the `stake` endpoint, if the user was not previously staked, we provide a default entry. The `insert` method of `UnorderedSetMapper` returns `true` if the entry is new and `false` if the user already exists in the list. This means we can use that result directly, instead of checking for `stake_mapper.is_empty()`.
 
-For the `unstake` and `claimRewards` endpoints, we have to check if the user was already staked, and return an error otherwise (as they'd have nothing to unstake/claim anyway).
+For the `unstake` and `claimRewards` endpoints, we have to check if the user was already staked and return an error otherwise (as they'd have nothing to unstake/claim anyway).
 
-Running the test after the suggested changes should work just fine now:
+Once you've applied all the suggested changes, **rebuilt the contract** and **regenerate the proxy**, running the test should work just fine now:
 
-```
+```bash
 running 1 test
 test stake_unstake_test ... ok
 ```
 
-In order to apply these changes on devnet, you should build the contract and then upgrade it. Because we added the APY on init now for the upgrade we will have to pass it as an argument.
+In order to apply these changes on devnet, you should build the contract, regenerate the interactor and then upgrade it.
+
+:::warning
+Whenever you regenerate the interactor, make sure that wallet_address points to the wallet you intend to use for executing transactions.
+
+By default, the interactor registers Alice's wallet, so you’ll need to update wallet_address manually if you’re using a different one.
+:::
 
 ```bash
-    mxpy --verbose contract upgrade ${SC_ADDRESS} \
-    --bytecode=~/Projects/tutorials/staking-contract/output/staking-contract.wasm \
-    --recall-nonce --pem=~/MyTestWallets/tutorialKey.pem \
-    --gas-limit=20000000 \
-    --send --outfile="upgrade-devnet.interaction.json" \
-    --proxy=https://devnet-gateway.multiversx.com --chain=D \
-    --arguments 100
+sc-meta all build
+sc-meta all snippets
+cd interactor/
+```
+
+Set the `apy` variable inside the `upgrade` function from `staking-contract/interactor/src/interact.rs` to `100`, then run:
+
+```bash
+cargo run upgrade
+```
+
+To verify the change, query the `apy` storage mapper by running:
+
+```bash
+cargo run getApy
+```
+
+You should see the following output:
+
+```bash
+Result: 100
 ```
 
 [comment]: # (mx-context-auto)
 
-### Rewards testing
+### Testing
 
-Now that we've implemented rewards logic, let's add the following test to ensure everything works as expected:
+Now that we've implemented rewards logic, let's add the following test to `staking-contract/tests/staking_contract_blackbox_test.rs`:
 
 ```rust
 #[test]
 fn rewards_test() {
-    let mut setup = ContractSetup::new(staking_contract::contract_obj);
-    let user_addr = setup.user_address.clone();
+    let mut setup = ContractSetup::new();
 
     // stake full
     setup
-        .b_mock
-        .execute_tx(
-            &user_addr,
-            &setup.contract_wrapper,
-            &rust_biguint!(USER_BALANCE),
-            |sc| {
-                sc.stake();
+        .world
+        .tx()
+        .from(USER_ADDRESS)
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .stake()
+        .egld(USER_BALANCE)
+        .run();
 
-                assert_eq!(
-                    sc.staking_position(&managed_address!(&user_addr)).get(),
-                    StakingPosition {
-                        stake_amount: managed_biguint!(USER_BALANCE),
-                        last_action_block: 0
-                    }
-                );
-            },
-        )
-        .assert_ok();
+    let expected_result_1 = StakingPosition {
+        stake_amount: BigUint::from(USER_BALANCE),
+        last_action_block: 0,
+    };
 
-    setup.b_mock.set_block_nonce(BLOCKS_IN_YEAR);
+    setup
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staking_position(USER_ADDRESS)
+        .returns(ExpectValue(&expected_result_1))
+        .run();
+
+    setup.world.current_block().block_nonce(BLOCKS_IN_YEAR);
 
     // query rewards
     setup
-        .b_mock
-        .execute_query(&setup.contract_wrapper, |sc| {
-            let actual_rewards = sc.calculate_rewards_for_user(managed_address!(&user_addr));
-            let expected_rewards = managed_biguint!(USER_BALANCE) * APY / MAX_PERCENTAGE;
-            assert_eq!(actual_rewards, expected_rewards);
-        })
-        .assert_ok();
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .calculate_rewards_for_user(USER_ADDRESS)
+        .returns(ExpectValue(
+            BigUint::from(USER_BALANCE) * APY / MAX_PERCENTAGE,
+        ))
+        .run();
 
     // claim rewards
     setup
-        .b_mock
-        .execute_tx(
-            &user_addr,
-            &setup.contract_wrapper,
-            &rust_biguint!(0),
-            |sc| {
-                assert_eq!(
-                    sc.staking_position(&managed_address!(&user_addr)).get(),
-                    StakingPosition {
-                        stake_amount: managed_biguint!(USER_BALANCE),
-                        last_action_block: 0
-                    }
-                );
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staking_position(USER_ADDRESS)
+        .returns(ExpectValue(&expected_result_1))
+        .run();
 
-                sc.claim_rewards();
+    setup
+        .world
+        .tx()
+        .from(USER_ADDRESS)
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .claim_rewards()
+        .run();
 
-                assert_eq!(
-                    sc.staking_position(&managed_address!(&user_addr)).get(),
-                    StakingPosition {
-                        stake_amount: managed_biguint!(USER_BALANCE),
-                        last_action_block: BLOCKS_IN_YEAR
-                    }
-                );
-            },
-        )
-        .assert_ok();
+    let expected_result_2 = StakingPosition {
+        stake_amount: BigUint::from(USER_BALANCE),
+        last_action_block: BLOCKS_IN_YEAR,
+    };
+    setup
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .staking_position(USER_ADDRESS)
+        .returns(ExpectValue(expected_result_2))
+        .run();
 
-    setup.b_mock.check_egld_balance(
-        &user_addr,
-        &(rust_biguint!(USER_BALANCE) * APY / MAX_PERCENTAGE),
-    );
+    setup
+        .world
+        .check_account(USER_ADDRESS)
+        .balance(BigUint::from(USER_BALANCE) * APY / MAX_PERCENTAGE);
 
     // query rewards after claim
     setup
-        .b_mock
-        .execute_query(&setup.contract_wrapper, |sc| {
-            let actual_rewards = sc.calculate_rewards_for_user(managed_address!(&user_addr));
-            let expected_rewards = managed_biguint!(0);
-            assert_eq!(actual_rewards, expected_rewards);
-        })
-        .assert_ok();
+        .world
+        .query()
+        .to(STAKING_CONTRACT_ADDRESS)
+        .typed(staking_contract_proxy::StakingContractProxy)
+        .calculate_rewards_for_user(USER_ADDRESS)
+        .returns(ExpectValue(0u32))
+        .run();
 }
 ```
 
 In the test, we perform the following steps:
 
-- stake 1 EGLD
-- set block nonce after 1 year (i.e. simulating 1 year worth of blocks passing)
-- querying rewards, which should give use 10% of 1 EGLD = 0.1 EGLD
-- claiming said rewards and checking the internal state and user balance
-- querying again after claim, to check that double-claim is not possible
+- Stake 1 EGLD;
+- Set block nonce after 1 year (i.e. simulating 1 year worth of blocks passing);
+- Querying rewards, which should give use 10% of 1 EGLD = 0.1 EGLD;
+- Claiming said rewards and checking the internal state and user balance;
+- Querying again after claim, to check that double-claim is not possible.
 
 This test should work without any errors.
 
 [comment]: # (mx-context-auto)
 
-## Depositing rewards / Conclusion
+## Conclusion
 
-Currently, there is no way to deposit rewards into the SC, unless the owner makes it payable, which is generally bad practice, and not recommended.
+Currently, there is no way to deposit rewards into the smart contract, unless the owner makes it payable, which is generally bad practice, and not recommended.
 
 As this is a fairly simple task compared to what we've done already, we'll leave this as an exercise to the reader. You'll have to add a `payable("EGLD")` endpoint, and additionally, a storage mapper that keeps track of the remaining rewards.
 
 Good luck!
-
-In part 2, which will come soon, we'll discuss about how to use custom ESDTs instead of just EGLD.
