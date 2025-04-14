@@ -164,14 +164,14 @@ As mentioned at the start of this section, in the scope a Sovereign Chain, a tok
 This endpoint is how an user from a Sovereign Chain registers a token on the MultiversX Mainchain. Every token registration costs 0.05 EGLD, that's why the endpoint is `payable`. 
 The endpoint check if the token was not registered before and if it has a prefix. 
 
-> Every token that was created in a Sovereign Chain has a prefix. Example: `Sov-TOKEN-123456`.
+> Every token that was created in a Sovereign Chain has a prefix. Example: `sov-TOKEN-123456`.
 
 If everything is in order, the `Mvx-ESDT-Safe` smart contract will initiate an asynchronous call to the `issue_and_set_all_roles` endpoint from the _ESDTSystemSC_. When the system smart contract finishes the issue transaction, the callback inside the `Mvx-ESDT-Safe` smart contract will trigger and register the mapping of token identifier inside the token mappers:
 
 * `sovereign_to_multiversx_token_id_mapper(sov_token_id)` -> mvx_token_id
 * `multiversx_to_sovereign_token_id_mapper(mvx_token_id)` -> sov_token_id
 
-> After the execution of this endpoint, the `Mvx-ESDT-Safe` smart contract will have in its storage a pair of token identifiers. **Example**: `Sov-TOKEN-123456` is the corresponding sovereign identifier for the `TOKEN-123456` identifier from the MultiversX Mainchain. You can view this feature as creating copies of MultiversX Mainchain tokens inside the Sovereign Chain.
+> After the execution of this endpoint, the `Mvx-ESDT-Safe` smart contract will have in its storage a pair of token identifiers. **Example**: `sov-TOKEN-123456` is the corresponding sovereign identifier for the `TOKEN-123456` identifier from the MultiversX Mainchain. You can view this feature as creating copies of MultiversX Mainchain tokens inside the Sovereign Chain.
 
 ### Register the native token
 Since a Sovereign Chain is a separate blockchain from the MultiversX Mainchain, it has to have a its own native token. Registering the native token is a straightforward process of just one endpoint call.

@@ -17,13 +17,13 @@ Since a Sovereign Chain is a separate blockchain with a different rule-set from 
 
 ![To Sovereign](../../static/sovereign/to-sovereign.png)
 
-When a transaction starts from the MultiversX Mainchain, either from a wallet or a smart contract, it goes through the `Mvx-ESDT-Safe` smart contract. The Observer nodes monitor the events that the deposit transaction emits and then the Sovereign Nodes notarize the state changes inside the Sovereign Chain. This notarization means the end of either the Cross-Chain execution or Cross-Chain transfer.
+When a transaction starts from the MultiversX Mainchain, either from a wallet or a smart contract, it goes through the `Mvx-ESDT-Safe` smart contract. The Observer nodes monitor the events that the deposit transaction emits and then the Sovereign Nodes notarize the state changes inside the Sovereign Chain. This notarization means the end of a Cross-Chain transfer.
 
 ![From Sovereign](../../static/sovereign/from-sovereign.png)
 
-When the transaction is generated from the Sovereign Chain, the `Sov-ESDT-Safe` smart contract must be used. The output of the transaction is read by the Sovereign Bridge Service. From that point there are two possible outcomes:
-1. If the operation is not registered it has to be verified and registered by the `Header-Verifier` smart contract.
-2. If the operation is registered, the Sovereign Bridge Service calls the `Mvx-ESDT-Safe` smart contract deployed on the MultiversX Mainchain to continue the transaction.
+
+
+When the transaction is generated from the Sovereign Chain, the `Sov-ESDT-Safe` smart contract must be used. This smart contract will generate events and from that point, the sovereign nodes, at the end of the round, will read all the outgoing operations (plus all the unconfirmed operations), then these are signed by all the validators, then send to the bridge service, which will make the transaction on main chain
 
 This is a high-level description of the whole process, the smart contracts that take place in it are far more detailed and have a lot of specific scenarios and behaviours. The current Sovereign Chain suite consists of four main contracts, here is the high-level description for some of the cross chain smart contracts:
 
@@ -39,7 +39,7 @@ Since every Sovereign Chain will have a customizable fee logic, it was paramount
 This contract is also present in the MultiversX Mainchain and in any Sovereign Chain.
 
 ## Header-Verifier
-When any transaction happens inside a Sovereign Chain is called and *operation*. The main role of this contract is to verify operations. They have to be signed by the validators of the Sovereign Chain. If the operation is successfully verified it will be registered and then can be executed by the `Mvx-ESDT-Safe` smart contract. All the *BLS keys* of the validators will be stored inside this contract. The in-depth description of how those _operations_ are registered can be found in the [`Header-Verifier`](header-verifier.md) module.
+Any cross-chain transaction that happens inside a Sovereign Chain is called and *operation*. The main role of this contract is to verify operations. They have to be signed by the validators of the Sovereign Chain. If the operation is successfully verified it will be registered and then can be executed by the `Mvx-ESDT-Safe` smart contract. All the *BLS keys* of the validators will be stored inside this contract. The in-depth description of how those _operations_ are registered can be found in the [`Header-Verifier`](header-verifier.md) module.
 
 :::note
 The source for the smart contracts can be found at the official [MultiversX Sovereign Chain SCs repository](https://github.com/multiversx/mx-sovereign-sc). 
