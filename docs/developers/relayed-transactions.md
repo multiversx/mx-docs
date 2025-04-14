@@ -22,7 +22,7 @@ More details and specifications can be found on [MultiversX Specs](https://githu
 
 Currently, there are 3 versions of relayed transactions: v1, v2 and v3. In the end, they all have the same effect.
 
-Relayed v2 was meant to bring optimisations in terms of gas usage. But v3 reduces the costs even further, making it our recommendation.
+Relayed v2 was meant to bring optimisations in terms of gas usage. But v3 reduces the costs even further, **making it our recommendation**.
 
 Once all applications will completely transition to relayed v3 model, v1 and v2 will be removed.
 
