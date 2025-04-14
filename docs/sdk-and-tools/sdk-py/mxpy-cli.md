@@ -106,13 +106,13 @@ mxpy config set dependencies.testwallets.tag v1.0.0
 
 The default config contains the **default address hrp** which depending on the network (e.g Sovereign Chain) might need to be altered.
 
-Most of the commands that might need the `address hrp` already provide a parameter called `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If that addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test` :
+Most of the commands that might need the `address hrp` already provide a parameter called `--hrp` or `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If that addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test` :
 ```sh
 mxpy config set default_address_hrp test
 ```
 
 :::note
-Explicitly providing `--address-hrp` will **always** be used over the `hrp` set in the config.
+Explicitly providing `--hrp` will **always** be used over the one fetched from the network or the `hrp` set in the config.
 :::
 
 [comment]: # (mx-context-auto)
@@ -223,7 +223,7 @@ Let's see a simple example:
 
 ```sh
 mxpy contract deploy --bytecode ~/contracts/adder/output/adder.wasm \
-    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --proxy=https://devnet-gateway.multiversx.com \
     --arguments 0 --gas-limit 5000000 \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --send
@@ -231,11 +231,11 @@ mxpy contract deploy --bytecode ~/contracts/adder/output/adder.wasm \
 
 The `--proxy` is used to specify the url of the proxy and the `--chain` is used to select the network the contract will be deployed to. The chain ID and the proxy need to match for our transaction to be executed. We can't prepare a transaction for the Devnet (using `--chain D`) and send it using the mainnet proxy (https://gateway.multiversx.com).
 
-The `--recall-nonce` is used to get the nonce of the address so we don't search it manually. It simply makes an API request to get the nonce of the account. The `--arguments` is used in case our contract needs any arguments for the initialization. We know our `adder` needs a value to start adding from, so we set that to `0`.
+The `--arguments` is used in case our contract needs any arguments for the initialization. We know our `adder` needs a value to start adding from, so we set that to `0`.
 
 The `--gas-limit` is used to set the gas we are willing to pay so our transaction will be executed. 5 million gas is a bit too much because our contract is very small and simple, but better to be sure. In case our transaction doesn't have enough gas the network will not execute it, saying something like `Insufficient gas limit`.
 
-The `--pem` argument is used to provide the sender of the transaction, the payer of the fee. The sender will also be the owner of the contract.
+The `--pem` argument is used to provide the sender of the transaction, the payer of the fee. The sender will also be the owner of the contract. The nonce of the sender is fetched from the network if the `--proxy` argument is provided. The nonce can also be explicitly set using the `--nonce` argument. If the nonce is explicitly set, mxpy will not fetch the nonce from the network.
 
 [comment]: # (mx-context-auto)
 
@@ -267,7 +267,7 @@ After finishing the arguments file, we can run the following command to deploy t
 
 ```sh
 mxpy contract deploy --bytecode ~/contracts/multisig/output/multisig.wasm \
-    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --proxy=https://devnet-gateway.multiversx.com \
     --abi ~/contracts/multisig/output/multisig.abi.json \
     --arguments-file deploy_multisig_arguments.json \
     --gas-limit 500000000 \
@@ -285,13 +285,13 @@ To call a function we use the `mxpy contract call` command. Here's an example of
 
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
-    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --proxy=https://devnet-gateway.multiversx.com --chain D \
     --function add --arguments 5 --gas-limit 1000000 \
     --send
 ```
 
-The positional argument is the contract address that we want to interact with. The `--pem`, `--recall-nonce`, `--proxy` and `--chain` arguments are used the same as above in the deploy transaction.
+The positional argument is the contract address that we want to interact with. The `--pem`, `--proxy` and `--chain` arguments are used the same as above in the deploy transaction.
 
 Using the `--function` argument we specify the function we want to call and with the `--arguments` argument we specify the value we want to add. We set the gas we are willing to pay for the transaction and finally we send the transaction.
 
@@ -326,7 +326,7 @@ After finishing the arguments file, we can run the following command to call the
 
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgqjsg84gq5e79rrc2rm5ervval3jrrfvvfd8sswc6xjy \
-    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --proxy=https://devnet-gateway.multiversx.com \
     --abi ~/contracts/multisig/output/multisig.abi.json \
     --arguments-file call_multisig_arguments.json \
     --function proposeTransferExecute
@@ -404,7 +404,7 @@ Then we upgrade the contract by running:
 mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --bytecode ~/contracts/adder/output/adder.wasm \
     --proxy=https://devnet-gateway.multiversx.com --chain D \
-    --recall-nonce --arguments 0 --gas-limit 5000000 \
+    --arguments 0 --gas-limit 5000000 \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --send
 ```
@@ -417,7 +417,7 @@ As shown above, we can also upgrade the contract by providing the ABI file and t
 mxpy contract upgrade erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
     --bytecode ~/contracts/adder/output/adder.wasm \
     --proxy=https://devnet-gateway.multiversx.com --chain D \
-    --recall-nonce --gas-limit 5000000 \
+    --gas-limit 5000000 \
     --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --abi=~/contracts/multisig/output/multisig.abi.json,
     --arguments-file=upgrade_arguments.json
@@ -428,7 +428,7 @@ Now let's add `5` to the contract one more time. We do so by running the followi
 
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgq3zrpqj3sulnc9xq95sljetxhf9s07pqtd8ssfkxjv4 \
-    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+    --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --proxy=https://devnet-gateway.multiversx.com --chain D \
     --function add --arguments 5 --gas-limit 1000000 \
     --send
@@ -483,7 +483,7 @@ The _packaged source_ passed as `--packaged-src` can be obtained either from [th
 To create a new transaction we use the `mxpy tx new` command. Let's see how that works:
 
 ```sh
-mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
     --gas-limit 50000 --value 1000000000000000000 \
     --proxy https://devnet-gateway.multiversx.com --chain D \
@@ -516,7 +516,7 @@ Here are the urls to our hosted co-signer services:
 :::
 
 ```sh
-mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
     --gas-limit 200000 --value 1000000000000000000 \
     --proxy https://devnet-gateway.multiversx.com --chain D \
@@ -551,7 +551,7 @@ The inner transaction is any regular transaction, with the following notes:
 This can be generated through `mxpy tx new` command. A new argument `--relayer` has been added for this feature.
 
 ```sh
-mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
     --gas-limit 100000 --value 1000000000000000000 \
     --proxy https://devnet-gateway.multiversx.com --chain D \
@@ -576,7 +576,7 @@ mxpy tx relay --relayer-pem ~/multiversx-sdk/testwallets/latest/users/carol.pem 
 
 This can be done through `mxpy tx new` command, as follows:
 ```sh
-mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem --recall-nonce \
+mxpy tx new --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --receiver erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
     --relayer erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
     --relayer-pem ~/multiversx-sdk/testwallets/latest/users/carol.pem \
@@ -623,7 +623,7 @@ account index = 0 | address index = 2 | address: erd1...
 Now let's sign and broadcast a transaction (EGLD transfer):
 
 ```sh
-mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
+mxpy tx new --proxy https://devnet-gateway.multiversx.com \
     --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
     --gas-limit 50000 --value 1000000000000000000 \
     --ledger \
@@ -633,7 +633,7 @@ mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
 By default, the first MultiversX address managed by the device is used as the sender (signer) of the transaction. In order to select a different address, you can use the `--ledger-address-index` CLI parameter:
 
 ```sh
-mxpy tx new --proxy https://devnet-gateway.multiversx.com --recall-nonce \
+mxpy tx new --proxy https://devnet-gateway.multiversx.com \
     --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
     --gas-limit 50000 --value 1000000000000000000 \
     --ledger --ledger-address-index=42 \
@@ -647,7 +647,7 @@ For MultiversX, **the account index should always be `0`**, while the address in
 Now let's deploy a smart contract using the Ledger:
 
 ```sh
-mxpy contract deploy --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+mxpy contract deploy --proxy=https://devnet-gateway.multiversx.com \
     --bytecode=adder.wasm --gas-limit=5000000 \
     --ledger --ledger-address-index=42 \
     --send
@@ -657,7 +657,7 @@ Then, perform a contract call:
 
 ```sh
 mxpy contract call erd1qqqqqqqqqqqqqpgqwwef37kmegph97egvvrxh3nccx7xuygez8ns682zz0 \
-    --proxy=https://devnet-gateway.multiversx.com --recall-nonce \
+    --proxy=https://devnet-gateway.multiversx.com \
     --function add --arguments 42 --gas-limit 5000000 \
     --ledger --ledger-address-index=42 \
     --send
