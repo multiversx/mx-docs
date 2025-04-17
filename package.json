@@ -40,7 +40,8 @@
     "react-markdown": "^9.0.3",
     "react-modal": "^3.16.3",
     "rehype-katex": "7.0.0",
-    "remark-math": "6.0.0"
+    "remark-math": "6.0.0",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.5.2",
