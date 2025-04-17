@@ -1,3 +1,12 @@
+---
+id: sdk-js-cookbook-v14
+title: Cookbook (v14)
+pagination_prev: sdk-and-tools/sdk-js/sdk-js-cookbook-versions
+pagination_next: null
+---
+
+[comment]: # (mx-abstract)
+
 ## Overview
 
 This guide walks you through handling common tasks using the MultiversX Javascript SDK (v14, latest stable version).
