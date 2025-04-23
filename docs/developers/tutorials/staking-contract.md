@@ -10,7 +10,7 @@ title: Staking smart contract
 This tutorial aims to teach you how to write a simple staking contract, and to illustrate and correct the common pitfalls new smart contract developers might fall into.
 
 :::tip
-If you find anything not answered here, feel free to ask further questions on the MultiversX Developers Telegram channel: [https://t.me/MultiversXDevelopers](https://t.me/MultiversXDevelopershttps://t.me/MultiversXDevelopers)
+If you find anything not answered here, feel free to ask further questions on the MultiversX Developers Telegram channel: [https://t.me/MultiversXDevelopers](https://t.me/MultiversXDevelopers)
 :::
 
 [comment]: # (mx-context-auto)
