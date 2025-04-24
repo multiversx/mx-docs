@@ -317,6 +317,7 @@ There are many ways of getting EGLD on Devnet:
 #### Getting EGLD through devnet wallet
 
 Go to [Devnet Wallet](https://devnet-wallet.multiversx.com) and login to your account using your PEM file. From the left side menu, select *Faucet*:
+
 ![img](/developers/staking-contract-tutorial-img/wallet_faucet.png)
 
 Request the tokens. After a few seconds you should have **5 xEGLD** in your wallet.
@@ -381,7 +382,8 @@ cargo run stake
 
 We've now successfully staked 1 EGLD... or have we?
 
-If we look at the transaction, that's not quite the case:  
+If we look at the transaction, that's not quite the case:
+
 ![img](/developers/staking-contract-tutorial-img/first_stake.png)
 
 [comment]: # (mx-context-auto)
@@ -409,6 +411,7 @@ let egld_amount = BigUint::<StaticApi>::from(1000000000000000000u128);
 ```
 
 Now let's try staking again:
+
 ![img](/developers/staking-contract-tutorial-img/second_stake.png)
 
 [comment]: # (mx-context-auto)
@@ -614,7 +617,8 @@ Then, run in terminal at path `staking-contract/interactor`:
 cargo run unstake
 ```
 
-Now run this function, and you'll get this result:  
+Now run this function, and you'll get this result:
+
 ![img](/developers/staking-contract-tutorial-img/first_unstake.png)
 
 ...but why? We just added the function!
