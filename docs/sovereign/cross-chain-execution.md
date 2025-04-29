@@ -30,6 +30,14 @@ This is a high-level description of the whole process, the smart contracts that 
 ## Mvx-ESDT-Safe & Sov-ESDT-Safe
 The two contracts have the same role: to facilitate a cross-chain execution depending on what side the process starts. The reason for the prefix of `Sov` and `Mvx` is to show where the smart contract is deployed, `Sov` means that the contract is deployed on a Sovereign Chain and `Mvx` that is deployed on the MultiversX Mainchain. There will be an in-depth description of each smart contract in the upcoming modules ([`Mvx-ESDT-Safe`](mvx-esdt-safe.md) and [`Sov-ESDT-Safe`](sov-esdt-safe.md)). The description will consist of flows for the cross-chain interactions, important modules and endpoints. 
 
+Cross-chain transfers imply sending funds through the smart contracts mentioned above. There are two types of bridging mechanism available: *Lock&Send* and *Burn&Mint*. 
+
+#### Lock and Send
+Lock & Send: a custodial bridging mechanism in which the source-chain tokens are locked inside the bridge contract, while an equal amount is minted on the destination chain. The locked balance on the source chain backs the circulating supply on the sovereign chain 1-for-1 until the tokens are returned and unlocked.
+
+#### Burn and Mint
+Mint & Burn: a non-custodial bridging mechanism where the source-chain tokens are burned (permanently removed from supply) and an identical amount is minted on the destination chain, so the total supply moves between chains without any tokens being held in escrow.
+
 ## Fee-Market
 Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. The rules set inside this contract are: 
 * fee per transferred token 
