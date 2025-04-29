@@ -33,14 +33,10 @@ The two contracts have the same role: to facilitate a cross-chain execution depe
 Cross-chain transfers imply sending funds through the smart contracts mentioned above. There are two types of bridging mechanism available: *Lock&Send* and *Burn&Mint*. 
 
 #### Lock and Send
-With Lock & Send, the user’s ESDT tokens are locked—not destroyed—inside the `Mvx-ESDT-Safe` on MultiversX. The safe escrows the exact amount and emits a cross-chain instruction. On the Sovereign Chain, the `Sov-ESDT-Safe` either mints a wrapped representation (if the token originated on MultiversX) or releases tokens it already holds (if the token originated on the Sovereign side) to the recipient, maintaining a 1-to-1 backing between locked funds and circulating wrapped tokens.
-
-Bridging back performs the mirror action: wrapped tokens on the Sovereign Chain are burned or re-locked there, the cross-chain message arrives, and the original tokens held in escrow on MultiversX are unlocked and sent to the user. Because the original supply never leaves MultiversX, Lock & Send avoids granting mint/burn roles to the safes and offers an easy fallback—locked funds can be returned if a transfer fails. The trade-off is that large custodial balances accumulate in the safe contract, and additional storage is required to track them.
+Lock & Send: a custodial bridging mechanism in which the source-chain tokens are locked inside the bridge contract, while an equal amount is minted on the destination chain. The locked balance on the source chain backs the circulating supply on the sovereign chain 1-for-1 until the tokens are returned and unlocked.
 
 #### Burn and Mint
-When a user bridges an ESDT token from MultiversX to a Sovereign Chain using Burn & Mint, the `Mvx-ESDT-Safe` contract first burns the specified amount on MultiversX—removing it from the main-chain supply. A cross-chain message then instructs the `Sov-ESDT-Safe` to mint the same amount on the target chain and credit the recipient. Moving tokens back works in reverse: they’re burned on the sovereign side and re-minted on MultiversX. Because the supply is destroyed on one chain and recreated on the other, no funds sit locked in a contract; the total supply simply shifts between chains.
-
-This method requires each safe contract to hold the token’s local mint and burn roles, so it’s enabled only for tokens explicitly whitelisted in the Mvx-ESDT-Safe configuration. Compared with the older Lock & Unlock mechanism—which escrows tokens instead of burning them—Burn & Mint eliminates custodial balances and reduces on-chain storage, but it places higher trust in the safes’ minting authority and demands robust cross-chain messaging to guarantee one-to-one supply transfer.
+Mint & Burn: a non-custodial bridging mechanism where the source-chain tokens are burned (permanently removed from supply) and an identical amount is minted on the destination chain, so the total supply moves between chains without any tokens being held in escrow.
 
 ## Fee-Market
 Since every Sovereign Chain will have a customizable fee logic, it was paramount that this configuration had to be separated into a different contract. The rules set inside this contract are: 
