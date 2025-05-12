@@ -64,14 +64,14 @@ A Collection is defined by the following:
 
 ### Collection Properties
 
-- `canUpgrade` - (default: true) - Allows the owner to upgrade the collection, changing any properties of the collection.
-- `canChangeOwner` - (default: false) - Allows the owner to change the owner of the collection.
-- `canTransfer` - (default: true) - Allows the transfer of tokens of this collection.
-- `canPause` - (default: false) - Allows the owner to pause the collection.
-- `canFreeze` - (default: false) - Allows the owner to freeze an address from transferring tokens of this collection.
-- `canWipe` - (default: false) - Allows the owner to wipe the tokens of an address which has been frozen.
-- `canTransferNFTCreateRole` - (default: false) - Allows the owner to transfer the NFT create role.
-- `canAddSpecialRoles` - (default: true) - Allows the owner to add special roles to an address.
+- `canUpgrade` (default: `true`) - Allows the owner to upgrade the collection, changing any properties of the collection.
+- `canChangeOwner` (default: `false`) - Allows the owner to change the owner of the collection.
+- `canTransfer` (default: `true`) - Allows the transfer of tokens of this collection.
+- `canPause` (default: `false`) - Allows the owner to pause the collection.
+- `canFreeze` (default: `false`) - Allows the owner to freeze an address from transferring tokens of this collection.
+- `canWipe` (default: `false`) - Allows the owner to wipe the tokens of an address which has been frozen.
+- `canTransferNFTCreateRole` (default: `false`) - Allows the owner to transfer the NFT create role.
+- `canAddSpecialRoles` (default: `true`) - Allows the owner to add special roles to an address.
 
 ## Issuing an NFT or SFT Collection  
 
@@ -188,28 +188,25 @@ Once the Collection is created, one can set the roles for the Collection.
 ### Shared Roles
 These roles are shared between NFTs and SFTs.
 
-- ESDTRoleNFTCreate : this role allows one to create a new NFT or SFT
-- ESDTRoleNFTBurn : this role allows one to burn a specific NFT or SFT, for SFTs it also allows one to burn a specific quantity of a SFT.
-- ESDTTransferRole : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
-- ESDTRoleNFTAddURI : this role allows one add URIs for a specific NFT or SFT.
-- ESDTRoleNFTUpdateAttributes : this role allows one to change the attributes of a specific NFT or SFT.
+- `ESDTRoleNFTCreate` : this role allows one to create a new NFT or SFT
+- `ESDTRoleNFTBurn` : this role allows one to burn a specific NFT or SFT, for SFTs it also allows one to burn a specific quantity of a SFT.
+- `ESDTTransferRole` : this role enables transfer only to specified addresses. The addresses with the transfer role can transfer anywhere.
+- `ESDTRoleNFTAddURI` : this role allows one add URIs for a specific NFT or SFT.
+- `ESDTRoleNFTUpdateAttributes` : this role allows one to change the attributes of a specific NFT or SFT.
 
 ### Shared Dynamic Roles
 These roles are shared between NFTs and SFTs of dynamic collections.
 
-- ESDTRoleNFTUpdate : this role allows one to update meta data attributes of a specific NFT or SFT
-- ESDTRoleModifyRoyalties : this role allows one to modify royalties of a specific NFT or SFT
-- ESDTRoleSetNewURI : this role allows one to set new uris of a specific NFT or SFT
-- ESDTRoleModifyCreator : this role allows one to rewrite the creator of a specific NFT or SFT
-- ESDTRoleNFTRecreate : this role allows one to recreate the whole NFT or SFT with new attributes
-
-
-
+- `ESDTRoleNFTUpdate` : this role allows one to update meta data attributes of a specific NFT or SFT
+- `ESDTRoleModifyRoyalties` : this role allows one to modify royalties of a specific NFT or SFT
+- `ESDTRoleSetNewURI` : this role allows one to set new uris of a specific NFT or SFT
+- `ESDTRoleModifyCreator` : this role allows one to rewrite the creator of a specific NFT or SFT
+- `ESDTRoleNFTRecreate` : this role allows one to recreate the whole NFT or SFT with new attributes
 
 ### SFT Specific Roles
 These roles are specific to SFTs.
 
-- ESDTRoleNFTAddQuantity : this role allows one to add quantity of a specific SFT
+- `ESDTRoleNFTAddQuantity` : this role allows one to add quantity of a specific SFT
 
 ### Assigning Collection Roles
 
