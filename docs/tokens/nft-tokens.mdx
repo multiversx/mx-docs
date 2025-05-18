@@ -13,7 +13,7 @@ import TableWrapper from "@site/src/components/TableWrapper";
 
 ## **Introduction**
 
-MultiversX NFTs(non-fungible tokens) are a breed of digital assets that are revolutionizing the world of art, collectibles, and more. These NFTs are unique, one-of-a-kind tokens that are built on blockchain technology, allowing for secure ownership and transfer of these assets. With MultiversX NFTs, every token is assigned a unique identification code(ticker) and metadata that distinguishes it from every other token, making each NFT truly one-of-a-kind. Read the full page for a comprehensive guide on how to brand, issue, transfer, assign roles and many other features, for both NFTs and SFTs.
+MultiversX NFTs (non-fungible tokens) are a breed of digital assets that are revolutionizing the world of art, collectibles, and more. These NFTs are unique, one-of-a-kind tokens that are built on blockchain technology, allowing for secure ownership and transfer of these assets. With MultiversX NFTs, every token is assigned a unique identification code (ticker) and metadata that distinguishes it from every other token, making each NFT truly one-of-a-kind. Read the full page for a comprehensive guide on how to brand, issue, transfer, assign roles and many other features, for both NFTs and SFTs.
 
 
 [comment]: # (mx-context-auto)
@@ -22,15 +22,15 @@ MultiversX NFTs(non-fungible tokens) are a breed of digital assets that are revo
 
 The MultiversX protocol introduces native NFT support by adding metadata and attributes on top of the already existing [Fungible tokens](/tokens/fungible-tokens).
 This way, one can issue a semi-fungible token or a non-fungible token which is quite similar to an ESDT, but has a few more attributes, as well as an assignable URI.
-Once owning a quantity of a NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/tokens/nft-tokens#nftsft-fields).
+Once owning a quantity of an NFT/SFT, users will have their data store directly under their account, inside the trie. All the fields available inside a NFT/SFT token can be found [here](/tokens/nft-tokens#nftsft-fields).
 
 ### Differences between NFTs and SFTs
 
 The main difference between NFTs and SFTs is that NFTs are non-fungible tokens, meaning each token is unique and cannot be divided. SFTs are semi-fungible tokens, meaning each token can exist in multiple quantities.
 Depending on the use case, one might choose to issue an NFT or an SFT Collection.
 
-- NFT - Unique art piece, concert tickets, etc.
-- SFT - Potions in a game, vouchers, etc.
+- NFT - Unique art piece, concert tickets, PFPs etc.
+- SFT - Potions in a game, discount vouchers, fractional real-estate ownership, etc.
 
 ### Dynamic NFTs and SFTs
 
@@ -54,13 +54,13 @@ A Collection is defined by the following:
 
 ### Collection Name
 
-- length between 3 and 50 characters
-- alphanumeric characters only
+- Length between 3 and 50 characters
+- Alphanumeric characters only
 
 ### Collection Ticker
 
-- length between 3 and 10 characters
-- alphanumeric UPPERCASE only
+- Length between 3 and 10 characters
+- Alphanumeric UPPERCASE only
 
 ### Collection Properties
 
@@ -77,8 +77,7 @@ A Collection is defined by the following:
 
 ### Issuing a Non-Fungible Tokens Collection
 
-One has to perform an issuance transaction in order to register a non-fungible token collection.
-Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a Collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction—sent to the **System: ESDT Module** account (address below)—in order to register a non-fungible token collection. Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a Collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -118,8 +117,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### Issuing a Semi-Fungible Tokens Collection
 
-One has to perform an issuance transaction in order to register a semi-fungible token collection.
-Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction—sent to the **System: ESDT Module** account (address below)—in order to register a semi-fungible token collection. Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -160,7 +158,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### Issuing a Dynamic NFT or SFT Collection
 
-A NFT or SFT collection can be created as dynamic by sending the following transaction:
+A NFT or SFT collection can be created as dynamic by sending the following transaction to the **System: ESDT Module** account (address below):
 ```rust
 RegisterDynamicTransaction {
     Sender: <account address of the token manager>
@@ -210,7 +208,7 @@ These roles are specific to SFTs.
 
 ### Assigning Collection Roles
 
-Roles can be assigned by sending a transaction to the Metachain from the ESDT manager.
+Roles can be assigned by sending a transaction to the Metachain from the ESDT manager—sent to the **System: ESDT Module** smart contract (address below).
 
 Within a transaction of this kind, any number of roles can be assigned (minimum 1).
 
@@ -295,7 +293,7 @@ Below you can find the fields involved when creating an NFT or SFT.
 - <u>Mandatory</u> field that represents the URL to a [supported](#supported-media-types) media file ending with the file extension as described in the [example](#example) below
 - Field should contain the `Uniform Resource Identifier`
 
-<u>Note</u>: As a best practice, we recommend storing the files for media & extra metadata(from attributes field) within same folder on your storage provider, ideally IPFS. Also, in order to have a thumbnail generated for the uploaded file the size of the file should be less or equal to 64MB.
+<u>Note</u>: As a best practice, we recommend storing the files for media & extra metadata (from attributes field) within same folder on your storage provider, ideally IPFS. Also, in order to have a thumbnail generated for the uploaded file the size of the file should be less or equal to 64MB.
 
 :::important
 Please note that each argument must be encoded in hexadecimal format with an even number of characters.
@@ -352,7 +350,7 @@ In this example we are creating a NFT representing a song. Hash is left null, we
 A single address can own the role of creating an NFT or SFT for an ESDT token. This role can be transferred by using the `ESDTNFTCreateRoleTransfer` function.
 
 An NFT or SFT can be created on top of an existing ESDT by sending a transaction to self that contains the function call that triggers the creation.
-Any number of URIs can be assigned (minimum 1)
+Any number of URIs can be assigned (minimum 1).
 
 ```rust
 NFTOrSFTCreationTransaction {
@@ -390,7 +388,7 @@ Most of the times you will be able to create the NFTs by issuing one single tran
 This assumes that the metadata file as well as the NFT media is already uploaded to IPFS.
 
 There are times, however, when uploading the metadata file before issuing the NFT is not possible (eg. when issued from a smart contract)
-In these cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction. You can find more information [here](/tokens/nft-tokens#change-nft-attributes) about how to update the attributes
+In these cases it is possible to update an NFT with the metadata file after it was issued by sending an additional transaction. You can find more information [here](/tokens/nft-tokens#change-nft-attributes) about how to update the attributes.
 
 [comment]: # (mx-context-auto)
 
@@ -800,7 +798,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### Making a SFT collection dynamic
 
-The SFT Collection manager can change token type to dynamic using a transaction like this:
+The ESDT manager can change token type to dynamic using a transaction like this —  sent to the **System: ESDT Module** smart contract (address below):
 
 ```rust
 ChangeToDynamicTransaction {
@@ -922,7 +920,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 **Step 2: Fetch the token identifier**
 
 For doing this, one has to check the previously sent transaction and see the Smart Contract Result of it.
-It will look similar to `@ok@414c432d317132773365`. The `414c432d317132773365` represents the token identifier in hexadecimal encoding.
+It will look similar to `@ok@414c432d317132773365`. The `414c432d317132773365` represents the token identifier in hexadecimal [encoding](https://utils.multiversx.com/).
 
 **Step 3: Set roles**
 
