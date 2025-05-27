@@ -46,7 +46,7 @@ A ready-to-broadcast transaction is structured as follows:
 ### Prerequisites
 
 > **Note**
-> To get the most out of this chapter we recommend reading **[Sharding](https://docs.multiversx.com/learn/sharding)** and our **[Introduction to MultiversX](https://docs.multiversx.com/learn/introduction)** first.
+> To get the most out of this chapter we recommend reading **[Sharding](https://docs.multiversx.com/learn/sharding)** and our **[Introduction to MultiversX](https://docs.multiversx.com/learn/multiversx-ecosystem)** first.
 
 ### Overview
 
