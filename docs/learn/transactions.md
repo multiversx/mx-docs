@@ -142,4 +142,3 @@ With **Andromeda**, every block reaches finality immediately (400 signatures, fi
 | Large metadata overhead in every cross‑chain proof. | Proofs are smaller, easier to verify, cheaper to transmit. |
 
 > **Effect:** Cross‑chain proofs are now lighter and faster to validate while preserving the same security guarantees.
-
