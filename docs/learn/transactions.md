@@ -41,35 +41,104 @@ A ready-to-broadcast transaction is structured as follows:
 }
 ```
 
-## **Cross-Shard Transactions**
+## Cross‑Shard Transactions
 
-### **Prerequisites**
-:::note
-To help you better understand this section, we recommend you first read [Sharding](/learn/sharding) and our [introduction to MultiversX](/welcome/welcome-to-multiversx).
-:::
+### Prerequisites
 
-For an in depth example of how the cross-shard transactions are being executed and how the communication between shards and the metachain occurs, we are simplifying the entire process to just two shards and the metachain. Assuming that a user generates a transaction from his wallet, which has an address in shard 0 and wants to send EGLD to another user that has a wallet with an address in shard 1, the steps depicted in the figure below are required for processing the cross-shard transaction.
+> **Note**
+> To get the most out of this chapter we recommend reading **[Sharding](https://docs.multiversx.com/learn/sharding)** and our **[Introduction to MultiversX](https://docs.multiversx.com/learn/multiversx-ecosystem)** first.
 
-The block’s structure is represented by a block Header that contains information about the block (block nonce, round, proposer, validators timestamp etc.), and a list of miniblocks for each shard that contain the actual transactions inside. Every miniblock contains all transactions that have either the sender in the current shard and the receiver in another shard or the sender in a different shard and the destination in the current shard. In our case, for a block in shard 0, there will normally be 3 miniblocks:
+### Overview
 
-- miniblock 0: containing the intrashard transactions for shard 0
-- miniblock 1: containing cross-shard transactions with the sender in shard 0 and destination in shard 1
-- miniblock 2: containing cross-shard transactions with sender in shard 1 and destination in shard 0. These transactions were already processed in the sender shard 1 and will be finalized after the processing in the current shard.
+With the **Andromeda (v1.9.6)** upgrade, cross‑shard execution has been streamlined:
 
-There is no limitation on the number of miniblocks with the same sender and receiver in one block. Meaning multiple miniblocks with the same sender and receiver can appear in the same block.
+* **Confirmation blocks have been removed** – every shard block is final as soon as it is signed by ≥ 2⁄3 of the 400‑validator consensus group.
+* The end‑to‑end path for a cross‑shard transaction is now **three blocks (≈ 18 s on mainnet)**, down from six.
+* The underlying data structures – blocks, miniblocks and metablocks – remain unchanged, so no SDK or API schema adjustments are required.
 
-[comment]: # (mx-context-auto)
+To illustrate the new flow we reduce the network to **two execution shards** (`shard 0`, `shard 1`) and the **Metachain**. A user in `shard 0` sends EGLD to another user in `shard 1`.
 
-### **Processing a Cross-Shard Transaction**
+### Block structure recap
 
-Currently, the atomic unit of processing in cross-shard execution is a miniblock: either all the transactions of the miniblock are processed at once or none and the miniblock’s execution will be retried in the next round.
+Each shard block contains:
 
-Our cross-shard transaction strategy uses an asynchronous model. Validation and processing is done first in sender’s shard and then in receivers' shard. Transactions are first dispatched in the sender’s shard, as it can fully validate any transaction initiated from the account in this shard – mainly the current balance. Afterwards, in the receivers' shard, the nodes only need proof of execution offered by metachain, do signature verification and check for replay attack and finally update the balance for the receiver, adding the amount from the transaction.
+| Component | Description |
+|-----------|-------------|
+| **Header** | nonce, round, proposer, timestamp, gas summary, Merkle roots, etc. |
+| **Miniblocks** | ordered lists of transactions, grouped by `(sender shard → receiver shard)` pair. |
 
-Shard 0 processes both intra-shard transactions in miniblock 0 and a set of cross-shard transactions that have addresses from shard 1 as a receiver in miniblock 1. The block header and miniblocks are sent to the metachain. The metachain notarizes the block from shard 0, by creating a new metachain block (metablock) that contains the following information about each miniblock: sender shard ID, receiver shard ID, miniblock hash.
+In `shard 0` a typical block might include three miniblocks:
 
-Shard 1 fetches the hash of miniblock 1 from metablock, requests the miniblock from shard 0, parses the transaction list, requests missing transactions (if any), executes the same miniblock 1 in shard 1 and sends to the metachain resulting block. After notarization the cross transaction set can be considered finalized.
+| Miniblock | Contents |
+|-----------|----------|
+| **0** | Intra‑shard txs (`shard 0 → shard 0`). |
+| **1** | Cross‑shard txs **from `shard 0` to `shard 1`** (our example). |
+| **2** | Cross‑shard txs **from `shard 1` to `shard 0`** that were already executed in `shard 1`; they will be finalised here. |
 
-The next diagram shows the number of rounds required for a transaction to be finalized. The rounds are considered between the first inclusion in a miniblock until the last miniblock is notarised.
+> There is no limit to how many miniblocks with the same sender/receiver pair can appear in one block.
 
-![img](/technology/cross-shard-txs.png)
+### Processing a cross‑shard transaction (post‑Andromeda)
+
+The atomic unit of cross‑shard execution remains the **miniblock**: either the entire miniblock is processed, or none of its transactions are applied and it is retried in the next round.
+
+MultiversX continues to use an **asynchronous model**:
+
+1. **Validation & execution in the sender’s shard.**  
+   `shard 0` fully verifies the transaction (nonce, signatures, balance, etc.) and places it in miniblock 1. The block is produced and immediately final (single‑block finality).
+2. **Notarisation by the Metachain.**  
+   The Metachain includes the header & miniblock hashes of the new `shard 0` block in metablock `n + 1`, together with an **Equivalent Consensus Proof (ECP)** – a compressed BLS aggregate signature from ≥ 2⁄3 of the validator set.
+3. **Execution in the receiver’s shard.**  
+   Nodes in `shard 1` read the metablock, fetch miniblock 1 from `shard 0`, verify the ECP, check for replay, and apply the state changes (credit the destination address). The resulting `shard 1` block (nonce `n + 2`) is finalised with its own consensus proof and notarised in the next metablock.
+
+The sequence diagram below highlights the three‑round flow:
+
+```mermaid
+sequenceDiagram
+    participant S0 as Shard 0
+    participant MC as Metachain
+    participant S1 as Shard 1
+
+    S0->>MC: Block n (miniblock 1)
+    MC-->>S0: Notarisation + ECP
+    MC->>S1: Proven miniblock header
+    S1->>MC: Block n+2 (exec miniblock 1)
+```
+
+#### Rounds required
+
+The transaction is considered **final** once miniblock 1 is executed and notarised in `shard 1`.
+
+| Round | Block location | Event |
+|-------|----------------|-------|
+| `n` | `shard 0` | Tx validated & executed (miniblock 1). |
+| `n + 1` | Metachain | Notarises `shard 0` block (`ECP`). |
+| `n + 2` | `shard 1` | Executes & finalises the mirrored miniblock. |
+
+Total latency ≈ 18 seconds on the actual 6 s‑block‑time mainnet.
+
+### Why did cross‑shard execution need six rounds before Andromeda?
+
+Before v1.9.6 a cross‑shard transfer had to survive **at least six separate blocks** to guarantee it could never be reverted elsewhere:
+
+| Step | Round | Chain | Purpose |
+|------|-------|-------|---------|
+| 1 | `k` | Source shard | Produce block **B<sub>k</sub>** containing the cross‑shard tx. |
+| 2 | `k + 1` | Source shard | **Confirmation block** C<sub>k+1</sub> proving B<sub>k</sub>. |
+| 3 | `k + 2` | Metachain | Notarise B<sub>k</sub> (only after it sees C<sub>k+1</sub>). |
+| 4 | `k + 3` | Metachain | Confirmation metablock M<sub>k+3</sub> proving M<sub>k+2</sub>. |
+| 5 | `k + 4` | Destination shard | Execute mirrored miniblock, produce D<sub>k+4</sub>. |
+| 6 | `k + 5` | Destination shard | Confirmation block D<sub>k+5</sub>; metachain can now notarise D<sub>k+4</sub>. |
+
+These guard‑rails were essential while only **63 of 400 validators** signed each shard block—an equivocating proposer could, in theory, create conflicting blocks until the confirmation arrived.
+
+With **Andromeda**, every block reaches finality immediately (400 signatures, fixed order), so the two confirmation stages are obsolete and the path collapses to three blocks.
+
+### Cross‑chain proof verification made simpler
+
+| Pre‑Andromeda | Post‑Andromeda |
+|---------------|----------------|
+| **63 / 400 validators** per block; membership shuffled each round. | **400 / 400 validators** sign every block for the entire epoch. |
+| Verifier had to reconstruct the 63‑node subset and their signature order for every proof. | Verifier only needs the epoch‑wide validator list once; proofs are a single aggregated BLS signature. |
+| Large metadata overhead in every cross‑chain proof. | Proofs are smaller, easier to verify, cheaper to transmit. |
+
+> **Effect:** Cross‑chain proofs are now lighter and faster to validate while preserving the same security guarantees.
