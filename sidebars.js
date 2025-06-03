@@ -223,20 +223,15 @@ const sidebars = {
                 items: [
                   "sdk-and-tools/sdk-js/sdk-js",
                   {
-                    label: "Cookbook",
-                    type: "doc",
-                    id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
-                  },
-                  {
                     type: "category",
                     label: "Cookbook (versioned)",
                     link: {
                       type: "doc",
-                      id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
+                      id: "sdk-and-tools/sdk-js/sdk-js-cookbook"
                     },
                     items: [
                       "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
-                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
+                      "sdk-and-tools/sdk-js/sdk-js-cookbook",
                     ]
                   },
                   "sdk-and-tools/sdk-js/extending-sdk-js",
