@@ -76,7 +76,7 @@ There are multiple ways of formatting the data field:
 
 - manually convert each argument, and then join the function name, alongside the argument via the `@` character.
 - use a pre-defined arguments serializer, such as [the one found in sdk-js](https://github.com/multiversx/mx-sdk-js-core/blob/main/src/smartcontracts/argSerializer.ts).
-- use sdk-js's [contract calls](/sdk-and-tools/sdk-js/sdk-js-cookbook-v14/#smart-contracts).
+- use sdk-js's [contract calls](/sdk-and-tools/sdk-js/sdk-js-cookbook/#smart-contracts).
 - use sdk-cpp's [contract calls](https://github.com/multiversx/mx-sdk-cpp/blob/main/src/smartcontracts/contract_call.cpp).
 - and so on
 

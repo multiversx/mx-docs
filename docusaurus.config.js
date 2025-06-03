@@ -428,11 +428,11 @@ const config = {
           },
           {
             from: "/sdk-and-tools/erdjs/erdjs-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
           },
           {
             from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
           },
           {
             from: "/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
