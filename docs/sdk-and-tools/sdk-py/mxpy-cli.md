@@ -5,9 +5,15 @@ title: mxpy CLI cookbook
 
 [comment]: # (mx-abstract)
 
+
+
 ## mxpy (Command Line Interface)
 
 **mxpy**, as a command-line tool, can be used to simplify and automate the interaction with the MultiversX network - it can be easily used in shell scripts, as well. It implements a set of **commands**, organized within **groups**.
+
+:::important
+In order to migrate to the newer `mxpy`, please follow [the migration guide](https://github.com/multiversx/mx-sdk-py-cli/issues?q=label:migration).
+:::
 
 The complete Command Line Interface is listed [**here**](https://github.com/multiversx/mx-sdk-py-cli/blob/main/CLI.md). Command usage and description are available through the `--help` or `-h` flags.
 

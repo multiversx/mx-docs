@@ -214,7 +214,6 @@ const sidebars = {
                   "sdk-and-tools/sdk-py/installing-mxpy",
                   "sdk-and-tools/sdk-py/mxpy-cli",
                   "sdk-and-tools/sdk-py/smart-contract-interactions",
-                  "sdk-and-tools/sdk-py/sdk-py-migration-guides",
                 ],
               },
               {
@@ -236,7 +235,6 @@ const sidebars = {
                   },
                   "sdk-and-tools/sdk-js/extending-sdk-js",
                   "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
-                  "sdk-and-tools/sdk-js/sdk-js-migration-guides",
                   "sdk-and-tools/sdk-js/sdk-js-signing-providers",
                 ],
               },

@@ -12,6 +12,10 @@ pagination_prev: sdk-and-tools/sdk-py/sdk-py
 
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries) **v0 (legacy, previous version)**.
 
+:::important
+In order to migrate to the newer `sdk-py v1`, please follow [the migration guide](https://github.com/multiversx/mx-sdk-py/issues?q=label:migration).
+:::
+
 :::note
 All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/main/examples/Cookbook.ipynb)**.
 :::
