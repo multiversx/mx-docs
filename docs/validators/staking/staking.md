@@ -92,7 +92,7 @@ Make sure `mxpy` is installed and has the latest version before continuing.
 
 To send transactions on your behalf _without_ using the online MultiversX Wallet, `mxpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
-Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/mxpy-cli#converting-a-wallet). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
+Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/mxpy/mxpy-cli#converting-a-wallet). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
 
 After the PEM file was generated, you can issue transactions from `mxpy` directly.
 
