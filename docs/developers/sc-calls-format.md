@@ -128,7 +128,7 @@ There are multiple tools that one can use in order to convert an address into he
 
 ### Converting addresses using mxpy
 
-Make sure you have `mxpy` [installed](/sdk-and-tools/sdk-py/installing-mxpy).
+Make sure you have `mxpy` [installed](/sdk-and-tools/mxpy/installing-mxpy).
 
 ```bash
 mxpy wallet bech32 --decode erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th

@@ -28,7 +28,7 @@ Let's take the following example:
 
 ### mxpy
 
-We're going to use [**mxpy**](/sdk-and-tools/sdk-py/mxpy-cli) to deploy the contract. Follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy) - make sure to use the latest version available.
+We're going to use [**mxpy**](/sdk-and-tools/mxpy/mxpy-cli) to deploy the contract. Follow the installation guide [here](/sdk-and-tools/mxpy/installing-mxpy) - make sure to use the latest version available.
 
 [comment]: # (mx-context-auto)
 
