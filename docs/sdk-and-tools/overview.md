@@ -65,10 +65,8 @@ You might also want to have a look over [**xSuite**](https://xsuite.dev), a tool
 
 | Name                                                                             | Description                               |
 | -------------------------------------------------------------------------------- | ----------------------------------------- |
-| [mxpy](/sdk-and-tools/sdk-py/)                                                   | High level overview about mxpy.           |
-| [Installing mxpy](/sdk-and-tools/sdk-py/installing-mxpy)                         | How to install and get started with mxpy. |
-| [mxpy cli](/sdk-and-tools/sdk-py/mxpy-cli)                                       | How to use the Command Line Interface.    |
-| [Smart contract interactions](/sdk-and-tools/sdk-py/smart-contract-interactions) | Interact with Smart Contract.             |
+| [Installing mxpy](/sdk-and-tools/mxpy/installing-mxpy)                         | How to install and get started with mxpy. |
+| [mxpy cli](/sdk-and-tools/mxpy/mxpy-cli)                                       | How to use the Command Line Interface.    |
 
 [comment]: # (mx-context-auto)
 

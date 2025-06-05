@@ -125,7 +125,7 @@ unJail@<BLS1>@<BLS2>@…@<BLS99>
 
 Submitting the unjailing transaction using `mxpy` avoids having to write the "Data" field manually. Instead, the transaction is constructed automatically by `mxpy` and submitted to the network directly, in a single command.
 
-Make sure `mxpy` is installed and has the latest version before continuing. If `mxpy` is not installed, please follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
+Make sure `mxpy` is installed and has the latest version before continuing. If `mxpy` is not installed, please follow [these instructions](/sdk-and-tools/mxpy/installing-mxpy).
 
 [comment]: # (mx-context-auto)
 
@@ -133,7 +133,7 @@ Make sure `mxpy` is installed and has the latest version before continuing. If `
 
 To send transactions on your behalf _without_ using the online MultiversX Wallet, `mxpy` must be able to sign for you. For this reason, you have to generate a PEM file using your Wallet mnemonic.
 
-Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/sdk-py/mxpy-cli). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
+Please follow the guide [Deriving the Wallet PEM file](/sdk-and-tools/mxpy/mxpy-cli). Make sure you know exactly where the PEM file was generated, because you'll need to reference its path in the `mxpy` commands.
 
 After the PEM file was generated, you can issue transactions from `mxpy`directly.
 

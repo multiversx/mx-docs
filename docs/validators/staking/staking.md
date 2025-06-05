@@ -82,7 +82,7 @@ Make sure `mxpy` is installed by issuing this command on a terminal:
 mxpy --version
 ```
 
-If `mxpy` is not installed (`command not found`), please follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
+If `mxpy` is not installed (`command not found`), please follow [these instructions](/sdk-and-tools/mxpy/installing-mxpy).
 
 Make sure `mxpy` is installed and has the latest version before continuing.
 

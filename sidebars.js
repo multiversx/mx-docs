@@ -211,9 +211,14 @@ const sidebars = {
                       "sdk-and-tools/sdk-py/sdk-py-cookbook",
                     ]
                   },
-                  "sdk-and-tools/sdk-py/installing-mxpy",
-                  "sdk-and-tools/sdk-py/mxpy-cli",
-                  "sdk-and-tools/sdk-py/smart-contract-interactions",
+                ],
+              },
+              {
+                type: "category",
+                label: "Mxpy CLI",
+                items: [
+                  "sdk-and-tools/mxpy/installing-mxpy",
+                  "sdk-and-tools/mxpy/mxpy-cli",
                 ],
               },
               {

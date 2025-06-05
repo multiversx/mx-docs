@@ -420,11 +420,15 @@ const config = {
           },
           {
             from: "/sdk-and-tools/sdk-py/configuring-mxpy",
-            to: "/sdk-and-tools/sdk-py/mxpy-cli",
+            to: "/sdk-and-tools/mxpy/mxpy-cli",
+          },
+          {
+            from: "/sdk-and-tools/sdk-py/mxpy-cli",
+            to: "/sdk-and-tools/mxpy/mxpy-cli",
           },
           {
             from: "/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
-            to: "/sdk-and-tools/sdk-py/mxpy-cli",
+            to: "/sdk-and-tools/mxpy/mxpy-cli",
           },
           {
             from: "/developers/log-events/esdt-events",
