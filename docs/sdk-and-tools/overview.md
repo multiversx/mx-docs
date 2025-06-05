@@ -35,12 +35,6 @@ Note that Rust is also the recommended programming language for writing Smart Co
 | [Writing and testing sdk-js interactions](/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions) | Write sdk-js interactions for Visual Studio Code    |
 | [sdk-js signing providers](/sdk-and-tools/sdk-js/sdk-js-signing-providers)                               | Integrate sdk-js signing providers.                 |
 
-In addition to sdk-js, one could use the following Javascript library for performing wallet operations via CLI:
-
-| Name                                                  | Description                                                  |
-| ----------------------------------------------------- | ------------------------------------------------------------ |
-| [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli) | Lightweight CLI wrapper used to perform wallet interactions. |
-
 You might also want to have a look over [**xSuite**](https://xsuite.dev), a toolkit to init, build, test, deploy contracts using JavaScript, made by the [Arda team](https://arda.run).
 
 [comment]: # (mx-context-auto)
