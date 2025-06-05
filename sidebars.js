@@ -252,7 +252,6 @@ const sidebars = {
               },
               "sdk-and-tools/erdcpp",
               "sdk-and-tools/erdkotlin",
-              "sdk-and-tools/sdk-js-wallet-cli"
             ],
           },
           {
