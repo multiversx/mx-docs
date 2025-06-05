@@ -194,25 +194,7 @@ const sidebars = {
             type: "category",
             label: "SDKs",
             items: [
-              {
-                type: "category",
-                label: "Python SDK",
-                items: [
-                  "sdk-and-tools/sdk-py/sdk-py",
-                  {
-                    type: "category",
-                    label: "Cookbook (versioned)",
-                    link: {
-                      type: "doc",
-                      id: "sdk-and-tools/sdk-py/sdk-py-cookbook"
-                    },
-                    items: [
-                      "sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
-                      "sdk-and-tools/sdk-py/sdk-py-cookbook",
-                    ]
-                  },
-                ],
-              },
+              "sdk-and-tools/sdk-py",
               {
                 type: "category",
                 label: "Mxpy CLI",
@@ -270,7 +252,6 @@ const sidebars = {
               },
               "sdk-and-tools/erdcpp",
               "sdk-and-tools/erdkotlin",
-              "sdk-and-tools/sdk-js-wallet-cli"
             ],
           },
           {
