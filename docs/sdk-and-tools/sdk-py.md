@@ -1,7 +1,7 @@
 ---
-id: sdk-py-cookbook
-title: Cookbook (v1)
-pagination_prev: sdk-and-tools/sdk-py/sdk-py-cookbook-v0
+id: sdk-py
+title: Python SDK
+pagination_prev: developers/testing/testing-in-go
 pagination_next: sdk-and-tools/mxpy/installing-mxpy
 ---
 

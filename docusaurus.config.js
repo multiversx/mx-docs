@@ -415,6 +415,14 @@ const config = {
             to: "/developers/testing/testing-in-go",
           },
           {
+            from: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+            to: "/sdk-and-tools/sdk-py",
+          },
+          {
+            from: "/sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
+            to: "/sdk-and-tools/sdk-py",
+          },
+          {
             from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
             to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
           },
