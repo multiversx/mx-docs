@@ -28,7 +28,7 @@ sudo pipx ensurepath --global
 
 ### mxpy
 
-Ensure you are using the latest version of mxpy. Follow the installation or upgrade instructions provided [here](/sdk-and-tools/sdk-py/installing-mxpy#install-using-pipx) if you haven't done so already.
+Ensure you are using the latest version of mxpy. Follow the installation or upgrade instructions provided [here](/sdk-and-tools/mxpy/installing-mxpy#install-using-pipx) if you haven't done so already.
 
 ### multiversx-sdk
 

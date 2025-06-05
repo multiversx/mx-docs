@@ -2,7 +2,7 @@
 id: sdk-py-cookbook
 title: Cookbook (v1)
 pagination_prev: sdk-and-tools/sdk-py/sdk-py-cookbook-v0
-pagination_next: sdk-and-tools/sdk-py/installing-mxpy
+pagination_next: sdk-and-tools/mxpy/installing-mxpy
 ---
 
 [comment]: # (mx-abstract)
