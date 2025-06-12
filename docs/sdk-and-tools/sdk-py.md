@@ -1,8 +1,8 @@
 ---
-id: sdk-py-cookbook
-title: Cookbook (v1)
-pagination_prev: sdk-and-tools/sdk-py/sdk-py-cookbook-v0
-pagination_next: sdk-and-tools/sdk-py/installing-mxpy
+id: sdk-py
+title: Python SDK
+pagination_prev: developers/testing/testing-in-go
+pagination_next: sdk-and-tools/mxpy/installing-mxpy
 ---
 
 [comment]: # (mx-abstract)
@@ -12,6 +12,10 @@ pagination_next: sdk-and-tools/sdk-py/installing-mxpy
 ## Overview
 
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries) **v1 (latest, stable version)**.
+
+:::important	
+This cookbook makes use of `sdk-py v1`. In order to migrate from `sdk-py v0` to `sdk-py v1`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-py/issues?q=label:migration).	
+:::
 
 :::note
 All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/main/examples/Cookbook.ipynb)**.
