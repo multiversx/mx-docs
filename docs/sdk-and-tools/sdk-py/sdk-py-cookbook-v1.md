@@ -14,12 +14,12 @@ pagination_next: sdk-and-tools/sdk-py/installing-mxpy
 This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries) **v1 (latest, stable version)**.
 
 :::note
-All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/main/examples/v1.ipynb)**.
+All examples depicted here are captured in **(interactive) [Jupyter notebooks](https://github.com/multiversx/mx-sdk-py/blob/main/examples/Cookbook.ipynb)**.
 :::
 
 We are going to use the [multiversx-sdk-py](https://github.com/multiversx/mx-sdk-py) package. This package can be installed directly from GitHub or from [**PyPI**](https://pypi.org/project/multiversx-sdk/).
 
-<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py/refs/heads/main/examples/v1.ipynb" } -->
+<!-- BEGIN_NOTEBOOK { "url": "https://raw.githubusercontent.com/multiversx/mx-sdk-py/refs/heads/main/examples/Cookbook.ipynb" } -->
 
 ## Creating an Entrypoint
 
@@ -251,7 +251,7 @@ from multiversx_sdk import NetworkProviderConfig, ApiNetworkProvider, RequestsRe
 retry_options = RequestsRetryOptions(
     retries=5,
     backoff_factor=0.1,
-    status_forecelist=[500, 502, 503]
+    status_forcelist=[500, 502, 503]
 )
 
 config = NetworkProviderConfig(
@@ -501,7 +501,9 @@ transaction = Transaction(
     receiver=contract,
     gas_limit=5000000,
     chain_id="D",
-    data=b"add@07"
+    nonce=entrypoint.recall_account_nonce(alice),  # nonce needs to be properly set
+    data=b"add@07",
+    signature=b'0' * 64,  #  signature is not checked by default, but a dummy value must be provided
 )
 transaction_on_network = api.simulate_transaction(transaction)
 ```
@@ -924,9 +926,9 @@ decoded_transaction = decoder.get_transaction_metadata(transaction)
 print(decoded_transaction.to_dict())
 ```
 
-## Smart Contracts
+### Smart Contracts
 
-### Contract ABIs
+#### Contract ABIs
 
 A contract's ABI describes the endpoints, data structure and events that a contract exposes. While contract interactions are possible without the ABI, they are easier to implement when the definitions are available.
 
@@ -939,7 +941,7 @@ from multiversx_sdk.abi import Abi
 abi = Abi.load(Path("./contracts/adder.abi.json"))
 ```
 
-##### Manually construct the ABI
+#### Manually construct the ABI
 
 If an ABI file isn't directly available, but you do have knowledge of the contract's endpoints and types, you can manually construct the ABI.
 
@@ -1348,7 +1350,7 @@ abi = Abi.load(Path("contracts/multisig-full.abi.json"))
 
 # fetch the transaction of the network
 network_provider = DevnetEntrypoint().create_network_provider()
-transaction_on_network = network_provider.get_transaction(tx_hash)
+transaction_on_network = network_provider.get_transaction("exampleTransactionHash")
 
 # extract the event from the transaction
 [event] = find_events_by_first_topic(transaction_on_network, "startPerformAction")
@@ -1672,6 +1674,7 @@ tx_hash = entrypoint.send_transaction(transaction)
 outcome = controller.await_completed_issue_fungible(tx_hash)
 
 token_identifier = outcome[0].token_identifier
+print(token_identifier)
 ```
 
 #### Issuing fungible tokens using the factory
@@ -1719,6 +1722,7 @@ parser = TokenManagementTransactionsOutcomeParser()
 outcome = parser.parse_issue_fungible(transaction_on_network)
 
 token_identifier = outcome[0].token_identifier
+print(token_identifier)
 ```
 
 #### Setting special roles for fungible tokens using the controller
@@ -1839,6 +1843,7 @@ tx_hash = entrypoint.send_transaction(transaction)
 outcome = controller.await_completed_issue_semi_fungible(tx_hash)
 
 token_identifier = outcome[0].token_identifier
+print(token_identifier)
 ```
 
 #### Issuing semi-fungible tokens using the factory
@@ -1885,6 +1890,7 @@ parser = TokenManagementTransactionsOutcomeParser()
 outcome = parser.parse_issue_semi_fungible(transaction_on_network)
 
 token_identifier = outcome[0].token_identifier
+print(token_identifier)
 ```
 
 #### Issuing NFT collection & creating NFTs using the controller
@@ -1926,6 +1932,23 @@ outcome = controller.await_completed_issue_non_fungible(tx_hash)
 
 collection_identifier = outcome[0].token_identifier
 
+# set roles
+transaction = controller.create_transaction_for_setting_special_role_on_non_fungible_token(
+    sender=alice,
+    nonce=alice.get_nonce_then_increment(),
+    user=alice.address,
+    token_identifier=collection_identifier,
+    add_role_nft_create=True,
+    add_role_nft_burn=True,
+    add_role_nft_update_attributes=True,
+    add_role_nft_add_uri=True,
+    add_role_esdt_transfer_role=True,
+)
+
+# sending the transaction and waiting for completion
+tx_hash = entrypoint.send_transaction(transaction)
+entrypoint.await_transaction_completed(tx_hash)
+
 # create a NFT
 transaction = controller.create_transaction_for_creating_nft(
     sender=alice,
@@ -1936,7 +1959,7 @@ transaction = controller.create_transaction_for_creating_nft(
     royalties=2500,  # 25%
     hash="",
     attributes=b"",
-    uris=[]
+    uris=["emptyUri"]
 )
 
 # sending the transaction
@@ -1948,6 +1971,9 @@ outcome = controller.await_completed_create_nft(tx_hash)
 identifier = outcome[0].token_identifier
 nonce = outcome[0].nonce
 initial_quantity = outcome[0].initial_quantity
+print(identifier)
+print(nonce)
+print(initial_quantity)
 ```
 
 #### Issuing NFT collection & creating NFTs using the factory
@@ -1996,6 +2022,26 @@ outcome = parser.parse_issue_non_fungible(transaction_on_network)
 
 collection_identifier = outcome[0].token_identifier
 
+# set roles
+transaction = factory.create_transaction_for_setting_special_role_on_non_fungible_token(
+    sender=alice.address,
+    user=alice.address,
+    token_identifier=collection_identifier,
+    add_role_nft_create=True,
+    add_role_nft_burn=True,
+    add_role_nft_update_attributes=True,
+    add_role_nft_add_uri=True,
+    add_role_esdt_transfer_role=True,
+)
+transaction.nonce = alice.get_nonce_then_increment()
+
+# sign the transaction
+transaction.signature = alice.sign_transaction(transaction)
+
+# sending the transaction and waiting for completion
+tx_hash = entrypoint.send_transaction(transaction)
+entrypoint.await_transaction_completed(tx_hash)
+
 # create a NFT
 transaction = factory.create_transaction_for_creating_nft(
     sender=alice.address,
@@ -2005,7 +2051,7 @@ transaction = factory.create_transaction_for_creating_nft(
     royalties=2500,  # 25%
     hash="",
     attributes=b"",
-    uris=[]
+    uris=["emptyUri"]
 )
 # set the nonce
 transaction.nonce = alice.get_nonce_then_increment()
@@ -2026,6 +2072,9 @@ outcome = parser.parse_nft_create(transaction_on_network)
 identifier = outcome[0].token_identifier
 nonce = outcome[0].nonce
 initial_quantity = outcome[0].initial_quantity
+print(identifier)
+print(nonce)
+print(initial_quantity)
 ```
 
 These are just a few examples of what we can do using the token management controller or factory. For a full list of what methods are supported for both, check out the autogenerated documentation:
@@ -2786,7 +2835,7 @@ transaction = factory.create_transaction_for_issuing_fungible(
     sender=alice.address,
     token_name="NEWTOKEN",
     token_ticker="TKN",
-    initial_supply=1000000000000,  # 1 million tokens, with 6 decimals
+    initial_supply=1_000_000_000000,  # 1 million tokens, with 6 decimals
     num_decimals=6,
     can_freeze=False,
     can_wipe=True,
@@ -2841,7 +2890,7 @@ transaction = controller.create_transaction_for_issuing_fungible(
     nonce=alice.get_nonce_then_increment(),
     token_name="NEWTOKEN",
     token_ticker="TKN",
-    initial_supply=1000000000000,  # 1 million tokens, with 6 decimals
+    initial_supply=1_000_000_000000,  # 1 million tokens, with 6 decimals
     num_decimals=6,
     can_freeze=False,
     can_wipe=True,
@@ -2881,7 +2930,7 @@ transaction = factory.create_transaction_for_issuing_fungible(
     sender=alice.address,
     token_name="NEWTOKEN",
     token_ticker="TKN",
-    initial_supply=1000000000000,  # 1 million tokens, with 6 decimals
+    initial_supply=1_000_000_000000,  # 1 million tokens, with 6 decimals
     num_decimals=6,
     can_freeze=False,
     can_wipe=True,
@@ -2911,6 +2960,318 @@ tx_hash = entrypoint.send_transaction(transaction)
 ```
 
 We can also create guarded relayed transactions the same way we did before. Keep in mind that, only the sender can be guarded, the relayer cannot. The same flow can be used. Using controllers, we set both `guardian` and `relayer` fields and then the transaction should be signed by both. Using a factory, we create the transaction, set both both fields and then sign the transaction using the sender's account, then the the guardian and the relayer sign the transaction.
+
+### Multisig
+
+The sdk contains components to interact with the [Multisig Contract](https://github.com/multiversx/mx-contracts-rs/releases/tag/v0.45.5). We can deploy a multisig smart contract, add members, propose and execute actions and query the contract. The same as the other components, to interact with a multisig smart contract we can use either the `MultisigController` or the `MultisigTransactionsFactory`.
+
+#### Deploying a Multisig Smart Contract using the controller
+
+```py
+from pathlib import Path
+from multiversx_sdk import Account, Address, ApiNetworkProvider, MultisigController
+from multiversx_sdk.abi import Abi
+
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+api = ApiNetworkProvider(url="https://devnet-api.multiversx.com")
+alice.nonce = api.get_account(alice.address).nonce
+
+abi = Abi.load(Path("../multiversx_sdk/testutils/testdata/multisig-full.abi.json"))
+controller = MultisigController(chain_id="D", network_provider=api, abi=abi)
+
+transaction = controller.create_transaction_for_deploy(
+    sender=alice,
+    nonce=alice.get_nonce_then_increment(),
+    bytecode=Path("../multiversx_sdk/testutils/testdata/multisig-full.wasm"),
+    quorum=2,
+    board=[alice.address, Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")],
+    gas_limit=100_000_000,
+)
+
+transaction.signature = alice.sign_transaction(transaction)
+tx_hash = api.send_transaction(transaction)
+```
+
+#### Deploying a Multisig Smart Contract using the factory
+
+```py
+from pathlib import Path
+from multiversx_sdk import Account, Address, ApiNetworkProvider, MultisigTransactionsFactory, TransactionsFactoryConfig
+from multiversx_sdk.abi import Abi
+
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+api = ApiNetworkProvider(url="https://devnet-api.multiversx.com")
+alice.nonce = api.get_account(alice.address).nonce
+
+abi = Abi.load(Path("../multiversx_sdk/testutils/testdata/multisig-full.abi.json"))
+config = TransactionsFactoryConfig(chain_id="D")
+factory = MultisigTransactionsFactory(config=config, abi=abi)
+
+transaction = factory.create_transaction_for_deploy(
+    sender=alice.address,
+    bytecode=Path("../multiversx_sdk/testutils/testdata/multisig-full.wasm"),
+    quorum=2,
+    board=[alice.address, Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")],
+    gas_limit=100_000_000,
+)
+transaction.nonce = alice.get_nonce_then_increment()
+transaction.signature = alice.sign_transaction(transaction)
+
+tx_hash = api.send_transaction(transaction)
+```
+
+#### Propose an action using the controller
+
+We'll propose an action to send some EGLD to Carol. After we sent the proposal, we'll also parse the outcome of the transaction to get the `proposal id`. The id can be later for signing and performing the proposal.
+
+```py
+from pathlib import Path
+from multiversx_sdk import Account, Address, ApiNetworkProvider, MultisigController
+from multiversx_sdk.abi import Abi
+
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+api = ApiNetworkProvider(url="https://devnet-api.multiversx.com")
+alice.nonce = api.get_account(alice.address).nonce
+
+abi = Abi.load(Path("../multiversx_sdk/testutils/testdata/multisig-full.abi.json"))
+controller = MultisigController(chain_id="D", network_provider=api, abi=abi)
+
+transaction = controller.create_transaction_for_propose_transfer_execute(
+    sender=alice,
+    nonce=alice.get_nonce_then_increment(),
+    contract=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq2ukrsg73nwgu3uz6sp8vequuyrhtv2akd8ssyrg7wj"),
+    receiver=Address.new_from_bech32("erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"),
+    gas_limit=10_000_000,
+    native_token_amount=1_000000000000000000,  # 1 EGLD
+)
+
+# sign and send the transaction
+transaction.signature = alice.sign_transaction(transaction)
+tx_hash = api.send_transaction(transaction)
+
+# parse the outcome and get the proposal id
+action_id = controller.await_completed_execute_propose_any(tx_hash)
+```
+
+#### Propose an action using the factory
+
+Proposing an action for a multisig contract using the `MultisigFactory` is very similar to using the controller, but in order to get the proposal id we need to use `MultisigTransactionsOutcomeParser`.
+
+```py
+from pathlib import Path
+from multiversx_sdk import Account, Address, ApiNetworkProvider, MultisigTransactionsFactory, TransactionsFactoryConfig, MultisigTransactionsOutcomeParser, TransactionAwaiter
+from multiversx_sdk.abi import Abi
+
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+api = ApiNetworkProvider(url="https://devnet-api.multiversx.com")
+alice.nonce = api.get_account(alice.address).nonce
+
+abi = Abi.load(Path("../multiversx_sdk/testutils/testdata/multisig-full.abi.json"))
+config = TransactionsFactoryConfig(chain_id="D")
+factory = MultisigTransactionsFactory(config=config, abi=abi)
+
+transaction = factory.create_transaction_for_propose_transfer_execute(
+    sender=alice.address,
+    contract=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq2ukrsg73nwgu3uz6sp8vequuyrhtv2akd8ssyrg7wj"),
+    receiver=Address.new_from_bech32("erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"),
+    gas_limit=10_000_000,
+    native_token_amount=1_000000000000000000,  # 1 EGLD
+)
+transaction.nonce = alice.get_nonce_then_increment()
+transaction.signature = alice.sign_transaction(transaction)
+
+tx_hash = api.send_transaction(transaction)
+
+# wait for the transaction to execute
+transaction_awaiter = TransactionAwaiter(fetcher=api)
+transaction_awaiter.await_completed(tx_hash)
+
+# parse the outcome of the transaction
+parser = MultisigTransactionsOutcomeParser(abi=abi)
+transaction_on_network = api.get_transaction(tx_hash)
+action_id = parser.parse_propose_action(transaction_on_network)
+```
+
+#### Querying the Multisig Smart Contract
+
+Unlike creating transactions, querying the multisig can be performed only using the controller. Let's query the contract to get all board members.
+
+```py
+from pathlib import Path
+from multiversx_sdk import Address, ApiNetworkProvider, MultisigController
+from multiversx_sdk.abi import Abi
+
+abi = Abi.load(Path("../multiversx_sdk/testutils/testdata/multisig-full.abi.json"))
+api = ApiNetworkProvider(url="https://devnet-api.multiversx.com")
+controller = MultisigController(chain_id="D", network_provider=api, abi=abi)
+
+contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq2ukrsg73nwgu3uz6sp8vequuyrhtv2akd8ssyrg7wj")
+board_members = controller.get_all_board_members(contract)
+```
+
+### Governance
+
+We can create transactions for creating a new governance proposal, vote for a proposal or query the governance contract.
+
+#### Creating a new proposal using the controller
+
+```py
+from multiversx_sdk import Account, ProxyNetworkProvider, GovernanceController
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+alice.nonce = proxy.get_account(alice.address).nonce
+
+controller = GovernanceController(chain_id="D", network_provider=proxy)
+commit_hash = "1db734c0315f9ec422b88f679ccfe3e0197b9d67"
+
+transaction = controller.create_transaction_for_new_proposal(
+    sender=alice,
+    nonce=alice.get_nonce_then_increment(),
+    commit_hash=commit_hash,
+    start_vote_epoch=10,
+    end_vote_epoch=15,
+    native_token_amount=500_000000000000000000,
+)
+
+# send the transaction
+tx_hash = proxy.send_transaction(transaction)
+
+# get proposal outcome
+[proposal] = controller.await_completed_new_proposal(tx_hash)
+print(proposal.proposal_nonce)
+print(proposal.commit_hash)
+print(proposal.start_vote_epoch)
+print(proposal.end_vote_epoch)
+```
+
+#### Creating a new proposal using the factory
+
+```py
+from multiversx_sdk import (Account, ProxyNetworkProvider, GovernanceTransactionsFactory,
+                            GovernanceTransactionsOutcomeParser, TransactionsFactoryConfig, TransactionAwaiter)
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+alice.nonce = proxy.get_account(alice.address).nonce
+
+config = TransactionsFactoryConfig(chain_id="D")
+factory  = GovernanceTransactionsFactory(config)
+commit_hash = "1db734c0315f9ec422b88f679ccfe3e0197b9d67"
+
+transaction = factory.create_transaction_for_new_proposal(
+    sender=alice.address,
+    commit_hash=commit_hash,
+    start_vote_epoch=10,
+    end_vote_epoch=15,
+    native_token_amount=500_000000000000000000,
+)
+transaction.nonce = alice.get_nonce_then_increment()
+transaction.signature = alice.sign_transaction(transaction)
+
+# send the transaction
+tx_hash = proxy.send_transaction(transaction)
+
+# make sure the transaction is complete
+awaiter = TransactionAwaiter(fetcher=proxy)
+transaction_on_network = awaiter.await_completed(tx_hash)
+
+# get proposal outcome
+parser = GovernanceTransactionsOutcomeParser()
+[proposal] = parser.parse_new_proposal(transaction_on_network=transaction_on_network)
+
+print(proposal.proposal_nonce)
+print(proposal.commit_hash)
+print(proposal.start_vote_epoch)
+print(proposal.end_vote_epoch)
+```
+
+#### Vote for a proposal using the controller
+
+```py
+from multiversx_sdk import Account, ProxyNetworkProvider, GovernanceController, VoteType
+
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+alice.nonce = proxy.get_account(alice.address).nonce
+
+controller = GovernanceController(chain_id="D", network_provider=proxy)
+
+transaction = controller.create_transaction_for_voting(
+    sender=alice,
+    nonce=alice.get_nonce_then_increment(),
+    proposal_nonce=1,
+    vote=VoteType.YES
+)
+
+# send the transaction
+tx_hash = proxy.send_transaction(transaction)
+
+# get vote outcome
+[vote] = controller.await_completed_vote(tx_hash)
+print(vote.proposal_nonce)
+print(vote.vote)
+print(vote.total_stake)
+print(vote.total_voting_power)
+```
+
+#### Vote for a proposal using the factory
+
+```py
+from multiversx_sdk import (Account, ProxyNetworkProvider, GovernanceTransactionsFactory,
+                            GovernanceTransactionsOutcomeParser, TransactionsFactoryConfig,
+                            TransactionAwaiter, VoteType)
+
+alice = Account.new_from_pem(Path("../multiversx_sdk/testutils/testwallets/alice.pem"))
+proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+alice.nonce = proxy.get_account(alice.address).nonce
+
+config = TransactionsFactoryConfig(chain_id="D")
+factory  = GovernanceTransactionsFactory(config)
+
+transaction = factory.create_transaction_for_voting(
+    sender=alice.address,
+    proposal_nonce=1,
+    vote=VoteType.YES,
+)
+transaction.nonce = alice.get_nonce_then_increment()
+transaction.signature = alice.sign_transaction(transaction)
+
+# send the transaction
+tx_hash = proxy.send_transaction(transaction)
+
+# make sure the transaction is complete
+awaiter = TransactionAwaiter(fetcher=proxy)
+transaction_on_network = awaiter.await_completed(tx_hash)
+
+# get vote outcome
+parser = GovernanceTransactionsOutcomeParser()
+[vote] = parser.parse_vote(transaction_on_network=transaction_on_network)
+
+print(vote.proposal_nonce)
+print(vote.vote)
+print(vote.total_stake)
+print(vote.total_voting_power)
+```
+
+#### Querying the governance contract
+
+Unlike creating transactions, querying the contract is only possible using the controller. Let's query the contract to get more details about a proposal.
+
+```py
+from multiversx_sdk import ProxyNetworkProvider, GovernanceController
+
+
+proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+controller = GovernanceController(chain_id="D", network_provider=proxy)
+
+proposal_info = controller.get_proposal(proposal_nonce=1)
+```
 
 ## Addresses
 
