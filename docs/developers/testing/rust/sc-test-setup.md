@@ -9,18 +9,18 @@ title: Test setup
 
 [comment]: # (mx-context-auto)
 
-### Preparing contracts for testing
-
 If you haven't yet, run the build command for your smart contract while in the contract directory `your-contract/`, that contains all the contract's directories.
 
 ```
 sc-meta all build
 ```
 
-**Create test file**
+### Creating test file
+
 Navigate to the folder `tests/` inside the contract's main directory and create a new Rust file to write the code for testing `your-contract/tests/your_contract_test.rs`.
 
-**Generate Proxy**
+### Generating Proxy
+
 Before creating the test, we need to set up the environment, starting with a Proxy.
 
 A smart contract's proxy is an object that mimics the contract. We will use the proxy to call the endpoints.
