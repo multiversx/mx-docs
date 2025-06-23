@@ -169,7 +169,7 @@ mxpy env set proxy_url https://devnet-api.multiversx.com
 
 #### Setting the explorer url
 
-mxpy already knows the explorer urls for all three networks (Mainnet, Devnet, Testnet). This is particulary useful when running the CLI on custom networks where an explorer is also available. This key is not required to be present in the env config for the config to be valid. To set the explorer url use the following command:
+mxpy already knows the explorer urls for all three networks (Mainnet, Devnet, Testnet). This is particularly useful when running the CLI on custom networks where an explorer is also available. This key is not required to be present in the env config for the config to be valid. To set the explorer url use the following command:
 
 ```sh
 mxpy env set explorer_url
@@ -283,7 +283,7 @@ To view all the properties of the active address, use the following command:
 mxpy address dump
 ```
 
-#### Dumping all availale addresses
+#### Dumping all available addresses
 
 To view all the addresses configured, use the following command:
 
