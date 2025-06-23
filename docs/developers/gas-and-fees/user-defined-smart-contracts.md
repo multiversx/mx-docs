@@ -225,27 +225,27 @@ For our example, let's simulate using the following values for `gasLimit`: `7619
 ```bash
 $ mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
- --function=foo\
- --gas-limit=7619200\
- --arguments ${hexAddressOfB}\
+ --function=foo \
+ --gas-limit=7619200 \
+ --arguments ${hexAddressOfB} \
  --simulate
 
 ... inspect output (possibly testnet logs); execution is successful
 
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
- --function=foo\
- --gas-limit=7000000\
- --arguments ${hexAddressOfB}\
+ --function=foo \
+ --gas-limit=7000000 \
+ --arguments ${hexAddressOfB} \
  --simulate
 
 ... inspect output (possibly testnet logs); execution is successful
 
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
- --function=foo\
- --gas-limit=6000000\
- --arguments ${hexAddressOfB}\
+ --function=foo \
+ --gas-limit=6000000 \
+ --arguments ${hexAddressOfB} \
  --simulate
 
 ... inspect output (possibly testnet logs); ERROR: out of gas when executing B::bar()
