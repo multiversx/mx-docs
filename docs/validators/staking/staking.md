@@ -105,7 +105,7 @@ The following commands assume that the PEM file for your Wallet was saved with t
 The command to submit a staking transaction with `mxpy` is this:
 
 ```bash
-mxpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --pem=walletKey.pem --value="<stake-value>" --validators-file=<validators-json-file> --proxy=https://gateway.multiversx.com
 ```
 
 Notice that we are using the `walletKey.pem` file. Moreover, before executing this command, you need to replace the following:
@@ -131,12 +131,10 @@ Notice that we are using the `walletKey.pem` file. Moreover, before executing th
 
 The `pemFile` field should point to valid Validator PEM file. **Note that paths must be relative to the JSON file itself.**
 
-Notice also that there is no calculation for "Gas Limit". If you provide the `--estimate-gas` argument to `mxpy`, the gas limit will be estimated automatically.
-
 Here's an example for a staking command for one node:
 
 ```
-mxpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com
 ```
 
 :::note important
@@ -146,7 +144,7 @@ You must take **denomination** into account when specifying the `value` paramete
 For two nodes, it becomes this:
 
 ```
-mxpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --pem=walletKey.pem --value="5000000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com
 ```
 
 [comment]: # (mx-context-auto)
@@ -160,7 +158,7 @@ Alternatively, you can tell `mxpy` to specify another wallet to which your rewar
 For example, a staking command for a single node, with a reward address specified, looks like this:
 
 ```
-mxpy --verbose validator stake --reward-address="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th" --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com --estimate-gas --recall-nonce
+mxpy --verbose validator stake --reward-address="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th" --pem=walletKey.pem --value="2500000000000000000000" --validators-file=my-validators.json --proxy=https://gateway.multiversx.com
 ```
 
 The above command will submit a staking command and will also inform the Staking SmartContract that the rewards should be transferred to the wallet `erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th` .
