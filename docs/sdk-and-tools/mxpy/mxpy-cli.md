@@ -169,7 +169,7 @@ mxpy env set proxy_url https://devnet-api.multiversx.com
 
 #### Setting the explorer url
 
-mxpy already knows the explorer urls for all three networks (Mainnet, Devnet, Testnet). This is particularly useful when running the CLI on custom networks where an explorer is also available. This key is not required to be present in the env config for the config to be valid. To set the explorer url use the following command:
+**mxpy** already knows the explorer urls for all three networks (Mainnet, Devnet, Testnet). This is particularly useful when running the CLI on custom networks where an explorer is also available. This key is not required to be present in the `env config` for the config to be valid. To set the explorer url use the following command:
 
 ```sh
 mxpy env set explorer_url
@@ -233,70 +233,70 @@ mxpy env switch <config-name>
 
 ### Configuring wallets
 
-Wallets can be configured in the address config. From all the wallets configured, one must be set as the active wallet. This wallet will be the default wallet used through mxpy if not another wallet is provided via CLI args, such as `--pem`, `--keystore` or `--ledger`. Additionally, the `--sender` argument has been added and can be used to specify a certain sender from the address config (e.g. --sender alice).
+Wallets can be configured in the wallet config. From all the wallets configured, one must be set as the active wallet. This wallet will be the default wallet used through mxpy if not another wallet is provided via CLI args, such as `--pem`, `--keystore` or `--ledger`. Additionally, the `--sender` argument has been added and can be used to specify a certain sender from the address config (e.g. --sender alice).
 
 The values that are available for configuring wallets are the following:
 ```json
 {
-    "kind": "",
     "path": "",
     "index": "",
 }
 ```
 
-The `kind` field represents the wallet type and can be either `pem` or `keystore`. If the wallet is of type `keystore`, you'll be prompted to enter the wallet's password.
+If the wallet is of type `keystore`, you'll be prompted to enter the wallet's password.
 
 The `path` field represents the absolute path to the wallet.
 
 The `index` field represents the index that will be used when deriving the wallet from the secret key. This field is optional, the default index is `0`.
 
-#### Creating a new address config
+#### Creating a new wallet config
 
-To create a new address config, we use the following command:
+To create a new wallet config, we use the following command:
 
 ```sh
-mxpy address new <alias>
+mxpy config-wallet new <alias>
 ```
 
-#### Setting the address config fields
+This command accepts the `--path` argument, so the path to the wallet can be set directly, without needing to call `mxpy config-wallet set` afterwards.
 
-For a config to be valid, we need to set at least the `kind` and `path` fields. To do so, we use the following command:
+#### Setting the wallet config fields
+
+For a config to be valid, we need to set at least the `path` field for an already created wallet alias. To do so, we use the following command:
 
 ```sh
-mxpy address set kind pem
-mxpy address set path absolute/path/to/pem/wallet.pem
+mxpy config-wallet set path absolute/path/to/pem/wallet.pem --alias alice
 ```
 
 #### Getting the value of a field
 
-Very similar to `mxpy config` or `mxpy env`, we can get the value of a field from the active config using the following command:
+We can get the value of a field from an alias using the following command:
 
 ```sh
-mxpy env get path
+mxpy config-wallet get path --alias alice
 ```
 
-#### Dumping the active address config
+#### Dumping the active wallet config
 
 To view all the properties of the active address, use the following command:
 
 ```sh
-mxpy address dump
+mxpy config-wallet dump
 ```
 
-#### Dumping all available addresses
+#### Dumping all configured wallets
 
-To view all the addresses configured, use the following command:
+To view all the wallets configured, use the following command:
 
 ```sh
-mxpy address list
+mxpy config-wallet list
 ```
 
-#### Switching to a different address
+#### Switching to a different wallet
 
-We may have multiple addresses configured, so to switch between them, we use the following command:
+We may have multiple wallets configured, so to switch between them, we use the following command:
 
 ```sh
-mxpy address switch <alias>
+mxpy config-wallet switch --alias alice
 ```
 
 #### Removing an address from the config
@@ -304,7 +304,7 @@ mxpy address switch <alias>
 We can remove an address from the config using the alias of the address and the following command:
 
 ```sh
-mxpy address remove <alias>
+mxpy config-wallet remove --alias alice
 ```
 
 [comment]: # (mx-context-auto)
