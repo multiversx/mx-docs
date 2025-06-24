@@ -140,7 +140,7 @@ The values that are available for configuration and their default values are the
 To create a new env config, we use the following command:
 
 ```sh
-mxpy env new <name>
+mxpy config-env new <name>
 ```
 
 Additionally, `--template` can be used to create a config from an existing env config. After a new env config is created, it is set as the active env config. After a new env config is created, the values need to be set using the `mxpy env set` command.
@@ -150,7 +150,7 @@ Additionally, `--template` can be used to create a config from an existing env c
 The `default_address_hrp` might need to be changed depending on the network you plan on using (e.g Sovereign Chain). Most of the commands that might need the `address hrp` already provide a parameter called `--hrp` or `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If that addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test`:
 
 ```sh
-mxpy env set default_address_hrp test
+mxpy config-env set default_address_hrp test
 ```
 
 :::note
@@ -164,7 +164,7 @@ If `proxy_url` is set in the active environment, the `--proxy` argument is no lo
 To set the proxy url, use the following command:
 
 ```sh
-mxpy env set proxy_url https://devnet-api.multiversx.com
+mxpy config-env set proxy_url https://devnet-api.multiversx.com
 ```
 
 #### Setting the explorer url
@@ -172,7 +172,7 @@ mxpy env set proxy_url https://devnet-api.multiversx.com
 **mxpy** already knows the explorer urls for all three networks (Mainnet, Devnet, Testnet). This is particularly useful when running the CLI on custom networks where an explorer is also available. This key is not required to be present in the `env config` for the config to be valid. To set the explorer url use the following command:
 
 ```sh
-mxpy env set explorer_url
+mxpy config-env set explorer_url
 ```
 
 #### Setting the ask for confirmation flag
@@ -180,7 +180,7 @@ mxpy env set explorer_url
 If set to `true`, whenever sending a transaction, mxpy will display the transaction and will ask for your confirmation. To set the flag, use the following command:
 
 ```sh
-mxpy env set ask_confirmation true
+mxpy config-env set ask_confirmation true
 ```
 
 #### Dumping the active env config
@@ -188,7 +188,7 @@ mxpy env set ask_confirmation true
 We can see the values set in our active env config. To do so, we use the following command:
 
 ```sh
-mxpy env dump
+mxpy config-env dump
 ```
 
 #### Dumping all the available env configs
@@ -196,7 +196,7 @@ mxpy env dump
 We may have multiple env configs, maybe one for each network. To dump all the available env configs, we use the following command:
 
 ```sh
-mxpy env list
+mxpy config-env list
 ```
 
 #### Deleting a value from the active env config
@@ -204,7 +204,7 @@ mxpy env list
 We can also delete the key-value pairs saved in the env config. For example, let's say we want to delete the explorer url, so we use the following command:
 
 ```sh
-mxpy env delete explorer_url
+mxpy config-env delete explorer_url
 ```
 
 #### Getting a value from the active env config
@@ -212,7 +212,7 @@ mxpy env delete explorer_url
 If we want to see just the value of a specific env config key, we can use the following command:
 
 ```sh
-mxpy env get <key-name>
+mxpy config-env get <key-name>
 ```
 
 #### Deleting an env config
@@ -220,7 +220,7 @@ mxpy env get <key-name>
 To delete an env config, we use the following command:
 
 ```sh
-mxpy env remove <config-name>
+mxpy config-env remove <config-name>
 ```
 
 #### Switching to a different env config
@@ -228,7 +228,7 @@ mxpy env remove <config-name>
 To switch to a new env config, we use the following command:
 
 ```sh
-mxpy env switch <config-name>
+mxpy config-env switch <config-name>
 ```
 
 ### Configuring wallets
