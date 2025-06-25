@@ -106,11 +106,7 @@ mxpy config dump --defaults
 
 ### Updating the mxpy configuration
 
-One can alter the current configuration using the command `mxpy config set`. For example, in order to set the **_testwallets version_** to be used, one would do the following:
-
-```bash
-mxpy config set dependencies.testwallets.tag v1.0.0
-```
+One can alter the current configuration using the command `mxpy config set`.
 
 The default config contains the **log level** of the CLI. The default log level is set to `info`, but can be changed. The available values are: [debug, info, warning, error]. To set the log level, we can use the following command:
 ```sh
@@ -123,7 +119,7 @@ Previously, the `default_address_hrp` was also stored in the config. As of `mxpy
 
 ### Configuring environments
 
-Environments can be useful when switching between networks, such as Mainnet and Devnet.
+An `env config` is a named environment configuration that stores commonly used settings (like proxy url, hrp, and flags) for use with the **mxpy CLI**. Environments can be useful when switching between networks, such as Mainnet and Devnet.
 
 The values that are available for configuration and their default values are the following:
 ```json
@@ -143,14 +139,14 @@ To create a new env config, we use the following command:
 mxpy config-env new <name>
 ```
 
-Additionally, `--template` can be used to create a config from an existing env config. After a new env config is created, it is set as the active env config. After a new env config is created, the values need to be set using the `mxpy env set` command.
+Additionally, `--template` can be used to create a config from an existing env config. After a new env config is created, it becomes the active one. You can then set its values using the `mxpy config-env set` command.
 
 #### Setting the default hrp
 
-The `default_address_hrp` might need to be changed depending on the network you plan on using (e.g Sovereign Chain). Most of the commands that might need the `address hrp` already provide a parameter called `--hrp` or `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If that addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test`:
+The `default_address_hrp` might need to be changed depending on the network you plan on using (e.g Sovereign Chain). Most of the commands that might need the `address hrp` already provide a parameter called `--hrp` or `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If those addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test`:
 
 ```sh
-mxpy config-env set default_address_hrp test
+mxpy config-env set default_address_hrp test --env test-env
 ```
 
 :::note
@@ -159,12 +155,12 @@ Explicitly providing `--hrp` will **always** be used over the one fetched from t
 
 #### Setting the proxy url
 
-If `proxy_url` is set in the active environment, the `--proxy` argument is no longer required for the commands that require this argument.
+If `proxy_url` is set in the active environment, the `--proxy` argument is no longer required for the commands that need this argument.
 
 To set the proxy url, use the following command:
 
 ```sh
-mxpy config-env set proxy_url https://devnet-api.multiversx.com
+mxpy config-env set proxy_url https://devnet-api.multiversx.com --env devnet
 ```
 
 #### Setting the explorer url
@@ -172,7 +168,7 @@ mxpy config-env set proxy_url https://devnet-api.multiversx.com
 **mxpy** already knows the explorer urls for all three networks (Mainnet, Devnet, Testnet). This is particularly useful when running the CLI on custom networks where an explorer is also available. This key is not required to be present in the `env config` for the config to be valid. To set the explorer url use the following command:
 
 ```sh
-mxpy config-env set explorer_url
+mxpy config-env set explorer_url https://url-to-explorer.com --env test-env
 ```
 
 #### Setting the ask for confirmation flag
@@ -180,7 +176,7 @@ mxpy config-env set explorer_url
 If set to `true`, whenever sending a transaction, mxpy will display the transaction and will ask for your confirmation. To set the flag, use the following command:
 
 ```sh
-mxpy config-env set ask_confirmation true
+mxpy config-env set ask_confirmation true --env mainnet
 ```
 
 #### Dumping the active env config
@@ -204,15 +200,15 @@ mxpy config-env list
 We can also delete the key-value pairs saved in the env config. For example, let's say we want to delete the explorer url, so we use the following command:
 
 ```sh
-mxpy config-env delete explorer_url
+mxpy config-env delete explorer_url --env test-env
 ```
 
 #### Getting a value from the active env config
 
-If we want to see just the value of a specific env config key, we can use the following command:
+If we want to see just the value of a env config key from a specific environment, we can use the following command:
 
 ```sh
-mxpy config-env get <key-name>
+mxpy config-env get <key-name> --env mainnet
 ```
 
 #### Deleting an env config
@@ -220,7 +216,7 @@ mxpy config-env get <key-name>
 To delete an env config, we use the following command:
 
 ```sh
-mxpy config-env remove <config-name>
+mxpy config-env remove <env-name>
 ```
 
 #### Switching to a different env config
@@ -228,12 +224,14 @@ mxpy config-env remove <config-name>
 To switch to a new env config, we use the following command:
 
 ```sh
-mxpy config-env switch <config-name>
+mxpy config-env switch --env <env-name>
 ```
+
+You can manage multiple environment configurations with ease using `mxpy config-env`. This feature helps streamline workflows when working with multiple networks or projects. Use `mxpy config-env list` to see all available configs, and `switch` to quickly toggle between them.
 
 ### Configuring wallets
 
-Wallets can be configured in the wallet config. From all the wallets configured, one must be set as the active wallet. This wallet will be the default wallet used through mxpy if not another wallet is provided via CLI args, such as `--pem`, `--keystore` or `--ledger`. Additionally, the `--sender` argument has been added and can be used to specify a certain sender from the address config (e.g. --sender alice).
+Wallets can be configured in the wallet config. Among all configured wallets, one must be set as the active wallet. This active wallet will be used by default in all mxpy commands, unless another wallet is explicitly provided using `--pem`, `--keystore`, or `--ledger`. Alternatively, the `--sender` argument can be used to specify a particular sender address from the address config (e.g. --sender alice).
 
 The values that are available for configuring wallets are the following:
 ```json
@@ -243,7 +241,7 @@ The values that are available for configuring wallets are the following:
 }
 ```
 
-If the wallet is of type `keystore`, you'll be prompted to enter the wallet's password.
+Supported wallet types include PEM files and keystores. The CLI will determine the type based on the given path and act accordingly. If the wallet is of type `keystore`, you'll be prompted to enter the wallet's password.
 
 The `path` field represents the absolute path to the wallet.
 
@@ -251,7 +249,7 @@ The `index` field represents the index that will be used when deriving the walle
 
 #### Creating a new wallet config
 
-To create a new wallet config, we use the following command:
+When configuring a new wallet we need to give it an alias. An alias is a user-defined name that identifies a configured wallet (e.g. alice, bob, dev-wallet). To create a new wallet config, we use the following command:
 
 ```sh
 mxpy config-wallet new <alias>
