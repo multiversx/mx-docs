@@ -20,7 +20,7 @@ Below is a step‑by‑step walk‑through of *one* six‑second block cycle (ro
 
 ```
 newRandSeed = currentProposer.Sign(lastRandSeed) 
-randomness = hash(randSeed, currentRound)
+randomness = hash(newRandSeed, currentRound)
 ```
 * `newRandSeed` - VUF (Verifiable Unpredictable Function). It allows the generate seeds that are verifiable, unpredictable but not uniform.
 * `randomness` - VRF (Verifiable Random Function)
