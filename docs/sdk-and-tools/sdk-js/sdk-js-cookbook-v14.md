@@ -1,7 +1,7 @@
 ---
-id: sdk-js-cookbook-v14
+id: sdk-js-cookbook
 title: Cookbook (v14)
-pagination_prev: sdk-and-tools/sdk-js/sdk-js-cookbook-versions
+pagination_prev: sdk-and-tools/sdk-js/sdk-js-cookbook-v13
 pagination_next: null
 ---
 

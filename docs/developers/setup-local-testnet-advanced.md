@@ -175,7 +175,7 @@ Given the request above, extract and save the fields `erd_chain_id` and `erd_min
 Let's send a simple transaction using **mxpy:**
 
 ```bash
-$ mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
+$ mxpy tx new --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1... \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
  --proxy=http://localhost:7950 \
@@ -197,7 +197,7 @@ Let's deploy a Smart Contract using **mxpy**.
 ```bash
 Deploy
 mxpy --verbose contract deploy --bytecode=./mycontract/output/contract.wasm \
- --recall-nonce --gas-limit=5000000 \
+ --gas-limit=5000000 \
  --pem=./sandbox/node/config/walletKey.pem --pem-index=0 \
  --outfile=contract.json \
  --proxy=http://localhost:7950 \
@@ -216,16 +216,16 @@ If everything is fine (transaction status is `executed` and the `code` property 
 ```bash
 Call
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgql... \
- --recall-nonce --gas-limit=1000000 --function=increment \
- --pem=./sandbox/node/config/walletKey.pem --pem-index=0 --outfile=myCall.json \
- --proxy=http://localhost:7950 \
- --send
+    --gas-limit=1000000 --function=increment \
+    --pem=./sandbox/node/config/walletKey.pem --pem-index=0 --outfile=myCall.json \
+    --proxy=http://localhost:7950 \
+    --send
 
 ```
 
 ```bash
 Query
-mxpy --verbose contract query erd1qqqqqqqqqqqqqpgqlq... \ 
+mxpy --verbose contract query erd1qqqqqqqqqqqqqpgqlq... \
  --function=get \
- --proxy=http://localhost:7950 
+ --proxy=http://localhost:7950
 ```

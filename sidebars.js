@@ -194,27 +194,13 @@ const sidebars = {
             type: "category",
             label: "SDKs",
             items: [
+              "sdk-and-tools/sdk-py",
               {
                 type: "category",
-                label: "Python SDK",
+                label: "Mxpy CLI",
                 items: [
-                  "sdk-and-tools/sdk-py/sdk-py",
-                  {
-                    type: "category",
-                    label: "Cookbook (versioned)",
-                    link: {
-                      type: "doc",
-                      id: "sdk-and-tools/sdk-py/sdk-py-cookbook"
-                    },
-                    items: [
-                      "sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
-                      "sdk-and-tools/sdk-py/sdk-py-cookbook",
-                    ]
-                  },
-                  "sdk-and-tools/sdk-py/installing-mxpy",
-                  "sdk-and-tools/sdk-py/mxpy-cli",
-                  "sdk-and-tools/sdk-py/smart-contract-interactions",
-                  "sdk-and-tools/sdk-py/sdk-py-migration-guides",
+                  "sdk-and-tools/mxpy/installing-mxpy",
+                  "sdk-and-tools/mxpy/mxpy-cli",
                 ],
               },
               {
@@ -223,25 +209,19 @@ const sidebars = {
                 items: [
                   "sdk-and-tools/sdk-js/sdk-js",
                   {
-                    label: "Cookbook",
-                    type: "doc",
-                    id: "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
-                  },
-                  {
                     type: "category",
                     label: "Cookbook (versioned)",
                     link: {
                       type: "doc",
-                      id: "sdk-and-tools/sdk-js/sdk-js-cookbook-versions"
+                      id: "sdk-and-tools/sdk-js/sdk-js-cookbook"
                     },
                     items: [
                       "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
-                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
+                      "sdk-and-tools/sdk-js/sdk-js-cookbook",
                     ]
                   },
                   "sdk-and-tools/sdk-js/extending-sdk-js",
                   "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
-                  "sdk-and-tools/sdk-js/sdk-js-migration-guides",
                   "sdk-and-tools/sdk-js/sdk-js-signing-providers",
                 ],
               },
@@ -272,7 +252,6 @@ const sidebars = {
               },
               "sdk-and-tools/erdcpp",
               "sdk-and-tools/erdkotlin",
-              "sdk-and-tools/sdk-js-wallet-cli"
             ],
           },
           {

@@ -19,7 +19,7 @@ If not specified otherwise, the localnet starts with two shards plus the metacha
 
 ## Prerequisites: mxpy
 
-In order to install **mxpy**, follow [these instructions](/sdk-and-tools/sdk-py/installing-mxpy).
+In order to install **mxpy**, follow [these instructions](/sdk-and-tools/mxpy/installing-mxpy).
 
 :::note
 This guide assumes you are using `mxpy v9.7.1` or newer.
@@ -64,7 +64,7 @@ If everything goes well, in the terminal you should see logs coming from the nod
 
 ```
 INFO:cli.localnet:Starting localnet...
-...                   
+...
 INFO:localnet:Starting process ['./seednode', ...
 ...
 INFO:localnet:Starting process ['./node', ...
@@ -326,7 +326,7 @@ These wallets (Alice, Bob, Carol, ..., Mike) **are publicly known** - they shoul
 Let's send a simple transaction using **mxpy**:
 
 ```bash
-mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
+mxpy tx new --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --chain=localnet --proxy=http://localhost:7950 \
@@ -347,7 +347,7 @@ Let's deploy a Smart Contract using **mxpy**.
 
 ```bash
 mxpy --verbose contract deploy --bytecode=./contract.wasm \
- --recall-nonce --gas-limit=5000000 \
+ --gas-limit=5000000 \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --outfile=contract.json \
  --chain=localnet --proxy=http://localhost:7950 \
@@ -365,7 +365,7 @@ If everything is fine (transaction status is `executed` and the `code` property 
 
 ```bash
 mxpy --verbose contract call erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq \
- --recall-nonce --gas-limit=1000000 --function=increment \
+ --gas-limit=1000000 --function=increment \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem --outfile=myCall.json \
  --chain=localnet --proxy=http://localhost:7950 \
  --send
@@ -386,13 +386,13 @@ At times, you can simulate transactions instead of broadcasting them, by replaci
 ```bash
 # Simulate: Call Contract
 mxpy contract call erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq \
- --recall-nonce --gas-limit=1000000 --function=increment \
+ --gas-limit=1000000 --function=increment \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --chain=localnet --proxy=http://localhost:7950 \
  --simulate
 
 # Simulate: Simple Transfer
-mxpy tx new --recall-nonce --data="Hello, World" --gas-limit=70000 \
+mxpy tx new --data="Hello, World" --gas-limit=70000 \
  --receiver=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
  --pem=~/multiversx-sdk/testwallets/latest/users/alice.pem \
  --chain=localnet --proxy=http://localhost:7950 \

@@ -40,7 +40,7 @@ Let's assume we deploy the contract with the argument **1u64**, and then we upgr
 Upgrading a smart contract is a relatively easy process, but its implications are not exactly obvious. To upgrade a smart contract, simply run the following command:
 
 ```
-mxpy --verbose contract upgrade SC_ADDRESS --recall-nonce \
+mxpy --verbose contract upgrade SC_ADDRESS \
     --pem=PEM_PATH --bytecode=WASM_PATH \
     --gas-limit=100000000 \
     --send --proxy=https://devnet-gateway.multiversx.com --chain=D
@@ -51,7 +51,7 @@ Replace SC_ADDRESS, PEM_PATH and WASM_PATH accordingly. Also, if you want to use
 This will replace the given SC's code with the one from the provided file, but that is not all. Additionally, it will run the new code's `upgrade` function. So, if your `upgrade` function has any arguments, the command has to be run by also giving said arguments:
 
 ```
-mxpy --verbose contract upgrade SC_ADDRESS --recall-nonce \
+mxpy --verbose contract upgrade SC_ADDRESS \
     --pem=PEM_PATH --bytecode=WASM_PATH \
     --arguments arg1 arg2 arg3
     --gas-limit=100000000 \

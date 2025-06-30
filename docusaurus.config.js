@@ -415,44 +415,28 @@ const config = {
             to: "/developers/testing/testing-in-go",
           },
           {
-            from: "/sdk-and-tools/erdjs",
-            to: "/sdk-and-tools/sdk-js",
+            from: "/sdk-and-tools/sdk-py/sdk-py-cookbook",
+            to: "/sdk-and-tools/sdk-py",
           },
           {
-            from: "/sdk-and-tools/erdjava",
-            to: "/sdk-and-tools/mxjava",
-          },
-          {
-            from: "/sdk-and-tools/erdgo",
-            to: "/sdk-and-tools/sdk-go",
-          },
-          {
-            from: "/sdk-and-tools/erdjs/erdjs-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-versions",
+            from: "/sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
+            to: "/sdk-and-tools/sdk-py",
           },
           {
             from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
-          },
-          {
-            from: "/sdk-and-tools/erdjs/writing-and-testing-erdjs-interactions",
-            to: "/sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
-          },
-          {
-            from: "/sdk-and-tools/erdjs/erdjs-migration-guides",
-            to: "/sdk-and-tools/sdk-js/sdk-js-migration-guides",
-          },
-          {
-            from: "/sdk-and-tools/erdjs/erdjs-signing-providers",
-            to: "/sdk-and-tools/sdk-js/sdk-js-signing-providers",
+            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
           },
           {
             from: "/sdk-and-tools/sdk-py/configuring-mxpy",
-            to: "/sdk-and-tools/sdk-py/mxpy-cli",
+            to: "/sdk-and-tools/mxpy/mxpy-cli",
+          },
+          {
+            from: "/sdk-and-tools/sdk-py/mxpy-cli",
+            to: "/sdk-and-tools/mxpy/mxpy-cli",
           },
           {
             from: "/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file",
-            to: "/sdk-and-tools/sdk-py/mxpy-cli",
+            to: "/sdk-and-tools/mxpy/mxpy-cli",
           },
           {
             from: "/developers/log-events/esdt-events",
