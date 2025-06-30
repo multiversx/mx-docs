@@ -41,10 +41,15 @@ pipx install multiversx-sdk-cli --force
 
 This will simply install the latest version available.
 
+As of latest versions, we also publish the package under the `mxpy` name. Typing the following command should also work:
+```sh
+pipx install mxpy
+```
+
 In case you want to install a specific version you should also specify the version.
 
 ```sh
-pipx install multiversx-sdk-cli==9.5.1
+pipx install multiversx-sdk-cli==11.0.0
 ```
 
 You can also install **mxpy** directly from a GitHub branch. Replace `branch_name` with your desired branch and run the following command:
@@ -97,4 +102,10 @@ To upgrade **mxpy** to a newer version, you can simply run the following command
 
 ```sh
 pipx upgrade multiversx-sdk-cli
+```
+
+or, if you've installed the CLI using the `mxpy` name:
+
+```sh
+pipx upgrade mxpy
 ```
