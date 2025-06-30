@@ -18,13 +18,12 @@ Below is a step‑by‑step walk‑through of *one* six‑second block cycle (ro
 
 ### 1.2  Round randomness
 
-Randomness must be unpredictable yet verifiable. For round `r` the seed is:
-
 ```
-rand_r = BLS_sign(prev_block_hash, proposer_{r-1})
+newRandSeed = currentProposer.Sign(lastRandSeed) 
+randomness = hash(newRandSeed, currentRound)
 ```
-
-Because the identity of the previous proposer is only revealed at the end of round `r – 1`, no one can bias or predict `rand_r` ahead of time.
+* `newRandSeed` - VUF (Verifiable Unpredictable Function). It allows the generate seeds that are verifiable, unpredictable but not uniform.
+* `randomness` - VRF (Verifiable Random Function)
 
 ### 1.3  Proposer election
 

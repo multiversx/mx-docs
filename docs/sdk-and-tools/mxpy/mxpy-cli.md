@@ -86,6 +86,8 @@ mxpy's configuration is stored in the file `~/multiversx-sdk/mxpy.json`.
 
 ### Viewing the current mxpy configuration
 
+As of `mxpy v11`, we've introduced more configuration options, such as `environments` and `wallets`.
+
 In order to view the current configuration, one can issue the command `mxpy config dump`. Output example:
 
 ```json
@@ -104,22 +106,204 @@ mxpy config dump --defaults
 
 ### Updating the mxpy configuration
 
-One can alter the current configuration using the command `mxpy config set`. For example, in order to set the **_testwallets version_** to be used, one would do the following:
+One can alter the current configuration using the command `mxpy config set`.
 
-```bash
-mxpy config set dependencies.testwallets.tag v1.0.0
+The default config contains the **log level** of the CLI. The default log level is set to `info`, but can be changed. The available values are: [debug, info, warning, error]. To set the log level, we can use the following command:
+```sh
+mxpy config set log_level debug
 ```
 
-The default config contains the **default address hrp** which depending on the network (e.g Sovereign Chain) might need to be altered.
+:::note
+Previously, the `default_address_hrp` was also stored in the config. As of `mxpy v11` it has been moved to the `env` config, which we'll talk about in the next section.
+:::
 
-Most of the commands that might need the `address hrp` already provide a parameter called `--hrp` or `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If that addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test` :
+### Configuring environments
+
+An `env config` is a named environment configuration that stores commonly used settings (like proxy url, hrp, and flags) for use with the **mxpy CLI**. Environments can be useful when switching between networks, such as Mainnet and Devnet.
+
+The values that are available for configuration and their default values are the following:
+```json
+{
+    "default_address_hrp": "erd",
+    "proxy_url": "",
+    "explorer_url": "",
+    "ask_confirmation": "false",
+}
+```
+
+#### Creating a new env config
+
+To create a new env config, we use the following command:
+
 ```sh
-mxpy config set default_address_hrp test
+mxpy config-env new <name>
+```
+
+Additionally, `--template` can be used to create a config from an existing env config. After a new env config is created, it becomes the active one. You can then set its values using the `mxpy config-env set` command.
+
+#### Setting the default hrp
+
+The `default_address_hrp` might need to be changed depending on the network you plan on using (e.g Sovereign Chain). Most of the commands that might need the `address hrp` already provide a parameter called `--hrp` or `--address-hrp`, that can be explicitly set, but there are system smart contract addresses that cannot be changed by providing the parameter. If those addresses need to be changed, we can use the following command to set the `default hrp` that will be used throughout mxpy. Here we set the default hrp to `test`:
+
+```sh
+mxpy config-env set default_address_hrp test --env test-env
 ```
 
 :::note
 Explicitly providing `--hrp` will **always** be used over the one fetched from the network or the `hrp` set in the config.
 :::
+
+#### Setting the proxy url
+
+If `proxy_url` is set in the active environment, the `--proxy` argument is no longer required for the commands that need this argument.
+
+To set the proxy url, use the following command:
+
+```sh
+mxpy config-env set proxy_url https://devnet-api.multiversx.com --env devnet
+```
+
+#### Setting the explorer url
+
+**mxpy** already knows the explorer urls for all three networks (Mainnet, Devnet, Testnet). This is particularly useful when running the CLI on custom networks where an explorer is also available. This key is not required to be present in the `env config` for the config to be valid. To set the explorer url use the following command:
+
+```sh
+mxpy config-env set explorer_url https://url-to-explorer.com --env test-env
+```
+
+#### Setting the ask for confirmation flag
+
+If set to `true`, whenever sending a transaction, mxpy will display the transaction and will ask for your confirmation. To set the flag, use the following command:
+
+```sh
+mxpy config-env set ask_confirmation true --env mainnet
+```
+
+#### Dumping the active env config
+
+We can see the values set in our active env config. To do so, we use the following command:
+
+```sh
+mxpy config-env dump
+```
+
+#### Dumping all the available env configs
+
+We may have multiple env configs, maybe one for each network. To dump all the available env configs, we use the following command:
+
+```sh
+mxpy config-env list
+```
+
+#### Deleting a value from the active env config
+
+We can also delete the key-value pairs saved in the env config. For example, let's say we want to delete the explorer url, so we use the following command:
+
+```sh
+mxpy config-env delete explorer_url --env test-env
+```
+
+#### Getting a value from the active env config
+
+If we want to see just the value of a env config key from a specific environment, we can use the following command:
+
+```sh
+mxpy config-env get <key-name> --env mainnet
+```
+
+#### Deleting an env config
+
+To delete an env config, we use the following command:
+
+```sh
+mxpy config-env remove <env-name>
+```
+
+#### Switching to a different env config
+
+To switch to a new env config, we use the following command:
+
+```sh
+mxpy config-env switch --env <env-name>
+```
+
+You can manage multiple environment configurations with ease using `mxpy config-env`. This feature helps streamline workflows when working with multiple networks or projects. Use `mxpy config-env list` to see all available configs, and `switch` to quickly toggle between them.
+
+### Configuring wallets
+
+Wallets can be configured in the wallet config. Among all configured wallets, one must be set as the active wallet. This active wallet will be used by default in all mxpy commands, unless another wallet is explicitly provided using `--pem`, `--keystore`, or `--ledger`. Alternatively, the `--sender` argument can be used to specify a particular sender address from the address config (e.g. --sender alice).
+
+The values that are available for configuring wallets are the following:
+```json
+{
+    "path": "",
+    "index": "",
+}
+```
+
+Supported wallet types include PEM files and keystores. The CLI will determine the type based on the given path and act accordingly. If the wallet is of type `keystore`, you'll be prompted to enter the wallet's password.
+
+The `path` field represents the absolute path to the wallet.
+
+The `index` field represents the index that will be used when deriving the wallet from the secret key. This field is optional, the default index is `0`.
+
+#### Creating a new wallet config
+
+When configuring a new wallet we need to give it an alias. An alias is a user-defined name that identifies a configured wallet (e.g. alice, bob, dev-wallet). To create a new wallet config, we use the following command:
+
+```sh
+mxpy config-wallet new <alias>
+```
+
+This command accepts the `--path` argument, so the path to the wallet can be set directly, without needing to call `mxpy config-wallet set` afterwards.
+
+#### Setting the wallet config fields
+
+For a config to be valid, we need to set at least the `path` field for an already created wallet alias. To do so, we use the following command:
+
+```sh
+mxpy config-wallet set path absolute/path/to/pem/wallet.pem --alias alice
+```
+
+#### Getting the value of a field
+
+We can get the value of a field from an alias using the following command:
+
+```sh
+mxpy config-wallet get path --alias alice
+```
+
+#### Dumping the active wallet config
+
+To view all the properties of the active address, use the following command:
+
+```sh
+mxpy config-wallet dump
+```
+
+#### Dumping all configured wallets
+
+To view all the wallets configured, use the following command:
+
+```sh
+mxpy config-wallet list
+```
+
+#### Switching to a different wallet
+
+We may have multiple wallets configured, so to switch between them, we use the following command:
+
+```sh
+mxpy config-wallet switch --alias alice
+```
+
+#### Removing an address from the config
+
+We can remove an address from the config using the alias of the address and the following command:
+
+```sh
+mxpy config-wallet remove --alias alice
+```
 
 [comment]: # (mx-context-auto)
 
@@ -672,3 +856,81 @@ mxpy contract call erd1qqqqqqqqqqqqqpgqwwef37kmegph97egvvrxh3nccx7xuygez8ns682zz
 :::note
 As of October 2023, on Windows (or WSL), you might encounter some issues when trying to use Ledger in `mxpy`.
 :::
+
+## Interacting with the Multisig Smart Contract
+
+As of `mxpy v11`, interacting with Multisig contracts has become a lot easier because a dedicated command group called `mxpy multisig` has been added. We can deploy a multisig contract, create proposals and query the contract. For a full list of all the possible actions, run the following command:
+
+```sh
+mxpy multisig -h
+```
+
+#### Deploying a multisig contract
+
+```sh
+mxpy multisig deploy --bytecode path/to/multisig.wasm \
+    --abi path/to/multisig.abi.json
+    --quorum 2
+    --board-members erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
+    --proxy=https://devnet-gateway.multiversx.com \
+    --gas-limit 100000000 \
+    --send
+```
+
+#### Creating a new proposal
+
+```sh
+mxpy multisig add-board-member --contract erd1qqqqqqqqqqqqqpgq2ukrsg73nwgu3uz6sp8vequuyrhtv2akd8ssyrg7wj \
+    --abi path/to/multisig.abi.json
+    --board-member erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8
+    --proxy=https://devnet-gateway.multiversx.com \
+    --gas-limit 10000000 \
+    --send
+```
+
+#### Querying the contract
+
+```sh
+mxpy multisig get-proposers --contract erd1qqqqqqqqqqqqqpgq2ukrsg73nwgu3uz6sp8vequuyrhtv2akd8ssyrg7wj \
+    --abi path/to/multisig.abi.json
+    --proxy=https://devnet-gateway.multiversx.com
+```
+
+## Interacting with the Governance Smart Contract
+
+As of `mxpy v11`, mxpy allows for easier interaction with the Governance smart contract. We can create a new governance proposal, vote for a proposal and query the contract. For a full list of the available commands, run the following command:
+
+```sh
+mxpy governance -h
+```
+
+#### Creating a new proposal
+
+```sh
+mxpy governance propose \
+    --commit-hash 30118901102b0bef11d675f4327565ae5246eeb5 \
+    --start-vote-epoch 1000 \
+    --end-vote-epoch 1010 \
+    --proxy=https://devnet-gateway.multiversx.com \
+    --gas-limit 100000000 \
+    --send
+```
+
+#### Voting for a proposal
+
+```sh
+mxpy governance vote \
+    --proposal-nonce 1 \
+    --vote yes \
+    --proxy=https://devnet-gateway.multiversx.com \
+    --gas-limit 100000000 \
+    --send
+```
+
+#### Querying the contract
+
+```sh
+mxpy governance get-proposal-info \
+    --proposal-nonce 1 \
+    --proxy=https://devnet-gateway.multiversx.com
+```
