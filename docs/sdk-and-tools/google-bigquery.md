@@ -45,8 +45,10 @@ Make sure to explore the dataset, the tables and their schema before running que
 SELECT
     DATE(`timestamp`) `day`,
     COUNT(*) `transactions`
-FROM `bigquery-public-data.crypto_multiversx_mainnet_eu.transactions`
-WHERE DATE(`timestamp`) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+FROM `bigquery-public-data.crypto_multiversx_mainnet_eu.operations`
+WHERE
+  type = 'normal'
+  AND DATE(`timestamp`) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
 GROUP BY `day`
 ORDER BY `day` DESC
 ```
@@ -60,8 +62,10 @@ SELECT
   DATE(`timestamp`) `day`,
   `receiver` `contract`,
   COUNT(DISTINCT `sender`) `num_users`,
-FROM `bigquery-public-data.crypto_multiversx_mainnet_eu.transactions`
-WHERE `isScCall` = true
+FROM `bigquery-public-data.crypto_multiversx_mainnet_eu.operations`
+WHERE
+  type = 'normal'
+  AND `isScCall` = true
 GROUP BY `day`, `contract`
 HAVING `day` >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) AND `num_users` > 1000
 ORDER BY `day` DESC, `num_users` DESC
@@ -104,9 +108,10 @@ FROM (
     ROW_NUMBER() OVER (PARTITION BY DATE(`timestamp`)
     ORDER BY PARSE_BIGNUMERIC(`value`) DESC) AS `row_num`
   FROM
-    `bigquery-public-data.crypto_multiversx_mainnet_eu.transactions`
+    `bigquery-public-data.crypto_multiversx_mainnet_eu.operations`
   WHERE
-    `status` = 'success'
+    type = 'normal'
+    AND `status` = 'success'
     AND DATE(`timestamp`) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) )
 WHERE `row_num` = 1
 ORDER BY `day` DESC
