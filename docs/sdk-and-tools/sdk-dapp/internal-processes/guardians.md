@@ -63,3 +63,8 @@ const guardedTransactions = await crossWindowProvider.guardTransactions(
     signedTransactions
 );
 ```
+
+For a working example see the code used in [signing-providers](https://github.com/multiversx/mx-sdk-js-examples/releases/tag/v0.9.0)
+
+
+
