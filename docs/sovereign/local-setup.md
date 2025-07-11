@@ -34,6 +34,17 @@ Before proceeding, ensure that a **SSH key** for GitHub is configured on your ma
 
 ### Step 2: Deploy Sovereign setup
 
+#### Sovereign chain with no main chain connection
+
+1. Update chain parameters in `variables.sh` file
+
+2. Start the chain with local scripts:
+```bash
+./config.sh && ./sovereignStart.sh
+```
+
+#### Sovereign chain with main chain connection
+
 Navigate to the `sovereignBridge` folder:
 ```bash
 cd sovereignBridge
