@@ -15,7 +15,7 @@ git clone https://github.com/multiversx/mx-lite-wallet-dapp.git
   cd src/config
   ```
 
-2. Update the `config.sovereign.ts` file:
+2. Update the `sharedNetworks.ts` file:
    - for `sovereign` item
      - update the URLs with your own
      - update `sovereignContractAddress` with contract address from `sovereignConfig.toml` -> `SubscribedEvents` from `OutgoingSubscribedEvents`
@@ -26,7 +26,7 @@ git clone https://github.com/multiversx/mx-lite-wallet-dapp.git
 
 ```bash
 yarn install
-yarn start:sovereign
+yarn start-sovereign
 ```
 
 Read more about deploying lite wallet in [GitHub](https://github.com/multiversx/mx-lite-wallet-dapp/tree/main#multiversx-lite-wallet-dapp).

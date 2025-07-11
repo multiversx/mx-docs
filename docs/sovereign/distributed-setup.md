@@ -13,9 +13,9 @@ Before proceeding, ensure that a **SSH key** for GitHub is configured on your ma
     git clone git@github.com:multiversx/mx-chain-sovereign-go.git
     ```
 
-2. Navigate to testnet directory:
+2. Navigate to project directory:
     ```bash
-    cd mx-chain-sovereign-go/scripts/testnet
+    cd mx-chain-sovereign-go
     ```
 
 ### Step 2: Seeder Build
@@ -206,7 +206,7 @@ Adjust the flags as needed. You can find all the available flags in `/mx-chain-s
 
 #### # observer
 ```
-./sovereignnode --profile-mode --log-save --log-level *:INFO --log-logger-name --log-correlation --use-health-service --rest-api-interface :8080 --working-directory ~/my_observer_node
+./sovereignnode --profile-mode --log-save --log-level *:INFO --log-logger-name --log-correlation --use-health-service --destination-shard-as-observer 0 --rest-api-interface :8080 --operation-mode db-lookup-extension --working-directory ~/my_observer_node
 ```
 
 ### Staking transaction
