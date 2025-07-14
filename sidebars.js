@@ -246,9 +246,7 @@ const sidebars = {
                   {
                     type: "category",
                     label: "Internal Processes",
-                    items: [
-                      "sdk-and-tools/sdk-dapp/internal-processes/guardians",
-                    ],
+                    items: ["sdk-and-tools/sdk-dapp/internal-processes/guardians"],
                   },
                 ],
               },
@@ -338,7 +336,7 @@ const sidebars = {
                   "sdk-and-tools/troubleshooting/ide-setup",
                   "sdk-and-tools/troubleshooting/multiplatform",
                 ],
-              },
+              }
             ],
           },
           {
@@ -415,7 +413,9 @@ const sidebars = {
       {
         type: "category",
         label: "Upgrade a Node",
-        items: ["validators/node-upgrades"],
+        items: [
+          "validators/node-upgrades",
+        ],
       },
       {
         type: "category",
@@ -481,7 +481,7 @@ const sidebars = {
           "integrators/observing-squad",
           "integrators/deep-history-squad",
           "integrators/snapshotless-observing-squad",
-          "integrators/advanced-observer-settings",
+          "integrators/advanced-observer-settings"
         ],
       },
       {
@@ -504,13 +504,13 @@ const sidebars = {
           "bridge/architecture",
           "bridge/transfer-flows",
           "bridge/token-types",
-          "bridge/whitelist-requirements",
-        ],
+          "bridge/whitelist-requirements",],
       },
       {
         type: "category",
         label: "Axelar Bridge",
-        items: ["bridge/axelar"],
+        items: [
+          "bridge/axelar",],
       },
       {
         type: "category",
@@ -523,16 +523,14 @@ const sidebars = {
             items: [
               "sovereign/concept",
               "sovereign/key-components",
-              "sovereign/disclaimer",
-            ],
+              "sovereign/disclaimer",],
           },
           {
             type: "category",
             label: "Prerequisites",
             items: [
               "sovereign/system-requirements",
-              "sovereign/software-dependencies",
-            ],
+              "sovereign/software-dependencies",],
           },
           {
             type: "category",
@@ -540,8 +538,7 @@ const sidebars = {
             items: [
               "sovereign/one-click-deployment",
               "sovereign/local-setup",
-              "sovereign/distributed-setup",
-            ],
+              "sovereign/distributed-setup",],
           },
           "sovereign/custom-configurations",
           {
@@ -551,16 +548,14 @@ const sidebars = {
               "sovereign/services",
               "sovereign/sovereign-api",
               "sovereign/sovereign-wallet",
-              "sovereign/sovereign-explorer",
-            ],
+              "sovereign/sovereign-explorer",],
           },
           {
             type: "category",
             label: "Managing a Sovereign Chain",
             items: [
               "sovereign/managing-sovereign",
-              "sovereign/token-management",
-            ],
+              "sovereign/token-management",],
           },
           {
             type: "category",
@@ -568,8 +563,7 @@ const sidebars = {
             items: [
               "sovereign/token-economics",
               "sovereign/restaking",
-              "sovereign/dual-staking",
-            ],
+              "sovereign/dual-staking",],
           },
           "sovereign/governance",
           "sovereign/testing",
@@ -609,7 +603,10 @@ const sidebars = {
       {
         type: "category",
         label: "Governance",
-        items: ["governance/overview", "governance/governance-interaction"],
+        items: [
+          "governance/overview",
+          "governance/governance-interaction",
+        ],
       },
       {
         type: "category",
