@@ -137,7 +137,7 @@ initApp(config).then(() => {
 
 ### 2. Provider interaction
 
-Once your dApp has loaded, the first user action is logging in with a chosen provider. There are two ways to perform a login, namely using the `UnlockPanelManager` and programatic login using the `ProviderFactory`.
+Once your dApp has loaded, the first user action is logging in with a chosen provider. There are two ways to perform a login, namely using the `UnlockPanelManager` and programmatic login using the `ProviderFactory`.
 
 #### 2.1 Using the `UnlockPanelManager`
 By using the provided UI, you get the benefit of having all supported providers ready for login in a side panel. You simply need to link the `unlockPanelManager.openUnlockPanel` to a user action.
@@ -210,7 +210,7 @@ export const AdvancedConnectButton = () => {
 
 ```
 
-#### 2.2 Programatic login using the `ProviderFactory`
+#### 2.2 Programmatic login using the `ProviderFactory`
 If you want to login using your custom UI, you can link user actions to specific providers by calling the `ProviderFactory`.
 
 ```typescript
@@ -449,7 +449,7 @@ Next, we will take the elements from Table 3 and detail them in the following se
 
 ### 1. Network
 
-The network configuration is done in the `initApp` method, where you can make several confgurations like:
+The network configuration is done in the `initApp` method, where you can make several configurations like:
 
 - specifying the environment (`devnet`, `testnet`, `mainnet`)
 - overriding certain network parameters like wallet address, explorer address etc.
@@ -479,9 +479,9 @@ const provider = await ProviderFactory.create({
 await provider?.login();
 ```
 
-#### Accessing provier methods
+#### Accessing provider methods
 
-Once the provider is initialized, you can get a reference to it using the `getAccountProvider` method. Then you can call the `login`, `logout`, `signTransactions`, `signMessage` methods, or other custom methods depending on the intialized provider (see ledger for example).
+Once the provider is initialized, you can get a reference to it using the `getAccountProvider` method. Then you can call the `login`, `logout`, `signTransactions`, `signMessage` methods, or other custom methods depending on the initialized provider (see ledger for example).
 
 [comment]: # (mx-context-auto)
 
@@ -531,7 +531,7 @@ The transaction lifecycle consists of the following steps:
 | # | Signature | Method | Description |
 |---|------|-------------|-------------|
 | 1 | `send([tx1, tx2])` | `POST` to `/transactions` | Transactions are executed in parallel
-| 2 | `send([[tx1, tx2], [tx3]])` | `POST` to `/batch` | **a)** 1<sup>st</sup> batch of two transactions is executed, **b)** the 2<sup>nd</sup> batch of one transaction waits for the finished results, **c)** and once the 1<sup>st</sup> batch is finished, the 2<sup>nd</sup> batch is executed
+| 2 | `send([[tx1, tx2], [tx3]])` | `POST` to `/batch` | **a)** 1st batch of two transactions is executed, **b)** the 2nd batch of one transaction waits for the finished results, **c)** and once the 1st batch is finished, the 2nd batch is executed
 
 4. **Tracking** transactions is made by using `transactionManager.track()`. Since the `send()` function returns the same arguments it has received, the same array payload can be passed into the `track()` method. Under the hood, status updates are received via a WebSocket or polling mechanism.
    Once a transaction array is tracked, it gets associated with a `sessionId`, returned by the `track()` method and stored in the `transactions` slice. Depending on the array's type (plain/batch), the session's status varies from initial (`pending`/`invalid`/`sent`) to final (`successful`/`failed`/`timedOut`).
@@ -679,7 +679,7 @@ await tManager.track([plainTransaction]);
 
 #### 3.2 Advanced Usage
 
-If you need to check the status of the signed transactions, you can query the store direclty using the `sessionId` returned by the `track()` method.
+If you need to check the status of the signed transactions, you can query the store directly using the `sessionId` returned by the `track()` method.
 
 ```typescript
 import { getStore } from '@multiversx/sdk-dapp/out/store/store';
@@ -796,7 +796,7 @@ If you want to override private components and create your own, you can implemen
 
 The recommended way to debug your application is by using [lerna](https://lerna.js.org/). Make sure you have the same package version in sdk-dapp's package.json and in your project's package.json.
 
-If you preffer to use [npm link](https://docs.npmjs.com/cli/v11/commands/npm-link), make sure to use the `preserveSymlinks` option in the server configuration:
+If you prefer to use [npm link](https://docs.npmjs.com/cli/v11/commands/npm-link), make sure to use the `preserveSymlinks` option in the server configuration:
 
 ```js
   resolve: {
