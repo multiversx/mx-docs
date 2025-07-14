@@ -4,7 +4,7 @@ title: Tools for signing
 ---
 [comment]: # (mx-abstract)
 
-In order to sign a transaction without actually dispatching it, several tools can be used. Two of the most popular ones are: [mxpy](/sdk-and-tools/sdk-py) or [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli).
+In order to sign a transaction without actually dispatching it, several tools can be used. One of the most popular ones is [mxpy](/sdk-and-tools/sdk-py).
 
 [comment]: # (mx-context-auto)
 
@@ -48,50 +48,6 @@ In either case, the output file looks like this:
     "hash": "",
     "data": "Hello, World"
 }
-```
-
-[comment]: # (mx-context-auto)
-
-## **Sign using [sdk-js-wallet-cli](/sdk-and-tools/sdk-js-wallet-cli)**
-
-Given an unsigned transaction in a JSON file:
-
-```
-{
-    "nonce": 42,
-    "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
-    "value": "100000000000000000",
-    "gasPrice": 1000000000,
-    "gasLimit": 70000,
-    "data": "food for cats",
-    "chainID": "1",
-    "version": 1
-}
-```
-
-You can sign it as follows:
-
-```
-$ mxjs-wallet sign -i ./aliceToBob.json -o ./aliceToBobSigned.json \
- -k walletKeyOfAlice.json -p passwordOfAlice.txt
-```
-
-The signed transaction looks like this:
-
-```
-{
-    "nonce": 42,
-    "value": "100000000000000000",
-    "receiver": "erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r",
-    "sender": "erd1ylzm22ngxl2tspgvwm0yth2myr6dx9avtx83zpxpu7rhxw4qltzs9tmjm9",
-    "gasPrice": 1000000000,
-    "gasLimit": 70000,
-    "data": "Zm9vZCBmb3IgY2F0cw==",
-    "chainID": "1",
-    "version": 1,
-    "signature": "5845301de8ca3a8576166fb3b7dd25124868ce54b07eec7022ae3ffd8d4629540dbb7d0ceed9455a259695e2665db614828728d0f9b0fb1cc46c07dd669d2f0e"
-}
-
 ```
 
 [comment]: # (mx-context-auto)

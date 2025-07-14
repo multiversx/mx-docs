@@ -87,4 +87,4 @@ Additional restrictions on the incoming tokens can be imposed in the body of the
 
 ## Sending payments
 
-We have seen how contracts can accommodate receiving tokens. Sending them is, in principle, even more straightforward, as it only involves specializing the `Payment` generic of the transaction using specific methods, or better said, attaching a payload to a regular transaction. Read more about payments [here](../../developers/transactions/tx-payment).
+We have seen how contracts can accommodate receiving tokens. Sending them is, in principle, even more straightforward, as it only involves specializing the `Payment` generic of the transaction using specific methods, or better said, attaching a payload to a regular transaction. Read more about payments [here](../transactions/tx-payment.md).

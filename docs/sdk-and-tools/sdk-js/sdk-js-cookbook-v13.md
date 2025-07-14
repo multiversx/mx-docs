@@ -7,10 +7,14 @@ pagination_next: null
 
 [comment]: # (mx-abstract)
 
-This page will guide you through the process of handling common tasks using **sdk-js v13 (latest, stable version)**.
+This page will guide you through the process of handling common tasks using **sdk-js v13 (legacy, previous version)**.
 
 :::important
-This cookbook makes use of `sdk-js v13`. In order to migrate from `sdk-js v12.x` to `sdk-js v13`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-js-core/issues/392).
+A newer variant of the **sdk-js** cookbook is available [here](/sdk-and-tools/sdk-js/sdk-js-cookbook-v13).
+:::
+
+:::important
+In order to migrate to the newer `sdk-js v14`, please follow [the migration guide](https://github.com/multiversx/mx-sdk-js-core/issues/576).
 :::
 
 ## Creating network providers

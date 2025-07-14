@@ -102,9 +102,11 @@ Staking phase 4 will unfold in three consecutive steps, each corresponding to a 
 
 ## Staking v4. Step 1.
 
-In the first step, we will completely **remove the staking queue** and place all nodes in an **auction list**. This
-process will occur automatically at the end of the epoch and requires no interaction from validators. Nodes'
-distribution remains unchanged.
+In the first step, we will completely **remove the staking queue** and **unstake all nodes from the staking queue**. 
+This process will occur automatically at the end of the epoch and requires no interaction from validators.
+Nodes' distribution remains unchanged.
+
+For owners which had **unstaked** nodes, these can be **restaked** using 'RestakeUnstakedNodes' complete details [here](https://docs.multiversx.com/validators/delegation-manager/#restaking-nodes)
 
 ![Staking V4 Step 1](/validators/stakingV4/stakingV4-step1.png)
 
@@ -114,7 +116,7 @@ Starting with this epoch:
 
 - Every **newly staked** node will be placed in the **auction list**.
 - Every **unjailed** node will be placed in the **auction list**.
-- The **number of new nodes** that can be staked is **uncapped**.
+- The global **number of new nodes** that can take part in the system is **uncapped**.
 - Owners with **insufficient base staked EGLD** for their nodes will have them **removed** at the end of the epoch in
   the following order: `auction` -> `waiting` -> `eligible`.
 
@@ -371,4 +373,6 @@ the `TotalNumOfEligibleNodes` from the current epoch. For example, if `NodeLimit
 the `TotalNumOfEligibleNodes` for a given epoch is 1600 nodes, this means owners cannot exceed having more than 8 nodes.
 The specific parameters, including the initial limit and `NodeLimitPercentage`, can be decided through a governance
 vote. This ensures community involvement in determining the rules governing node ownership.
+
+The actual limit is 50 nodes per provider with the calculation details from the 'systemSmartContractsConfig.toml' [here](https://github.com/multiversx/mx-chain-mainnet-config/blob/2ca2da07427c5a802202d1ed364a923f0e366f13/systemSmartContractsConfig.toml#L15)
 

@@ -28,7 +28,7 @@ Let's take the following example:
 
 ### mxpy
 
-We're going to use [**mxpy**](/sdk-and-tools/sdk-py/mxpy-cli) to deploy the contract. Follow the installation guide [here](/sdk-and-tools/sdk-py/installing-mxpy) - make sure to use the latest version available.
+We're going to use [**mxpy**](/sdk-and-tools/mxpy/mxpy-cli) to deploy the contract. Follow the installation guide [here](/sdk-and-tools/mxpy/installing-mxpy) - make sure to use the latest version available.
 
 [comment]: # (mx-context-auto)
 
@@ -49,7 +49,7 @@ Now, in order to deploy the contract, we use the special **deploy** function of 
 
 ```
 deploySC() {
-    mxpy --verbose contract deploy --recall-nonce \
+    mxpy --verbose contract deploy \
         --bytecode=${WASM_PATH} \
         --pem=${WALLET_PEM} \
         --gas-limit=60000000 \
@@ -77,7 +77,7 @@ The upgrade function would look like this:
 
 ```
 upgradeSC() {
-    mxpy --verbose contract upgrade ${CONTRACT_ADDRESS} --recall-nonce --payable \
+    mxpy --verbose contract upgrade ${CONTRACT_ADDRESS} --payable \
         --bytecode=${WASM_PATH} \
         --pem=${WALLET_PEM} \
         --gas-limit=60000000 \
@@ -113,7 +113,7 @@ ADDRESS_ARGUMENT="erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3
 THIRD_BIGUINT_ARGUMENT=0x0f4240
 myNonPayableEndpoint() {
     address_argument="0x$(mxpy wallet bech32 --decode ${ADDRESS_ARGUMENT})"
-    mxpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
         --gas-limit=6000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -152,7 +152,7 @@ So, in case of our **myNonPayableEndpoint** interaction, we can write it like so
 ADDRESS_ARGUMENT="erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3"
 THIRD_BIGUINT_ARGUMENT=1000000
 myNonPayableEndpoint() {
-    mxpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
         --gas-limit=6000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -193,7 +193,7 @@ myPayableEndpoint() {
     method_name=str:myPayableEndpoint
     my_token=str:$1
     token_amount=$2
-    mxpy --verbose contract call ${CONTRACT_ADDRESS} --recall-nonce \
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
         --gas-limit=6000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -226,7 +226,7 @@ myESDTNFTPayableEndpoint() {
     sft_token_nonce=$2
     sft_token_amount=$3
     destination_address=$4
-    mxpy --verbose contract call $user_address --recall-nonce \
+    mxpy --verbose contract call $user_address \
         --pem=${WALLET_PEM} \
         --gas-limit=100000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -279,7 +279,7 @@ myMultiESDTNFTPayableEndpoint() {
     third_token_nonce=$7
     third_token_amount=$8
 
-    mxpy --verbose contract call $user_address --recall-nonce \
+    mxpy --verbose contract call $user_address \
         --pem=${WALLET_PEM} \
         --gas-limit=100000000 \
         --proxy=${PROXY} --chain=${CHAIN_ID} \
