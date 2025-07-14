@@ -263,7 +263,6 @@ const sidebars = {
                 label: "dApp SDK",
                 items: [
                   "sdk-and-tools/sdk-dapp/sdk-dapp",
-                  "sdk-and-tools/sdk-dapp-core/sdk-dapp-core",
                   {
                     type: "category",
                     label: "Internal Processes",
