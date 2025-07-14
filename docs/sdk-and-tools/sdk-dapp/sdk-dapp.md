@@ -3,7 +3,13 @@ id: sdk-dapp
 title: sdk-dapp
 ---
 
-MultiversX Front-End SDK for JavaScript and TypeScript (written in TypeScript).
+Library used to build React dApps on MultiversX Network.	MultiversX Front-End SDK for JavaScript and TypeScript (written in TypeScript).
+
+:::important	
+The following documentation is for `sdk-dapp v5.0.0` and above.	
+:::	
+
+[comment]: # (mx-abstract)
 
 ## Introduction
 
