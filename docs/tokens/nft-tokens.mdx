@@ -84,7 +84,7 @@ A Collection is defined by the following:
 
 ### Issuing a Non-Fungible Tokens Collection
 
-One has to perform an issuance transaction-sent to the **System: ESDT Module** account (address below)-in order to register a non-fungible token collection. Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a Collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction, sent to the **System: ESDT Module** account (address below)-in order to register a non-fungible token collection. Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a collection, one must provide a collection name, a collection ticker and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -128,7 +128,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### Issuing a Semi-Fungible Tokens Collection
 
-One has to perform an issuance transaction-sent to the **System: ESDT Module** account (address below)-in order to register a semi-fungible token collection. Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction, sent to the **System: ESDT Module** account (address below)-in order to register a semi-fungible token collection. Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token collection, one must provide a collection name, a collection ticker and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -168,7 +168,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### Issuing a Meta ESDT Collection
 
-One has to perform an issuance transaction-sent to the **System: ESDT Module** account (address below)-in order to register a meta ESDT collection. Meta ESDTs are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a meta ESDT collection, one must provide a collection name, a collection ticker, the number of decimals and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction, sent to the **System: ESDT Module** account (address below)-in order to register a meta ESDT collection. Meta ESDTs are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a meta ESDT collection, one must provide a collection name, a collection ticker, the number of decimals and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -1252,7 +1252,6 @@ https://gateway.multiversx.com/transaction/*txHash*?withResults=true
   "error": "",
   "code": "successful"
 }
-
 ```
 
 The event with the identifier `ESDTNFTTransfer` will have the following topics:
