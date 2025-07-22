@@ -35,7 +35,7 @@ Depending on the use case, one might choose to issue an NFT or an SFT Collection
 ### Meta ESDT
 
 Meta ESDTs are similar to SFTs with the main difference that they are fully fungible, meaning that they have decimals which need to be specified when issuing the token.
-It is worth noting that as of writing, Meta ESDTs information displayed by the explorer and returned by the API and the Elastic Search are similar to the one of ESDTs.
+It is worth noting that Meta ESDTs information displayed by the Explorer and returned by the API and the ElasticSearch are similar to the one of SFTs.
 
 
 ### Dynamic NFTs and SFTs
@@ -51,6 +51,7 @@ They allow for further flexibility by making all the fields inside the NFT/SFT t
 - [Explorer](https://explorer.multiversx.com/) - Blockchain explorer on MultiversX.
 - [Web Wallet](https://wallet.multiversx.com/) - Official MultiversX Web Wallet.
 - [MultiversX API](https://api.multiversx.com/) - API for MultiversX.
+- [SDK and Tools](https://docs.multiversx.com/sdk-and-tools/overview) - SDK and Tools for MultiversX.
 
 ## Defining an NFT or SFT Collection
 
@@ -83,7 +84,7 @@ A Collection is defined by the following:
 
 ### Issuing a Non-Fungible Tokens Collection
 
-One has to perform an issuance transaction—sent to the **System: ESDT Module** account (address below)—in order to register a non-fungible token collection. Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a Collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction-sent to the **System: ESDT Module** account (address below)-in order to register a non-fungible token collection. Non-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a Collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -127,7 +128,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### Issuing a Semi-Fungible Tokens Collection
 
-One has to perform an issuance transaction—sent to the **System: ESDT Module** account (address below)—in order to register a semi-fungible token collection. Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction-sent to the **System: ESDT Module** account (address below)-in order to register a semi-fungible token collection. Semi-Fungible Tokens are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a semi-fungible token collection, one must provide a Collection name, a Collection ticker and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -167,7 +168,7 @@ _For more details about how arguments have to be encoded, check [here](/develope
 
 ### Issuing a Meta ESDT Collection
 
-One has to perform an issuance transaction—sent to the **System: ESDT Module** account (address below)—in order to register a meta ESDT collection. Meta ESDTs are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a meta ESDT collection, one must provide a Collection name, a Collection ticker, the number of decimals and optionally additional properties. This transaction has the form:
+One has to perform an issuance transaction-sent to the **System: ESDT Module** account (address below)-in order to register a meta ESDT collection. Meta ESDTs are issued via a request to the Metachain, which is a transaction submitted by the Account which will manage the tokens. When issuing a meta ESDT collection, one must provide a collection name, a collection ticker, the number of decimals and optionally additional properties. This transaction has the form:
 
 ```rust
 IssuanceTransaction {
@@ -251,7 +252,7 @@ RegisterDynamicTransaction {
 
 ### Making a SFT Collection dynamic
 
-The ESDT manager can change token type to dynamic using a transaction like this —  sent to the **System: ESDT Module** smart contract (address below):
+The ESDT manager can change token type to dynamic using a transaction like this -  sent to the **System: ESDT Module** smart contract (address below):
 
 ```rust
 ChangeToDynamicTransaction {
@@ -295,7 +296,7 @@ These roles are specific to SFTs.
 
 ### Assigning Collection Roles
 
-Roles can be assigned by sending a transaction to the Metachain from the ESDT manager—sent to the **System: ESDT Module** smart contract (address below).
+Roles can be assigned by sending a transaction to the Metachain from the ESDT manager-sent to the **System: ESDT Module** smart contract (address below).
 
 Within a transaction of this kind, any number of roles can be assigned (minimum 1).
 
@@ -953,7 +954,7 @@ Here’s a prefilled template for the .json file to get you started:
 
 ```json
 {
-  "website": "https://www.multiversxtoken.com",
+  "website": "https://www.example.org",
   "description": "MultiversX Token is a collection of 10.000 unique and randomly generated tokens.",
   "social": {
     "email": "mxt-token@multiversxtoken.com",
@@ -1226,30 +1227,32 @@ https://gateway.multiversx.com/transaction/*txHash*?withResults=true
 </TabItem>
 <TabItem value="Response">
 
-```rust
+```json
 {
- "data": {
-  "transaction": {
-   ...
-   "logs": {
-    "address": "...",
-    "events": [
-     {
-      "address": "...",
-      "identifier": "ESDTNFTTransfer",
-      "topics": [
-       "VFNGVC1jODY3ZzM=",                              // TSFT-c867g3
-       "CEI=",                                          // 2114
-       "Ag==",                                          // 2
-       "givNK+JiLZ5VA5/dP11QKoYEn7qoqnD8uPchH3ZMLw4="   // erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
-      ],
-      "data": null
-     },
-   }
- }
- "error": "",
- "code": "successful"
+  "data": {
+    "transaction": {
+      "logs": {
+        "address": "...",
+        "events": [
+          {
+            "address": "...",
+            "identifier": "ESDTNFTTransfer",
+            "topics": [
+              "VFNGVC1jODY3ZzM=",                              // TSFT-c867g3
+              "CEI=",                                          // 2114
+              "Ag==",                                          // 2
+              "givNK+JiLZ5VA5/dP11QKoYEn7qoqnD8uPchH3ZMLw4="   // erd1sg4u62lzvgkeu4grnlwn7h2s92rqf8a64z48pl9c7us37ajv9u8qj9w8xg
+            ],
+            "data": null
+          }
+        ]
+      }
+    }
+  },
+  "error": "",
+  "code": "successful"
 }
+
 ```
 
 The event with the identifier `ESDTNFTTransfer` will have the following topics:
