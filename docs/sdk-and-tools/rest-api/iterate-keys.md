@@ -146,7 +146,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 - When `newIteratorState` is null, all keys have been retrieved.
 - If `iteratorState` is an empty array (`[]`) in the request, iteration starts from the beginning of the trie.
 - If `numKeys` is 0, the server will return as many keys as possible until all are retrieved or until the `TrieOperationsDeadlineMilliseconds` timeout is reached.
-- If retrieving `numKeys` takes more time than the timeout, the request will return the keys collected up to that point.
+- If retrieving `numKeys` takes more time than the configured timeout, the request will return the keys collected up to that point.
 - Use `?blockNonce={blockNonce}` to ensure all requests iterate the same trie root, even if the account changes between requests.
 
 [comment]: # (mx-context-auto)
