@@ -154,7 +154,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 ## Example Usage
 
 1. **Initial Request:**
-   - Send a POST with `iteratorState` as an empty string and desired `numKeys` (or 0 for maximum batch).
+   - Send a POST with `iteratorState` as an empty array and desired `numKeys` (or 0 for maximum batch).
 2. **Subsequent Requests:**
    - Use the `newIteratorState` from the previous response to fetch the next batch. Pass it as-is.
    - Optionally, provide `blockNonce` to ensure consistency if the account may change.
