@@ -22,13 +22,13 @@ This endpoint will only work if the node's `config.toml` file has the following 
 
 [comment]: # (mx-context-auto)
 
-## Endpoint Details
+## Endpoint details
 
 - **Method:** POST
 - **Path:** `/address/iterate-keys`
 - **Optional:** `/address/iterate-keys?blockNonce={blockNonce}`
 
-### Request Body
+### Request body
 
 | Field          | Type   | Description                                                                                       |
 | -------------- | ------ | --------------------------------------------------------------------------------------------------|
@@ -36,7 +36,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 | `numKeys`      | int    | Number of keys to retrieve in this batch. If 0, retrieves as many as possible until timeout.      |
 | `iteratorState`| array  | Set to empty array for the first request, or use the value from the previous response to resume.  |
 
-#### Example First Request
+#### Example - First request
 
 ```json
 {
@@ -46,7 +46,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 }
 ```
 
-#### Example Subsequent Request
+#### Example - Subsequent request
 
 ```json
 {
@@ -69,7 +69,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 ```
 
 
-### Response Body
+### Response body
 
 | Field                   | Type                | Description                                                                 |
 |-------------------------|---------------------|-----------------------------------------------------------------------------|
@@ -79,7 +79,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 | `error`                 | string              | Error message, if any.                                                      |
 | `code`                  | string              | Status code, e.g., "successful".                                            |
 
-#### Example Response (more data to fetch)
+#### Example response (more data to fetch)
 
 ```json
 {
@@ -117,7 +117,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 }
 ```
 
-#### Example Response (iteration complete)
+#### Example response (iteration complete)
 
 ```json
 {
@@ -139,7 +139,7 @@ This endpoint will only work if the node's `config.toml` file has the following 
 
 [comment]: # (mx-context-auto)
 
-## Usage Notes
+## Usage notes
 
 - The `pairs` object contains hex-encoded keys and values. Decode as needed.
 - Always pass `newIteratorState` as-is in your next request's `iteratorState` field to continue iteration.
@@ -151,11 +151,11 @@ This endpoint will only work if the node's `config.toml` file has the following 
 
 [comment]: # (mx-context-auto)
 
-## Example Usage
+## Example usage
 
-1. **Initial Request:**
+1. **Initial request:**
    - Send a POST with `iteratorState` as an empty array and desired `numKeys` (or 0 for maximum batch).
-2. **Subsequent Requests:**
+2. **Subsequent requests:**
    - Use the `newIteratorState` from the previous response to fetch the next batch. Pass it as-is.
    - Optionally, provide `blockNonce` to ensure consistency if the account may change.
 3. **Finish:**
