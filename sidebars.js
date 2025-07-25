@@ -279,6 +279,7 @@ const sidebars = {
                       "sdk-and-tools/rest-api/versions-and-changelog",
                     ],
                   },
+                  "sdk-and-tools/rest-api/iterate-keys",
                 ],
               },
             ],
