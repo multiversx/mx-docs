@@ -347,7 +347,16 @@ Example response for cross-shard transactions:
 
 `https://gateway.multiversx.com/transaction/cost`
 
-This endpoint allows one to estimate the cost of a transaction.
+
+:::note
+This endpoint estimates the **gas cost** of a transaction. Use this value to determine the appropriate `gasLimit` before sending a transaction.
+
+In the background, this endpoint simulates the transaction in a read-only environment to estimate its gas cost. Any resulting smart contract results and events will also be returned.
+:::
+
+:::warning
+As the transaction is executed in a simulated environment, `providing the correct nonce is mandatory`.
+:::
 
 <Tabs
 defaultValue="Request"
@@ -364,10 +373,12 @@ Body Parameters
 | value    | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
 | sender   | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
-| data     | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
 | chainID  | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
 | version  | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
-| nonce    | <span class="text-normal">OPTIONAL</span> | `number` | The Sender nonce.                                                                |
+| nonce    | <span class="text-danger">REQUIRED</span> | `number` | The Sender nonce.                                                                |
+| options  | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                         |
+| data     | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
+
 
 </TabItem>
 <TabItem value="Response">
@@ -390,7 +401,12 @@ The cost is estimated successfully.
 </Tabs>
 
 :::tip
-This endpoint returns the cost on the transaction in **gas units**. The returned value can be used to fill in **gasLimit** field of the transaction.
+- Use the returned `txGasUnits` value as the `gasLimit` in your actual transaction.
+- Make sure to provide the correct `nonce` of transaction
+:::
+
+:::tip
+`Best practice:` when sending the transaction, add ~10% extra gas to the estimated value to avoid underestimation and failure due to insufficient gas.
 :::
 
 Here's an example of a request:
