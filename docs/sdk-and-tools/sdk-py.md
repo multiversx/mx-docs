@@ -716,6 +716,32 @@ config = TransactionsFactoryConfig(chain_id="D")
 factory = TransferTransactionsFactory(config=config)
 ```
 
+### Estimating the Gas Limit for a Transaction
+
+When creating transaction factories or controllers, we can pass an additional argument, a **gas limit estimator**. This gas estimator simulates the transaction before being sent and computes the `gasLimit` that it will require. The `GasLimitEstimator` can be initialized with a multiplier, so that the estimated value will be multiplied by the specified value. It is recommended to use a small multiplier (e.g. 1.1) to cover any possible changes that may occur from the time the transaction is simulated to the time it is actually sent and processed on-chain. The gas limit estimator can be provided to any factory or controller available. Let's see how we can create a `GasLimitEstimator` and use it.
+
+```py
+from multiversx_sdk import ApiNetworkProvider, GasLimitEstimator, TransferTransactionsFactory, TransactionsFactoryConfig
+
+api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+gas_estimator = GasLimitEstimator(network_provider=api) # create a gas limit estimator with default multiplier of 1.0
+gas_estimator = GasLimitEstimator(network_provider=api, gas_multiplier=1.1) # create a gas limit estimator with a multiplier of 1.1
+
+config = TransactionsFactoryConfig(chain_id="D")
+transfers_factory = TransferTransactionsFactory(config=config, gas_limit_estimator=gas_estimator)
+```
+
+Also, factories or controllers created through the entrypoints can use the `GasLimitEstimator` as well:
+
+```py
+from multiversx_sdk import DevnetEntrypoint
+
+entrypoint = DevnetEntrypoint(with_gas_limit_estimator=True, gas_limit_multiplier=1.1)
+
+transfers_controller = entrypoint.create_transfers_controller() # will create the controller using the GasLimitEstimator with a 1.1 multiplier
+transfers_factory = entrypoint.create_transfers_transactions_factory() # will create the factory using the GasLimitEstimator with a 1.1 multiplier
+```
+
 ### Token transfers
 
 We can send native tokens (EGLD) and ESDT tokens using both the `controller` and the `factory`.
@@ -1084,7 +1110,7 @@ from multiversx_sdk.abi import Abi, BigUIntValue
 # load the abi file
 abi = Abi.load(Path("contracts/adder.abi.json"))
 
-# get the smart contracts controller
+# get the smart contracts transaction factory
 entrypoint = DevnetEntrypoint()
 factory = entrypoint.create_smart_contract_transactions_factory(abi=abi)
 
@@ -1277,7 +1303,7 @@ account.nonce = entrypoint.recall_account_nonce(account.address)
 # load the abi file
 abi = Abi.load(Path("contracts/adder.abi.json"))
 
-# get the smart contracts controller
+# get the smart contracts factory
 entrypoint = DevnetEntrypoint()
 factory = entrypoint.create_smart_contract_transactions_factory(abi=abi)
 
@@ -1584,7 +1610,7 @@ from multiversx_sdk.abi import Abi, BigUIntValue
 # load the abi file
 abi = Abi.load(Path("contracts/adder.abi.json"))
 
-# get the smart contracts controller
+# get the smart contracts factory
 entrypoint = DevnetEntrypoint()
 factory = entrypoint.create_smart_contract_transactions_factory(abi=abi)
 
@@ -2868,6 +2894,8 @@ transaction.relayer_signature = carol.sign_transaction(transaction)
 tx_hash = entrypoint.send_transaction(transaction)
 ```
 
+### Guarded Transactions
+
 #### Creating guarded transactions using controllers
 
 Very similar to relayers, we have a field `guardian` and a field `guardianSignature`. Each controller has an argument for the guardian. The transaction can be sent to a service that signs it using the guardian's account or we can use another account as a guardian. Let's issue a token using a guarded account.
@@ -2993,7 +3021,7 @@ transaction = controller.create_transaction_for_deploy(
     gas_limit=100_000_000,
 )
 
-transaction.signature = alice.sign_transaction(transaction)
+# send the transaction
 tx_hash = api.send_transaction(transaction)
 ```
 
@@ -3052,8 +3080,7 @@ transaction = controller.create_transaction_for_propose_transfer_execute(
     native_token_amount=1_000000000000000000,  # 1 EGLD
 )
 
-# sign and send the transaction
-transaction.signature = alice.sign_transaction(transaction)
+# send the transaction
 tx_hash = api.send_transaction(transaction)
 
 # parse the outcome and get the proposal id
