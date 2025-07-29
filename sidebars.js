@@ -216,7 +216,7 @@ const sidebars = {
                       id: "sdk-and-tools/sdk-js/sdk-js-cookbook"
                     },
                     items: [
-                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v13",
+                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
                       "sdk-and-tools/sdk-js/sdk-js-cookbook",
                     ]
                   },
