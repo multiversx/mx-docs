@@ -11,10 +11,10 @@ pagination_next: sdk-and-tools/mxpy/installing-mxpy
 
 ## Overview
 
-This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries) **v1 (latest, stable version)**.
+This page will guide you through the process of handling common tasks using the MultiversX Python SDK (libraries) **v2 (latest, stable version)**.
 
 :::important
-This cookbook makes use of `sdk-py v1`. In order to migrate from `sdk-py v0` to `sdk-py v1`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-py/issues?q=label:migration).
+This cookbook makes use of `sdk-py v2`. In order to migrate from `sdk-py v1` to `sdk-py v2`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-py/issues?q=label:migration).
 :::
 
 :::note
@@ -3923,10 +3923,10 @@ If your project has multiple dependencies, we recommend using a `requirements.tx
 multiversx-sdk
 ```
 
-Additionally, we can also install it directly from GitHub. Place this line on a new line of your `requirements.txt` file. In this example, we are going to install the version `1.0.0`:
+Additionally, we can also install it directly from GitHub. Place this line on a new line of your `requirements.txt` file. In this example, we are going to install the version `2.0.0`:
 
 ```sh
-git+https://git@github.com/multiversx/mx-sdk-py.git@v1.0.0#egg=multiversx_sdk
+git+https://git@github.com/multiversx/mx-sdk-py.git@v2.0.0#egg=multiversx_sdk
 ```
 
 If you've places all dependencies in a `requirements.txt` file, make sure you also install them by running:
