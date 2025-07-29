@@ -347,7 +347,36 @@ Example response for cross-shard transactions:
 
 `https://gateway.multiversx.com/transaction/cost`
 
-This endpoint allows one to estimate the cost of a transaction.
+This endpoint is used to estimate the gas cost of a given transaction.
+
+It performs a read-only simulation of the transaction against the current on-chain state, returning the number of gas units the transaction would consume if executed in that exact state.
+
+#### How it works:
+- The endpoint takes all transaction input fields (value, sender, receiver, data, chainID, etc.).
+- It executes the transaction in a sandboxed, non-persistent environment, meaning it simulates execution without affecting the actual blockchain.
+- It uses the current state of the network (including smart contract storage, balances, etc.).
+- It returns the estimated gas (txGasUnits) and may also return smart contract results and events triggered by the simulation.
+
+#### How does it apply to smart contracts?
+
+For smart contracts, the endpoint simulates the contract call exactly as if it were executed live, including processing all logic, branches, and emitted events.
+The gas estimate reflects the computation and storage impact that would occur if the state remained unchanged at the time of actual execution.
+
+#### How does it approximate the cost if the contract logic has variable gas usage?
+
+If a smart contract’s logic has branches or conditional execution that result in variable gas usage (e.g., depending on internal storage state, previous executions, etc.),
+the estimation will only reflect the gas used by the path taken during this particular simulation.
+
+#### Why is providing the correct nonce important?
+
+Because the simulation engine mirrors real transaction behavior, it requires a valid and correct nonce to properly simulate the transaction. Using an outdated or incorrect
+nonce may lead to simulation failure.
+
+#### Can the estimated gas differ from the actual cost?
+
+Yes. Since the blockchain state may change between the moment you call /transaction/cost and when the transaction is actually sent to the network, the real gas usage can differ.
+This is especially true for smart contract calls that depend on dynamic or mutable state.
+
 
 <Tabs
 defaultValue="Request"
@@ -364,10 +393,12 @@ Body Parameters
 | value    | <span class="text-danger">REQUIRED</span> | `string` | The Value to transfer, as a string representation of a Big Integer (can be "0"). |
 | receiver | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Receiver.                                            |
 | sender   | <span class="text-danger">REQUIRED</span> | `string` | The Address (bech32) of the Sender.                                              |
-| data     | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
 | chainID  | <span class="text-danger">REQUIRED</span> | `string` | The Chain identifier.                                                            |
 | version  | <span class="text-danger">REQUIRED</span> | `number` | The Version of the Transaction (e.g. 1).                                         |
-| nonce    | <span class="text-normal">OPTIONAL</span> | `number` | The Sender nonce.                                                                |
+| nonce    | <span class="text-danger">REQUIRED</span> | `number` | The Sender nonce.                                                                |
+| options  | <span class="text-normal">OPTIONAL</span> | `number` | The Options of the Transaction (e.g. 1).                                         |
+| data     | <span class="text-normal">OPTIONAL</span> | `string` | The base64 string representation of the Transaction's message (data).            |
+
 
 </TabItem>
 <TabItem value="Response">
@@ -390,7 +421,12 @@ The cost is estimated successfully.
 </Tabs>
 
 :::tip
-This endpoint returns the cost on the transaction in **gas units**. The returned value can be used to fill in **gasLimit** field of the transaction.
+- Use the returned `txGasUnits` value as the `gasLimit` in your actual transaction.
+- Make sure to provide the correct `nonce` of the transaction
+:::
+
+:::tip
+**Best practice:** when sending the transaction, add ~10% extra gas to the estimated value to avoid underestimation and failure due to insufficient gas.
 :::
 
 Here's an example of a request:
