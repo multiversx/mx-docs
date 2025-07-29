@@ -351,28 +351,28 @@ This endpoint is used to estimate the gas cost of a given transaction.
 
 It performs a read-only simulation of the transaction against the current on-chain state, returning the number of gas units the transaction would consume if executed in that exact state.
 
-💬 How it works:
+#### How it works:
 - The endpoint takes all transaction input fields (value, sender, receiver, data, chainID, etc.).
 - It executes the transaction in a sandboxed, non-persistent environment, meaning it simulates execution without affecting the actual blockchain.
 - It uses the current state of the network (including smart contract storage, balances, etc.).
 - It returns the estimated gas (txGasUnits) and may also return smart contract results and events triggered by the simulation.
 
-❓ How does it apply to smart contracts?
+#### How does it apply to smart contracts?
 
 For smart contracts, the endpoint simulates the contract call exactly as if it were executed live, including processing all logic, branches, and emitted events.
 The gas estimate reflects the computation and storage impact that would occur if the state remained unchanged at the time of actual execution.
 
-❓ How does it approximate the cost if the contract logic has variable gas usage?
+#### How does it approximate the cost if the contract logic has variable gas usage?
 
 If a smart contract’s logic has branches or conditional execution that result in variable gas usage (e.g., depending on internal storage state, previous executions, etc.),
 the estimation will only reflect the gas used by the path taken during this particular simulation.
 
-❗ Why is providing the correct nonce important?
+#### Why is providing the correct nonce important?
 
 Because the simulation engine mirrors real transaction behavior, it requires a valid and correct nonce to properly simulate the transaction. Using an outdated or incorrect
 nonce may lead to simulation failure.
 
-⚠️ Can the estimated gas differ from the actual cost?
+#### Can the estimated gas differ from the actual cost?
 
 Yes. Since the blockchain state may change between the moment you call /transaction/cost and when the transaction is actually sent to the network, the real gas usage can differ.
 This is especially true for smart contract calls that depend on dynamic or mutable state.
