@@ -2762,7 +2762,17 @@ tx_hash = entrypoint.send_transaction(transaction)
 
 ### Relayed transactions
 
-We are currently on the third iteration of relayed transactions. V1 and V2 are soon to be deactivated so we'll focus on V3. For V3, two new fields have been added on transactions: `relayer` and `relayerSignature`. Before the sender signs the transaction, the relayer needs to be set. After the sender has signed the transaction, the relayer can also sign the transaction and broadcast it. Keep in mind that, for relayed V3 transactions we need an extra `50_000` gas. Let's see how we can create a relayed transaction:
+We are currently on the third iteration (V3) of relayed transactions. V1 and V2 will be deactivated soon, so we'll focus on V3.
+
+For V3, two new fields have been added on transactions: `relayer` and `relayerSignature`.
+
+Note that:
+1. the sender and the relayer can sign the transaction in any order.
+2. before any of the sender or relayer can sign the transaction, the `relayer` field must be set.
+3. relayed transactions require an additional `50,000` of gas.
+4. the sender and the relayer must be in the same network shard.
+
+Let’s see how to create a relayed transaction:
 
 ```py
 from pathlib import Path
