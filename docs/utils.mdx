@@ -273,7 +273,7 @@ $$
 
 Image path should include `#gh-light-mode-only` for the Light Theme and `#gh-dark-mode-only` for the Dark Theme
 
-![Docusaurus themed image](/img/logo.svg#gh-light-mode-only)![Docusaurus themed image](/img/logo_dark.svg#gh-dark-mode-only)
+![Docusaurus themed image](/img/logo_dark.svg#gh-light-mode-only)![Docusaurus themed image](/img/logo.svg#gh-dark-mode-only)
 
 ### Second Version
 
@@ -287,8 +287,8 @@ import ThemedImage from "@theme/ThemedImage";
 <ThemedImage
   alt="Docusaurus themed image"
   sources={{
-    light: useBaseUrl("/img/logo.svg"),
-    dark: useBaseUrl("/img/logo_dark.svg"),
+    light: useBaseUrl("/img/logo_dark.svg"),
+    dark: useBaseUrl("/img/logo.svg"),
   }}
 />
 
