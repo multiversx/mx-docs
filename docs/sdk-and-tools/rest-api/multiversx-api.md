@@ -34,6 +34,14 @@ Checkout information about [pricing](https://blastapi.io/pricing) and API [limit
 
 More details on how to get your private endpoint can be found [here](https://docs.blastapi.io/blast-documentation/tutorials-and-guides/using-blast-to-get-a-blockchain-endpoint-1).
 
+**Kepler**
+
+High-performance infrastructure layer purpose-built for the MultiversX ecosystem.
+
+Low prices, high limits for API, Gateway, Elastic Search, Event Notifier, and many more!
+
+[https://kepler.projectx.mx](https://kepler.projectx.mx)
+
 [comment]: # (mx-context-auto)
 
 ## Dependencies
