@@ -121,7 +121,7 @@ CloseProposalTransaction {
 - If the proposal **passes** → the full proposal fee is refunded.  
 - If the proposal **fails** or is **vetoed** → the refund is reduced by the `LostProposalFee`.  
 - Once a proposal is closed, it cannot be reopened.
-- - Closing also finalizes the vote tally (the proposal is marked as `Passed` or not, based on the results).
+- Closing also finalizes the vote tally (the proposal is marked as `Passed` or not, based on the results).
 
  
 [comment]: # (mx-context-auto)
