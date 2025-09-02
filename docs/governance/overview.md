@@ -37,6 +37,9 @@ The MultiversX network enables on-chain governance by issuing special types of t
 - If the proposal passes or fails normally, the fee is refunded to the issuer.  
 - If the proposal is vetoed, the fee is slashed (transferred to the **Community Governance Pool**) or reduced by the configured `LostProposalFee`.  
 - Proposals cannot be duplicated: the same commit hash cannot be submitted twice.
+- Proposals can be **cancelled** by the issuer **before the voting period starts**. (introduced in v1.10.0 Barnard release)
+- Lost proposal fees may either be accumulated in the governance contract (retrievable by the contract owner) or redirected to a **Community Governance Pool**, depending on configuration.  
+
 
 ### Voting
 - There are four vote types: **Yes**, **No**, **Abstain**, and **Veto**.  
@@ -49,10 +52,9 @@ The MultiversX network enables on-chain governance by issuing special types of t
 ### Quorum and thresholds
 A proposal can pass only if all conditions are met:
 
-- **Quorum**: at least `MinQuorum%` of the total voting power must participate.  
-- **Majority**: the **Yes** votes must outnumber **No** votes.  
-- **Pass threshold**: the **Yes** votes must represent at least `MinPassThreshold%` of all votes cast.  
-- **Veto threshold**: if **Veto** votes exceed `MinVetoThreshold%`, the proposal is rejected and penalized.
+- **Quorum**: at least `MinQuorum%` of the total voting power must participate. (currently at least **20%** of total voting power)
+- **Acceptance threshold**: YES / (YES + NO + VETO) ≥ **66.67%** (`MinPassThreshold`) 
+- **Veto threshold**:  if VETO votes exceed **33%** of total participating voting power, the proposal is rejected and the proposal fee is slashed.
 
 ### Closing and cleanup
 - Proposals can only be closed after the end epoch has passed.  
