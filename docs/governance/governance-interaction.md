@@ -138,7 +138,7 @@ https://<gateway>.multiversx.com/vm-values/query
 {
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla",
   "funcName": "viewProposal",
-  "args": ["<nonce>"]
+  "args": ["<nonce-hex>"]
 }
 ```
 
@@ -154,7 +154,7 @@ https://<gateway>.multiversx.com/vm-values/query
     "<issuer_address>", (address of the proposer)
     "<start_epoch>", (epoch when voting starts)
     "<end_epoch>", (epoch when voting ends)
-    "<quorum_stake>", (minimum stake required to reach quorum)
+    "<quorum_stake>", (current quorum stake: sum of stake that participated)
     "<yes_votes>", (total stake voting YES)
     "<no_votes>", (total stake voting NO)
     "<veto_votes>", (total stake vetoing the proposal)
@@ -201,14 +201,17 @@ https://<gateway>.multiversx.com/vm-values/query
 {
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla",
   "funcName": "viewDelegatedVoteInfo",
-  "args": ["<proposal_nonce>", "<address>"]
+  "args": ["<proposal_nonce-hex>", "<address>"]
 }
 ```
 
 - `proposal_nonce` → the proposal identifier (nonce, hex-encoded).  
 - `address` → the bech32 address of the account to check.  
 
- The response will contain the following json definition where all fields are base64-encoded:
+> **Note:** The older function `viewUserVoteHistory` (which returned lists of proposal nonces) is now considered legacy.  
+> Use `viewDelegatedVoteInfo` for detailed voting power and stake information.
+
+The response will contain the following json definition where all fields are base64-encoded:
 
 ```json
 {
