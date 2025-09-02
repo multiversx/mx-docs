@@ -148,7 +148,7 @@ https://<gateway>.multiversx.com/vm-values/query
 ```json
 {
   "returnData": [
-    "<proposal_fee_locked>", (amount locked by proposer)
+    "<proposal_cost>", (amount locked by proposer)
     "<commit_hash>", (unique identifier of the proposal)
     "<nonce>", (proposal number)
     "<issuer_address>", (address of the proposer)
