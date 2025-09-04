@@ -128,26 +128,32 @@ After issuing the vote, a log event is generated containing the `proposal` ident
 
 ### Closing a proposal
 
-A proposal can be closed only in an epoch that is strictly higher than the end epoch value provided when the proposal was open.
+A proposal can be closed only in an epoch that is strictly higher than the end epoch value provided when the proposal was opened.  
+Closing can only be performed by the account that created the proposal (the issuer).
 
 ```rust
 CloseProposalTransaction {
-    Sender: <account address of the wallet that created the proposal>
+    Sender:   <account address of the wallet that created the proposal>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla
-    Value: 0 EGLD
+    Value:    0 EGLD
     GasLimit: 51000000
-    Data: "closeProposal" +
-          "@<nonce>"
+    Data:     "closeProposal" +
+              "@<nonce>"
 }
 ```
+#### Rules for closing
+- Only the issuer can call `closeProposal`.  
+- If the proposal **passes** → the full proposal fee is refunded.  
+- If the proposal **fails** or is **vetoed** → the refund is reduced by the `LostProposalFee`.  
+- Once a proposal is closed, it cannot be reopened.
+- Closing also finalizes the vote tally (the proposal is marked as `Passed` or not, based on the results).
 
-Only the address that created the proposal can call the `closeProposal` function that will also trigger the funds unlocking. As stated in the overview page, if the proposal does not pass, the amount returned will be less with 10 EGLD.
-
+ 
 [comment]: # (mx-context-auto)
 
 ### Querying the status of a proposal
 
-The status of a certain proposal can be queried at any time by using the `vm-values/query` REST API endpoints provided by the gateway/API.
+The status of any proposal can be queried at any time through `vm-values/query` REST API endpoints provided by the gateway/API.
 
 ```bash
 https://<gateway>.multiversx.com/vm-values/query
@@ -157,52 +163,54 @@ https://<gateway>.multiversx.com/vm-values/query
 {
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla",
   "funcName": "viewProposal",
-  "args": ["<nonce>"]
+  "args": ["<nonce-hex>"]
 }
 ```
 
-the `nonce` represents the proposal nonce in hex format. The response will contain the following json definition where all fields are base64-encoded:
+- The argument `nonce` is the proposal nonce in hex format.
+- The response will contain the following json definition where all fields are base64-encoded:
 
 ```json
 {
   "returnData": [
-    "<proposal_cost>",
-    "<commit_hash>",
-    "<nonce>",
-    "<account address of the wallet that created the proposal>",
-    "<starting epoch>",
-    "<ending epoch>",
-    "<quorum stake>",
-    "<yes_value>",
-    "<no_value>",
-    "<veto_value>",
-    "<abstain_value>",
+    "<proposal_cost>", (amount locked by proposer)
+    "<commit_hash>", (unique identifier of the proposal)
+    "<nonce>", (proposal number)
+    "<issuer_address>", (address of the proposer)
+    "<start_epoch>", (epoch when voting starts)
+    "<end_epoch>", (epoch when voting ends)
+    "<quorum_stake>", (current quorum stake: sum of stake that participated)
+    "<yes_votes>", (total stake voting YES)
+    "<no_votes>", (total stake voting NO)
+    "<veto_votes>", (total stake vetoing the proposal)
+    "<abstain_votes>", (total stake abstaining)
     "<proposal_closed true|false>",
     "<proposal_passed true|false>"
   ]
 }
 ```
 
-Example:
+Example response:
 ```json
 {
   "returnData": [
     "NjXJrcXeoAAA", (proposal locked amount: 1000 EGLD denominated = 1000 * 10^18)
     "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABg==", (commit hash: 0x0000...006)
     "AQ==", (nonce: 1)
-    "aj88GtqHy9ibm5ePPQlG4aqLhpgqsQWygoTppckLa4M=", (address: erd1dglncxk6sl9a3xumj78n6z2xux4ghp5c92cstv5zsn56tjgtdwpsk46qrs)
+    "aj88GtqHy9ibm5ePPQlG4aqLhpgqsQWygoTppckLa4M=", (proposer address)
     "bQ==", (starting epoch: 109)
     "bg==", (ending epoch: 110)
-    "ntGU2xmyOMAAAA==", (quorum: 750000 EGLD = 7500000 * 10^18)
-    "", (yes value: 0)
-    "", (no value: 0)
-    "ntGU2xmyOMAAAA==", (veto value: 7500000 * 10^18)
-    "", (abstain value: 0)
+    "ntGU2xmyOMAAAA==", (quorum: 7,500,000 EGLD denominated)
+    "", (yes votes: 0)
+    "", (no votes: 0)
+    "ntGU2xmyOMAAAA==", (veto votes: 7,500,000 EGLD denominated)
+    "", (abstain votes: 0)
     "dHJ1ZQ==", (proposal closed: true)
     "ZmFsc2U=" (proposal passed: false)
   ]
 }
-```
+
+
 
 [comment]: # (mx-context-auto)
 
@@ -217,51 +225,51 @@ https://<gateway>.multiversx.com/vm-values/query
 ```json
 {
   "scAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla",
-  "funcName": "viewUserVoteHistory",
-  "args": ["<address>"]
+  "funcName": "viewDelegatedVoteInfo",
+  "args": ["<proposal_nonce-hex>", "<address>"]
 }
 ```
 
-the `address` represents the address in hex format. The response will contain the following json definition where all fields are base64-encoded:
+- `proposal_nonce` → the proposal identifier (nonce, hex-encoded).  
+- `address` → the bech32 address of the account to check.  
+
+> **Note:** The older function `viewUserVoteHistory` (which returned lists of proposal nonces) is now considered legacy.  
+> Use `viewDelegatedVoteInfo` for detailed voting power and stake information.
+
+The response will contain the following json definition where all fields are base64-encoded:
 
 ```json
 {
   "returnData": [
-    "<the number of delegated nonces>",
-    "<delegated nonce 0>",
-    "<delegated nonce 1>",
-    ...
-    "<delegated nonce n>",
-    "<the number of direct nonces>",
-    "<direct nonce 0>",
-    "<direct nonce 1>",
-    ...
-    "<direct nonce m>"
+    "<used_power>", (voting power already used by this address on the proposal)
+    "<used_stake>", (stake associated with the used power)
+    "<total_power>", (total available voting power for the address)
+    "<total_stake>" (total stake considered in governance for the address)
   ]
 }
 ```
 
-Example for an address that cast votes on 5 proposals:
+Example for an address that voted:
 ```json
 {
   "returnData": [
-    "Aw==", (number of delegated nonces: 3)
-    "AQ==", (nonce: 1)
-    "Ag==", (nonce: 2)
-    "Aw==", (nonce: 3)
-    "Ag==", (number of direct nonces: 2)
-    "BA==", (nonce: 4)
-    "BQ==", (nonce: 5)
+    "Cg==", (used power: 10)
+    "ZAA=", (used stake: 100)
+    "A+g=", (total power: 1000)
+    "Gg4M=", (total stake: 10000)
   ]
 }
 ```
+In this example, the queried address voted on this proposal with **100 stake**, which translated into **10 voting power**. The proposal overall had **10000 total stake** and **1000 total voting power** recorded.
 
-Example for an address that did not cast votes on any proposals:
+Example for an address that did not vote:
 ```json
 {
   "returnData": [
-    "AA==", (number of delegated nonces: 0)
-    "AA==", (number of direct nonces: 0)
+    "AA==", (used power: 0)
+    "AA==", (used stake: 0)
+    "A+g=", (total power: 1000)
+    "Gg4M=", (total stake: 10000)
   ]
 }
 ```
