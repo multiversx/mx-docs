@@ -34,7 +34,7 @@ The MultiversX network enables on-chain governance by issuing special types of t
 
 ### Proposals
 
-In order for a proposal to be submitted, the following requierments need to be met:
+In order for a proposal to be submitted, the following requirements need to be met:
 - For a period of at least 15 days, the proposal needs to be published on Agora for public debate and analysis;
 - Each proposal requires paying a `ProposalFee` (currently **500 EGLD**);
 - Each proposal costs around 51 million of gas units to be submitted.
