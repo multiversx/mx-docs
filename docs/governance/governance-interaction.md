@@ -19,7 +19,7 @@ The proposal creation transaction has the following parameters:
 GovernanceProposalTransaction {
     Sender: <account address of the wallet that creates the proposal>
     Receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla
-    Value: 1000 EGLD
+    Value: 500 EGLD
     GasLimit: 51000000
     Data: "proposal" +
           "@<identifier>" +
@@ -28,9 +28,13 @@ GovernanceProposalTransaction {
 }
 ```
 
+The value parameter represents the mandatory proposal submission deposit of 500 EGLD.
+
 The proposal identifier is a hex string containing exactly 40 characters. Usually, this can be a git commit hash on which the proposal is made but can be any other identifier string.  
 
-The starting & ending epochs should be an even-length hex string containing the starting epoch and the ending epoch. During this time frame the votes can be cast.
+The starting & ending epochs should be an even-length hex string containing the starting epoch and the ending epoch. During this time frame, lasting 10 days, the votes can be cast.
+
+>**Note:** When providing the starting epoch, it should be taken into consideration that the governance contract enforcing a configured maximum gap of 30 epochs between the current epoch and the proposal’s starting epoch. 
 
 After issuing the proposal, there is a log event generated having the `proposal` identifier that will contain the following encoded topics:
 
@@ -43,7 +47,7 @@ After issuing the proposal, there is a log event generated having the `proposal`
 
 ### Voting a proposal using the direct staked or delegation-system amount
 
-Any wallet that has staked EGLD (either direct staked or through the delegation sub-system) can cast a vote for a proposal.
+Any wallet that has staked EGLD (either direct staked or through the delegation sub-system) can cast a vote for a proposal. 
 ```rust
 GovernanceVoteTransaction {
     Sender: <account address of the wallet that will vote the proposal>
@@ -56,6 +60,8 @@ GovernanceVoteTransaction {
 }
 ```
 
+The value parameter for the voting transaction must be set to 0, since the function is non-payable.
+
 The `nonce` is the hex encoded value of the proposal's unique nonce and the `vote_type` can be one of the following values:
 - for **Yes**: `796573`;
 - for **No**: `6e6f`;
@@ -64,11 +70,19 @@ The `nonce` is the hex encoded value of the proposal's unique nonce and the `vot
 
 The vote value for the account that will vote a proposal is the sum of all staked values along with the sum of all delegated values in the delegation sub-system. 
 
+After issuing the vote, a log event is generated containing the `proposal` identifier and the following encoded topics:
+
+- `nonce` as encoded integer which uniquely identifies the proposals 
+- `vote_type` as encoded string representing the vote 
+- `total_stake` total staked EGLD for the sender address
+- `total_voting_power` total available voting power for the sender address
+
 [comment]: # (mx-context-auto)
 
 ### Voting a proposal through smart contracts (delegation voting)
 
 Whenever we deal with a smart contract that delegated through the delegation sub-system or owns staked nodes it is the out of scope of the metachain's governance contract to track each address that sent EGLD how much is really staked (if any EGLD is staked).
+
 That is why we offered an endpoint to the governance smart contact that can be called **only by a shard smart contract** and the governance contract will record the address provided, the vote type and vote value.
 This is very useful whenever implementing liquid-staking-like smart contracts. The liquid-staking contract knows the balance for each user, so it will delegate the call to the governance contract providing the value.
 
@@ -90,6 +104,8 @@ GovernanceVoteThourghDelegationTransaction {
 }
 ```
 
+The value parameter for the voting transaction must be set to 0, since the function is non-payable.
+
 The `nonce` is the hex encoded value of the proposal's unique nonce and the `vote_type` can be one of the following values:
 - for **Yes**: `796573`;
 - for **No**: `6e6f`;
@@ -97,7 +113,16 @@ The `nonce` is the hex encoded value of the proposal's unique nonce and the `vot
 - for **Veto**: `7665746f`.
 
 The `account address handled by the smart contract` is the address handled by the smart contract that will delegate the vote towards the governance smart contract. This address will be recorded for casting the vote.
+
 The `vote_balance` is the amount of stake the address has in the smart contract. The governance contract will "believe" that this is the right amount as it impossible to verify the information. The balance will diminish the total voting power the smart contract has. 
+
+After issuing the vote, a log event is generated containing the `proposal` identifier and the following encoded topics:
+
+- `nonce` as encoded integer which uniquely identifies the proposals 
+- `vote_type` as encoded string representing the vote
+- `voter` account address handled by the smart contract
+- `total_stake` total staked EGLD for the sender address
+- `total_voting_power` total available voting power for the sender address
 
 [comment]: # (mx-context-auto)
 
