@@ -33,7 +33,13 @@ The MultiversX network enables on-chain governance by issuing special types of t
 ## Implementation details
 
 ### Proposals
-- Each proposal requires paying a `ProposalFee` (currently **500 EGLD**).  
+
+In order for a proposal to be submitted, the following requierments need to be met:
+  - For a period of at least 15 days, the proposal needs to be published on Agora for public debate and analysis;
+  - Each proposal requires paying a `ProposalFee` (currently **500 EGLD**);
+  - Each proposal costs around 51 million of gas units to be submitted.
+  - The starting epoch of the proposal's voting period needs to be set inside an interval of 30 epochs from the epoch in which the proposal was submitted;
+
 - If the proposal passes or fails normally, the fee is refunded to the issuer.  
 - If the proposal is vetoed, the fee is slashed (transferred to the **Community Governance Pool**) or reduced by the configured `LostProposalFee`.  
 - Proposals cannot be duplicated: the same commit hash cannot be submitted twice.
@@ -42,10 +48,11 @@ The MultiversX network enables on-chain governance by issuing special types of t
 
 
 ### Voting
+- The voting starts from the provided starting epoch and lasts exactly *10 days*.
 - There are four vote types: **Yes**, **No**, **Abstain**, and **Veto**.  
 - Voting consumes gas (approx. 6 million units).  
 - Voting power is derived from staked and delegated EGLD.  
-- Delegation and liquid staking contracts can cast votes on behalf of users.
+- Delegation and liquid staking () contracts can cast votes on behalf of users.
 - Voting power is **linear** with stake: the more EGLD staked or delegated, the higher the voting power.  
 - The contract tracks both **used voting power/stake** (applied in a proposal) and **total available voting power/stake** for each address.  
 
