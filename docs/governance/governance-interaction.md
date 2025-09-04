@@ -7,7 +7,7 @@ title: Governance interaction
 
 ### Introduction
 
-The interaction with the governance system smartcontract is done through correctly formatted transactions to submit actions and through the usage of the vm-query REST API calls for reading the proposal(s) status.
+The interaction with the governance system smartcontract is done through correctly formatted transactions to submit actions and through the usage of the vm-query REST API calls for reading the proposal(s) status. 
 
 [comment]: # (mx-context-auto)
 
@@ -84,6 +84,7 @@ After issuing the vote, a log event is generated containing the `proposal` ident
 Whenever we deal with a smart contract that delegated through the delegation sub-system or owns staked nodes it is the out of scope of the metachain's governance contract to track each address that sent EGLD how much is really staked (if any EGLD is staked).
 
 That is why we offered an endpoint to the governance smart contact that can be called **only by a shard smart contract** and the governance contract will record the address provided, the vote type and vote value.
+
 This is very useful whenever implementing liquid-staking-like smart contracts. The liquid-staking contract knows the balance for each user, so it will delegate the call to the governance contract providing the value.
 
 :::important
