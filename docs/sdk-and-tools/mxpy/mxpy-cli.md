@@ -305,6 +305,26 @@ We can remove an address from the config using the alias of the address and the 
 mxpy config-wallet remove --alias alice
 ```
 
+## Estimating the Gas Limit for transactions
+
+mxpy (version 11.1.0 and later) can automatically estimate the required gas limit for transactions when a proxy URL is provided. The estimation works by simulating the transaction before sending it.
+
+While the estimation is generally accurate, it's recommended to add a safety margin to account for potential state changes. This can be done in two ways:
+
+1. Per transaction, using the `--gas-limit-multiplier` flag:
+
+```sh
+mxpy tx new --gas-limit-multiplier 1.1 ...
+```
+
+2. As a global default setting in the config:
+
+```sh
+mxpy config set gas_limit_multiplier 1.1
+```
+
+A multiplier of 1.1 (10% increase) is typically sufficient for most transactions.
+
 [comment]: # (mx-context-auto)
 
 ## Creating wallets
