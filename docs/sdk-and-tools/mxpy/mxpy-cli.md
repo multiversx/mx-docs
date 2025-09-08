@@ -840,13 +840,13 @@ mxpy tx new --proxy https://devnet-gateway.multiversx.com \
     --send
 ```
 
-By default, the first MultiversX address managed by the device is used as the sender (signer) of the transaction. In order to select a different address, you can use the `--ledger-address-index` CLI parameter:
+By default, the first MultiversX address managed by the device is used as the sender (signer) of the transaction. In order to select a different address, you can use the `--sender-wallet-index` CLI parameter:
 
 ```sh
 mxpy tx new --proxy https://devnet-gateway.multiversx.com \
     --receiver erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th \
     --gas-limit 50000 --value 1000000000000000000 \
-    --ledger --ledger-address-index=42 \
+    --ledger --sender-wallet-index=42 \
     --send
 ```
 
@@ -859,7 +859,7 @@ Now let's deploy a smart contract using the Ledger:
 ```sh
 mxpy contract deploy --proxy=https://devnet-gateway.multiversx.com \
     --bytecode=adder.wasm --gas-limit=5000000 \
-    --ledger --ledger-address-index=42 \
+    --ledger --sender-wallet-index=42 \
     --send
 ```
 
@@ -869,7 +869,7 @@ Then, perform a contract call:
 mxpy contract call erd1qqqqqqqqqqqqqpgqwwef37kmegph97egvvrxh3nccx7xuygez8ns682zz0 \
     --proxy=https://devnet-gateway.multiversx.com \
     --function add --arguments 42 --gas-limit 5000000 \
-    --ledger --ledger-address-index=42 \
+    --ledger --sender-wallet-index=42 \
     --send
 ```
 
