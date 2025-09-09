@@ -25,7 +25,7 @@ The MultiversX network enables on-chain governance by issuing special types of t
   - a **commit hash** (unique identifier, usually a GitHub commit or spec reference)
   - a **start epoch** and an **end epoch** (the voting window).
 - **Any staked user** (direct or delegated) can vote during the active period.
-- Voting power is proportional to stake:  
+- Voting power is proportional to stake:
   `voting_power = staked_value` (linear voting).
 
 [comment]: # (mx-context-auto)
@@ -40,35 +40,44 @@ In order for a proposal to be submitted, the following requirements need to be m
 - Each proposal costs around 51 million of gas units to be submitted.
 - The starting epoch of the proposal's voting period needs to be set inside an interval of 30 epochs from the epoch in which the proposal was submitted;
 
-After a proposal is created, the following rules will apply: 
-- If the proposal passes or fails normally, the fee is refunded to the issuer.  
-- If the proposal is vetoed, the fee is slashed (transferred to the **Community Governance Pool**) or reduced by the configured `LostProposalFee`.  
+After a proposal is created, the following rules will apply:
+- If the proposal passes, the fee is refunded to the issuer.
+- If the proposal fails, a penalty fee (called `LostProposalFee`) is deducted from the initial proposal fee, and the remaining amount is returned to the proposer.
+- If the proposal is vetoed, the fee is slashed (transferred to the **Community Governance Pool**) or reduced by the configured `LostProposalFee`.
 - Proposals cannot be duplicated: the same commit hash cannot be submitted twice.
 - Proposals can be **cancelled** by the issuer **before the voting period starts**. (introduced in v1.10.0 Barnard release)
-- Lost proposal fees may either be accumulated in the governance contract (retrievable by the contract owner) or redirected to a **Community Governance Pool**, depending on configuration.  
+- Lost proposal fees may either be accumulated in the governance contract (retrievable by the contract owner) or redirected to a **Community Governance Pool**, depending on configuration.
 
 
 ### Voting
-- The voting starts from the provided starting epoch and lasts exactly *10 days*.
-- There are four vote types: **Yes**, **No**, **Abstain**, and **Veto**.  
-- Voting consumes gas (approx. 6 million units).  
-- Voting power is derived from staked and delegated EGLD.  
-- Delegation and liquid staking () contracts can cast votes on behalf of users.
-- Voting power is **linear** with stake: the more EGLD staked or delegated, the higher the voting power.  
-- The contract tracks both **used voting power/stake** (applied in a proposal) and **total available voting power/stake** for each address.  
+- The voting starts from the provided starting epoch and lasts at most *10 days*.
+- There are four vote types: **Yes**, **No**, **Abstain**, and **Veto**.
+- Voting consumes gas (approx. 6 million units).
+- Voting power is derived from staked and delegated EGLD.
+- Delegation and liquid staking contracts can forward user votes.
+- Voting power is **linear** with stake: the more EGLD staked or delegated, the higher the voting power.
+- The contract tracks both **used voting power/stake** (applied in a proposal) and **total available voting power/stake** for each address.
 
 ### Quorum and thresholds
 A proposal can pass only if all conditions are met:
 
 - **Quorum**: at least `MinQuorum%` of the total voting power must participate. (currently at least **20%** of total voting power)
-- **Acceptance threshold**: YES / (YES + NO + VETO) ≥ **66.67%** (`MinPassThreshold`) 
+- **Acceptance threshold**: YES / (YES + NO + VETO) ≥ **66.67%** (`MinPassThreshold`)
 - **Veto threshold**:  if VETO votes exceed **33%** of total participating voting power, the proposal is rejected and the proposal fee is slashed.
 
 ### Closing and cleanup
-- Proposals can only be closed after the end epoch has passed.  
-- Only the issuer can close their proposal.  
-- Closing finalizes the outcome (passed / failed / vetoed) and unlocks the funds.  
-- Expired but unclosed proposals can also be cleaned up via `clearEndedProposals` to maintain efficiency.
+**Proposal closing permissions:**
+- **Before voting starts:** Only the proposal issuer can close the proposal.
+- **After voting ends:** Any user can close the proposal.
+
+**Effects of closing:**
+1. Finalizes the proposal outcome (passed/failed/vetoed).
+2. Unlocks any locked funds.
+3. Updates the proposal status in the governance system.
+
+**Cleanup options:**
+- The `clearEndedProposals` function can be called to clean up expired but unclosed proposals.
+- This helps maintain system efficiency by removing inactive proposals.
 
 ### Governance configuration
 All thresholds and fees are defined in `GovernanceConfigV2`:
@@ -91,22 +100,22 @@ Let's suppose we have the following addresses that cast the following votes:
 - `delta`: staked value **1500 EGLD** that vote **No**
 
 The totals are:
-- Quorum = `(2000+3000+4000+1500) = 10,500 EGLD`  
-- **Yes** = `9000 EGLD`  
-- **No** = `1500 EGLD`  
-- **Abstain** = `0`  
-- **Veto** = `0`  
+- Quorum = `(2000+3000+4000+1500) = 10,500 EGLD`
+- **Yes** = `9000 EGLD`
+- **No** = `1500 EGLD`
+- **Abstain** = `0`
+- **Veto** = `0`
 
-Assume:  
-- total staked in the system = `20,000 EGLD`  
-- `MinQuorum` = 20%  
-- `MinPassThreshold` = 50%  
-- `MinVetoThreshold` = 33%  
+Assume:
+- total staked in the system = `20,000 EGLD`
+- `MinQuorum` = 20%
+- `MinPassThreshold` = 50%
+- `MinVetoThreshold` = 33%
 
 Evaluation:
-- Quorum is satisfied: `10,500 > 4000`  
-- Yes > No: `9000 > 1500`  
-- Yes is ≥ 50% of votes: `9000 / 10,500 = 85.7%`  
-- Veto is below 33%: `0 < 3465`  
+- Quorum is satisfied: `10,500 > 4000`
+- Yes > No: `9000 > 1500`
+- Yes is ≥ 50% of votes: `9000 / 10,500 = 85.7%`
+- Veto is below 33%: `0 < 3465`
 
 To sum it all, the proposal **passes**.
