@@ -18,10 +18,11 @@ The following documentation is for `sdk-dapp v5.0.0` and above.
 It is built for applications that use any of the following technologies:
 
 - React (example: [React Template Dapp](https://github.com/multiversx/mx-template-dapp))
+- React JS (example: [React JS Template Dapp](https://github.com/multiversx/mx-template-dapp-reactjs))
 - Angular (example: [Angular Template Dapp](https://github.com/multiversx/mx-template-dapp-angular))
 - Vue (example: [Vue Template Dapp](https://github.com/multiversx/mx-template-dapp-vue))
 - Any other JavaScript framework (e.g. Solid.js etc.) (example: [Solid.js Dapp](https://github.com/multiversx/mx-solidjs-template-dapp))
-- React Native
+- React Native (example: [React Native Dapp](https://github.com/multiversx/mx-template-dapp-react-native))
 - Next.js (example: [Next.js Dapp](https://github.com/multiversx/mx-template-dapp-nextjs))
 
 [comment]: # (mx-context-auto)
@@ -84,7 +85,7 @@ The basic concepts you need to understand are configuration, provider interactio
 
 Having this knowledge, we can consider several steps needed to put a dApp together:
 
-**Table 1.** Steps to build a dApp
+**Table 1**. Steps to build a dApp
 
 | #  | Step                | Description |
 |----|---------------------|-------------|
@@ -166,14 +167,14 @@ export const ConnectButton = () => {
 Once the user has logged in, if `nativeAuth` is configured in the `initApp` method, an automatic logout will be performed upon native auth expiration. Before the actual logout is performed, the `LogoutManager` will show a warning toast to the user. This toast can be customized by passing a `tokenExpirationToastWarningSeconds` to the `nativeAuth` config.
 
 ```typescript
-// in initAoo config
+// in initApp config
 const config: InitAppType = {
- // ...
- nativeAuth: {
+  // ...
+  nativeAuth: {
     expirySeconds: 30, // test auto logout after 30 seconds
     tokenExpirationToastWarningSeconds: 10 // show warning toast 10 seconds before auto logout
- },
-}
+  }
+};
 ```
 
 You have the option to stop this behavior by calling `LogoutManager.getInstance().stop()` after the user has logged in.
@@ -199,7 +200,7 @@ export const AdvancedConnectButton = () => {
         anchor
       });
       const { address, signature } = await provider.login();
-      navigate(`/dashboard?address=${address}`;
+      navigate(`/dashboard?address=${address}`);
     },
   });
   const handleOpenUnlockPanel = () => {
@@ -364,16 +365,16 @@ await notificationManager.openNotificationsFeed();
 
 You can find both methods and hooks to access transactions data, as seen in the table below.
 
-**Table 2**. Inspectig transactions
+**Table 2**. Inspecting transactions
 | # | Helper | Description | React hook equivalent |
 |---|------|-------------|----|
 | | `methods/transactions` | path | `react/transactions` |
-| 1 | `getTransactionSessions()` | returns all trabsaction sessions |`useGetTransactionSessions()` |
-| 2 | `getPendingTransactionsSessions()` | returns an record of pending sessions | `useGetPendingTransactionsSessions()`|
+| 1 | `getTransactionSessions()` | returns all transaction sessions |`useGetTransactionSessions()` |
+| 2 | `getPendingTransactionsSessions()` | returns a record of pending sessions | `useGetPendingTransactionsSessions()`|
 | 3 | `getPendingTransactions()` | returns an array of signed transactions | `useGetPendingTransactions()` |
-| 4 | `getFailedTransactionsSessions()` | returns an record of failed sessions | `useGetFailedTransactionsSessions()`|
+| 4 | `getFailedTransactionsSessions()` | returns a record of failed sessions | `useGetFailedTransactionsSessions()`|
 | 5 | `getFailedTransactions()` | returns an array of failed transactions | `useGetFailedTransactions()`|
-| 6 | `getSuccessfulTransactionsSessions()` | returns an record of successful sessions | `useGetSuccessfulTransactionsSessions()`|
+| 6 | `getSuccessfulTransactionsSessions()` | returns a record of successful sessions | `useGetSuccessfulTransactionsSessions()`|
 | 7 | `getSuccessfulTransactions()` | returns an array of successful transactions | `useGetSuccessfulTransactions()`|
 
 There is a way to inspect store information regarding a specific transaction, using the `transactionsSliceSelector`. An example is shown below:
@@ -416,7 +417,7 @@ We have seen in the previous chapter what are the minimal steps to get up and ru
 | # | Type | Description |
 |---|------|-------------|
 | 1 | Network | Chain configuration |
-| 2 | Provider | The signing provider for logging in and singing transactions |
+| 2 | Provider | The signing provider for logging in and signing transactions |
 | 3 | Account | Inspecting user address and balance |
 | 4 | Transactions Manager | Sending and tracking transactions |
 | 5 | UI Components | Displaying UI information like balance, public keys etc. |
@@ -441,7 +442,7 @@ Conceptually, these can be split into 3 main parts:
 
 - First is the business logic in `apiCalls`, `constants`, `providers` and `methods`
 - Then comes the persistence layer hosted in the `store` folder, using [Zustand](https://zustand.docs.pmnd.rs/) under the hood.
-- Last are the UI components hosted in [@multiversx/sdk-dapp-ui](https://github.com/multiversx/mx-sdk-dapp-ui) with some components controlled on demand by classes defined in `controlles` and `managers`
+- Last are the UI components hosted in [@multiversx/sdk-dapp-ui](https://github.com/multiversx/mx-sdk-dapp-ui) with some components controlled on demand by classes defined in `controllers` and `managers`
 
 Next, we will take the elements from Table 3 and detail them in the following sections.
 
@@ -540,16 +541,16 @@ The transaction lifecycle consists of the following steps:
 | # | Helper | Description | React hook equivalent |
 |---|------|-------------|----|
 | | `methods/transactions` | path | `react/transactions` |
-| 1 | `getTransactionSessions()` | returns all trabsaction sessions |`useGetTransactionSessions()` |
-| 2 | `getPendingTransactionsSessions()` | returns an record of pending sessions | `useGetPendingTransactionsSessions()`|
+| 1 | `getTransactionSessions()` | returns all transaction sessions |`useGetTransactionSessions()` |
+| 2 | `getPendingTransactionsSessions()` | returns a record of pending sessions | `useGetPendingTransactionsSessions()`|
 | 3 | `getPendingTransactions()` | returns an array of signed transactions | `useGetPendingTransactions()` |
-| 4 | `getFailedTransactionsSessions()` | returns an record of failed sessions | `useGetFailedTransactionsSessions()`|
+| 4 | `getFailedTransactionsSessions()` | returns a record of failed sessions | `useGetFailedTransactionsSessions()`|
 | 5 | `getFailedTransactions()` | returns an array of failed transactions | `useGetFailedTransactions()`|
-| 6 | `getSuccessfulTransactionsSessions()` | returns an record of successful sessions | `useGetSuccessfulTransactionsSessions()`|
+| 6 | `getSuccessfulTransactionsSessions()` | returns a record of successful sessions | `useGetSuccessfulTransactionsSessions()`|
 | 7 | `getSuccessfulTransactions()` | returns an array of successful transactions | `useGetSuccessfulTransactions()`|
 
 5. **User feedback** is provided through toast notifications, which are triggered to inform about transactions' progress. Additional tracking details can be optionally displayed in the toast UI.
-There is an option to add custom toast messages by using the `createCustomToast` helper.
+   There is an option to add custom toast messages by using the `createCustomToast` helper.
 
 ```ts
 import { createRoot } from 'react-dom/client';
@@ -574,7 +575,11 @@ createCustomToast({
   message: 'This is a custom toast',
   title: 'My custom toast'
 });
-      
+
+
+// closing a custom toast
+const toastManager = ToastManager.getInstance();
+toastManager.closeToast('custom-toast') // toastId
 
 ```
 
@@ -615,12 +620,14 @@ import { TransactionManagerTrackOptionsType } from '@multiversx/sdk-dapp/out/man
 
 const options: TransactionManagerTrackOptionsType = {
   disableToasts: false, // `false` by default
-  transactionsDisplayInfo: { // `undefined` by default
+  transactionsDisplayInfo: {
+    // `undefined` by default
     errorMessage: 'Failed adding stake',
     successMessage: 'Stake successfully added',
     processingMessage: 'Staking in progress'
   },
-  sessionInformation: { // `undefined` by default. Use to perform additional actions based on the session information
+  sessionInformation: {
+    // `undefined` by default. Use to perform additional actions based on the session information
     stakeAmount: '1000000000000000000000000'
   }
 };
@@ -697,7 +704,7 @@ Object.entries(state).forEach(([sessionKey, data]) => {
 
 ### 5. UI Components
 
-`sdk-dapp` needs to make use of visual elements for allowing the user to interact with some providers (like the ledger), or to display messages to the user (like idle states or toasts). These visual elements consitst of webcomponents hosted in the `@multiversx/sdk-dapp-ui` package. Thus, `sdk-dapp` does not hold any UI elements, just business logic that controls external components. We can consider two types of UI components: internal and public. They are differentiated by the way they are controlled: internal components are controlled by `sdk-dapp`'s signing or logging in flows, while public components should be controlled by the dApp.
+`sdk-dapp` needs to make use of visual elements for allowing the user to interact with some providers (like the ledger), or to display messages to the user (like idle states or toasts). These visual elements consist of webcomponents hosted in the `@multiversx/sdk-dapp-ui` package. Thus, `sdk-dapp` does not hold any UI elements, just business logic that controls external components. We can consider two types of UI components: internal and public. They are differentiated by the way they are controlled: internal components are controlled by `sdk-dapp`'s signing or logging in flows, while public components should be controlled by the dApp.
 
 #### 5.1 Public components
 
@@ -709,12 +716,13 @@ The business logic for these components is served by a controller. The component
 import { TransactionsTableController } from '@multiversx/sdk-dapp/out/controllers/TransactionsTableController';
 import { MvxTransactionsTable } from '@multiversx/sdk-dapp-ui/react';
  
-const processedTransactions = await TransactionsTableController.processTransactions({
-        address,
-        egldLabel: network.egldLabel,
-        explorerAddress: network.explorerAddress,
-        transactions
-      });
+const processedTransactions =
+  await TransactionsTableController.processTransactions({
+    address,
+    egldLabel: network.egldLabel,
+    explorerAddress: network.explorerAddress,
+    transactions
+  });
 
 // and use like this:
 <MvxTransactionsTable transactions={processedTransaction} />;
@@ -807,7 +815,7 @@ If you prefer to use [npm link](https://docs.npmjs.com/cli/v11/commands/npm-link
   },
 ```
 
-Crome Redux DevTools are by default enabled to help you debug your application. You can find the extension in the Chrome Extensions store.
+Chrome Redux DevTools are by default enabled to help you debug your application. You can find the extension in the Chrome Extensions store.
 
 To build the library, run:
 
