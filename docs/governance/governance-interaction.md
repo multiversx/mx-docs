@@ -39,7 +39,7 @@ The starting & ending epochs should be an even-length hex string containing the 
 After issuing the proposal, there is a log event generated having the `proposal` identifier that will contain the following encoded topics:
 
 - `nonce` as encoded integer which uniquely identifies the proposals
-- `identifier` the provided 40 hex characters long identifier
+- `identifier` is the provided 40 hex characters long identifier
 - `start epoch` as encoded integer for the starting epoch
 - `end epoch` as encoded integer for the ending epoch
 
@@ -105,7 +105,7 @@ This is very useful whenever implementing liquid-staking-like smart contracts. T
 The maximum value for the staked value & the voting power for the liquid-staking contract is known by the governance contract, so it can not counterfeit the voting. If, due to a bug the liquid-staking contract allows, for example, for a user to vote with a larger quota, the liquid-staking contract will deplete its maximum allowance making other voting transactions (on his behalf) to fail.
 :::
 
-The user that delegated through a liquid-staking-like contract in order to vote on a proposal, sends a transaction to the liquid-staking-like contract. The smart contract then creates the GovernanceVoteThroughDelegationTransaction based on the users transaction inputs to forward the vote and the computed voting power to the governance contract.
+The user that delegated through a liquid-staking-like contract in order to vote on a proposal, sends a transaction to the liquid-staking-like contract. The smart contract then creates the GovernanceVoteThroughDelegationTransaction based on the user’s transaction inputs, forwarding the vote and the computed voting power to the governance contract.
 
 ```rust
 GovernanceVoteThroughDelegationTransaction {
@@ -363,7 +363,7 @@ The response will contain the following json definition where all fields are bas
     "<lost_proposal_fee>", (the amount of EGLD that the issuer loses if the proposal fails)
     "<min_quorum>", (the minimum percentage of total voting power required for a proposal to be considered valid)
     "<min_veto_threshold>", (the minimum percentage of veto votes needed to reject a proposal and slash its fee)
-    "<min_pass_threshold>", (the minimum percentage of YES votes required for a proposal to
+    "<min_pass_threshold>", (the minimum percentage of YES votes required for a proposal to pass)
     "<last_proposal_nonce>" (the nonce of the last created proposal)
   ]
 }
