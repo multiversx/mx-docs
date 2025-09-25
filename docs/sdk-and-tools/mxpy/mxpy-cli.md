@@ -961,7 +961,7 @@ mxpy governance get-proposal-info \
 ```
 
 
-## Token Mangement Operations
+## Token Management Operations
 
 User can now perform token management operations, such as issuing fungible tokens, issuing semi-fungible tokens, creating NFTs and more, directly via `mxpy`. For a full list of available commands type:
 
