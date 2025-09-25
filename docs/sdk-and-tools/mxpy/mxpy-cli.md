@@ -888,7 +888,9 @@ mxpy multisig -h
 #### Deploying a multisig contract
 
 ```sh
-mxpy multisig deploy --bytecode path/to/multisig.wasm \
+mxpy multisig deploy \
+    --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --bytecode path/to/multisig.wasm \
     --abi path/to/multisig.abi.json
     --quorum 2
     --board-members erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx
@@ -902,7 +904,8 @@ mxpy multisig deploy --bytecode path/to/multisig.wasm \
 ```sh
 mxpy multisig add-board-member --contract erd1qqqqqqqqqqqqqpgq2ukrsg73nwgu3uz6sp8vequuyrhtv2akd8ssyrg7wj \
     --abi path/to/multisig.abi.json
-    --board-member erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8
+    --board-member erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8 \
+    --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --proxy=https://devnet-gateway.multiversx.com \
     --gas-limit 10000000 \
     --send
@@ -931,6 +934,7 @@ mxpy governance propose \
     --commit-hash 30118901102b0bef11d675f4327565ae5246eeb5 \
     --start-vote-epoch 1000 \
     --end-vote-epoch 1010 \
+    --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --proxy=https://devnet-gateway.multiversx.com \
     --gas-limit 100000000 \
     --send
@@ -942,6 +946,7 @@ mxpy governance propose \
 mxpy governance vote \
     --proposal-nonce 1 \
     --vote yes \
+    --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
     --proxy=https://devnet-gateway.multiversx.com \
     --gas-limit 100000000 \
     --send
@@ -953,4 +958,49 @@ mxpy governance vote \
 mxpy governance get-proposal-info \
     --proposal-nonce 1 \
     --proxy=https://devnet-gateway.multiversx.com
+```
+
+
+## Token Mangement Operations
+
+User can now perform token management operations, such as issuing fungible tokens, issuing semi-fungible tokens, creating NFTs and more, directly via `mxpy`. For a full list of available commands type:
+
+```sh
+mxpy token -h
+```
+
+#### Issue a fungible token
+
+```sh
+mxpy token issue-fungible \
+    --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --token-name test --token-ticker TEST \
+    --initial-supply 1000000000000 \
+    --num-decimals 6 \
+    --proxy=https://devnet-gateway.multiversx.com \
+    --send
+```
+
+#### Pause a token
+
+```sh
+mxpy token pause \
+    --token-identifier TEST-123456 \
+    --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --proxy=https://devnet-gateway.multiversx.com \
+    --send
+```
+
+#### Set special roles on fungible tokens
+
+```sh
+mxpy token set-special-role-fungible \
+    --token-identifier TEST-123456 \
+    --user erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx \
+    --local-mint \
+    --local-burn \
+    --esdt-transfer-role \
+    --pem ~/multiversx-sdk/testwallets/latest/users/alice.pem \
+    --proxy=https://devnet-gateway.multiversx.com \
+    --send
 ```
