@@ -123,11 +123,12 @@ cd sovereignBridge
     deploySovereignWithCrossChainContracts sov
     ```
 
-    :::info
-    `deploySovereignWithCrossChainContracts` command will:
-    - deploy all main chain smart contracts and update sovereign configs
-    - deploy sovereign nodes and the main chain observer
-    - `sov` is the prefix for ESDT tokens in the sovereign chain - it can be changed to any string consisting of 1-4 lowercase alphanumeric characters
+   :::info
+   `deploySovereignWithCrossChainContracts` command will:
+    - deploy all smart contracts on the main chain and update the sovereign chain configuration
+    - set up sovereign nodes and deploy the main chain observer
+    - use `sov` as the default prefix for ESDT tokens on the sovereign chain  
+      (can be changed to any 1–4 character lowercase alphanumeric string; **must be unique across all deployed sovereign chains**)
     - if no prefix is provided, a random one will be generated
     :::
 
