@@ -313,7 +313,7 @@ Once the development server is up and running, seeing the _Template dApp_ screen
 
 You will log in using the wallet created [previously](./your-first-dapp.md#create-wallet).
 
-To do this, you will press **Connect** button and then choose **Web Wallet** option.
+To do this, you will press **Connect** button and then choose **MultiversX Web Wallet** option.
 
 ![img](/developers/tutorial/wallet_connect.png)
 
@@ -335,7 +335,7 @@ Click the **Ping** button and you will be redirected to the authentication page 
 
 A new transaction will be created, and you will be asked to confirm it. This transaction transfers the balance from your wallet to the smart contract address. Those funds will be locked for a specified period of time. Pay attention to the data field, where you call the smart contract function `ping`.
 
-After you confirm the transaction, a success message will appear and the funds are locked. You can view the transaction shown in the image [here](https://devnet-explorer.multiversx.com/transactions/af85e8a26f78f1a26d03377b85bd611b218d5e864d5c8788121beb74a9972aee).
+After you confirm the transaction, a success message will appear and the funds are locked. You can view the transaction shown in the image [here](https://devnet-explorer.multiversx.com/transactions/e52c0425bb3d004831706fa52cd83c463475fc69a8052951812eef4ee9e57bdf).
 
 ![img](/developers/tutorial/success_tx.png)
 You can see **the amount of time** you will have to wait until you can **Pong**.
@@ -350,7 +350,7 @@ After the time interval has passed, you can claim the funds by clicking the **Po
 
 Another blockchain transaction will wait to be processed and again you will be asked to confirm it. This time the amount will be zero, as you only have to invoke the `pong` function (specified in the _data_ field).
 
-Once the transaction is complete, a **success** message will appear, and your funds will be returned to your wallet. You can view the transaction shown in the image [here](https://devnet-explorer.multiversx.com/transactions/3959fb90f08265465cf7c87314ff595357e984d636b023fa530a93733d0c3d6e).
+Once the transaction is complete, a **success** message will appear, and your funds will be returned to your wallet. You can view the transaction shown in the image [here](https://devnet-explorer.multiversx.com/transactions/f98c86677b9d62da969afbc1208d073029e3190e5486f70dc057863e1430e7d1).
 
 ![img](/developers/tutorial/pong_tx.png)
 
