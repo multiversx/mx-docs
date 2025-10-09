@@ -80,7 +80,7 @@ cd sovereignBridge
     # Owner Configuration
     WALLET="~/wallet.pem"
 
-    # Network Configuration
+    # Main Chain Constants
     MAIN_CHAIN_ELASTIC=https://testnet-index.multiversx.com
     PROXY = https://testnet-gateway.multiversx.com
     CHAIN_ID = T
@@ -115,7 +115,7 @@ cd sovereignBridge
     ```
    
     :::info
-    After running this command wait until the observer is fully synchronized.
+    After running this command, one should wait until the observer is fully synchronized.
     :::
 
 6. Deploy all cross-chain contracts on main chain and deploy Sovereign Chain with all required services:
@@ -128,7 +128,7 @@ cd sovereignBridge
     - deploy all smart contracts on the main chain and update the sovereign chain configuration
     - set up sovereign nodes and deploy the main chain observer
     - use `sov` as the default prefix for ESDT tokens on the sovereign chain  
-      (can be changed to any 1–4 character lowercase alphanumeric string; **must be unique across all deployed sovereign chains**)
+      (can be changed to any 1–4 character lowercase alphanumeric string and **must be unique across all deployed sovereign chains**)
     - if no prefix is provided, a random one will be generated
     :::
 
