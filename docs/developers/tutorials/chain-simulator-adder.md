@@ -5,20 +5,22 @@ title: Chain Simulator in Adder - SpaceCraft interactors
 
 [comment]: # (mx-abstract)
 
-This tutorial will guide you to interact with **Chain Simulator** using the SpaceCraft interactors in _Adder_ smart contract. 
+This tutorial will guide you to interact with **Chain Simulator** using the SpaceCraft interactors in _Adder_ smart contract.
 
 [comment]: # (mx-context-auto)
 
 ## Introduction
 
-[Chain Simulator](../../sdk-and-tools/chain-simulator.md) mimics the functionality of a local blockchain test network. It offers a convenient, faster, and realistic way to test smart contracts. 
+[Chain Simulator](../../sdk-and-tools/chain-simulator.md) mimics the functionality of a local blockchain test network. It offers a convenient, faster, and realistic way to test smart contracts.
 
 [SpaceCraft interactor](../meta/interactor/interactors-overview.md) allows testing any complex scenario defined in a smart contract using **Chain Simulator**. Rather than going through the full setup of a local testnet, you can get straight to developing and debugging in a streamlined environment. This tool handles the setup details so you can focus on what matters most: **building and testing your contracts**.
 
 :::important
 Before we dive in and explore how easy it can be, make sure you have the following:
-- `stable` Rust version `≥ 1.78.0` (install via [rustup](https://docs.multiversx.com/sdk-and-tools/troubleshooting/rust-setup/#without-mxpy)): 
-- `multiversx-sc-meta` version `≥ 0.54.0` (cargo install [multiversx-sc-meta](https://docs.multiversx.com/developers/meta/sc-meta-cli/#introduction))
+
+- `stable` Rust version `≥ 1.85.0` (install via [rustup](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta)):
+- `multiversx-sc-meta` version `≥ 0.54.0` (cargo install [multiversx-sc-meta](/docs/developers/meta/sc-meta-cli.md))
+
 :::
 
 [comment]: # (mx-context-auto)
@@ -54,7 +56,7 @@ After running the command, you’ll see that the contract `my-adder` has been ge
 
 Our main focus will be the `interactor` directory. Let’s take a closer look:
 
-The directory that makes the connection with Chain Simulator contains the following structures: 
+The directory that makes the connection with Chain Simulator contains the following structures:
 
 ```bash
 .
@@ -84,10 +86,11 @@ gateway_uri = 'http://localhost:8085'
 ```
 
 You can customize two settings in the configuration:
+
 - **Type of blockchain**;
 - **Gateway URI**.
   
-To use a simulator for your blockchain, set `chain_type` as shown in the example above. 
+To use a simulator for your blockchain, set `chain_type` as shown in the example above.
 
 By default, the simulator runs on `http://localhost:8085`. However, depending on your Docker image settings, the simulator's URI **might have a different port or name**.
 
@@ -96,6 +99,7 @@ Make sure to set both `chain_type` and `gateway_uri` for the interactor to work.
 :::
 
 The configuration is parsed by `basic_interactor_config.rs`. This file contains **two** functions that will be important for interacting with Chain Simulator:
+
 - `use_chain_simulator()`: returns if the chain type is real or simulator;
 - `chain_simulator_config()`: initialize the proper configuration for simulator environment; this function is useful for **continuous integration tests**.
 
@@ -172,11 +176,12 @@ pub async fn new(config: Config) -> Self {
 }
 ```
 
-Let's find out what is mandatory for initializing the Chain Simulator interactor. 
+Let's find out what is mandatory for initializing the Chain Simulator interactor.
 
 ```rust
 let adder_owner_address = interactor.register_wallet(test_wallets::heidi()).await;
 ```
+
 Every time you initialize an interactor, you’ll need to register a wallet. When a wallet is registered in the Chain Simulator, its associated account is automatically credited with a generous amount of EGLD. This way, you don’t have to worry about running out of tokens while testing!
 
 :::tip
@@ -190,13 +195,14 @@ Whenever the Chain Simulator stops, the account will be dissolved.
 ```rust
 interactor.generate_blocks_until_epoch(1).await.unwrap();
 ```
+
 Node enables `ESDTSystemSCAddress` in **epoch number one**. If you want to use functionality like issuing or minting tokens, it is necessary to generate blocks until the simulator chain reaches **epoch number one**.
 
 [comment]: # (mx-context-auto)
 
 ## Step 4: Create tests that run on Chain Simulator
 
-One of the best parts about using the Chain Simulator with your interactor is that it lets you create **continuous integration tests in an environment that mirrors the real blockchain**. 
+One of the best parts about using the Chain Simulator with your interactor is that it lets you create **continuous integration tests in an environment that mirrors the real blockchain**.
 
 `tests/` holds all your test suites, where you are able to verify your contract’s behaviour effectively.
 
@@ -277,6 +283,7 @@ async fn simulator_adder_test() {}
 ### 1. Deploy the contract
 
 **Deploy** on Chain Simulator _MyAdder_ contract which sets the initial sum with **zero**.
+
 ```rust
 use basic_interactor::{Config, MyAdderInteract};
 
@@ -369,6 +376,7 @@ async fn simulator_upgrade_test() {
 [comment]: # (mx-context-auto)
 
 ### 5. Unauthorized Upgrade
+
 Attempt to upgrade the contract with an unauthorized user to confirm that it results in a failed transaction. To ensure no changes occur, you need to query the storage again to check that the number remains unchanged.
 
 ```rust
@@ -417,6 +425,7 @@ async fn simulator_upgrade_test() {
 [comment]: # (mx-context-auto)
 
 ### Install
+
 To run the test provided, you will need to install the Docker image that includes the Chain Simulator.
 
 ```bash
@@ -427,21 +436,26 @@ Successfully pulled the latest Chain Simulator image.
 
 :::note
 If you encounter the following error while installing:
+
 ```bash
 Attempting to install prerequisites for the Chain Simulator...
 Error: Failed to execute command: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
 ```
 
 You will need to run the command with root privileges due to Docker usage:
+
 ```bash
 my-adder/interactor$ sudo sc-meta cs install
 ```
 
 If you get this error:
+
 ```bash
 sudo: sc-meta: command not found
 ```
+
 You can find the sc-meta path and choose one of these solutions:
+
 ```bash
 my-adder/interactor$ which sc-meta
 my-path/.cargo/bin/sc-meta
@@ -449,9 +463,11 @@ my-path/.cargo/bin/sc-meta
 
 1. Add the sc-meta path to root privileges:
 2. Run sc-meta directly using the full path:
+
 ```bash
 sudo my-path/.cargo/bin/sc-meta cs install
 ```
+
 :::
 
 [comment]: # (mx-context-auto)
@@ -459,6 +475,7 @@ sudo my-path/.cargo/bin/sc-meta cs install
 ### Start
 
 Once you’ve successfully installed the Docker image, you can start the Chain Simulator.
+
 ```bash
 my-adder/interactor$ sudo my-path/.cargo/bin/sc-meta cs start
 Attempting to start the Chain Simulator...
@@ -477,6 +494,7 @@ INFO [2024-11-11 13:09:15.699]   updated config value                     file =
 [comment]: # (mx-context-auto)
 
 ### Run
+
 While Chain Simulator is running, open a new terminal window in parallel. In this new terminal, you will run the test provided in [Step 4](./chain-simulator-adder.md#step-4-create-tests-that-run-on-chain-simulator).
 
 ```bash
@@ -489,17 +507,22 @@ test simulator_upgrade_test ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.09s
 ```
+
 [comment]: # (mx-context-auto)
 
 ### Stop
+
 In the **same** terminal window you ran the tests, **stop** Chain Simulator using the next command:
+
 ```bash
 my-adder/interactor$ sc-meta cs stop
 Attempting to close the Chain Simulator...
 Successfully stopped the Chain Simulator.
 ```
+
 :::note
 If you encounter the following error while stopping:
+
 ```bash
 Attempting to close the Chain Simulator...
 Error: Failed to execute command: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock

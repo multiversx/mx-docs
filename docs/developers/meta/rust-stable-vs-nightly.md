@@ -1,5 +1,5 @@
 ---
-id: rust-nightly
+id: rust-stable-vs-nightly
 title: Stable vs. Nightly Rust
 ---
 
@@ -17,22 +17,28 @@ Before this version, nightly Rust was required.
 
 For everything after v0.50.0 we recommend running the latest stable version of Rust. Older versions have had compatibility issues with certain framework dependencies, on certain versions of the compiler.
 
-Nightly Rust is still allowed, but not recommended. We will still be supporting nightly builds and running continuous integration on `nightly-2024-05-22`.
-
 Also, everything on versions older than v0.50.0 needs to run on nightly Rust.
 
-So, to summarize:
-- Before `v0.50`: `nightly-2023-12-11` and `nightly-2024-05-22` are both known to be running fine;
-- On `v0.50` (use `v0.50.6`): any version of `stable` Rust;
-- Starting with `v0.51`: `stable`, Rust >= 1.78 required.
+:::important
+
+- For Versions Prior to `v0.50`:
+  - **Requirement**: A specific nightly build is necessary.
+  - **Known Working Builds**:`nightly-2023-12-11` and `nightly-2024-05-22` are confirmed to run correctly.
+- For Versions `v0.50` through `v0.57`:
+  - **Requirement**: The **stable channel** must be used, requiring a Rust version that is **greater than or equal** to `1.78` and **less than or equal** to `1.86`.
+- For Version `v0.58` and Higher:
+  - **Requirement**: The **stable channel** must be used, requiring a **minimum** Rust version of `1.78` or newer.
+
+:::
 
 [comment]: # (mx-context-auto)
 
-## Why Nighly for the older versions?
+## Why Nightly for the older versions?
 
 There were several nightly features that the framework was using, which we had hoped to see stabilized sooner.
 
 These are of little relevance to the average developer, but for the record, let's mention a few of them and how we managed to circumvent their usage:
+
 - `never_type` - avoided by using slightly different syntax;
 - `auto_traits` and `negative_impls` - avoided by redesigning the `CodecFrom`/`TypeAbiFrom` trait systems;
 - `generic_const_exprs` - replaced with massive amounts of macros;

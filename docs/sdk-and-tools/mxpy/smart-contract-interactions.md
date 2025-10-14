@@ -34,8 +34,7 @@ We're going to use [**mxpy**](/sdk-and-tools/mxpy/mxpy-cli) to deploy the contra
 
 ### Rust
 
-Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](/sdk-and-tools/troubleshooting/rust-setup). They are required to build smart contracts.
-
+Install **Rust** and [**sc-meta**](/developers/meta/sc-meta) as depicted [here](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta). They are required to build smart contracts.
 
 ## Deploy & Upgrade
 
@@ -139,6 +138,7 @@ mxpy facilitates us with some encoding conventions, including:
 - The values **true** or **false** are automatically converted to **boolean** values
 - Values that are identified as **numbers** are hex encoded by default
 - Arguments like **0x...** are left unchanged, as they are interpreted as already encoded hex values
+
   :::
 
 So, in case of our **myNonPayableEndpoint** interaction, we can write it like so:

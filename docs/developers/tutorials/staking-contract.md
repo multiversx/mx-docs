@@ -20,8 +20,8 @@ If you find anything not answered here, feel free to ask further questions on th
 :::important
 Before starting this tutorial, make sure you have the following:
 
-- `stable` **Rust** version `≥ 1.83.0` (install via [rustup](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
-- `sc-meta` (install [multiversx-sc-meta](/docs/sdk-and-tools/troubleshooting/rust-setup.md#installing-rust-and-sc-meta))
+- `stable` **Rust** version `≥ 1.85.0` (install via [rustup](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta))
+- `sc-meta` (install [multiversx-sc-meta](/docs/developers/meta/sc-meta-cli.md))
 
 :::
 
