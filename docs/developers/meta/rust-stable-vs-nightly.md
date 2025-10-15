@@ -19,17 +19,32 @@ For everything after v0.50.0 we recommend running the latest stable version of R
 
 Also, everything on versions older than v0.50.0 needs to run on nightly Rust.
 
-:::important
-
-- For Versions Prior to `v0.50`:
-  - **Requirement**: A specific nightly build is necessary.
-  - **Known Working Builds**:`nightly-2023-12-11` and `nightly-2024-05-22` are confirmed to run correctly.
-- For Versions `v0.50` through `v0.57`:
-  - **Requirement**: The **stable channel** must be used, requiring a Rust version that is **greater than or equal** to `1.78` and **less than or equal** to `1.86`.
-- For Version `v0.58` and Higher:
-  - **Requirement**: The **stable channel** must be used, requiring a **minimum** Rust version of `1.78` or newer.
-
-:::
+<table>
+   <thead>
+      <tr>
+         <th>Application Version</th>
+         <th>Required Rust Channel</th>
+         <th>Version Requirements</th>
+      </tr>
+   </thead>
+   <tbody class="table-center-content">
+      <tr>
+         <td>Prior to `v0.50`</td>
+         <td>Nightly</td>
+         <td>`nightly-2023-12-11` or `nightly-2024-05-22`</td>
+      </tr>
+      <tr>
+         <td>`v0.50` to `v0.57`</td>
+         <td>Stable</td>
+         <td>≥`1.78` and ≤`1.86`</td>
+      </tr>
+      <tr>
+         <td>`v0.58` and Higher</td>
+         <td>Stable</td>
+         <td>≥`1.85`</td>
+      </tr>
+   </tbody>
+</table>
 
 [comment]: # (mx-context-auto)
 
