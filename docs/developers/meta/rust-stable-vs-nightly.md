@@ -34,14 +34,19 @@ Also, everything on versions older than v0.50.0 needs to run on nightly Rust.
          <td>`nightly-2023-12-11` or `nightly-2024-05-22`</td>
       </tr>
       <tr>
-         <td>`v0.50` to `v0.57`</td>
+         <td>`v0.50` to `v0.56`</td>
          <td>Stable</td>
          <td>≥`1.78` and ≤`1.86`</td>
       </tr>
       <tr>
+         <td>`v0.57`</td>
+         <td>Stable</td>
+         <td>≥`1.83` and ≤`1.86`</td>
+      </tr>
+      <tr>
          <td>`v0.58` and Higher</td>
          <td>Stable</td>
-         <td>≥`1.85`</td>
+         <td>≥`1.83`</td>
       </tr>
    </tbody>
 </table>
