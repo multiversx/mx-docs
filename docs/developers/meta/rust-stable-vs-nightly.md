@@ -35,21 +35,27 @@ Also, everything on versions older than v0.50.0 needs to run on nightly Rust.
       </tr>
       <tr>
          <td>`v0.50` to `v0.56`</td>
-         <td>Stable</td>
+         <td>**Stable (recommended)** or Nightly</td>
          <td>≥`1.78` and ≤`1.86`</td>
       </tr>
       <tr>
          <td>`v0.57`</td>
-         <td>Stable</td>
+         <td>**Stable (recommended)** or Nightly</td>
          <td>≥`1.83` and ≤`1.86`</td>
       </tr>
       <tr>
          <td>`v0.58` and Higher</td>
-         <td>Stable</td>
-         <td>≥`1.83`</td>
+         <td>**Stable (recommended)** or Nightly</td>
+         <td>≥`1.83`*</td>
       </tr>
    </tbody>
 </table>
+
+\* Starting with Rust version `1.89` and higher, there are known runtime issues when using **wasmer 6.0** (`wasmer-experimental`) exclusively on the **Linux platform**.
+
+:::note
+If you are using **wasmer 6.0** on Linux, we recommend pinning your Rust version below `1.89`.
+:::
 
 [comment]: # (mx-context-auto)
 
