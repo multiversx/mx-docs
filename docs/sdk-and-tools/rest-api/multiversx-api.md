@@ -38,7 +38,7 @@ More details on how to get your private endpoint can be found [here](https://doc
 
 High-performance infrastructure layer purpose-built for the MultiversX ecosystem.
 
-Low prices, high limits for API, Gateway, Elastic Search, Event Notifier, and many more!
+Affordable plans, high limits for API, Gateway, Elastic Search, Event Notifier, and many more!
 
 [https://kepler.projectx.mx](https://kepler.projectx.mx)
 
