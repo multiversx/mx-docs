@@ -143,7 +143,7 @@ const sidebars = {
                       "developers/meta/sc-config",
                       "developers/meta/sc-meta-cli",
                       "developers/meta/sc-allocator",
-                      "developers/meta/rust-stable-vs-nightly",
+                      "developers/meta/rust-version",
                     ],
                   },
                   {

@@ -1,6 +1,6 @@
 ---
-id: rust-stable-vs-nightly
-title: Stable vs. Nightly Rust
+id: rust-version
+title: Rust Version
 ---
 
 [comment]: # (mx-abstract)
