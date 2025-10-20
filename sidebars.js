@@ -202,6 +202,7 @@ const sidebars = {
                 items: [
                   "sdk-and-tools/mxpy/installing-mxpy",
                   "sdk-and-tools/mxpy/mxpy-cli",
+                  "sdk-and-tools/mxpy/smart-contract-interactions",
                 ],
               },
               {
