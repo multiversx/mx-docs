@@ -1,6 +1,6 @@
 ---
-id: rust-nightly
-title: Stable vs. Nightly Rust
+id: rust-version
+title: Rust Version
 ---
 
 [comment]: # (mx-abstract)
@@ -17,22 +17,54 @@ Before this version, nightly Rust was required.
 
 For everything after v0.50.0 we recommend running the latest stable version of Rust. Older versions have had compatibility issues with certain framework dependencies, on certain versions of the compiler.
 
-Nightly Rust is still allowed, but not recommended. We will still be supporting nightly builds and running continuous integration on `nightly-2024-05-22`.
-
 Also, everything on versions older than v0.50.0 needs to run on nightly Rust.
 
-So, to summarize:
-- Before `v0.50`: `nightly-2023-12-11` and `nightly-2024-05-22` are both known to be running fine;
-- On `v0.50` (use `v0.50.6`): any version of `stable` Rust;
-- Starting with `v0.51`: `stable`, Rust >= 1.78 required.
+<table>
+   <thead>
+      <tr>
+         <th>Application Version</th>
+         <th>Required Rust Channel</th>
+         <th>Version Requirements</th>
+      </tr>
+   </thead>
+   <tbody class="table-center-content">
+      <tr>
+         <td>Prior to `v0.50`</td>
+         <td>Nightly</td>
+         <td>`nightly-2023-12-11` or `nightly-2024-05-22`</td>
+      </tr>
+      <tr>
+         <td>`v0.50` to `v0.56`</td>
+         <td>**Stable (recommended)** or Nightly</td>
+         <td>≥`1.78` and ≤`1.86`</td>
+      </tr>
+      <tr>
+         <td>`v0.57`</td>
+         <td>**Stable (recommended)** or Nightly</td>
+         <td>≥`1.83` and ≤`1.86`</td>
+      </tr>
+      <tr>
+         <td>`v0.58` and Higher</td>
+         <td>**Stable (recommended)** or Nightly</td>
+         <td>≥`1.83`*</td>
+      </tr>
+   </tbody>
+</table>
+
+\* Starting with Rust version `1.89` and higher, there are known runtime issues when using **wasmer 6.0** (`wasmer-experimental`) exclusively on the **Linux platform**.
+
+:::note
+If you are using **wasmer 6.0** on Linux, we recommend pinning your Rust version below `1.89`.
+:::
 
 [comment]: # (mx-context-auto)
 
-## Why Nighly for the older versions?
+## Why Nightly for the older versions?
 
 There were several nightly features that the framework was using, which we had hoped to see stabilized sooner.
 
 These are of little relevance to the average developer, but for the record, let's mention a few of them and how we managed to circumvent their usage:
+
 - `never_type` - avoided by using slightly different syntax;
 - `auto_traits` and `negative_impls` - avoided by redesigning the `CodecFrom`/`TypeAbiFrom` trait systems;
 - `generic_const_exprs` - replaced with massive amounts of macros;

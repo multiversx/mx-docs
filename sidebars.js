@@ -76,6 +76,7 @@ const sidebars = {
                 label: "Rust Development Framework",
                 items: [
                   "developers/smart-contracts",
+                  "developers/toolchain-setup",
                   {
                     type: "category",
                     label: "Rust Developer reference",
@@ -142,7 +143,7 @@ const sidebars = {
                       "developers/meta/sc-config",
                       "developers/meta/sc-meta-cli",
                       "developers/meta/sc-allocator",
-                      "developers/meta/rust-nightly",
+                      "developers/meta/rust-version",
                     ],
                   },
                   {
@@ -333,7 +334,7 @@ const sidebars = {
                 label: "Troubleshooting",
                 items: [
                   "sdk-and-tools/troubleshooting/troubleshooting",
-                  "sdk-and-tools/troubleshooting/rust-setup",
+                  "sdk-and-tools/troubleshooting/fix-rust-setup",
                   "sdk-and-tools/troubleshooting/ide-setup",
                   "sdk-and-tools/troubleshooting/multiplatform",
                 ],
