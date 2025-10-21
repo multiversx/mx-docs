@@ -380,6 +380,7 @@ Below you can find the fields involved when creating an NFT or SFT.
 
 - <u>Mandatory</u> field that represents the URL to a [supported](#supported-media-types) media file ending with the file extension as described in the [example](#example) below
 - Field should contain the `Uniform Resource Identifier`
+- If you are using IPFS, we strongly recommend not using the gateway URL of the provider (Pinata Cloud, Infura, Cloudflare, etc.) but rather the default IPFS one (https://ipfs.io/ipfs/ [ipfsCID]). This ensures that the media remains available even if the provider goes offline, and other gateways can be used in the future.
 
 <u>Note</u>: As a best practice, we recommend storing the files for media & extra metadata (from attributes field) within same folder on your storage provider, ideally IPFS. Also, in order to have a thumbnail generated for the uploaded file the size of the file should be less or equal to 64MB.
 
