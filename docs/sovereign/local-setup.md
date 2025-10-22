@@ -80,7 +80,7 @@ cd sovereignBridge
     # Owner Configuration
     WALLET="~/wallet.pem"
 
-    # Main Chain Constants
+    # Main Chain network config
     MAIN_CHAIN_ELASTIC=https://testnet-index.multiversx.com
     PROXY = https://testnet-gateway.multiversx.com
     CHAIN_ID = T
