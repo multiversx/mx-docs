@@ -21,7 +21,7 @@ After each change to the interactions file, we need to repeat the source command
 
 Let's take the following example:
 
-1. We want to deploy a new SC on the Devnet.
+1. We want to deploy a new smart contract on the Devnet.
 2. We then need to upgrade the contract, to make it payable.
 3. We call an endpoint without transferring any assets.
 4. We make an `ESDTTransfer`, in order to call a payable endpoint.
@@ -88,7 +88,7 @@ After the transaction is sent, `mxpy` will output information like the **transac
 
 ## Upgrade
 
-Let's now suppose we need to make the contract **payable**, in case it needs to receive funds. We could redeploy the contract but that will mean two different contracts, and not to mention that we will lose any existing storage. For that, we can use the **upgrade** command, that replaces the existing SC bytecode with the newly built contract version.
+Let's now suppose we need to make the contract **payable**, in case it needs to receive funds. We could redeploy the contract but that will mean two different contracts, and not to mention that we will lose any existing storage. For that, we can use the **upgrade** command, that replaces the existing smart contract bytecode with the newly built contract version.
 
 :::caution
 It is import to handle data storage with caution when upgrading a smart contract. Data structure, especially for complex data types, must be preserved, otherwise the data may become corrupt.
