@@ -21,11 +21,11 @@ After each change to the interactions file, we need to repeat the source command
 
 Let's take the following example:
 
-1. We want to deploy a new smart contract on the Devnet.
-2. We then need to upgrade the contract, to make it payable.
-3. We call an endpoint without transferring any assets.
-4. We make an `ESDTTransfer`, in order to call a payable endpoint.
-5. We call a view function.
+1. We want to **deploy** a new smart contract on the Devnet.
+2. We then need to **upgrade** the contract, to make it payable.
+3. We **call** an endpoint without transferring any assets.
+4. We **transfer** ESDT, in order to call a payable endpoint.
+5. We call a **view** function.
 
 [comment]: # (mx-context-auto)
 
@@ -35,7 +35,7 @@ Before starting this tutorial, make sure you have the following:
 
 - [`mxpy`](/sdk-and-tools/mxpy/mxpy-cli). Follow the [installation guide](/sdk-and-tools/mxpy/installing-mxpy) - make sure to use the latest version available.
 - `stable` **Rust** version `≥ 1.83.0`. Follow the [installation guide](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta).
-- `sc-meta` (install [multiversx-sc-meta](/docs/developers/meta/sc-meta-cli.md)).
+- `sc-meta`. Follow the [installation guide](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta).
 
 [comment]: # (mx-context-auto)
 
@@ -58,14 +58,12 @@ Now, in order to deploy the contract, we use the special **deploy** function of 
 ```shell
 WALLET_PEM="~/my-wallet/my-wallet.pem"
 PROXY="https://devnet-gateway.multiversx.com"
-CHAIN_ID="D"
 
 deploySC() {
     mxpy --verbose contract deploy \
         --bytecode=${WASM_PATH} \
         --pem=${WALLET_PEM} \
-        --gas-limit=60000000 \
-        --proxy=${PROXY} --chain=${CHAIN_ID} \
+        --proxy=${PROXY} \
         --arguments $1 $2 \
         --send || return
 }
@@ -78,11 +76,11 @@ source devnet.snippets.sh
 deploySC arg1 arg2
 ```
 
-Now let's look at the structure of the interaction. It receives the path of the **wasm file**, where we previously built the contract. It also receives the path of the **wallet** (the PEM file), the **proxy URL** and the **chain ID**, where the contract will be deployed. Another important parameter is the **gas limit**, where we state the maximum amount of gas we are willing to spend with this transaction. Each transaction cost depends on its complexity and the amount of data storage it handles.
+Now let's look at the structure of the interaction. It receives the path of the **wasm file**, where we previously built the contract. It also receives the path of the **wallet** (the PEM file) and the **proxy URL** where the contract will be deployed.
 
 Other than this, we also have the **arguments** keyword, that allows us to pass in the required parameters. As we previously said, deploying a smart contract means that we run the **init** function, which may or may not request some parameters. In our case, the **init** function has two different arguments, and we pass them when calling the **deploy** function. We'll come back later in this section at how we can pass parameters in function calls.
 
-After the transaction is sent, `mxpy` will output information like the **transaction hash**, **data** and any other important information, based on the type of transaction. In case of a contract deployment, it will also output the newly deployed contract address.
+After the transaction is sent, `mxpy` will output information like the **transaction hash**, **data** and any other important information, based on the type of transaction. In case of a contract deployment, it will also output the **newly deployed contract address**.
 
 [comment]: # (mx-context-auto)
 
@@ -103,12 +101,13 @@ upgradeSC() {
     mxpy --verbose contract upgrade ${CONTRACT_ADDRESS} --metadata-payable \
         --bytecode=${WASM_PATH} \
         --pem=${WALLET_PEM} \
-        --gas-limit=60000000 \
-        --proxy=${PROXY} --chain=${CHAIN_ID} \
+        --proxy=${PROXY} \
         --arguments $1 $2 \
         --send || return
 }
 ```
+
+`CONTRACT_ADDRESS` is a placeholder value which value needs to be replaced with the address previously generated in the deploy action.
 
 Here we have 2 new different elements that we need to observe:
 
@@ -126,14 +125,13 @@ Let's suppose we want to call the following endpoint, that receives an address a
 #   $1 = FirstBigUintArgument
 #   $2 = SecondBigUintArgument
 THIRD_BIGUINT_ARGUMENT=0x0f4240
-ADDRESS_ARGUMENT=addr:erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3
+ADDRESS_ARGUMENT=erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3
 
 myNonPayableEndpoint() {
     address_argument="0x$(mxpy wallet bech32 --decode ${ADDRESS_ARGUMENT})"
     mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
-        --gas-limit=6000000 \
-        --proxy=${PROXY} --chain=${CHAIN_ID} \
+        --proxy=${PROXY} \
         --function="myNonPayableEndpoint" \
         --arguments $address_argument $1 $2 ${THIRD_BIGUINT_ARGUMENT}\
         --send || return
@@ -142,7 +140,7 @@ myNonPayableEndpoint() {
 
 So, what happens in this interaction and how do we call it?
 
-Besides the function and arguments parts, the snippet is more or less the same as when deploying or upgrading a contract. When calling a non payable function, we need to provide the endpoint's name as the function argument. As for the arguments, they have to be in the **same order** as in the smart contract, including when calling an endpoint that has a variable number of arguments. Now, for the sake of example, we provided the arguments in multiple ways.
+Besides the function and arguments parts, the snippet is more or less the same as when deploying or upgrading a contract. When calling a **non payable** function, we need to provide the **endpoint's name** as the function argument. As for the arguments, they have to be in the **same order** as in the smart contract, including when calling an endpoint that has a variable number of arguments. Now, for the sake of example, we provided the arguments in multiple ways.
 
 It is up to each developer to choose the layout he prefers, but a few points need to be underlined:
 
@@ -159,7 +157,7 @@ In our example we provide the address argument as a fixed argument. We then conv
 - We can use `str:` for encoding strings. For example: `str:MYTOKEN-123456`.
 - Blockchain addresses that start with `erd1` are automatically encoded, so there is no need to further hex encode them.
 - The values **true** or **false** are automatically converted to **boolean** values.
-- Values that are identified as **numbers** are hex encoded by default.
+- Values that are identified as **numbers** are hex encoded as `BigUint` values.
 - Arguments like `0x...` are left unchanged, as they are interpreted as already encoded hex values.
 
 :::
@@ -176,8 +174,7 @@ ADDRESS_ARGUMENT=addr:erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49
 myNonPayableEndpoint() {
     mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
-        --gas-limit=6000000 \
-        --proxy=${PROXY} --chain=${CHAIN_ID} \
+        --proxy=${PROXY} \
         --function="myNonPayableEndpoint" \
         --arguments ${ADDRESS_ARGUMENT} $1 $2 ${THIRD_BIGUINT_ARGUMENT}\
         --send || return
@@ -194,7 +191,7 @@ myNonPayableEndpoint 10000 100000
 Using unencoded values (for easier reading) would translate into:
 
 ```shell
-myNonPayableEndpoint erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3 10000 100000 1000000
+myNonPayableEndpoint addr:erd14nw9pukqyqu75gj0shm8upsegjft8l0awjefp877phfx74775dsq49swp3 10000 100000 1000000
 ```
 
 :::caution
@@ -213,20 +210,29 @@ Now let's take a look at the following example, where we want to call a payable 
 
 ```shell
 myPayableEndpoint() {
-    method_name=str:myPayableEndpoint
-    my_token=str:$1
+    token_identifier=$1
     token_amount=$2
     mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
-        --gas-limit=6000000 \
-        --proxy=${PROXY} --chain=${CHAIN_ID} \
-        --function="ESDTTransfer" \
-        --arguments $my_token $token_amount $method_name\
+        --proxy=${PROXY} \
+        --token-transfers $token_identifier $token_amount \
+        --function="myPayableEndpoint" \
         --send || return
 }
 ```
 
-As we can see, the way we call a **payable endpoint** is by calling an `ESDTTransfer` function (or any other function that transfer assets and supports contract calls) and providing the name of the method as an argument. The order of the arguments differs for each transfer function. In our case, we specify in the terminal the **token type** and **the amount of tokens** we want to transfer and then we provide as a **fixed input** what smart contract endpoint we want to call.
+To call a **payable endpoint**, we use the  `--token-transfer` flag, which requires two values:
+
+1. The token identifier.
+2. The amount.
+
+In our case, we specify in the terminal the **token identifier** and **the amount of tokens** we want to transfer.
+
+:::info
+When specifying the amount of tokens to transfer, the value must include the token's decimal precision.
+
+For example EGLD use 18 decimals. This means that if you want to transfer 1.5 EGLD, the amount value will be $1.5 \times 10^{18}$.
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -237,40 +243,22 @@ Now let's suppose we want to call an endpoint that accepts an NFT or an SFT as p
 ```shell
 ###PARAMS
 #   $1 = NFT/SFT Token Identifier,
-#   $2 = NFT/SFT Token Nonce,
-#   $3 = NFT/SFT Token Amount,
-#   $4 = Destination Address,
+#   $2 = NFT/SFT Token Amount,
 FIRST_BIGUINT_ARGUMENT=1000
 SECOND_BIGUINT_ARGUMENT=10000
-MY_WALLET_ADDRESS=erd1...
 
 myESDTNFTPayableEndpoint() {
-    method_name=str:myESDTNFTPayableEndpoint
-    sft_token=str:$1
-    sft_token_nonce=$2
-    sft_token_amount=$3
-    destination_address=addr:$4
-    mxpy --verbose contract call ${MY_WALLET_ADDRESS} \
+    sft_token_identifier=$1
+    sft_token_amount=$2
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
-        --gas-limit=100000000 \
-        --proxy=${PROXY} --chain=${CHAIN_ID} \
-        --function="ESDTNFTTransfer" \
-        --arguments $sft_token \
-                    $sft_token_nonce \
-                    $sft_token_amount \
-                    $destination_address \
-                    $method_name \
-                    ${FIRST_BIGUINT_ARGUMENT} \
-                    ${SECOND_BIGUINT_ARGUMENT} \
+        --proxy=${PROXY} \
+        --token-transfers $sft_token_identifier $sft_token_amount \
+        --function="myESDTNFTPayableEndpoint" \
+        --arguments ${FIRST_BIGUINT_ARGUMENT} ${SECOND_BIGUINT_ARGUMENT} \
         --send || return
 }
 ```
-
-First of all, to call this type of transfer function we need to pass the receiver address the same as the sender address. So in this example, `MY_WALLET_ADDRESS` is the caller's address of the PEM wallet used.
-
-Now, like in the case of `ESDTTransfer`, the name of the called function is `ESDTNFTTransfer`. All the other required data is passed as arguments (including the destination contract's address and the endpoint).
-
-In case of this single NFT/SFT transfer, we first pass the **token** (identifier, nonce and amount) and then we pass the **destination address** and the **name of the endpoint**. In the end we pass whatever parameters the indicated method needs.
 
 [comment]: # (mx-context-auto)
 
@@ -279,59 +267,36 @@ In case of this single NFT/SFT transfer, we first pass the **token** (identifier
 In case we need to call an endpoint that accepts multiple tokens (let's say for example 2 fungible tokens and an NFT). Let's take a look at the following example:
 
 ```shell
-
 ###PARAMS
-#   $1 = Destination Address,
-#   $2 = First Token Identifier,
-#   $3 = First Token Amount,
-#   $4 = Second Token Identifier,
-#   $5 = Second Token Amount,
+#   $1 = First Token Identifier,
+#   $2 = First Token Amount,
+#   $3 = Second Token Identifier,
+#   $4 = Second Token Amount,
+#   $5 = Third Token Identifier,
 #   $6 = Third Token Identifier,
-#   $7 = Third Token Nonce,
-#   $8 = Third Token Identifier,
 FIRST_BIGUINT_ARGUMENT=1000
 SECOND_BIGUINT_ARGUMENT=10000
 
 myMultiESDTNFTPayableEndpoint() {
-    method_name=str:myMultiESDTPayableEndpoint
-    destination_address=addr:$1
-    number_of_tokens=3
-    first_token=str:$2
-    first_token_nonce=0
-    first_token_amount=$3
-    second_token=str:$4
-    second_token_nonce=0
-    second_token_amount=$5
-    third_token=str:$6
-    third_token_nonce=$7
-    third_token_amount=$8
+    first_token_identifier=$1
+    first_token_amount=$2
+    second_token_identifier=$3
+    second_token_amount=$4
+    third_token_identifier=$5
+    third_token_amount=$6
 
-    mxpy --verbose contract call $user_address \
+    mxpy --verbose contract call ${CONTRACT_ADDRESS} \
         --pem=${WALLET_PEM} \
-        --gas-limit=100000000 \
-        --proxy=${PROXY} --chain=${CHAIN_ID} \
-        --function="MultiESDTNFTTransfer" \
-        --arguments $destination_address \
-                    $number_of_tokens \
-                    $first_token \
-                    $first_token_nonce \
-                    $first_token_amount \
-                    $second_token \
-                    $second_token_nonce \
-                    $second_token_amount \
-                    $third_token \
-                    $third_token_nonce \
-                    $third_token_amount \
-                    $method_name \
-                    ${FIRST_BIGUINT_ARGUMENT} \
-                    ${SECOND_BIGUINT_ARGUMENT} \
+        --proxy=${PROXY} \
+        --token-transfers $first_token_identifier $first_token_amount \
+                        $second_token_identifier $second_token_amount \
+                        $third_token_identifier $third_token_amount \
+        --function="payable_nft_with_args" \
+        --arguments ${FIRST_BIGUINT_ARGUMENT} ${SECOND_BIGUINT_ARGUMENT} \
         --send || return
-}
 ```
 
 In this example, we call `myMultiESDTPayableEndpoint` endpoint, by transferring **3 different tokens**: the first two are fungible tokens and the last one is an NFT.
-
-The endpoint takes 2 BigUInt arguments. The layout of the snippet is almost the same as with `ESDTNFTTransfer` (including the fact that the sender is the same as the receiver) but has different arguments. We now pass the destination address first and the number of ESDT/NFT tokens that we want to sent. Then, for each sent token, we specify the identifier, the nonce (in our example 0 for the fungible tokens and a specific value for the NFT) and the amount. In the end, like with the `ESDTTransfer`, we pass the name of the method we want to call and the rest of the parameters of that specific method.
 
 :::tip
 More information about ESDT Transfers [here](/tokens/fungible-tokens/#transfers).
