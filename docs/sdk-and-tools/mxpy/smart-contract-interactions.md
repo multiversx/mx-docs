@@ -231,7 +231,7 @@ In our case, we specify in the terminal the **token identifier** and **the amoun
 :::info
 When specifying the amount of tokens to transfer, the value must include the token's decimal precision.
 
-For example EGLD use 18 decimals. This means that if you want to transfer 1.5 EGLD, the amount value will be $1.5 \times 10^{18}$.
+For example EGLD uses 18 decimals. This means that if you want to transfer 1.5 EGLD, the amount value will be $1.5 \times 10^{18}$.
 :::
 
 [comment]: # (mx-context-auto)
