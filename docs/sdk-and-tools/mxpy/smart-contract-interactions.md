@@ -140,7 +140,7 @@ myNonPayableEndpoint() {
 
 So, what happens in this interaction and how do we call it?
 
-Besides the function and arguments parts, the snippet is more or less the same as when deploying or upgrading a contract. When calling a **non payable** function, we need to provide the **endpoint's name** as the function argument. As for the arguments, they have to be in the **same order** as in the smart contract, including when calling an endpoint that has a variable number of arguments. Now, for the sake of example, we provided the arguments in multiple ways.
+Besides the function and arguments parts, the snippet is more or less the same as when deploying or upgrading a contract. When calling a **non payable** function, we need to provide the **endpoint's name** as the function argument. As for the arguments, they have to be in the **same order** as in the endpoint's signature. Now, for the sake of example, we provided the arguments in multiple ways.
 
 It is up to each developer to choose the layout he prefers, but a few points need to be underlined:
 
@@ -152,7 +152,7 @@ It is up to each developer to choose the layout he prefers, but a few points nee
 In our example we provide the address argument as a fixed argument. We then convert it to hexadecimal format (as it is in the bech32 format by default) and only after that we pass it as a parameter. As for the `BigUint` parameters, we provide the first two parameters directly in the terminal and the last one as a fixed argument, hexadecimal encoded.
 
 :::tip
-`mxpy` facilitates us with some encoding conventions, including:
+`mxpy` provides the following encoding conventions:
 
 - We can use `str:` for encoding strings. For example: `str:MYTOKEN-123456`.
 - Blockchain addresses that start with `erd1` are automatically encoded, so there is no need to further hex encode them.
@@ -273,7 +273,7 @@ In case we need to call an endpoint that accepts multiple tokens (let's say for 
 #   $3 = Second Token Identifier,
 #   $4 = Second Token Amount,
 #   $5 = Third Token Identifier,
-#   $6 = Third Token Identifier,
+#   $6 = Third Token Amount,
 FIRST_BIGUINT_ARGUMENT=1000
 SECOND_BIGUINT_ARGUMENT=10000
 
