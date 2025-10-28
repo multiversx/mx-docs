@@ -221,12 +221,21 @@ myPayableEndpoint() {
 }
 ```
 
-To call a **payable endpoint**, we use the  `--token-transfer` flag, which requires two values:
+To call a **payable endpoint**, we use the  `--token-transfer` argument, which requires two values:
 
 1. The token identifier.
 2. The amount.
 
 In our case, we specify in the terminal the **token identifier** and **the amount of tokens** we want to transfer.
+
+:::info
+The format for the token identifier changes based on the type of asset you are sending:
+
+- **ESDTs Tokens**: Use the **standard** Token Identifier.
+- **NFTs and SFTs**: Use the **extended** Token identifier format, which includes the token's nonce. The nonce must be hex-encoded.
+  - Example: `NFT-123456-0a` (where `0a` is the hex-encoded nonce).
+
+:::
 
 :::info
 When specifying the amount of tokens to transfer, the value must include the token's decimal precision.
