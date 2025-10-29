@@ -9,6 +9,16 @@ This page will guide you through the process of integrating the **sdk-js signing
 
 :::important
 Note that for most purposes, **we recommend using [sdk-dapp](https://github.com/multiversx/mx-sdk-dapp)** instead of integrating the signing providers on your own.
+It's recommended to start from one of the examples found here: 
+
+- React (example: [React Template Dapp](https://github.com/multiversx/mx-template-dapp))
+- React JS (example: [React JS Template Dapp](https://github.com/multiversx/mx-template-dapp-reactjs))
+- Angular (example: [Angular Template Dapp](https://github.com/multiversx/mx-template-dapp-angular))
+- Vue (example: [Vue Template Dapp](https://github.com/multiversx/mx-template-dapp-vue))
+- Any other JavaScript framework (example: [Solid.js Dapp](https://github.com/multiversx/mx-solidjs-template-dapp))
+- React Native (example: [React Native Dapp](https://github.com/multiversx/mx-template-dapp-react-native))
+- Next.js (example: [Next.js Dapp](https://github.com/multiversx/mx-template-dapp-nextjs))
+
 :::
 
 [comment]: # (mx-context-auto)
