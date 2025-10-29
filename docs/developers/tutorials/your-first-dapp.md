@@ -12,8 +12,8 @@ Let's build your first decentralized application(dApp) on the MultiversX Blockch
 :::important
 Before starting this tutorial, make sure you have the following:
 
-- `stable` Rust version `≥ 1.78.0` (install via [rustup](https://docs.multiversx.com/sdk-and-tools/troubleshooting/rust-setup/#without-mxpy))
-- `multiversx-sc-meta` (cargo install [multiversx-sc-meta](https://docs.multiversx.com/developers/meta/sc-meta-cli/#introduction))
+- `stable` Rust version `≥ 1.85.0` (install via [rustup](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta))
+- `multiversx-sc-meta` (cargo install [multiversx-sc-meta](/docs/developers/meta/sc-meta-cli.md))
 - `Node.js` with version `≥ 20`(guide [here](https://nodejs.org/en/download/package-manager))
 - `yarn` ([npm install --global yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) )
 

@@ -458,6 +458,10 @@ const config = {
             from: "/developers/log-events/system-delegation-events",
             to: "/developers/event-logs/system-delegation-events",
           },
+          {
+            from: "/developers/meta/rust-stable-vs-nightly",
+            to: "/developers/meta/rust-version",
+          },
         ],
         createRedirects(existingPath) {
           return undefined; // Return a falsy value: no redirect created

@@ -21,8 +21,9 @@ In order to make sure that the smart contract works as expected, there are at le
 In this tutorial we will focus on integration testing using the interactors made available by the SpaceCraft smart contract framework.
 
 ::::important Prerequisites
-- `stable` Rust version `1.78.0 or above` (install via [rustup](https://docs.multiversx.com/sdk-and-tools/troubleshooting/rust-setup/#without-mxpy)): 
-- `multiversx-sc-meta` version `0.50.0 or above` (cargo install [multiversx-sc-meta](https://docs.multiversx.com/developers/meta/sc-meta-cli/#introduction))
+
+- `stable` Rust version `1.78.0 or above` (install via [rustup](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta)):
+- `multiversx-sc-meta` version `0.50.0 or above` (cargo install [multiversx-sc-meta](/docs/developers/meta/sc-meta-cli.md))
 ::::
 
 [comment]: # (mx-context-auto)
@@ -110,7 +111,7 @@ sc-meta all snippets
 
 This command compiled the contract and generated a new folder called `interactor`. The interactor is by default a Rust CLI program that uses the smart contract proxy to send calls to the contract.
 
-Inside the source folder *(interactor/src)*, we should find the newly generated proxy of the contract *(proxy.rs)* and the `interactor_main.rs` file, which is the main file of the project. A *sc-config.toml* file has also been created (if not existent) containing the path of the proxy file. 
+Inside the source folder *(interactor/src)*, we should find the newly generated proxy of the contract *(proxy.rs)* and the `interactor_main.rs` file, which is the main file of the project. A *sc-config.toml* file has also been created (if not existent) containing the path of the proxy file.
 
 If we navigate to *interactor/src/interactor_main.rs*, inside the `main` function, we can find all the CLI command available to us:
 
@@ -170,7 +171,7 @@ By default, the testing environment is `devnet`, specified by the `GATEWAY` cons
 ```rust title=interactor_main.rs
 const GATEWAY: &str = sdk::blockchain::DEVNET_GATEWAY;
 ```
-Changing the value of this constant will change the testing environment for a quick setup (other options are `TESTNET_GATEWAY` and `MAINNET_GATEWAY`). 
+Changing the value of this constant will change the testing environment for a quick setup (other options are `TESTNET_GATEWAY` and `MAINNET_GATEWAY`).
 
 Each command has some waiting time and returns the result inside a variable in the function, but also prints it in the console for easy tracking.
 
@@ -267,11 +268,11 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 This setup can be used for extensive testing, but also as a tool for live deployment on mainnet, tracking and interaction.  In a multi-contract setup, one can, for example, create different modules for specific interactions with each contract and development environment and further structure all the interactions into different integration tests.
 
-Let’s take the example of the [DEX smart contract interactors](https://github.com/multiversx/mx-exchange-sc/tree/feat/unified/dex/interactor). Here, all the proxy files are organized in a different crate for easier access. 
+Let’s take the example of the [DEX smart contract interactors](https://github.com/multiversx/mx-exchange-sc/tree/feat/unified/dex/interactor). Here, all the proxy files are organized in a different crate for easier access.
 
 ![img](/img/dex_interactor_file_structure.jpeg)
 
-Furthermore, all the contracts that are part of the DEX flow have separate interaction modules, so we can easily keep track of the flow when writing complex tests. 
+Furthermore, all the contracts that are part of the DEX flow have separate interaction modules, so we can easily keep track of the flow when writing complex tests.
 
 This is the `energy_factory` file, containing only interactions with the `energy factory smart contract`, using the specific proxy and contract address:
 ```rust title=energy_factory.rs
@@ -302,7 +303,7 @@ pub(crate) async fn get_energy_amount_for_user(
 }
 ```
 
-After having implemented this structure, writing integration test is a smooth process, even though the logic gets complicated: 
+After having implemented this structure, writing integration test is a smooth process, even though the logic gets complicated:
 
 ```rust title=dex_interact.rs
 impl DexInteract {
@@ -354,7 +355,7 @@ pub mod integration_tests {
 }
 ```
 
-Organizing the code this way streamlines the process even further. Now, it is just a matter of using a different datatype or a different module in order to keep track of the various contracts and development environments and be able to rerun everything quickly if needed. 
+Organizing the code this way streamlines the process even further. Now, it is just a matter of using a different datatype or a different module in order to keep track of the various contracts and development environments and be able to rerun everything quickly if needed.
 
 [comment]: # (mx-context-auto)
 
