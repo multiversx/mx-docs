@@ -9,7 +9,7 @@ pagination_next: null
 
 ## Overview
 
-This guide walks you through handling common tasks using the MultiversX Javascript SDK (v14, latest stable version).
+This guide walks you through handling common tasks using the MultiversX Javascript SDK (v14, old stable version).
 
 :::important	
 This cookbook makes use of `sdk-js v14`. In order to migrate from `sdk-js v13.x` to `sdk-js v14`, please also follow [the migration guide](https://github.com/multiversx/mx-sdk-js-core/issues/576).	
