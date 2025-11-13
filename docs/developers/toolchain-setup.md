@@ -28,7 +28,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 Then, choose **Proceed with installation (default)**.
 
 :::tip
-Generally speaking, you should install Rust `v1.85.0` (stable channel) or later.
+Generally speaking, you should install Rust `v1.83.0` (stable channel) or later.
 :::
 
 ```bash
