@@ -5,7 +5,7 @@ title: Deploy a SC in 5 minutes - SpaceCraft interactors
 
 [comment]: # (mx-abstract)
 
-This short guide demonstrates how to deploy and interact with a smart contract on MultiversX using the SpaceCraft interactors. We will cover essential topics such as the SC framework, integration tests, sc-meta, and interactors (devtools).
+This short guide demonstrates how to deploy and interact with a smart contract (SC) on MultiversX using the SpaceCraft interactors. We will cover essential topics such as the SC framework, integration tests, `sc-meta`, and interactors (devtools).
 
 [comment]: # (mx-context-auto)
 
@@ -14,23 +14,24 @@ This short guide demonstrates how to deploy and interact with a smart contract o
 Building smart contracts involves complex tasks. Beyond the syntax, a smart contract acts as a public server where users pay for actions. Enforcing rules to ensure safety (treating possible exploits) and efficiency (timewise - transaction speed, costwise - gas fees) for all users interacting with the contract is crucial.
 
 In order to make sure that the smart contract works as expected, there are at least three stages of testing that we recommend to be performed before live deployment:
-- unit testing ([SpaceCraft testing framework](https://docs.multiversx.com/developers/testing/rust/sc-test-overview#overview) - Rust unit tests, RustVM)
-- scenarios ([mandos](https://docs.multiversx.com/developers/testing/scenario/concept#what-is-mandos) - json files, can be generated from Rust unit tests). Mandos can be used to test the logic on the [GoVM](https://docs.multiversx.com/technology/the-wasm-vm) as well, which is the actual VM running on the node
-- integration testing ([SpaceCraft Rust interactors](https://docs.multiversx.com/developers/interactor/interactors-overview/#overview) - testing on the blockchain). Integration tests cover real life scenarios across the different MultiversX blockchain environments - devnet/testnet/mainnet
+
+- unit testing ([SpaceCraft testing framework](/docs/developers/testing/rust/sc-test-overview.md#overview) - Rust unit tests, RustVM)
+- scenarios ([mandos](/docs/developers/testing/scenario/concept.md#what-is-mandos) - json files, can be generated from Rust unit tests). Mandos can be used to test the logic on the [GoVM](/docs/learn/space-vm.md) as well, which is the actual VM running on the node
+- integration testing ([SpaceCraft Rust interactors](/docs/developers/meta/interactor/interactors-overview.md#overview) - testing on the blockchain). Integration tests cover real life scenarios across the different MultiversX blockchain environments - devnet/testnet/mainnet
 
 In this tutorial we will focus on integration testing using the interactors made available by the SpaceCraft smart contract framework.
 
 ::::important Prerequisites
 
-- `stable` Rust version `1.78.0 or above` (install via [rustup](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta)):
-- `multiversx-sc-meta` version `0.50.0 or above` (cargo install [multiversx-sc-meta](/docs/developers/meta/sc-meta-cli.md))
+- `stable` Rust version `≥1.83.0` (install via [rustup](/docs/developers/toolchain-setup.md#installing-rust-and-sc-meta)):
+- `multiversx-sc-meta` (cargo install [multiversx-sc-meta](/docs/developers/meta/sc-meta-cli.md))
 ::::
 
 [comment]: # (mx-context-auto)
 
 ## Step 1: Start from a template
 
-Get a headstart by using sc-meta to generate one of our smart contract templates as a starting point for your smart contract. Let’s say we start from the `empty` template contract and name it `my-contract`.
+Get a headstart by using `sc-meta` to generate one of our smart contract templates as a starting point for your smart contract. Let’s say we start from the `empty` template contract and name it `my-contract`.
 
 ```bash
 sc-meta new --template empty --name my-contract
@@ -111,21 +112,22 @@ sc-meta all snippets
 
 This command compiled the contract and generated a new folder called `interactor`. The interactor is by default a Rust CLI program that uses the smart contract proxy to send calls to the contract.
 
-Inside the source folder *(interactor/src)*, we should find the newly generated proxy of the contract *(proxy.rs)* and the `interactor_main.rs` file, which is the main file of the project. A *sc-config.toml* file has also been created (if not existent) containing the path of the proxy file.
+Inside the source folder *(my-contract/interactor/src)*, we should find the newly generated proxy of the contract *(my_contract_proxy.rs)* and the `interactor_main.rs` file, which is the main file of the project. A *sc-config.toml* file has also been created (if not existent) in the contract root containing the path of the proxy file.
 
-If we navigate to *interactor/src/interactor_main.rs*, inside the `main` function, we can find all the CLI command available to us:
+If we navigate to *interactor/src/interact.rs*, inside the `my_contract_cli()` function, we can find all the CLI command available to us:
 
-```rust title=interactor_main.rs
-#[tokio::main]
-async fn main() {
+```rust title=interact.rs
+pub async fn my_contract_cli() {
     env_logger::init();
 
     let mut args = std::env::args();
     let _ = args.next();
     let cmd = args.next().expect("at least one argument required");
-    let mut interact = ContractInteract::new().await;
+    let config = Config::new();
+    let mut interact = ContractInteract::new(config).await;
     match cmd.as_str() {
         "deploy" => interact.deploy().await,
+        "upgrade" => interact.upgrade().await,
         "register_me" => interact.register_me().await,
         "deregister_me" => interact.deregister_me().await,
         "already_registered" => interact.already_registered().await,
@@ -136,7 +138,7 @@ async fn main() {
 
 As you can see, `sc-meta` automatically generated all the logic behind calling the smart contract endpoints. The interactor uses asynchronous Rust, so all the functions are marked as `async` and need to be awaited to get a result.
 
-In order to compile the project, we need to include it in the project tree. In this case, we have to add the interactor project to the smart contract’s workspaces, in the *Cargo.toml* file:
+In order to compile the project, we need to include it in the project tree. In this case, we have to add the interactor project to the smart contract’s workspaces, in the *my-contract/Cargo.toml* file:
 
 ```toml title=Cargo.toml
 [workspace]
@@ -151,7 +153,7 @@ members = [
 
 ## Step 5: Create scenarios & run
 
-Now the setup is complete, it’s time to create some scenarios to test. For our use-case, the perfect scenario is: deploy the contract, register from a user and deregister from the same user. Anything else should result in an error.
+Now the setup is complete, it’s time to create some scenarios to test. For our use-case, the perfect scenario is: **deploy the contract**, **register from a user** and **deregister from the same user**. Anything else should result in an error.
 
 In order to test the perfect scenario first, we will first deploy the contract:
 
@@ -160,24 +162,30 @@ cd interactor
 cargo run deploy
 ```
 
-After deploying the contract, a new file named *state.toml* will be created, which contains the newly deployed sc address. For each deploy, a new address will be printed into the file.
+After deploying the contract, a new file named *state.toml* will be created in the `interactor` directory, which contains the newly deployed SC address. For each deploy, a new address will be printed into the file.
 
 ```toml title=state.toml
 contract_address = "erd1qqqqqqqqqqqqqpgqpsev0x4nufh240l44gf2t6qzkh9xvutqd8ssrnydzr"
 ```
 
-By default, the testing environment is `devnet`, specified by the `GATEWAY` constant:
+By default, the testing environment is `devnet`, specified by the `my-contract/interactor/config.toml`:
 
-```rust title=interactor_main.rs
-const GATEWAY: &str = sdk::blockchain::DEVNET_GATEWAY;
+```toml title=config.toml
+chain_type = 'real'
+gateway_uri = 'https://devnet-gateway.multiversx.com'
 ```
-Changing the value of this constant will change the testing environment for a quick setup (other options are `TESTNET_GATEWAY` and `MAINNET_GATEWAY`).
+
+Changing the value of the `gateway_uri` will change the testing environment for a quick setup. Other options are:
+
+- Testnet: `https://testnet-gateway.multiversx.com`
+- Mainnet: `https://gateway.multiversx.com`
 
 Each command has some waiting time and returns the result inside a variable in the function, but also prints it in the console for easy tracking.
 
 In this case, the console shows:
+
 ```bash
-you@PC interactor % cargo run deploy
+interactor % cargo run deploy
    Compiling rust-interact v0.0.0 (/Users/you/Documents/my-contract/interact-rs)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.96s
      Running `/Users/you/Documents/my-contract/target/debug/rust-interact deploy`
@@ -197,15 +205,18 @@ cargo run deregister_me
 
 These commands will send two transactions to the newly deployed contract from the `test_wallets::alice()` wallet, each of them calling one endpoint of the contract in the specified order.
 
-```bash
-you@PC interactor % cargo run register_me
+```bash title=register_me
+interactor % cargo run register_me
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.35s
      Running `/Users/you/Documents/my-contract/target/debug/rust-interact register_me`
 sender's recalled nonce: 1718
 -- tx nonce: 1718
 sc call tx hash: 97bea2b18ca0d1305200dc4ea0d1b2b32a666430f8d24ab042f59c324bf47eec
 Result: ()
-you@PC interactor % cargo run deregister_me
+```
+
+```bash title=deregister_me
+interactor % cargo run deregister_me
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.11s
      Running `/Users/you/Documents/my-contract/target/debug/rust-interact deregister_me
 sender's recalled nonce: 1719
@@ -221,18 +232,37 @@ Result: ()
 Using the functions generated by `sc-meta`, we can extend the interactor to cover a series of integration tests. Organized tests help with maintenance and long-term testing.
 
 We can create a quick integration test as such:
-```rust title=interactor_main.rs
+
+Inside the `tests` directory of the `interactor`, you can add integration tests that run either on the **chain simulator** or on the **gateway** configured in `config.toml`.
+
+For this example, we can create an integration test that runs on `devnet`, starting with the template provided in the file `my-contract/interactor/interact_tests.rs`:
+
+```rust title=interact_tests.rs
 #[tokio::test]
 async fn integration_test() {
-    let mut interact = ContractInteract::new().await;
+    let mut interactor = ContractInteract::new(Config::new()).await;
 
-    interact.deploy().await;
-    interact.register_me().await;
-    interact.deregister_me().await;
+    interactor.deploy().await;
+    interactor.register_me().await;
+    interactor.deregister_me().await;
 }
 ```
 
-Running this test will perform the previous CLI actions in the same order, on the real blockchain. The console will show all the intermediate actions at the end of the test, as such:
+Alternatively, we can create an integration test that runs only on the [chain simulator](/docs/developers/tutorials/chain-simulator-adder.md):
+
+```rust
+#[tokio::test]
+#[cfg_attr(not(feature = "chain-simulator-tests"), ignore)]
+async fn chain_simulator_integration_test() {
+    let mut interactor = ContractInteract::new(Config::chain_simulator_config()).await;
+    
+    interactor.deploy().await;
+    interactor.register_me().await;
+    interactor.deregister_me().await;
+}
+```
+
+Running `integration_test()` will perform the previous CLI actions in the same order, on the real blockchain. The console will show all the intermediate actions at the end of the test, as such:
 
 ```bash
 running 1 test
@@ -261,101 +291,6 @@ successes:
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.38s
 ```
-
-[comment]: # (mx-context-auto)
-
-## Improvements
-
-This setup can be used for extensive testing, but also as a tool for live deployment on mainnet, tracking and interaction.  In a multi-contract setup, one can, for example, create different modules for specific interactions with each contract and development environment and further structure all the interactions into different integration tests.
-
-Let’s take the example of the [DEX smart contract interactors](https://github.com/multiversx/mx-exchange-sc/tree/feat/unified/dex/interactor). Here, all the proxy files are organized in a different crate for easier access.
-
-![img](/img/dex_interactor_file_structure.jpeg)
-
-Furthermore, all the contracts that are part of the DEX flow have separate interaction modules, so we can easily keep track of the flow when writing complex tests.
-
-This is the `energy_factory` file, containing only interactions with the `energy factory smart contract`, using the specific proxy and contract address:
-```rust title=energy_factory.rs
-use multiversx_sc_snippets::imports::*;
-use proxies::energy_factory_proxy;
-
-use crate::{
-    structs::{to_rust_biguint, InteractorEnergy},
-    DexInteract,
-};
-
-pub(crate) async fn get_energy_amount_for_user(
-    dex_interact: &mut DexInteract,
-    user: Address,
-) -> RustBigUint {
-    let result_token = dex_interact
-        .interactor
-        .query()
-        .to(dex_interact.state.current_energy_factory_address())
-        .typed(energy_factory_proxy::SimpleLockEnergyProxy)
-        .get_energy_amount_for_user(ManagedAddress::from(user))
-        .returns(ReturnsResult)
-        .prepare_async()
-        .run()
-        .await;
-
-    to_rust_biguint(result_token)
-}
-```
-
-After having implemented this structure, writing integration test is a smooth process, even though the logic gets complicated:
-
-```rust title=dex_interact.rs
-impl DexInteract {
-    async fn full_farm_scenario(&mut self, args: &AddArgs) {
-    // adds liquidity to the pair SC
-    let (_, _, lp_token) = pair::add_liquidity(self, args).await.0; 
-    // enters farm in the farm locked SC
-    let _result = farm_locked::enter_farm(self, lp_token).await;
-    // query the energy factory SC
-    let _query = energy_factory::get_energy_amount_for_user(self, Address::zero()).await;
-    // stake farm tokens in the farm staking proxy SC 
-    let _farm_token = farm_staking_proxy::stake_farm_tokens(self, Vec::new(), None).await; 
-    // more logic 
-    }
-}
-
-#[cfg(test)]
-pub mod integration_tests {
-    use multiversx_sc_snippets::tokio;
-
-    use crate::{dex_interact_cli::SwapArgs, pair, DexInteract};
-
-    #[tokio::test]
-    async fn test_swap() {
-        // initialize interactor
-        let mut dex_interact = DexInteract::init().await;
-        // test users
-        dex_interact.register_wallets();
-        // mock arguments
-        let args = SwapArgs::default();
-
-        // swap tokens with the pair SC
-        let result = pair::swap_tokens_fixed_input(&mut dex_interact, &args).await;
-        println!("result {:#?}", result);  
-    }
-
-    #[tokio::test]
-    async fn test_full_farm_scenario() {
-        // initialize interactor
-        let mut dex_interact = DexInteract::init().await;
-        // test users
-        dex_interact.register_wallets();
-        // mock arguments
-        let args = AddArgs::default();
-
-        // runs a full farm scenario
-        dex_interact.full_farm_scenario(args).await;
-    }
-}
-```
-
-Organizing the code this way streamlines the process even further. Now, it is just a matter of using a different datatype or a different module in order to keep track of the various contracts and development environments and be able to rerun everything quickly if needed.
 
 [comment]: # (mx-context-auto)
 
