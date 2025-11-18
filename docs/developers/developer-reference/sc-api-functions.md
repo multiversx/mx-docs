@@ -140,13 +140,25 @@ A smart contract call that runs out of gas will revert all operations, so this f
 
 [comment]: # (mx-context-auto)
 
-### get_block_timestamp
+### get_block_timestamp_seconds
 
 ```rust
-get_block_timestamp() -> u64
+get_block_timestamp_millis() -> TimestampSeconds
 ```
 
 Returns the timestamp of the current block, in seconds (UNIX timestamp).
+
+
+[comment]: # (mx-context-auto)
+
+### get_block_timestamp_millis
+
+```rust
+get_block_timestamp_millis() -> TimestampMillis
+```
+
+Returns the timestamp of the current block, in milliseconds (UNIX timestamp).
+
 
 [comment]: # (mx-context-auto)
 
@@ -194,11 +206,25 @@ This will be the same for all the calls in the current block, so it can be predi
 
 [comment]: # (mx-context-auto)
 
-### get_prev_block_timestamp
+### get_prev_block_timestamp_seconds
 
 ```rust
-get_prev_block_timestamp() -> u64
+get_prev_block_timestamp_seconds() -> TimestampSeconds
 ```
+
+Returns the timestamp of the previous block, in seconds (UNIX timestamp).
+
+
+[comment]: # (mx-context-auto)
+
+### get_prev_block_timestamp_millis
+
+```rust
+get_prev_block_timestamp_millis() -> TimestampMillis
+```
+
+Returns the timestamp of the previous block, in milliseconds (UNIX timestamp).
+
 
 [comment]: # (mx-context-auto)
 
@@ -232,7 +258,16 @@ get_prev_block_epoch() -> u64
 get_prev_block_random_seed() -> ManagedByteArray<Self::Api, 48>
 ```
 
-The same as the functions above, but for the previous block instead of the current block.
+[comment]: # (mx-context-auto)
+
+### get_block_round_time_millis
+
+```rust
+get_block_round_time_millis(&self) -> DurationMillis
+```
+
+The block round time, in milliseconds, i.e the time between consecutive blocks.
+
 
 [comment]: # (mx-context-auto)
 
