@@ -126,12 +126,14 @@ const sidebars = {
                   },
                   {
                     type: "category",
-                    label: "Rust Developers Best Practices",
+                    label: "Best Practices",
                     items: [
                       "developers/best-practices/best-practices-basics",
                       "developers/best-practices/biguint-operations",
                       "developers/best-practices/managed-decimal",
                       "developers/best-practices/the-dynamic-allocation-problem",
+                      "developers/best-practices/time-types",
+                      "developers/best-practices/prepare-sc-supernova",
                     ],
                   },
                   {
