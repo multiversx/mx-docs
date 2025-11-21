@@ -14,26 +14,26 @@ https://devnet-api.multiversx.com/<resource>
 https://testnet-api.multiversx.com/<resource>
 ```
 
-All updates include the same fields as REST responses, plus a `<resource>Count` representing **the total number of existing items at the moment the message was delivered**.
+All updates mirror REST responses and include a `<resource>Count` field representing **the total number of existing items at the moment the update was delivered**.
 
 ---
 
-# 1. Selecting the WebSocket Endpoint
+# Selecting the WebSocket Endpoint
 
 Before connecting, fetch the WebSocket cluster:
 
-## Mainnet
-```
+### Mainnet
+```text
 https://api.multiversx.com/websocket/config
 ```
 
-## Testnet
-```
+### Testnet
+```text
 https://testnet-api.multiversx.com/websocket/config
 ```
 
-## Devnet
-```
+### Devnet
+```text
 https://devnet-api.multiversx.com/websocket/config
 ```
 
@@ -45,93 +45,78 @@ https://devnet-api.multiversx.com/websocket/config
 ```
 
 ### WebSocket endpoint
-```
+```text
 https://<returned-url>/ws/subscription
 ```
 
 ---
 
-# 2. Subscription Events Overview
+# Subscription Events Overview
 
-| Stream       | Subscribe Event       | Update Event       | Mirrors REST Route |
-|--------------|------------------------|---------------------|---------------------|
-| Transactions | `subscribeTransactions`| `transactionUpdate`| `/transactions` |
-| Blocks       | `subscribeBlocks`      | `blocksUpdate`     | `/blocks` |
-| Pool         | `subscribePool`        | `poolUpdate`       | `/pool` |
-| Events       | `subscribeEvents`      | `eventsUpdate`     | `/events` |
-| Stats        | `subscribeStats`       | `statsUpdate`      | `/stats` |
+| Stream       | Subscribe Event         | Update Event       | Mirrors REST Route |
+|--------------|-------------------------|--------------------|---------------------|
+| Transactions | `subscribeTransactions` | `transactionUpdate`| `/transactions`     |
+| Blocks       | `subscribeBlocks`       | `blocksUpdate`     | `/blocks`           |
+| Pool         | `subscribePool`         | `poolUpdate`       | `/pool`             |
+| Events       | `subscribeEvents`       | `eventsUpdate`     | `/events`           |
+| Stats        | `subscribeStats`        | `statsUpdate`      | `/stats`            |
 
 ---
 
-# 3. Subscriptions (Full Flows)
+# Subscriptions
 
 Each subscription includes:
 
-1. Connect  
-2. Payload (fields + types + required)  
-3. Subscribe  
-4. Listen  
-5. Update Example  
+- Payload (fields + types + required)
+- Single code block with connect + payload + subscribe + listen
+- Update example
 
 ---
 
-# 3.1 Transactions Subscription
+# Transactions Subscription
 
-## Connect
+## Payload (DTO)
+
+| Field                   | Type                                               | Required |
+|-------------------------|----------------------------------------------------|----------|
+| from                    | number                                             | YES      |
+| size                    | number (1–50)                                      | YES      |
+| status                  | `"success" \| "pending" \| "invalid" \| "fail"`    | NO       |
+| order                   | `"asc" \| "desc"`                                  | NO       |
+| isRelayed               | boolean                                            | NO       |
+| isScCall                | boolean                                            | NO       |
+| withScResults           | boolean                                            | NO       |
+| withRelayedScresults    | boolean                                            | NO       |
+| withOperations          | boolean                                            | NO       |
+| withLogs                | boolean                                            | NO       |
+| withScamInfo            | boolean                                            | NO       |
+| withUsername            | boolean                                            | NO       |
+| withBlockInfo           | boolean                                            | NO       |
+| withActionTransferValue | boolean                                            | NO       |
+| fields                  | string[]                                           | NO       |
+
+## Example usage
 
 ```js
 import { io } from "socket.io-client";
 
-const { url } = await fetch("https://api.multiversx.com/websocket/config")
-  .then(r => r.json());
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
 
-const socket = io(`https://${url}`, { path: "/ws/subscription" });
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  const payload = { from: 0, size: 25 };
+
+  socket.emit("subscribeTransactions", payload);
+
+  socket.on("transactionUpdate", (data) => {
+    console.log("Transactions update:", data);
+  });
+}
+
+main().catch(console.error);
 ```
-
----
-
-## Payload (DTO)
-
-| Field | Type | Required |
-|-------|------|----------|
-| from | number | YES |
-| size | number (1–50) | YES |
-| status | `"success" \| "pending" \| "invalid" \| "fail"` | NO |
-| order | `"asc" \| "desc"` | NO |
-| isRelayed | boolean | NO |
-| isScCall | boolean | NO |
-| withScResults | boolean | NO |
-| withRelayedScresults | boolean | NO |
-| withOperations | boolean | NO |
-| withLogs | boolean | NO |
-| withScamInfo | boolean | NO |
-| withUsername | boolean | NO |
-| withBlockInfo | boolean | NO |
-| withActionTransferValue | boolean | NO |
-| fields | string[] | NO |
-
----
-
-## Subscribe
-
-```js
-socket.emit("subscribeTransactions", {
-  from: 0,
-  size: 25
-});
-```
-
----
-
-## Listen
-
-```js
-socket.on("transactionUpdate", (data) => {
-  console.log("Transactions update:", data);
-});
-```
-
----
 
 ## Update Example
 
@@ -153,51 +138,40 @@ socket.on("transactionUpdate", (data) => {
 
 ---
 
-# 3.2 Blocks Subscription
-
-## Connect
-
-```js
-const { url } = await fetch("https://api.multiversx.com/websocket/config")
-  .then(r => r.json());
-
-const socket = io(`https://${url}`, { path: "/ws/subscription" });
-```
-
----
+# Blocks Subscription
 
 ## Payload (DTO)
 
-| Field | Type | Required |
-|-------|------|----------|
-| from | number | YES |
-| size | number (1–50) | YES |
-| shard | number | NO |
-| order | `"asc" \| "desc"` | NO |
-| withProposerIdentity | boolean | NO |
+| Field                 | Type                | Required |
+|-----------------------|---------------------|----------|
+| from                  | number              | YES      |
+| size                  | number (1–50)       | YES      |
+| shard                 | number              | NO       |
+| order                 | `"asc" \| "desc"`   | NO       |
+| withProposerIdentity  | boolean             | NO       |
 
----
-
-## Subscribe
+## Example usage
 
 ```js
-socket.emit("subscribeBlocks", {
-  from: 0,
-  size: 25
-});
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  const payload = { from: 0, size: 25 };
+
+  socket.emit("subscribeBlocks", payload);
+
+  socket.on("blocksUpdate", (data) => {
+    console.log("Blocks update:", data);
+  });
+}
+
+main().catch(console.error);
 ```
-
----
-
-## Listen
-
-```js
-socket.on("blocksUpdate", (data) => {
-  console.log("Blocks update:", data);
-});
-```
-
----
 
 ## Update Example
 
@@ -219,50 +193,38 @@ socket.on("blocksUpdate", (data) => {
 
 ---
 
-# 3.3 Pool Subscription
-
-## Connect
-
-```js
-const { url } = await fetch("https://api.multiversx.com/websocket/config")
-  .then(r => r.json());
-
-const socket = io(`https://${url}`, { path: "/ws/subscription" });
-```
-
----
+# Pool Subscription
 
 ## Payload (DTO)
 
-| Field | Type | Required |
-|--------|------|----------|
-| from | number | YES |
-| size | number (1–50) | YES |
-| type | `"Transaction" \| "SmartContractResult" \| "Reward"` | NO |
+| Field | Type                                                | Required |
+|--------|-----------------------------------------------------|----------|
+| from  | number                                              | YES      |
+| size  | number (1–50)                                       | YES      |
+| type  | `"Transaction" \| "SmartContractResult" \| "Reward"`| NO       |
 
----
-
-## Subscribe
+## Example usage
 
 ```js
-socket.emit("subscribePool", {
-  from: 0,
-  size: 25,
-  type: "Transaction"
-});
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  const payload = { from: 0, size: 25, type: "Transaction" };
+
+  socket.emit("subscribePool", payload);
+
+  socket.on("poolUpdate", (data) => {
+    console.log("Pool update:", data);
+  });
+}
+
+main().catch(console.error);
 ```
-
----
-
-## Listen
-
-```js
-socket.on("poolUpdate", (data) => {
-  console.log("Pool update:", data);
-});
-```
-
----
 
 ## Update Example
 
@@ -284,49 +246,38 @@ socket.on("poolUpdate", (data) => {
 
 ---
 
-# 3.4 Events Subscription
-
-## Connect
-
-```js
-const { url } = await fetch("https://api.multiversx.com/websocket/config")
-  .then(r => r.json());
-
-const socket = io(`https://${url}`, { path: "/ws/subscription" });
-```
-
----
+# Events Subscription
 
 ## Payload (DTO)
 
-| Field | Type | Required |
-|--------|------|----------|
-| from | number | YES |
-| size | number (1–50) | YES |
-| shard | number | NO |
+| Field | Type          | Required |
+|-------|---------------|----------|
+| from  | number        | YES      |
+| size  | number (1–50) | YES      |
+| shard | number        | NO       |
 
----
-
-## Subscribe
+## Example usage
 
 ```js
-socket.emit("subscribeEvents", {
-  from: 0,
-  size: 25
-});
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  const payload = { from: 0, size: 25 };
+
+  socket.emit("subscribeEvents", payload);
+
+  socket.on("eventsUpdate", (data) => {
+    console.log("Events update:", data);
+  });
+}
+
+main().catch(console.error);
 ```
-
----
-
-## Listen
-
-```js
-socket.on("eventsUpdate", (data) => {
-  console.log("Events update:", data);
-});
-```
-
----
 
 ## Update Example
 
@@ -351,42 +302,32 @@ socket.on("eventsUpdate", (data) => {
 
 ---
 
-# 3.5 Stats Subscription
-
-## Connect
-
-```js
-const { url } = await fetch("https://api.multiversx.com/websocket/config")
-  .then(r => r.json());
-
-const socket = io(`https://${url}`, { path: "/ws/subscription" });
-```
-
----
+# Stats Subscription
 
 ## Payload (DTO)
 
-Stats does not accept payload.
+Stats subscription does not accept any payload.
 
----
-
-## Subscribe
+## Example usage
 
 ```js
-socket.emit("subscribeStats");
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  socket.emit("subscribeStats");
+
+  socket.on("statsUpdate", (data) => {
+    console.log("Stats update:", data);
+  });
+}
+
+main().catch(console.error);
 ```
-
----
-
-## Listen
-
-```js
-socket.on("statsUpdate", (data) => {
-  console.log("Stats update:", data);
-});
-```
-
----
 
 ## Update Example
 
@@ -406,13 +347,13 @@ socket.on("statsUpdate", (data) => {
 
 ---
 
-# 4. Summary
+# Summary
 
-- WebSocket endpoint is dynamically obtained via `/websocket/config`
-- Each stream has its own subscribe and update events
-- Payload DTOs enforce strict field validation
-- Update messages mirror REST API routes
-- `<resource>Count` always reflects **total items at that moment**
-- Uses `socket.io-client`
+- WebSocket endpoint is dynamically obtained via `/websocket/config`.
+- Each stream has its own subscribe and update events.
+- Payload DTOs define allowed fields and required/optional rules.
+- Update messages mirror REST API and include `<resource>Count` fields.
+- `<resource>Count` reflects **total items at the moment of update**.
+- Uses `socket.io-client`.
 
 This document contains everything required to use MultiversX WebSocket Subscriptions effectively.
