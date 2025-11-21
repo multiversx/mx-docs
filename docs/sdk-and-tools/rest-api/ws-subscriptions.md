@@ -3,8 +3,7 @@ id: multiversx-api-ws
 title: MultiversX API WebSocket
 ---
 
-# MultiversX WebSocket Subscription API  
-### Real-Time Streaming Guide (socket.io-client)
+# MultiversX WebSocket Subscription API
 
 The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
 
@@ -18,7 +17,7 @@ All updates mirror REST responses and include a `<resource>Count` field represen
 
 ---
 
-# Selecting the WebSocket Endpoint
+## Selecting the WebSocket Endpoint
 
 Before connecting, fetch the WebSocket cluster:
 
@@ -51,7 +50,7 @@ https://<returned-url>/ws/subscription
 
 ---
 
-# Subscription Events Overview
+## Subscription Events Overview
 
 | Stream       | Subscribe Event         | Update Event       | Mirrors REST Route |
 |--------------|-------------------------|--------------------|---------------------|
@@ -63,19 +62,19 @@ https://<returned-url>/ws/subscription
 
 ---
 
-# Subscriptions
+## Subscriptions
 
-Each subscription includes:
+Each stream includes:
 
-- Payload (fields + types + required)
+- DTO payload table
 - Single code block with connect + payload + subscribe + listen
 - Update example
 
 ---
 
-# Transactions Subscription
+### Transactions Subscription
 
-## Payload (DTO)
+#### Payload (DTO)
 
 | Field                   | Type                                               | Required |
 |-------------------------|----------------------------------------------------|----------|
@@ -95,7 +94,7 @@ Each subscription includes:
 | withActionTransferValue | boolean                                            | NO       |
 | fields                  | string[]                                           | NO       |
 
-## Example usage
+#### Example usage
 
 ```js
 import { io } from "socket.io-client";
@@ -118,7 +117,7 @@ async function main() {
 main().catch(console.error);
 ```
 
-## Update Example
+#### Update Example
 
 ```json
 {
@@ -138,9 +137,9 @@ main().catch(console.error);
 
 ---
 
-# Blocks Subscription
+### Blocks Subscription
 
-## Payload (DTO)
+#### Payload (DTO)
 
 | Field                 | Type                | Required |
 |-----------------------|---------------------|----------|
@@ -150,7 +149,7 @@ main().catch(console.error);
 | order                 | `"asc" \| "desc"`   | NO       |
 | withProposerIdentity  | boolean             | NO       |
 
-## Example usage
+#### Example usage
 
 ```js
 import { io } from "socket.io-client";
@@ -173,7 +172,7 @@ async function main() {
 main().catch(console.error);
 ```
 
-## Update Example
+#### Update Example
 
 ```json
 {
@@ -193,9 +192,9 @@ main().catch(console.error);
 
 ---
 
-# Pool Subscription
+### Pool Subscription
 
-## Payload (DTO)
+#### Payload (DTO)
 
 | Field | Type                                                | Required |
 |--------|-----------------------------------------------------|----------|
@@ -203,7 +202,7 @@ main().catch(console.error);
 | size  | number (1–50)                                       | YES      |
 | type  | `"Transaction" \| "SmartContractResult" \| "Reward"`| NO       |
 
-## Example usage
+#### Example usage
 
 ```js
 import { io } from "socket.io-client";
@@ -226,7 +225,7 @@ async function main() {
 main().catch(console.error);
 ```
 
-## Update Example
+#### Update Example
 
 ```json
 {
@@ -240,15 +239,15 @@ main().catch(console.error);
       "type": "Transaction"
     }
   ],
-  "poolCount": 1902
+      "poolCount": 1902
 }
 ```
 
 ---
 
-# Events Subscription
+### Events Subscription
 
-## Payload (DTO)
+#### Payload (DTO)
 
 | Field | Type          | Required |
 |-------|---------------|----------|
@@ -256,7 +255,7 @@ main().catch(console.error);
 | size  | number (1–50) | YES      |
 | shard | number        | NO       |
 
-## Example usage
+#### Example usage
 
 ```js
 import { io } from "socket.io-client";
@@ -279,7 +278,7 @@ async function main() {
 main().catch(console.error);
 ```
 
-## Update Example
+#### Update Example
 
 ```json
 {
@@ -302,13 +301,13 @@ main().catch(console.error);
 
 ---
 
-# Stats Subscription
+### Stats Subscription
 
-## Payload (DTO)
+#### Payload (DTO)
 
 Stats subscription does not accept any payload.
 
-## Example usage
+#### Example usage
 
 ```js
 import { io } from "socket.io-client";
@@ -329,7 +328,7 @@ async function main() {
 main().catch(console.error);
 ```
 
-## Update Example
+#### Update Example
 
 ```json
 {
@@ -347,7 +346,7 @@ main().catch(console.error);
 
 ---
 
-# Summary
+## Summary
 
 - WebSocket endpoint is dynamically obtained via `/websocket/config`.
 - Each stream has its own subscribe and update events.
