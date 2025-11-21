@@ -6,7 +6,7 @@ title: MultiversX API WebSocket
 # MultiversX WebSocket Subscription API  
 ### Real-Time Streaming Guide (socket.io-client)
 
-The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to the REST API responses from:
+The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
 
 ```
 https://api.multiversx.com/<resource>
@@ -14,133 +14,105 @@ https://devnet-api.multiversx.com/<resource>
 https://testnet-api.multiversx.com/<resource>
 ```
 
-All updates contain the same fields as their REST counterparts, and where applicable, a `<resource>Count` representing **the total number of items existing at the time the message was delivered**.
+All updates include the same fields as REST responses, plus a `<resource>Count` representing **the total number of existing items at the moment the message was delivered**.
 
 ---
 
-# 1. Selecting the Correct WebSocket Endpoint
+# 1. Selecting the WebSocket Endpoint
 
-The WebSocket endpoint depends on the network:
+Before connecting, fetch the WebSocket cluster:
 
-## **Mainnet**
-You must first determine which **cluster** you are allocated to.
-
-### 1. Call:
+## Mainnet
 ```
 https://api.multiversx.com/websocket/config
 ```
 
-### Example response:
+## Testnet
+```
+https://testnet-api.multiversx.com/websocket/config
+```
+
+## Devnet
+```
+https://devnet-api.multiversx.com/websocket/config
+```
+
+### Response example
 ```json
 {
-  "url": "socket-api-ams.multiversx.com"
+  "url": "socket-api-xxxx.multiversx.com"
 }
 ```
 
-Clusters may be:
-- `socket-api-ams.multiversx.com`
-- `socket-api-ovh.multiversx.com`
-
-### 2. Connect using the provided cluster:
+### WebSocket endpoint
 ```
-https://<cluster>/ws/subscription
+https://<returned-url>/ws/subscription
 ```
 
 ---
 
-## **Devnet**
+# 2. Subscription Events Overview
 
-Direct endpoint:
-```
-https://devnet-socket-api.multiversx.com/ws/subscription
-```
-(Devnet always uses the `-ovh` cluster.)
-
----
-
-## **Testnet**
-
-Direct endpoint:
-```
-https://testnet-socket-api.multiversx.com/ws/subscription
-```
-(Testnet also always uses the `-ovh` cluster.)
+| Stream       | Subscribe Event       | Update Event       | Mirrors REST Route |
+|--------------|------------------------|---------------------|---------------------|
+| Transactions | `subscribeTransactions`| `transactionUpdate`| `/transactions` |
+| Blocks       | `subscribeBlocks`      | `blocksUpdate`     | `/blocks` |
+| Pool         | `subscribePool`        | `poolUpdate`       | `/pool` |
+| Events       | `subscribeEvents`      | `eventsUpdate`     | `/events` |
+| Stats        | `subscribeStats`       | `statsUpdate`      | `/stats` |
 
 ---
 
-# 2. Connecting with socket.io-client
+# 3. Subscriptions (Full Flows)
+
+Each subscription includes:
+
+1. Connect  
+2. Payload (fields + types + required)  
+3. Subscribe  
+4. Listen  
+5. Update Example  
+
+---
+
+# 3.1 Transactions Subscription
+
+## Connect
 
 ```js
 import { io } from "socket.io-client";
 
-const socket = io("https://<cluster>", {
-  path: "/ws/subscription",
-});
-```
+const { url } = await fetch("https://api.multiversx.com/websocket/config")
+  .then(r => r.json());
 
-Replace `<cluster>` depending on the network:
-- Mainnet → result from `/websocket/config`
-- Devnet → `devnet-socket-api.multiversx.com`
-- Testnet → `testnet-socket-api.multiversx.com`
+const socket = io(`https://${url}`, { path: "/ws/subscription" });
+```
 
 ---
 
-# 3. Subscription Events (Overview)
+## Payload (DTO)
 
-Each subscription type uses a dedicated event:
-
-| Stream | Subscribe Event | Update Event | Mirrors REST Route |
-|--------|-----------------|--------------|---------------------|
-| Transactions | `subscribeTransactions` | `transactionUpdate` | `/transactions` |
-| Blocks | `subscribeBlocks` | `blocksUpdate` | `/blocks` |
-| Pool (Mempool) | `subscribePool` | `poolUpdate` | `/pool` |
-| Events | `subscribeEvents` | `eventsUpdate` | `/events` |
-| Stats | `subscribeStats` | `statsUpdate` | `/stats` |
-
-All update events return objects structured **exactly like the REST API**, plus a `<resource>Count` where applicable (`transactionsCount`, `blocksCount`, etc.).
-
----
-
-# 4. Payload Structure (DTO Requirements)
-
-Below are the fields supported for each subscription.  
-All fields not listed below must NOT be sent.
-
-### Common Notes:
-- `from` is **always required** and must be `0`  
-- `size` is **required** unless otherwise specified, and must be **1–50**  
-- All other filters are optional
+| Field | Type | Required |
+|-------|------|----------|
+| from | number | YES |
+| size | number (1–50) | YES |
+| status | `"success" \| "pending" \| "invalid" \| "fail"` | NO |
+| order | `"asc" \| "desc"` | NO |
+| isRelayed | boolean | NO |
+| isScCall | boolean | NO |
+| withScResults | boolean | NO |
+| withRelayedScresults | boolean | NO |
+| withOperations | boolean | NO |
+| withLogs | boolean | NO |
+| withScamInfo | boolean | NO |
+| withUsername | boolean | NO |
+| withBlockInfo | boolean | NO |
+| withActionTransferValue | boolean | NO |
+| fields | string[] | NO |
 
 ---
 
-## 4.1 Transactions Subscription
-
-### Event
-```
-subscribeTransactions
-```
-
-### Payload Fields
-
-| Field | Optional | Description |
-|-------|----------|-------------|
-| from | required | Must always be 0 |
-| size | required | Number of items (1–50) |
-| status | optional | Filter by status |
-| order | optional | ASC or DESC |
-| isRelayed | optional | Filter relayed txs |
-| isScCall | optional | SC calls only |
-| withScResults | optional | Attach SC results |
-| withRelayedScresults | optional | Attach relayed SC results |
-| withOperations | optional | Include operations |
-| withLogs | optional | Include logs |
-| withScamInfo | optional | Include scam info |
-| withUsername | optional | Include username |
-| withBlockInfo | optional | Include block metadata |
-| withActionTransferValue | optional | Include transfer values |
-| fields | optional | Select specific fields |
-
-### Example subscribe
+## Subscribe
 
 ```js
 socket.emit("subscribeTransactions", {
@@ -149,36 +121,64 @@ socket.emit("subscribeTransactions", {
 });
 ```
 
-### What you receive (generic)
+---
 
+## Listen
+
+```js
+socket.on("transactionUpdate", (data) => {
+  console.log("Transactions update:", data);
+});
 ```
-transactionUpdate:
+
+---
+
+## Update Example
+
+```json
 {
-  "transactions": [...],         // identical to REST API
-  "transactionsCount": <number>  // total items at that moment
+  "transactions": [
+    {
+      "txHash": "7f172e468e61210805815f33af8500d827aff36df6196cc96783c6d592a5fc76",
+      "sender": "erd1srdxd75cg7nkaxxy3llz4hmwqqkmcej0jelv8ults8m86g29aj3sxjkc45",
+      "receiver": "erd19waq9tlhj32ane9duhkv6jusm58ca5ylnthhg9h8fcumtp8srh4qrl3hjj",
+      "nonce": 211883,
+      "status": "pending",
+      "timestamp": 1763718888
+    }
+  ],
+  "transactionsCount": 1234567
 }
 ```
 
 ---
 
-## 4.2 Blocks Subscription
+# 3.2 Blocks Subscription
 
-### Event
+## Connect
+
+```js
+const { url } = await fetch("https://api.multiversx.com/websocket/config")
+  .then(r => r.json());
+
+const socket = io(`https://${url}`, { path: "/ws/subscription" });
 ```
-subscribeBlocks
-```
 
-### Payload Fields
+---
 
-| Field | Optional |
-|-------|----------|
-| from | required |
-| size | required |
-| shard | optional |
-| order | optional |
-| withProposerIdentity | optional |
+## Payload (DTO)
 
-### Example subscribe
+| Field | Type | Required |
+|-------|------|----------|
+| from | number | YES |
+| size | number (1–50) | YES |
+| shard | number | NO |
+| order | `"asc" \| "desc"` | NO |
+| withProposerIdentity | boolean | NO |
+
+---
+
+## Subscribe
 
 ```js
 socket.emit("subscribeBlocks", {
@@ -187,34 +187,62 @@ socket.emit("subscribeBlocks", {
 });
 ```
 
-### Update structure
+---
 
+## Listen
+
+```js
+socket.on("blocksUpdate", (data) => {
+  console.log("Blocks update:", data);
+});
 ```
-blocksUpdate:
+
+---
+
+## Update Example
+
+```json
 {
-  "blocks": [...],         // same as REST API
-  "blocksCount": <number>  // total blocks at that moment
+  "blocks": [
+    {
+      "hash": "8576bb346bc95680f1ab0eb1fb8c43bbd03ef6e6ac8fd24a3c6e85d4c81be16b",
+      "epoch": 1939,
+      "nonce": 27918028,
+      "round": 27933551,
+      "shard": 0,
+      "timestamp": 1763718906
+    }
+  ],
+  "blocksCount": 111636242
 }
 ```
 
 ---
 
-## 4.3 Pool (Mempool) Subscription
+# 3.3 Pool Subscription
 
-### Event
+## Connect
+
+```js
+const { url } = await fetch("https://api.multiversx.com/websocket/config")
+  .then(r => r.json());
+
+const socket = io(`https://${url}`, { path: "/ws/subscription" });
 ```
-subscribePool
-```
 
-### Payload Fields
+---
 
-| Field | Optional |
-|--------|----------|
-| from | required |
-| size | required |
-| type | optional |
+## Payload (DTO)
 
-### Example subscribe
+| Field | Type | Required |
+|--------|------|----------|
+| from | number | YES |
+| size | number (1–50) | YES |
+| type | `"Transaction" \| "SmartContractResult" \| "Reward"` | NO |
+
+---
+
+## Subscribe
 
 ```js
 socket.emit("subscribePool", {
@@ -224,34 +252,62 @@ socket.emit("subscribePool", {
 });
 ```
 
-### Update structure
+---
 
+## Listen
+
+```js
+socket.on("poolUpdate", (data) => {
+  console.log("Pool update:", data);
+});
 ```
-poolUpdate:
+
+---
+
+## Update Example
+
+```json
 {
-  "pool": [...],        // same as REST API
-  "poolCount": <number> // total pool items at that moment
+  "pool": [
+    {
+      "txHash": "0b0cd3932689c6853e50ccc0f49feeb9c5f2a68858cbd213fd0825dd4bc0632b",
+      "sender": "erd1jfwjg6tl87rhe73zmd5ygm8xmc9u3ys80mjvakdc7ca3kknr2kjq7s98h3",
+      "receiver": "erd1qqqqqqqqqqqqqpgq0dsmyccxtlkrjvv0czyv2p4kcy72xvt3nzgq8j2q3y",
+      "nonce": 1166,
+      "function": "claim",
+      "type": "Transaction"
+    }
+  ],
+  "poolCount": 1902
 }
 ```
 
 ---
 
-## 4.4 Events Subscription
+# 3.4 Events Subscription
 
-### Event
+## Connect
+
+```js
+const { url } = await fetch("https://api.multiversx.com/websocket/config")
+  .then(r => r.json());
+
+const socket = io(`https://${url}`, { path: "/ws/subscription" });
 ```
-subscribeEvents
-```
 
-### Payload Fields
+---
 
-| Field | Optional |
-|--------|----------|
-| from | required |
-| size | required |
-| shard | optional |
+## Payload (DTO)
 
-### Example
+| Field | Type | Required |
+|--------|------|----------|
+| from | number | YES |
+| size | number (1–50) | YES |
+| shard | number | NO |
+
+---
+
+## Subscribe
 
 ```js
 socket.emit("subscribeEvents", {
@@ -260,54 +316,103 @@ socket.emit("subscribeEvents", {
 });
 ```
 
-### Update structure
+---
 
+## Listen
+
+```js
+socket.on("eventsUpdate", (data) => {
+  console.log("Events update:", data);
+});
 ```
-eventsUpdate:
+
+---
+
+## Update Example
+
+```json
 {
-  "events": [...],          // same as REST API
-  "eventsCount": <number>   // total events at that moment
+  "events": [
+    {
+      "txHash": "b5bde891df72e26fb36e7ab3acc14b74044bd9aa82b4852692f5b9a767e0391f-1-0",
+      "identifier": "signalError",
+      "address": "erd1jv5m4v3yr0wy6g2jtz2v344sfx572rw6aclum9c6r7rd4ej4l6csjej2wh",
+      "timestamp": 1763718864,
+      "topics": [
+        "9329bab2241bdc4d21525894c8d6b049a9e50ddaee3fcd971a1f86dae655feb1",
+        "4865616c7468206e6f74206c6f7720656e6f75676820666f72206c69717569646174696f6e2e"
+      ],
+      "shardID": 1
+    }
+  ],
+  "eventsCount": 109432
 }
 ```
 
 ---
 
-## 4.5 Stats Subscription
+# 3.5 Stats Subscription
 
-### Event
+## Connect
+
+```js
+const { url } = await fetch("https://api.multiversx.com/websocket/config")
+  .then(r => r.json());
+
+const socket = io(`https://${url}`, { path: "/ws/subscription" });
 ```
-subscribeStats
-```
 
-### Payload
-No payload must be sent.
+---
 
-### Example
+## Payload (DTO)
+
+Stats does not accept payload.
+
+---
+
+## Subscribe
 
 ```js
 socket.emit("subscribeStats");
 ```
 
-### Update structure
+---
 
+## Listen
+
+```js
+socket.on("statsUpdate", (data) => {
+  console.log("Stats update:", data);
+});
 ```
-statsUpdate:
+
+---
+
+## Update Example
+
+```json
 {
-  ... same fields as GET /stats
+  "shards": 3,
+  "blocks": 111636242,
+  "accounts": 9126654,
+  "transactions": 569773975,
+  "scResults": 402596990,
+  "epoch": 1939,
+  "roundsPassed": 9478,
+  "roundsPerEpoch": 14400,
+  "refreshRate": 6000
 }
 ```
 
 ---
 
-# 5. Summary
+# 4. Summary
 
-- WebSocket endpoint depends on network  
-  - Mainnet → determined via `GET /websocket/config`  
-  - Devnet/Testnet → fixed endpoint  
-- All subscriptions are made via event names (`subscribeBlocks`, etc.)  
-- Payload DTOs specify required and optional fields  
-- Update events return structures identical to REST API  
-- `<resource>Count` always reflects **the total number of items at that exact moment**  
-- Communication is done using `socket.io-client`
+- WebSocket endpoint is dynamically obtained via `/websocket/config`
+- Each stream has its own subscribe and update events
+- Payload DTOs enforce strict field validation
+- Update messages mirror REST API routes
+- `<resource>Count` always reflects **total items at that moment**
+- Uses `socket.io-client`
 
 This document contains everything required to use MultiversX WebSocket Subscriptions effectively.
