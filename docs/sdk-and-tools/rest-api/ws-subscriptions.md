@@ -3,8 +3,28 @@ id: multiversx-api-ws
 title: MultiversX API WebSocket
 ---
 
-# MultiversX WebSocket Subscription API
+## MultiversX WebSocket Subscription API
 
+Starting with the release [v1.17.0](https://github.com/multiversx/mx-api-service/releases/tag/v1.17.0) we introduced WebSocket Subscription functionality.
+
+It is useful for subscribing to new events, rather than performing polling (requesting latest events with a given refresh period).
+
+## Update Frequency and Duplicate Management
+Subscribers receive the most recent events at regular intervals defined by the API.
+
+This means:
+* You are **not** notified only when new events occur.
+
+* Instead, you receive an update every round (or according to the configured interval configured in MultiversX API).
+
+* Each update contains the latest events for that timeframe.
+
+*For example*:
+
+If you subscribe to the latest 25 blocks, you will receive those 25 blocks every second.
+Because of this repeating interval, **duplicate events may appear across batches**, and it is the user’s responsibility to filter or handle those duplicates on their side.
+
+## Rest API models compatibility
 The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
 
 ```
@@ -14,8 +34,6 @@ https://testnet-api.multiversx.com/<resource>
 ```
 
 All updates mirror REST responses and include a `<resource>Count` field representing **the total number of existing items at the moment the update was delivered**.
-
----
 
 ## Selecting the WebSocket Endpoint
 
