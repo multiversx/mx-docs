@@ -95,7 +95,7 @@ An API instance can be started with the following behavior:
 - cache warmer: used to proactively fetch data & pushes it to cache, to improve performance & scalability
 - elastic updater: used to attach various extra information to items in the elasticsearch, for not having to fetch associated data from other external systems when performing listing requests
 - events notifier: perform various decisions based on incoming logs & events
-
+- subscription: used to manage subscriptions, fetch and broadcast data to subscribers
 [comment]: # (mx-context-auto)
 
 ## Rate limiting
@@ -110,6 +110,13 @@ Public MultiversX APIs have a rate limit mechanism that brings the following lim
 ## Rest API documentation
 
 Rest API documentation of `api.multiversx.com` can be found on the [Swagger docs](https://api.multiversx.com).
+
+[comment]: # (mx-context-auto)
+
+## WebSocket Subscription Documentation
+
+Real-time blockchain streaming is supported through the MultiversX WebSocket Subscription API.  
+A dedicated guide is available here [WebSocket Subscription Guide](./ws-subscriptions.md)
 
 [comment]: # (mx-context-auto)
 
