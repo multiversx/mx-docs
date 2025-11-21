@@ -1,3 +1,8 @@
+---
+id: multiversx-api-ws
+title: MultiversX API WebSocket
+---
+
 # MultiversX WebSocket Subscription API  
 ### Real-Time Streaming Guide (socket.io-client)
 

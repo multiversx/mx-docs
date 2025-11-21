@@ -267,7 +267,14 @@ const sidebars = {
                 label: "Rest API",
                 items: [
                   "sdk-and-tools/rest-api/rest-api",
-                  "sdk-and-tools/rest-api/multiversx-api",
+                  {
+                    type: "category",
+                    label: "MultiversX API",
+                    items: [
+                        "sdk-and-tools/rest-api/multiversx-api",
+                        "sdk-and-tools/rest-api/multiversx-api-ws"
+                    ]
+                  },
                   {
                     type: "category",
                     label: "MultiversX Gateway",
