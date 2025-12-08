@@ -364,6 +364,68 @@ main().catch(console.error);
 
 ---
 
+## Error Handling
+
+Unexpected behaviors, such as sending an invalid payload or exceeding the server's subscription limits, will trigger an `error` event emitted by the server.
+
+You should listen to this event to handle failures gracefully.
+
+### Payload (DTO)
+
+The error object contains context about which subscription failed and why.
+
+| Field   | Type   | Description                                                                        |
+|---------|--------|------------------------------------------------------------------------------------|
+| pattern | string | The subscription topic (event name) that was requested (e.g., `subscribePool`). |
+| data    | object | The original payload sent by the client that caused the error.                       |
+| error   | object | The specific error returned by the server.                                 |
+
+### Example usage
+
+```js
+import { io } from "socket.io-client";
+
+// ... setup socket connection ...
+
+// Listen for generic errors from the server
+socket.on("error", (errorData) => {
+  console.error("Received error from server:");
+  console.dir(errorData, { depth: null });
+});
+```
+
+### Error Example
+
+**Scenario:** The client attempts to open more subscriptions than the server allows (e.g., limit of X).
+
+```json
+{
+  "pattern": "subscribePool",
+  "data": {
+    "from": 0,
+    "size": 25,
+    "type": "badInput"
+  },
+  "error": [
+    {
+      "target": {
+        "from": 0,
+        "size": 25,
+        "type": "badInput"
+      },
+      "value": "badInput",
+      "property": "type",
+      "children": [],
+      "constraints": {
+        "isEnum": "type must be one of the following values: Transaction, SmartContractResult, Reward"
+      }
+    }
+  ]
+}
+```
+
+---
+
 ## Summary
 
 - WebSocket endpoint is dynamically obtained via `/websocket/config`.
@@ -371,6 +433,7 @@ main().catch(console.error);
 - Payload DTOs define allowed fields and required/optional rules.
 - Update messages mirror REST API and include `<resource>Count` fields.
 - `<resource>Count` reflects **total items at the moment of update**.
+- Errors are emitted via the standard `error` event, containing the pattern, original data, and error message.
 - Uses `socket.io-client`.
 
 This document contains everything required to use MultiversX WebSocket Subscriptions effectively.
