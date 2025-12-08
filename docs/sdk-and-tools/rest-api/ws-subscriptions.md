@@ -376,7 +376,7 @@ The error object contains context about which subscription failed and why.
 
 | Field   | Type   | Description                                                                        |
 |---------|--------|------------------------------------------------------------------------------------|
-| pattern | string | The subscription topic (event name) that was requested (e.g., `subscribeTransactions`). |
+| pattern | string | The subscription topic (event name) that was requested (e.g., `subscribePool`). |
 | data    | object | The original payload sent by the client that caused the error.                       |
 | error   | object | The specific error returned by the server.                                 |
 
@@ -400,11 +400,27 @@ socket.on("error", (errorData) => {
 
 ```json
 {
-  "pattern": "subscribeCustomTransactions",
-  "data": { 
-    "function": "newGame" 
+  "pattern": "subscribePool",
+  "data": {
+    "from": 0,
+    "size": 25,
+    "type": "badInput"
   },
-  "error": "Maximum number of X global subscriptions accepted by server reached!"
+  "error": [
+    {
+      "target": {
+        "from": 0,
+        "size": 25,
+        "type": "badInput"
+      },
+      "value": "badInput",
+      "property": "type",
+      "children": [],
+      "constraints": {
+        "isEnum": "type must be one of the following values: Transaction, SmartContractResult, Reward"
+      }
+    }
+  ]
 }
 ```
 
