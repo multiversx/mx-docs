@@ -80,7 +80,7 @@ cd sovereignBridge
     # Owner Configuration
     WALLET="~/wallet.pem"
 
-    # Main Chain Constants
+    # Main chain network config
     MAIN_CHAIN_ELASTIC=https://testnet-index.multiversx.com
     PROXY = https://testnet-gateway.multiversx.com
     CHAIN_ID = T
@@ -91,7 +91,7 @@ cd sovereignBridge
     ```
 
     :::note
-    - **SOVEREIGN_DIRECTORY, TXS_OUTFILE_DIRECTORY, CONTRACTS_DIRECTORY** - represent the paths to the location where the deployment scripts will generate the outputs.
+    - **SOVEREIGN_DIRECTORY, OUTFILE_PATH, CONTRACTS_DIRECTORY** - represent the paths to the location where the deployment scripts will generate the outputs.
     - **WALLET** - should represent the wallet generated at Step 2.2.
     - **MAIN_CHAIN_ELASTIC** - represents the elasticsearch db from the main chain
     - **PROXY** - in this case, for the purpose of the test, the used proxy is the testnet one. Of course that the proper proxy should be used when deploying your own set of contracts depending on the development phase of your project.
@@ -109,16 +109,27 @@ cd sovereignBridge
     source script.sh
     ```
 
+6. Create and deploy main chain observer:
+    ```bash
+    createAndDeployMainChainObserver
+    ```
+   
+    :::info
+    After running this command, one should wait until the observer is fully synchronized.
+    :::
+
 6. Deploy all cross-chain contracts on main chain and deploy Sovereign Chain with all required services:
     ```bash
     deploySovereignWithCrossChainContracts sov
     ```
 
-    :::info
-    `deploySovereignWithCrossChainContracts` command will:
-    - deploy all main chain smart contracts and update sovereign configs
-    - deploy sovereign nodes and the main chain observer
-    - `sov` is the prefix for ESDT tokens in the sovereign chain - it can be changed to any string consisting of 4 lowercase alphanumeric characters
+   :::info
+   `deploySovereignWithCrossChainContracts` command will:
+    - deploy all smart contracts on the main chain and update the sovereign chain configuration
+    - set up sovereign nodes and deploy the main chain observer
+    - use `sov` as the default prefix for ESDT tokens on the sovereign chain  
+      (can be changed to any 1–4 character lowercase alphanumeric string and **must be unique across all deployed sovereign chains**)
+    - if no prefix is provided, a random one will be generated
     :::
 
 ### Step 3: Deploy services
@@ -138,17 +149,4 @@ ___
 2. Stop and clean the chain, and all sovereign services:
     ```bash
     stopAndCleanSovereign
-    ```
-
-## Upgrade and reset local Sovereign Chain
-
-1. Navigate to `mx-chain-sovereign-go/scripts/testnet/sovereignBridge`.
-    Source the script:
-    ```bash
-    source script.sh
-    ```
-
-2. Upgrade and reset the chain, and all sovereign services:
-    ```bash
-    sovereignUpgradeAndReset
     ```
