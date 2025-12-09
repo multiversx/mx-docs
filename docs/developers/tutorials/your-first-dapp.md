@@ -74,7 +74,7 @@ The contract also includes several views, storage mappers and one event:
 - `getTimeToPong`: **view** that shows the remaining time until `pong` is enabled for a specific address;
 - `getAcceptedPaymentToken`: **storage mapper** that saves the token type allowed for deposits;
 - `getPingAmount`: **storage mapper** that records the total amount of tokens deposited;
-- `getDurationTimestamp`: **storage mapper** that saves the lock duration (in seconds) before `pong` can be called after a `ping`;
+- `getDurationTimestamp`: **storage mapper** that saves the lock duration (in milliseconds) before `pong` can be called after a `ping`;
 - `getUserPingTimestamp`: **storage mapper** that saves the timestamp of the block where the user `ping`-ed;
 - `pongEvent`: **event** that signals a successful `pong` by the user with amount.
 
@@ -124,7 +124,7 @@ PEM wallets are recommended only for testing and experimenting with non-producti
 
 To initiate transactions on the blockchain, your wallet needs funds to cover transaction fees, commonly referred to as **gas**.
 
-The [MultiversX Devnet](https://devnet-wallet.multiversx.com/dashboard) offers a **faucet** where you can claim **5 EGLD**. You can recall the faucet every **24 hours** if your ballance is **lower than 1 EGLD**. Here’s how to fund your wallet:
+The [MultiversX Devnet](https://devnet-wallet.multiversx.com/dashboard) offers a **faucet** where you can claim **5 EGLD**. You can recall the faucet every **24 hours** if your balance is **lower than 1 EGLD**. Here’s how to fund your wallet:
 
 1. Go to [Devnet Wallet MultiversX](https://devnet-wallet.multiversx.com/unlock/pem) and log in using your newly generated **PEM** file;
 2. Once logged in, open the **Faucet** from the **Tools**;
@@ -202,7 +202,7 @@ Alternatively, you can add the absolute path of `wallet-owner.pem`.
 This next command deploys the Ping-Pong contract with the following settings:
 
 - Ping Amount: **1 EGLD**.
-- Lock Duration: **180000 seconds** (3 minutes).
+- Lock Duration: **180000 milliseconds** (3 minutes).
 
 :::important
 Ensure that you run the next command inside the **interactor** crate, located at:
