@@ -5,7 +5,7 @@ title: MultiversX API WebSocket
 
 ## MultiversX WebSocket Subscription API
 
-Starting with the release [v.1.17.0](https://github.com/multiversx/mx-api-service/releases/tag/v1.17.0) we introduced WebSocket Subscription functionality.
+Starting with the release [v1.17.0](https://github.com/multiversx/mx-api-service/releases/tag/v1.17.0) we introduced WebSocket Subscription functionality.
 
 It is useful for subscribing to new events in real-time, rather than performing polling (requesting latest events with a given refresh period).
 
@@ -390,7 +390,7 @@ Subscribes to transactions matching specific criteria (Sender, Receiver, or Func
 import { io } from "socket.io-client";
 
 async function main() {
-  const { url } = await fetch("[https://api.multiversx.com/websocket/config](https://api.multiversx.com/websocket/config)")
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
     .then((r) => r.json());
 
   const socket = io(`https://${url}`, { path: "/ws/subscription" });
