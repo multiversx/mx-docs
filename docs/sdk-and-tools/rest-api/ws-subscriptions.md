@@ -30,11 +30,11 @@ Subscribers receive events strictly as they occur on the blockchain, filtered by
 ## Rest API models compatibility
 The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
 
-```text
-[https://api.multiversx.com](https://api.multiversx.com)
-[https://devnet-api.multiversx.com](https://devnet-api.multiversx.com)
-[https://testnet-api.multiversx.com](https://testnet-api.multiversx.com)
-```
+
+[https://api.multiversx.com](https://api.multiversx.com)   
+[https://devnet-api.multiversx.com](https://devnet-api.multiversx.com)   
+[https://testnet-api.multiversx.com](https://testnet-api.multiversx.com)   
+
 
 All updates mirror REST responses and include a `<resource>Count` field representing **the total number of existing items at the moment the update was delivered**.
 
