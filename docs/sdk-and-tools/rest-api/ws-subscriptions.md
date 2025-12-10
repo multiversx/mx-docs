@@ -5,21 +5,22 @@ title: MultiversX API WebSocket
 
 ## MultiversX WebSocket Subscription API
 
-Starting with the release [v1.17.0](https://github.com/multiversx/mx-api-service/releases/tag/v1.17.0) we introduced WebSocket Subscription functionality.
+Starting with the release [v.1.17.0](https://github.com/multiversx/mx-api-service/releases/tag/v1.17.0) we introduced WebSocket Subscription functionality.
 
 It is useful for subscribing to new events in real-time, rather than performing polling (requesting latest events with a given refresh period).
 
-## Update Frequency and Data Modes
+## Update Frequency and Stream Modes
 
-The WebSocket API supports two primary modes of data consumption: **Latest Data** and **Fresh Data**.
+The WebSocket API supports two primary modes of data consumption: **Pulse Stream** and **Filtered Stream**.
 
-### 1. Latest Data (Snapshot & Loop)
+### 1. Pulse Stream (Snapshot & Loop)
 Subscribers receive the most recent events for a specific timeframe at regular intervals defined by the API.
 * **Behavior:** You receive an update every round (or configured interval).
 * **Content:** Each update contains the latest events for the requested buffer (e.g., latest 25 blocks).
 * **Duplicates:** Because of the repeating interval, **duplicate events may appear across batches**. It is the user’s responsibility to filter these duplicates.
+* **Available Streams:** Transactions, Blocks, Pool, Events, Stats.
 
-### 2. Fresh Data (Custom Real-time Streams)
+### 2. Filtered Stream (Custom Real-time Streams)
 Subscribers receive events strictly as they occur on the blockchain, filtered by specific criteria.
 * **Behavior:** You are notified immediately when a new event matches your filter.
 * **Content:** Data flows in real-time from the moment of subscription.
@@ -30,9 +31,9 @@ Subscribers receive events strictly as they occur on the blockchain, filtered by
 The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
 
 ```text
-https://api.multiversx.com
-https://devnet-api.multiversx.com
-https://testnet-api.multiversx.com
+[https://api.multiversx.com](https://api.multiversx.com)
+[https://devnet-api.multiversx.com](https://devnet-api.multiversx.com)
+[https://testnet-api.multiversx.com](https://testnet-api.multiversx.com)
 ```
 
 All updates mirror REST responses and include a `<resource>Count` field representing **the total number of existing items at the moment the update was delivered**.
@@ -74,21 +75,21 @@ https://<returned-url>/ws/subscription
 
 | Stream Type | Stream Name | Subscribe Event | Update Event | Description |
 |---|---|---|---|---|
-| **Latest** | Transactions | `subscribeTransactions` | `transactionUpdate` | Recurring latest buffer |
-| **Latest** | Blocks | `subscribeBlocks` | `blocksUpdate` | Recurring latest buffer |
-| **Latest** | Pool | `subscribePool` | `poolUpdate` | Recurring mempool dump |
-| **Latest** | Events | `subscribeEvents` | `eventsUpdate` | Recurring latest events |
-| **Latest** | Stats | `subscribeStats` | `statsUpdate` | Recurring chain stats |
-| **Fresh** | Custom Txs | `subscribeCustomTransactions` | `customTransactionUpdate` | Real-time filtered Txs |
-| **Fresh** | Custom Events| `subscribeCustomEvents` | `customEventUpdate` | Real-time filtered Events |
+| **Pulse** | Transactions | `subscribeTransactions` | `transactionUpdate` | Recurring latest buffer |
+| **Pulse** | Blocks | `subscribeBlocks` | `blocksUpdate` | Recurring latest buffer |
+| **Pulse** | Pool | `subscribePool` | `poolUpdate` | Recurring mempool dump |
+| **Pulse** | Events | `subscribeEvents` | `eventsUpdate` | Recurring latest events |
+| **Pulse** | Stats | `subscribeStats` | `statsUpdate` | Recurring chain stats |
+| **Filtered** | Custom Txs | `subscribeCustomTransactions` | `customTransactionUpdate` | Real-time filtered Txs |
+| **Filtered** | Custom Events| `subscribeCustomEvents` | `customEventUpdate` | Real-time filtered Events |
 
 ---
 
-## Latest Data Subscriptions
+## Pulse Stream Subscriptions
 
 **Note:** This mode pushes the latest buffer of data repeatedly. **Duplicate events may appear across batches**, and it is the user’s responsibility to filter or handle those duplicates on their side.
 
-### Transactions (Latest)
+### Transactions (Pulse)
 
 #### Payload (DTO)
 
@@ -153,7 +154,7 @@ main().catch(console.error);
 
 ---
 
-### Blocks (Latest)
+### Blocks (Pulse)
 
 #### Payload (DTO)
 
@@ -208,7 +209,7 @@ main().catch(console.error);
 
 ---
 
-### Pool (Latest)
+### Pool (Pulse)
 
 #### Payload (DTO)
 
@@ -261,7 +262,7 @@ main().catch(console.error);
 
 ---
 
-### Events (Latest)
+### Events (Pulse)
 
 #### Payload (DTO)
 
@@ -317,7 +318,7 @@ main().catch(console.error);
 
 ---
 
-### Stats (Latest)
+### Stats (Pulse)
 
 #### Payload (DTO)
 
@@ -362,11 +363,11 @@ main().catch(console.error);
 
 ---
 
-## Fresh Data Subscriptions (Custom Streams)
+## Filtered Stream Subscriptions (Custom Streams)
 
-**Note:** These streams provide real-time data with **no duplicates**. You must provide at least one filter criterion in the payload.
+**Note:** These streams provide real-time data (with a small delay after the actions are committed on-chain) for specific criteria. You must provide at least one filter criteria when subscribing.
 
-### Custom Transactions (Fresh)
+### Custom Transactions (Filtered)
 
 Subscribes to transactions matching specific criteria (Sender, Receiver, or Function) as they happen.
 
@@ -389,7 +390,7 @@ Subscribes to transactions matching specific criteria (Sender, Receiver, or Func
 import { io } from "socket.io-client";
 
 async function main() {
-  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+  const { url } = await fetch("[https://api.multiversx.com/websocket/config](https://api.multiversx.com/websocket/config)")
     .then((r) => r.json());
 
   const socket = io(`https://${url}`, { path: "/ws/subscription" });
@@ -429,7 +430,7 @@ async function main() {
 
 ---
 
-### Custom Events (Fresh)
+### Custom Events (Filtered)
 
 Subscribes to smart contract events matching specific criteria as they happen.
 
@@ -595,8 +596,8 @@ socket.on("error", (errorData) => {
 ## Summary
 
 - WebSocket endpoint is dynamically obtained via `/websocket/config`.
-- **Latest Data Subscriptions:** periodic updates with possible duplicates (Transactions, Blocks, Pool, Events, Stats).
-- **Fresh Data Subscriptions:** real-time updates with only new data (CustomTransactions, CustomEvents).
+- **Pulse Stream Subscriptions:** periodic updates with possible duplicates (Transactions, Blocks, Pool, Events, Stats).
+- **Filtered Stream Subscriptions:** real-time updates with only new data (CustomTransactions, CustomEvents).
 - **Unsubscribing:** Use `un` prefix + same payload.
 - Payload DTOs define allowed fields and required/optional rules.
 - Update messages mirror REST API and include `<resource>Count` fields.
