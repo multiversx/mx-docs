@@ -25,7 +25,7 @@ Subscribers receive events strictly as they occur on the blockchain, filtered by
 * **Behavior:** You are notified immediately when a new event matches your filter.
 * **Content:** Data flows in real-time from the moment of subscription.
 * **Duplicates:** **No duplicate events are sent.** You receive each item exactly once.
-* **Available Streams:** Only `CustomTransactions` and `CustomEvents` are supported in this mode.
+* **Available Streams:** Only `Transactions` and `Events` are supported in this mode.
 
 ## Rest API models compatibility
 The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
