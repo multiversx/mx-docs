@@ -38,3 +38,9 @@ sudo apt install redis
 sudo systemctl start redis
 sudo systemctl enable redis
 ```
+
+## Prerequisites
+
+### Sovereign network deployed
+
+Before starting the services it is required to have a full sovereign network running, see [setup guide](/sovereign/local-setup).

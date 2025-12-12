@@ -18,6 +18,7 @@ git clone https://github.com/multiversx/mx-lite-wallet-dapp.git
 2. Update the `sharedNetworks.ts` file:
    - for `sovereign` item
      - update the URLs with your own
+     - update `WEGLDid` with the sovereign native token identifier from `config.toml` -> `BaseTokenID`
      - update `sovereignContractAddress` with contract address from `sovereignConfig.toml` -> `SubscribedEvents` from `OutgoingSubscribedEvents`
    - for `testnet` item (or the network your sovereign is connected to)
      - update `sovereignContractAddress` with contract address from `sovereignConfig.toml` -> `SubscribedEvents` from `NotifierConfig`
