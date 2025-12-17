@@ -7,31 +7,34 @@ title: MultiversX API WebSocket
 
 Starting with the release [v1.17.0](https://github.com/multiversx/mx-api-service/releases/tag/v1.17.0) we introduced WebSocket Subscription functionality.
 
-It is useful for subscribing to new events, rather than performing polling (requesting latest events with a given refresh period).
+It is useful for subscribing to new events in real-time, rather than performing polling (requesting latest events with a given refresh period).
 
-## Update Frequency and Duplicate Management
-Subscribers receive the most recent events at regular intervals defined by the API.
+## Update Frequency and Stream Modes
 
-This means:
-* You are **not** notified only when new events occur.
+The WebSocket API supports two primary modes of data consumption: **Pulse Stream** and **Filtered Stream**.
 
-* Instead, you receive an update every round (or according to the configured interval configured in MultiversX API).
+### 1. Pulse Stream (Snapshot & Loop)
+Subscribers receive the most recent events for a specific timeframe at regular intervals defined by the API.
+* **Behavior:** You receive an update every round (or configured interval).
+* **Content:** Each update contains the latest events for the requested buffer (e.g., latest 25 blocks).
+* **Duplicates:** Because of the repeating interval, **duplicate events may appear across batches**. It is the user’s responsibility to filter these duplicates.
+* **Available Streams:** Transactions, Blocks, Pool, Events, Stats.
 
-* Each update contains the latest events for that timeframe.
-
-*For example*:
-
-If you subscribe to the latest 25 blocks, you will receive those 25 blocks every second.
-Because of this repeating interval, **duplicate events may appear across batches**, and it is the user’s responsibility to filter or handle those duplicates on their side.
+### 2. Filtered Stream (Custom Real-time Streams)
+Subscribers receive events strictly as they occur on the blockchain, filtered by specific criteria.
+* **Behavior:** You are notified immediately when a new event matches your filter.
+* **Content:** Data flows in real-time from the moment of subscription.
+* **Duplicates:** **No duplicate events are sent.** You receive each item exactly once.
+* **Available Streams:** `Transactions`, `Events`, and `Transfers` are supported in this mode.
 
 ## Rest API models compatibility
 The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
 
-```
-https://api.multiversx.com/<resource>
-https://devnet-api.multiversx.com/<resource>
-https://testnet-api.multiversx.com/<resource>
-```
+
+[https://api.multiversx.com](https://api.multiversx.com)   
+[https://devnet-api.multiversx.com](https://devnet-api.multiversx.com)   
+[https://testnet-api.multiversx.com](https://testnet-api.multiversx.com)   
+
 
 All updates mirror REST responses and include a `<resource>Count` field representing **the total number of existing items at the moment the update was delivered**.
 
@@ -70,27 +73,24 @@ https://<returned-url>/ws/subscription
 
 ## Subscription Events Overview
 
-| Stream       | Subscribe Event         | Update Event       | Mirrors REST Route |
-|--------------|-------------------------|--------------------|---------------------|
-| Transactions | `subscribeTransactions` | `transactionUpdate`| `/transactions`     |
-| Blocks       | `subscribeBlocks`       | `blocksUpdate`     | `/blocks`           |
-| Pool         | `subscribePool`         | `poolUpdate`       | `/pool`             |
-| Events       | `subscribeEvents`       | `eventsUpdate`     | `/events`           |
-| Stats        | `subscribeStats`        | `statsUpdate`      | `/stats`            |
+| Stream Type | Stream Name | Subscribe Event | Update Event | Description |
+|---|---|---|---|---|
+| **Pulse** | Transactions | `subscribeTransactions` | `transactionUpdate` | Recurring latest buffer |
+| **Pulse** | Blocks | `subscribeBlocks` | `blocksUpdate` | Recurring latest buffer |
+| **Pulse** | Pool | `subscribePool` | `poolUpdate` | Recurring mempool dump |
+| **Pulse** | Events | `subscribeEvents` | `eventsUpdate` | Recurring latest events |
+| **Pulse** | Stats | `subscribeStats` | `statsUpdate` | Recurring chain stats |
+| **Filtered** | Custom Txs | `subscribeCustomTransactions` | `customTransactionUpdate` | Real-time filtered Txs |
+| **Filtered** | Custom Transfers | `subscribeCustomTransfers` | `customTransferUpdate` | Real-time filtered Transfers |
+| **Filtered** | Custom Events| `subscribeCustomEvents` | `customEventUpdate` | Real-time filtered Events |
 
 ---
 
-## Subscriptions
+## Pulse Stream Subscriptions
 
-Each stream includes:
+**Note:** This mode pushes the latest buffer of data repeatedly. **Duplicate events may appear across batches**, and it is the user’s responsibility to filter or handle those duplicates on their side.
 
-- DTO payload table
-- Single code block with connect + payload + subscribe + listen
-- Update example
-
----
-
-### Transactions Subscription
+### Transactions (Pulse)
 
 #### Payload (DTO)
 
@@ -155,7 +155,7 @@ main().catch(console.error);
 
 ---
 
-### Blocks Subscription
+### Blocks (Pulse)
 
 #### Payload (DTO)
 
@@ -210,7 +210,7 @@ main().catch(console.error);
 
 ---
 
-### Pool Subscription
+### Pool (Pulse)
 
 #### Payload (DTO)
 
@@ -263,7 +263,7 @@ main().catch(console.error);
 
 ---
 
-### Events Subscription
+### Events (Pulse)
 
 #### Payload (DTO)
 
@@ -319,7 +319,7 @@ main().catch(console.error);
 
 ---
 
-### Stats Subscription
+### Stats (Pulse)
 
 #### Payload (DTO)
 
@@ -364,13 +364,367 @@ main().catch(console.error);
 
 ---
 
+## Filtered Stream Subscriptions (Custom Streams)
+
+**Note:** These streams provide real-time data (with a small delay after the actions are committed on-chain) for specific criteria. You must provide at least one filter criteria when subscribing.
+
+### Custom Transactions (Filtered)
+
+Subscribes to transactions matching specific criteria (Sender, Receiver, or Function) as they happen.
+
+#### Subscribe Event
+`subscribeCustomTransactions`
+
+#### Payload (DTO)
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| sender | string | NO* | Filter by sender address (bech32) |
+| receiver | string | NO* | Filter by receiver address (bech32) |
+| function | string | NO* | Filter by smart contract function name |
+
+*\*At least one field must be provided.*
+
+#### Example usage
+
+```js
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  // Subscribe to all transactions sent by a specific address
+  const payload = { 
+    sender: "erd1..." 
+  };
+
+  socket.emit("subscribeCustomTransactions", payload);
+
+  socket.on("customTransactionUpdate", (data) => {
+    // data.transactions: Transaction[]
+    // data.timestampMs: number
+    console.log("New Custom Transaction:", data);
+  });
+}
+```
+
+#### Update Example
+
+```json
+{
+  "transactions": [
+    {
+      "txHash": "7f172e468e61210805815f33af8500d827aff36df6196cc96783c6d592a5fc76",
+      "sender": "erd1srdxd75cg7nkaxxy3llz4hmwqqkmcej0jelv8ults8m86g29aj3sxjkc45",
+      "receiver": "erd19waq9tlhj32ane9duhkv6jusm58ca5ylnthhg9h8fcumtp8srh4qrl3hjj",
+      "nonce": 211883,
+      "status": "pending",
+      "timestamp": 1763718888
+    }
+  ],
+  "timestampMs": 1763718888000
+}
+```
+
+---
+
+### Custom Transfers (Filtered)
+
+Subscribes to the complete stream of actions associated with a specific Address or Token. This includes not only standard transactions but all blockchain operations: Transactions, Smart Contract Results (SCRs), Rewards, ... .  It is the preferred mode for tracking the full real-time activity of an account or the global movement of a specific token.
+
+#### Subscribe Event
+`subscribeCustomTransfers`
+
+#### Payload (DTO)
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| sender | string | NO* | Filter by sender address (bech32) |
+| receiver | string | NO* | Filter by receiver address (bech32) |
+| relayer | string | NO* | Filter by the relayer address (for meta-transactions) |
+| function | string | NO* | Filter by smart contract function name |
+| token | string | NO* | Filter by Token Identifier (e.g., `USDC-c76f1f` or `EGLD` for native egld) |
+| address | string | NO** | **Universal Filter:** Matches if the address is the Sender **OR** Receiver **OR** Relayer. |
+
+*\*At least one field from the list above must be provided.*
+*\*\*The `address` field cannot be combined with `sender`, `receiver`, or `relayer` in the same payload.*
+
+#### Example usage
+
+**Scenario: Listen for specific Token transfers (e.g., USDC)**
+Useful for tracking volume on a specific token.
+
+```js
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  const payload = { 
+    token: "USDC-c76f1f" 
+  };
+
+  socket.emit("subscribeCustomTransfers", payload);
+
+  socket.on("customTransferUpdate", (data) => {
+    // data.transfers: Transaction[] (filtered)
+    // data.timestampMs: number
+    console.log("New USDC Transfer:", data);
+  });
+}
+```
+
+**Scenario: Listen for ANY activity related to an address**
+Using the `address` field is a shorthand to avoid creating 3 separate subscriptions (sender, receiver, relayer).
+
+```js
+  const payload = { 
+    address: "erd1..." // Will capture incoming, outgoing, and relayed transfers
+  };
+
+  socket.emit("subscribeCustomTransfers", payload);
+```
+
+#### Update Example
+
+```json
+{
+  "transfers": [
+   {
+        "txHash": "cb5d0644ef40943db8035ff50913c4a974a469c2479a73c3cd3ab8de9027be0f",
+        "receiver": "erd1qqqqqqqqqqqqqpgqxn6hj5m9x33zuq0xynjkusd8tsz3u6a94fvsn2m2ry",
+        "receiverShard": 1,
+        "sender": "erd1qqqqqqqqqqqqqpgqcc69ts8409p3h77q5chsaqz57y6hugvc4fvs64k74v",
+        "senderAssets": {
+          ...    
+        },
+        "senderShard": 1,
+        "status": "success",
+        "value": "0",
+        "timestamp": 1765963650,
+        "function": "exchange",
+        "action": {
+            "category": "esdtNft",
+            "name": "transfer",
+            "description": "Transfer",
+            "arguments": {
+                "transfers": [
+                    {
+                        "type": "FungibleESDT",
+                        "ticker": "USDC",
+                        "svgUrl": "https://tools.multiversx.com/assets-cdn/tokens/USDC-c76f1f/icon.svg",
+                        "token": "USDC-c76f1f",
+                        "decimals": 6,
+                        "value": "4087442"
+                    }
+                ],
+                "receiver": "erd1qqqqqqqqqqqqqpgqxn6hj5m9x33zuq0xynjkusd8tsz3u6a94fvsn2m2ry",
+                "functionName": "exchange",
+                "functionArgs": [
+                    "01"
+                ]
+            }
+        },
+        "type": "SmartContractResult",
+        "originalTxHash": "46bb841a087c5ce95ca28d0e95c860c661b4d32514bb2970137536036bf591b3"
+    },
+  ],
+  "timestampMs": 1763718888000
+}
+```
+
+---
+
+### Custom Events (Filtered)
+
+Subscribes to smart contract events matching specific criteria as they happen.
+
+#### Subscribe Event
+`subscribeCustomEvents`
+
+#### Payload (DTO)
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| address | string | NO* | Filter by the address associated with the event |
+| identifier | string | NO* | Filter by event identifier (name) |
+| logAddress | string | NO* | Filter by the contract address that emitted the log |
+
+*\*At least one field must be provided.*
+
+#### Example usage
+
+```js
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  // Subscribe to a specific event identifier
+  const payload = { 
+    identifier: "swap" 
+  };
+
+  socket.emit("subscribeCustomEvents", payload);
+
+  socket.on("customEventUpdate", (data) => {
+      // data.events: Events[]
+      // data.timestampMs: number
+      console.log("New Custom Event:", data);
+  });
+}
+```
+
+#### Update Example
+
+```json
+{
+  "events": [
+    {
+      "txHash": "b5bde891df72e26fb36e7ab3acc14b74044bd9aa82b4852692f5b9a767e0391f-1-0",
+      "identifier": "signalError",
+      "address": "erd1jv5m4v3yr0wy6g2jtz2v344sfx572rw6aclum9c6r7rd4ej4l6csjej2wh",
+      "timestamp": 1763718864,
+      "topics": [
+        "9329bab2241bdc4d21525894c8d6b049a9e50ddaee3fcd971a1f86dae655feb1",
+        "4865616c7468206e6f74206c6f7720656e6f75676820666f72206c69717569646174696f6e2e"
+      ],
+      "shardID": 1
+    }
+  ],
+  "timestampMs": 1763718864000
+}
+```
+
+---
+
+## Unsubscribing
+
+To stop receiving updates for any stream, you must emit the corresponding unsubscribe event.
+
+**The Rule:**
+1.  Add the prefix `un` to the subscription event name (e.g., `subscribeTransactions` → `unsubscribeTransactions`, `subscribeCustomTransactions` → `unsubscribeCustomTransactions`).
+2.  Send the **exact same payload** used for the subscription.
+
+### Example: Unsubscribe from Custom Transactions
+
+If you subscribed with:
+```js
+const payload = { sender: "erd1..." };
+socket.emit("subscribeCustomTransactions", payload);
+```
+
+You must unsubscribe with:
+```js
+socket.emit("unsubscribeCustomTransactions", payload);
+```
+
+### Example: Unsubscribe from Custom Transfers
+If you subscribed with:
+```js
+const payload = { token: "USDC-c76f1f" };
+socket.emit("subscribeCustomTransfers", payload);
+```
+
+You must unsubscribe with:
+```js
+socket.emit("unsubscribeCustomTransfers", payload);
+```
+
+### Example: Unsubscribe from Blocks
+If you subscribed with:
+```js
+const payload = { from: 0, size: 25 };
+socket.emit("subscribeBlocks", payload);
+```
+
+You must unsubscribe with:
+```js
+socket.emit("unsubscribeBlocks", payload);
+```
+
+---
+
+## Error Handling
+
+Unexpected behaviors, such as sending an invalid payload or exceeding the server's subscription limits, will trigger an `error` event emitted by the server.
+
+You should listen to this event to handle failures gracefully.
+
+### Payload (DTO)
+
+The error object contains context about which subscription failed and why.
+
+| Field   | Type   | Description                                                                        |
+|---------|--------|------------------------------------------------------------------------------------|
+| pattern | string | The subscription topic (event name) that was requested (e.g., `subscribePool`). |
+| data    | object | The original payload sent by the client that caused the error.                       |
+| error   | object | The specific error returned by the server.                                 |
+
+### Example usage
+
+```js
+import { io } from "socket.io-client";
+
+// ... setup socket connection ...
+
+// Listen for generic errors from the server
+socket.on("error", (errorData) => {
+  console.error("Received error from server:");
+  console.dir(errorData, { depth: null });
+});
+```
+
+### Error Example
+
+**Scenario:** The client attempts to open more subscriptions than the server allows (e.g., limit of X).
+
+```json
+{
+  "pattern": "subscribePool",
+  "data": {
+    "from": 0,
+    "size": 25,
+    "type": "badInput"
+  },
+  "error": [
+    {
+      "target": {
+        "from": 0,
+        "size": 25,
+        "type": "badInput"
+      },
+      "value": "badInput",
+      "property": "type",
+      "children": [],
+      "constraints": {
+        "isEnum": "type must be one of the following values: Transaction, SmartContractResult, Reward"
+      }
+    }
+  ]
+}
+```
+
+---
+
 ## Summary
 
 - WebSocket endpoint is dynamically obtained via `/websocket/config`.
-- Each stream has its own subscribe and update events.
+- **Pulse Stream Subscriptions:** periodic updates with possible duplicates (Transactions, Blocks, Pool, Events, Stats).
+- **Filtered Stream Subscriptions:** real-time updates with only new data (CustomTransactions, **CustomTransfers**, CustomEvents).
+- **Unsubscribing:** Use `un` prefix + same payload.
 - Payload DTOs define allowed fields and required/optional rules.
 - Update messages mirror REST API and include `<resource>Count` fields.
-- `<resource>Count` reflects **total items at the moment of update**.
+- Errors are emitted via the standard `error` event.
 - Uses `socket.io-client`.
 
 This document contains everything required to use MultiversX WebSocket Subscriptions effectively.
