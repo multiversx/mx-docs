@@ -433,7 +433,7 @@ async function main() {
 
 ### Custom Transfers (Filtered)
 
-Subscribes to value transfers (EGLD, ESDT, NFT) matching specific criteria. This stream is optimized for tracking movement of assets and supports flexible filtering like generic address matching and token identifiers.
+Subscribes to the complete stream of actions associated with a specific Address or Token. This includes not only standard transactions but all blockchain operations: Transactions, Smart Contract Results (SCRs), Rewards, ... .  It is the preferred mode for tracking the full real-time activity of an account or the global movement of a specific token.
 
 #### Subscribe Event
 `subscribeCustomTransfers`
