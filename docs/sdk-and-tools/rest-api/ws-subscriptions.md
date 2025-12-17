@@ -25,7 +25,7 @@ Subscribers receive events strictly as they occur on the blockchain, filtered by
 * **Behavior:** You are notified immediately when a new event matches your filter.
 * **Content:** Data flows in real-time from the moment of subscription.
 * **Duplicates:** **No duplicate events are sent.** You receive each item exactly once.
-* **Available Streams:** Only `Transactions` and `Events` are supported in this mode.
+* **Available Streams:** `Transactions`, `Events`, and `Transfers` are supported in this mode.
 
 ## Rest API models compatibility
 The MultiversX WebSocket Subscription API provides real-time blockchain data identical in structure to REST API responses:
@@ -81,6 +81,7 @@ https://<returned-url>/ws/subscription
 | **Pulse** | Events | `subscribeEvents` | `eventsUpdate` | Recurring latest events |
 | **Pulse** | Stats | `subscribeStats` | `statsUpdate` | Recurring chain stats |
 | **Filtered** | Custom Txs | `subscribeCustomTransactions` | `customTransactionUpdate` | Real-time filtered Txs |
+| **Filtered** | Custom Transfers | `subscribeCustomTransfers` | `customTransferUpdate` | Real-time filtered Transfers |
 | **Filtered** | Custom Events| `subscribeCustomEvents` | `customEventUpdate` | Real-time filtered Events |
 
 ---
@@ -430,6 +431,116 @@ async function main() {
 
 ---
 
+### Custom Transfers (Filtered)
+
+Subscribes to value transfers (EGLD, ESDT, NFT) matching specific criteria. This stream is optimized for tracking movement of assets and supports flexible filtering like generic address matching and token identifiers.
+
+#### Subscribe Event
+`subscribeCustomTransfers`
+
+#### Payload (DTO)
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| sender | string | NO* | Filter by sender address (bech32) |
+| receiver | string | NO* | Filter by receiver address (bech32) |
+| relayer | string | NO* | Filter by the relayer address (for meta-transactions) |
+| function | string | NO* | Filter by smart contract function name |
+| token | string | NO* | Filter by Token Identifier (e.g., `USDC-c76f1f` or `EGLD` for native egld) |
+| address | string | NO** | **Universal Filter:** Matches if the address is the Sender **OR** Receiver **OR** Relayer. |
+
+*\*At least one field from the list above must be provided.*
+*\*\*The `address` field cannot be combined with `sender`, `receiver`, or `relayer` in the same payload.*
+
+#### Example usage
+
+**Scenario: Listen for specific Token transfers (e.g., USDC)**
+Useful for tracking volume on a specific token.
+
+```js
+import { io } from "socket.io-client";
+
+async function main() {
+  const { url } = await fetch("https://api.multiversx.com/websocket/config")
+    .then((r) => r.json());
+
+  const socket = io(`https://${url}`, { path: "/ws/subscription" });
+
+  const payload = { 
+    token: "USDC-c76f1f" 
+  };
+
+  socket.emit("subscribeCustomTransfers", payload);
+
+  socket.on("customTransferUpdate", (data) => {
+    // data.transfers: Transaction[] (filtered)
+    // data.timestampMs: number
+    console.log("New USDC Transfer:", data);
+  });
+}
+```
+
+**Scenario: Listen for ANY activity related to an address**
+Using the `address` field is a shorthand to avoid creating 3 separate subscriptions (sender, receiver, relayer).
+
+```js
+  const payload = { 
+    address: "erd1..." // Will capture incoming, outgoing, and relayed transfers
+  };
+
+  socket.emit("subscribeCustomTransfers", payload);
+```
+
+#### Update Example
+
+```json
+{
+  "transfers": [
+   {
+        "txHash": "cb5d0644ef40943db8035ff50913c4a974a469c2479a73c3cd3ab8de9027be0f",
+        "receiver": "erd1qqqqqqqqqqqqqpgqxn6hj5m9x33zuq0xynjkusd8tsz3u6a94fvsn2m2ry",
+        "receiverShard": 1,
+        "sender": "erd1qqqqqqqqqqqqqpgqcc69ts8409p3h77q5chsaqz57y6hugvc4fvs64k74v",
+        "senderAssets": {
+          ...    
+        },
+        "senderShard": 1,
+        "status": "success",
+        "value": "0",
+        "timestamp": 1765963650,
+        "function": "exchange",
+        "action": {
+            "category": "esdtNft",
+            "name": "transfer",
+            "description": "Transfer",
+            "arguments": {
+                "transfers": [
+                    {
+                        "type": "FungibleESDT",
+                        "ticker": "USDC",
+                        "svgUrl": "https://tools.multiversx.com/assets-cdn/tokens/USDC-c76f1f/icon.svg",
+                        "token": "USDC-c76f1f",
+                        "decimals": 6,
+                        "value": "4087442"
+                    }
+                ],
+                "receiver": "erd1qqqqqqqqqqqqqpgqxn6hj5m9x33zuq0xynjkusd8tsz3u6a94fvsn2m2ry",
+                "functionName": "exchange",
+                "functionArgs": [
+                    "01"
+                ]
+            }
+        },
+        "type": "SmartContractResult",
+        "originalTxHash": "46bb841a087c5ce95ca28d0e95c860c661b4d32514bb2970137536036bf591b3"
+    },
+  ],
+  "timestampMs": 1763718888000
+}
+```
+
+---
+
 ### Custom Events (Filtered)
 
 Subscribes to smart contract events matching specific criteria as they happen.
@@ -517,6 +628,18 @@ You must unsubscribe with:
 socket.emit("unsubscribeCustomTransactions", payload);
 ```
 
+### Example: Unsubscribe from Custom Transfers
+If you subscribed with:
+```js
+const payload = { token: "USDC-c76f1f" };
+socket.emit("subscribeCustomTransfers", payload);
+```
+
+You must unsubscribe with:
+```js
+socket.emit("unsubscribeCustomTransfers", payload);
+```
+
 ### Example: Unsubscribe from Blocks
 If you subscribed with:
 ```js
@@ -597,7 +720,7 @@ socket.on("error", (errorData) => {
 
 - WebSocket endpoint is dynamically obtained via `/websocket/config`.
 - **Pulse Stream Subscriptions:** periodic updates with possible duplicates (Transactions, Blocks, Pool, Events, Stats).
-- **Filtered Stream Subscriptions:** real-time updates with only new data (CustomTransactions, CustomEvents).
+- **Filtered Stream Subscriptions:** real-time updates with only new data (CustomTransactions, **CustomTransfers**, CustomEvents).
 - **Unsubscribing:** Use `un` prefix + same payload.
 - Payload DTOs define allowed fields and required/optional rules.
 - Update messages mirror REST API and include `<resource>Count` fields.
