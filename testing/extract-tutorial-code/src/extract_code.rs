@@ -7,6 +7,7 @@ use parser::{CodeBlock, extract_code_blocks_from_markdown};
 const CROWDFUNDING_TUTORIAL_PATHS: &[&str] = &[
     "../../docs/developers/tutorials/crowdfunding/crowdfunding-p1.md",
     "../../docs/developers/tutorials/crowdfunding/crowdfunding-p2.md",
+    "../../docs/developers/tutorials/crowdfunding/final-code.md",
 ];
 
 fn extract_code_blocks_from_file<P: AsRef<Path>>(path: P) -> Vec<CodeBlock> {
@@ -56,6 +57,13 @@ fn main() {
     write_code_block(
         "crowdfunding.rs",
         "../crowdfunding/src/crowdfunding.rs",
+        &code_blocks,
+    );
+
+    // Find and write crowdfunding.rs
+    write_code_block(
+        "crowdfunding_blackbox_test.rs",
+        "../crowdfunding/tests/crowdfunding_blackbox_test.rs",
         &code_blocks,
     );
 }

@@ -1,6 +1,6 @@
 ---
 id: crowdfunding-p1
-title: Crowdfunding Smart Contract Setup
+title: Setup
 ---
 
 [comment]: # (mx-abstract)
