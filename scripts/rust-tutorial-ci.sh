@@ -7,5 +7,5 @@
 cd testing/extract-tutorial-code
 cargo run || return 1
 
-cd ../crowdfunding-esdt
+cd ../crowdfunding
 cargo test || return 1

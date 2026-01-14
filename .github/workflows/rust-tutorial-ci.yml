@@ -15,6 +15,6 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           default: true
-          toolchain: nightly
+          toolchain: stable
       - name: Run rust tests
         run: ./scripts/rust-tutorial-ci.sh

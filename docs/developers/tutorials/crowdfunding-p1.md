@@ -81,20 +81,17 @@ You may choose any location you want for your smart contract. Either way, now th
 name = "crowdfunding"
 version = "0.0.0"
 publish = false
-edition = "2021"
+edition = "2024"
 authors = ["you"]
 
 [lib]
 path = "src/crowdfunding.rs"
 
 [dependencies.multiversx-sc]
-version = "0.57.0"
-
-[dev-dependencies]
-num-bigint = "0.4"
+version = "0.64.1"
 
 [dev-dependencies.multiversx-sc-scenario]
-version = "0.57.0"
+version = "0.64.1"
 
 [workspace]
 members = [
