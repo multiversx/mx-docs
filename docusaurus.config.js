@@ -462,6 +462,14 @@ const config = {
             from: "/developers/meta/rust-stable-vs-nightly",
             to: "/developers/meta/rust-version",
           },
+          {
+            from: "/developers/tutorials/crowdfunding-p1",
+            to: "/developers/tutorials/crowdfunding/crowdfunding-p1",
+          },
+          {
+            from: "/developers/tutorials/crowdfunding-p2",
+            to: "/developers/tutorials/crowdfunding/crowdfunding-p2",
+          },
         ],
         createRedirects(existingPath) {
           return undefined; // Return a falsy value: no redirect created

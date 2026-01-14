@@ -4,8 +4,8 @@
 ## The tests are also taken from the tutorial.
 ## Tests are only run on the rust backend.
 
-cd testing/extract-tutorial-code
-cargo run || return 1
+cd extract-tutorial-code || exit 1
+cargo run || exit 1
 
-cd ../crowdfunding
-cargo test || return 1
+cd ../crowdfunding || exit 1
+cargo test || exit 1

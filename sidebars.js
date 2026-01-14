@@ -52,8 +52,14 @@ const sidebars = {
         items: [
           "developers/tutorials/your-first-dapp",
           "developers/tutorials/your-first-microservice",
-          "developers/tutorials/crowdfunding-p1",
-          "developers/tutorials/crowdfunding-p2",
+          {
+            type: "category",
+            label: "Crowdfunding Tutorial",
+            items: [
+              "developers/tutorials/crowdfunding/crowdfunding-p1",
+              "developers/tutorials/crowdfunding/crowdfunding-p2",
+            ],
+          },
           "developers/tutorials/staking-contract",
           "developers/tutorials/energy-dao",
           "developers/tutorials/dex-walkthrough",

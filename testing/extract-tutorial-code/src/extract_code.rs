@@ -5,8 +5,8 @@ mod parser;
 use parser::{CodeBlock, extract_code_blocks_from_markdown};
 
 const CROWDFUNDING_TUTORIAL_PATHS: &[&str] = &[
-    "../../docs/developers/tutorials/crowdfunding-p1.md",
-    "../../docs/developers/tutorials/crowdfunding-p2.md",
+    "../../docs/developers/tutorials/crowdfunding/crowdfunding-p1.md",
+    "../../docs/developers/tutorials/crowdfunding/crowdfunding-p2.md",
 ];
 
 fn extract_code_blocks_from_file<P: AsRef<Path>>(path: P) -> Vec<CodeBlock> {

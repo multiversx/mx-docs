@@ -1,7 +1,8 @@
 ---
 id: crowdfunding-p1
-title: Building a Crowdfunding Smart Contract
+title: Crowdfunding Smart Contract Setup
 ---
+
 [comment]: # (mx-abstract)
 Write, build and deploy a simple smart contract written in Rust.
 

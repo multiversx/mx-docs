@@ -9,7 +9,7 @@ Define contract arguments, handle storage, process payments, define new types, w
 
 ## Configuring the contract
 
-[The previous chapter](/docs/developers/tutorials/crowdfunding-p1.md) left us with a minimal contract as a starting point.
+[The previous chapter](crowdfunding-p1.md) left us with a minimal contract as a starting point.
 
 The first thing we need to do is to configure the desired target amount and the deadline. The deadline will be expressed as the block timestamp after which the contract can no longer be funded. We will be adding 2 more storage fields and arguments to the constructor.
 
