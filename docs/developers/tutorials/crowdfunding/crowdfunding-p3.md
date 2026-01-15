@@ -74,37 +74,13 @@ fn deadline(&self) -> SingleValueMapper<TimestampMillis>;
 
 ## Updating the Fund Endpoint
 
-Now we need to update the `fund` endpoint to accept any token and validate it matches the configured token identifier:
+The `fund` endpoint from Part 2 already validates the token identifier, so we only need to add one more check - we need to ensure that only fungible tokens (not NFTs) are accepted:
 
 ```rust
-#[endpoint]
-#[payable]
-fn fund(&self) {
-    let payment = self.call_value().single();
-    
-    require!(
-        payment.token_identifier == self.cf_token_id().get(),
-        "wrong token"
-    );
-    require!(payment.is_fungible(), "only fungible tokens accepted");
-    require!(
-        self.status() == Status::FundingPeriod,
-        "cannot fund after deadline"
-    );
-    
-    let caller = self.blockchain().get_caller();
-    self.deposit(&caller)
-        .update(|deposit| *deposit += payment.amount.as_big_uint());
-}
+require!(payment.is_fungible(), "only fungible tokens accepted");
 ```
 
-Changes from Part 2:
-
-1. **`#[payable]`** without a specific token: This accepts any token (we'll validate it ourselves)
-2. **`call_value().single()`**: Gets the payment as an `EsdtTokenPayment` structure
-3. **Token validation**: We check that the sent token matches our configured token identifier
-4. **Fungible check**: We ensure that only fungible tokens (not NFTs) are accepted
-5. **Amount extraction**: We use `.as_big_uint()` to get the amount as a `BigUint`
+This check should be added after the token identifier validation. The key difference from Part 2 is that `cf_token_id()` now returns the stored token identifier (via `.get()`) instead of a hardcoded value.
 
 [comment]: # (mx-context-auto)
 
@@ -141,58 +117,9 @@ fn status(&self) -> Status {
 
 [comment]: # (mx-context-auto)
 
-## Updating the Claim Endpoint
+## The Claim Endpoint
 
-Finally, we need to update the `claim` endpoint to send the configured token instead of hardcoded EGLD:
-
-```rust
-#[endpoint]
-fn claim(&self) {
-    match self.status() {
-        Status::FundingPeriod => sc_panic!("cannot claim before deadline"),
-        Status::Successful => {
-            let caller = self.blockchain().get_caller();
-            require!(
-                caller == self.blockchain().get_owner_address(),
-                "only owner can claim successful funding"
-            );
-
-            let token_identifier = self.cf_token_id().get();
-            let sc_balance = self.get_current_funds();
-
-            if let Some(sc_balance_non_zero) = sc_balance.into_non_zero() {
-                self.tx()
-                    .to(&caller)
-                    .payment(Payment::new(token_identifier, 0, sc_balance_non_zero))
-                    .transfer();
-            }
-        }
-        Status::Failed => {
-            let caller = self.blockchain().get_caller();
-            let deposit = self.deposit(&caller).get();
-
-            if deposit > 0u32 {
-                let token_identifier = self.cf_token_id().get();
-
-                self.deposit(&caller).clear();
-
-                if let Some(deposit_non_zero) = deposit.into_non_zero() {
-                    self.tx()
-                        .to(&caller)
-                        .payment(Payment::new(token_identifier, 0, deposit_non_zero))
-                        .transfer();
-                }
-            }
-        }
-    }
-}
-```
-
-Key changes:
-
-1. **Get token identifier**: We retrieve the stored token identifier
-2. **New transaction syntax**: We use the `.tx()` builder with `Payment::new()` to send any token type
-3. **Non-zero amounts**: We convert amounts to `NonZeroUsize` to ensure we only transfer when there's actually something to send
+The `claim` endpoint from Part 2 already uses the modern transaction syntax with `self.cf_token_id()`, so it automatically works with the configurable token identifier without any changes needed. The only difference is that `cf_token_id()` now returns the stored token via `.get()` instead of the hardcoded EGLD value.
 
 [comment]: # (mx-context-auto)
 

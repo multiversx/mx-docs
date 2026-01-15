@@ -145,12 +145,17 @@ It is not enough to receive the funds, the contract also needs to keep track of 
 fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
 
 #[endpoint]
-#[payable("EGLD")]
+#[payable]
 fn fund(&self) {
-    let payment = self.call_value().egld();
+    let payment = self.call_value().single();
+    
+    require!(
+        payment.token_identifier == self.cf_token_id(),
+        "wrong token"
+    );
     
     let caller = self.blockchain().get_caller();
-    self.deposit(&caller).update(|deposit| *deposit += &*payment);
+    self.deposit(&caller).update(|deposit| *deposit += payment.amount.as_big_uint());
 }
 ```
 
@@ -161,8 +166,9 @@ Every time the contract is modified, you need to rebuild it and regenerate the p
 A few things to unpack:
 
 1. This storage mapper has an extra argument, for an address. This is how we define a map in the storage. The donor argument will become part of the storage key. Any number of such key arguments can be added, but in this case we only need one. The resulting storage key will be a concatenation of the specified base key `"deposit"` and the serialized argument.
-2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with `#[payable]`. The `"EGLD"` parameter means the function only accepts EGLD.
-3. `fund` needs to also be explicitly declared as an endpoint. All `#[payable]`methods need to be marked `#[endpoint]`, but not the other way around.
+2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with `#[payable]`.
+3. `call_value().single()` gets the payment as an `EsdtTokenPayment` structure, which we then validate against our hardcoded EGLD token identifier.
+4. `fund` needs to also be explicitly declared as an endpoint. All `#[payable]` methods need to be marked `#[endpoint]`, but not the other way around.
 
 To test the function, we will add a new test, in the same `crowdfunding_blackbox_test.rs` file. Let's call it `crowdfunding_fund_test()` .
 
@@ -345,15 +351,20 @@ Additionally, it doesn't make sense to accept funding after the deadline has pas
 
 ```rust
 #[endpoint]
-#[payable("EGLD")]
+#[payable]
 fn fund(&self) {
-    let payment = self.call_value().egld();
+    let payment = self.call_value().single();
+    
+    require!(
+        payment.token_identifier == self.cf_token_id(),
+        "wrong token"
+    );
 
     let current_time = self.blockchain().get_block_timestamp_millis();
     require!(current_time < self.deadline().get(), "cannot fund after deadline");
 
     let caller = self.blockchain().get_caller();
-    self.deposit(&caller).update(|deposit| *deposit += &*payment);
+    self.deposit(&caller).update(|deposit| *deposit += payment.amount.as_big_uint());
 }
 ```
 
@@ -464,9 +475,14 @@ We will also modify the `require` condition in the `fund` endpoint to ensure tha
 
 ```rust
 #[endpoint]
-#[payable("EGLD")]
+#[payable]
 fn fund(&self) {
-    let payment = self.call_value().egld();
+    let payment = self.call_value().single();
+    
+    require!(
+        payment.token_identifier == self.cf_token_id(),
+        "wrong token"
+    );
 
     require!(
         self.status() == Status::FundingPeriod,
@@ -475,7 +491,7 @@ fn fund(&self) {
 
     let caller = self.blockchain().get_caller();
     self.deposit(&caller)
-        .update(|deposit| *deposit += &*payment);
+        .update(|deposit| *deposit += payment.amount.as_big_uint());
 }
 ```
 
