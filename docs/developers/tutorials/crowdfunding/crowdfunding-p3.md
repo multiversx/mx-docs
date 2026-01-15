@@ -41,7 +41,7 @@ fn get_current_time_millis(&self) -> TimestampMillis {
 }
 ```
 
-We've made several improvements:
+The key changes:
 
 1. **New parameter**: `token_identifier: TokenId` is now the first parameter
 2. **Validation**: We validate that the token identifier is valid before storing it

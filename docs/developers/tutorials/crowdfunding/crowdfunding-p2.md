@@ -47,16 +47,24 @@ fn init(&self, target: BigUint, deadline: TimestampMillis) {
     self.target().set(target);
     
     require!(
-        deadline > self.blockchain().get_block_timestamp_millis(),
+        deadline > self.get_current_time_millis(),
         "Deadline can't be in the past"
     );
     self.deadline().set(deadline);
+}
+
+fn get_current_time_millis(&self) -> TimestampMillis {
+    self.blockchain().get_block_timestamp_millis()
 }
 ```
 
 The `cf_token_id()` storage mapper will hold the token identifier for our crowdfunding campaign. We initialize it to `TokenId::egld()` in the `init` function, hardcoding it to EGLD for now. In Part 3, we'll make this configurable to support any token.
 
 `TimestampMillis` is a type-safe wrapper for millisecond timestamps, providing better type safety than using raw `u64` values.
+
+:::note Private functions
+Note that `get_current_time_millis()` is not annotated with `#[endpoint]` or `#[view]`. This makes it a **private helper function** that can only be called from within the contract, not from external transactions. Private functions are useful for organizing code and avoiding duplication, but they cannot be called directly by users or other contracts.
+:::
 
 The deadline being a block timestamp can be expressed as a 64-bits unsigned integer `TimestampMillis`. The target, however, being a sum of EGLD cannot.
 
@@ -345,7 +353,7 @@ fn init(&self, target: BigUint, deadline: TimestampMillis) {
     self.target().set(target);
 
     require!(
-        deadline > self.blockchain().get_block_timestamp_millis(),
+        deadline > self.get_current_time_millis(),
         "Deadline can't be in the past"
     );
     self.deadline().set(deadline);
@@ -460,7 +468,7 @@ We can now use the type **Status** just like we use the other types, so we can w
 ```rust
 #[view]
 fn status(&self) -> Status {
-    if self.blockchain().get_block_timestamp_millis() < self.deadline().get() {
+    if self.get_current_time_millis() < self.deadline().get() {
         Status::FundingPeriod
     } else if self.get_current_funds() >= self.target().get() {
         Status::Successful
