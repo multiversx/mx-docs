@@ -153,7 +153,7 @@ fn fund(&self) {
     let payment = self.call_value().single();
     
     require!(
-        payment.token_identifier == self.cf_token_id(),
+        payment.token_identifier == self.cf_token_id().get(),
         "wrong token"
     );
     
@@ -230,7 +230,7 @@ With the code organized, we can now start developing the test for the fund endpo
 const DONOR: TestAddress = TestAddress::new("donor");
 
 fn crowdfunding_fund() -> ScenarioWorld {
-    let mut world = deploy_crowdfunding();
+    let mut world = crowdfunding_deploy();
 
     world.account(DONOR).nonce(0).balance(400_000_000_000u64);
 
@@ -339,6 +339,8 @@ It doesn't make sense to create a funding that has the target 0 or a negative nu
 ```rust
 #[init]
 fn init(&self, target: BigUint, deadline: TimestampMillis) {
+    self.cf_token_id().set(TokenId::egld());
+    
     require!(target > 0, "Target must be more than 0");
     self.target().set(target);
 
@@ -359,7 +361,7 @@ fn fund(&self) {
     let payment = self.call_value().single();
     
     require!(
-        payment.token_identifier == self.cf_token_id(),
+        payment.token_identifier == self.cf_token_id().get(),
         "wrong token"
     );
 
@@ -382,7 +384,7 @@ We will create another test to verify that the validation works: `crowdfunding_f
 fn crowdfunding_fund_too_late_test() {
     let mut world = crowdfunding_fund();
 
-    world.current_block().block_timestamp(123_001u64);
+    world.current_block().block_timestamp_millis(123_001u64);
 
     world
         .tx()
@@ -458,7 +460,7 @@ We can now use the type **Status** just like we use the other types, so we can w
 ```rust
 #[view]
 fn status(&self) -> Status {
-    if self.get_current_time_millis() < self.deadline().get() {
+    if self.blockchain().get_block_timestamp_millis() < self.deadline().get() {
         Status::FundingPeriod
     } else if self.get_current_funds() >= self.target().get() {
         Status::Successful

@@ -102,8 +102,8 @@ Now that our contract is token-agnostic, we can test it with both EGLD and ESDT 
 
 The complete test files demonstrate this:
 
-- [EGLD Test File](final-code.md#egld-test-file)
-- [ESDT Test File](final-code.md#esdt-test-file)
+- [EGLD Test File](final-code.md#complete-blackbox-test-egld)
+- [ESDT Test File](final-code.md#complete-blackbox-test-esdt)
 
 Key differences in the ESDT test:
 
