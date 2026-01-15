@@ -48,18 +48,6 @@ The most common way for contracts to accept payments is by having endpoints anno
 The "payable" flag in the code metadata only refers to direct transfers. Transferring tokens via contract endpoint calls is not affected by it in any way.
 :::
 
-If an endpoint only accepts EGLD, it should be annotated with `#[payable("EGLD")]`:
-
-```rust
-#[endpoint]
-#[payable("EGLD")]
-fn accept_egld(&self) {
-	// ...
-}
-```
-
-When annotated like this, the contract will only accept a single EGLD payment.
-
 To accept any kind of payment, annotate the endpoints with `#[payable]`:
 
 ```rust
@@ -69,6 +57,38 @@ fn accept_any_payment(&self) {
 	// ...
 }
 ```
+
+Usually on the first line there will be an instruction that processes, interprets, and validates the received payment ([see below](#call-value-methods))
+
+
+
+If an endpoint only accepts EGLD, it can be annotated with `#[payable("EGLD")]`, although this is slowly falling out of favor. 
+
+```rust
+#[endpoint]
+#[payable("EGLD")]
+fn accept_egld(&self) {
+	// ...
+}
+```
+
+
+:::note Multi-transfer note
+Note that it is currently possible to send two or more EGLD payments in the same transaction. The `#[payable("EGLD")]` annotation rejects that.
+:::
+
+This snippet is equivalent to:
+
+```rust
+#[endpoint]
+#[payable]
+fn accept_egld(&self) {
+    let payment_amount = self.call_value().egld();
+    // ...
+}
+```
+
+
 
 :::note Hard-coded token identifier
 It is also possible to hard-code a token identifier in the `payable`, e.g. `#[payable("MYTOKEN-123456")]`. It is rarely, if ever, used, tokens should normally be configured in storage, or at runtime.
@@ -105,11 +125,8 @@ Additional restrictions on the incoming tokens can be imposed in the body of the
 pub fn process_all_payments(&self) {
     let payments = self.call_value().all();
     for payment in payments.iter() {
-        let token_id = &payment.token_identifier;
-        let amount = payment.amount;
-        let nonce = &payment.token_nonce;
         // Handle each payment uniformly
-        self.process_payment(token_id, nonce, amount);
+        self.process_payment(&payment.token_identifier, payment.token_nonce, &payment.amount);
     }
 }
 ```
