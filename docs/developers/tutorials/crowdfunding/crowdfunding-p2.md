@@ -34,12 +34,15 @@ fn deadline(&self) -> SingleValueMapper<TimestampMillis>;
 #[storage_mapper("deposit")]
 fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
 
-fn cf_token_id(&self) -> TokenId {
-    TokenId::egld()
-}
+#[view(getCrowdfundingTokenId)]
+#[storage_mapper("tokenIdentifier")]
+fn cf_token_id(&self) -> SingleValueMapper<TokenId>;
 
 #[init]
 fn init(&self, target: BigUint, deadline: TimestampMillis) {
+    // only support EGLD for now
+    self.cf_token_id().set(TokenId::egld());
+    
     require!(target > 0, "Target must be more than 0");
     self.target().set(target);
     
@@ -51,7 +54,7 @@ fn init(&self, target: BigUint, deadline: TimestampMillis) {
 }
 ```
 
-The `cf_token_id()` method returns a hardcoded EGLD identifier using the `TokenId` type. In a future tutorial, we'll make this configurable to support any token.
+The `cf_token_id()` storage mapper will hold the token identifier for our crowdfunding campaign. We initialize it to `TokenId::egld()` in the `init` function, hardcoding it to EGLD for now. In Part 3, we'll make this configurable to support any token.
 
 `TimestampMillis` is a type-safe wrapper for millisecond timestamps, providing better type safety than using raw `u64` values.
 
@@ -167,7 +170,7 @@ A few things to unpack:
 
 1. This storage mapper has an extra argument, for an address. This is how we define a map in the storage. The donor argument will become part of the storage key. Any number of such key arguments can be added, but in this case we only need one. The resulting storage key will be a concatenation of the specified base key `"deposit"` and the serialized argument.
 2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with `#[payable]`.
-3. `call_value().single()` gets the payment as an `EsdtTokenPayment` structure, which we then validate against our hardcoded EGLD token identifier.
+3. `call_value().single()` gets the payment as a `Payment` structure, which we then validate against our stored EGLD token identifier from `cf_token_id()`.
 4. `fund` needs to also be explicitly declared as an endpoint. All `#[payable]` methods need to be marked `#[endpoint]`, but not the other way around.
 
 To test the function, we will add a new test, in the same `crowdfunding_blackbox_test.rs` file. Let's call it `crowdfunding_fund_test()` .
@@ -466,8 +469,8 @@ fn status(&self) -> Status {
 
 #[view(getCurrentFunds)]
 fn get_current_funds(&self) -> BigUint {
-    let token_id = self.cf_token_id();
-    self.blockchain().get_sc_balance(&token_id, 0)
+    let token = self.cf_token_id().get();
+    self.blockchain().get_sc_balance(&token, 0)
 }
 ```
 
@@ -480,7 +483,7 @@ fn fund(&self) {
     let payment = self.call_value().single();
     
     require!(
-        payment.token_identifier == self.cf_token_id(),
+        payment.token_identifier == self.cf_token_id().get(),
         "wrong token"
     );
 

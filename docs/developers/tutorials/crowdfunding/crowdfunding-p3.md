@@ -10,7 +10,7 @@ Generalize the crowdfunding contract to accept any fungible token instead of jus
 
 ## Introduction
 
-In [Part 2](crowdfunding-p2.md), we built a complete crowdfunding contract that accepts EGLD. However, the contract was hardcoded to only work with EGLD. In this chapter, we'll generalize it to accept any fungible token (EGLD or ESDT), specified at deployment time.
+In [Part 2](crowdfunding-p2.md), we built a complete crowdfunding contract that accepts EGLD. The `cf_token_id()` storage mapper was initialized to `TokenId::egld()` in the init function. In this chapter, we'll make it configurable so the contract can accept any fungible token (EGLD or ESDT), specified at deployment time.
 
 This demonstrates an important principle in smart contract design: making contracts configurable and reusable for different use cases.
 
@@ -18,19 +18,9 @@ This demonstrates an important principle in smart contract design: making contra
 
 ## Making the Token Identifier Configurable
 
-Instead of hardcoding the token identifier in a method, we'll store it as a configuration parameter. Let's update our imports and storage mappers:
+The `cf_token_id()` storage mapper already exists from Part 2. We just need to update the `init` function to accept a token identifier as a parameter instead of hardcoding it:
 
 ```rust
-use multiversx_sc::imports::*;
-```
-
-Now let's convert the `cf_token_id()` method into a storage mapper and update the `init` function:
-
-```rust
-#[view(getCrowdfundingTokenId)]
-#[storage_mapper("tokenIdentifier")]
-fn cf_token_id(&self) -> SingleValueMapper<TokenId>;
-
 #[init]
 fn init(&self, token_identifier: TokenId, target: BigUint, deadline: TimestampMillis) {
     require!(token_identifier.is_valid(), "Invalid token provided");
@@ -53,161 +43,93 @@ fn get_current_time_millis(&self) -> TimestampMillis {
 
 We've made several improvements:
 
-1. **TokenId type**: Represents any token identifier (EGLD or ESDT), providing type safety
-2. **TimestampMillis type**: A type-safe wrapper for millisecond timestamps
-3. **Validation**: We validate that the token identifier is valid before storing it
-4. **Storage**: The token identifier is now stored and can be queried
-
-[comment]: # (mx-context-auto)
-
-## Updating the Deadline Storage
-
-The deadline storage mapper already uses `TimestampMillis` from Part 2:
-
-```rust
-#[view(getDeadline)]
-#[storage_mapper("deadline")]
-fn deadline(&self) -> SingleValueMapper<TimestampMillis>;
-```
+1. **New parameter**: `token_identifier: TokenId` is now the first parameter
+2. **Validation**: We validate that the token identifier is valid before storing it
+3. **Configuration**: Instead of `self.cf_token_id().set(TokenId::egld())`, we now use the provided parameter
 
 [comment]: # (mx-context-auto)
 
 ## Updating the Fund Endpoint
 
-The `fund` endpoint from Part 2 already validates the token identifier, so we only need to add one more check - we need to ensure that only fungible tokens (not NFTs) are accepted:
+The `fund` endpoint from Part 2 already validates the token identifier against `cf_token_id()`, so it automatically works with any configured token. We only need to add one more check to ensure that only fungible tokens (not NFTs) are accepted:
 
 ```rust
-require!(payment.is_fungible(), "only fungible tokens accepted");
-```
-
-This check should be added after the token identifier validation. The key difference from Part 2 is that `cf_token_id()` now returns the stored token identifier (via `.get()`) instead of a hardcoded value.
-
-[comment]: # (mx-context-auto)
-
-## Updating Get Current Funds
-
-We need to update `get_current_funds()` to use the stored token identifier:
-
-```rust
-#[view(getCurrentFunds)]
-fn get_current_funds(&self) -> BigUint {
-    let token = self.cf_token_id().get()
-    self.blockchain().get_sc_balance(&token, 0)
-}
-```
-
-[comment]: # (mx-context-auto)
-
-## Updating the Status Method
-
-The status method needs to use the new `get_current_time_millis()` helper:
-
-```rust
-#[view]
-fn status(&self) -> Status {
-    if self.get_current_time_millis() < self.deadline().get() {
-        Status::FundingPeriod
-    } else if self.get_current_funds() >= self.target().get() {
-        Status::Successful
-    } else {
-        Status::Failed
-    }
-}
-```
-
-[comment]: # (mx-context-auto)
-
-## The Claim Endpoint
-
-The `claim` endpoint from Part 2 already uses the modern transaction syntax with `self.cf_token_id()`, so it automatically works with the configurable token identifier without any changes needed. The only difference is that `cf_token_id()` now returns the stored token via `.get()` instead of the hardcoded EGLD value.
-
-[comment]: # (mx-context-auto)
-
-## Updating Tests
-
-Let's update our tests to work with the new token-agnostic implementation. First, update the deploy function:
-
-```rust
-fn crowdfunding_deploy() -> ScenarioWorld {
-    let mut world = world();
-
-    world.account(OWNER).nonce(0).balance(1000000);
-
-    let crowdfunding_address = world
-        .tx()
-        .from(OWNER)
-        .typed(crowdfunding_proxy::CrowdfundingProxy)
-        .init(TokenId::egld(), 500_000_000_000u64, 123000u64)
-        .code(CODE_PATH)
-        .new_address(CROWDFUNDING_ADDRESS)
-        .returns(ReturnsNewAddress)
-        .run();
-
-    assert_eq!(crowdfunding_address, CROWDFUNDING_ADDRESS.to_address());
-
-    world
-}
-```
-
-Note that we now pass `TokenId::egld()` as the first argument. This means our test still uses EGLD, but now the contract could work with any token!
-
-Let's create a new test that uses an ESDT token instead:
-
-```rust
-const CF_TOKEN_ID: TestTokenIdentifier = TestTokenIdentifier::new("CROWD-123456");
-
-fn crowdfunding_deploy_esdt() -> ScenarioWorld {
-    let mut world = world();
-
-    world.account(OWNER).nonce(0);
-
-    let crowdfunding_address = world
-        .tx()
-        .from(OWNER)
-        .typed(crowdfunding_proxy::CrowdfundingProxy)
-        .init(TokenId::from(CF_TOKEN_ID), 2_000u64, 604_800_000u64) // 1 week in ms
-        .code(CODE_PATH)
-        .new_address(CROWDFUNDING_ADDRESS)
-        .returns(ReturnsNewAddress)
-        .run();
-
-    assert_eq!(crowdfunding_address, CROWDFUNDING_ADDRESS.to_address());
-
-    world
-}
-
-#[test]
-fn crowdfunding_esdt_test() {
-    let mut world = crowdfunding_deploy_esdt();
+#[endpoint]
+#[payable]
+fn fund(&self) {
+    let payment = self.call_value().single();
     
-    // Set up donor with ESDT tokens
-    world
-        .account(DONOR)
-        .nonce(0)
-        .esdt_balance(CF_TOKEN_ID, 1_000u64);
+    require!(
+        payment.token_identifier == self.cf_token_id().get(),
+        "wrong token"
+    );
+    require!(payment.is_fungible(), "only fungible tokens accepted");
 
-    // Donor funds with ESDT
-    world
-        .tx()
-        .from(DONOR)
-        .to(CROWDFUNDING_ADDRESS)
-        .typed(crowdfunding_proxy::CrowdfundingProxy)
-        .fund()
-        .esdt(CF_TOKEN_ID, 0, 500u64)
-        .run();
+    require!(
+        self.status() == Status::FundingPeriod,
+        "cannot fund after deadline"
+    );
 
-    // Verify deposit
-    world
-        .query()
-        .to(CROWDFUNDING_ADDRESS)
-        .typed(crowdfunding_proxy::CrowdfundingProxy)
-        .deposit(DONOR)
-        .returns(ExpectValue(500u64))
-        .run();
+    let caller = self.blockchain().get_caller();
+    self.deposit(&caller)
+        .update(|deposit| *deposit += payment.amount.as_big_uint());
 }
 ```
 
-This test demonstrates that the same contract can now work with ESDT tokens!
+The only new line is the fungible check. Everything else works automatically because `cf_token_id().get()` now returns the configured token instead of always returning EGLD.
+
+[comment]: # (mx-context-auto)
+
+## Other Methods
+
+The `get_current_funds()`, `status()`, and `claim()` methods from Part 2 work automatically with the configurable token because they all use `cf_token_id().get()`, which now returns the configured token instead of hardcoded EGLD.
+
+[comment]: # (mx-context-auto)
+
+## Testing with Different Tokens
+
+Now that our contract is token-agnostic, we can test it with both EGLD and ESDT tokens. The key difference is in the deployment - we pass different token identifiers:
+
+**For EGLD:**
+```rust
+.init(TokenId::native(), 2_000u32, CF_DEADLINE)
+```
+
+**For ESDT:**
+```rust
+.init(CF_TOKEN_ID, 2_000u32, CF_DEADLINE)
+```
+
+The complete test files demonstrate this:
+
+### EGLD Test File
+
+<details>
+<summary>crowdfunding_egld_blackbox_test.rs (click to expand)</summary>
+
+```rust file=/Users/andreim/multiversx/mx-docs/testing/crowdfunding/tests/crowdfunding_egld_blackbox_test.rs
+
+```
+</details>
+
+### ESDT Test File
+
+<details>
+<summary>crowdfunding_esdt_blackbox_test.rs (click to expand)</summary>
+
+```rust file=/Users/andreim/multiversx/mx-docs/testing/crowdfunding/tests/crowdfunding_esdt_blackbox_test.rs
+
+```
+</details>
+
+Key differences in the ESDT test:
+
+1. **Token setup**: Accounts are given ESDT balances instead of EGLD
+2. **Deployment**: Contract is initialized with an ESDT token identifier
+3. **Funding**: Uses `.payment(Payment::new(...))` instead of `.egld()`
+4. **Balance checks**: Uses `.esdt_balance()` instead of `.balance()`
+
+Both test files verify the same functionality (successful funding, failed funding, wrong token rejection), proving the contract works identically regardless of the token type!
 
 [comment]: # (mx-context-auto)
 

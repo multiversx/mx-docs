@@ -60,10 +60,15 @@ fn main() {
         &code_blocks,
     );
 
-    // Find and write crowdfunding.rs
+    // Find and write blackbox tests
     write_code_block(
-        "crowdfunding_blackbox_test.rs",
-        "../crowdfunding/tests/crowdfunding_blackbox_test.rs",
+        "crowdfunding_egld_blackbox_test.rs",
+        "../crowdfunding/tests/crowdfunding_egld_blackbox_test.rs",
+        &code_blocks,
+    );
+    write_code_block(
+        "crowdfunding_esdt_blackbox_test.rs",
+        "../crowdfunding/tests/crowdfunding_esdt_blackbox_test.rs",
         &code_blocks,
     );
 }
