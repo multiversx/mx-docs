@@ -6,7 +6,7 @@ title: Final Code
 [comment]: # (mx-abstract)
 Complete crowdfunding smart contract implementation with all features.
 
-This page provides the complete, final version of the crowdfunding smart contract developed throughout the tutorial. This implementation includes all the features covered in [Part 1](crowdfunding-p1.md) and [Part 2](crowdfunding-p2.md).
+This page provides the complete, final version of the crowdfunding smart contract developed throughout the tutorial. This implementation includes all the features covered in [Part 1](crowdfunding-p1.md), [Part 2](crowdfunding-p2.md), and [Part 3](crowdfunding-p3.md).
 
 [comment]: # (mx-context-auto)
 
@@ -54,7 +54,7 @@ The contract uses a custom `Status` enum to represent the three possible states 
 ```rust title=crowdfunding.rs
 #![no_std]
 
-use multiversx_sc::{chain_core::types::TimestampMillis, derive_imports::*, imports::*};
+use multiversx_sc::{derive_imports::*, imports::*};
 pub mod crowdfunding_proxy;
 
 #[type_abi]
@@ -70,13 +70,13 @@ pub trait Crowdfunding {
     #[init]
     fn init(&self, token_identifier: TokenId, target: BigUint, deadline: TimestampMillis) {
         require!(token_identifier.is_valid(), "Invalid token provided");
-        self.cf_token_identifier().set(token_identifier);
+        self.cf_token_id().set(token_identifier);
 
         require!(target > 0, "Target must be more than 0");
         self.target().set(target);
 
         require!(
-            deadline > self.get_current_time_ms(),
+            deadline > self.get_current_time_millis(),
             "Deadline can't be in the past"
         );
         self.deadline().set(deadline);
@@ -88,7 +88,7 @@ pub trait Crowdfunding {
         let payment = self.call_value().single();
 
         require!(
-            payment.token_identifier == self.cf_token_identifier().get(),
+            payment.token_identifier == self.cf_token_id().get(),
             "wrong token"
         );
         require!(payment.is_fungible(), "only fungible tokens accepted");
@@ -104,7 +104,7 @@ pub trait Crowdfunding {
 
     #[view]
     fn status(&self) -> Status {
-        if self.get_current_time_ms() < self.deadline().get() {
+        if self.get_current_time_millis() < self.deadline().get() {
             Status::FundingPeriod
         } else if self.get_current_funds() >= self.target().get() {
             Status::Successful
@@ -116,7 +116,7 @@ pub trait Crowdfunding {
     #[view(getCurrentFunds)]
     #[title("currentFunds")]
     fn get_current_funds(&self) -> BigUint {
-        let token = self.cf_token_identifier().get();
+        let token = self.cf_token_id().get();
 
         self.blockchain().get_sc_balance(&token, 0)
     }
@@ -132,7 +132,7 @@ pub trait Crowdfunding {
                     "only owner can claim successful funding"
                 );
 
-                let token_identifier = self.cf_token_identifier().get();
+                let token_identifier = self.cf_token_id().get();
                 let sc_balance = self.get_current_funds();
 
                 if let Some(sc_balance_non_zero) = sc_balance.into_non_zero() {
@@ -147,7 +147,7 @@ pub trait Crowdfunding {
                 let deposit = self.deposit(&caller).get();
 
                 if deposit > 0u32 {
-                    let token_identifier = self.cf_token_identifier().get();
+                    let token_identifier = self.cf_token_id().get();
 
                     self.deposit(&caller).clear();
 
@@ -164,7 +164,7 @@ pub trait Crowdfunding {
 
     // private
 
-    fn get_current_time_ms(&self) -> TimestampMillis {
+    fn get_current_time_millis(&self) -> TimestampMillis {
         self.blockchain().get_block_timestamp_millis()
     }
 
@@ -185,10 +185,10 @@ pub trait Crowdfunding {
     #[storage_mapper("deposit")]
     fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
 
-    #[view(getCrowdfundingTokenIdentifier)]
+    #[view(getCrowdfundingTokenId)]
     #[title("tokenIdentifier")]
     #[storage_mapper("tokenIdentifier")]
-    fn cf_token_identifier(&self) -> SingleValueMapper<TokenId>;
+    fn cf_token_id(&self) -> SingleValueMapper<TokenId>;
 }
 ```
 
@@ -423,7 +423,7 @@ The contract uses several storage mappers to persist data on the blockchain:
 - **`target`**: Stores the target amount of tokens to be raised (BigUint)
 - **`deadline`**: Stores the campaign deadline as a timestamp in milliseconds (TimestampMillis)
 - **`deposit`**: Maps each donor's address to their contribution amount (BigUint)
-- **`cf_token_identifier`**: Stores the token identifier used for the crowdfunding campaign (TokenId)
+- **`cf_token_id`**: Stores the token identifier used for the crowdfunding campaign (TokenId)
 
 Each storage mapper is also exposed as a view function, allowing external queries to read these values.
 
@@ -446,6 +446,7 @@ Now that you have the complete crowdfunding contract:
 ## Related Documentation
 
 - [Part 1: Crowdfunding Smart Contract Setup](crowdfunding-p1.md)
-- [Part 2: Enhancing the Crowdfunding Smart Contract](crowdfunding-p2.md)
+- [Part 2: Crowdfunding Logic](crowdfunding-p2.md)
+- [Part 3: Supporting Any Fungible Token](crowdfunding-p3.md)
 - [Smart Contract Developer Reference](/developers/developer-reference/sc-annotations)
 - [Testing Smart Contracts](/developers/testing/testing-overview)

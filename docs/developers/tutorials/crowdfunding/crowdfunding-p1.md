@@ -1,6 +1,6 @@
 ---
 id: crowdfunding-p1
-title: Setup
+title: Setup & Basics
 ---
 
 [comment]: # (mx-abstract)

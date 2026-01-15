@@ -58,6 +58,7 @@ const sidebars = {
             items: [
               "developers/tutorials/crowdfunding/crowdfunding-p1",
               "developers/tutorials/crowdfunding/crowdfunding-p2",
+              "developers/tutorials/crowdfunding/crowdfunding-p3",
               "developers/tutorials/crowdfunding/final-code",
             ],
           },
