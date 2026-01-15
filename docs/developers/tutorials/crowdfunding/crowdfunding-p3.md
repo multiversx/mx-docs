@@ -1,6 +1,6 @@
 ---
 id: crowdfunding-p3
-title: Supporting Any Fungible Token
+title: Extend to Any Token
 ---
 
 [comment]: # (mx-abstract)
@@ -102,25 +102,8 @@ Now that our contract is token-agnostic, we can test it with both EGLD and ESDT 
 
 The complete test files demonstrate this:
 
-### EGLD Test File
-
-<details>
-<summary>crowdfunding_egld_blackbox_test.rs (click to expand)</summary>
-
-```rust file=/Users/andreim/multiversx/mx-docs/testing/crowdfunding/tests/crowdfunding_egld_blackbox_test.rs
-
-```
-</details>
-
-### ESDT Test File
-
-<details>
-<summary>crowdfunding_esdt_blackbox_test.rs (click to expand)</summary>
-
-```rust file=/Users/andreim/multiversx/mx-docs/testing/crowdfunding/tests/crowdfunding_esdt_blackbox_test.rs
-
-```
-</details>
+- [EGLD Test File](final-code.md#egld-test-file)
+- [ESDT Test File](final-code.md#esdt-test-file)
 
 Key differences in the ESDT test:
 

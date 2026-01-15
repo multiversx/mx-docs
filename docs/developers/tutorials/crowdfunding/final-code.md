@@ -425,9 +425,10 @@ fn test_failed_cf_esdt() {
 
 [comment]: # (mx-context-auto)
 
-## EGLD Test File
+## Complete Blackbox Test (EGLD)
 
-For testing with EGLD, we have a separate test file that uses native EGLD transfers:
+If you are interested in specifically only testing for EGLD, we have a separate test file that uses native EGLD transfers. It is very similar, but there is some specific syntax to deal with the EGLD balances and transfers.
+
 
 ```rust title=crowdfunding_egld_blackbox_test.rs
 use crowdfunding::crowdfunding_proxy;
