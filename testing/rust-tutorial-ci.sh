@@ -4,7 +4,7 @@
 ## The tests are also taken from the tutorial.
 ## Tests are only run on the rust backend.
 
-SCRIPT_DIR="$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 cd "$SCRIPT_DIR/extract-tutorial-code" || exit 1
 cargo run || exit 1

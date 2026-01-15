@@ -72,7 +72,7 @@ fn parse_code_block_info(info: &str, language: &mut Option<String>, filename: &m
     {
         *filename = Some(first_part.to_string());
         // If it looks like a filename, try to extract language from extension
-        if let Some(ext) = first_part.split('.').last() {
+        if let Some(ext) = first_part.split('.').next_back() {
             *language = Some(ext.to_string());
         }
     } else {

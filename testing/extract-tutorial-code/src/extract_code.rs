@@ -20,8 +20,7 @@ fn extract_code_blocks_from_file<P: AsRef<Path>>(path: P) -> Vec<CodeBlock> {
 fn extract_crowdfunding_tutorial_code_blocks() -> Vec<CodeBlock> {
     CROWDFUNDING_TUTORIAL_PATHS
         .iter()
-        .map(|tutorial_path| extract_code_blocks_from_file(tutorial_path))
-        .flatten()
+        .flat_map(extract_code_blocks_from_file)
         .collect()
 }
 
@@ -47,6 +46,7 @@ fn find_code_block_by_filename<'a>(code_blocks: &'a [CodeBlock], filename: &str)
 fn main() {
     fs::create_dir_all("../crowdfunding/scenarios").unwrap();
     fs::create_dir_all("../crowdfunding/src").unwrap();
+    fs::create_dir_all("../crowdfunding/tests").unwrap();
 
     let code_blocks = extract_crowdfunding_tutorial_code_blocks();
 
