@@ -218,7 +218,7 @@ Sometimes we don't have ownership of the token identifier object, or amount, and
 For brevity, instead of `payment(EsdtTokenPaymentRefs::new(&token_identifier, token_nonce, &amount))`, we can use `.single_esdt(&token_identifier, token_nonce, &amount)`.
 
 ```rust title=contract.rs
-    #[payable("*")]
+    #[payable]
     #[endpoint]
     fn send_esdt(&self, to: ManagedAddress) {
         let payment = self.call_value().single();

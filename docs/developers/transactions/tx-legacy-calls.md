@@ -151,7 +151,7 @@ mod callee_proxy {
 
     #[multiversx_sc::proxy]
     pub trait CalleeContract {
-        #[payable("*")]
+    	#[payable]
 		#[endpoint(myPayableEndpoint)]
 		fn my_payable_endpoint(&self, arg: BigUint) -> BigUint;
     }
@@ -224,7 +224,7 @@ Now that we specified the recipient address, the function and the arguments, it 
 Let's assume we want to call a `#[payable]` endpoint, with this definition:
 
 ```rust
-#[payable("*")]
+#[payable]
 #[endpoint(myPayableEndpoint)]
 fn my_payable_endpoint(&self, arg: BigUint) -> BigUint {
 	let payment = self.call_value().any_payment();

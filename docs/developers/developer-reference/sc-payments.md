@@ -100,7 +100,7 @@ Additional restrictions on the incoming tokens can be imposed in the body of the
 `self.call_value().all()` retrieves all payments sent with the transaction as a `PaymentVec<A>`. It handles all tokens uniformly, including EGLD (represented as "EGLD-000000"). Never stops execution.
 
 ```rust
-#[payable("*")]
+#[payable]
 #[endpoint]
 pub fn process_all_payments(&self) {
     let payments = self.call_value().all();
@@ -121,7 +121,7 @@ pub fn process_all_payments(&self) {
 `self.call_value().single()` expects exactly one payment and returns it. Will halt execution if zero or multiple payments are received. Returns a `Payment<A>` object.
 
 ```rust
-#[payable("*")]
+#[payable]
 #[endpoint]
 pub fn deposit(&self) {
     let payment = self.call_value().single();
@@ -140,7 +140,7 @@ pub fn deposit(&self) {
 `self.call_value().single_optional()` accepts either zero or one payment. Returns `Option<Payment<A>>` for graceful handling. Will halt execution if multiple payments are received.
 
 ```rust
-#[payable("*")]
+#[payable]
 #[endpoint]
 pub fn execute_with_optional_fee(&self) {
     match self.call_value().single_optional() {
@@ -163,7 +163,7 @@ pub fn execute_with_optional_fee(&self) {
 `self.call_value().array<N>()` expects exactly N payments and returns them as a fixed-size array. Will halt execution if the number of payments doesn't match exactly.
 
 ```rust
-#[payable("*")]
+#[payable]
 #[endpoint]
 pub fn swap(&self) {
     // Expect exactly 2 payments for the swap
