@@ -111,7 +111,7 @@ References are also allowed. A slightly less common variation is the `ManagedRef
         endpoint_name: ManagedBuffer,
         args: MultiValueEncoded<ManagedBuffer>,
     ) {
-        let payment = self.call_value().egld_value(); // readonly BigUint managed reference
+        let payment = self.call_value().egld(); // readonly BigUint managed reference
         self
             .tx() // tx with sc environment
             .to(to)
@@ -221,17 +221,25 @@ For brevity, instead of `payment(EsdtTokenPaymentRefs::new(&token_identifier, to
     #[payable("*")]
     #[endpoint]
     fn send_esdt(&self, to: ManagedAddress) {
-        let (token_id, payment) = self.call_value().single_fungible_esdt();
-        let half = payment / BigUint::from(2u64);
+        let payment = self.call_value().single();
+        let half_payment = &payment.amount / 2u32;
 
         self.tx()
             .to(&to)
-            .single_esdt(&token_id, 0, &half)
+            .payment(PaymentRefs::new(
+                &payment.token_identifier,
+                0,
+                &half_payment,
+            ))
             .transfer();
 
         self.tx()
             .to(&self.blockchain().get_caller())
-            .single_esdt(&token_id, 0, &half)
+            .payment(PaymentRefs::new(
+                &payment.token_identifier,
+                0,
+                &half_payment,
+            ))
             .transfer();
     }
 ```
