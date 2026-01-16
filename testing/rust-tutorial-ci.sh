@@ -4,8 +4,10 @@
 ## The tests are also taken from the tutorial.
 ## Tests are only run on the rust backend.
 
-cd testing/extract-tutorial-code
-cargo run || return 1
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-cd ../crowdfunding-esdt
-cargo test || return 1
+cd "$SCRIPT_DIR/extract-tutorial-code" || exit 1
+cargo run || exit 1
+
+cd "$SCRIPT_DIR/crowdfunding" || exit 1
+cargo test || exit 1

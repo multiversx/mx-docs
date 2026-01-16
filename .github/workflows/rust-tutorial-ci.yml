@@ -11,10 +11,9 @@ jobs:
     name: Rust tutorial code test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          default: true
-          toolchain: nightly
+          toolchain: 1.92
       - name: Run rust tests
-        run: ./scripts/rust-tutorial-ci.sh
+        run: ./testing/rust-tutorial-ci.sh

@@ -39,14 +39,14 @@ num-traits = "0.2"
 hex = "0.4"
 ```
 
-For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding-esdt
+For this tutorial, we're going to use the crowdfunding SC, so it might be handy to have it open or clone the repository: https://github.com/multiversx/mx-sdk-rs/tree/master/contracts/examples/crowdfunding
 
 You need a `tests` and a `scenarios` folder in your contract. Create a `.rs` file in your `tests` folder.
 
-In your newly created test file, add the following code (adapt the `crowdfunding_esdt` namespace, the struct/variable names, and the contract wasm path according to your contract):
+In your newly created test file, add the following code (adapt the `crowdfunding` namespace, the struct/variable names, and the contract wasm path according to your contract):
 
 ```rust
-use crowdfunding_esdt::*;
+use crowdfunding::*;
 use multiversx_sc::{
     sc_error,
     types::{Address, SCResult},
@@ -56,19 +56,19 @@ use multiversx_sc_scenario::{
     DebugApi,
 };
 
-const WASM_PATH: &'static str = "crowdfunding-esdt/output/crowdfunding-esdt.wasm";
+const WASM_PATH: &'static str = "crowdfunding/output/crowdfunding.wasm";
 
 struct CrowdfundingSetup<CrowdfundingObjBuilder>
 where
     CrowdfundingObjBuilder:
-        'static + Copy + Fn() -> crowdfunding_esdt::ContractObj<DebugApi>,
+        'static + Copy + Fn() -> crowdfunding::ContractObj<DebugApi>,
 {
     pub blockchain_wrapper: BlockchainStateWrapper,
     pub owner_address: Address,
     pub first_user_address: Address,
     pub second_user_address: Address,
     pub cf_wrapper:
-        ContractObjWrapper<crowdfunding_esdt::ContractObj<DebugApi>, CrowdfundingObjBuilder>,
+        ContractObjWrapper<crowdfunding::ContractObj<DebugApi>, CrowdfundingObjBuilder>,
 }
 ```
 
