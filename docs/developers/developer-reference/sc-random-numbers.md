@@ -97,7 +97,7 @@ Example of BAD implementation:
 #[endpoint(rollDie)]
 fn roll_die(&self) {
     // ...
-    let payment = self.call_value().egld_value();
+    let payment = self.call_value().egld();
     let rand_nr = rand_source.next_u8();
     if rand_nr % 6 == 0 {
         let prize = payment * 2u32;

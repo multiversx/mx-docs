@@ -3208,11 +3208,11 @@ We are going to assume we have an account at this point. If you don't, feel free
 {
     const secretKeyHex = "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9";
     const secretKey = UserSecretKey.fromString(secretKeyHex);
-    const publickKey = secretKey.generatePublicKey();
+    const publicKey = secretKey.generatePublicKey();
 
     const transaction = new Transaction({
         nonce: 90n,
-        sender: publickKey.toAddress(),
+        sender: publicKey.toAddress(),
         receiver: Address.newFromBech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
         value: 1000000000000000000n,
         gasLimit: 50000n,
