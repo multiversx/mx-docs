@@ -1,11 +1,11 @@
 [package]
 name = "crowdfunding-meta"
 version = "0.0.0"
-edition = "2018"
+edition = "2024"
 publish = false
 
 [dependencies.crowdfunding]
 path = ".."
 
 [dependencies.multiversx-sc-meta]
-version = "0.39.0"
+version = "0.64.1"

@@ -208,7 +208,7 @@ The following methods are available for backwards compatibility but may be depre
 - `self.call_value().single_fungible_esdt()` further restricts `single_esdt` to only fungible tokens, so those with their nonce zero. Returns the token identifier and amount, as pair.
 - `self.call_value().egld_or_single_esdt()` retrieves an object of type `EgldOrEsdtTokenPayment`. Will halt execution in case of ESDT multi-transfer.
 - `self.call_value().egld_or_single_fungible_esdt()` further restricts `egld_or_single_esdt` to fungible ESDT tokens. It will return a pair of `EgldOrEsdtTokenIdentifier` and an amount.
-- `self.call_value().any_payment()` is the most general payment retriever. Never stops execution. Returns an object of type `EgldOrMultiEsdtPayment`. *(Deprecated since 0.64.0 - use `all()` instead)*
+- `self.call_value().any_payment()` is the most general payment retriever. Never stops execution. Returns an object of type `EgldOrMultiEsdtPayment`. *(Deprecated since 0.64.1 - use `all()` instead)*
 
 ---
 

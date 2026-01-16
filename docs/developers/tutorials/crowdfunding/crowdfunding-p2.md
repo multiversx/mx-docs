@@ -1,6 +1,6 @@
 ---
 id: crowdfunding-p2
-title: Enhancing the Crowdfunding Smart Contract
+title: Core Logic
 ---
 [comment]: # (mx-abstract)
 Define contract arguments, handle storage, process payments, define new types, write better tests
@@ -9,9 +9,17 @@ Define contract arguments, handle storage, process payments, define new types, w
 
 ## Configuring the contract
 
-[The previous chapter](/docs/developers/tutorials/crowdfunding-p1.md) left us with a minimal contract as a starting point.
+[The previous chapter](crowdfunding-p1.md) left us with a minimal contract as a starting point.
 
-The first thing we need to do is to configure the desired target amount and the deadline. The deadline will be expressed as the block timestamp after which the contract can no longer be funded. We will be adding 2 more storage fields and arguments to the constructor.
+The first thing we need to do is to configure the desired target amount and the deadline. The deadline will be expressed as the block timestamp (in milliseconds) after which the contract can no longer be funded. We will be adding 2 more storage fields and arguments to the constructor.
+
+For now, we'll hardcode the contract to only accept EGLD. First, let's add the necessary import at the top of the file:
+
+```rust
+use multiversx_sc::imports::*;
+```
+
+Now let's add the storage mappers and init function:
 
 ```rust
 #[view(getTarget)]
@@ -20,25 +28,50 @@ fn target(&self) -> SingleValueMapper<BigUint>;
 
 #[view(getDeadline)]
 #[storage_mapper("deadline")]
-fn deadline(&self) -> SingleValueMapper<u64>;
+fn deadline(&self) -> SingleValueMapper<TimestampMillis>;
 
 #[view(getDeposit)]
 #[storage_mapper("deposit")]
 fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
 
+#[view(getCrowdfundingTokenId)]
+#[storage_mapper("tokenIdentifier")]
+fn cf_token_id(&self) -> SingleValueMapper<TokenId>;
+
 #[init]
-fn init(&self, target: BigUint, deadline: u64) {
-    self.target().set(&target);
-    self.deadline().set(&deadline);
+fn init(&self, target: BigUint, deadline: TimestampMillis) {
+    // only support EGLD for now
+    self.cf_token_id().set(TokenId::egld());
+    
+    require!(target > 0, "Target must be more than 0");
+    self.target().set(target);
+    
+    require!(
+        deadline > self.get_current_time_millis(),
+        "Deadline can't be in the past"
+    );
+    self.deadline().set(deadline);
+}
+
+fn get_current_time_millis(&self) -> TimestampMillis {
+    self.blockchain().get_block_timestamp_millis()
 }
 ```
 
-The deadline being a block timestamp can be expressed as a regular 64-bits unsigned integer. The target, however, being a sum of EGLD cannot.
+The `cf_token_id()` storage mapper will hold the token identifier for our crowdfunding campaign. We initialize it to `TokenId::egld()` in the `init` function, hardcoding it to EGLD for now. In Part 3, we'll make this configurable to support any token.
+
+`TimestampMillis` is a type-safe wrapper for millisecond timestamps, providing better type safety than using raw `u64` values.
+
+:::note Private functions
+Note that `get_current_time_millis()` is not annotated with `#[endpoint]` or `#[view]`. This makes it a **private helper function** that can only be called from within the contract, not from external transactions. Private functions are useful for organizing code and avoiding duplication, but they cannot be called directly by users or other contracts.
+:::
+
+The deadline being a block timestamp can be expressed as a 64-bits unsigned integer `TimestampMillis`. The target, however, being a sum of EGLD cannot.
 
 :::note
  1 EGLD = 10<sup>18</sup> EGLD-wei, also known as atto-EGLD.
 
-It is the smallest unit of currency, and all payments are expressed in wei.
+It is the smallest unit of currency, and all payments are expressed in wei. The same applies to ESDT tokens, where the smallest unit depends on the token's number of decimals.
 :::
 
 Even for small payments, the numbers get large. Luckily, the framework offers support for big numbers out of the box. Two types are available: [**BigUint**](/docs/developers/best-practices/biguint-operations.md) and **BigInt**.
@@ -65,7 +98,7 @@ sc-meta all proxy
 
 Finally, we update the test:
 
-```rust title=crowdfunding_blackbox_test.rs
+```rust
 #[test]
 fn crowdfunding_deploy_test() {
     let mut world = world();
@@ -115,7 +148,7 @@ sc-meta test
 
 ## Funding the contract
 
-It is not enough to receive the funds, the contract also needs to keep track of who donated how much.
+It is not enough to receive the funds, the contract also needs to keep track of who donated how much. Additionally, we need to validate that the correct token is being sent.
 
 ```rust
 #[view(getDeposit)]
@@ -123,11 +156,17 @@ It is not enough to receive the funds, the contract also needs to keep track of 
 fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
 
 #[endpoint]
-#[payable("EGLD")]
+#[payable]
 fn fund(&self) {
-    let payment = self.call_value().egld();
+    let payment = self.call_value().single();
+    
+    require!(
+        payment.token_identifier == self.cf_token_id().get(),
+        "wrong token"
+    );
+    
     let caller = self.blockchain().get_caller();
-    self.deposit(&caller).update(|deposit| *deposit += &*payment);
+    self.deposit(&caller).update(|deposit| *deposit += payment.amount.as_big_uint());
 }
 ```
 
@@ -138,14 +177,15 @@ Every time the contract is modified, you need to rebuild it and regenerate the p
 A few things to unpack:
 
 1. This storage mapper has an extra argument, for an address. This is how we define a map in the storage. The donor argument will become part of the storage key. Any number of such key arguments can be added, but in this case we only need one. The resulting storage key will be a concatenation of the specified base key `"deposit"` and the serialized argument.
-2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending a sum of EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with `#[payable]`.
-3. `fund` needs to also be explicitly declared as an endpoint. All `#[payable]`methods need to be marked `#[endpoint]`, but not the other way around.
+2. We encounter the first payable function. By default, any function in a smart contract is not payable, i.e. sending EGLD to the contract using the function will cause the transaction to be rejected. Payable functions need to be annotated with `#[payable]`.
+3. `call_value().single()` gets the payment as a `Payment` structure, which we then validate against our stored EGLD token identifier from `cf_token_id()`.
+4. `fund` needs to also be explicitly declared as an endpoint. All `#[payable]` methods need to be marked `#[endpoint]`, but not the other way around.
 
 To test the function, we will add a new test, in the same `crowdfunding_blackbox_test.rs` file. Let's call it `crowdfunding_fund_test()` .
 
 To avoid duplicate code, we will put all the deployment and account setup logic into a function called `crowdfunding_deploy()`. This function will return a **ScenarioWorld** response, which gives us the **state of the mocked chain** after setting up an account with the OWNER address and deploying the crowdfunding contract.
 
-```rust title=crowdfunding_blackbox_test.rs
+```rust
 fn crowdfunding_deploy() -> ScenarioWorld {
     let mut world = world();
 
@@ -169,7 +209,7 @@ fn crowdfunding_deploy() -> ScenarioWorld {
 
 Now that we've moved the deployment logic to a separate function, let's update the test that checks the deploy endpoint like this:
 
-```rust title=crowdfunding_blackbox_test.rs
+```rust
 #[test]
 fn crowdfunding_deploy_test() {
     let mut world = crowdfunding_deploy();
@@ -194,11 +234,11 @@ fn crowdfunding_deploy_test() {
 
 With the code organized, we can now start developing the test for the fund endpoint.
 
-```rust title=crowdfunding_blackbox_test.rs
+```rust
 const DONOR: TestAddress = TestAddress::new("donor");
 
 fn crowdfunding_fund() -> ScenarioWorld {
-    let mut world = deploy_crowdfunding();
+    let mut world = crowdfunding_deploy();
 
     world.account(DONOR).nonce(0).balance(400_000_000_000u64);
 
@@ -306,12 +346,14 @@ It doesn't make sense to create a funding that has the target 0 or a negative nu
 
 ```rust
 #[init]
-fn init(&self, target: BigUint, deadline: u64) {
+fn init(&self, target: BigUint, deadline: TimestampMillis) {
+    self.cf_token_id().set(TokenId::egld());
+    
     require!(target > 0, "Target must be more than 0");
     self.target().set(target);
 
     require!(
-        deadline > self.get_current_time(),
+        deadline > self.get_current_time_millis(),
         "Deadline can't be in the past"
     );
     self.deadline().set(deadline);
@@ -322,15 +364,20 @@ Additionally, it doesn't make sense to accept funding after the deadline has pas
 
 ```rust
 #[endpoint]
-#[payable("EGLD")]
+#[payable]
 fn fund(&self) {
-    let payment = self.call_value().egld();
+    let payment = self.call_value().single();
+    
+    require!(
+        payment.token_identifier == self.cf_token_id().get(),
+        "wrong token"
+    );
 
-    let current_time = self.blockchain().get_block_timestamp();
+    let current_time = self.blockchain().get_block_timestamp_millis();
     require!(current_time < self.deadline().get(), "cannot fund after deadline");
 
     let caller = self.blockchain().get_caller();
-    self.deposit(&caller).update(|deposit| *deposit += &*payment);
+    self.deposit(&caller).update(|deposit| *deposit += payment.amount.as_big_uint());
 }
 ```
 
@@ -340,12 +387,12 @@ The [`require!`](/docs/developers/developer-reference/sc-messages.md#require) ma
 
 We will create another test to verify that the validation works: `crowdfunding_fund_too_late_test()` .
 
-```rust title=crowdfunding_blackbox_test.rs
+```rust
 #[test]
 fn crowdfunding_fund_too_late_test() {
     let mut world = crowdfunding_fund();
 
-    world.current_block().block_timestamp(123_001u64);
+    world.current_block().block_timestamp_millis(123_001u64);
 
     world
         .tx()
@@ -421,7 +468,7 @@ We can now use the type **Status** just like we use the other types, so we can w
 ```rust
 #[view]
 fn status(&self) -> Status {
-    if self.blockchain().get_block_timestamp() <= self.deadline().get() {
+    if self.get_current_time_millis() < self.deadline().get() {
         Status::FundingPeriod
     } else if self.get_current_funds() >= self.target().get() {
         Status::Successful
@@ -432,7 +479,8 @@ fn status(&self) -> Status {
 
 #[view(getCurrentFunds)]
 fn get_current_funds(&self) -> BigUint {
-    self.blockchain().get_sc_balance(&EgldOrEsdtTokenIdentifier::egld(), 0)
+    let token = self.cf_token_id().get();
+    self.blockchain().get_sc_balance(&token, 0)
 }
 ```
 
@@ -440,9 +488,14 @@ We will also modify the `require` condition in the `fund` endpoint to ensure tha
 
 ```rust
 #[endpoint]
-#[payable("EGLD")]
+#[payable]
 fn fund(&self) {
-    let payment = self.call_value().egld();
+    let payment = self.call_value().single();
+    
+    require!(
+        payment.token_identifier == self.cf_token_id().get(),
+        "wrong token"
+    );
 
     require!(
         self.status() == Status::FundingPeriod,
@@ -451,7 +504,7 @@ fn fund(&self) {
 
     let caller = self.blockchain().get_caller();
     self.deposit(&caller)
-        .update(|deposit| *deposit += &*payment);
+        .update(|deposit| *deposit += payment.amount.as_big_uint());
 }
 ```
 
@@ -498,16 +551,30 @@ fn claim(&self) {
                 "only owner can claim successful funding"
             );
 
+            let token_identifier = self.cf_token_id().get();
             let sc_balance = self.get_current_funds();
-            self.send().direct_egld(&caller, &sc_balance);
+
+            if let Some(sc_balance_non_zero) = sc_balance.into_non_zero() {
+                self.tx()
+                    .to(&caller)
+                    .payment(Payment::new(token_identifier, 0, sc_balance_non_zero))
+                    .transfer();
+            }
         },
         Status::Failed => {
             let caller = self.blockchain().get_caller();
             let deposit = self.deposit(&caller).get();
 
             if deposit > 0u32 {
+                let token_identifier = self.cf_token_id().get();
                 self.deposit(&caller).clear();
-                self.send().direct_egld(&caller, &deposit);
+
+                if let Some(deposit_non_zero) = deposit.into_non_zero() {
+                    self.tx()
+                        .to(&caller)
+                        .payment(Payment::new(token_identifier, 0, deposit_non_zero))
+                        .transfer();
+                }
             }
         },
     }
@@ -516,124 +583,26 @@ fn claim(&self) {
 
 [`sc_panic!`](/docs/developers/developer-reference/sc-messages.md) has the same functionality as [`panic!`](https://doc.rust-lang.org/std/macro.panic.html) from Rust, with the difference that it works in a no_std environment.
 
-`self.send().direct_egld()` forwards EGLD from the contract to the given address.
+We use the modern [transaction syntax](/developers/transactions/tx-overview) with `.tx()` to send tokens. We convert amounts to `NonZeroUsize` to ensure we only transfer when there's actually something to send, preventing unnecessary transactions with zero amounts.
 
 [comment]: # (mx-context-auto)
 
-## The final contract code
+## Conclusion
 
-If you followed all the steps presented until now, you should have ended up with a contract that looks something like:
+Congratulations! You've successfully built a crowdfunding smart contract with:
 
-```rust title=crowdfunding.rs
-#![no_std]
+- EGLD-based funding mechanism
+- Time-based campaign management
+- Status tracking (FundingPeriod, Successful, Failed)
+- Claim functionality for both successful campaigns and refunds
+- Comprehensive testing
 
-use multiversx_sc::{derive_imports::*, imports::*};
-pub mod crowdfunding_proxy;
-
-#[type_abi]
-#[derive(TopEncode, TopDecode, PartialEq, Clone, Copy)]
-pub enum Status {
-    FundingPeriod,
-    Successful,
-    Failed,
-}
-
-#[multiversx_sc::contract]
-pub trait Crowdfunding {
-    #[init]
-    fn init(&self, target: BigUint, deadline: u64) {
-        require!(target > 0, "Target must be more than 0");
-        self.target().set(target);
-
-        require!(
-            deadline > self.get_current_time(),
-            "Deadline can't be in the past"
-        );
-        self.deadline().set(deadline);
-    }
-
-    #[endpoint]
-    #[payable("EGLD")]
-    fn fund(&self) {
-        let payment = self.call_value().egld();
-
-        require!(
-            self.status() == Status::FundingPeriod,
-            "cannot fund after deadline"
-        );
-
-        let caller = self.blockchain().get_caller();
-        self.deposit(&caller).update(|deposit| *deposit += &*payment);
-    }
-
-    #[view]
-    fn status(&self) -> Status {
-        if self.get_current_time() <= self.deadline().get() {
-            Status::FundingPeriod
-        } else if self.get_current_funds() >= self.target().get() {
-            Status::Successful
-        } else {
-            Status::Failed
-        }
-    }
-
-    #[view(getCurrentFunds)]
-    fn get_current_funds(&self) -> BigUint {
-        self.blockchain().get_sc_balance(&EgldOrEsdtTokenIdentifier::egld(), 0)
-    }
-
-    #[endpoint]
-    fn claim(&self) {
-        match self.status() {
-            Status::FundingPeriod => sc_panic!("cannot claim before deadline"),
-            Status::Successful => {
-                let caller = self.blockchain().get_caller();
-                require!(
-                    caller == self.blockchain().get_owner_address(),
-                    "only owner can claim successful funding"
-                );
-
-                let sc_balance = self.get_current_funds();
-                self.send().direct_egld(&caller, &sc_balance);
-            },
-            Status::Failed => {
-                let caller = self.blockchain().get_caller();
-                let deposit = self.deposit(&caller).get();
-
-                if deposit > 0u32 {
-                    self.deposit(&caller).clear();
-                    self.send().direct_egld(&caller, &deposit);
-                }
-            },
-        }
-    }
-
-    // private
-
-    fn get_current_time(&self) -> u64 {
-        self.blockchain().get_block_timestamp()
-    }
-
-    // storage
-
-    #[view(getTarget)]
-    #[storage_mapper("target")]
-    fn target(&self) -> SingleValueMapper<BigUint>;
-
-    #[view(getDeadline)]
-    #[storage_mapper("deadline")]
-    fn deadline(&self) -> SingleValueMapper<u64>;
-
-    #[view(getDeposit)]
-    #[storage_mapper("deposit")]
-    fn deposit(&self, donor: &ManagedAddress) -> SingleValueMapper<BigUint>;
-}
-```
-
-As an exercise, try to add some more tests, especially ones involving the claim function.
+As an exercise, try to add some more tests, especially ones involving the claim function under different scenarios.
 
 [comment]: # (mx-context-auto)
 
-## Next steps
+## Next Steps
 
-If you want to see some other smart contract examples, or even an extended version of the crowdfunding smart contract, you can check [here](https://github.com/multiversx/mx-contracts-rs).
+- **Part 3**: In the [next chapter](crowdfunding-p3.md), we'll generalize the contract to accept any fungible token, not just EGLD
+- **View the complete code**: Check out the [final contract code](final-code.md) with detailed explanations
+- **Explore more examples**: Visit the [MultiversX contracts repository](https://github.com/multiversx/mx-contracts-rs) for more smart contract examples

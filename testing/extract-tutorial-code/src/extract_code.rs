@@ -1,55 +1,74 @@
 use std::{fs, fs::File, io::Write, path::Path};
 
-use waltz::CodeBlock;
+mod parser;
+
+use parser::{CodeBlock, extract_code_blocks_from_markdown};
+
+const CROWDFUNDING_TUTORIAL_PATHS: &[&str] = &[
+    "../../docs/developers/tutorials/crowdfunding/crowdfunding-p1.md",
+    "../../docs/developers/tutorials/crowdfunding/crowdfunding-p2.md",
+    "../../docs/developers/tutorials/crowdfunding/final-code.md",
+];
 
 fn extract_code_blocks_from_file<P: AsRef<Path>>(path: P) -> Vec<CodeBlock> {
     let contents = fs::read_to_string(path.as_ref())
         .unwrap_or_else(|e| panic!("not found: {} {:?}", e, path.as_ref()));
-    let markdown = pulldown_cmark::Parser::new(contents.as_str());
-    waltz::extract_code_blocks(markdown).unwrap()
+
+    extract_code_blocks_from_markdown(&contents)
 }
 
 fn extract_crowdfunding_tutorial_code_blocks() -> Vec<CodeBlock> {
-    let mut code_blocks_1 =
-        extract_code_blocks_from_file("../../docs/developers/tutorials/crowdfunding-p1.md");
-    let code_blocks_2 =
-        extract_code_blocks_from_file("../../docs/developers/tutorials/crowdfunding-p2.md");
-    code_blocks_1.extend(code_blocks_2.into_iter());
-    code_blocks_1
+    CROWDFUNDING_TUTORIAL_PATHS
+        .iter()
+        .flat_map(extract_code_blocks_from_file)
+        .collect()
 }
 
-fn write_code_block<P: AsRef<Path>>(path: P, code_block: &CodeBlock) {
+fn write_code_block<P: AsRef<Path>>(code_block_filename: &str, path: P, code_blocks: &[CodeBlock]) {
+    let code_block = find_code_block_by_filename(code_blocks, code_block_filename);
     let mut file = File::create(path.as_ref())
         .unwrap_or_else(|e| panic!("could not create file: {} {:?}", e, path.as_ref()));
-    file.write_all(code_block.content().as_bytes()).unwrap();
+    file.write_all(code_block.content.as_bytes()).unwrap();
+    println!(
+        "Successfully extracted {}, language: {}",
+        path.as_ref().display(),
+        code_block.language.as_deref().unwrap_or("unknown")
+    );
+}
+
+fn find_code_block_by_filename<'a>(code_blocks: &'a [CodeBlock], filename: &str) -> &'a CodeBlock {
+    code_blocks
+        .iter()
+        .find(|block| block.filename.as_deref() == Some(filename))
+        .unwrap_or_else(|| panic!("{} code block not found in tutorials", filename))
 }
 
 fn main() {
-    fs::create_dir_all("../crowdfunding-esdt/scenarios").unwrap();
-    fs::create_dir_all("../crowdfunding-esdt/src").unwrap();
+    fs::create_dir_all("../crowdfunding/scenarios").unwrap();
+    fs::create_dir_all("../crowdfunding/src").unwrap();
+    fs::create_dir_all("../crowdfunding/tests").unwrap();
 
     let code_blocks = extract_crowdfunding_tutorial_code_blocks();
-    for code_block in &code_blocks {
-        if let Some(filename) = code_block.filename() {
-            match filename.as_str() {
-                "Cargo.toml" => write_code_block("../crowdfunding-esdt/Cargo.toml", code_block),
-                "final.rs" => {
-                    write_code_block("../crowdfunding-esdt/src/crowdfunding.rs", code_block)
-                }
-                "crowdfunding-init.scen.json" => write_code_block(
-                    "../crowdfunding-esdt/scenarios/crowdfunding-init.scen.json",
-                    code_block,
-                ),
-                "crowdfunding-fund.scen.json" => write_code_block(
-                    "../crowdfunding-esdt/scenarios/crowdfunding-fund.scen.json",
-                    code_block,
-                ),
-                "crowdfunding-fund-too-late.scen.json" => write_code_block(
-                    "../crowdfunding-esdt/scenarios/crowdfunding-fund-too-late.scen.json",
-                    code_block,
-                ),
-                _ => {}
-            }
-        }
-    }
+
+    // Find and write Cargo.toml
+    write_code_block("Cargo.toml", "../crowdfunding/Cargo.toml", &code_blocks);
+
+    // Find and write crowdfunding.rs
+    write_code_block(
+        "crowdfunding.rs",
+        "../crowdfunding/src/crowdfunding.rs",
+        &code_blocks,
+    );
+
+    // Find and write blackbox tests
+    write_code_block(
+        "crowdfunding_egld_blackbox_test.rs",
+        "../crowdfunding/tests/crowdfunding_egld_blackbox_test.rs",
+        &code_blocks,
+    );
+    write_code_block(
+        "crowdfunding_esdt_blackbox_test.rs",
+        "../crowdfunding/tests/crowdfunding_esdt_blackbox_test.rs",
+        &code_blocks,
+    );
 }
