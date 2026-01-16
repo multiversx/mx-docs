@@ -88,6 +88,7 @@ Therefore, in order to build such a transaction, one has to follow the next step
 1. For a guarded relayed transaction, the guarded operation fee will also be consumed from the relayer.
 2. Relayer must be different from guardian, in case of guarded sender.
 3. Guarded relayers are not allowed.
+4. Relayer address must be in the same shard as the transaction sender.
 :::
 
 ### Example
