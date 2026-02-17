@@ -1,6 +1,6 @@
 ---
-id: es-index-blocks
-title: blocks
+id: es-index-executionresults
+title: execution results
 description: "Elasticsearch executionresults index: execution result block hash, header fields and example queries."
 ---
 
