@@ -238,7 +238,7 @@ This documentation is organized into major sections. Each section includes tutor
 - [Architecture](https://docs.multiversx.com/bridge/architecture): High-level architecture of the Ad‑Astra Bridge: core contracts on MultiversX and EVM chains, relayer quorum, and how cross‑chain transfers are coordinated.
 - [Axelar Amplifier Setup](https://docs.multiversx.com/bridge/axelar): Set up an Axelar Amplifier verifier for MultiversX: prerequisites, tofnd and ampd services, configuration, and verification steps.
 - [Bitcoin L2](https://docs.multiversx.com/sovereign/bitcoin-l2): Concept and architecture for a Bitcoin‑compatible Sovereign L2 and VM integration.
-- [Concept](https://docs.multiversx.com/sovereign/concept): Concept and rationale for Sovereign Chains: performance, configurability, VM options and built‑in cross‑chain mechanism.
+- [Concept](https://docs.multiversx.com/sovereign/concept): Learn about MultiversX Sovereign Chain architecture, cross-chain mechanisms, and smart contracts.
 - [Cross Chain Execution](https://docs.multiversx.com/sovereign/cross-chain-execution): Concept and flow of cross‑chain execution between MultiversX and Sovereign Chains: contracts, bridge service and fees.
 - [Custom Configurations](https://docs.multiversx.com/sovereign/custom-configurations): Configuration options to tailor a Sovereign network: chain ID, economics, ratings and system smart‑contract parameters.
 - [Disclaimer](https://docs.multiversx.com/sovereign/disclaimer): Disclaimer on scope: MultiversX provides core chain SDK and scripts; full production infrastructure and some components may require separate integration.

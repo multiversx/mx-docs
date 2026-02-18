@@ -23,6 +23,7 @@ In order to ensure that the newly added content is correctly aligned and every M
 
 - clone the repository
 - run `npm install` (only for the first usage)
+- run `npm build`
 - run `npm start`
 - access `http://localhost:3000` to view your local version of the docs
 
