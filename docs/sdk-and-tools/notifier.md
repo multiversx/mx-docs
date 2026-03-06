@@ -390,6 +390,10 @@ There are multiple event types:
 - `Push Block event`: when the block is committed, it contains logs and events
 - `Revert Block event`: when the block is reverted
 - `Finalized Block event`: when the block is finalized
+- `Block Txs event`: when the block is committed, it contains the transactions of the block
+- `Block Scrs event`: when the block is committed, it contains the smart contract results of the block
+- `Block Events`: when the block is committed, it contains the transactions, smart contract results, and events with their execution order
+- `Block State Accesses event`: when the block is committed, it contains the state accesses for the block
 
 In RabbitMQ there is a separate exchange for each event type.
 In Websocket setup, there is a event type field in each message.
@@ -398,7 +402,7 @@ The WS event is defined as follows:
 
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
-| Type       | The type field defines the event type, it can be one of the following: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events. |
+| Type       | The type field defines the event type, it can be one of the following: `all_events`, `revert_events`, `finalized_events`, `block_txs`, `block_scrs`, `block_events`, `block_state_accesses`. `all_events` refers to all logs and events. |
 | Data       | Serialized data corresponding to the event type. |
 
 [comment]: # (mx-context-auto)
@@ -449,3 +453,55 @@ be triggered containing the hash of the block.
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
 | hash       | The hash field represents the hash of the committed block.                      |
+
+[comment]: # (mx-context-auto)
+
+### Block Txs Event
+
+When a block is committed on the chain, an event will be triggered containing the transactions of the block.
+
+| Field      | Description                                                                    |
+|------------|--------------------------------------------------------------------------------|
+| hash       | The hash field represents the hash of the committed block.                      |
+| txs        | The txs field holds a map of transactions, where the key is the transaction hash. |
+
+[comment]: # (mx-context-auto)
+
+### Block Scrs Event
+
+When a block is committed on the chain, an event will be triggered containing the smart contract results of the block.
+
+| Field      | Description                                                                    |
+|------------|--------------------------------------------------------------------------------|
+| hash       | The hash field represents the hash of the committed block.                      |
+| scrs       | The scrs field holds a map of smart contract results, where the key is the smart contract result hash. |
+
+[comment]: # (mx-context-auto)
+
+### Block Events
+
+When a block is committed on the chain, an event will be triggered containing the block transactions, smart contract results, and events with their execution order.
+
+| Field       | Description                                                                            |
+|-------------|----------------------------------------------------------------------------------------|
+| hash        | The hash field represents the hash of the committed block.                             |
+| shardID     | The shardID field represents the shard ID of the committed block.                      |
+| timestamp   | The timestamp field represents the creation time of the block (in seconds).            |
+| timestampMs | The timestampMs field represents the creation time of the block (in milliseconds).     |
+| txs         | The txs field holds a map of transactions, where the key is the transaction hash.      |
+| scrs        | The scrs field holds a map of smart contract results, where the key is the scr hash.   |
+| events      | The events field holds a list of events.                                               |
+
+[comment]: # (mx-context-auto)
+
+### Block State Accesses Event
+
+When a block is committed on the chain, an event will be triggered containing the state accesses.
+
+| Field                    | Description                                                                            |
+|--------------------------|----------------------------------------------------------------------------------------|
+| hash                     | The hash field represents the hash of the committed block.                             |
+| shardID                  | The shardID field represents the shard ID of the committed block.                      |
+| timestampMs              | The timestampMs field represents the creation time of the block (in milliseconds).     |
+| nonce                    | The nonce field represents the sequence number of the block.                           |
+| stateAccessesPerAccounts | The stateAccessesPerAccounts field holds a map of state accesses, grouped by account.  |
