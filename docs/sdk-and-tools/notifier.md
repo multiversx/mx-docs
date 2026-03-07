@@ -489,7 +489,7 @@ When a block is committed on the chain, an event will be triggered containing th
 | timestamp   | The timestamp field represents the creation time of the block (in seconds).            |
 | timestampMs | The timestampMs field represents the creation time of the block (in milliseconds).     |
 | txs         | The txs field holds a map of transactions, where the key is the transaction hash.      |
-| scrs        | The scrs field holds a map of smart contract results, where the key is the scr hash.   |
+| scrs        | The scrs field holds a map of smart contract results, where the key is the smart contract results hash.   |
 | events      | The events field holds a list of events.                                               |
 
 [comment]: # (mx-context-auto)
