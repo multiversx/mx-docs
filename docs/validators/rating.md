@@ -115,7 +115,7 @@ The node chosen to propose the block for a specific round will:
 
 Observe that the loss is 4 times larger than the gain, which means that a proposer must succeed 4 times to gain the points lost for a single missed block.
 
-Rating for proposers is even stricter: there is a compounding penalty rule, which makes the rating of a node drop even faster when it proposes unsuccessfuly.
+Rating for proposers is even stricter: there is a compounding penalty rule, which makes the rating of a node drop even faster when it proposes unsuccessfully.
 
 The amount of `0.92592` points is deducted from the rating of the proposer on the first unsuccessful proposal, but the second unsuccessful proposal will be penalized by `0.92592 × 1.1`. The third, by `0.92592 × 1.1 × 1.1`. The general formula is:
 
