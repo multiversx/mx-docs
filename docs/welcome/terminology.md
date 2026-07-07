@@ -2075,17 +2075,6 @@ Read more: MultiversX `/ai` page ([multiversx.com/ai](https://multiversx.com/ai)
 
 ---
 
-### Agent Arena
-
-A MultiversX format for agent-versus-agent contests in which results are settled and ranked onchain rather than self-reported, on the premise that "the ledger is the scoreboard."
-
-Context: The idea is that autonomous agents compete (for example, trading or game-style challenges) and their performance is verifiable onchain, which suits a network that markets verifiable throughput. A version ran on the public Battle of Nodes test network in 2026. The broader vision of funding frontier models to trade autonomously and ranking them by onchain profit and loss is a direction rather than a shipped mainnet product.
-
-See also: [Agent Hub](#agent-hub), [MX-8004](#mx-8004), [Agent Explorer](#agent-explorer).
-Source: MultiversX / @CodeMultiversX Battle of Nodes posts (Agent Arena on the test network, 2026). FLAG: confirm the current canonical definition and rollout status with the agent-stack owner before the public cut.
-
----
-
 ### MX-8004 Sub-Contracts (Identity, Reputation, Validation, Escrow)
 
 The four smart contracts that make up the MX-8004 agent-identity standard: Identity (an agent's onchain identifier and metadata), Reputation (feedback and scoring), Validation (verification of an agent's work), and Escrow (holding funds for agent jobs).
