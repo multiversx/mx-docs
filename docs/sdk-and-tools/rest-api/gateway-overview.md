@@ -30,6 +30,15 @@ Currently, authentication is not needed to access the API.
 
 [comment]: # (mx-context-auto)
 
+## **Rate Limits**
+
+The public Gateway endpoints use a rate-limiting mechanism to ensure infrastructure stability and fair resource distribution. The limitations are as follows:
+
+* **gateway.multiversx.com (_Mainnet_):** Maximum of **50 requests / IP / second**.
+* **devnet-gateway.multiversx.com (_Devnet_):** Maximum of **50 requests / IP / second**.
+
+[comment]: # (mx-context-auto)
+
 ## **HTTP Response format**
 
 Each request against the MultiversX API will resolve to a JSON response having the following structure:
@@ -76,3 +85,4 @@ In the case of an **error**, the `data` field is unset, the `error` field contai
 :::important
 When describing each HTTP endpoint on the following pages, the basic structure of the response is **simplified for brevity,** and, in general, only the actual payload of the response is depicted.
 :::
+```
