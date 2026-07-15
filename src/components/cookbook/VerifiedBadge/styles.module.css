@@ -1,0 +1,43 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.28rem 0.5rem;
+  border-radius: 999px;
+  font-family: var(--cookbook-font-mono);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.ok {
+  color: var(--cookbook-accent);
+  border-color: color-mix(in srgb, var(--cookbook-accent) 40%, transparent);
+  background: var(--cookbook-accent-soft);
+}
+
+.stale {
+  color: #8a6d00;
+  border-color: color-mix(in srgb, var(--cookbook-yellow) 55%, transparent);
+  background: color-mix(in srgb, var(--cookbook-yellow) 12%, transparent);
+}
+
+html[data-theme="dark"] .stale {
+  color: var(--cookbook-yellow);
+}
+
+.icon {
+  display: inline-flex;
+}
+
+.bang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  font-weight: 700;
+}

@@ -46,6 +46,7 @@ This documentation is organized into major sections. Each section includes tutor
 - [Concept](https://docs.multiversx.com/developers/testing/scenario/concept): Concept of scenario‑based testing: composing steps to simulate blockchain interactions for contracts.
 - [Configuration](https://docs.multiversx.com/developers/meta/sc-config): Configure MultiversX smart contract projects: build variants, features, and multi‑contract settings.
 - [Constants](https://docs.multiversx.com/developers/constants): Protocol constants and defaults referenced throughout MultiversX docs: timings, sizes and network parameters.
+- [Cookbook (design preview)](https://docs.multiversx.com/sdk-and-tools/sdk-js/cookbook-preview): Design-layer preview of the MultiversX Cookbook recipe system — recipe cards, difficulty, verified badges and SDK-version chips rendered from real frontmatter.
 - [Cookbook (v14)](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-cookbook-v14): sdk‑js Cookbook (v14): common tasks, entrypoints, API/proxy usage and migration notes.
 - [Cookbook (v15)](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-cookbook-v15): sdk‑js Cookbook (v15): common tasks, entrypoints, API/proxy usage and migration notes.
 - [Core Logic](https://docs.multiversx.com/developers/tutorials/crowdfunding/crowdfunding-p2): Tutorial: Core Logic
@@ -147,6 +148,7 @@ This documentation is organized into major sections. Each section includes tutor
 - [sdk-dapp](https://docs.multiversx.com/sdk-and-tools/sdk-dapp/sdk-dapp): React SDK for MultiversX: components, hooks and providers to build dApps quickly and safely.
 - [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js): JavaScript/TypeScript SDK: accounts, transactions, signing, smart contracts and utilities.
 - [SDKs and Tools - Overview](https://docs.multiversx.com/sdk-and-tools/overview): Overview of MultiversX SDKs, tools and APIs for building apps and services.
+- [Send EGLD to an address](https://docs.multiversx.com/sdk-and-tools/sdk-js/cookbook-preview-recipe): Send a native EGLD transfer with sdk-core's TransfersController against DevnetEntrypoint — the backend/script pattern for when your code holds the key. [beginner, verified 2026-07-07]
 - [Sender](https://docs.multiversx.com/developers/transactions/tx-from): Transaction sender field: account requirements, nonce handling and permissions when originating calls.
 - [Set up a Localnet (mxpy)](https://docs.multiversx.com/developers/setup-local-testnet): Set up a localnet with mxpy: prerequisites, setup/start commands, components and logs.
 - [Set up a Localnet (raw)](https://docs.multiversx.com/developers/setup-local-testnet-advanced): Manual localnet setup using protocol repositories and scripts: prerequisites, configuration and running nodes.
@@ -287,4 +289,4 @@ This documentation is organized into major sections. Each section includes tutor
 - [xPortal](https://docs.multiversx.com/wallet/xportal): xPortal mobile app: secure wallet, token swaps, payments, missions, AI avatar creation and upcoming debit card features.
 
 ## Terminology
-- [Terminology](https://docs.multiversx.com/welcome/terminology): Glossary of MultiversX terms: Metachain, addresses, nodes, validators, staking and more.
+- [Terminology](https://docs.multiversx.com/welcome/terminology): A glossary of MultiversX terms across blockchain foundations, protocol and architecture, consensus and security, tokens, nodes and staking, wallets, ecosystem applications, upgrades, and the SDK. Every entry is sourced.

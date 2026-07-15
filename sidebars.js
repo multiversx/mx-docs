@@ -233,6 +233,17 @@ const sidebars = {
                       "sdk-and-tools/sdk-js/sdk-js-cookbook",
                     ]
                   },
+                  {
+                    type: "category",
+                    label: "Cookbook (design preview)",
+                    link: {
+                      type: "doc",
+                      id: "sdk-and-tools/sdk-js/cookbook-preview"
+                    },
+                    items: [
+                      "sdk-and-tools/sdk-js/cookbook-preview-recipe",
+                    ]
+                  },
                   "sdk-and-tools/sdk-js/extending-sdk-js",
                   "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
                   "sdk-and-tools/sdk-js/sdk-js-signing-providers",

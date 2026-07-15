@@ -1,0 +1,57 @@
+---
+title: Send EGLD to an address
+sidebar_label: Sample recipe — Send EGLD
+description: Send a native EGLD transfer with sdk-core's TransfersController against DevnetEntrypoint — the backend/script pattern for when your code holds the key.
+difficulty: beginner
+est_minutes: 4
+last_validated: "2026-07-07"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - transaction
+  - devnet
+---
+
+:::note Design-layer demo
+This page exists to demonstrate the recipe **metadata strip** (above the title):
+difficulty dots, estimated time, SDK-version chips, and the teal verified badge —
+all read automatically from this page's frontmatter by the `DocItem/Content`
+swizzle. The recipe prose itself is authored on a separate track; the short
+content below is only here to show code-block and admonition styling inside a
+recipe.
+:::
+
+Install and run the recipe project:
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/send-egld
+npm install
+npm start -- ./wallet.pem erd1... 1.5
+```
+
+A native EGLD transfer built with sdk-core's `TransfersController`:
+
+```ts
+const entrypoint = new DevnetEntrypoint();
+const controller = entrypoint.createTransfersController();
+
+const tx = await controller.createTransactionForTransfer(
+  sender,
+  sender.getNonceThenIncrement(),
+  {
+    receiver: new Address(receiverBech32),
+    nativeAmount: 1_500_000_000_000_000_000n, // 1.5 EGLD (10^18 base units)
+  }
+);
+
+const hash = await entrypoint.sendTransaction(tx);
+```
+
+:::tip Verified
+The badge above turns teal only while the recipe's nightly CI recheck is green.
+If a recheck fails, the frontmatter flips `stale: true` and the same badge
+degrades to a neutral "Needs recheck" state — the teal never means anything but
+"trustworthy right now".
+:::

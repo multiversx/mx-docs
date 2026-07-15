@@ -196,11 +196,18 @@ function parseFrontmatter(mdContent) {
     title: block.match(/^\s*title:\s*(["']?)(.+?)\1\s*$/m),
     slug: block.match(/^\s*slug:\s*(["']?)(.+?)\1\s*$/m),
     description: block.match(/^\s*description:\s*(["']?)([\s\S]*?)\1\s*$/m),
+    // Cookbook recipe frontmatter — surfaced in the agent-ingestible llms.txt
+    // so a coding agent sees difficulty + CI-verified date alongside each
+    // recipe. Optional: only cookbook pages declare these fields.
+    difficulty: block.match(/^\s*difficulty:\s*(["']?)(.+?)\1\s*$/m),
+    last_validated: block.match(/^\s*last_validated:\s*(["']?)(.+?)\1\s*$/m),
   };
   if (pairs.id) meta.id = pairs.id[2].trim();
   if (pairs.title) meta.title = pairs.title[2].trim();
   if (pairs.slug) meta.slug = pairs.slug[2].trim();
   if (pairs.description) meta.description = pairs.description[2].trim();
+  if (pairs.difficulty) meta.difficulty = pairs.difficulty[2].trim();
+  if (pairs.last_validated) meta.lastValidated = pairs.last_validated[2].trim();
   meta._fmEnd = end + '\n---'.length;
   return meta;
 }
@@ -302,7 +309,7 @@ async function getDocMeta(docId) {
         title = `${humanizeSegmentForTitle(parent)} ${title}`;
       }
     }
-    meta = { ...meta, title, description, filePath, source: fromFm ? 'frontmatter' : (description ? 'content' : 'none') };
+    meta = { ...meta, title, description, filePath, source: fromFm ? 'frontmatter' : (description ? 'content' : 'none'), difficulty: fm.difficulty, lastValidated: fm.lastValidated };
   } catch {
     // ignore
   }
@@ -393,7 +400,7 @@ async function main() {
       const meta = await getDocMeta(id);
       // eslint-disable-next-line no-await-in-loop
       const url = await computeUrlForDoc(id, siteUrl);
-      all.push({ id, title: meta.title, description: meta.description, url, source: meta.source, filePath: meta.filePath });
+      all.push({ id, title: meta.title, description: meta.description, url, source: meta.source, filePath: meta.filePath, difficulty: meta.difficulty, lastValidated: meta.lastValidated });
     }
     all.sort((a, b) => a.title.localeCompare(b.title));
     for (const e of all) {
@@ -402,7 +409,17 @@ async function main() {
         desc = generatedDescriptionFromPath(e.id, e.filePath, brand);
       }
       const clipped = desc.length > 400 ? `${desc.slice(0, 397)}...` : desc;
-      outputLines.push(`- [${e.title}](${e.url})${clipped ? `: ${clipped}` : ''}`);
+      // Cookbook pages append a compact, machine-parseable metadata tag so the
+      // agent surface carries difficulty + CI-verified date. Only pages that
+      // declare `difficulty` frontmatter are affected; all other entries are
+      // byte-for-byte unchanged.
+      let recipeTag = '';
+      if (e.difficulty) {
+        const bits = [e.difficulty];
+        if (e.lastValidated) bits.push(`verified ${e.lastValidated}`);
+        recipeTag = ` [${bits.join(', ')}]`;
+      }
+      outputLines.push(`- [${e.title}](${e.url})${clipped ? `: ${clipped}` : ''}${recipeTag}`);
 
       // Build full content entry
       if (e.filePath) {

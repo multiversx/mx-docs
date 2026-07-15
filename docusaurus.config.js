@@ -76,7 +76,7 @@ const config = {
         },
         blog: false,
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: ["./src/css/custom.css", "./src/css/cookbook.css"],
         },
         gtag: {
           trackingID: "G-TW3LCJ0LS7",

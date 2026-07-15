@@ -1,0 +1,82 @@
+---
+title: Cookbook (design preview)
+sidebar_label: Cookbook (design preview)
+description: Design-layer preview of the MultiversX Cookbook recipe system — recipe cards, difficulty, verified badges and SDK-version chips rendered from real frontmatter.
+---
+
+import RecipeGrid from "@site/src/components/cookbook/RecipeGrid";
+
+This page previews the **Cookbook design layer** — the recipe-card index and the
+per-recipe metadata strip, built as standard Docusaurus components on the
+MultiversX design tokens. Every chip maps to a real frontmatter field
+(`difficulty`, `sdk_versions`, `last_validated`, `stale`, `tags`), so
+"CI-verified" is the visual system rather than decoration. The teal accent is
+reserved for the single load-bearing idea: a recipe is verified.
+
+Card data below is a representative sample pulled from the verified recipe
+sources; wiring the full recipe set into this grid is a later track.
+
+<RecipeGrid
+  recipes={[
+    {
+      title: "Send EGLD to an address",
+      description:
+        "Send a native EGLD transfer with sdk-core's TransfersController against DevnetEntrypoint.",
+      href: "/sdk-and-tools/sdk-js/cookbook-preview-recipe",
+      difficulty: "beginner",
+      lastValidated: "2026-07-07",
+      tags: ["sdk-core", "transaction", "devnet"],
+      sdkVersions: { "sdk-core": "^15.4.0" },
+    },
+    {
+      title: "Sign and send a transaction",
+      description:
+        "The canonical sdk-dapp v5 sign + send + track flow, with proper nonce handling.",
+      href: "/sdk-and-tools/sdk-js/cookbook-preview-recipe",
+      difficulty: "beginner",
+      lastValidated: "2026-05-07",
+      tags: ["sdk-dapp", "transaction", "devnet"],
+      sdkVersions: { "sdk-core": "^15.4.0", "sdk-dapp": "^5.6.0" },
+    },
+    {
+      title: "Generate a mnemonic + derive keys",
+      description:
+        "Generate a BIP39 mnemonic and derive secret keys at several address indices, fully offline.",
+      href: "/sdk-and-tools/sdk-js/cookbook-preview-recipe",
+      difficulty: "beginner",
+      lastValidated: "2026-07-15",
+      tags: ["sdk-core", "wallet", "typescript"],
+      sdkVersions: { "sdk-core": "^15.4.0" },
+    },
+    {
+      title: "Issue a fungible ESDT",
+      description:
+        "Issue a fungible ESDT token with sdk-core's TokenManagementController against DevnetEntrypoint.",
+      href: "/sdk-and-tools/sdk-js/cookbook-preview-recipe",
+      difficulty: "intermediate",
+      lastValidated: "2026-07-07",
+      tags: ["sdk-core", "esdt", "transaction"],
+      sdkVersions: { "sdk-core": "^15.4.0" },
+    },
+    {
+      title: "Issue an NFT collection + mint an NFT",
+      description:
+        "Issue an NFT collection and mint an NFT into it with sdk-core's TokenManagementController.",
+      href: "/sdk-and-tools/sdk-js/cookbook-preview-recipe",
+      difficulty: "intermediate",
+      lastValidated: "2026-07-07",
+      tags: ["sdk-core", "nft", "esdt"],
+      sdkVersions: { "sdk-core": "^15.4.0" },
+    },
+    {
+      title: "Delegate (stake) EGLD",
+      description:
+        "Delegate (stake) EGLD to an existing delegation contract with sdk-core's DelegationController.",
+      href: "/sdk-and-tools/sdk-js/cookbook-preview-recipe",
+      difficulty: "intermediate",
+      lastValidated: "2026-07-15",
+      tags: ["sdk-core", "delegation", "devnet"],
+      sdkVersions: { "sdk-core": "^15.4.0" },
+    },
+  ]}
+/>
