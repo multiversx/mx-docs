@@ -1,0 +1,407 @@
+---
+title: Read the connected account with useGetAccount
+description: Every AccountType field explained, which ones are optional, how to format the balance correctly, and when to reach for useGetAccountInfo instead.
+difficulty: beginner
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-dapp: "^5.6.0"
+tags:
+  - sdk-dapp
+  - wallet
+  - react
+  - typescript
+  - devnet
+---
+
+Once a user is logged in, `useGetAccount()` is how you read their address,
+balance, and nonce back out of the sdk-dapp store. This recipe goes field by
+field through `AccountType`, shows the two sibling hooks (`useGetAccountInfo()`,
+`useGetLatestNonce()`) you will reach for less often, and gets the
+balance-formatting pitfall out of the way early.
+
+## Prerequisites
+
+- A working sdk-dapp v5 setup (Next.js or Vite).
+- A logged-in account on devnet.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/read-connected-account
+npm install
+npm run dev
+# open https://localhost:5173
+```
+
+## The account card
+
+```tsx title="src/AccountCard.tsx"
+// src/AccountCard.tsx — the useGetAccount() field-by-field breakdown.
+//
+// This is the piece this recipe is actually about. useGetAccount() returns
+// AccountType (node_modules/@multiversx/sdk-dapp/out/types/account.types.d.ts)
+// — a plain object read straight from the Zustand store sdk-dapp populates
+// on login. No network call happens here; the values are whatever the store
+// currently holds (refreshed automatically after transactions settle).
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetAccountInfo } from '@multiversx/sdk-dapp/out/react/account/useGetAccountInfo';
+import { useGetLatestNonce } from '@multiversx/sdk-dapp/out/react/account/useGetLatestNonce';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { formatAmount } from '@multiversx/sdk-dapp/out/lib/sdkDappUtils';
+
+export function AccountCard(): JSX.Element {
+  // The hook you want almost all of the time. Returns AccountType directly —
+  // no destructuring through a bigger "everything" object.
+  const account = useGetAccount();
+
+  // The latest nonce, alone — a thin convenience wrapper around the same
+  // store value as account.nonce. Handy when a component only cares about
+  // the nonce and you don't want to pull in the whole AccountType.
+  const latestNonce = useGetLatestNonce();
+
+  // The network config, so we can label the balance with the right symbol
+  // (EGLD on mainnet, xEGLD on some custom networks) instead of hard-coding it.
+  const { network } = useGetNetworkConfig();
+
+  // The lower-level, back-compat-shaped hook. Useful when you also need
+  // provider-adjacent fields (publicKey, ledgerAccount, walletConnectAccount,
+  // websocket event snapshots) that AREN'T part of AccountType. Note this is
+  // NOT the same shape as sdk-dapp v4's useGetAccountInfo() — v5 dropped
+  // isLoggedIn and tokenLogin from it (those moved to useGetLoginInfo() /
+  // useGetIsLoggedIn()).
+  const accountInfo = useGetAccountInfo();
+
+  return (
+    <div style={cardStyle}>
+      <h2>useGetAccount()</h2>
+      <dl style={dlStyle}>
+        <dt>address</dt>
+        <dd>
+          <code>{account.address}</code>
+        </dd>
+
+        <dt>balance</dt>
+        <dd>
+          <code>
+            {formatAmount({
+              input: account.balance,
+              decimals: 18,
+              digits: 4,
+              showLastNonZeroDecimal: true,
+            })}{' '}
+            {network.egldLabel}
+          </code>{' '}
+          <span style={rawStyle}>(raw: {account.balance})</span>
+        </dd>
+
+        <dt>nonce</dt>
+        <dd>
+          <code>{account.nonce}</code>{' '}
+          <span style={rawStyle}>
+            (useGetLatestNonce() agrees: {latestNonce})
+          </span>
+        </dd>
+
+        <dt>shard</dt>
+        <dd>
+          <code>{account.shard ?? 'unknown — optional field'}</code>
+        </dd>
+
+        <dt>username</dt>
+        <dd>
+          <code>{account.username || '(none set — optional field)'}</code>
+        </dd>
+
+        <dt>txCount / scrCount</dt>
+        <dd>
+          <code>
+            {account.txCount} / {account.scrCount}
+          </code>
+        </dd>
+
+        <dt>isGuarded</dt>
+        <dd>
+          <code>{String(account.isGuarded)}</code>
+        </dd>
+      </dl>
+
+      <h3>useGetAccountInfo() — the fields AccountType doesn't have</h3>
+      <dl style={dlStyle}>
+        <dt>publicKey</dt>
+        <dd>
+          <code>{accountInfo.publicKey}</code>
+        </dd>
+        <dt>ledgerAccount</dt>
+        <dd>
+          <code>{accountInfo.ledgerAccount ? 'connected via Ledger' : 'null'}</code>
+        </dd>
+        <dt>walletConnectAccount</dt>
+        <dd>
+          <code>{accountInfo.walletConnectAccount ?? 'null'}</code>
+        </dd>
+      </dl>
+    </div>
+  );
+}
+
+const cardStyle: React.CSSProperties = {
+  border: '1px solid #444',
+  borderRadius: '8px',
+  padding: '1.25rem',
+  marginTop: '1rem',
+};
+
+const dlStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'max-content 1fr',
+  columnGap: '1rem',
+  rowGap: '0.4rem',
+  margin: 0,
+};
+
+const rawStyle: React.CSSProperties = {
+  color: '#888',
+  fontSize: '0.85em',
+};
+```
+
+## The demo page
+
+```tsx title="src/App.tsx"
+// src/App.tsx — demo page: connect, then show every account field.
+
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import { AccountCard } from './AccountCard';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+
+  const handleConnect = (): void => {
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  const handleDisconnect = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Reading the connected account</h1>
+
+      {!isLoggedIn ? (
+        <button type="button" onClick={handleConnect} style={buttonStyle}>
+          Connect wallet
+        </button>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              void handleDisconnect();
+            }}
+            style={buttonStyle}
+          >
+            Disconnect
+          </button>
+          <AccountCard />
+        </>
+      )}
+    </main>
+  );
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+```
+
+## Provider bootstrap
+
+Every sdk-dapp recipe shares the same init wrapper. `providers.tsx` calls
+`initApp()` once and gates rendering until the store is ready; `lib/multiversx.ts`
+holds the environment config it passes in. They are shown here so the recipe
+compiles as a complete unit, but the subject of this recipe is `AccountCard.tsx`
+above.
+
+```tsx title="src/providers.tsx"
+// src/providers.tsx — sdk-dapp v5 init wrapper.
+//
+// This recipe's subject is AccountCard.tsx, not this file — this is the
+// same login bootstrap every recipe in this Cookbook uses.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { dappConfig } from './lib/multiversx';
+
+let initStarted = false;
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (initStarted) {
+      setReady(true);
+      return;
+    }
+    initStarted = true;
+
+    let cancelled = false;
+    void initApp(dappConfig).then(() => {
+      if (cancelled) return;
+
+      UnlockPanelManager.init({
+        loginHandler: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Logged in.');
+        },
+        onClose: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Unlock panel closed.');
+        },
+      });
+
+      setReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+```ts title="src/lib/multiversx.ts"
+// src/lib/multiversx.ts — environment configuration for sdk-dapp's initApp.
+// Same shape as every other Vite recipe in this Cookbook.
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+const WALLET_CONNECT_PROJECT_ID =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? 'multiversx-cookbook-demo';
+
+export const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    nativeAuth: true,
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+  },
+};
+
+export { EnvironmentsEnum };
+```
+
+## How it works
+
+**`useGetAccount()` is a synchronous store read, not a network call.** It returns
+`AccountType`, verified field by field against
+`node_modules/@multiversx/sdk-dapp/out/types/account.types.d.ts` on the
+actually-installed `@multiversx/sdk-dapp@5.6.23`:
+
+```ts
+interface AccountType {
+  address: string;
+  balance: string;      // smallest denomination, decimal string
+  nonce: number;
+  txCount: number;
+  scrCount: number;
+  claimableRewards: string;
+  isGuarded: boolean;
+  // optional: username, shard, code, ownerAddress, developerReward,
+  // deployedAt, scamInfo, isUpgradeable, isReadable, isPayable,
+  // isPayableBySmartContract, assets, and the active/pending guardian fields
+}
+```
+
+The store refreshes this automatically, on initial login and after each tracked
+transaction settles. Calling the hook again on every render is fine and expected;
+it does not refetch anything by itself.
+
+**Format the balance, always.** `account.balance` is the raw smallest-unit
+string. `formatAmount({ input: account.balance, decimals: 18, digits: 4, showLastNonZeroDecimal: true })`
+gives you the human-readable decimal EGLD amount with the precision behavior you
+want.
+
+**`useGetAccountInfo()` still exists in v5, with a narrower shape than v4.** It
+dropped `isLoggedIn` and `tokenLogin` (now `useGetIsLoggedIn()` /
+`useGetLoginInfo()`), but adds fields `AccountType` does not have: `publicKey`,
+`ledgerAccount`, `walletConnectAccount`, `websocketEvent`, `websocketBatchEvent`.
+Reach for it only when you need one of those; `useGetAccount()` is the right
+default for everything else.
+
+## Pitfalls
+
+:::danger[Pitfall 1: never render account.balance directly]
+It is the raw smallest-unit string (`"1500000000000000000"`, not `"1.5"`). Always
+pass it through `formatAmount()` first. Rendering it raw is the single most common
+"why does my balance say a huge number" support question.
+:::
+
+:::warning[Pitfall 2: shard and username are optional]
+A freshly created account, or one the API has not fully indexed, may have
+`shard: undefined`. Guard with `??` or a conditional. Do not assume every optional
+`AccountType` field is always present, as `AccountCard.tsx` does for both.
+:::
+
+:::warning[Pitfall 3: the hook doesn't refetch, refreshAccount() does]
+`useGetAccount()` returns whatever the store currently holds. It updates
+automatically after login and after tracked transactions settle. If you need to
+force a fresh read outside those triggers, call `refreshAccount()`
+(`@multiversx/sdk-dapp/out/utils/account/refreshAccount`) instead of expecting the
+hook itself to hit the network.
+:::
+
+:::warning[Pitfall 4: getAccount vs getAccountFromApi]
+`useGetAccount()` (and its non-React twin `getAccount()`) are free, instant store
+reads. `getAccountFromApi` is a *different* function that makes a real network
+round-trip on every call. Do not reach for it inside a render loop thinking it is
+just a renamed getter.
+:::
+
+## See also
+
+- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+  is the sdk-core, script-side counterpart, for when your own code holds the key.
+- [Configure a network provider](/sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider)
+  shows the read-side provider the sdk-dapp store wraps for you.
+- [docs.multiversx.com, sdk-dapp](https://docs.multiversx.com/sdk-and-tools/sdk-dapp)
+  is the conceptual reference.

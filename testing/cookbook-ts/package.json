@@ -1,0 +1,18 @@
+{
+  "name": "cookbook-ts-extractor",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Extracts titled ts/tsx fences from the cookbook recipe MDX into the harness project (TypeScript counterpart of extract-tutorial-code).",
+  "scripts": {
+    "extract": "tsx extract.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20.13.1"
+  }
+}

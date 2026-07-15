@@ -244,6 +244,33 @@ const sidebars = {
                       "sdk-and-tools/sdk-js/cookbook-preview-recipe",
                     ]
                   },
+                  {
+                    type: "category",
+                    label: "Cookbook (recipes)",
+                    items: [
+                      {
+                        type: "category",
+                        label: "Network providers",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Transactions",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/transactions/send-egld",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Wallets",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account",
+                        ]
+                      },
+                    ]
+                  },
                   "sdk-and-tools/sdk-js/extending-sdk-js",
                   "sdk-and-tools/sdk-js/writing-and-testing-sdk-js-interactions",
                   "sdk-and-tools/sdk-js/sdk-js-signing-providers",

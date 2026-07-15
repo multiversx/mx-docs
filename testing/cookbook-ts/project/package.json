@@ -1,0 +1,27 @@
+{
+  "name": "cookbook-ts-project",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Harness project the cookbook recipe code is extracted into and type-checked (TypeScript counterpart of the crowdfunding crate).",
+  "scripts": {
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "^15.4.0",
+    "@multiversx/sdk-dapp": "^5.6.0",
+    "axios": "^1.7.9",
+    "bignumber.js": "^9.1.2",
+    "protobufjs": "^7.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20.13.1"
+  }
+}

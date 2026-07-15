@@ -1,0 +1,5 @@
+# Assembled by `cookbook-ts-extractor` on every CI run — never committed.
+/src/recipes/
+
+# npm
+/node_modules
