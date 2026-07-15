@@ -1,0 +1,235 @@
+---
+title: Apply a guardian to a transaction and co-sign it
+description: Turn any transaction into a guarded one with TransactionComputer.applyGuardian and co-sign it, asserting version, options, and guardian fields on devnet.
+difficulty: advanced
+est_minutes: 9
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - guardian
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+Once an account is guarded, *every* transaction it sends needs a guardian
+co-signature. This recipe takes a plain EGLD transfer and makes it a guarded
+transaction with `TransactionComputer.applyGuardian`, then co-signs it with both
+the sender and the guardian, verifying the version, options, and guardian fields
+end up correct.
+
+Unlike a relayer (which must share the sender's shard, see
+[Build a relayed v3 transaction](/sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction)),
+a guardian has no shard constraint; it is purely a co-signer.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates two fresh, unfunded accounts and only needs
+  devnet **read** access before proving the shape via a clean rejection.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/apply-guardian-to-transaction
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+First, a fresh sender and guardian (two independent accounts, no shard search
+needed):
+
+```ts title="src/keys.ts"
+// src/keys.ts — generate a sender and a guardian as two fresh, independent,
+// intentionally-unfunded accounts.
+//
+// Unlike a relayer (which must share the sender's shard — see the
+// relayed-v3-transaction recipe), a guardian has NO shard constraint: it is
+// purely a co-signer. So there is no same-shard search here — two independent
+// mnemonics are enough, reflecting that the guardian is a separate party (a
+// guardian service, a second device) from the account owner.
+
+import { Account, Mnemonic } from '@multiversx/sdk-core';
+
+/** Generate a fresh sender and a fresh guardian (both unfunded). */
+export async function generateSenderAndGuardian(): Promise<{
+  sender: Account;
+  guardian: Account;
+}> {
+  const sender = await Account.newFromMnemonic(Mnemonic.generate().toString());
+  const guardian = await Account.newFromMnemonic(Mnemonic.generate().toString());
+  return { sender, guardian };
+}
+```
+
+Then apply the guardian, assert the guarded fields, and co-sign:
+
+```ts title="src/guarded.ts"
+// src/guarded.ts — the subject of this recipe: taking any transaction and
+// making it a GUARDED transaction, then co-signing it.
+//
+// A guarded transaction carries a second signature from the account's
+// guardian. `TransactionComputer.applyGuardian(tx, guardianAddress)` does
+// three things (confirmed by reading the installed v15.4.1 source):
+//   1. raises `version` to at least 2 (the minimum that supports options),
+//   2. sets the TX_GUARDED bit in `options`,
+//   3. sets `tx.guardian` to the guardian's address.
+// It does NOT touch gas — the +50,000 for guarded transactions is the
+// caller's job on a hand-built transaction (the controllers add it for you).
+//
+// Signing ORDER matters: applyGuardian must run BEFORE either party signs, so
+// both signatures cover the version/options/guardian fields.
+
+import { Transaction, TransactionComputer } from '@multiversx/sdk-core';
+import type { Account, Address } from '@multiversx/sdk-core';
+
+// sdk-core's internal constant for the extra guarded-transaction gas (guarded
+// transactions require an extra 50,000 gas). It is not re-exported from the
+// package barrel, so it is restated here.
+const EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTIONS = 50_000n;
+
+export interface GuardedBuildResult {
+  transaction: Transaction;
+  assertions: {
+    versionIsAtLeast2: boolean;
+    guardedBitSet: boolean;
+    guardianMatches: boolean;
+    hasSenderSignature: boolean;
+    hasGuardianSignature: boolean;
+  };
+}
+
+/**
+ * Build a plain EGLD transfer, apply a guardian to it, assert the guarded
+ * fields, then co-sign it with both the sender and the guardian.
+ */
+export async function buildGuardedTransfer(
+  sender: Account,
+  guardian: Account,
+  receiver: Address,
+  chainID: string,
+  amount: bigint,
+): Promise<GuardedBuildResult> {
+  const transaction = new Transaction({
+    sender: sender.address,
+    receiver,
+    gasLimit: 50_000n, // minimum for a plain EGLD transfer, before the guarded extra
+    chainID,
+    value: amount,
+    nonce: sender.getNonceThenIncrement(),
+  });
+
+  const computer = new TransactionComputer();
+
+  // Apply the guardian BEFORE signing, and add the guarded gas ourselves.
+  computer.applyGuardian(transaction, guardian.address);
+  transaction.gasLimit += EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTIONS;
+
+  // Co-sign: the sender signs `signature`, the guardian signs
+  // `guardianSignature` — both over the same (now guarded) bytes.
+  transaction.signature = await sender.signTransaction(transaction);
+  transaction.guardianSignature = await guardian.signTransaction(transaction);
+
+  return {
+    transaction,
+    assertions: {
+      versionIsAtLeast2: transaction.version >= 2,
+      guardedBitSet: computer.hasOptionsSetForGuardedTransaction(transaction),
+      guardianMatches: transaction.guardian.toBech32() === guardian.address.toBech32(),
+      hasSenderSignature: transaction.signature.length > 0,
+      hasGuardianSignature: transaction.guardianSignature.length > 0,
+    },
+  };
+}
+```
+
+## Run it
+
+A real captured run (addresses differ every run):
+
+```text
+Guarded transaction fields:
+  version:            2
+  options:            2
+  guardian:           erd16pwwy3l8du89tljqht00tg8rt3tuhqysv85x5kakpda3e0znfmkqpdas4v
+  gasLimit:           100000 (50000 base + 50000 guarded extra)
+  signature length:   64 bytes
+  guardianSig length: 64 bytes
+
+Assertions:
+  version >= 2:          true
+  guarded bit set:       true
+  guardian field matches: true
+  sender signature set:  true
+  guardian signature set: true
+
+Broadcasting the guarded transfer...
+Rejected (expected for an unfunded wallet): ... insufficient funds for address erd12kzk5e...
+```
+
+## How it works
+
+`TransactionComputer.applyGuardian(tx, guardianAddress)` does exactly three things
+(confirmed by reading the installed v15.4.1 source):
+
+1. raises `version` to at least `2` (the minimum that supports the options field),
+2. sets the `TX_GUARDED` bit in `options` (so `options` becomes `2`),
+3. sets `tx.guardian` to the guardian's address.
+
+It does **not** touch gas, the `50,000` guarded premium is the caller's job on a
+hand-built transaction (the controllers add it for you). This recipe adds it
+explicitly, so the transfer's `50,000` minimum becomes `100,000`.
+
+**Order matters.** `applyGuardian` runs *before* either party signs, so both
+signatures cover the version/options/guardian fields. The sender signs
+`signature`; the guardian signs `guardianSignature`. Both are 64-byte Ed25519
+signatures over the same serialized bytes. The unfunded broadcast is rejected
+with a clean `insufficient funds` keyed to the sender, confirming the guarded
+shape is well-formed.
+
+For built-in function and guardian detail, see
+[docs.multiversx.com/developers/built-in-functions](https://docs.multiversx.com/developers/built-in-functions/).
+
+## Pitfalls
+
+:::danger[Pitfall 1: apply the guardian BEFORE signing]
+`applyGuardian` mutates `version`, `options`, and `guardian`. Sign first and both
+signatures cover the wrong bytes, so the network rejects them. Apply, then sign.
+:::
+
+:::warning[Pitfall 2: a guarded transaction costs an extra 50,000 gas]
+`applyGuardian` does not add it. On a hand-built transaction you must add `50,000`
+yourself (the controllers do it automatically). Under-budget and the transaction
+is rejected for gas.
+:::
+
+:::note[Pitfall 3: the guarded constants are not exported from the barrel]
+`TRANSACTION_OPTIONS_TX_GUARDED` and `EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTIONS`
+are internal to sdk-core. Read the guarded flag through
+`TransactionComputer.hasOptionsSetForGuardedTransaction`, and restate the
+`50,000` gas constant locally (as this recipe does).
+:::
+
+:::note[Pitfall 4: the account must actually be guarded on-chain]
+This recipe proves the transaction *shape* with unfunded accounts. A real guarded
+transfer also requires the sender's account to be guarded
+([Guard an account](/sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account))
+with a guardian whose key produces the `guardianSignature`.
+:::
+
+## See also
+
+- [Set a guardian on an account](/sdk-and-tools/sdk-js/cookbook/accounts/set-guardian)
+  nominates the guardian whose signature co-signs here.
+- [Guard and unguard an account](/sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account)
+  activates guardianship so guarded transactions are actually required.
+- [Build a relayed v3 transaction](/sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction)
+  is the other multi-signature shape, where a relayer pays gas instead of a
+  guardian co-signing.

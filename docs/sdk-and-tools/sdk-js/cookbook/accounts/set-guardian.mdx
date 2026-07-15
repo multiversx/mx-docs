@@ -1,0 +1,208 @@
+---
+title: Set a guardian on an account
+description: Nominate a guardian for an account with SetGuardian via sdk-core's AccountController and AccountTransactionsFactory, payload verified on devnet.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - guardian
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+A guardian is a second key that must co-sign an account's transactions once the
+account is *guarded*. Turning that protection on is a two-step sequence:
+
+1. **`SetGuardian`** nominates the guardian (this recipe).
+2. **`GuardAccount`** activates guardianship (see
+   [Guard and unguard an account](/sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account)).
+
+This recipe builds the `SetGuardian` transaction with sdk-core's
+`AccountController` (and the matching `AccountTransactionsFactory`), decodes the
+payload, and broadcasts it.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites. **No devnet EGLD required**, see "How it works".
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/set-guardian
+npm install
+npm run build
+npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th MyGuardianService
+```
+
+## The code
+
+```ts title="src/guardian.ts"
+// src/guardian.ts — the subject of this recipe: nominating a guardian for an
+// account with the `SetGuardian` builtin, via sdk-core's AccountController
+// and AccountTransactionsFactory.
+//
+// A guardian is a second key that must co-sign your transactions once the
+// account is guarded. Setting one is a two-transaction dance:
+//   1. SetGuardian  — nominate the guardian (this recipe). The nomination
+//      only becomes active after a cooldown (unless the account is already
+//      guarded, in which case the current guardian co-signs and it is
+//      immediate).
+//   2. GuardAccount — activate guardianship (see guard-unguard-account).
+//
+// SetGuardian is a builtin function executed in the caller's own account
+// context, so the transaction's receiver is the sender itself.
+//
+// SetGuardianInput = { guardianAddress: Address; serviceID: string }. The
+// serviceID identifies the guardian SERVICE (e.g. a Trusted Co-Signer
+// Service). It is written to the wire verbatim as hex; the exact value
+// depends on the service you use, so this recipe takes it as a parameter.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+export interface SetGuardianInput {
+  guardianAddress: Address;
+  serviceID: string;
+}
+
+/**
+ * Build a SetGuardian transaction.
+ *
+ * Controller path: `createTransactionForSettingGuardian` sets the nonce and
+ * signs (it takes the whole Account). Factory path: it only builds; the
+ * caller owns nonce + signature. Same method name on both.
+ */
+export async function setGuardian(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: SetGuardianInput,
+  useFactory: boolean,
+): Promise<Transaction> {
+  if (useFactory) {
+    const factory = entrypoint.createAccountTransactionsFactory();
+    const transaction = await factory.createTransactionForSettingGuardian(sender.address, {
+      guardianAddress: input.guardianAddress,
+      serviceID: input.serviceID,
+    });
+    transaction.nonce = sender.getNonceThenIncrement();
+    transaction.signature = await sender.signTransaction(transaction);
+    return transaction;
+  }
+
+  const controller = entrypoint.createAccountController();
+  return controller.createTransactionForSettingGuardian(sender, sender.getNonceThenIncrement(), {
+    guardianAddress: input.guardianAddress,
+    serviceID: input.serviceID,
+  });
+}
+
+/**
+ * Decode a SetGuardian transaction's `data` field:
+ * `SetGuardian@<guardianPubKeyHex>@<serviceIdHex>`. The guardian argument is
+ * a raw 32-byte public key (hex), NOT bech32.
+ */
+export function describeSetGuardianPayload(transaction: Transaction): {
+  function: string;
+  receiver: string;
+  guardian: string;
+  serviceID: string;
+  gasLimit: string;
+} {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  const guardianHex = parts[1] ?? '';
+  const serviceHex = parts[2] ?? '';
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    guardian: guardianHex ? Address.newFromHex(guardianHex).toBech32() : '(none)',
+    serviceID: Buffer.from(serviceHex, 'hex').toString(),
+    gasLimit: transaction.gasLimit.toString(),
+  };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> <guardianBech32> [serviceID] [--factory]
+```
+
+A real captured run (unfunded wallet):
+
+```text
+SetGuardian payload:
+  function:  SetGuardian
+  receiver:  erd18l2cww3g3g6uc35wy60efd87ss85xdqj9gh9qn6ga6halz3jscaqd4dl3k
+  guardian:  erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+  serviceID: MyGuardianService
+  gasLimit:  466500
+
+Broadcasting...
+Rejected (expected for an unfunded wallet): ... insufficient funds for address erd18l2c...
+```
+
+## How it works
+
+`SetGuardian` is a builtin function on the caller's own account, so the
+transaction's **receiver is the sender itself**. Its data is
+`SetGuardian@<guardianPublicKeyHex>@<serviceIdHex>`. The guardian argument is a
+raw 32-byte public key in hex, *not* bech32, this recipe's decoder converts it
+back to a readable address. The `serviceID` identifies the guardian **service**
+(for example a Trusted Co-Signer Service) and is written verbatim as hex; its
+exact value depends on the service you use, so the recipe takes it as a
+parameter.
+
+Gas was `466500`, matching `50,000 + 1,500 × 111 (data bytes) + 250,000
+(gasLimitSetGuardian)` to the unit. The unfunded broadcast is rejected with a
+clean `insufficient funds` keyed to the sender, the payload is well-formed.
+
+:::note[Activation is delayed by design]
+A newly set guardian is not usable immediately: on an unguarded account the
+nomination becomes active only after a protocol cooldown. If the account is
+*already* guarded, the current guardian co-signs the `SetGuardian` and the change
+is immediate. Either way, `SetGuardian` only nominates,
+[`GuardAccount`](/sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account)
+is what activates protection.
+:::
+
+For built-in function detail, see
+[docs.multiversx.com/developers/built-in-functions](https://docs.multiversx.com/developers/built-in-functions/).
+
+## Pitfalls
+
+:::warning[Pitfall 1: the guardian argument is a public key, not bech32]
+On the wire `SetGuardian` carries the guardian's raw 32-byte public key in hex.
+The SDK converts your `Address` for you, but if you hand-decode the payload, read
+it back with `Address.newFromHex`, not `newFromBech32`.
+:::
+
+:::note[Pitfall 2: serviceID is service-specific, not a fixed constant]
+This recipe uses an illustrative `serviceID`. The real value is defined by the
+guardian service you register with; passing the wrong one nominates a guardian
+the service cannot co-sign for.
+:::
+
+:::note[Pitfall 3: setting a guardian does not guard the account]
+`SetGuardian` only nominates. Until you send
+[`GuardAccount`](/sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account),
+transactions still sign with the primary key alone.
+:::
+
+## See also
+
+- [Guard and unguard an account](/sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account)
+  activates the guardian you nominated here, and removes it.
+- [Apply a guardian to a transaction](/sdk-and-tools/sdk-js/cookbook/accounts/apply-guardian-to-transaction)
+  co-signs an individual transaction once guardianship is active.
+- [Build a relayed v3 transaction](/sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction)
+  is the other multi-signature transaction shape (a relayer paying gas, rather
+  than a guardian co-signing).

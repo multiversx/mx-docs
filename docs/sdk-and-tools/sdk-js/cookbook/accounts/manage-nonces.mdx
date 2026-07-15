@@ -1,0 +1,225 @@
+---
+title: Manage nonces (fetch-then-increment)
+description: Fetch an account's nonce from the network once, then increment it locally for every transaction sent afterward in a batch, plus recovery from a nonce gap.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - transaction
+  - typescript
+  - devnet
+---
+
+The pattern behind sdk-core's single most emphasized rule: fetch the account's
+nonce from the network **once**, then increment it **locally** for every
+transaction sent afterward in the same batch, never re-fetch mid-batch. This
+recipe makes that pattern concrete with a small burst of sequential sends, plus
+the recovery step for when a batch partially fails.
+
+This is the sdk-core side of a problem that also exists in sdk-dapp's
+connected-wallet flow (see
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)'s
+Pitfall 1), the failure mode is identical; only the concrete API differs.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet with some devnet EGLD, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for how to generate and fund a throwaway one.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/manage-nonces
+npm install
+npm run build
+npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th 3
+```
+
+## The pattern
+
+```ts title="src/batchSend.ts"
+// src/batchSend.ts — the actual subject of this recipe: sending more than
+// one transaction per process run with a SINGLE nonce fetch, using
+// `getNonceThenIncrement()` locally for each one.
+//
+// The sdk-core nonce rule: you MUST fetch the account nonce from the network
+// before sending transactions, then increment locally with
+// getNonceThenIncrement(). Stale nonces cause transaction rejection. This
+// file is that pattern, applied to a batch.
+//
+// THE WRONG PATTERN (do not copy this) is calling
+// `entrypoint.recallAccountNonce(address)` again before building each
+// transaction in the loop below, instead of relying on the account's local
+// counter. It looks safer ("always get the freshest nonce!") but does the
+// opposite: the network only advances an account's nonce once a
+// transaction is PROCESSED, not merely broadcast. If you fire transaction
+// #2's nonce fetch before #1 has been processed, both fetches return the
+// SAME value — transaction #2 then either overwrites #1 in the mempool
+// (same nonce, different hash) or gets rejected outright, depending on
+// timing. This is the exact failure mode the "Sign and send a transaction"
+// recipe's Pitfall 1 describes for the sdk-dapp + connected-wallet flow;
+// the fix is structurally identical here even though the concrete API
+// differs (sdk-dapp's AccountType.nonce is read-only with no
+// getNonceThenIncrement() equivalent — you'd track a local counter
+// yourself; here, Account already has one built in).
+//
+// Fetch once, per PROCESS RUN (or per logical batch), before the loop —
+// not once per transaction inside it.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export interface BatchSendResult {
+  nonce: bigint;
+  txHash: string;
+}
+
+/**
+ * Sends one EGLD transfer per entry in `amounts`, all to the same
+ * `receiver`, using a single local nonce counter incremented once per
+ * transaction. Does NOT wait for any transaction to confirm before
+ * building and sending the next — that's the whole point: this is exactly
+ * the "send a burst, don't wait" scenario where re-fetching the nonce
+ * per-send would break (see the file header).
+ *
+ * `sender.nonce` must already reflect the network's current nonce before
+ * calling this — see src/account.ts's loadDevnetAccount, called once by the
+ * caller, not once per entry in `amounts`.
+ */
+export async function sendBatch(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  receiver: string,
+  amounts: bigint[],
+): Promise<BatchSendResult[]> {
+  const controller = entrypoint.createTransfersController();
+  const receiverAddress = Address.newFromBech32(receiver);
+  const results: BatchSendResult[] = [];
+
+  for (const amount of amounts) {
+    // ONE local increment per transaction. No network call in this loop —
+    // that's the fix. Capture the nonce used for this transaction before
+    // the controller call increments it further, so the log below reflects
+    // reality even though getNonceThenIncrement() already advanced
+    // sender.nonce internally.
+    const nonceForThisTx = sender.nonce;
+
+    const transaction = await controller.createTransactionForNativeTokenTransfer(
+      sender,
+      sender.getNonceThenIncrement(),
+      {
+        receiver: receiverAddress,
+        nativeAmount: amount,
+      },
+    );
+
+    const txHash = await entrypoint.sendTransaction(transaction);
+    results.push({ nonce: nonceForThisTx, txHash });
+  }
+
+  return results;
+}
+
+/**
+ * Recovery for when a batch partially fails and leaves a nonce gap (one
+ * transaction rejected or expired mid-batch stalls every transaction
+ * queued behind it, up to the mempool's own timeout). Re-fetches the real
+ * nonce from the network and overwrites the local one — resyncing rather
+ * than continuing to trust a local counter that may now be wrong.
+ *
+ * There is no way to detect a gap from the client side alone before
+ * attempting to send; this is a recovery step to call after a send in the
+ * batch fails, not a pre-check.
+ */
+export async function resyncNonce(entrypoint: DevnetEntrypoint, sender: Account): Promise<void> {
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+}
+```
+
+## Run it
+
+Expected output, three distinct, sequential nonces from a **single** network
+fetch at the start:
+
+```text
+Sender: erd1... (starting nonce 42)
+Sending 3 transfers of 0.001 EGLD each to erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th…
+
+nonce 42 -> <hash 1>
+nonce 43 -> <hash 2>
+nonce 44 -> <hash 3>
+
+Ending local nonce: 45
+```
+
+## How it works
+
+**One fetch, then N local increments, never N fetches.** `sender.nonce` is set
+once from `entrypoint.recallAccountNonce(address)`. Inside `sendBatch()`'s loop,
+each iteration calls `sender.getNonceThenIncrement()`, a purely local,
+synchronous read-then-increment on the `Account` object, with **no** network
+call. Verified directly against real devnet: sending 3 transfers in a row from an
+intentionally unfunded wallet produced transactions with `nonce: 0`, `nonce: 1`,
+and `nonce: 2` respectively, each rejected for "insufficient funds", never for a
+stale or duplicate nonce, confirming no re-fetch happened between iterations.
+
+**Why re-fetching per-send is actively wrong, not just slower.** The network only
+advances an account's nonce once a transaction is *processed*, not merely
+broadcast. Calling `recallAccountNonce()` again for transaction #2 before
+transaction #1 has been processed returns the **same** value both times;
+transaction #2 then collides with #1 or gets rejected, depending on timing.
+
+**A nonce gap stalls everything queued behind it.** If one transaction in a batch
+is rejected or expires, every transaction already built with a *higher* local
+nonce is now invalid until that gap is filled or the queued transactions time
+out. `resyncNonce()` recovers by re-fetching the real value and overwriting the
+local counter, a recovery step to call after a failure, not a defensive pre-check
+before every send.
+
+For conceptual depth, see
+[docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-cookbook](https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-cookbook).
+
+## Pitfalls
+
+:::note[Pitfall 1: this recipe does not wait for each transaction to confirm before sending the next]
+That's the point, waiting between every send would sidestep the whole problem, at
+the cost of one network round-trip per transaction. If your workload can tolerate
+that latency, waiting is simpler and this recipe doesn't apply to you.
+:::
+
+:::warning[Pitfall 2: a failure partway through the loop is not automatically retried or detected]
+`sendBatch()` throws on the first rejected transaction, aborting the remaining
+iterations, verified directly: an intentionally unfunded wallet's first send fails
+and the loop never reaches its second or third iteration. A production version
+needs its own decision about whether to abort, skip, or resync-and-retry.
+:::
+
+:::warning[Pitfall 3: resyncNonce() is a recovery step, not a pre-check]
+There is no way to detect a nonce gap from the client side before attempting to
+send. Call `resyncNonce()` after a failure, not defensively before every send,
+doing the latter reintroduces the "why re-fetching per-send is wrong" problem
+above.
+:::
+
+:::danger[Pitfall 4: concurrent processes sharing one account will race regardless of this pattern]
+`getNonceThenIncrement()` only protects against the caller re-fetching nonces it
+already knows. If two separate process instances both load the same PEM and both
+call `recallAccountNonce()` around the same time, they can still both observe the
+same starting value. Use one process (or an external lock) per account for
+nonce-sensitive sends.
+:::
+
+## See also
+
+- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+  is the single-send case this recipe extends to a batch.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the same nonce problem, in the sdk-dapp + connected-wallet flow.
+- The same Controller pattern applies to ESDT token transfers, covered in the
+  transactions recipes.

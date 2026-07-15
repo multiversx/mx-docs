@@ -1,0 +1,217 @@
+---
+title: Guard and unguard an account
+description: Activate guardianship with GuardAccount and remove it with UnGuardAccount via sdk-core, including the guardian co-sign requirement, verified on devnet.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - guardian
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+Once a guardian is nominated (see
+[Set a guardian](/sdk-and-tools/sdk-js/cookbook/accounts/set-guardian)), two
+transactions toggle protection:
+
+- **`GuardAccount`** activates guardianship. From here on, every transaction from
+  the account must carry the guardian's co-signature.
+- **`UnGuardAccount`** removes guardianship. Because the account is guarded when
+  you run this, the unguard transaction itself must be co-signed by the current
+  guardian.
+
+This recipe builds both with sdk-core's `AccountController` (and factory), decodes
+the payloads, and shows the guarded flag being set on the unguard.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites. **No devnet EGLD required**, see "How it works".
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/guard-unguard-account
+npm install
+npm run build
+npm start -- ./wallet.pem --guardian erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+```
+
+## The code
+
+```ts title="src/guard.ts"
+// src/guard.ts — the subject of this recipe: turning guardianship on and off
+// once a guardian has been nominated (see set-guardian for the nomination).
+//
+//   - GuardAccount   — activate guardianship. From here on, every transaction
+//     from this account must carry the guardian's co-signature.
+//   - UnGuardAccount — remove guardianship. Because the account is guarded
+//     when you run this, the UnGuardAccount transaction ITSELF must be
+//     co-signed by the current guardian — otherwise a stolen primary key
+//     could simply unguard the account and bypass the guardian entirely.
+//
+// Both are builtin functions on the caller's own account, so the receiver is
+// the sender. Note the wire spelling: `GuardAccount` and `UnGuardAccount`
+// (capital G in "Guard").
+
+import { Address, TransactionComputer } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+/** Build a GuardAccount transaction (activate guardianship). */
+export async function guardAccount(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  useFactory: boolean,
+): Promise<Transaction> {
+  if (useFactory) {
+    const factory = entrypoint.createAccountTransactionsFactory();
+    const transaction = await factory.createTransactionForGuardingAccount(sender.address);
+    transaction.nonce = sender.getNonceThenIncrement();
+    transaction.signature = await sender.signTransaction(transaction);
+    return transaction;
+  }
+
+  const controller = entrypoint.createAccountController();
+  return controller.createTransactionForGuardingAccount(sender, sender.getNonceThenIncrement(), {});
+}
+
+/**
+ * Build an UnGuardAccount transaction (remove guardianship).
+ *
+ * Pass the current `guardian` to have the SDK mark the transaction as guarded
+ * (version stays 2, options gets the TX_GUARDED bit, and `guardian` is set),
+ * ready for the guardian's co-signature in `guardianSignature`. Without it,
+ * the network rejects the unguard on a guarded account.
+ */
+export async function unguardAccount(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  guardian: Address | undefined,
+  useFactory: boolean,
+): Promise<Transaction> {
+  if (useFactory) {
+    const factory = entrypoint.createAccountTransactionsFactory();
+    const transaction = await factory.createTransactionForUnguardingAccount(
+      sender.address,
+      guardian ? { guardian } : {},
+    );
+    transaction.nonce = sender.getNonceThenIncrement();
+    transaction.signature = await sender.signTransaction(transaction);
+    return transaction;
+  }
+
+  const controller = entrypoint.createAccountController();
+  return controller.createTransactionForUnguardingAccount(
+    sender,
+    sender.getNonceThenIncrement(),
+    guardian ? { guardian } : {},
+  );
+}
+
+/** Decode a guard/unguard transaction's shape, including the guarded bit. */
+export function describeGuardPayload(transaction: Transaction): {
+  function: string;
+  receiver: string;
+  options: number;
+  isGuardedBitSet: boolean;
+  guardian: string;
+  gasLimit: string;
+} {
+  const guardianBech = transaction.guardian.isEmpty() ? '(none)' : transaction.guardian.toBech32();
+  // The TX_GUARDED options constant is not re-exported from the sdk-core
+  // barrel, so read the flag through TransactionComputer instead of
+  // hardcoding the bit.
+  const computer = new TransactionComputer();
+  return {
+    function: Buffer.from(transaction.data).toString().split('@')[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    options: transaction.options,
+    isGuardedBitSet: computer.hasOptionsSetForGuardedTransaction(transaction),
+    guardian: guardianBech,
+    gasLimit: transaction.gasLimit.toString(),
+  };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> [--guardian <bech32>] [--factory]
+```
+
+A real captured run (unfunded wallet, guardian supplied):
+
+```text
+GUARD ACCOUNT (activate):
+  function:        GuardAccount
+  receiver:        erd18l2cww3g3g6uc35wy60efd87ss85xdqj9gh9qn6ga6halz3jscaqd4dl3k
+  options:         0 (guarded bit set: false)
+  guardian:        (none)
+  gasLimit:        318000
+
+UNGUARD ACCOUNT (co-signed by current guardian):
+  function:        UnGuardAccount
+  options:         2 (guarded bit set: true)
+  guardian:        erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+  gasLimit:        371000
+
+Broadcasting the GuardAccount transaction...
+Rejected (expected for an unfunded wallet): ... insufficient funds for address erd18l2c...
+```
+
+## How it works
+
+Both are builtin functions on the caller's own account, so the receiver is the
+**sender**. `GuardAccount` carries no arguments; its gas was `318000`, matching
+`50,000 + 1,500 × 12 (data bytes) + 250,000`.
+
+The interesting one is `UnGuardAccount`. Passing the current guardian marks the
+transaction as guarded: `options` becomes `2` (the `TX_GUARDED` bit), `guardian`
+is populated, and the SDK adds the `50,000` guarded-transaction gas premium,
+`371000` total versus the `321000` an unguarded build would cost. This is the
+network's protection: a stolen primary key alone cannot lift guardianship,
+because the unguard must itself be co-signed by the guardian being removed. Add
+that co-signature with the guardian's key (see
+[Apply a guardian to a transaction](/sdk-and-tools/sdk-js/cookbook/accounts/apply-guardian-to-transaction))
+before broadcasting a real unguard.
+
+For built-in function detail, see
+[docs.multiversx.com/developers/built-in-functions](https://docs.multiversx.com/developers/built-in-functions/).
+
+## Pitfalls
+
+:::danger[Pitfall 1: unguarding a guarded account needs the guardian's co-signature]
+Send `UnGuardAccount` from the primary key alone and the network rejects it. Pass
+the current guardian so the transaction is marked guarded, then attach the
+`guardianSignature`.
+:::
+
+:::warning[Pitfall 2: the guarded unguard costs an extra 50,000 gas]
+Because it is itself a guarded transaction. The controller adds it automatically
+when a guardian is present (`371000` vs `321000` here); budget for it on a
+hand-built transaction.
+:::
+
+:::note[Pitfall 3: the TX_GUARDED options constant is not exported from the barrel]
+`TRANSACTION_OPTIONS_TX_GUARDED` is internal to sdk-core. Read the flag through
+`TransactionComputer.hasOptionsSetForGuardedTransaction(tx)` instead of
+hardcoding `2`, as this recipe does.
+:::
+
+## See also
+
+- [Set a guardian on an account](/sdk-and-tools/sdk-js/cookbook/accounts/set-guardian)
+  nominates the guardian you activate here.
+- [Apply a guardian to a transaction](/sdk-and-tools/sdk-js/cookbook/accounts/apply-guardian-to-transaction)
+  attaches the guardian co-signature the unguard (and every guarded transaction)
+  needs.
+- [Manage nonces (fetch-then-increment)](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  is the nonce-fetch pattern this recipe uses.

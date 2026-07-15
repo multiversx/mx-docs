@@ -1,0 +1,157 @@
+---
+title: Create an Account from a KeyPair, secret key, or mnemonic
+description: Build an sdk-core Account from a KeyPair, a raw secret key, or a mnemonic, fully offline, and learn which named constructors are sync versus async.
+difficulty: beginner
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - typescript
+  - wallet
+---
+
+The `Account` is the object you sign with. This recipe builds one three ways:
+from a `KeyPair`, from a raw secret key, and from a mnemonic, all fully offline,
+with no network call. It also flags a real inconsistency in the named
+constructors: one of them is asynchronous while the rest are not.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates its own throwaway keys.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/account-from-keys
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+```ts title="src/index.ts"
+// src/index.ts — build an Account four ways: from a KeyPair, from a raw
+// secret key, from a mnemonic, and (for contrast) note the async PEM path.
+//
+// Fully offline. No devnet, no network call — every constructor here works
+// on local key material. Fresh keys are generated on each run, so exact
+// addresses differ; the equivalences printed do not.
+//
+// Grounded in the installed @multiversx/sdk-core v15.4.1 Account class
+// (accounts/account.d.ts).
+
+import { Account, KeyPair, Mnemonic } from '@multiversx/sdk-core';
+
+async function main(): Promise<void> {
+  // === A. From a freshly generated KeyPair. ===
+  // KeyPair.generate() makes a new Ed25519 keypair; newFromKeypair wraps it
+  // in an Account. Synchronous.
+  const keyPair = KeyPair.generate();
+  const fromKeyPair = Account.newFromKeypair(keyPair);
+  console.log(`A. From KeyPair:    ${fromKeyPair.address.toBech32()}`);
+
+  // === B. From a raw secret key — the plain constructor. ===
+  // We reuse the KeyPair's own secret key, so B is the same account as A and
+  // the addresses must match. Synchronous.
+  const fromSecretKey = new Account(keyPair.secretKey);
+  console.log(`B. From secretKey:  ${fromSecretKey.address.toBech32()}`);
+  console.log(
+    `   A and B share one key, so addresses match: ${fromKeyPair.address.toBech32() === fromSecretKey.address.toBech32()}`,
+  );
+
+  // === C. From a mnemonic at addressIndex 0. ===
+  // newFromMnemonic derives the key first, then builds the Account.
+  // Synchronous, despite deriving a key.
+  const mnemonic = Mnemonic.generate();
+  const fromMnemonic = Account.newFromMnemonic(mnemonic.toString(), 0);
+  console.log(`C. From mnemonic:   ${fromMnemonic.address.toBech32()}`);
+
+  // === D. Every Account exposes the same surface. ===
+  // address, publicKey, secretKey, and a LOCAL nonce (a bigint you manage
+  // yourself — see the Manage nonces recipe). An Account can sign, too.
+  console.log(`\nfromMnemonic.nonce starts at ${fromMnemonic.nonce} (a local bigint, not fetched from the network).`);
+  const data = new Uint8Array(Buffer.from('proof this account can sign'));
+  const signature = await fromMnemonic.sign(data);
+  const verified = await fromMnemonic.verify(data, signature);
+  console.log(`fromMnemonic can sign and verify its own data: ${verified}`);
+
+  // === E. The one async constructor. ===
+  // newFromPem is the odd one out: it returns Promise<Account> and must be
+  // awaited. newFromKeypair / new Account(...) / newFromMnemonic /
+  // newFromKeystore are all synchronous. See the "Save and load a PEM" recipe.
+  console.log('\nNote: Account.newFromPem(...) is async (returns a Promise); the four constructors used above are synchronous.');
+
+  console.log('\nExpected: A and B identical, two "true"-style confirmations.');
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+Keys are generated fresh each run, so addresses differ. A and B reuse one key, so
+their addresses always match:
+
+```text
+A. From KeyPair:    erd13cj3sr6vxqknjaegpc3txvjtz3ermc3dvlznhj6lpfzm4wtu69vs2695hk
+B. From secretKey:  erd13cj3sr6vxqknjaegpc3txvjtz3ermc3dvlznhj6lpfzm4wtu69vs2695hk
+   A and B share one key, so addresses match: true
+C. From mnemonic:   erd1uast8l23rlhkee32xx59tmuc54gh8xp5eveayw7ecql9vqxtnqzsmg2yj6
+
+fromMnemonic.nonce starts at 0 (a local bigint, not fetched from the network).
+fromMnemonic can sign and verify its own data: true
+```
+
+## How it works
+
+Grounded in the installed `@multiversx/sdk-core` v15.4.1 `Account` class
+(`accounts/account.d.ts`):
+
+1. **From a KeyPair.** `KeyPair.generate()` makes a new Ed25519 keypair;
+   `Account.newFromKeypair(keyPair)` wraps it.
+2. **From a raw secret key.** `new Account(secretKey)`, the plain constructor.
+   Reusing the KeyPair's own key makes A and B the same account.
+3. **From a mnemonic.** `Account.newFromMnemonic(phrase, addressIndex)` derives
+   the key first, then builds the Account.
+4. **The shared surface.** Every `Account` exposes `address`, `publicKey`,
+   `secretKey`, and a *local* `nonce` (a `bigint` you manage yourself), and can
+   `sign` / `verify`.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the named constructors are inconsistent, one is async]
+`Account.newFromPem(...)` returns `Promise<Account>` and must be `await`ed. But
+`Account.newFromKeypair(...)`, `new Account(...)`, `Account.newFromMnemonic(...)`,
+and `Account.newFromKeystore(...)` are all **synchronous**. Forgetting to await
+`newFromPem` gives you a `Promise`, not an account. Check the specific
+constructor.
+:::
+
+:::note[Pitfall 2: account.nonce starts at 0 and is not the on-chain nonce]
+It is a local counter you must seed from the network before sending
+transactions, see [Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces).
+Constructing an account does not query the chain.
+:::
+
+:::tip[Pitfall 3: same key means same address, always]
+The address is a function of the public key alone. If two constructions share
+key material (as A and B do here), they are the same account, there is no
+per-object identity beyond the key.
+:::
+
+## See also
+
+- [Generate a mnemonic + derive keys](/sdk-and-tools/sdk-js/cookbook/accounts/generate-mnemonic-derive-keys)
+  is where constructor C's key material comes from.
+- [Save and load a keystore](/sdk-and-tools/sdk-js/cookbook/accounts/keystore-save-load)
+  persists an account as encrypted JSON.
+- [Save and load a PEM (dev only)](/sdk-and-tools/sdk-js/cookbook/accounts/pem-save-load)
+  is the async `newFromPem` path in full.

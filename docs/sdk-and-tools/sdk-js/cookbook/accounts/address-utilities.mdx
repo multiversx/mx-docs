@@ -1,0 +1,195 @@
+---
+title: Address utilities
+description: The sdk-core Address toolkit, bech32/hex conversion, raw public key, shard computation, isSmartContract, and the HRP. Fully offline, no network.
+difficulty: beginner
+est_minutes: 7
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - typescript
+  - address
+---
+
+The sdk-core `Address` toolkit in one place: bech32 to hex conversion, building
+an address from a raw public key, computing an address's shard, checking whether
+an address is a smart contract, and the HRP (human-readable part). Fully offline:
+an `Address` is a pure value type, with no network call.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates one throwaway address and uses one fixed,
+  well-known contract address.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/address-utilities
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+```ts title="src/index.ts"
+// src/index.ts — the sdk-core Address toolkit: bech32 <-> hex conversion,
+// building an address from a raw public key, computing an address's shard,
+// checking whether an address is a smart contract, and the HRP concept
+// (LibraryConfig.DefaultAddressHrp).
+//
+// Fully offline. No devnet, no network — an Address is a pure value type.
+// One address is generated fresh per run (so its exact value and shard vary);
+// the ESDT system contract address is a fixed, well-known value.
+//
+// Grounded in the installed @multiversx/sdk-core v15.4.1: Address /
+// AddressComputer (core/address.d.ts) and LibraryConfig (core/config.d.ts).
+
+import { Address, AddressComputer, LibraryConfig, Mnemonic } from '@multiversx/sdk-core';
+
+function main(): void {
+  // A throwaway user address to work with.
+  const userAddress = Mnemonic.generate().deriveKey(0).generatePublicKey().toAddress();
+  const bech32 = userAddress.toBech32();
+  console.log(`User address (bech32): ${bech32}`);
+
+  // === 1. bech32 <-> hex. ===
+  // toHex() gives the 64-char (32-byte) public key; newFromHex parses it
+  // back. The round-trip must return the original bech32.
+  const hex = userAddress.toHex();
+  const roundTripped = Address.newFromHex(hex);
+  console.log(`\n1. hex (${hex.length} chars): ${hex}`);
+  console.log(`   bech32 -> hex -> bech32 round-trips: ${roundTripped.toBech32() === bech32}`);
+
+  // === 2. From a raw public-key buffer. ===
+  // The generic constructor accepts an Address, a bech32/hex string, or the
+  // raw 32 bytes. getPublicKey() returns those bytes.
+  const rawPublicKey = userAddress.getPublicKey();
+  const fromBytes = new Address(rawPublicKey);
+  console.log(`2. new Address(rawPublicKeyBytes) matches: ${fromBytes.toBech32() === bech32}`);
+
+  // === 3. Shard of an address. ===
+  // AddressComputer defaults to 3 shards (without metachain); getShardOfAddress
+  // returns 0, 1, or 2 for a user address.
+  const computer = new AddressComputer();
+  const shard = computer.getShardOfAddress(userAddress);
+  console.log(`3. Shard of this address: ${shard} (0, 1, or 2)`);
+
+  // === 4. Is it a smart contract? ===
+  // Contract addresses have a fixed all-zero prefix. The ESDT system contract
+  // is a known contract; a user address is not.
+  const esdtSystemContract = Address.newFromBech32(
+    'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u',
+  );
+  console.log(`4. ESDT system contract isSmartContract(): ${esdtSystemContract.isSmartContract()}`);
+  console.log(`   User address isSmartContract():         ${userAddress.isSmartContract()}`);
+
+  // === 5. The HRP (human-readable part). ===
+  // Every bech32 address starts with an HRP — "erd" on MultiversX. It is a
+  // global default on LibraryConfig, and each Address also carries its own.
+  console.log(`\n5. LibraryConfig.DefaultAddressHrp: "${LibraryConfig.DefaultAddressHrp}"`);
+  console.log(`   This address's own HRP: "${userAddress.getHrp()}"`);
+
+  // A per-call override builds an address under a different HRP WITHOUT
+  // touching global state — the safe way to handle a non-"erd" prefix.
+  const testHrpAddress = Address.newFromHex(hex, 'test');
+  console.log(`   Same key under HRP "test": ${testHrpAddress.toBech32()}`);
+
+  // The two bech32 parse paths differ in strictness. The named constructor
+  // Address.newFromBech32 accepts ANY hrp (allowCustomHrp: true):
+  const lenient = Address.newFromBech32(testHrpAddress.toBech32());
+  console.log(`   Address.newFromBech32 accepts a "test" address (parsed hrp="${lenient.getHrp()}").`);
+
+  // ...but the generic constructor new Address(bech32) validates the hrp
+  // against LibraryConfig.DefaultAddressHrp and rejects a mismatch.
+  let strictRejected = false;
+  try {
+    const parsed = new Address(testHrpAddress.toBech32());
+    console.log(`   new Address unexpectedly accepted hrp="${parsed.getHrp()}".`);
+  } catch {
+    strictRejected = true;
+  }
+  console.log(`   new Address(...) rejects the "test" address while default is "erd": ${strictRejected}`);
+
+  console.log('\nExpected: round-trip true, from-bytes true, a shard 0-2, isSmartContract true then false, HRP "erd", newFromBech32 lenient, and new Address(...) strict-rejects.');
+}
+
+main();
+```
+
+## Run it
+
+One address is generated fresh per run, so its value and shard vary; the ESDT
+system contract address is fixed:
+
+```text
+User address (bech32): erd1ggdn9z7aunpuqrk7z3ywpngh5vcsaz0y6hslqvj92tudsahwghkqvj67m2
+
+1. hex (64 chars): 421b328bdde4c3c00ede1448e0cd17a3310e89e4d5e1f0324552f8d876ee45ec
+   bech32 -> hex -> bech32 round-trips: true
+2. new Address(rawPublicKeyBytes) matches: true
+3. Shard of this address: 0 (0, 1, or 2)
+4. ESDT system contract isSmartContract(): true
+   User address isSmartContract():         false
+
+5. LibraryConfig.DefaultAddressHrp: "erd"
+   This address's own HRP: "erd"
+   Same key under HRP "test": test1ggdn9z7aunpuqrk7z3ywpngh5vcsaz0y6hslqvj92tudsahwghkquaenm7
+   Address.newFromBech32 accepts a "test" address (parsed hrp="test").
+   new Address(...) rejects the "test" address while default is "erd": true
+```
+
+## How it works
+
+Grounded in the installed `@multiversx/sdk-core` v15.4.1 `Address` /
+`AddressComputer` (`core/address.d.ts`) and `LibraryConfig` (`core/config.d.ts`):
+
+1. **bech32 to hex.** `toHex()` gives the 64-char (32-byte) public key;
+   `Address.newFromHex(hex)` parses it back.
+2. **From raw bytes.** The generic constructor `new Address(bytes)` accepts the
+   32-byte public key that `getPublicKey()` returns.
+3. **Shard.** `new AddressComputer().getShardOfAddress(address)` returns 0, 1, or
+   2 (the computer defaults to 3 shards without the metachain).
+4. **Smart-contract check.** `isSmartContract()` is `true` for the ESDT system
+   contract and `false` for a user address, contract addresses have a fixed
+   all-zero prefix.
+5. **HRP.** `LibraryConfig.DefaultAddressHrp` is the global default (`"erd"`);
+   each `Address` also carries its own via `getHrp()`. A per-call override like
+   `Address.newFromHex(hex, "test")` builds an address under a different HRP
+   without touching global state.
+
+## Pitfalls
+
+:::warning[Pitfall 1: new Address(bech32) and Address.newFromBech32(bech32) differ on HRP strictness]
+The generic constructor validates the HRP against
+`LibraryConfig.DefaultAddressHrp` (`allowCustomHrp: false`) and **throws** on a
+mismatch, a `"test1..."` string is rejected while the default is `"erd"`. The
+named `newFromBech32` uses `allowCustomHrp: true` and **accepts any HRP**. Use
+`newFromBech32` to parse a non-`erd` address; use the strict constructor to
+reject foreign ones. A real, verified divergence in v15.4.1.
+:::
+
+:::note[Pitfall 2: an Address's HRP is fixed at construction]
+Mutating `LibraryConfig.DefaultAddressHrp` afterward changes only *newly built*
+addresses; existing objects keep the HRP they were made with. The config's own
+doc comment warns never to alter it inside a library, prefer the per-call `hrp`
+argument over changing the global.
+:::
+
+:::tip[Pitfall 3: the hex form is the public key, not a transaction hash]
+`toHex()` returns the 32-byte account public key (64 hex chars). Do not confuse
+it with a 32-byte transaction hash, which is also 64 hex chars but a different
+thing entirely.
+:::
+
+## See also
+
+- [Create an Account from a KeyPair, secret key, or mnemonic](/sdk-and-tools/sdk-js/cookbook/accounts/account-from-keys)
+  is where the public key behind an address comes from.
+- [Sign a message + verify a signature](/sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message)
+  is another pure-value, offline sdk-core recipe.
+- `AddressComputer.computeContractAddress` is the deploy-side counterpart to
+  `getShardOfAddress`, covered in the smart-contract deploy recipes.

@@ -261,6 +261,26 @@ const sidebars = {
                       },
                       {
                         type: "category",
+                        label: "Accounts and signing",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/accounts/generate-mnemonic-derive-keys",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/account-from-keys",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/keystore-save-load",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/pem-save-load",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/address-utilities",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/fetch-account-state",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/hash-signing-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/set-guardian",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/apply-guardian-to-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction",
+                        ]
+                      },
+                      {
+                        type: "category",
                         label: "Network providers",
                         items: [
                           "sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider",

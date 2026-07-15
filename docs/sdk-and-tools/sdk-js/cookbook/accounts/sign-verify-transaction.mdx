@@ -1,0 +1,209 @@
+---
+title: Sign + verify a transaction (offline)
+description: Sign a transaction offline with a raw secret key and verify it three ways with sdk-core, including tamper checks. No devnet, no broadcast.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - typescript
+  - transaction
+---
+
+Sign a `Transaction` offline with a raw secret key and verify the signature three
+ways: `Account.verifyTransactionSignature`, a `UserVerifier` built from the
+address, and the raw `UserPublicKey`. Then prove the check works by tampering
+with the transaction and watching verification fail. This is the
+transaction-signing counterpart to
+[Sign a message + verify a signature](/sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message):
+no devnet, no broadcast, pure local Ed25519.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates its own throwaway keys and never touches
+  the network.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/sign-verify-transaction
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+```ts title="src/index.ts"
+// src/index.ts — sign arbitrary data with a UserSigner, then sign a
+// Transaction OFFLINE with a raw secret key and verify the signature three
+// ways (UserVerifier, UserPublicKey.verify, Account.verifyTransactionSignature).
+// Prove the check works by tampering with the transaction and watching
+// verification fail.
+//
+// Fully offline. No devnet, no broadcast — signing and verifying are pure
+// local Ed25519 cryptography. This is the transaction-signing counterpart to
+// the message-signing recipe. Fresh keys each run; the true/false pattern of
+// the output is stable.
+//
+// Grounded in the installed @multiversx/sdk-core v15.4.1: UserSigner /
+// UserVerifier (wallet/), TransactionComputer (core/transactionComputer.d.ts).
+
+import {
+  Account,
+  Address,
+  Mnemonic,
+  Transaction,
+  TransactionComputer,
+  UserSigner,
+  UserVerifier,
+} from '@multiversx/sdk-core';
+
+async function main(): Promise<void> {
+  const account = Account.newFromMnemonic(Mnemonic.generate().toString(), 0);
+  const other = Account.newFromMnemonic(Mnemonic.generate().toString(), 0);
+  const secretKey = account.secretKey;
+  const publicKey = account.publicKey;
+
+  // === 1. Sign arbitrary bytes with a UserSigner, verify with UserVerifier. ===
+  // UserSigner wraps a secret key; its sign() is ASYNC (returns a Promise).
+  // UserVerifier needs only the public key to check the signature. (Step 2
+  // below uses the raw secretKey.sign, which is SYNC — the contrast matters.)
+  const data = new Uint8Array(Buffer.from('arbitrary bytes to authenticate'));
+  const signer = new UserSigner(secretKey);
+  const dataSignature = await signer.sign(data);
+  const verifier = new UserVerifier(publicKey);
+  console.log(`1. UserSigner-signed data verified by UserVerifier: ${await verifier.verify(data, dataSignature)}`);
+
+  // === 2. Build a transaction and sign it offline with the raw key. ===
+  // account.signTransaction would work too, but doing it by hand shows what
+  // that method does internally: serialize with computeBytesForSigning, then
+  // sign those bytes. No network, no nonce fetch — this is a local signature.
+  const transactionComputer = new TransactionComputer();
+  const transaction = new Transaction({
+    nonce: 42n,
+    value: 1000000000000000000n, // 1 EGLD
+    sender: account.address,
+    receiver: other.address,
+    gasLimit: 50000n,
+    chainID: 'D',
+  });
+  transaction.signature = secretKey.sign(transactionComputer.computeBytesForSigning(transaction));
+  console.log(`2. Transaction signed. Signature length: ${transaction.signature.length} bytes.`);
+
+  // === 3. Verify the transaction signature three ways. ===
+  // (a) Account convenience method.
+  const viaAccount = await account.verifyTransactionSignature(transaction, transaction.signature);
+  // (b) UserVerifier built from the sender's address alone — the path a
+  //     third party uses, needing only the public address.
+  const viaVerifier = await UserVerifier.fromAddress(account.address).verify(
+    transactionComputer.computeBytesForVerifying(transaction),
+    transaction.signature,
+  );
+  // (c) The raw public key.
+  const viaPublicKey = await publicKey.verify(
+    transactionComputer.computeBytesForVerifying(transaction),
+    transaction.signature,
+  );
+  console.log(`3. Verified via account / UserVerifier / publicKey: ${viaAccount} / ${viaVerifier} / ${viaPublicKey}`);
+
+  // === 4. Tamper with the transaction, keep the signature. ===
+  // Changing any signed field (here, the value) makes the recomputed bytes
+  // no longer match the signature — verification must return false.
+  transaction.value = 2000000000000000000n; // 2 EGLD, was 1
+  const afterTamper = await account.verifyTransactionSignature(transaction, transaction.signature);
+  console.log(`4. Verify after changing the value: ${afterTamper} (expected false)`);
+
+  // === 5. A different key cannot verify the (untampered) signature. ===
+  // Restore the value, then check the signature against the wrong address.
+  transaction.value = 1000000000000000000n;
+  const wrongSigner = await UserVerifier.fromAddress(other.address).verify(
+    transactionComputer.computeBytesForVerifying(transaction),
+    transaction.signature,
+  );
+  console.log(`5. Verify against a different address: ${wrongSigner} (expected false)`);
+
+  // A convenience helper so the "wrong-key" address is unmistakably distinct.
+  const distinct = !account.address.equals(Address.newFromBech32(other.address.toBech32()));
+  console.log(`   (signer and other address are distinct: ${distinct})`);
+
+  console.log('\nExpected: steps 1 and 3 all true; steps 4 and 5 false.');
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+Keys are generated fresh each run; the pattern of `true`/`false` is stable:
+
+```text
+1. UserSigner-signed data verified by UserVerifier: true
+2. Transaction signed. Signature length: 64 bytes.
+3. Verified via account / UserVerifier / publicKey: true / true / true
+4. Verify after changing the value: false (expected false)
+5. Verify against a different address: false (expected false)
+   (signer and other address are distinct: true)
+```
+
+The two `false` lines are the point: they prove verification actually checks
+something, rather than always returning `true`.
+
+## How it works
+
+Grounded in the installed `@multiversx/sdk-core` v15.4.1: `UserSigner` /
+`UserVerifier` (`wallet/`) and `TransactionComputer`
+(`core/transactionComputer.d.ts`):
+
+1. **The primitive.** A `UserSigner` wraps the secret key and signs arbitrary
+   data (async); `new UserVerifier(publicKey).verify(bytes, signature)` checks it,
+   needing only the public key.
+2. **Sign a transaction offline.** Build a `Transaction`, serialize it with
+   `transactionComputer.computeBytesForSigning(tx)`, and sign those bytes with the
+   raw key. This is exactly what `account.signTransaction` does internally, no
+   network, no nonce fetch.
+3. **Verify three ways.** `account.verifyTransactionSignature`; a
+   `UserVerifier.fromAddress(sender)` (the path a third party uses, needing only
+   the public address); and the raw `publicKey.verify`.
+4. **Tamper.** Change the transaction's value; verification returns `false`.
+5. **Wrong key.** The signature does not verify against a different address.
+
+## Pitfalls
+
+:::warning[Pitfall 1: secretKey.sign is synchronous; the verify methods are async]
+`UserSecretKey.sign(bytes)` returns a `Uint8Array` directly (no `await`). But
+`UserVerifier.verify`, `UserPublicKey.verify`, `account.verifyTransactionSignature`,
+and `account.sign` all return `Promise`s. Mixing these up is an easy
+`tsc --strict` error or a silently unawaited promise.
+:::
+
+:::note[Pitfall 2: computeBytesForSigning and computeBytesForVerifying match only when the transaction is NOT hash-signed]
+For an ordinary transaction (options bit unset) they return identical bytes,
+which is why signing one and verifying against the other works here. The moment
+you set the hash-signing option, they diverge, see
+[Hash-signing a transaction](/sdk-and-tools/sdk-js/cookbook/accounts/hash-signing-transaction).
+:::
+
+:::tip[Pitfall 3: any signed field is covered]
+Changing the value, receiver, nonce, gas, data, or chainID after signing
+invalidates the signature. There is no "unsigned metadata" on a transaction, if
+it is serialized, it is signed.
+:::
+
+## See also
+
+- [Sign a message + verify a signature](/sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message)
+  is the message-signing counterpart, using `MessageComputer` instead of
+  `TransactionComputer`.
+- [Hash-signing a transaction](/sdk-and-tools/sdk-js/cookbook/accounts/hash-signing-transaction)
+  is the options-bit variant, where signing and verifying bytes deliberately
+  differ.
+- [Build a relayed v3 transaction](/sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction)
+  is another accounts-and-signing recipe, devnet-verified.

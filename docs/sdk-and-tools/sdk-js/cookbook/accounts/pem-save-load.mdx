@@ -1,0 +1,174 @@
+---
+title: Save and load a PEM (dev only)
+description: Save a wallet to a PEM file and load it back via Account and UserPem with sdk-core. PEM is unencrypted and dev-only; fully offline, no network.
+difficulty: beginner
+est_minutes: 5
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - typescript
+  - wallet
+---
+
+A PEM file is the quick dev-wallet format: write a key, load it back, done. But
+it stores the secret key **unencrypted**, anyone who reads the file has the key.
+This recipe covers the full round-trip via both the `Account` API and the
+lower-level `UserPem` class, fully offline, while making the dev-only caveat
+impossible to miss.
+
+:::danger[PEM is for development and testing only]
+A PEM stores the secret key in plaintext. Never put a mainnet or funded key in a
+PEM. For anything real, use an
+[encrypted keystore](/sdk-and-tools/sdk-js/cookbook/accounts/keystore-save-load).
+:::
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates its own throwaway key and writes to a temp
+  directory it cleans up.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/pem-save-load
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+```ts title="src/index.ts"
+// src/index.ts — save a wallet to a PEM file and load it back, via both the
+// Account API (saveToPem / newFromPem) and the lower-level UserPem class.
+//
+// PEM IS FOR DEVELOPMENT AND TESTING ONLY. A PEM file stores the secret key
+// UNENCRYPTED — anyone who reads the file has the key. Never put a
+// mainnet/funded key in a PEM. For anything real, use an encrypted keystore
+// (see the "Save and load a keystore" recipe).
+//
+// Fully offline. The only I/O is to a throwaway temp directory (cleaned up
+// at the end); no devnet, no network. Fresh keys each run.
+//
+// Grounded in the installed @multiversx/sdk-core v15.4.1: Account.saveToPem /
+// Account.newFromPem (accounts/account.d.ts) and UserPem (wallet/userPem.d.ts).
+
+import { Account, Mnemonic, UserPem } from '@multiversx/sdk-core';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+async function main(): Promise<void> {
+  const dir = mkdtempSync(join(tmpdir(), 'mvx-pem-'));
+  try {
+    // === 1. Write a PEM from an Account. ===
+    const account = Account.newFromMnemonic(Mnemonic.generate().toString(), 0);
+    const expectedAddress = account.address.toBech32();
+    const pemPath = join(dir, 'wallet.pem');
+    account.saveToPem(pemPath);
+
+    // A PEM is plain text: a base64 body between BEGIN/END markers, labeled
+    // with the bech32 address. The secret key sits in that body, unencrypted.
+    const firstLine = readFileSync(pemPath, 'utf8').split('\n')[0] ?? '';
+    console.log(`1. Wrote ${pemPath.split('/').pop() ?? ''}. First line: ${firstLine}`);
+
+    // === 2. Load it back with Account.newFromPem — this one is ASYNC. ===
+    // Unlike newFromMnemonic / newFromKeystore / newFromKeypair (all sync),
+    // newFromPem returns a Promise and must be awaited.
+    const loaded = await Account.newFromPem(pemPath);
+    console.log(`2. Account.newFromPem address matches: ${loaded.address.toBech32() === expectedAddress}`);
+
+    // === 3. UserPem is the lower-level view of the same file. ===
+    // It exposes the label, the secret key, and the public key directly —
+    // useful when you want the key material rather than a full Account.
+    const pem = UserPem.fromFile(pemPath);
+    console.log(`3. UserPem.fromFile label is the address: ${pem.label === expectedAddress}`);
+    console.log(`   UserPem secret key matches the Account's: ${pem.secretKey.hex() === account.secretKey.hex()}`);
+
+    // === 4. Build a PEM from raw key material, no Account needed. ===
+    // new UserPem(label, secretKey).save(path) is the write side of UserPem.
+    const rebuilt = new UserPem(expectedAddress, account.secretKey);
+    const rebuiltPath = join(dir, 'rebuilt.pem');
+    rebuilt.save(rebuiltPath);
+    const rebuiltAccount = await Account.newFromPem(rebuiltPath);
+    console.log(`4. Rebuilt PEM round-trips to the same address: ${rebuiltAccount.address.toBech32() === expectedAddress}`);
+
+    // A PEM file can hold several keys; UserPem.fromFile(path, index) selects
+    // one, and UserPem.fromFileAll(path) returns them all. Account.newFromPem
+    // takes the same optional index.
+    console.log('\nExpected: three "true" confirmations (2, 3, 4) and the matching key line.');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+Keys are generated fresh each run; the confirmations are stable:
+
+```text
+1. Wrote wallet.pem. First line: -----BEGIN PRIVATE KEY for erd1lss6vxy7pamd6nflt9zuusxdmqutd0mwzu7nrmxvwax3em0kzgjqv63ssn-----
+2. Account.newFromPem address matches: true
+3. UserPem.fromFile label is the address: true
+   UserPem secret key matches the Account's: true
+4. Rebuilt PEM round-trips to the same address: true
+```
+
+## How it works
+
+Grounded in the installed `@multiversx/sdk-core` v15.4.1 `Account.saveToPem` /
+`Account.newFromPem` (`accounts/account.d.ts`) and `UserPem`
+(`wallet/userPem.d.ts`):
+
+1. **Write from an Account.** `account.saveToPem(path)`. The file is plain text,
+   a base64 body between `BEGIN`/`END` markers, labeled with the bech32 address.
+   The secret key sits in that body, unencrypted.
+2. **Load with `Account.newFromPem`, this one is async.** It returns a `Promise`
+   and must be awaited, unlike the synchronous `newFromMnemonic` /
+   `newFromKeystore` / `newFromKeypair`.
+3. **`UserPem` is the lower-level view.** `UserPem.fromFile(path)` exposes
+   `label`, `secretKey`, and `publicKey` directly.
+4. **Build a PEM from raw material.** `new UserPem(label, secretKey).save(path)`
+   is the write side of `UserPem`, no `Account` required.
+
+A PEM can hold several keys; `UserPem.fromFile(path, index)` selects one and
+`UserPem.fromFileAll(path)` returns them all. `Account.newFromPem` takes the same
+optional index.
+
+## Pitfalls
+
+:::danger[Pitfall 1: PEM is unencrypted; treat the file as the key itself]
+There is no password. Reading the file is reading the private key. Keep PEMs out
+of version control, shared drives, and anything mainnet. This is the whole reason
+the keystore format exists.
+:::
+
+:::warning[Pitfall 2: newFromPem is async; saveToPem and the other constructors are not]
+Forgetting to `await newFromPem` leaves you holding a `Promise<Account>`, whose
+`.address` is `undefined`. This is the single most common PEM mistake.
+:::
+
+:::note[Pitfall 3: the label is cosmetic]
+The bech32 address in the `BEGIN ... for erd1...` header is a human-readable
+hint, not verified against the key on load. The account's real address always
+comes from the key, derive it rather than trusting the label.
+:::
+
+## See also
+
+- [Save and load a keystore](/sdk-and-tools/sdk-js/cookbook/accounts/keystore-save-load)
+  is the encrypted, production-safe alternative to PEM.
+- [Create an Account from a KeyPair, secret key, or mnemonic](/sdk-and-tools/sdk-js/cookbook/accounts/account-from-keys)
+  covers the in-memory constructors, including the async `newFromPem` note.
+- [Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  is the next step once you have a loaded dev account.

@@ -1,0 +1,205 @@
+---
+title: Hash-signing a transaction
+description: Opt a transaction into hash signing with sdk-core, assert the version/options bits, and sign the hash correctly. Includes a real v15.4.1 signing trap.
+difficulty: advanced
+est_minutes: 10
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - typescript
+  - transaction
+---
+
+Opt a transaction into **hash signing**, assert the version and options bits are
+set, and sign it correctly by signing the transaction *hash*. Along the way this
+recipe demonstrates a real v15.4.1 trap: `Account.signTransaction` does **not**
+honor the hash-signing option, so its output fails verification. Fully offline,
+nothing is broadcast.
+
+Hash signing sets the least-significant bit of the transaction `options` field.
+When set, the signature must be over the **keccak-256 hash** of the serialized
+transaction, not over the serialized bytes themselves. It lets a signer (for
+example a hardware wallet) sign a short fixed-size digest instead of an
+arbitrarily long payload.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates its own throwaway keys and never touches
+  the network.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/hash-signing-transaction
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+```ts title="src/index.ts"
+// src/index.ts — opt a transaction into HASH SIGNING, assert the version and
+// options bits are set, and sign it correctly by signing the transaction
+// HASH. Also demonstrates a real v15.4.1 trap: Account.signTransaction does
+// NOT honor the hash-signing option, so its output fails verification.
+//
+// Fully offline. No devnet, no broadcast — this builds and signs locally and
+// asserts on the bytes. Nothing is sent. Fresh keys each run.
+//
+// Background: hash signing sets the least-significant bit of the transaction
+// `options` field. When set, the signature must be over the KECCAK-256 hash
+// of the serialized transaction, not over the serialized bytes themselves.
+// It lets a signer (e.g. a hardware wallet) sign a short fixed-size digest
+// instead of an arbitrarily long payload.
+//
+// Grounded in the installed @multiversx/sdk-core v15.4.1: TransactionComputer
+// (core/transactionComputer.d.ts) and Account (accounts/account.d.ts).
+
+import { Account, Mnemonic, Transaction, TransactionComputer } from '@multiversx/sdk-core';
+import { strict as assert } from 'node:assert';
+
+async function main(): Promise<void> {
+  const account = Account.newFromMnemonic(Mnemonic.generate().toString(), 0);
+  const other = Account.newFromMnemonic(Mnemonic.generate().toString(), 0);
+  const transactionComputer = new TransactionComputer();
+
+  const transaction = new Transaction({
+    nonce: 7n,
+    value: 0n,
+    sender: account.address,
+    receiver: other.address,
+    gasLimit: 50000n,
+    chainID: 'D',
+  });
+
+  // === 1. Before: a default transaction is version 2, options 0. ===
+  console.log(`1. Before: version=${transaction.version}, options=${transaction.options}`);
+  console.log(`   hasOptionsSetForHashSigning: ${transactionComputer.hasOptionsSetForHashSigning(transaction)}`);
+
+  // === 2. Opt into hash signing and assert the bits. ===
+  // applyOptionsForHashSigning sets the options LSB (0b0001) and ensures
+  // version >= 2. This is the core of the recipe: proving the flags land.
+  transactionComputer.applyOptionsForHashSigning(transaction);
+  console.log(`\n2. After applyOptionsForHashSigning: version=${transaction.version}, options=${transaction.options}`);
+
+  assert.equal(transaction.version, 2, 'version must be >= 2 for options to be honored');
+  assert.equal(transaction.options & 0b0001, 0b0001, 'the hash-signing bit (0b0001) must be set');
+  assert.equal(transactionComputer.hasOptionsSetForHashSigning(transaction), true);
+  // The hash-signing bit and the guarded bit (0b0010) are independent.
+  assert.equal(transactionComputer.hasOptionsSetForGuardedTransaction(transaction), false);
+  console.log('   Asserted: version === 2, options bit 0b0001 set, hasOptionsSetForHashSigning === true.');
+
+  // === 3. Sign CORRECTLY: sign the hash, verify against it. ===
+  // computeHashForSigning returns the keccak-256 digest (32 bytes).
+  // computeBytesForVerifying already returns that same hash when the option
+  // is set, so signing the hash and verifying line up.
+  const hashForSigning = transactionComputer.computeHashForSigning(transaction);
+  console.log(`\n3. computeHashForSigning length: ${hashForSigning.length} bytes (keccak-256).`);
+  transaction.signature = account.secretKey.sign(hashForSigning);
+  const correct = await account.publicKey.verify(
+    transactionComputer.computeBytesForVerifying(transaction),
+    transaction.signature,
+  );
+  console.log(`   Sign the hash -> verify: ${correct} (expected true)`);
+
+  // === 4. THE TRAP: Account.signTransaction does NOT honor the option. ===
+  // Account.signTransaction serializes with computeBytesForSigning, which in
+  // v15.4.1 does NOT branch on the hash-signing option — it returns the full
+  // JSON bytes, not the hash. verifyTransactionSignature DOES branch (it
+  // verifies against the hash). So the two disagree and verification fails.
+  const trapSignature = await account.signTransaction(transaction);
+  const trapVerify = await account.verifyTransactionSignature(transaction, trapSignature);
+  console.log(`\n4. TRAP: account.signTransaction -> account.verifyTransactionSignature: ${trapVerify} (expected false!)`);
+
+  const signingBytes = transactionComputer.computeBytesForSigning(transaction);
+  const verifyingBytes = transactionComputer.computeBytesForVerifying(transaction);
+  console.log(
+    `   Why: computeBytesForSigning is ${signingBytes.length} bytes (full JSON) but computeBytesForVerifying is ${verifyingBytes.length} bytes (the hash) — they differ.`,
+  );
+  assert.equal(trapVerify, false, 'demonstrates the documented trap');
+  assert.equal(correct, true, 'the manual hash-signing path is the correct one');
+
+  console.log('\nExpected: step 3 true (sign the hash), step 4 false (the trap). Use the step-3 path in real code.');
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+Keys are fresh each run; the true/false pattern and the byte counts are stable:
+
+```text
+1. Before: version=2, options=0
+   hasOptionsSetForHashSigning: false
+
+2. After applyOptionsForHashSigning: version=2, options=1
+   Asserted: version === 2, options bit 0b0001 set, hasOptionsSetForHashSigning === true.
+
+3. computeHashForSigning length: 32 bytes (keccak-256).
+   Sign the hash -> verify: true (expected true)
+
+4. TRAP: account.signTransaction -> account.verifyTransactionSignature: false (expected false!)
+   Why: computeBytesForSigning is 250 bytes (full JSON) but computeBytesForVerifying is 32 bytes (the hash) — they differ.
+```
+
+The source's `assert` calls turn this behavior, including the trap, into hard
+test assertions, so the run fails loudly if the SDK ever changes.
+
+## How it works
+
+Grounded in the installed `@multiversx/sdk-core` v15.4.1 `TransactionComputer`
+(`core/transactionComputer.d.ts`) and `Account` (`accounts/account.d.ts`):
+
+1. **Before.** A default transaction is `version: 2`, `options: 0`.
+2. **Opt in and assert.** `applyOptionsForHashSigning(tx)` sets the options bit
+   `0b0001` and ensures `version >= 2`. The recipe asserts `version === 2`, that
+   bit `0b0001` is set, and that `hasOptionsSetForHashSigning(tx)` is `true` (the
+   independent guarded bit `0b0010` stays unset). This is the core deliverable,
+   proving the flags land.
+3. **Sign correctly.** `computeHashForSigning(tx)` returns the 32-byte keccak-256
+   digest. `computeBytesForVerifying(tx)` already returns that same hash when the
+   option is set, so signing the hash and verifying against it line up: `true`.
+4. **The trap.** `account.signTransaction(tx)` then
+   `account.verifyTransactionSignature(tx, sig)` returns `false`.
+
+## Pitfalls
+
+:::danger[Pitfall 1: Account.signTransaction does NOT honor the hash-signing option (v15.4.1)]
+It serializes with `computeBytesForSigning`, which does not branch on the option
+and returns the full ~250-byte JSON. But `computeBytesForVerifying` *does* branch
+and returns the 32-byte hash. The two disagree, so a hash-flagged transaction
+signed with `account.signTransaction` fails its own `verifyTransactionSignature`,
+and would be rejected by the network. **Sign `computeHashForSigning(tx)`
+directly instead** (step 3).
+:::
+
+:::warning[Pitfall 2: options is a bitfield, do not overwrite it]
+`applyOptionsForHashSigning` OR-s in bit `0b0001`; the guarded flag is `0b0010`.
+Setting `tx.options = 1` by hand would clobber a guarded flag. Use the `apply...`
+/ `hasOptionsSet...` helpers rather than assigning the field.
+:::
+
+:::note[Pitfall 3: applyOptionsForHashSigning bumps the version if needed]
+Options are only honored at `version >= 2`. The helper raises the version for
+you; if you set the bit by hand on a `version: 1` transaction, the network
+ignores the options entirely.
+:::
+
+## See also
+
+- [Sign + verify a transaction (offline)](/sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-transaction)
+  is the ordinary (non-hash) signing path, where signing and verifying bytes
+  match.
+- [Sign a message + verify a signature](/sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message)
+  is message signing, a related but distinct primitive family.
+- [Build a relayed v3 transaction](/sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction)
+  is another advanced transaction shape using the `options`/`version` machinery.

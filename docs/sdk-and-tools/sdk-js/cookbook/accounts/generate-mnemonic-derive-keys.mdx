@@ -1,0 +1,160 @@
+---
+title: Generate a mnemonic + derive keys
+description: Generate a BIP39 mnemonic with sdk-core and derive secret keys at several address indices, fully offline, with a determinism check and secrecy notes.
+difficulty: beginner
+est_minutes: 5
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - typescript
+  - wallet
+---
+
+Generate a BIP39 mnemonic and derive secret keys from it at different address
+indices, fully offline. There is no network call anywhere in this recipe:
+mnemonic generation and key derivation are pure local cryptography. No devnet
+wallet, no funds, no gas.
+
+One mnemonic is the root of many accounts: `deriveKey(0)`, `deriveKey(1)`, and so
+on each produce a distinct key and address. Because derivation is deterministic,
+the same phrase always regenerates the same keys, which is exactly what makes a
+mnemonic a portable backup.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates its own throwaway mnemonic and never
+  touches the network.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/generate-mnemonic-derive-keys
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+```ts title="src/index.ts"
+// src/index.ts — generate a mnemonic and derive secret keys from it at
+// several address indices, then show the derivation is deterministic.
+//
+// Fully offline. No devnet, no network call of any kind — mnemonic
+// generation and key derivation are pure local cryptography (BIP39
+// entropy -> words, then a deterministic derivation to Ed25519 keys). A
+// fresh mnemonic is generated on every run, so exact words/addresses differ
+// run to run; the shape of the output does not.
+//
+// Modeled on the mx-sdk-js-core cookbook source (cookbook/basics.ts,
+// "Generating a mnemonic" / "Deriving secret keys from a mnemonic").
+
+import { Mnemonic } from '@multiversx/sdk-core';
+
+function main(): void {
+  // === 1. Generate a fresh 24-word mnemonic. ===
+  // This is the ROOT SECRET. Anyone holding these words controls every
+  // account derived from them. Real code must never log a mnemonic; this
+  // recipe prints only the count and the first/last word because the phrase
+  // is a throwaway that is never funded.
+  const mnemonic = Mnemonic.generate();
+  const words = mnemonic.getWords();
+  console.log(`Generated a ${words.length}-word mnemonic.`);
+  console.log(
+    `First word: "${words[0] ?? ''}", last word: "${words[words.length - 1] ?? ''}".`,
+  );
+
+  // === 2. One mnemonic derives many accounts, selected by addressIndex. ===
+  // deriveKey(i) walks the MultiversX derivation path at account index i and
+  // returns a UserSecretKey; its public key gives the on-chain Address.
+  console.log('\nAddresses derived from this one mnemonic:');
+  for (const addressIndex of [0, 1, 2]) {
+    const secretKey = mnemonic.deriveKey(addressIndex);
+    const address = secretKey.generatePublicKey().toAddress();
+    console.log(`  addressIndex ${addressIndex} -> ${address.toBech32()}`);
+  }
+
+  // === 3. Derivation is deterministic. ===
+  // Re-importing the same phrase with Mnemonic.fromString and deriving at the
+  // same index yields the same key/address every time — this is what makes a
+  // mnemonic a portable backup.
+  const restored = Mnemonic.fromString(mnemonic.toString());
+  const original0 = mnemonic.deriveKey(0).generatePublicKey().toAddress().toBech32();
+  const restored0 = restored.deriveKey(0).generatePublicKey().toAddress().toBech32();
+  console.log(`\nRe-derived from the same phrase (addressIndex 0) matches: ${original0 === restored0}`);
+
+  // === 4. deriveKey() defaults to addressIndex 0. ===
+  const defaultAddress = mnemonic.deriveKey().generatePublicKey().toAddress().toBech32();
+  console.log(`deriveKey() with no argument == deriveKey(0): ${defaultAddress === original0}`);
+
+  console.log('\nExpected: three distinct addresses, then two "true" lines.');
+}
+
+main();
+```
+
+## Run it
+
+A fresh mnemonic is generated every run, so the exact words and addresses differ;
+the shape does not. Three distinct addresses, then two `true` lines:
+
+```text
+Generated a 24-word mnemonic.
+First word: "lesson", last word: "grief".
+
+Addresses derived from this one mnemonic:
+  addressIndex 0 -> erd1f03w2cg7lxx8k8e9dafw3rxe092qhzlceq3xv6rqsj4kn5rsq6fq086964
+  addressIndex 1 -> erd1r64f3gmpq23zf634x80evgfcpa5n8vt9jtmpqgtd5wuwwkez94usxeke2q
+  addressIndex 2 -> erd1ulvfmlh43ejl42jngekfu2pn2gugrewrxxgwgzmrf4h3flywqgeqkkl78g
+
+Re-derived from the same phrase (addressIndex 0) matches: true
+deriveKey() with no argument == deriveKey(0): true
+```
+
+## How it works
+
+Grounded in the installed `@multiversx/sdk-core` v15.4.1 `Mnemonic` class:
+
+1. **Generate.** `Mnemonic.generate()` returns a fresh 24-word phrase;
+   `getWords()` lists the words.
+2. **Derive at indices.** `mnemonic.deriveKey(addressIndex)` returns a
+   `UserSecretKey`; its `generatePublicKey().toAddress()` gives the on-chain
+   `Address`. One mnemonic backs many accounts, selected by `addressIndex`.
+3. **Determinism.** `Mnemonic.fromString(phrase)` re-imports the phrase and
+   derives the identical key/address.
+4. **Default index.** `deriveKey()` with no argument is `deriveKey(0)`.
+
+## Pitfalls
+
+:::danger[Pitfall 1: a mnemonic is the root secret, never log it in real code]
+Anyone holding these 24 words controls every account derived from them. This
+recipe prints only the word count and first/last word because the phrase is a
+throwaway that is never funded. In production, treat the phrase like a private
+key: never log it, never send it over the wire.
+:::
+
+:::note[Pitfall 2: addressIndex selects the account and is not a passphrase]
+`deriveKey(0)`, `deriveKey(1)`, `deriveKey(2)` are three different accounts from
+the *same* mnemonic. The optional second argument, `deriveKey(addressIndex,
+password)`, is a BIP39 passphrase (a "25th word"), a separate concept. Leave it
+unset unless you deliberately use one.
+:::
+
+:::tip[Pitfall 3: this gives you a key, not a funded account]
+Deriving a key is free and offline; the account does not exist on-chain until it
+receives EGLD. Fetching its nonce or balance needs a network provider, see
+[Fetch an account's on-chain state](/sdk-and-tools/sdk-js/cookbook/accounts/fetch-account-state).
+:::
+
+## See also
+
+- [Create an Account from a KeyPair, secret key, or mnemonic](/sdk-and-tools/sdk-js/cookbook/accounts/account-from-keys)
+  turns a derived key into an `Account`.
+- [Save and load a keystore](/sdk-and-tools/sdk-js/cookbook/accounts/keystore-save-load)
+  encrypts a mnemonic (or a single key) at rest.
+- [Save and load a PEM (dev only)](/sdk-and-tools/sdk-js/cookbook/accounts/pem-save-load)
+  is the unencrypted dev-wallet format.

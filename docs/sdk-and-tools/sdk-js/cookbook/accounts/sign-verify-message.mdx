@@ -1,0 +1,265 @@
+---
+title: Sign a message + verify a signature
+description: Sign a message with an account or secret key and verify it with a UserVerifier, fully offline, including proof the check fails on a tampered signature.
+difficulty: beginner
+est_minutes: 7
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - typescript
+---
+
+Message signing and verification, fully offline. Unlike every other
+transaction-shaped recipe in this Cookbook, there is no network call anywhere in
+this one: signing and verifying a message is pure local Ed25519 cryptography over
+a deterministic byte encoding. No devnet wallet, no funds, no gas.
+
+Signing a message proves "this address controls this key and endorsed this exact
+text", it does not touch the blockchain, cost gas, or change any state. Common
+uses: proving wallet ownership to a backend (see
+[Native auth](/sdk-and-tools/sdk-js/cookbook/wallets/native-auth) for the
+token-based version of this idea), authorizing an off-chain action, or signing
+structured data for a service to verify later. If you need to move funds or call
+a contract, see
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+instead.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Nothing else. This recipe generates its own throwaway keypair and never touches
+  the network.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/sign-verify-message
+npm install
+npm run build
+npm start
+```
+
+## The code
+
+```ts title="src/index.ts"
+// src/index.ts — sign a message two ways (Account, then raw SecretKey),
+// verify it two ways (UserVerifier, then Account.verifyMessageSignature),
+// then prove verification actually checks something by tampering with
+// both the message and the signature and showing verify() return false.
+//
+// Fully offline. No devnet, no network call of any kind — signing and
+// verifying a message is pure local cryptography (Ed25519 over a
+// deterministic byte encoding), unlike every transaction-sending recipe
+// in this Cookbook. A fresh keypair is generated on every run via
+// Mnemonic.generate(), so exact addresses/signatures differ run to run;
+// the shape of the output (which booleans print true vs false) does not.
+//
+// Modeled on the mx-sdk-js-core cookbook source (cookbook/signingObjects.ts
+// and cookbook/verifySignatures.ts), which shows both the Account-level and
+// the raw-SecretKey-level APIs side by side.
+
+import {
+  Account,
+  Message,
+  MessageComputer,
+  Mnemonic,
+  UserVerifier,
+} from '@multiversx/sdk-core';
+
+async function main(): Promise<void> {
+  // --- Setup: a fresh, offline keypair. No PEM file, no network. -----
+  const mnemonic = Mnemonic.generate();
+  const account = await Account.newFromMnemonic(mnemonic.toString(), 0);
+  console.log(`Address: ${account.address.toBech32()}`);
+
+  const plaintext = 'Hello MultiversX';
+  const messageComputer = new MessageComputer();
+
+  // === 1. Sign using an Account (the common case — cookbook/signingObjects.ts's
+  //        first message example). ===
+  const message = new Message({
+    data: new Uint8Array(Buffer.from(plaintext)),
+    address: account.address,
+  });
+  message.signature = await account.signMessage(message);
+  console.log(
+    `\nSigned with Account. Signature (hex): ${Buffer.from(message.signature).toString('hex').slice(0, 24)}…`,
+  );
+
+  // === 2. Verify using a UserVerifier built from the address —
+  //        cookbook/verifySignatures.ts's "Verifying Message signature
+  //        using a UserVerifier" section. ===
+  const verifier = UserVerifier.fromAddress(account.address);
+  const bytesToVerify = messageComputer.computeBytesForVerifying(message);
+  const isValid = await verifier.verify(bytesToVerify, message.signature);
+  console.log(`UserVerifier.verify() on the untampered message: ${isValid}`);
+
+  // === 3. The same check via Account's own convenience method — no
+  //        separate UserVerifier needed if you already have an Account
+  //        for the signer (cookbook/verifySignatures.ts's "Sending
+  //        messages over boundaries" section uses this exact method
+  //        after an unpack). ===
+  const isValidViaAccount = await account.verifyMessageSignature(
+    message,
+    message.signature,
+  );
+  console.log(`account.verifyMessageSignature() on the same message: ${isValidViaAccount}`);
+
+  // === 4. Prove verification actually checks something: tamper with the
+  //        message text, keep the original signature, and verify again.
+  //        A signature scheme that returned true here would be useless —
+  //        this is the check a recipe that only ever shows the "true"
+  //        path can't prove. ===
+  const tamperedMessage = new Message({
+    data: new Uint8Array(Buffer.from(`${plaintext} — but edited`)),
+    address: account.address,
+  });
+  const tamperedBytes = messageComputer.computeBytesForVerifying(tamperedMessage);
+  const isTamperedValid = await verifier.verify(tamperedBytes, message.signature);
+  console.log(`\nVerify a tampered message against the original signature: ${isTamperedValid}`);
+
+  // === 5. Same idea, the other direction: original message, corrupted
+  //        signature byte. ===
+  const corruptedSignature = new Uint8Array(message.signature);
+  const firstByte = corruptedSignature[0] ?? 0;
+  corruptedSignature[0] = firstByte ^ 0xff;
+  const isCorruptedValid = await verifier.verify(bytesToVerify, corruptedSignature);
+  console.log(`Verify the original message against a corrupted signature: ${isCorruptedValid}`);
+
+  // === 6. Signing directly with a SecretKey derived from the mnemonic,
+  //        no Account wrapper — cookbook/signingObjects.ts's "Signing a
+  //        Message using an SecretKey" section (that source uses
+  //        UserSecretKey.fromString(hex); this recipe derives from the
+  //        same fresh mnemonic at a second index instead, to stay
+  //        offline without a hardcoded key). Useful when you're holding
+  //        raw key material rather than a PEM/keystore-backed Account. ===
+  const secretKey = mnemonic.deriveKey(1);
+  const publicKey = secretKey.generatePublicKey();
+  const rawMessage = new Message({
+    data: new Uint8Array(Buffer.from(plaintext)),
+    address: publicKey.toAddress(),
+  });
+  const serialized = messageComputer.computeBytesForSigning(rawMessage);
+  rawMessage.signature = await secretKey.sign(serialized);
+  const rawVerifier = new UserVerifier(publicKey);
+  const rawIsValid = await rawVerifier.verify(
+    messageComputer.computeBytesForVerifying(rawMessage),
+    rawMessage.signature,
+  );
+  console.log(`\nSigned + verified via raw SecretKey/UserVerifier (no Account): ${rawIsValid}`);
+
+  // === 7. Packing/unpacking for sending across a boundary (a service
+  //        call, a file, a QR code) — cookbook/verifySignatures.ts's
+  //        "Sending messages over boundaries" section. ===
+  const packed = messageComputer.packMessage(message);
+  const unpacked = messageComputer.unpackMessage(packed);
+  // Message.signature is typed Uint8Array | undefined (a Message can
+  // exist unsigned, before signing) — a real tsc --strict error if you
+  // pass it straight through without narrowing first.
+  if (!unpacked.signature) {
+    throw new Error('Unpacked message has no signature.');
+  }
+  const isUnpackedValid = await account.verifyMessageSignature(
+    unpacked,
+    unpacked.signature,
+  );
+  console.log(`\nPack -> unpack -> verify round-trip: ${isUnpackedValid}`);
+
+  console.log(
+    '\nExpected: five "true" lines above (2, 3, 6, 7) and two "false" lines (4, 5).',
+  );
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+Addresses and signatures are freshly generated every run; the pattern of
+`true`/`false` lines is not:
+
+```text
+Address: erd1xg4xglsa43epnp5v2k45anqcejzdqwug86kug52tt3mq7k7vtt2qm0spu4
+
+Signed with Account. Signature (hex): e997e384490ad843899b1047…
+UserVerifier.verify() on the untampered message: true
+account.verifyMessageSignature() on the same message: true
+
+Verify a tampered message against the original signature: false
+Verify the original message against a corrupted signature: false
+
+Signed + verified via raw SecretKey/UserVerifier (no Account): true
+
+Pack -> unpack -> verify round-trip: true
+```
+
+The two `false` lines are the important ones: they are the proof this recipe's
+verification step actually checks something, rather than always returning `true`.
+
+## How it works
+
+Modeled on the mx-sdk-js-core cookbook source (`cookbook/signingObjects.ts` and
+`cookbook/verifySignatures.ts`), which shows both an Account-level and a
+raw-SecretKey-level path side by side:
+
+1. **Generate a fresh keypair.** `Mnemonic.generate()` + `Account.newFromMnemonic()`.
+2. **Sign with the Account.** `account.signMessage(message)`, the address is part
+   of what gets signed, via `MessageComputer`.
+3. **Verify with a `UserVerifier`.** Built from the address alone, the path a
+   *different* party (a backend, a service) uses, never needing the key.
+4. **Verify with `account.verifyMessageSignature()`.** A shortcut when the
+   verifying code already holds the same `Account`.
+5. **Tamper with the message, then the signature.** Both correctly return `false`.
+6. **Sign directly with a `SecretKey`**, no `Account` wrapper, the lower-level
+   path for raw key material.
+7. **Pack, unpack, verify.** Round-trips a message for transmission across a
+   boundary (a service call, a QR code, a file).
+
+## In a dApp (browser wallet, not verified live here)
+
+`mx-template-dapp`'s `SignMessage` widget shows the same call from a connected
+browser wallet: `provider.signMessage(messageToSign)` opens the wallet's own
+confirmation UI instead of signing silently. This recipe doesn't exercise that
+path end-to-end, it needs a real wallet extension or xPortal session. The
+verification side (`UserVerifier`) is identical regardless of which side signed.
+
+## Pitfalls
+
+:::warning[Pitfall 1: Message.signature is Uint8Array | undefined, not always present]
+A `Message` can exist unsigned. Passing an unsigned message's `.signature`
+straight into a function expecting `Uint8Array` is a real `tsc --strict` failure,
+narrow with a null check first.
+:::
+
+:::note[Pitfall 2: the address is part of the signed payload, not a side channel]
+`MessageComputer` folds the message's `address` field into the bytes that get
+signed/verified. A verifier built from the wrong address reports `false` even
+against an untampered message + signature pair.
+:::
+
+:::tip[Pitfall 3: a UserVerifier only needs the address, never the secret key]
+That's the entire point of asymmetric signing, don't design a verification flow
+that requires shipping key material to the verifying party.
+:::
+
+:::danger[Pitfall 4: this recipe doesn't sign a transaction]
+Message signing and transaction signing use related but distinct primitives
+(`MessageComputer` vs `TransactionComputer`), see
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+for the transaction case.
+:::
+
+## See also
+
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the transaction-signing counterpart to this recipe.
+- [Native auth: token issuance, expiry, auto-logout](/sdk-and-tools/sdk-js/cookbook/wallets/native-auth)
+  is a productized use of message-adjacent signing.
+- [Build a relayed v3 transaction](/sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction)
+  is another accounts-and-signing recipe, devnet-verified instead of offline.
