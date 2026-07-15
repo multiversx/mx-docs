@@ -250,6 +250,17 @@ const sidebars = {
                     items: [
                       {
                         type: "category",
+                        label: "Start here",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/local-https-setup",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration",
+                        ]
+                      },
+                      {
+                        type: "category",
                         label: "Network providers",
                         items: [
                           "sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider",
@@ -267,6 +278,21 @@ const sidebars = {
                         label: "Wallets",
                         items: [
                           "sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/ledger-login",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/native-auth",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/typescript-strict-mode-checklist",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Migration",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/migration/dapp-provider-to-initapp",
+                          "sdk-and-tools/sdk-js/cookbook/migration/get-account-info-v4-vs-v5",
+                          "sdk-and-tools/sdk-js/cookbook/migration/send-transactions-to-transaction-manager",
                         ]
                       },
                     ]

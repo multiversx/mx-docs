@@ -1,0 +1,275 @@
+---
+title: "Migration: useSendTransactions to TransactionManager.send"
+description: The v4 hook this migration is named for does not exist in the real package. This recipe covers what does, batch sends and a v5 nested-array trigger.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-07"
+sdk_versions:
+  sdk-dapp: "^5.6.0"
+tags:
+  - sdk-dapp
+  - migration
+  - v4-to-v5
+  - transaction
+  - typescript
+---
+
+## A correction before this recipe starts
+
+Some migration notes name the v4 hook this recipe replaces as
+`useSendTransactions()`. While authoring this recipe we checked the real,
+published `@multiversx/sdk-dapp@4.6.4` (the last v4 release, fetched from the npm
+registry and unpkg): **no hook by that exact name exists anywhere in it.** The two
+real v4 surfaces for sending transactions are:
+
+- the plain `sendTransactions()` function from
+  `services/transactions/sendTransactions`, already covered by
+  [Migrate v4 to v5: hook-by-hook diffs](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)'s
+  hook-by-hook pair, for the single-array case.
+- `useSendBatchTransactions()`, a dedicated hook for grouped/sequential sends,
+  which that pair does not cover.
+
+This recipe covers the second one, in depth, since it maps onto a genuinely
+distinct v5 capability (nested-array batch sends).
+
+## Prerequisites
+
+- An existing sdk-dapp v4.x codebase using `useSendBatchTransactions()`.
+- Node.js >= 20.13.1.
+- Familiarity with
+  [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send);
+  this recipe assumes the single-transaction flow and focuses on what changes for groups.
+
+## Before (v4): the dedicated batch-sending hook
+
+This is v4 code, shown for contrast only.
+
+```tsx
+// before.tsx (v4) — useSendBatchTransactions()
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// before.tsx — v4's dedicated batch-sending hook.
+//
+// A note on the name of this recipe: some migration notes say
+// "useSendTransactions() replaced by
+// TransactionManager.getInstance().send()". Checked against the real,
+// published @multiversx/sdk-dapp@4.6.4 (the last v4 release, fetched from
+// the npm registry / unpkg while authoring this recipe): there is no hook
+// literally named useSendTransactions anywhere in that package. The two
+// real v4 surfaces for sending transactions are:
+//   - the plain `sendTransactions()` function from
+//     `services/transactions/sendTransactions` — already covered by
+//     the v4-to-v5-migration recipe's migrations/04-send-transactions/
+//     pair, for the single-array case.
+//   - `useSendBatchTransactions()`, shown below — a dedicated HOOK for
+//     grouped/sequential sends, which pair 04 does not cover at all.
+// This recipe covers the batch hook specifically, since it's the one
+// real gap pair 04 leaves open, and it maps onto a genuinely distinct v5
+// capability (see after.tsx) rather than repeating pair 04's content.
+
+import { useSendBatchTransactions } from '@multiversx/sdk-dapp/hooks/transactions/batch/useSendBatchTransactions';
+
+export function useBatchStakeFlow() {
+  const { send, batchId } = useSendBatchTransactions();
+
+  const submitBatch = async (transactions: unknown[]) => {
+    const result = await send({
+      transactions,
+      transactionsDisplayInfo: {
+        processingMessage: 'Processing batch…',
+        successMessage: 'Batch complete',
+        errorMessage: 'Batch failed',
+      },
+    });
+
+    if ('error' in result && result.error) {
+      throw new Error(result.error);
+    }
+
+    return result.batchId;
+  };
+
+  return { submitBatch, batchId };
+}
+```
+
+## After (v5): TransactionManager with a nested array
+
+```tsx title="after.tsx"
+// after.tsx — v5's grouped-send path: a nested Transaction[][] fed to the
+// SAME TransactionManager.send()/.track() calls the flat, single-group
+// case uses (see v4-to-v5-migration/migrations/04-send-transactions/after.tsx
+// for that simpler case).
+//
+// Confirmed directly from the installed
+// node_modules/@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager.d.ts
+// and its compiled .cjs:
+//
+//   send(signedTransactions: Transaction[] | Transaction[][]):
+//     Promise<SignedTransactionType[] | SignedTransactionType[][]>
+//   track(sentTransactions: SignedTransactionType[] | SignedTransactionType[][], options?):
+//     Promise<string>
+//
+// `isBatchTransaction(t)` (the internal helper send() calls first) is
+// exactly `Array.isArray(t[0])` — a NESTED array is what selects batch
+// mode. Concretely, from reading the compiled source:
+//   - Flat Transaction[]   -> send() POSTs each transaction individually
+//                             to `${apiAddress}/transactions` (parallel,
+//                             one request per tx).
+//   - Nested Transaction[][] -> send() POSTs the WHOLE nested structure
+//                             ONCE to `${apiAddress}/batch`, as
+//                             { transactions: [[...], [...]], id: batchId }.
+// The outer arrays are what the source calls "sequential" groups
+// (`getIsSequential` / `sequentialToFlatArray`) — that naming strongly
+// implies the API processes group 1 before group 2, but this recipe only
+// verifies the CLIENT-SIDE contract (the type signature, the batch
+// trigger, and the endpoint choice) by reading the compiled source; it
+// does not independently confirm server-side group ordering against a
+// live multi-group broadcast, which would need funded wallets and is out
+// of scope here. Treat "sequential" as the SDK's own claim, not this
+// recipe's independently-verified one.
+//
+// track() ALWAYS flattens the structure back down
+// (`sequentialToFlatArray`, triggered when every top-level element is
+// itself an array) before building the transaction session — so whether
+// you sent flat or grouped, you get exactly ONE sessionId covering every
+// transaction in the call, not one per group.
+
+import { Transaction } from '@multiversx/sdk-core';
+import { TransactionManager } from '@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+
+/**
+ * Splits a flat array back into the group sizes it came from. Used below
+ * to re-nest a signed, flat array of transactions after signing — signing
+ * itself only accepts a flat Transaction[] (see Pitfall 1), so grouping
+ * has to happen before signing (to know the sizes) and again after (to
+ * rebuild the nested shape send()/track() expect for batch mode).
+ */
+function regroup<T>(flat: T[], groupSizes: number[]): T[][] {
+  const groups: T[][] = [];
+  let offset = 0;
+  for (const size of groupSizes) {
+    groups.push(flat.slice(offset, offset + size));
+    offset += size;
+  }
+  return groups;
+}
+
+/**
+ * Sends `groups` — e.g. [[approveTx1, approveTx2], [claimTx]] — as one
+ * grouped submission, and tracks all of it under a single sessionId.
+ *
+ * Replaces v4's useSendBatchTransactions() hook (see before.tsx). Unlike
+ * the hook, this is plain async code — usable from anywhere
+ * getAccountProvider() works (a click handler, a CLI-adjacent browser
+ * script, a service worker), not tied to a React render.
+ */
+export async function sendGrouped(groups: Transaction[][]): Promise<string> {
+  const groupSizes = groups.map((g) => g.length);
+  const flat = groups.flat();
+
+  // 1. Sign. signTransactions() only accepts a flat array — see Pitfall 1.
+  const provider = getAccountProvider();
+  const signedFlat = await provider.signTransactions(flat);
+
+  // 2. Re-nest using the ORIGINAL group sizes, now that everything is
+  //    signed. The order signTransactions() returns is stable (one
+  //    signed transaction per input, same index), so slicing by the
+  //    sizes we recorded before flattening reconstructs the same groups.
+  const signedGroups = regroup(signedFlat, groupSizes);
+
+  // 3. Send. A nested array here (signedGroups is Transaction[][]) makes
+  //    isBatchTransaction() return true, which routes this call to the
+  //    dedicated POST /batch endpoint instead of N individual
+  //    POST /transactions calls.
+  const txManager = TransactionManager.getInstance();
+  const sent = await txManager.send(signedGroups);
+
+  // 4. Track. One call, one sessionId, even though the input was nested —
+  //    track() flattens internally before building the session.
+  const sessionId = await txManager.track(sent, {
+    transactionsDisplayInfo: {
+      processingMessage: 'Processing batch…',
+      successMessage: 'Batch complete',
+      errorMessage: 'Batch failed',
+    },
+  });
+
+  return sessionId;
+}
+```
+
+## The v5 mechanism: a nested array picks batch mode
+
+Confirmed directly from the installed
+`node_modules/@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager.d.ts`
+and its compiled source:
+
+```ts
+send(signedTransactions: Transaction[] | Transaction[][]):
+  Promise<SignedTransactionType[] | SignedTransactionType[][]>
+
+track(sentTransactions: SignedTransactionType[] | SignedTransactionType[][], options?):
+  Promise<string>
+```
+
+The internal `isBatchTransaction(t)` check is exactly `Array.isArray(t[0])`.
+Passing a **nested** array selects batch mode:
+
+| Input shape | What `send()` actually does |
+| --- | --- |
+| Flat `Transaction[]` | POSTs each transaction individually to `${apiAddress}/transactions` (parallel, one request per tx) |
+| Nested `Transaction[][]` | POSTs the whole nested structure **once** to `${apiAddress}/batch`, as `{ transactions: [[...], [...]], id: batchId }` |
+
+The outer groups are what the compiled source's own internal naming calls
+"sequential" (`getIsSequential` / `sequentialToFlatArray`), naming that implies the
+API processes group 1 before group 2. This recipe verifies the **client-side
+contract** (the type signature, the batch trigger, and the endpoint choice) by
+reading the compiled source directly; it does not independently confirm
+server-side group ordering against a live multi-group broadcast.
+
+`track()` always flattens the structure back down before building the transaction
+session, so whether you sent flat or grouped, you get exactly **one** `sessionId`
+covering every transaction in the call, not one per group.
+
+## Pitfalls
+
+:::danger[Pitfall 1: signTransactions() only accepts a flat array]
+There is no nested-array overload for signing, confirmed from
+`node_modules/@multiversx/sdk-dapp/out/providers/DappProvider/DappProvider.d.ts`:
+`signTransactions(transactions: Transaction[], options?): Promise<Transaction[]>`.
+This is why `after.tsx` flattens before signing and re-nests afterward, rather
+than trying to sign group-by-group.
+:::
+
+:::warning[Pitfall 2: re-nesting depends on signTransactions() preserving order and count]
+`regroup()` in `after.tsx` slices the signed, flat result using the group sizes
+recorded before flattening. This is correct as long as the signed array has
+exactly one entry per input transaction, in the same order.
+:::
+
+:::warning[Pitfall 3: batch mode requires a resolvable logged-in address]
+Reading `TransactionManager.cjs`'s `sendSignedBatchTransactions`: it builds the
+batch id from `getAccount().address` and returns an explicit error if that is
+empty. The flat-array path has no equivalent check at this layer.
+:::
+
+:::note[Pitfall 4: don't treat "sequential" as independently proven here]
+See "The v5 mechanism" above; this recipe verified the client contract, not
+on-chain group ordering.
+:::
+
+## See also
+
+- [Migrate v4 to v5: hook-by-hook diffs](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
+  is the six-pair overview, including the flat single-array send/track case.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the canonical single-transaction sign, send, track flow this recipe extends
+  to groups.
+- [Migration: useGetAccountInfo v4 vs v5](/sdk-and-tools/sdk-js/cookbook/migration/get-account-info-v4-vs-v5)
+  is another "the old name still resolves, but check the real shape" trap from the
+  same migration.

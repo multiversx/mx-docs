@@ -1,0 +1,224 @@
+---
+title: "Migration: useGetAccountInfo v4 vs v5"
+description: The same hook name still resolves in v5 but returns less data, silently. The easiest migration bug to miss because nothing forces a second look at it.
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-07"
+sdk_versions:
+  sdk-dapp: "^5.6.0"
+tags:
+  - sdk-dapp
+  - migration
+  - v4-to-v5
+  - react
+  - typescript
+---
+
+The
+[hook-by-hook migration overview](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
+shows the v4 shape and the v5-recommended replacement for `useGetAccountInfo`.
+This recipe adds the piece that overview leaves out: **`useGetAccountInfo` is not
+removed in v5**. The same import name still resolves, still compiles, and still
+returns real data. It just returns *less* data, silently, which makes this one of
+the easiest migration bugs to miss entirely.
+
+## Prerequisites
+
+- An existing sdk-dapp v4.x codebase calling `useGetAccountInfo()`.
+- Node.js >= 20.13.1.
+
+## Before (v4): one hook returned everything
+
+v4's `useGetAccountInfo()` returned address, balance, nonce, `isLoggedIn`, and
+`tokenLogin` from a single call. This is v4 code, shown for contrast only.
+
+```tsx
+// before.tsx (v4)
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// before.tsx — v4's useGetAccountInfo(): one hook, one big object.
+// address + balance/nonce + login flag + auth token, all in one place.
+
+import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks';
+
+export function AccountSummary() {
+  const {
+    address,
+    account: { balance, nonce },
+    isLoggedIn,
+    tokenLogin,
+  } = useGetAccountInfo();
+
+  if (!isLoggedIn) {
+    return <p>Not logged in.</p>;
+  }
+
+  return (
+    <div>
+      <p>Address: {address}</p>
+      <p>Balance: {balance}</p>
+      <p>Nonce: {nonce}</p>
+      <p>Token: {tokenLogin?.nativeAuthToken}</p>
+    </div>
+  );
+}
+```
+
+## After (v5): same name, thinner shape
+
+The same import name still resolves under its new `out/react/account/...` path,
+same call-site shape, but `isLoggedIn` and `tokenLogin` are gone from the return
+type. `tsc --strict` only catches this if you actually destructure those fields.
+
+```tsx title="after-shim.tsx"
+// after-shim.tsx — the SAME import name resolves in v5, but the shape it
+// returns changed. This is the trap this recipe exists to name: a v4
+// codebase that only bulk-renamed import paths (the "smallest viable
+// patch" from the v4-to-v5-migration recipe) will still find
+// `useGetAccountInfo` at
+// `@multiversx/sdk-dapp/out/react/account/useGetAccountInfo` and will
+// still compile a call to it — right up until it reaches for
+// `.isLoggedIn` or `.tokenLogin`, which no longer exist on the return
+// type. `tsc --strict` catches this the moment you destructure a field
+// that's gone; it will NOT catch it if you only ever access `.address` or
+// `.account`, which still work identically. That's what makes this a
+// sneaky migration bug rather than an obvious one: the hook doesn't
+// disappear, so nothing forces you to look at it.
+//
+// Confirmed against the real, installed
+// `@multiversx/sdk-dapp@5.6.23` `.d.ts`: the v5 shape is
+//   { address, account, publicKey, ledgerAccount, walletConnectAccount,
+//     websocketEvent, websocketBatchEvent }
+// — no `isLoggedIn`, no `tokenLogin`. Both moved to useGetLoginInfo() /
+// useGetIsLoggedIn() — see after-recommended.tsx.
+
+import { useGetAccountInfo } from '@multiversx/sdk-dapp/out/react/account/useGetAccountInfo';
+
+export function AccountSummaryShim(): JSX.Element {
+  const { address, account } = useGetAccountInfo();
+
+  // The next two lines are what the v4 code looked like. Uncommenting
+  // either one is a real, reproducible tsc --strict failure against the
+  // installed v5 types — left here as comments rather than deleted, so
+  // the failure is visible without needing to break the build to see it:
+  //
+  //   const { isLoggedIn } = useGetAccountInfo();
+  //   // error TS2339: Property 'isLoggedIn' does not exist on type
+  //   // 'AccountInfoType'.
+  //
+  //   const { tokenLogin } = useGetAccountInfo();
+  //   // error TS2339: Property 'tokenLogin' does not exist on type
+  //   // 'AccountInfoType'.
+
+  return (
+    <div>
+      <p>Address: {address}</p>
+      <p>Balance: {account.balance}</p>
+      <p>Nonce: {account.nonce}</p>
+      <p>
+        Not shown: login flag and auth token — this shim no longer carries
+        them. See after-recommended.tsx.
+      </p>
+    </div>
+  );
+}
+```
+
+## After (v5): the recommended three-hook split
+
+The recommended replacement: `useGetAccount()` plus `useGetIsLoggedIn()` plus
+`useGetLoginInfo()`.
+
+```tsx title="after-recommended.tsx"
+// after-recommended.tsx — the v5-recommended replacement: three hooks,
+// one per concern, instead of reaching for the still-exists-but-thinner
+// useGetAccountInfo() shim in after-shim.tsx.
+//
+// Migration rule of thumb:
+//   address, balance, nonce, shard, username      -> useGetAccount()
+//   isLoggedIn                                    -> useGetIsLoggedIn()
+//   tokenLogin, providerType, expires, loginMethod -> useGetLoginInfo()
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetLoginInfo } from '@multiversx/sdk-dapp/out/react/loginInfo/useGetLoginInfo';
+
+export function AccountSummaryRecommended(): JSX.Element {
+  const { address, balance, nonce } = useGetAccount();
+  const isLoggedIn = useGetIsLoggedIn();
+  const { tokenLogin } = useGetLoginInfo();
+
+  if (!isLoggedIn) {
+    return <p>Not logged in.</p>;
+  }
+
+  return (
+    <div>
+      <p>Address: {address}</p>
+      <p>Balance: {balance}</p>
+      <p>Nonce: {nonce}</p>
+      <p>Token: {tokenLogin?.nativeAuthToken}</p>
+    </div>
+  );
+}
+```
+
+## Why the shim is the dangerous one
+
+A codebase migrated only via the "smallest viable patch" (bulk find-and-replace
+of import paths) keeps calling `useGetAccountInfo()` under its new
+`out/react/account/...` path. If that codebase only ever reads `.address` or
+`.account`, **it keeps compiling and keeps working**. Nothing forces a second look
+at this hook. The bug surfaces only when code reaches for `.isLoggedIn` or
+`.tokenLogin`, at which point `tsc --strict` reports a real, specific error (see
+the commented-out lines in `after-shim.tsx` for the exact message).
+
+Confirmed against the real, installed `@multiversx/sdk-dapp@5.6.23` `.d.ts`: the
+v5 return type is
+`{ address, account, publicKey, ledgerAccount, walletConnectAccount, websocketEvent, websocketBatchEvent }`,
+with no `isLoggedIn` and no `tokenLogin`.
+
+**Practical takeaway:** grep your v4 codebase for every `useGetAccountInfo()` call
+site and check what it destructures, rather than trusting that "it still compiles"
+means "it still works the same way."
+
+## How it works
+
+`useGetAccount()`, `useGetIsLoggedIn()`, and `useGetLoginInfo()` read three
+different Zustand store slices, each with a different update cadence: account
+balance/nonce change per transaction, the login flag changes twice per session,
+and the login info (auth token, provider type) changes only on login. v4's
+`useGetAccountInfo()` bundled all three into one subscription, so any change to any
+of the three re-rendered every consumer. v5's split means a component that only
+cares about the balance does not re-render when the auth token refreshes, a real
+performance improvement that falls out of doing the migration properly instead of
+leaning on the shim indefinitely.
+
+## Pitfalls
+
+:::danger[Pitfall 1: "it still compiles" is not proof the migration is done]
+`useGetAccountInfo` surviving the rename means nothing here forces a re-read.
+Audit every call site's destructuring, not just whether the import resolves.
+:::
+
+:::warning[Pitfall 2: isLoggedIn and tokenLogin move to different hooks entirely]
+There is no `useGetAccountInfo().isLoggedIn` replacement shortcut; you need the
+separate `useGetIsLoggedIn()` / `useGetLoginInfo()` calls.
+:::
+
+:::note[Pitfall 3: don't assume every surviving v4 hook kept its full shape]
+This Cookbook found the same "same name, thinner shape" pattern is worth checking
+case-by-case per hook, not assumed either way.
+:::
+
+## See also
+
+- [Migrate v4 to v5: hook-by-hook diffs](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
+  is the six-pair overview this recipe expands on.
+- [Migration: DappProvider to initApp](/sdk-and-tools/sdk-js/cookbook/migration/dapp-provider-to-initapp)
+  is the structural change that usually comes first in a real migration.
+- [Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  is the full `useGetAccount()` field reference.

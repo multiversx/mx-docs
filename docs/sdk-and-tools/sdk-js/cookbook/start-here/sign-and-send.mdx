@@ -1,0 +1,674 @@
+---
+title: Sign and send a transaction (the working path)
+description: The canonical sdk-dapp v5 sign, send, and track flow. provider.signTransactions then TransactionManager.send and .track, with proper nonce handling.
+difficulty: beginner
+est_minutes: 8
+last_validated: "2026-05-07"
+sdk_versions:
+  sdk-core: "^15.4.0"
+  sdk-dapp: "^5.6.0"
+tags:
+  - sdk-dapp
+  - sdk-core
+  - transaction
+  - typescript
+  - devnet
+---
+
+This is the canonical "I have a wallet, now what?" recipe, the foundation every
+other transaction recipe links from. Build a `Transaction` with sdk-core, sign
+with the connected provider, send and track with `TransactionManager`. The whole
+pattern is three calls.
+
+In v4, signing was a React hook (`useSignTransactions`). In v5, signing is on the
+provider itself (`provider.signTransactions(txs)`), a deliberate change because
+the provider already knows the user's signing surface (extension popup, Ledger
+USB, WalletConnect mobile prompt). This recipe is the v5-current pattern.
+
+If you do not yet have a working sdk-dapp v5 setup, start with
+[Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
+or
+[Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal),
+both of which end where this recipe begins.
+
+## Prerequisites
+
+- A working sdk-dapp v5 setup (Next.js or Vite, see the start-here recipes).
+- A logged-in account on devnet.
+- A few devnet EGLD ([faucet](https://r3d4.fr/faucet) or
+  [devnet wallet](https://devnet-wallet.multiversx.com)).
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/sign-and-send
+npm install
+npm run dev
+# open https://localhost:3000
+```
+
+The recipe is a Next.js app, but the load-bearing file (`lib/transactions.ts`) is
+framework-agnostic. Copy it into a Vite app, a Remix loader, a CLI script, or
+anywhere the sdk-dapp store has been initialized.
+
+## The three-step pattern
+
+The whole flow lives in `lib/transactions.ts`. Read this once and you have the v5
+transaction pattern.
+
+```ts title="lib/transactions.ts"
+// lib/transactions.ts — the canonical sign / send / track flow for sdk-dapp v5.
+//
+// This file demonstrates the three-step pattern that every transaction in a
+// v5 dApp follows:
+//
+//   1. BUILD with sdk-core's Transaction constructor.
+//      Pull sender, nonce, and chainID from the sdk-dapp
+//      store via getAccount() and getNetworkConfig() — both are non-React
+//      synchronous reads.
+//   2. SIGN via the connected provider.
+//      In v5 signing is on the provider, not a hook — this is the v4 → v5
+//      semantic change documented in the v5 changelog.
+//   3. SEND + TRACK with TransactionManager.
+//      The returned sessionId is the React-hook key for
+//      useGetPendingTransactions(sessionId).
+//
+// The function below is intentionally framework-agnostic. It reads from the
+// sdk-dapp store directly (no hooks), so you can call it from a React
+// onClick, a server action, a CLI script, or anywhere else.
+
+import { Address, Transaction } from '@multiversx/sdk-core';
+import { GAS_PRICE, GAS_LIMIT } from '@multiversx/sdk-dapp/out/constants/mvx.constants';
+import { TransactionManager } from '@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager';
+import { getAccount } from '@multiversx/sdk-dapp/out/methods/account/getAccount';
+import { getNetworkConfig } from '@multiversx/sdk-dapp/out/methods/network/getNetworkConfig';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import type { SignedTransactionType } from '@multiversx/sdk-dapp/out/types/transactions.types';
+
+/**
+ * Inputs for an EGLD transfer. Amount is in the smallest denomination —
+ * 1 EGLD = 10^18.
+ *
+ * Use bigint everywhere. Never `Number` — JavaScript loses precision past
+ * 2^53 and EGLD amounts go higher than that all the time.
+ */
+export interface SendEgldInput {
+  /** Bech32 address of the recipient. */
+  receiver: string;
+  /** Amount in the smallest denomination (10^18 = 1 EGLD). */
+  amountInSmallestDenomination: bigint;
+  /** Optional UTF-8 data field. Note: data adds gas. */
+  data?: string;
+}
+
+/**
+ * Output of a successful sign + send + track call. The sessionId is the key
+ * the React hooks (useGetPendingTransactions, etc.) use to render UI state.
+ */
+export interface SendEgldOutput {
+  sessionId: string;
+  transactionHash: string;
+}
+
+/**
+ * Build, sign, send, and start tracking an EGLD transfer.
+ *
+ * Throws if no account is connected. The caller is responsible for ensuring
+ * useGetIsLoggedIn() is true before invoking — the function does not
+ * gracefully wait for login.
+ */
+export async function sendEgld(input: SendEgldInput): Promise<SendEgldOutput> {
+  const account = getAccount();
+  const { network } = getNetworkConfig();
+
+  if (!account.address) {
+    throw new Error('No account connected. Call after a successful login.');
+  }
+
+  // Step 1 — BUILD.
+  // Note: account.nonce is the network's last-known nonce. If you sent any
+  // transactions earlier in this session you must increment locally — see
+  // Pitfall 1 on this page.
+  //
+  // The canonical Transaction constructor shape: value/gasLimit/nonce are
+  // bigint, data is Uint8Array.
+  const tx = new Transaction({
+    sender: Address.newFromBech32(account.address),
+    receiver: Address.newFromBech32(input.receiver),
+    value: input.amountInSmallestDenomination,
+    gasLimit: BigInt(computeGasLimit(input.data)),
+    gasPrice: BigInt(GAS_PRICE),
+    chainID: network.chainId,
+    nonce: BigInt(account.nonce),
+    // Version 1 is the unsigned-transaction default; sdk-dapp managers handle
+    // hash-signing version bumps internally where needed.
+    version: 1,
+    // data is omitted via spread when undefined to play nicely with
+    // exactOptionalPropertyTypes (strict mode rejects passing
+    // `undefined` to a property that is `Uint8Array` not `Uint8Array | undefined`).
+    ...(input.data ? { data: new Uint8Array(Buffer.from(input.data)) } : {}),
+  });
+
+  // Step 2 — SIGN.
+  // The provider knows the connected wallet's signing surface (extension
+  // popup / Ledger USB / WalletConnect mobile prompt). signTransactions
+  // returns the same array shape it was given, with each tx now carrying a
+  // .signature field.
+  const provider = getAccountProvider();
+  const [signed] = await provider.signTransactions([tx]);
+
+  if (!signed) {
+    // Defensive: if the user cancelled the wallet popup, signTransactions
+    // throws or returns an empty array depending on the provider.
+    throw new Error('User cancelled signing.');
+  }
+
+  // Step 3 — SEND + TRACK.
+  // TransactionManager.send()'s type signature is shape-symmetric: pass a
+  // flat Transaction[] (one batch), get a flat SignedTransactionType[] back;
+  // pass Transaction[][] (multiple batches), get SignedTransactionType[][]
+  // back (node_modules/@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager.d.ts).
+  // We always pass a single flat batch, so the nested variant cannot occur
+  // here — narrow explicitly (isFlatSentTransactions below) rather than
+  // casting, so a real shape change fails loudly instead of miscompiling.
+  //
+  // track() takes that SAME array (not a single unwrapped element) — see the
+  // TransactionManager.d.ts JSDoc example, which calls
+  // `txManager.track(sentTransactions, {...})` on the whole array.
+  const txManager = TransactionManager.getInstance();
+  const sentTransactions = await txManager.send([signed]);
+
+  if (!isFlatSentTransactions(sentTransactions)) {
+    throw new Error('Unexpected response shape from TransactionManager.send().');
+  }
+
+  const [sent] = sentTransactions;
+  if (!sent) {
+    throw new Error('Send failed: TransactionManager returned no transactions.');
+  }
+
+  const sessionId = await txManager.track(sentTransactions, {
+    transactionsDisplayInfo: {
+      processingMessage: 'Sending EGLD…',
+      successMessage: 'Transfer complete.',
+      errorMessage: 'Transfer failed.',
+    },
+  });
+
+  // `SignedTransactionType` already carries `hash: string` (see
+  // node_modules/@multiversx/sdk-dapp/out/types/transactions.types.d.ts).
+  // sdk-dapp's own status-polling joins on this same field internally, so
+  // it is the authoritative hash — no separate computation needed.
+  //
+  // Earlier drafts of this recipe called
+  // `new TransactionComputer().computeTransactionHash(sent)` and hex-encoded
+  // the result via `Buffer.from(...)`. Both are wrong for this SDK version:
+  // computeTransactionHash() expects an sdk-core `Transaction` instance, not
+  // the `SignedTransactionType` plain object `send()` returns here (that's a
+  // real tsc --strict error, not just a style nit) — and its return value is
+  // already a hex `string`, not a `Uint8Array`
+  // (node_modules/@multiversx/sdk-core/out/core/transactionComputer.js), so
+  // re-wrapping it in `Buffer.from(str).toString('hex')` would silently
+  // double-encode it into a wrong, longer hex string.
+  const transactionHash = sent.hash;
+
+  return {
+    sessionId,
+    transactionHash,
+  };
+}
+
+/**
+ * Type guard narrowing TransactionManager.send()'s union return type down to
+ * the flat (single-batch) variant. We only ever call send() with a single
+ * flat Transaction[] batch, so this should always hold at runtime; it exists
+ * so the compiler (not an assertion) enforces that invariant.
+ */
+function isFlatSentTransactions(
+  value: SignedTransactionType[] | SignedTransactionType[][],
+): value is SignedTransactionType[] {
+  return value.length === 0 || !Array.isArray(value[0]);
+}
+
+/**
+ * Compute a reasonable gas limit for a plain or data-bearing EGLD transfer.
+ *
+ * The default GAS_LIMIT (50_000) covers the empty-data case. For data
+ * transactions, the network charges 1500 gas per byte.
+ */
+function computeGasLimit(data: string | undefined): number {
+  const baseLimit = GAS_LIMIT;
+  if (!data) {
+    return baseLimit;
+  }
+  const dataBytes = Buffer.byteLength(data, 'utf8');
+  // 1500 gas per byte of data. Add some headroom (10%) so a slight protocol
+  // change doesn't immediately invalidate every recipe — CI catches drift.
+  return Math.ceil((baseLimit + dataBytes * 1500) * 1.1);
+}
+```
+
+The three steps:
+
+1. **Build** with sdk-core. `Transaction` is the value type;
+   `Address.newFromBech32()` parses the bech32 strings. `getAccount()` and
+   `getNetworkConfig()` are non-React reads of the sdk-dapp store; they work from
+   any context as long as `initApp()` has resolved.
+2. **Sign** with the provider. `getAccountProvider()` returns the connected
+   provider; calling `.signTransactions([tx])` opens the wallet UI and resolves
+   with the same array, now signature-bearing.
+3. **Send and track** with `TransactionManager`. The singleton's `.send()` POSTs
+   to the network; `.track()` starts the WebSocket-or-polling tracker that updates
+   the Zustand store as the tx transitions pending to success/fail. The returned
+   `sessionId` is the lookup key for the React hooks.
+
+## The React hook
+
+A thin wrapper around `sendEgld()` with status / error state for `onClick` use:
+
+```ts title="lib/useSendEgld.ts"
+// lib/useSendEgld.ts — React hook around the framework-agnostic sendEgld().
+//
+// Wraps lib/transactions.ts in a stateful hook so a component can render a
+// "Send" button, drive it from local state, and surface in-flight / success /
+// error UI.
+//
+// Why a hook? sendEgld() is callable from anywhere, but most UI calls want:
+//   - a loading flag while the wallet popup is open
+//   - the sessionId, so other parts of the page can use
+//     useGetPendingTransactions(sessionId) to render per-tx state
+//   - a stable reference to the send function for use in onClick
+
+import { useCallback, useState } from 'react';
+import { sendEgld, type SendEgldInput, type SendEgldOutput } from './transactions';
+
+export interface UseSendEgldState {
+  status: 'idle' | 'signing' | 'sending' | 'tracking' | 'done' | 'error';
+  sessionId: string | null;
+  transactionHash: string | null;
+  error: string | null;
+}
+
+const initialState: UseSendEgldState = {
+  status: 'idle',
+  sessionId: null,
+  transactionHash: null,
+  error: null,
+};
+
+export interface UseSendEgld {
+  state: UseSendEgldState;
+  send: (input: SendEgldInput) => Promise<SendEgldOutput | null>;
+  reset: () => void;
+}
+
+export function useSendEgld(): UseSendEgld {
+  const [state, setState] = useState<UseSendEgldState>(initialState);
+
+  const send = useCallback(
+    async (input: SendEgldInput): Promise<SendEgldOutput | null> => {
+      setState({ ...initialState, status: 'signing' });
+      try {
+        // The status doesn't get a chance to update between signing and
+        // sending in any visually meaningful way; we keep it simple.
+        const out = await sendEgld(input);
+        setState({
+          status: 'done',
+          sessionId: out.sessionId,
+          transactionHash: out.transactionHash,
+          error: null,
+        });
+        return out;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        setState({
+          status: 'error',
+          sessionId: null,
+          transactionHash: null,
+          error: message,
+        });
+        return null;
+      }
+    },
+    [],
+  );
+
+  const reset = useCallback((): void => {
+    setState(initialState);
+  }, []);
+
+  return { state, send, reset };
+}
+```
+
+## The page
+
+The form: receiver address, amount in EGLD (decimal, converted internally to the
+smallest denomination), submit button. It pulls login state and pending-transaction
+count from the sdk-dapp hooks, so the UI reflects the same store the manager writes to.
+
+```tsx title="app/page.tsx"
+'use client';
+
+// app/page.tsx — sign + send + track demo page.
+//
+// Three states:
+//   1. Logged out → "Connect wallet" button (delegates to UnlockPanelManager).
+//   2. Logged in, idle → form: receiver address + amount in EGLD.
+//   3. Logged in, post-send → status display: hash, sessionId, success/error.
+//
+// The form's amount input is in EGLD (decimal), but lib/transactions.ts
+// expects the smallest denomination (10^18). We do the conversion inline —
+// see toSmallestDenomination() below — so the user can think in EGLD while
+// the SDK still gets a precise bigint.
+
+import { useState } from 'react';
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { useGetPendingTransactions } from '@multiversx/sdk-dapp/out/react/transactions/useGetPendingTransactions';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import { useSendEgld } from '../lib/useSendEgld';
+
+export default function SendPage(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const account = useGetAccount();
+  const { network } = useGetNetworkConfig();
+  const { state, send, reset } = useSendEgld();
+
+  // useGetPendingTransactions() returns SignedTransactionType[] — a flat
+  // array of currently-pending transactions, NOT a sessionId-keyed map (see
+  // node_modules/@multiversx/sdk-dapp/out/react/transactions/useGetPendingTransactions.d.ts).
+  // If you need session-keyed
+  // lookups instead, use useGetPendingTransactionsSessions(), which returns
+  // Record<string, SessionTransactionType>.
+  const pending = useGetPendingTransactions();
+  const pendingCount = pending.length;
+
+  const [receiver, setReceiver] = useState('');
+  const [amountEgld, setAmountEgld] = useState('0.001');
+
+  const handleConnect = (): void => {
+    // openUnlockPanel() returns Promise<void> (see
+    // node_modules/@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager.d.ts).
+    // This handler is a sync onClick, so we explicitly discard the promise —
+    // matching the eslint no-floating-promises gate.
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  const handleLogout = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+    let amountInSmallest: bigint;
+    try {
+      amountInSmallest = toSmallestDenomination(amountEgld);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Bad amount:', err);
+      return;
+    }
+    await send({
+      receiver,
+      amountInSmallestDenomination: amountInSmallest,
+    });
+  };
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Sign and send a transaction</h1>
+      <p>
+        Network: <code>{network.chainId}</code>
+      </p>
+
+      {!isLoggedIn ? (
+        <button type="button" onClick={handleConnect} style={buttonStyle}>
+          Connect wallet
+        </button>
+      ) : (
+        <>
+          <p>
+            Connected as <code>{account.address}</code>
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              void handleLogout();
+            }}
+            style={{ ...buttonStyle, marginBottom: '1.5rem' }}
+          >
+            Disconnect
+          </button>
+
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
+          >
+            <label>
+              Receiver (bech32 address):
+              <input
+                type="text"
+                required
+                value={receiver}
+                onChange={(e) => setReceiver(e.target.value)}
+                placeholder="erd1..."
+                style={inputStyle}
+              />
+            </label>
+            <label>
+              Amount (EGLD):
+              <input
+                type="text"
+                required
+                inputMode="decimal"
+                value={amountEgld}
+                onChange={(e) => setAmountEgld(e.target.value)}
+                style={inputStyle}
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={state.status === 'signing' || state.status === 'sending'}
+              style={buttonStyle}
+            >
+              {state.status === 'signing' || state.status === 'sending'
+                ? 'Sending…'
+                : 'Send'}
+            </button>
+          </form>
+
+          <Result state={state} reset={reset} pending={pendingCount} />
+        </>
+      )}
+    </main>
+  );
+}
+
+interface ResultProps {
+  state: ReturnType<typeof useSendEgld>['state'];
+  reset: () => void;
+  pending: number;
+}
+
+function Result({ state, reset, pending }: ResultProps): JSX.Element | null {
+  if (state.status === 'idle') {
+    return null;
+  }
+  return (
+    <section style={{ marginTop: '1.5rem' }}>
+      <h2>Result</h2>
+      <p>
+        Status: <code>{state.status}</code> · Pending in store:{' '}
+        <code>{pending}</code>
+      </p>
+      {state.transactionHash && (
+        <p>
+          Hash: <code>{state.transactionHash}</code>
+        </p>
+      )}
+      {state.sessionId && (
+        <p>
+          Session ID: <code>{state.sessionId}</code>
+        </p>
+      )}
+      {state.error && (
+        <p style={{ color: 'crimson' }}>
+          Error: <code>{state.error}</code>
+        </p>
+      )}
+      <button type="button" onClick={reset} style={buttonStyle}>
+        Reset
+      </button>
+    </section>
+  );
+}
+
+/**
+ * Convert a decimal EGLD string to the smallest denomination (10^18).
+ *
+ * Avoid `parseFloat` + `* 1e18` — it loses precision for any meaningful
+ * balance. We do the multiplication on the integer part with bigint, then
+ * pad the fractional part with zeros to 18 digits.
+ */
+function toSmallestDenomination(decimalEgld: string): bigint {
+  const trimmed = decimalEgld.trim();
+  if (trimmed === '' || !/^\d+(\.\d+)?$/.test(trimmed)) {
+    throw new Error(`Invalid amount: "${decimalEgld}"`);
+  }
+  const dotIndex = trimmed.indexOf('.');
+  const integerPart = dotIndex === -1 ? trimmed : trimmed.slice(0, dotIndex);
+  const rawFraction = dotIndex === -1 ? '' : trimmed.slice(dotIndex + 1);
+  if (rawFraction.length > 18) {
+    throw new Error('Amount has more than 18 decimal places.');
+  }
+  const paddedFraction = rawFraction.padEnd(18, '0');
+  return BigInt(integerPart) * 10n ** 18n + BigInt(paddedFraction || '0');
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.6rem 1.1rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+
+const inputStyle: React.CSSProperties = {
+  display: 'block',
+  width: '100%',
+  marginTop: '0.25rem',
+  padding: '0.5rem',
+  fontSize: '0.95rem',
+  fontFamily: 'monospace',
+};
+```
+
+## How it works
+
+**Why signing is on the provider, not a hook.** v4 had `useSignTransactions()`, a
+hook that paid the cost of being a hook (Rules of Hooks, render-phase identity)
+without using any of the benefits. The signing call is fundamentally imperative:
+"user clicks Send, wallet pops up". Putting it on the provider makes the call site
+honest about that.
+
+**Why sending is via TransactionManager, not the provider.** Sending is a separate
+concern from signing. `TransactionManager` handles batching, gas-bumping retries,
+and integrates with the WebSocket-or-polling tracker. The provider is just a
+signature surface; the manager is the orchestrator.
+
+**What `sessionId` is for.** `useGetPendingTransactions()`,
+`useGetSuccessfulTransactions()`, and `useGetFailedTransactions()` take **no
+arguments**. Each returns the flat `SignedTransactionType[]` for *every*
+transaction in that state, not just yours:
+
+```ts
+const pending = useGetPendingTransactions();     // every pending tx, all sessions
+const successful = useGetSuccessfulTransactions();
+const failed = useGetFailedTransactions();
+```
+
+To look up **one** session (the one `sessionId` from `send()` refers to), use the
+`...Sessions()` variants instead. They return
+`Record<sessionId, SessionTransactionType>`:
+
+```ts
+const sessions = useGetPendingTransactionsSessions();
+const mySession = sessions[sessionId]; // SessionTransactionType | undefined
+```
+
+## Pitfalls
+
+:::warning[Pitfall 1: the nonce trap (silent rejection)]
+`getAccount()` returns the network's last-known nonce. If you fire two
+transactions in a session, the second is rejected unless you increment the nonce
+locally:
+
+```ts
+const nonce = BigInt(getAccount().nonce);
+// First transaction with nonce, signed and sent.
+// For the second:
+const tx2 = new Transaction({ ...rest, nonce: nonce + 1n });
+```
+
+The store updates the nonce after a confirmed transaction, but if you fire two
+before the first confirms you must manage the nonce yourself.
+:::
+
+:::warning[Pitfall 2: amount is in the smallest denomination (10^18)]
+`value: 1n` means **0.000000000000000001** EGLD, not 1 EGLD. The recipe's UI takes
+a decimal string and converts via `toSmallestDenomination()`. Avoid
+`parseFloat * 1e18`, JavaScript loses precision past 2^53. Use bigint arithmetic.
+:::
+
+:::warning[Pitfall 3: gas limit scales with data]
+The default `GAS_LIMIT` (50,000) covers an empty-data transfer. Each byte of
+`data` adds 1500 gas. If you hand-roll a `Transaction` and skip the math, the
+network rejects with "insufficient gas". The recipe's `computeGasLimit()` does
+this, copy it.
+:::
+
+:::warning[Pitfall 4: chain ID mismatch]
+The signed transaction's `chainID` must match the network you are sending to.
+Pulling from `getNetworkConfig().network.chainId` ensures consistency. Never
+hard-code `"D"`, `"T"`, or `"1"`; it makes the recipe environment-bound and
+silently breaks when someone switches via a config change.
+:::
+
+:::warning[Pitfall 5: sender mismatch]
+`tx.sender` MUST equal the logged-in account's bech32 address. The wallet refuses
+to sign otherwise (it would sign with a different key than the tx's sender field,
+then the network rejects on mismatch).
+:::
+
+:::warning[Pitfall 6: useGetPendingTransactions() has no per-session overload]
+It is tempting to assume `useGetPendingTransactions()` accepts the `sessionId`
+from `send()` and filters to just that transaction. It does not; the signature is
+`(): SignedTransactionType[]`, no parameters, verified against
+`node_modules/@multiversx/sdk-dapp/out/react/transactions/useGetPendingTransactions.d.ts`
+on `@multiversx/sdk-dapp@5.6.23`. It returns *every* pending transaction across
+every session. For a single session's status, index into
+`useGetPendingTransactionsSessions()` by `sessionId` instead.
+:::
+
+## See also
+
+- [Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
+  is the wallet-connect setup this recipe builds on.
+- [Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+  is the same pattern, Vite path.
+- [Migration: useSendTransactions to TransactionManager.send](/sdk-and-tools/sdk-js/cookbook/migration/send-transactions-to-transaction-manager)
+  extends this single-transaction flow to grouped/batch sends.
+- [Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  is how to read the account this recipe signs for.

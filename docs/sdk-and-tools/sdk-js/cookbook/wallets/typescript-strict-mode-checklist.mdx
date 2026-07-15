@@ -1,0 +1,277 @@
+---
+title: TypeScript strict-mode checklist for sdk-dapp consumers
+description: Four real bugs found while verifying cookbook recipes against installed sdk-dapp, plus the tsconfig flags and ESLint rules that catch them.
+difficulty: intermediate
+est_minutes: 7
+last_validated: "2026-07-07"
+sdk_versions:
+  sdk-dapp: "^5.6.0"
+tags:
+  - sdk-dapp
+  - typescript
+  - react
+---
+
+Every item below is a real bug this Cookbook's own build found while verifying its
+recipes against actually-installed `@multiversx/sdk-dapp`, not a hypothetical list.
+Each is the concrete, runnable version of a class of failure: docs examples that
+do not survive `tsc --strict`.
+
+## Prerequisites
+
+- A TypeScript project consuming `@multiversx/sdk-dapp` v5.
+- `strict: true` in `tsconfig.json`.
+
+## The tsconfig
+
+| Flag | Why it matters here |
+| --- | --- |
+| `strict: true` | Umbrella flag; without it, most of the bugs below compile silently. |
+| `strictNullChecks` | Catches `account.balance` used before confirming `account` is not `null`/`undefined`, common when reading store state before `initApp()` resolves. |
+| `noUncheckedIndexedAccess` | Array/object index access returns `T \| undefined` instead of `T`. Catches assuming `sentTransactions[0]` exists after a `.send()` call, see Item 4. |
+| `exactOptionalPropertyTypes` | Distinguishes "property omitted" from "property explicitly `undefined`" in config objects like `dAppConfig`. |
+| `noImplicitAny` | Without it, an unresolved sdk-dapp import path silently degrades to `any`, and every bug on this page stops being a compile error. |
+| `noUnusedLocals` / `noUnusedParameters` | Catches leftover v4 imports after a migration pass. |
+
+## The checklist
+
+### 1. theme is a ThemesEnum member, not a string literal
+
+```ts title="src/theme.ts"
+// src/theme.ts — Checklist item 1: `theme` is an enum member, not a string.
+//
+// The naive port of sdk-dapp's own prose docs (which show `theme: 'dark'`
+// without importing anything) fails strict-mode compile. Confirmed
+// against the real, installed
+// node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts
+// while verifying this Cookbook's start-here recipes (nextjs-minimal,
+// sign-and-send, vite-react-minimal all had this bug).
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+// WRONG — fails tsc --strict:
+//
+//   const dappConfig = {
+//     dAppConfig: {
+//       environment: EnvironmentsEnum.devnet,
+//       theme: 'dark' as const,
+//     },
+//   };
+//
+//   error TS2322: Type '"dark"' is not assignable to type
+//   '`${ThemesEnum}`'.
+
+// RIGHT:
+export const dappConfig = {
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    theme: ThemesEnum.dark,
+  },
+};
+```
+
+Found in three of this Cookbook's own recipes during verification (`nextjs-minimal`,
+`sign-and-send`, `vite-react-minimal`) before being fixed.
+
+### 2. UnlockPanelManager callbacks must return Promise&lt;void&gt;
+
+```ts title="src/unlockPanel.ts"
+// src/unlockPanel.ts — Checklist item 2: UnlockPanelManager callbacks must
+// return Promise<void>, not void.
+//
+// A real bug this Cookbook hit. The docs' own example for
+// UnlockPanelManager.init uses plain synchronous callbacks; that shape
+// does not satisfy the real installed type. Confirmed from
+// node_modules/@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager.types.d.ts.
+
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+
+// WRONG — fails tsc --strict:
+//
+//   UnlockPanelManager.init({
+//     loginHandler: () => {
+//       console.log('logged in');
+//     },
+//   });
+//
+//   error TS2322: Type '() => void' is not assignable to type
+//   'OnProviderLoginType'.
+//     Type 'void' is not assignable to type 'Promise<void>'.
+
+// RIGHT — async, even if the body has nothing to await:
+export function initUnlockPanel(): void {
+  UnlockPanelManager.init({
+    loginHandler: async (): Promise<void> => {
+      // eslint-disable-next-line no-console
+      console.log('logged in');
+    },
+    onClose: async (): Promise<void> => {
+      // eslint-disable-next-line no-console
+      console.log('panel closed');
+    },
+  });
+}
+```
+
+This is the reason `OnCloseUnlockPanelType` shows up by name in this Cookbook's
+migration recipes.
+
+### 3. @typescript-eslint/no-floating-promises must actually be wired, and actually run
+
+```ts title="src/floatingPromise.ts"
+// src/floatingPromise.ts — Checklist item 3: the ESLint rule that catches
+// what tsc alone does not, PLUS the meta-bug of the rule silently not
+// running at all.
+//
+// UnlockPanelManager.getInstance().openUnlockPanel() returns Promise<void>
+// (confirmed from the real .d.ts). Calling it from a synchronous onClick
+// handler without `void` or `await` is a floating promise: if it rejects
+// (e.g. the user's environment has no injected wallet), the rejection is
+// silently swallowed — no error boundary, no console warning by default.
+// tsc --strict does NOT flag this on its own; a floating Promise<void> is
+// still assignable to a `void`-returning callback signature. This is
+// exactly why @typescript-eslint/no-floating-promises exists as a
+// SEPARATE gate from tsc.
+//
+// Validation performed while authoring this recipe: temporarily removed
+// the `void` operator below and re-ran `npm run lint` against this
+// exact .eslintrc.cjs. It failed with:
+//   error  Promises must be awaited, end with a call to .catch, end with
+//   a call to .then with a rejection handler or be explicitly marked as
+//   ignored with the `void` operator  @typescript-eslint/no-floating-promises
+// — confirming this recipe's own lint config does NOT have the
+// silent-no-op bug it warns about (see .eslintrc.cjs's header comment).
+// Restored the `void` operator afterward; this file lints clean.
+
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+
+export function handleConnectClick(): void {
+  // WRONG — a real, reproducible eslint error under this exact config:
+  //
+  //   UnlockPanelManager.getInstance().openUnlockPanel();
+  //
+  // RIGHT — explicitly discard the promise (there's nothing to await from
+  // a sync onClick handler here):
+  void UnlockPanelManager.getInstance().openUnlockPanel();
+}
+```
+
+Two distinct failure modes, both real: the rule silently does nothing if
+`parserOptions.project` is not set (this Cookbook's own `nextjs-minimal` recipe
+shipped exactly this bug once), and, once wired, it catches real bugs `tsc` alone
+does not, since a floating `Promise<void>` is still assignable everywhere a
+`void`-returning callback is expected.
+
+### 4. Don't assume a .send() result is the class instance you signed
+
+```ts title="src/transactionHash.ts"
+// src/transactionHash.ts — Checklist item 4: don't assume a helper class
+// accepts the object shape a hand-signed value happens to look like, AND
+// don't assume a union return type narrows just because your own input
+// didn't.
+//
+// TransactionManager.getInstance().send() returns SignedTransactionType[]
+// (a plain object shape: `{ ...Transaction fields, hash, status }`),
+// NOT sdk-core Transaction class instances. Passing that return value
+// into TransactionComputer.computeTransactionHash() — which expects a
+// real Transaction instance with its class methods — is a real,
+// reproducible tsc --strict failure, confirmed while authoring this
+// Cookbook's sign-and-send recipe. The fix isn't a cast: SignedTransactionType already
+// carries `hash: string` directly, computed server-side, so there's
+// nothing to recompute client-side at all.
+//
+// A second, related trap this file's own first draft hit while being
+// verified for this Cookbook: send()'s declared return type is
+// `SignedTransactionType[] | SignedTransactionType[][]` — a union,
+// UNCONDITIONALLY, even when the input you passed was a plain flat
+// `Transaction[]` (see the
+// send-transactions-to-transaction-manager recipe for why the return
+// type is a union at all: send() also accepts a nested batch input).
+// There is no overload that narrows the return based on which arm of the
+// input union you passed, so `const [first] = sent; first.hash` fails —
+// `first`'s type includes `SignedTransactionType[]` (the nested-batch
+// member), which has no `.hash`. Narrow explicitly at runtime instead of
+// casting blindly.
+
+import { TransactionManager } from '@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager';
+import type { SignedTransactionType } from '@multiversx/sdk-dapp/out/types/transactions.types';
+import { TransactionComputer, type Transaction } from '@multiversx/sdk-core';
+
+/**
+ * Narrows send()'s always-a-union return type down to the flat shape,
+ * using the same Array.isArray check the SDK's own internal
+ * isBatchTransaction() helper uses — not a blind `as` cast.
+ */
+function assertFlatResult(
+  sent: SignedTransactionType[] | SignedTransactionType[][],
+): SignedTransactionType[] {
+  if (sent.length > 0 && Array.isArray(sent[0])) {
+    throw new Error(
+      'Expected a flat transaction result; got a nested batch result instead.',
+    );
+  }
+  return sent as SignedTransactionType[];
+}
+
+export async function sendAndGetHash(signed: Transaction[]): Promise<string> {
+  const txManager = TransactionManager.getInstance();
+
+  // WRONG — fails tsc --strict, even though `signed` above is flat:
+  //
+  //   const sent = await txManager.send(signed);
+  //   const [first] = sent;
+  //   return first.hash;
+  //
+  //   error TS2339: Property 'hash' does not exist on type
+  //   'SignedTransactionType | SignedTransactionType[]'.
+
+  // RIGHT — narrow explicitly, then read the hash the network already
+  // computed; no TransactionComputer call needed:
+  const flatSent = assertFlatResult(await txManager.send(signed));
+  const [first] = flatSent;
+  if (!first) {
+    throw new Error('No transaction was sent.');
+  }
+  return first.hash;
+}
+
+// TransactionComputer.computeTransactionHash IS the right tool — just for
+// a different input: an sdk-core Transaction instance you haven't sent
+// yet (e.g. to display a hash before broadcasting). Kept here to show
+// the type it actually wants, not to suggest it's unused:
+export function hashBeforeSending(tx: Transaction): string {
+  const computer = new TransactionComputer();
+  return computer.computeTransactionHash(tx);
+}
+```
+
+Two stacked traps: `TransactionManager.getInstance().send()` returns
+`SignedTransactionType[]` (plain objects with `hash` already on them), not
+`Transaction` class instances, so `TransactionComputer.computeTransactionHash()`
+rejects it. And `send()`'s declared return type is a union
+(`SignedTransactionType[] | SignedTransactionType[][]`) **even when your input was
+flat** (see
+[Migration: grouped/batch sends](/sdk-and-tools/sdk-js/cookbook/migration/send-transactions-to-transaction-manager)),
+so destructuring the first element needs an explicit `Array.isArray` narrow, not a
+blind cast.
+
+## How to use this checklist on an existing codebase
+
+1. Turn on every flag in the table above, one at a time if the codebase is large.
+2. Fix in the order `tsc --noEmit --strict` reports them; resist the urge to
+   blanket-suppress with `// @ts-ignore`.
+3. Add the two `@typescript-eslint` promise rules last, once the codebase compiles.
+4. Confirm the ESLint rules are actually running (Item 3) before trusting a clean
+   `eslint` pass.
+
+## See also
+
+- [Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
+  and
+  [Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+  are where Items 1 to 3 were first found and fixed.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is where Item 4 was first found and fixed.
+- [Migrate v4 to v5: hook-by-hook diffs](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
+  references Item 2 by name (`OnCloseUnlockPanelType`).

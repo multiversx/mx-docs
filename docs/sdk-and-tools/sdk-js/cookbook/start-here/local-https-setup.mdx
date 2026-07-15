@@ -1,0 +1,405 @@
+---
+title: Local HTTPS for dApp dev (mkcert + Vite + Next.js)
+description: Wallet providers refuse to connect over plain HTTP. Set up trusted HTTPS for localhost using mkcert with Vite, Next.js, or framework-agnostic plain Node.
+difficulty: beginner
+est_minutes: 6
+last_validated: "2026-05-07"
+sdk_versions:
+  sdk-dapp: "^5.6.0"
+tags:
+  - https
+  - mkcert
+  - vite
+  - nextjs
+  - wallet
+---
+
+The first time a builder hits the wallet button over plain HTTP, they get a wall
+of silence. The DeFi extension does nothing. Ledger does nothing. Most docs say
+"make sure you run your app on https" and stop there. This recipe is the missing how.
+
+The short version: install mkcert, run `setup.sh`, copy the matching framework
+snippet. Five minutes total. The longer version walks the per-framework
+configuration, Vite (two options), Next.js (two options), framework-agnostic plain
+Node, plus the "I can't install root certs on this corp laptop" Cloudflare Tunnel
+escape hatch.
+
+## Why HTTPS in dev
+
+Most wallet providers require a secure context to connect:
+
+| Provider | Works under HTTP? | HTTPS required? |
+| --- | --- | --- |
+| Extension (DeFi) | No | Yes |
+| Ledger | No | Yes |
+| WalletConnect / xPortal | Yes | Optional |
+| Web Wallet (cross-window) | Yes | Optional |
+| Passkey / WebAuthn | No | Yes (browser API requires secure context) |
+| InMemory (dev) | Yes | Optional |
+
+If you only test against xPortal during dev, plain HTTP works. The moment a
+teammate tries the DeFi extension, things break, and it does not fail with a useful
+message; it just silently does not connect.
+
+## Prerequisites
+
+- macOS, Linux, or Windows.
+- A package manager (Homebrew on macOS / apt on Linux / Chocolatey on Windows).
+- Admin rights for the one-time root cert install.
+
+## Step 1: Install mkcert and trust the local CA (one-time per machine)
+
+The bundled `setup.sh` does the install, trust, and cert generation in one shot:
+
+```bash
+#!/usr/bin/env bash
+# setup.sh — install mkcert and generate localhost certs for the current
+# directory. Idempotent: re-running is safe.
+#
+# Usage:
+#   bash setup.sh
+#
+# What this does:
+#   1. Detects OS (macOS / Linux / Windows-via-Git-Bash) and installs
+#      mkcert via the appropriate package manager if it's not present.
+#   2. Runs `mkcert -install` to add the local CA to the OS trust store.
+#      Requires admin rights on first run; later runs are no-ops.
+#   3. Generates cert + key files in the current directory:
+#        ./localhost+2.pem  (cert)
+#        ./localhost+2-key.pem  (key)
+#   4. Adds both file globs to .gitignore so the key is never committed.
+#
+# After running this, configure your dev server to use the cert/key —
+# see snippets/vite.config.mkcert.ts or snippets/server.mkcert.js.
+
+set -euo pipefail
+
+echo ">>> Local HTTPS setup for dApp dev"
+echo
+
+# ---- 1. Install mkcert ----
+if command -v mkcert >/dev/null 2>&1; then
+    echo "mkcert already installed: $(mkcert --version 2>&1)"
+else
+    echo "Installing mkcert..."
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        if ! command -v brew >/dev/null 2>&1; then
+            echo "Homebrew not found. Install from https://brew.sh and re-run."
+            exit 1
+        fi
+        brew install mkcert nss
+    elif [[ "$OSTYPE" == "linux"* ]]; then
+        echo "Linux detected. Install mkcert and libnss3-tools manually:"
+        echo "  Debian/Ubuntu: sudo apt install libnss3-tools && \\"
+        echo "                 curl -JLO 'https://dl.filippo.io/mkcert/latest?for=linux/amd64' && \\"
+        echo "                 chmod +x mkcert-* && sudo mv mkcert-* /usr/local/bin/mkcert"
+        echo "  Arch:          sudo pacman -S mkcert nss"
+        echo "  Fedora:        sudo dnf install mkcert nss-tools"
+        exit 1
+    elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
+        if ! command -v choco >/dev/null 2>&1; then
+            echo "Chocolatey not found. Install from https://chocolatey.org and re-run, or install mkcert directly:"
+            echo "  choco install mkcert     (PowerShell as admin)"
+            echo "  scoop bucket add extras && scoop install mkcert"
+            exit 1
+        fi
+        choco install -y mkcert
+    else
+        echo "Unsupported OS: $OSTYPE"
+        echo "Install mkcert manually from https://github.com/FiloSottile/mkcert"
+        exit 1
+    fi
+fi
+
+# ---- 2. Trust the local CA ----
+echo
+echo ">>> Installing local CA (requires admin rights on first run)"
+mkcert -install
+
+# ---- 3. Generate the cert ----
+echo
+echo ">>> Generating cert for localhost, 127.0.0.1, ::1"
+mkcert localhost 127.0.0.1 ::1
+
+# ---- 4. .gitignore safety ----
+echo
+echo ">>> Adding cert globs to .gitignore"
+GITIGNORE=".gitignore"
+touch "$GITIGNORE"
+for pattern in "localhost*.pem" "localhost*-key.pem"; do
+    if ! grep -qx "$pattern" "$GITIGNORE"; then
+        echo "$pattern" >> "$GITIGNORE"
+        echo "  added: $pattern"
+    else
+        echo "  already present: $pattern"
+    fi
+done
+
+echo
+echo ">>> Done."
+echo "Configure your dev server to use ./localhost+2.pem and ./localhost+2-key.pem."
+echo "See:"
+echo "  snippets/vite.config.mkcert.ts   (Vite)"
+echo "  snippets/server.mkcert.js        (Next.js)"
+echo "  snippets/server.plain-node.ts    (other)"
+```
+
+Run it from your project root:
+
+```bash
+bash setup.sh
+```
+
+It detects the OS, installs mkcert via the appropriate package manager, runs
+`mkcert -install` (adds a root CA to your OS trust store, admin rights required
+first time), generates `./localhost+2.pem` plus `./localhost+2-key.pem`, and adds
+both globs to `.gitignore`.
+
+## Step 2: Configure your dev server
+
+### Vite (mkcert): fully trusted, no browser warning (recommended)
+
+```ts
+// snippets/vite.config.mkcert.ts — Vite HTTPS via mkcert-generated certs.
+//
+// Pros: fully trusted certificate. No browser warning. Same cert can be
+// trusted on the phone via mkcert.dev's mobile guide for end-to-end
+// trusted dev.
+//
+// Cons: one-time `mkcert -install` per machine; cert + key files in the
+// project root that MUST be gitignored (otherwise you've shipped a key
+// that signs as your hostname).
+//
+// Generation steps (one-time per project):
+//   mkcert localhost 127.0.0.1 ::1
+//   → produces ./localhost+2.pem and ./localhost+2-key.pem
+//
+// Add both to .gitignore:
+//   localhost*.pem
+//   localhost*-key.pem
+
+import { readFileSync } from 'node:fs';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// readFileSync at config-load time: Vite's config is evaluated in Node,
+// so this is fine. It runs once at server start, not per request.
+const cert = readFileSync('./localhost+2.pem');
+const key = readFileSync('./localhost+2-key.pem');
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    https: { cert, key },
+    port: 5173,
+  },
+});
+```
+
+### Vite (basic-ssl): zero-config but self-signed
+
+```bash
+npm install --save-dev @vitejs/plugin-basic-ssl
+```
+
+```ts
+// snippets/vite.config.basic-ssl.ts — minimum-config Vite HTTPS via the
+// @vitejs/plugin-basic-ssl plugin.
+//
+// Pros: zero filesystem fingerprint. No certs to generate, manage, or
+// gitignore. Good for solo work.
+//
+// Cons: the cert is self-signed and untrusted. Your browser shows a
+// "not private" warning every dev session; the wallet extensions still
+// connect, but the warning is annoying and can confuse new contributors
+// to your project.
+//
+// Do NOT also set `server.https` yourself. Two independent reasons:
+//   1. Vite's `server.https` type is `https.ServerOptions | undefined`
+//      (node_modules/vite/dist/node/index.d.ts) — it has never accepted a
+//      bare `boolean`. `https: true` fails `tsc --strict` with "no overload
+//      matches this call" on the actually-installed vite@5.4.21.
+//   2. The plugin's own README (node_modules/@vitejs/plugin-basic-ssl/README.md)
+//      shows usage as `plugins: [basicSsl()]` with no `server.https` at all —
+//      the plugin injects the generated cert into `server.https` itself via
+//      its Vite `config` hook. Setting it yourself risks the two configs
+//      merging in an order you don't control.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    port: 5173,
+  },
+});
+```
+
+### Next.js (mkcert): fully trusted, via a custom server
+
+Used by `mx-template-dapp-nextjs/server.js`.
+
+```js
+// snippets/server.mkcert.js — Next.js custom HTTPS dev server with mkcert.
+//
+// Run with `node server.mkcert.js` instead of `next dev`.
+//
+// Mirrors the pattern used by mx-template-dapp-nextjs/server.js.
+// The Node `https` module wraps the Next.js request handler; mkcert
+// supplies the trusted certificate so the browser doesn't show a
+// warning.
+//
+// Generation steps (one-time per project):
+//   mkcert localhost 127.0.0.1 ::1
+//   → produces ./localhost+2.pem and ./localhost+2-key.pem
+//
+// Add both to .gitignore:
+//   localhost*.pem
+//   localhost*-key.pem
+//
+// This file is .js (CommonJS) deliberately — Next 14 expects a CJS
+// custom server. If you'd rather use ESM, rename to .mjs and switch to
+// `import` syntax.
+
+const { createServer } = require('node:https');
+const { parse } = require('node:url');
+const { readFileSync } = require('node:fs');
+const next = require('next');
+
+const port = 3000;
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev, hostname: 'localhost', port });
+const handle = app.getRequestHandler();
+
+const httpsOptions = {
+  key: readFileSync('./localhost+2-key.pem'),
+  cert: readFileSync('./localhost+2.pem'),
+};
+
+void app.prepare().then(() => {
+  createServer(httpsOptions, (req, res) => {
+    const parsedUrl = parse(req.url ?? '/', true);
+    void handle(req, res, parsedUrl);
+  }).listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`> Ready on https://localhost:${port}`);
+  });
+});
+```
+
+Then point your `dev` script at it:
+
+```json
+{
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  }
+}
+```
+
+### Next.js (experimental): zero-config, browser warns
+
+```json
+{
+  "scripts": {
+    "dev": "next dev --experimental-https"
+  }
+}
+```
+
+`npm run dev` starts the server on `https://localhost:3000` with a self-signed cert.
+
+### Plain Node: Express, Fastify, Koa, or vanilla
+
+Same pattern, different request handler.
+
+```ts
+// snippets/server.plain-node.ts — framework-agnostic HTTPS dev server.
+//
+// For the rare reader who isn't on Vite or Next.js — Express, Fastify,
+// Koa, or vanilla Node. The pattern is the same: load the cert, hand it
+// to https.createServer. The framework's request handler slots in the
+// same way the Next.js custom server does.
+//
+// This snippet is illustrative. In production you'd put a real reverse
+// proxy (Cloudflare, NGINX, Caddy) in front of your service — local
+// HTTPS only matters for the dev loop.
+
+import { createServer } from 'node:https';
+import { readFileSync } from 'node:fs';
+import type { IncomingMessage, ServerResponse } from 'node:http';
+
+const httpsOptions = {
+  key: readFileSync('./localhost+2-key.pem'),
+  cert: readFileSync('./localhost+2.pem'),
+};
+
+// Replace this with your framework's request handler. For Express:
+//   const app = express();
+//   ...
+//   const handler = app;
+const handler = (_req: IncomingMessage, res: ServerResponse): void => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('hello over https');
+};
+
+createServer(httpsOptions, handler).listen(3000, () => {
+  // eslint-disable-next-line no-console
+  console.log('> Ready on https://localhost:3000');
+});
+```
+
+## Pitfalls
+
+:::warning[Pitfall 1: mkcert -install fails silently on locked-down corp laptops]
+On macOS, IT can lock the System Keychain so `mkcert` can add to `nss` but not
+Keychain. Browsers then do not trust the cert. Escape hatch: Cloudflare Tunnel.
+
+```bash
+cloudflared tunnel --url http://localhost:3000
+```
+
+A free public HTTPS URL that wallets accept. The tunnel URL changes per session
+unless you register a stable hostname through the Cloudflare Zero Trust dashboard.
+:::
+
+:::warning[Pitfall 2: committing the cert key]
+The cert and key files are .gitignored, but only after you set them up that way.
+`setup.sh` does it; the manual flow does not unless you remember. If you committed
+the key, **regenerate** with a fresh `mkcert localhost 127.0.0.1` and rotate.
+Anyone with the committed key can MITM your traffic on the local network.
+:::
+
+:::note[Pitfall 3: mkcert's root CA expires after ~3 years]
+You will start seeing "not private" warnings on what was a working setup. Run
+`mkcert -install` again; it regenerates and re-trusts.
+:::
+
+:::note[Pitfall 4: mobile testing]
+Run `mkcert -CAROOT` to find the CA cert location (typically
+`~/Library/Application Support/mkcert/rootCA.pem` on macOS), copy it to the iOS /
+Android device, and trust manually. mkcert.dev has the per-platform trust
+instructions.
+:::
+
+:::note[Pitfall 5: staging is not dev]
+The "not private" click-through is fine for `localhost`. Staging deploys should use
+a real cert (Let's Encrypt via Caddy / Cloudflare / whatever your hosting provides),
+not mkcert. mkcert root CAs are local-machine-only; they do not propagate to
+teammates' machines.
+:::
+
+## See also
+
+- [Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
+  uses `next dev --experimental-https` by default; switch to mkcert via `server.js`
+  for fully trusted.
+- [Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+  uses `@vitejs/plugin-basic-ssl` by default; switch to mkcert for fully trusted.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the wallet flow this recipe makes accessible.
+- [mkcert](https://github.com/FiloSottile/mkcert) is the upstream tool.
