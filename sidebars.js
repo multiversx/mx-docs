@@ -366,6 +366,35 @@ const sidebars = {
                           "sdk-and-tools/sdk-js/cookbook/multisig/read-multisig-state",
                         ]
                       },
+                      {
+                        type: "category",
+                        label: "Smart contracts (call & query)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-payable-endpoint",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/decode-return-data",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/decode-contract-events",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Smart contracts (deploy & upgrade)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/compute-contract-address",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/deploy-contract",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/upgrade-contract",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Smart contracts (Rust authoring)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-rust/new-contract-from-template",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-rust/storage-mapper-decision-table",
+                        ]
+                      },
                     ]
                   },
                   "sdk-and-tools/sdk-js/extending-sdk-js",

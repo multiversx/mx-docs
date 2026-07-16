@@ -1,0 +1,209 @@
+---
+title: Call a payable endpoint with EGLD
+description: Call a payable contract endpoint, attaching EGLD via nativeTransferAmount, against a real live devnet contract with sdk-core's controller pattern.
+difficulty: intermediate
+est_minutes: 7
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - smart-contract
+  - abi
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+Call a **payable** smart contract endpoint, attaching EGLD via
+`nativeTransferAmount` (the same option works for plain EGLD, no token
+identifier needed).
+
+Target: the real, currently-deployed devnet **ping-pong** contract,
+`erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq`, the exact
+address `mx-template-dapp`'s own `src/config/config.devnet.ts` ships as its
+default `contractAddress`. Its own ABI docs: "A contract that allows anyone to
+send a fixed sum, locks it for a while and then allows users to take it back...
+Only the set amount can be `ping`-ed, no more, no less." This recipe queries that
+fixed amount first (`getPingAmount()`, the same pattern as
+[Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view))
+rather than hardcoding it.
+
+**When NOT to use this recipe:** for a browser dApp where the *end user's own
+wallet* signs, see
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+and `mx-template-dapp`'s `PingPongAbi` widget (same ABI plus Factory plus
+`nativeTransferAmount` pattern, driven from a connected wallet). This recipe is
+for when **your own code holds the private key**.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for how to generate a throwaway one. **No devnet EGLD required**,
+  see "How it works" below.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/call-payable-endpoint
+npm install
+npm run build
+npm start -- ./wallet.pem
+```
+
+## Calling the payable endpoint
+
+```ts title="src/callPing.ts"
+// src/callPing.ts — calling a PAYABLE endpoint, attaching EGLD via
+// `nativeTransferAmount` (the same option works for plain EGLD, no token
+// identifier needed).
+//
+// Target: the real, currently-deployed devnet **ping-pong** contract —
+// erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq — the exact
+// contract address mx-template-dapp's own config.devnet.ts ships as its default
+// contractAddress, and the same contract mx-template-dapp's PingPongAbi widget
+// calls. Its ABI docs: "A contract that allows anyone to send a fixed sum,
+// locks it for a while and then allows users to take it back... Only the set
+// amount can be `ping`-ed, no more, no less." That fixed amount is itself a
+// read-only view (`getPingAmount`) — this recipe queries it first, then uses
+// the result as the payment.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Abi, Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export const PING_PONG_CONTRACT_ADDRESS =
+  'erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq';
+
+/**
+ * Reads the exact EGLD amount this ping-pong instance requires for `ping()` — a
+ * read-only view, no wallet needed (same pattern as the "Query a read-only
+ * view" recipe). This deployed instance returns exactly 1000000000000000000
+ * (1 EGLD).
+ */
+export async function queryPingAmount(entrypoint: DevnetEntrypoint, abi: Abi): Promise<bigint> {
+  const controller = entrypoint.createSmartContractController(abi);
+  const [pingAmount] = await controller.query({
+    contract: Address.newFromBech32(PING_PONG_CONTRACT_ADDRESS),
+    function: 'getPingAmount',
+    arguments: [],
+  });
+  return BigInt((pingAmount as { toString(base: number): string }).toString(10));
+}
+
+export interface CallPingOutput {
+  txHash: string;
+}
+
+/**
+ * Calls `ping()`, attaching exactly `pingAmountInSmallestDenomination` of EGLD
+ * via `nativeTransferAmount` — the same option `createTransactionForExecute`
+ * uses for ANY native EGLD payment, token payments, or both together. `ping`
+ * itself declares zero ABI inputs (`arguments: []`); the payment is not an
+ * argument, it is the transaction's attached value.
+ */
+export async function callPing(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  sender: Account,
+  pingAmountInSmallestDenomination: bigint,
+): Promise<CallPingOutput> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const transaction = await controller.createTransactionForExecute(sender, sender.getNonceThenIncrement(), {
+    contract: Address.newFromBech32(PING_PONG_CONTRACT_ADDRESS),
+    function: 'ping',
+    arguments: [],
+    gasLimit: 6_000_000n,
+    nativeTransferAmount: pingAmountInSmallestDenomination,
+  });
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath>
+```
+
+Expected output:
+
+```text
+Contract: erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq (ping-pong, live devnet)
+Required ping amount (from getPingAmount()): 1000000000000000000 (smallest denomination)
+Sender:   erd1... (nonce 0)
+Calling:  ping()  <- payable, attaching 1000000000000000000 EGLD via nativeTransferAmount
+
+Sent. Transaction hash: <64-char hex hash>
+```
+
+(An unfunded wallet gets a clean "insufficient funds" rejection here instead of
+a hash, see "How it works.")
+
+## How it works
+
+**`nativeTransferAmount` attaches EGLD to a call without it being an ABI
+argument.** `ping()`'s ABI declares zero inputs; the payment is not a function
+argument, it is the transaction's attached value, same as sending EGLD to any
+address, except this transaction also carries `data: "ping"` so the contract's
+VM execution knows which endpoint to run. Verified directly: sending this call
+logged `"value":"1000000000000000000","data":"cGluZw=="`, where
+`1000000000000000000` is exactly 1 EGLD and `cGluZw==` decodes to the literal
+string `"ping"` (no `@`-separated arguments, since none are declared).
+
+**The required amount is discovered, not hardcoded.** `queryPingAmount()` calls
+`getPingAmount()`, a read-only view, no wallet needed, before `callPing()` builds
+a transaction. This deployed instance requires exactly `1000000000000000000`
+(1 EGLD). A different ping-pong deployment could require a different fixed
+amount, set once at deploy time; querying it is what makes this recipe correct
+for whichever instance you point it at.
+
+**Why an unfunded wallet is enough to verify this end to end.** Sending this
+transaction from a freshly generated, intentionally unfunded devnet wallet was
+rejected with a clean, specific `insufficient funds` error, never a
+malformed-request or bad-signature error. That is proof the whole pipeline
+(querying the live required amount, building the payable call, attaching
+`nativeTransferAmount`, signing) produced a well-formed transaction, without
+needing to fund the wallet with 1+ EGLD.
+
+The crowdfunding tutorial contract in `mx-sdk-rs`
+(`contracts/examples/crowdfunding`) has a `fund()` endpoint of the same shape,
+payable, accepts EGLD, no arguments, if you want the same pattern in a Rust
+contract you deploy yourself.
+
+## Pitfalls
+
+:::danger[Pitfall 1: sending the wrong amount is an on-chain-enforced failure for this contract]
+ping-pong's own logic accepts only its exact configured `ping_amount`, "no more,
+no less." Always query the real value (`getPingAmount()`) instead of assuming a
+round number; this recipe's default is 1 EGLD only because that is what this
+particular deployed instance happens to require.
+:::
+
+:::warning[Pitfall 2: nativeTransferAmount is separate from arguments]
+It is easy to assume payment has to be encoded as an ABI argument somehow. It
+does not. A payable endpoint with real arguments would use both `arguments`
+(for the declared inputs) and `nativeTransferAmount` (for the payment) together.
+:::
+
+:::note[Pitfall 3: this recipe deliberately never succeeds against a real balance]
+It proves the request is well-formed via a clean "insufficient funds" rejection,
+not a confirmed on-chain state change. Funding the wallet with at least 1 EGLD
+(plus gas) lets the same code actually `ping` the contract for real; nothing in
+`callPing.ts` changes for that case.
+:::
+
+## See also
+
+- [Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+  is the `getPingAmount()` query pattern this recipe depends on.
+- [Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint)
+  is the non-payable counterpart, calling adder's `add(value)` instead.
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is the ABI-loading step both of the above build on.

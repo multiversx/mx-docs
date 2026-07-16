@@ -1,0 +1,201 @@
+---
+title: Query a read-only view
+description: Query a smart contract's read-only view with sdk-core's SmartContractController, no wallet, no gas, no transaction, verified against live devnet.
+difficulty: beginner
+est_minutes: 5
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - smart-contract
+  - abi
+  - devnet
+  - typescript
+---
+
+Query a smart contract's read-only view function. A view function does not
+modify the state of the contract, so there is no transaction to send: no wallet,
+no nonce, no gas, no signing, no devnet EGLD. This is the cheapest possible way
+to read on-chain state.
+
+This recipe queries two real, currently-deployed devnet contracts: **adder**
+(`getSum()`, zero arguments, the same contract as
+[Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi) and
+[Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint))
+and **ping-pong** (`didUserPing(address)`, which itself takes a native JS
+argument, the same contract as
+[Call a payable endpoint with EGLD](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-payable-endpoint)).
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Network access to devnet. No wallet, no PEM, no devnet EGLD.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/query-contract-view
+npm install
+npm run build
+npm start
+```
+
+## Querying
+
+```ts title="src/queryView.ts"
+// src/queryView.ts — querying a read-only view function. A view function does
+// not modify the state of the contract, so there is no transaction to send:
+// no wallet, no nonce, no gas, no signing.
+//
+// Targets two real, currently-deployed devnet contracts:
+//   - adder   (erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug)
+//     `getSum()` — zero-argument view, the mx-sdk-js-core cookbook's own example.
+//   - ping-pong (erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq)
+//     `didUserPing(address)` — a view that itself takes a native JS argument
+//     (an `Address`), to show query arguments go through the same
+//     NativeSerializer conversion as mutating-endpoint arguments do.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export const ADDER_CONTRACT_ADDRESS =
+  'erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug';
+export const PING_PONG_CONTRACT_ADDRESS =
+  'erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq';
+
+/**
+ * Queries adder's `getSum()` — the one-step way, via
+ * `SmartContractController.query()`. Returns already-decoded native values
+ * (each with a `.valueOf()`/`.toString()` you can read directly) because the
+ * controller was constructed with the ABI.
+ */
+export async function queryAdderSum(entrypoint: DevnetEntrypoint, abi: Abi): Promise<bigint> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const [sum] = await controller.query({
+    contract: Address.newFromBech32(ADDER_CONTRACT_ADDRESS),
+    function: 'getSum',
+    arguments: [],
+  });
+
+  return BigInt((sum as { toString(base: number): string }).toString(10));
+}
+
+/**
+ * The same query, split into its three granular steps — create, run, parse.
+ * Produces the same result; useful when you want to inspect or cache the raw
+ * `SmartContractQuery` / `SmartContractQueryResponse` in between.
+ */
+export async function queryAdderSumGranular(entrypoint: DevnetEntrypoint, abi: Abi): Promise<bigint> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const query = controller.createQuery({
+    contract: Address.newFromBech32(ADDER_CONTRACT_ADDRESS),
+    function: 'getSum',
+    arguments: [],
+  });
+  const response = await controller.runQuery(query);
+  const [sum] = controller.parseQueryResponse(response);
+
+  return BigInt((sum as { toString(base: number): string }).toString(10));
+}
+
+/**
+ * Queries ping-pong's `didUserPing(address)` — a view that takes a native JS
+ * argument (an `Address` instance, or equally a bech32 string, per
+ * NativeSerializer's `Address` conversion rule) instead of none.
+ */
+export async function queryDidUserPing(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  userAddress: string,
+): Promise<boolean> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const [didPing] = await controller.query({
+    contract: Address.newFromBech32(PING_PONG_CONTRACT_ADDRESS),
+    function: 'didUserPing',
+    arguments: [Address.newFromBech32(userAddress)],
+  });
+
+  return Boolean((didPing as { valueOf(): boolean }).valueOf());
+}
+```
+
+## Run it
+
+```bash
+npm start [addressToCheck]
+```
+
+Expected output:
+
+```text
+Querying getSum() on adder (erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug)...
+  one-step  controller.query():                     84
+  three-step create/run/parseQueryResponse():       84
+  (both queries hit the same live contract; equal:  true)
+
+Querying didUserPing(erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th) on ping-pong (erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq)...
+  didUserPing: false
+```
+
+(The adder sum grows over time as other cookbook readers call `add()`; expect a
+different number, not necessarily `84`.)
+
+## How it works
+
+**Two ways to run the same query.**
+`controller.query({ contract, function, arguments })` creates the query, runs
+it, and parses the result in one call. The three-step form (`createQuery()`,
+`runQuery()`, `parseQueryResponse()`) does the same work, split apart for when
+you want to inspect or cache the raw `SmartContractQuery` /
+`SmartContractQueryResponse` in between. Both are verified here to return
+identical results against the real, live adder contract.
+
+**Query arguments use the exact same `NativeSerializer` conversion as
+mutating-endpoint arguments.** `didUserPing(address)` takes an `Address`; this
+recipe passes `Address.newFromBech32(userAddress)` directly in the `arguments`
+array.
+
+**No wallet is constructed anywhere in this recipe.** `SmartContractController`
+only needs a `chainID` and a network provider (both supplied internally by
+`DevnetEntrypoint`) plus the ABI: no `IAccount`, no nonce, no signing. Compare
+with [Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint),
+whose `createTransactionForExecute` takes a `sender: IAccount` because it builds
+a transaction that must be signed; `query()` never does.
+
+## Pitfalls
+
+:::note[Pitfall 1: a query result's static type is any]
+The SDK decodes the result using the ABI at runtime, but TypeScript's static
+type is not narrowed to `bigint` / `boolean` / etc. This recipe casts explicitly
+rather than trusting an implicit `any`, worth doing in your own code too, since
+`strict` mode will not catch a wrong assumption about a query result's shape for
+you.
+:::
+
+:::warning[Pitfall 2: a query reflects state at the moment it runs, not a fixed snapshot]
+Two calls to the same query moments apart can return different values if someone
+else's transaction lands in between. Nothing wrong with the code, that is what
+"live" state means. Neither query here waits for or depends on a particular
+block.
+:::
+
+:::note[Pitfall 3: this recipe reads from contracts it does not own]
+Both adder and ping-pong are used here only because they are real, stable,
+publicly queryable devnet fixtures, the same ones `mx-sdk-js-core`'s cookbook and
+`mx-template-dapp`'s default config already point at. This recipe never deploys
+or controls either one.
+:::
+
+## See also
+
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is the ABI-loading step this recipe builds on.
+- [Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint)
+  is the mutating-endpoint counterpart to this read-only recipe.
+- [Call a payable endpoint with EGLD](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-payable-endpoint)
+  uses this recipe's query pattern to discover how much EGLD to attach.

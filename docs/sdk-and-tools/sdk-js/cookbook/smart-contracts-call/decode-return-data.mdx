@@ -1,0 +1,189 @@
+---
+title: Decode contract return data (ABI codec)
+description: Decode raw contract return data and encode or decode custom struct and enum types with sdk-core's BinaryCodec, getStruct, and getEnum, fully offline.
+difficulty: advanced
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - smart-contract
+  - abi
+  - codec
+  - typescript
+---
+
+Use an ABI plus the low-level `BinaryCodec` to decode raw contract bytes into
+typed values, and to encode typed values back into bytes. This is the layer
+beneath `controller.parseQueryResponse` / `parseExecute`: reach for it when you
+hold raw return data, a struct, or an enum and want to convert it by hand.
+
+Three real demonstrations: decode `getPingAmount`'s raw return data into a
+`BigUint`, encode the multisig `EsdtTokenPayment` struct, and decode the multisig
+`Action` enum. All offline and deterministic.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- No wallet, no gas, no network.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/decode-return-data
+npm install
+npm run build
+npm start
+```
+
+## Decoding and encoding
+
+```ts title="src/decodeReturnData.ts"
+// src/decodeReturnData.ts - using an ABI plus the low-level `BinaryCodec` to
+// decode raw contract bytes into typed values, and to encode typed values back
+// into bytes. This is the layer beneath `controller.parseQueryResponse` /
+// `parseExecute`: reach for it when you hold raw return data, a struct, or an
+// enum and want to convert by hand.
+//
+// Three real, verified demonstrations:
+//   1. Decode raw RETURN DATA: ping-pong's getPingAmount returns a BigUint;
+//      the raw bytes 0de0b6b3a7640000 decode to 1000000000000000000 (1 EGLD),
+//      the same value the live query returns.
+//   2. Encode a STRUCT: the multisig contract's EsdtTokenPayment struct,
+//      via abi.getStruct(...) + Struct/Field + codec.encodeNested.
+//   3. Decode an ENUM: the multisig contract's Action enum, via
+//      abi.getEnum(...) + codec.decodeNested, from a real encoded action.
+
+import {
+  BinaryCodec,
+  Struct,
+  Field,
+  TokenIdentifierValue,
+  U64Value,
+  BigUIntValue,
+} from '@multiversx/sdk-core';
+import type { Abi } from '@multiversx/sdk-core';
+
+const codec = new BinaryCodec();
+
+/**
+ * Decode raw contract RETURN DATA into a value, using the output type the ABI
+ * declares for a given endpoint. `decodeTopLevel` is the top-level form (a whole
+ * return-data part); `decodeNested` is for values embedded inside a larger
+ * buffer.
+ *
+ * Returns the decimal string form, since a decoded BigUint is a BigNumber.
+ */
+export function decodeReturnValue(abi: Abi, endpointName: string, returnDataHex: string): string {
+  const endpoint = abi.getEndpoint(endpointName);
+  const outputType = endpoint.output[0]?.type;
+  if (!outputType) {
+    throw new Error(`Endpoint ${endpointName} declares no output type.`);
+  }
+  const decoded = codec.decodeTopLevel(Buffer.from(returnDataHex, 'hex'), outputType);
+  return String(decoded.valueOf());
+}
+
+/**
+ * Encode a custom STRUCT (EsdtTokenPayment) into binary, using the struct type
+ * looked up from the ABI. Each `Field` pairs a typed value with its field name.
+ * Returns the nested-encoding hex.
+ */
+export function encodeEsdtTokenPayment(
+  abi: Abi,
+  tokenIdentifier: string,
+  tokenNonce: bigint,
+  amount: bigint,
+): string {
+  const paymentType = abi.getStruct('EsdtTokenPayment');
+  const paymentStruct = new Struct(paymentType, [
+    new Field(new TokenIdentifierValue(tokenIdentifier), 'token_identifier'),
+    new Field(new U64Value(tokenNonce), 'token_nonce'),
+    new Field(new BigUIntValue(amount), 'amount'),
+  ]);
+  return codec.encodeNested(paymentStruct).toString('hex');
+}
+
+/**
+ * Decode a custom ENUM (Action) from binary, using the enum type looked up from
+ * the ABI. Returns the variant name and the decoded fields object.
+ */
+export function decodeAction(abi: Abi, dataHex: string): { name: string; value: unknown } {
+  const actionType = abi.getEnum('Action');
+  const [decoded] = codec.decodeNested(Buffer.from(dataHex, 'hex'), actionType);
+  const value = decoded.valueOf() as { name: string };
+  return { name: value.name, value };
+}
+```
+
+## Run it
+
+```bash
+npm start
+```
+
+Expected output:
+
+```text
+1) Decode raw return data (ping-pong getPingAmount -> BigUint):
+   0de0b6b3a7640000 -> 1000000000000000000
+   equals 1 EGLD (1e18): true
+
+2) Encode a struct (multisig EsdtTokenPayment):
+   encoded: 0000000b544553542d3862303238660000000000000000000000022710
+   matches expected: true
+
+3) Decode an enum (multisig Action):
+   variant: SendTransferExecuteEgld
+```
+
+## How it works
+
+**Decode raw return data with the ABI's declared output type.** A contract's
+return data is just bytes. `abi.getEndpoint("getPingAmount").output[0].type` is
+the type the ABI declares for that endpoint's result (`BigUint`), and
+`codec.decodeTopLevel(buffer, type)` turns raw bytes into a typed value.
+`0de0b6b3a7640000` decodes to `1000000000000000000` (1 EGLD), the same value the
+live [query recipe](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+returns.
+
+**Encode a struct.** `abi.getStruct("EsdtTokenPayment")` returns the struct type;
+build a `Struct` from `Field`s (each a typed value plus its field name) and call
+`codec.encodeNested(struct)`.
+
+**Decode an enum.** `abi.getEnum("Action")` returns the enum type;
+`codec.decodeNested(buffer, type)` returns the decoded value and the number of
+bytes consumed. The real `Action` bytes decode to the `SendTransferExecuteEgld`
+variant.
+
+## Pitfalls
+
+:::note[Pitfall 1: a decoded value's static type is TypedValue]
+Call `.valueOf()` and convert explicitly. A decoded `BigUint` is a `BigNumber`,
+so this recipe returns `String(decoded.valueOf())`. `strict` mode will not narrow
+the shape for you, the same caveat as query results.
+:::
+
+:::warning[Pitfall 2: decodeTopLevel vs decodeNested are not interchangeable]
+Top-level and nested encodings differ (nested values are length-prefixed where
+top-level ones are not). Decode return-data parts with `decodeTopLevel`; decode a
+value pulled from inside a larger buffer with `decodeNested`. Using the wrong one
+yields garbage or throws.
+:::
+
+:::note[Pitfall 3: getStruct / getEnum need a name that exists in the ABI]
+They throw if the type name is missing. `adder` and `ping-pong` declare no custom
+types, which is why this recipe uses the multisig ABI for the struct and enum
+demonstrations.
+:::
+
+## See also
+
+- [Decode contract events](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/decode-contract-events)
+  decodes event fields with the same codec.
+- [Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+  is the high-level `parseQueryResponse` that sits on top of this codec.
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is where `getStruct` / `getEnum` / `getEndpoint` come from.

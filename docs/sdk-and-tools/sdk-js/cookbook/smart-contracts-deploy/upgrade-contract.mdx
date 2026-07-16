@@ -1,0 +1,203 @@
+---
+title: Upgrade a smart contract
+description: Upgrade a deployed smart contract to new WASM bytecode with sdk-core's controller and factory, and read the upgradeContract builtin wire payload.
+difficulty: intermediate
+est_minutes: 7
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - smart-contract
+  - upgrade
+  - devnet
+  - typescript
+---
+
+Upgrade an already-deployed smart contract to new WASM bytecode, two ways
+(controller and factory). An upgrade is almost identical to a deploy: it carries
+new WASM plus constructor arguments. The differences are that the contract
+address is already known and the transaction is addressed to the contract, with a
+`data` field that starts with the `upgradeContract` builtin function. This recipe
+targets the real **adder** fixtures.
+
+The default `npm start` builds an upgrade and prints its wire payload without
+sending anything, so you can see the exact shape offline.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- For the default payload demo: nothing (it builds offline).
+- For an actual upgrade: a devnet PEM wallet that **owns** the target contract
+  and has a little EGLD for gas.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/upgrade-contract
+npm install
+npm run build
+```
+
+## Upgrading
+
+```ts title="src/upgrade.ts"
+// src/upgrade.ts - upgrading an already-deployed smart contract to new bytecode.
+// An upgrade is almost identical to a deploy (it carries new WASM plus
+// constructor arguments), with two differences:
+//   1. The contract address is already known, so you pass it in `contract`.
+//   2. The transaction is addressed to the CONTRACT (not the system deploy
+//      address), and its `data` starts with the `upgradeContract` builtin
+//      function: `upgradeContract@<codeHex>@<codeMetadata>@<args>`.
+//
+// The contract must have been deployed as upgradeable (codeMetadata bit set) and
+// the caller must be its owner, otherwise the network rejects the upgrade at
+// execution time. The default deploy code metadata `0504` DOES set the
+// Upgradeable bit (see the deploy recipe).
+//
+// Targets the real **adder** contract fixtures (adder.wasm + adder.abi.json).
+// Adder declares a dedicated `upgradeConstructor` in its ABI, also taking
+// `initial_value: BigUint`, which is what the upgrade arguments feed.
+
+import type { Abi, Account, Address, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+/**
+ * Upgrade path 1 - the controller. `createTransactionForUpgrade` builds, sets
+ * the nonce, and signs, taking the whole `Account`. Same shape as
+ * `createTransactionForDeploy` plus the `contract` field.
+ */
+export async function upgradeViaController(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  sender: Account,
+  contract: Address,
+  bytecode: Uint8Array,
+  newInitialValue: number,
+): Promise<string> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const transaction = await controller.createTransactionForUpgrade(sender, sender.getNonceThenIncrement(), {
+    contract,
+    bytecode,
+    gasLimit: 6_000_000n,
+    arguments: [newInitialValue], // plain JS value - allowed because we passed the ABI
+  });
+
+  return entrypoint.sendTransaction(transaction);
+}
+
+/**
+ * Upgrade path 2 - the factory. Builds the unsigned transaction only; the caller
+ * sets the nonce and signs. Use when a wallet or hardware device signs.
+ */
+export async function upgradeViaFactory(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  sender: Account,
+  contract: Address,
+  bytecode: Uint8Array,
+  newInitialValue: number,
+): Promise<string> {
+  const factory = entrypoint.createSmartContractTransactionsFactory(abi);
+
+  const transaction = await factory.createTransactionForUpgrade(sender.address, {
+    contract,
+    bytecode,
+    gasLimit: 6_000_000n,
+    arguments: [newInitialValue],
+  });
+
+  transaction.nonce = sender.getNonceThenIncrement();
+  transaction.signature = await sender.signTransaction(transaction);
+
+  return entrypoint.sendTransaction(transaction);
+}
+
+/** Decode an upgrade transaction's `data` field into its wire parts. */
+export function describeUpgradePayload(transaction: Transaction): {
+  builtinFunction: string;
+  codeHex: string;
+  codeMetadata: string;
+  args: string[];
+  receiver: string;
+} {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    builtinFunction: parts[0] ?? '',
+    codeHex: parts[1] ?? '',
+    codeMetadata: parts[2] ?? '',
+    args: parts.slice(3),
+    receiver: transaction.receiver.toBech32(),
+  };
+}
+```
+
+## Run it
+
+```bash
+# Build an upgrade and print its wire payload - no wallet, offline:
+npm start
+
+# Actually upgrade a contract you own; add --factory for the factory path:
+npm start -- upgrade ./wallet.pem erd1qqqqqqqqqqqqqpgq...your-contract 42
+```
+
+Expected output of the default payload demo:
+
+```text
+Upgrade transaction wire payload (built, not sent):
+  receiver:        erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug  (the contract itself)
+  builtinFunction: upgradeContract
+  code === wasm:   true
+  codeMetadata:    0504  (0504 = Upgradeable + Readable + PayableBySmartContract)
+  args:            2a  (2a = 42)
+```
+
+## How it works
+
+**Upgrade is deploy with a known address.**
+`controller.createTransactionForUpgrade(account, nonce, { contract, bytecode, gasLimit, arguments })`
+and `factory.createTransactionForUpgrade(address, { contract, ... })` take the
+same options as their deploy counterparts plus `contract`. The controller signs;
+the factory only builds.
+
+**The wire shape differs from deploy.** A deploy is addressed to the system
+deploy address with `data` = `<codeHex>@<vmType>@<codeMetadata>@<args>`. An
+upgrade is addressed to the **contract** with `data` =
+`upgradeContract@<codeHex>@<codeMetadata>@<args>` (no vmType part; the
+`upgradeContract` builtin replaces it).
+
+**Storage survives, code is replaced.** Adder declares a dedicated
+`upgradeConstructor` in its ABI (also `initial_value: BigUint`), which the upgrade
+arguments feed. Existing storage persists across the upgrade unless the new code
+changes the layout.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the contract must be upgradeable and you must own it]
+If the Upgradeable code metadata bit was not set at deploy, or the caller is not
+the owner, the network rejects the upgrade at execution time. The default deploy
+metadata `0504` does set the Upgradeable bit.
+:::
+
+:::warning[Pitfall 2: without an ABI, arguments must be TypedValue objects]
+Same trap as deploy: with the ABI, `arguments: [42]` works; without it you must
+pass `arguments: [new BigUIntValue(42)]` or the SDK throws `Can't convert args to
+TypedValues`.
+:::
+
+:::note[Pitfall 3: codeMetadata is rebuilt, not inherited]
+Whatever metadata you pass (or the `0504` default) replaces the old metadata.
+Upgrading with the defaults keeps the contract Upgradeable; passing
+`isUpgradeable: false` locks it against future upgrades.
+:::
+
+## See also
+
+- [Deploy a smart contract](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/deploy-contract)
+  is the deploy counterpart with the same bytecode-plus-args shape.
+- [Compute a contract address before deploy](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/compute-contract-address)
+  is how the address you upgrade was assigned.
+- [Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint)
+  calls the upgraded contract.
