@@ -199,7 +199,7 @@ requirement.
 :::note[Pitfall 2: a cross-shard simulate returns routing, not a status]
 Simulate executes on the sender's shard only. If sender and receiver are in
 different shards, the response is just `{ senderShard, receiverShard }` and
-`status` is empty, not a bug, just the limit of a single-shard sandbox. Send to
+`status` is empty — not a bug, just the limit of a single-shard sandbox. Send to
 self (or keep both endpoints in one shard) for a definitive status.
 :::
 

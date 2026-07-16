@@ -242,9 +242,11 @@ right URL and chain ID in for you.
 
 ## See also
 
-- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
-  builds a transfer with an entrypoint that wraps the same provider.
-- [Read the connected account with useGetAccount](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
-  is the sdk-dapp counterpart, where the store holds the provider for you.
-- [The versioned sdk-js cookbook](/sdk-and-tools/sdk-js/sdk-js-cookbook) covers
-  the wider read-side API surface.
+- [Fetch network config and status](/sdk-and-tools/sdk-js/cookbook/network-providers/fetch-network-config-status)
+  is the first thing you read once you have a provider.
+- [Custom API/Proxy request](/sdk-and-tools/sdk-js/cookbook/network-providers/custom-api-request)
+  calls any endpoint the typed methods do not cover, via `doGetGeneric` /
+  `doPostGeneric`.
+- [Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+  uses `createSmartContractController()`, which wraps the same provider this
+  recipe builds.

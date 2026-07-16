@@ -422,7 +422,7 @@ signs it is `${origin}.${blockHash}.${expirySeconds}.${extraInfo}`
 `initialize()`). The API validates the signed token against that same embedded
 value, so a short `expirySeconds` really does produce a short-lived token.
 
-**Auto-logout is wired up inside `provider.login()` itself, you never call it.**
+**Auto-logout is wired up inside `provider.login()` itself — you never call it.**
 `DappProvider.login()`'s last step is `LogoutManager.getInstance().init()`.
 `LogoutManager.init()` reads the real token's remaining TTL and schedules a
 warning toast, a "Logging out" toast 3 seconds before expiry, and the actual

@@ -180,7 +180,7 @@ This recipe uses a 500ms poll and a 3s timeout for the demo.
 
 :::danger[Pitfall 1: timeout REJECTS, it does not resolve]
 If the account never satisfies the predicate within `timeoutInMilliseconds`, the
-promise rejects, it does not hand you the last-seen account. Wrap the await in
+promise rejects — it does not hand you the last-seen account. Wrap the await in
 try/catch wherever a timeout is realistic, as step 3 does.
 :::
 

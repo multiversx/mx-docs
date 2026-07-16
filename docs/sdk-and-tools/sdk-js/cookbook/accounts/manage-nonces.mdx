@@ -15,7 +15,7 @@ tags:
 
 The pattern behind sdk-core's single most emphasized rule: fetch the account's
 nonce from the network **once**, then increment it **locally** for every
-transaction sent afterward in the same batch, never re-fetch mid-batch. This
+transaction sent afterward in the same batch — never re-fetch mid-batch. This
 recipe makes that pattern concrete with a small burst of sequential sends, plus
 the recovery step for when a batch partially fails.
 
@@ -179,7 +179,7 @@ transaction #2 then collides with #1 or gets rejected, depending on timing.
 is rejected or expires, every transaction already built with a *higher* local
 nonce is now invalid until that gap is filled or the queued transactions time
 out. `resyncNonce()` recovers by re-fetching the real value and overwriting the
-local counter, a recovery step to call after a failure, not a defensive pre-check
+local counter — a recovery step to call after a failure, not a defensive pre-check
 before every send.
 
 For conceptual depth, see
@@ -221,5 +221,5 @@ nonce-sensitive sends.
   is the single-send case this recipe extends to a batch.
 - [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
   is the same nonce problem, in the sdk-dapp + connected-wallet flow.
-- The same Controller pattern applies to ESDT token transfers, covered in the
-  transactions recipes.
+- [Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)
+  is the same Controller pattern for a token transfer.
