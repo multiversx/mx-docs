@@ -427,7 +427,8 @@ export const dappConfig = {
     // verify. Set to false for the
     // simplest possible flow.
     nativeAuth: true,
-    // Theme is a ThemesEnum member (not a bare string) — sdk-dapp's own
+    // `theme` takes one of the enum's string values; the short `'dark'` fails,
+    // so use ThemesEnum. sdk-dapp's own
     // InitAppType JSDoc example uses `theme: ThemesEnum.light` (see
     // node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts).
     // The runtime value is the literal 'mvx:dark-theme'; the web components
@@ -489,12 +490,13 @@ correctly.
 :::
 
 :::warning[Pitfall 2: wallet providers require HTTPS, even in dev]
-`npm run dev` defaults to `http://localhost:3000`. The DeFi extension and Ledger
-providers refuse to connect over HTTP. WalletConnect (xPortal) **does** work over
-HTTP because the connection happens over the WalletConnect relay, not the dApp
-origin. See
+Stock `next dev` serves plain `http://localhost:3000`, and the DeFi extension and
+Ledger providers refuse to connect over HTTP. That is why this recipe's dev script
+adds `--experimental-https` to serve `https://localhost:3000`. WalletConnect
+(xPortal) **does** work over HTTP, since the connection runs over the WalletConnect
+relay rather than the dApp origin. See
 [Local HTTPS for dApp dev](/sdk-and-tools/sdk-js/cookbook/start-here/local-https-setup)
-for the mkcert workflow that makes `https://localhost:3000` work.
+for the mkcert workflow that makes the certificate *trusted*.
 :::
 
 :::warning[Pitfall 3: initApp() must run client-side only]

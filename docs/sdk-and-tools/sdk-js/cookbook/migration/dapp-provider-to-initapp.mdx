@@ -177,7 +177,7 @@ const dappConfig = {
   },
   dAppConfig: {
     environment: EnvironmentsEnum.devnet,
-    // theme is a ThemesEnum member, not a bare string literal — see
+    // theme takes one of the enum's string values; the short `'dark'` fails — see
     // node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts.
     // A `theme: 'dark' as const` cast (what the naive port of the v4 prop
     // would look like) does not satisfy InitAppType; this was a real,

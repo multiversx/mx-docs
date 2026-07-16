@@ -89,7 +89,7 @@ type. `tsc --strict` only catches this if you actually destructure those fields.
 // disappear, so nothing forces you to look at it.
 //
 // Confirmed against the real, installed
-// `@multiversx/sdk-dapp@5.6.23` `.d.ts`: the v5 shape is
+// `@multiversx/sdk-dapp v5` `.d.ts`: the v5 shape is
 //   { address, account, publicKey, ledgerAccount, walletConnectAccount,
 //     websocketEvent, websocketBatchEvent }
 // — no `isLoggedIn`, no `tokenLogin`. Both moved to useGetLoginInfo() /
@@ -176,7 +176,7 @@ at this hook. The bug surfaces only when code reaches for `.isLoggedIn` or
 `.tokenLogin`, at which point `tsc --strict` reports a real, specific error (see
 the commented-out lines in `after-shim.tsx` for the exact message).
 
-Confirmed against the real, installed `@multiversx/sdk-dapp@5.6.23` `.d.ts`: the
+Confirmed against the real, installed `@multiversx/sdk-dapp v5` `.d.ts`: the
 v5 return type is
 `{ address, account, publicKey, ledgerAccount, walletConnectAccount, websocketEvent, websocketBatchEvent }`,
 with no `isLoggedIn` and no `tokenLogin`.

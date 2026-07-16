@@ -75,7 +75,7 @@ async function candidatesFromMnemonic(
 ): Promise<Array<{ account: Account; shard: number }>> {
   const candidates: Array<{ account: Account; shard: number }> = [];
   for (let index = 0; index < MAX_INDICES_TO_TRY; index += 1) {
-    const account = await Account.newFromMnemonic(mnemonic.toString(), index);
+    const account = Account.newFromMnemonic(mnemonic.toString(), index);
     const shard = addressComputer.getShardOfAddress(account.address);
     candidates.push({ account, shard });
   }

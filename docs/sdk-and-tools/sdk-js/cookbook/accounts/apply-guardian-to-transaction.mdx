@@ -63,8 +63,8 @@ export async function generateSenderAndGuardian(): Promise<{
   sender: Account;
   guardian: Account;
 }> {
-  const sender = await Account.newFromMnemonic(Mnemonic.generate().toString());
-  const guardian = await Account.newFromMnemonic(Mnemonic.generate().toString());
+  const sender = Account.newFromMnemonic(Mnemonic.generate().toString());
+  const guardian = Account.newFromMnemonic(Mnemonic.generate().toString());
   return { sender, guardian };
 }
 ```

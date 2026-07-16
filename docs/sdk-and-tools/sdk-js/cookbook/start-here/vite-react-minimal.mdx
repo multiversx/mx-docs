@@ -143,7 +143,7 @@ export default defineConfig({
   // module-format errors in the browser console.
   //
   // Do NOT list '@multiversx/sdk-dapp' (the bare package) here. Verified
-  // against the installed @multiversx/sdk-dapp@5.6.23: its package.json has
+  // against the installed @multiversx/sdk-dapp v5: its package.json has
   // no "main", "module", or "exports" field at all — by design, every import
   // is a deep path like '@multiversx/sdk-dapp/out/react/account/useGetAccount'
   // Telling Vite to eagerly pre-bundle the bare specifier makes it try to
@@ -157,7 +157,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
     // These three deep paths are unresolvable in the actually-installed tree
-    // (npm install on 2026-07-07 pulled @multiversx/sdk-dapp@5.6.23): three
+    // (npm install on 2026-07-07 pulled @multiversx/sdk-dapp v5): three
     // of sdk-dapp's Ledger transport strategies
     // (hw-transport-webusb, hw-transport-webhid, hw-transport-web-ble) each
     // bundle their OWN nested copy of @ledgerhq/devices@8.16.0, and that
@@ -477,7 +477,7 @@ export const dappConfig = {
     environment: EnvironmentsEnum.devnet,
     nativeAuth: true,
     // See node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts —
-    // `theme` is a ThemesEnum member, not a bare string literal.
+    // `theme` takes one of the enum's string values; the short `'dark'` fails, so use `ThemesEnum.dark`.
     theme: ThemesEnum.dark,
     providers: {
       walletConnect: {
@@ -555,7 +555,7 @@ everywhere.
 
 :::danger[Pitfall 5: never add '@multiversx/sdk-dapp' itself to optimizeDeps.include]
 This breaks the dev server outright. Confirmed by actually running `npm run dev`
-against the installed `@multiversx/sdk-dapp@5.6.23`: its `package.json` declares
+against the installed `@multiversx/sdk-dapp v5`: its `package.json` declares
 no `main`, `module`, or `exports` field at all. Every public import is a deep path
 like `@multiversx/sdk-dapp/out/react/account/useGetAccount`. Asking Vite to
 eagerly pre-bundle the bare package name makes it try to resolve an entry point

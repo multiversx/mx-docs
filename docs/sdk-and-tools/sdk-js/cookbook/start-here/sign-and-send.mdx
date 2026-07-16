@@ -657,7 +657,7 @@ You might assume `useGetPendingTransactions()` accepts the `sessionId`
 from `send()` and filters to just that transaction. It does not; the signature is
 `(): SignedTransactionType[]`, no parameters, verified against
 `node_modules/@multiversx/sdk-dapp/out/react/transactions/useGetPendingTransactions.d.ts`
-on `@multiversx/sdk-dapp@5.6.23`. It returns *every* pending transaction across
+on `@multiversx/sdk-dapp v5`. It returns *every* pending transaction across
 every session. For a single session's status, index into
 `useGetPendingTransactionsSessions()` by `sessionId` instead.
 :::

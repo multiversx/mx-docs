@@ -374,9 +374,11 @@ the key, **regenerate** with a fresh `mkcert localhost 127.0.0.1` and rotate.
 Anyone with the committed key can MITM your traffic on the local network.
 :::
 
-:::note[Pitfall 3: mkcert's root CA expires after ~3 years]
-You will start seeing "not private" warnings on what was a working setup. Run
-`mkcert -install` again; it regenerates and re-trusts.
+:::note[Pitfall 3: mkcert leaf certificates expire after about two years]
+The cert mkcert issues for your hostnames is short-lived; the root CA it installs
+lasts much longer. When the cert expires you will start seeing "not private"
+warnings on a setup that used to work. Re-run the `mkcert` command from the setup
+step to reissue it. You should not need to reinstall the root CA (`mkcert -install`).
 :::
 
 :::note[Pitfall 4: mobile testing]

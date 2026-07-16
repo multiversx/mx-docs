@@ -72,7 +72,7 @@ import {
 async function main(): Promise<void> {
   // --- Setup: a fresh, offline keypair. No PEM file, no network. -----
   const mnemonic = Mnemonic.generate();
-  const account = await Account.newFromMnemonic(mnemonic.toString(), 0);
+  const account = Account.newFromMnemonic(mnemonic.toString(), 0);
   console.log(`Address: ${account.address.toBech32()}`);
 
   const plaintext = 'Hello MultiversX';

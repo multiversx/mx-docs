@@ -338,8 +338,8 @@ export const dappConfig = {
   dAppConfig: {
     environment: EnvironmentsEnum.devnet,
     nativeAuth: true,
-    // `theme` is a ThemesEnum member (runtime value 'mvx:dark-theme'), not a
-    // bare string — see node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts.
+    // `theme` takes one of the enum's string values (e.g. 'mvx:dark-theme'); the
+    // short `'dark'` fails — see node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts.
     theme: ThemesEnum.dark,
     providers: {
       walletConnect: {
