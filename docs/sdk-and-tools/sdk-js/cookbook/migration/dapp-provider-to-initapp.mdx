@@ -17,7 +17,7 @@ tags:
 This Cookbook's
 [Migrate v4 to v5: hook-by-hook diffs](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
 shows the `<DappProvider>` to `initApp()` change as a single before/after
-component. That is the compressed version. This recipe shows the same change at
+component. That is the compressed version. Here is the same change at
 the scale it actually happens at, a whole entry point plus its provider tree,
 because that is where the real migration cost lives: not the line that changed,
 but everything that now has to be sequenced around it.
@@ -297,7 +297,7 @@ createRoot(rootElement).render(
 
 ## What `<DappProvider>` actually did, made explicit
 
-`<DappProvider>` did five things under the hood that v5 makes explicit:
+`<DappProvider>` did five things implicitly that v5 makes explicit:
 
 | v4 (`<DappProvider>`, implicit) | v5 (`initApp()`, explicit) |
 | --- | --- |

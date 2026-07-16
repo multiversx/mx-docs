@@ -167,9 +167,9 @@ pub trait StorageMappers {
 | `MapMapper<K,V>` | Insertion order of keys | O(1) via `contains_key()` | ~4N + 1 | Yes: `.iter()`, `.keys()`, `.values()` | A real key-value store with iteration: balances, per-user settings. |
 | `LinkedListMapper<T>` | Insertion order, efficient front/back ops | Not built in | ~2N + 1 | Yes | Efficient push/pop from both ends. Not exercised with working code here, see "What this recipe did not test." |
 
-The storage-cost column is expressed in unique storage keys, not bytes; the point
-is relative ordering between choices for the same logical data, not an absolute
-gas number.
+The storage-cost column is expressed in unique storage keys, not bytes; it
+captures the relative ordering between choices for the same logical data, not an
+absolute gas number.
 
 ## Two clarifications from the crate source
 

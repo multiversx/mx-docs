@@ -13,8 +13,8 @@ tags:
 ---
 
 Opt a transaction into **hash signing**, assert the version and options bits are
-set, and sign it correctly by signing the transaction *hash*. Along the way this
-recipe demonstrates a real v15.4.1 trap: `Account.signTransaction` does **not**
+set, and sign it correctly by signing the transaction *hash*. Along the way it
+exposes a real v15.4.1 trap: `Account.signTransaction` does **not**
 honor the hash-signing option, so its output fails verification. Fully offline,
 nothing is broadcast.
 

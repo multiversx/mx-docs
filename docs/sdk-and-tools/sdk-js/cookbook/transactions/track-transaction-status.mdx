@@ -19,8 +19,8 @@ tags:
 
 Track a transaction's live status after sending it. sdk-dapp's
 `trackTransactions()` monitors status via WebSocket with a polling fallback,
-configured during `initApp` via `transactionTracking` callbacks. This recipe
-shows both halves: the `transactionTracking` config in `initApp`, and the flat
+configured during `initApp` via `transactionTracking` callbacks. It has two
+halves: the `transactionTracking` config in `initApp`, and the flat
 React hooks (`useGetPendingTransactions`, `useGetSuccessfulTransactions`,
 `useGetFailedTransactions`) that re-render automatically as status changes, no
 polling code of your own anywhere in this recipe.

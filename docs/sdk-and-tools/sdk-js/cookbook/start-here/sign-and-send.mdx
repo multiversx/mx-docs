@@ -653,7 +653,7 @@ then the network rejects on mismatch).
 :::
 
 :::warning[Pitfall 6: useGetPendingTransactions() has no per-session overload]
-It is tempting to assume `useGetPendingTransactions()` accepts the `sessionId`
+You might assume `useGetPendingTransactions()` accepts the `sessionId`
 from `send()` and filters to just that transaction. It does not; the signature is
 `(): SignedTransactionType[]`, no parameters, verified against
 `node_modules/@multiversx/sdk-dapp/out/react/transactions/useGetPendingTransactions.d.ts`

@@ -15,8 +15,7 @@ tags:
 A PEM file is the quick dev-wallet format: write a key, load it back, done. But
 it stores the secret key **unencrypted**, anyone who reads the file has the key.
 This recipe covers the full round-trip via both the `Account` API and the
-lower-level `UserPem` class, fully offline, while making the dev-only caveat
-impossible to miss.
+lower-level `UserPem` class, fully offline.
 
 :::danger[PEM is for development and testing only]
 A PEM stores the secret key in plaintext. Never put a mainnet or funded key in a

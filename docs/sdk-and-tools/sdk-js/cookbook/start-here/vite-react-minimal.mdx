@@ -573,8 +573,7 @@ has them). Left alone, this breaks `npm run dev` and hard-fails `npm run build`.
 `vite.config.ts` works around it by externalizing the three specific deep paths in
 both `optimizeDeps.exclude` and `build.rollupOptions.external`. This is an upstream
 Ledger packaging bug, not a mistake in this config. The DeFi extension,
-xPortal/WalletConnect, and web-wallet login paths this recipe demonstrates are
-unaffected.
+xPortal/WalletConnect, and web-wallet login paths are unaffected.
 :::
 
 ## See also

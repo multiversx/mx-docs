@@ -33,8 +33,8 @@ sc-meta new --template empty --name greeter
 ```
 
 This does more than copy files: it renames the trait, the crate names, the module
-paths, and the scenario references throughout, all in one pass. Two things worth
-noting immediately, both confirmed by actually running the command rather than
+paths, and the scenario references throughout, all in one pass. Two things stand
+out immediately, both confirmed by actually running the command rather than
 reading about it:
 
 - **There is no `sc-config.toml`, no `wasm/`, and no `output/` yet.** A bare
@@ -265,7 +265,7 @@ framework version from anywhere. Run `sc-meta upgrade` after scaffolding for the
 latest framework version, or pass `sc-meta new --tag <version>` to pin one
 explicitly.
 
-Also worth noting: the actual build command targets `wasm32v1-none`, not
+Also: the actual build command targets `wasm32v1-none`, not
 `wasm32-unknown-unknown` as some older references list, confirmed directly from
 the real `sc-meta all build` invocation logged above.
 

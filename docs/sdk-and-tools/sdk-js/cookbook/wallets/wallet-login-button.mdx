@@ -18,8 +18,8 @@ tags:
 Every dApp needs a "Connect wallet" button. In sdk-dapp v5 that button does not
 render a picker itself. It calls `UnlockPanelManager.getInstance().openUnlockPanel()`,
 and a pre-built web component, configured once at app startup, does the rest.
-This recipe shows the full pattern: configure the panel, build one reusable
-button component, and understand what each `UnlockPanelManager.init()` option does.
+Here is the full pattern: configure the panel, build one reusable
+button component, and see what each `UnlockPanelManager.init()` option does.
 
 This recipe assumes you already have a working sdk-dapp v5 + Vite setup. If not,
 start with

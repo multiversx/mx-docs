@@ -16,13 +16,13 @@ tags:
 Before you sign or perform anything on a multisig, you read it: who is on the
 board, how many signatures the quorum needs, and what is currently pending. This
 recipe reads all of that with the `MultisigController`'s view helpers. None of it
-needs a wallet, it is read-only `queryContract` under the hood, decoded through the
+needs a wallet; it is a read-only `queryContract`, decoded through the
 multisig ABI.
 
 The reads split in two: the **board configuration** (quorum, board members,
 proposers) and the **pending actions** (what has been proposed but not performed,
 and for each, its signers and whether it has reached quorum). The default
-`npm start` reads a real devnet multisig, so it shows live output out of the box.
+`npm start` reads a real devnet multisig, so you get live output right away.
 
 ## Prerequisites
 
