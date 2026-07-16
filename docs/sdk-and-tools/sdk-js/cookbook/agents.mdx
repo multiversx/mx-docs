@@ -1,0 +1,47 @@
+---
+title: Agent or agentic engineer? Start here
+sidebar_label: Agent? Start here
+description: Two ways into the MultiversX cookbook. Developers copy recipes by hand; coding agents read the same CI-verified recipes from a machine-readable surface.
+slug: /sdk-and-tools/sdk-js/cookbook/agents
+---
+
+The cookbook is built to be read two ways: by a developer copying a recipe into
+their project, and by a coding agent reading the docs programmatically. Both get
+the same CI-verified recipes. Pick your lane.
+
+## If you are a developer
+
+Browse the full set on the [cookbook overview](./index.mdx), or jump straight to
+a common starting point:
+
+- [Minimal sdk-dapp v5 app in Vite + React](./start-here/vite-react-minimal.mdx): the smallest working dApp setup.
+- [Sign and send a transaction](./start-here/sign-and-send.mdx): the canonical sign, send, and track flow.
+- [Send EGLD to an address](./transactions/send-egld.mdx): the backend and script transfer pattern.
+- [Call a contract endpoint](./smart-contracts-call/call-contract-endpoint.mdx): invoke a contract with typed arguments.
+- [Issue a fungible token](./tokens/issue-fungible-token.mdx): mint your own ESDT.
+
+Each recipe shows every file it needs and states the SDK versions it was verified
+against. The teal badge on a page means its code compiled green in CI on the date
+shown.
+
+## If you are a coding agent (or wiring one up)
+
+Point your coding agent at this documentation and let it read the recipes
+directly. Because every recipe is a closed, type-checked unit, the code an agent
+lifts from a page compiles as shown, against the SDK versions the page declares.
+
+### The machine-readable surface
+
+MultiversX publishes the whole documentation set in the
+[`llms.txt`](https://llmstxt.org) format, so a model can load it as context:
+
+- [`https://docs.multiversx.com/llms.txt`](https://docs.multiversx.com/llms.txt): the index. Every page as a titled, described link; cookbook recipes carry an inline `[difficulty, verified DATE]` tag, so an agent sees each recipe's difficulty and its last green CI date without opening the page.
+- [`https://docs.multiversx.com/llms-full.txt`](https://docs.multiversx.com/llms-full.txt): the same set with full page content inlined, for one-shot ingestion.
+
+### The wider MultiversX agent stack
+
+For the MCP server, the skills collection, and agent identity tooling, see
+[AI agents](../../../learn/ai-agents.md). That page also links the
+[`mx-ai-skills`](https://github.com/multiversx/mx-ai-skills) repository, a
+structured collection of MultiversX-specific skills, roles, and documentation for
+equipping agents to build, audit, and optimize on MultiversX.

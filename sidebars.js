@@ -235,19 +235,13 @@ const sidebars = {
                   },
                   {
                     type: "category",
-                    label: "Cookbook (design preview)",
+                    label: "Cookbook (recipes)",
                     link: {
                       type: "doc",
-                      id: "sdk-and-tools/sdk-js/cookbook-preview"
+                      id: "sdk-and-tools/sdk-js/cookbook/index"
                     },
                     items: [
-                      "sdk-and-tools/sdk-js/cookbook-preview-recipe",
-                    ]
-                  },
-                  {
-                    type: "category",
-                    label: "Cookbook (recipes)",
-                    items: [
+                      "sdk-and-tools/sdk-js/cookbook/agents",
                       {
                         type: "category",
                         label: "Start here",

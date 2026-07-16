@@ -12,7 +12,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "prebuild": "node scripts/generate-llms-txt.js && node scripts/generate-md-urls.js",
+    "prebuild": "node scripts/generate-cookbook-manifest.js && node scripts/generate-llms-txt.js && node scripts/generate-md-urls.js",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -21,7 +21,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "generate:llms": "node scripts/generate-llms-txt.js",
-    "generate:md-urls": "node scripts/generate-md-urls.js"
+    "generate:md-urls": "node scripts/generate-md-urls.js",
+    "generate:cookbook": "node scripts/generate-cookbook-manifest.js"
   },
   "dependencies": {
     "@docusaurus/core": "3.8.1",

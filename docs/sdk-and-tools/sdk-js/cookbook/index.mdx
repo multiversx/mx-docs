@@ -1,0 +1,30 @@
+---
+title: MultiversX SDK cookbook
+sidebar_label: Overview
+description: Atomic, copy-paste recipes for building on MultiversX with the JavaScript, TypeScript, and Rust SDKs. Every recipe's code is extracted and type-checked in CI, so what you copy is what compiles.
+slug: /sdk-and-tools/sdk-js/cookbook
+hide_table_of_contents: true
+---
+
+import CookbookIndex from "@site/src/components/cookbook/CookbookIndex";
+import manifest from "@site/src/data/cookbook-manifest.json";
+
+The cookbook is a set of **atomic, copy-paste recipes** for building on
+MultiversX with the JavaScript and TypeScript SDKs, plus the Rust contract
+framework where that is the right tool. Each recipe solves one concrete task,
+shows every file you need and nothing you do not, and is written to be lifted
+straight into your project.
+
+Every recipe's code is **extracted from the page and type-checked in CI**. The
+teal **Verified** badge on a card means that check passed on the date shown. If a
+scheduled recheck ever fails, the badge degrades to a neutral **Needs recheck**
+state instead, so the teal only ever means "trustworthy right now". What you copy
+is what compiles.
+
+:::tip[Building with a coding agent?]
+Point your agent at the docs and let it read the recipes directly.
+[Agent or agentic engineer? Start here](./agents.mdx) covers the machine-readable
+surface (`llms.txt`) and how to wire the cookbook into an agentic workflow.
+:::
+
+<CookbookIndex sections={manifest} />
