@@ -243,6 +243,10 @@ const config = {
       {
         redirects: [
           {
+            from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+            to: "/sdk-and-tools/sdk-js/cookbook",
+          },
+          {
             from: "/technology/glossary",
             to: "/welcome/terminology",
           },
@@ -421,10 +425,6 @@ const config = {
           {
             from: "/sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
             to: "/sdk-and-tools/sdk-py",
-          },
-          {
-            from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
           },
           {
             from: "/sdk-and-tools/sdk-py/configuring-mxpy",
