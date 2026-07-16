@@ -1,0 +1,221 @@
+---
+title: Local mint and burn (change a fungible token's supply)
+description: Increase and decrease a fungible ESDT's circulating supply with ESDTLocalMint and ESDTLocalBurn via sdk-core, plus a real SDK method-name typo.
+difficulty: intermediate
+est_minutes: 7
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - esdt
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+Once a fungible ESDT is issued, its circulating supply is not fixed. An address
+holding the right role can mint more (`ESDTLocalMint`, needs `ESDTRoleLocalMint`)
+or burn its own (`ESDTLocalBurn`, needs `ESDTRoleLocalBurn`). Both are **builtin
+functions** executed in the caller's own account, so the transaction's receiver is
+the sender itself, not the ESDT system contract.
+
+This recipe builds both, decodes the payloads, and broadcasts the mint. It also
+walks straight into a real sdk-core method-name trap.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites. **No devnet EGLD required**, see "How it works".
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/local-mint-burn-supply
+npm install
+npm run build
+npm start -- ./wallet.pem COOK-123456 1000
+```
+
+## The code
+
+```ts title="src/supply.ts"
+// src/supply.ts — the subject of this recipe: changing a fungible ESDT's
+// circulating supply after issuance, using the ESDTLocalMint / ESDTLocalBurn
+// builtin functions.
+//
+//   - localMint — requires the ESDTRoleLocalMint role (see set-special-roles)
+//   - localBurn — requires the ESDTRoleLocalBurn role
+//
+// Both are builtin functions executed in the caller's OWN account context,
+// so the transaction's receiver is the sender itself (not the ESDT system
+// contract). This is the correct, on-chain-verified shape for these two
+// operations — contrast the freeze/pause/wipe manager operations in the
+// token-lifecycle-operations recipe, which must instead target the ESDT
+// system contract.
+//
+// TWO method-name traps, both confirmed against the installed v15.4.1 (see
+// the recipe page's Pitfalls):
+//   - MINT, controller: createTransactionForLocaMinting  (note the typo:
+//     "Loca", missing an "l" — it is NOT createTransactionForLocalMinting).
+//   - MINT, factory:    createTransactionForLocalMint     (correct spelling,
+//     but no "-ing" suffix).
+//   - BURN is createTransactionForLocalBurning on BOTH — the only consistent
+//     one of the pair.
+
+import type { Account, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+export interface SupplyInput {
+  tokenIdentifier: string;
+  /** Amount in the token's smallest denomination (respect its numDecimals). */
+  amount: bigint;
+}
+
+/** Mint additional supply of a fungible token you hold the local-mint role on. */
+export async function localMint(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: SupplyInput,
+  useFactory: boolean,
+): Promise<Transaction> {
+  if (useFactory) {
+    const factory = entrypoint.createTokenManagementTransactionsFactory();
+    // Factory: createTransactionForLocalMint — no "-ing", correct spelling.
+    const transaction = await factory.createTransactionForLocalMint(sender.address, {
+      tokenIdentifier: input.tokenIdentifier,
+      supplyToMint: input.amount,
+    });
+    transaction.nonce = sender.getNonceThenIncrement();
+    transaction.signature = await sender.signTransaction(transaction);
+    return transaction;
+  }
+
+  const controller = entrypoint.createTokenManagementController();
+  // Controller: createTransactionForLocaMinting — "Loca", a real SDK typo.
+  return controller.createTransactionForLocaMinting(sender, sender.getNonceThenIncrement(), {
+    tokenIdentifier: input.tokenIdentifier,
+    supplyToMint: input.amount,
+  });
+}
+
+/** Burn supply of a fungible token you hold the local-burn role on. */
+export async function localBurn(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: SupplyInput,
+  useFactory: boolean,
+): Promise<Transaction> {
+  if (useFactory) {
+    const factory = entrypoint.createTokenManagementTransactionsFactory();
+    const transaction = await factory.createTransactionForLocalBurning(sender.address, {
+      tokenIdentifier: input.tokenIdentifier,
+      supplyToBurn: input.amount,
+    });
+    transaction.nonce = sender.getNonceThenIncrement();
+    transaction.signature = await sender.signTransaction(transaction);
+    return transaction;
+  }
+
+  const controller = entrypoint.createTokenManagementController();
+  return controller.createTransactionForLocalBurning(sender, sender.getNonceThenIncrement(), {
+    tokenIdentifier: input.tokenIdentifier,
+    supplyToBurn: input.amount,
+  });
+}
+
+/** Decode a transaction's `data` field into `<function>@<tokenId>@<amount>`. */
+export function describeSupplyPayload(transaction: Transaction): {
+  function: string;
+  receiver: string;
+  tokenIdentifier: string;
+  amountHex: string;
+} {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  const tokenHex = parts[1] ?? '';
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    tokenIdentifier: Buffer.from(tokenHex, 'hex').toString(),
+    amountHex: parts[2] ?? '',
+  };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> <tokenIdentifier> <amount> [--factory]
+```
+
+A real captured run (unfunded wallet):
+
+```text
+LOCAL MINT (ESDTLocalMint):
+  function:        ESDTLocalMint
+  receiver:        erd18l2cww3g3g6uc35wy60efd87ss85xdqj9gh9qn6ga6halz3jscaqd4dl3k
+  tokenIdentifier: COOK-123456
+  amount (hex):    03e8
+
+LOCAL BURN (ESDTLocalBurn):
+  function:        ESDTLocalBurn
+  amount (hex):    03e8
+
+Broadcasting the mint...
+Rejected (expected for an unfunded wallet): ... insufficient funds for address erd18l2c...
+```
+
+## How it works
+
+Both payloads decode to `<function>@<tokenIdentifier>@<amount>` addressed to the
+**sender**. `03e8` is hex for 1000, remember this is in the token's smallest
+denomination, so respect its `numDecimals` (a 6-decimal token needs `1000000` for
+one whole unit). The unfunded broadcast is rejected with a clean `insufficient
+funds` keyed to the sender, proving the payload is well-formed; a real mint
+additionally needs the token to exist and the sender to hold the matching local
+role (see [Set and unset special roles](/sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles)).
+
+**The method names are a minefield, this is the recipe's real value.** Against the
+installed v15.4.1:
+
+- **Mint, controller:** `createTransactionForLocaMinting`, note the typo, **"Loca"**
+  with a missing "l". It is *not* `createTransactionForLocalMinting`.
+- **Mint, factory:** `createTransactionForLocalMint`, correct spelling, but **no
+  "-ing"** suffix.
+- **Burn:** `createTransactionForLocalBurning` on *both*, the only consistent name
+  of the pair.
+
+## Pitfalls
+
+:::danger[Pitfall 1: the controller mint method is misspelled createTransactionForLocaMinting]
+"Loca", not "Local". Autocomplete for `createTransactionForLocal…` will not surface
+it on the controller. The factory instead uses `createTransactionForLocalMint` (no
+"-ing"). Copy the exact name from the code above.
+:::
+
+:::warning[Pitfall 2: amounts are in the smallest denomination]
+`ESDTLocalMint@…@03e8` mints 1000 base units. For a token issued with 6 decimals
+that is 0.001 of a whole unit. See
+[Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)'s decimals
+pitfall.
+:::
+
+:::note[Pitfall 3: local mint/burn needs the local role, not ownership]
+Being the token's owner is not enough; the sender needs `ESDTRoleLocalMint` /
+`ESDTRoleLocalBurn` explicitly granted. Grant it with
+[Set and unset special roles](/sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles).
+:::
+
+## See also
+
+- [Set and unset special roles](/sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles)
+  grants the `ESDTRoleLocalMint` / `ESDTRoleLocalBurn` roles these operations
+  require.
+- [Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token)
+  issues the token whose supply you then change.
+- [Token lifecycle operations](/sdk-and-tools/sdk-js/cookbook/tokens/token-lifecycle-operations)
+  covers freeze, pause, and wipe (the manager-side operations, which target the
+  ESDT contract instead of the sender).

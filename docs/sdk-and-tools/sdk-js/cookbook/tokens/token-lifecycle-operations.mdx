@@ -1,0 +1,245 @@
+---
+title: Token lifecycle — freeze, unfreeze, pause, unpause, wipe
+description: Freeze/unfreeze an account's token, pause/unpause globally, and wipe with sdk-core, includes the confirmed v15.4.1 wrong-receiver bug and its fix.
+difficulty: advanced
+est_minutes: 10
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - esdt
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+A token manager can control a token after issuance through the ESDT system
+contract:
+
+- **pause / unpause**, globally halt or resume *all* transfers of the token.
+- **freeze / unfreeze**, freeze or unfreeze *one* account's holding.
+- **wipe**, remove a frozen account's holding entirely.
+
+These are privileged manager calls, distinct from the builtin `ESDTLocalMint` /
+`ESDTNFTCreate` self-calls in
+[Local mint and burn](/sdk-and-tools/sdk-js/cookbook/tokens/local-mint-burn-supply).
+And in sdk-core v15.4.1 they ship with a confirmed bug that this recipe both
+demonstrates and works around.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites. **No devnet EGLD required**, see "How it works".
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/token-lifecycle-operations
+npm install
+npm run build
+npm start -- ./wallet.pem COOK-123456
+```
+
+## The code
+
+```ts title="src/lifecycle.ts"
+// src/lifecycle.ts — the subject of this recipe: the manager-only lifecycle
+// operations a token owner can perform through the ESDT system contract.
+//
+//   - pause / unpause  — globally halt / resume all transfers of a token
+//   - freeze / unfreeze — freeze / unfreeze ONE account's holding of a token
+//   - wipe             — remove a frozen account's holding entirely
+//
+// These are distinct from ESDTLocalMint/Burn and ESDTNFTCreate (builtin
+// functions on the caller's own account — see local-mint-burn-supply). A
+// pause/freeze/wipe is a privileged call the token MANAGER makes TO the ESDT
+// system contract, which enforces it.
+//
+// ============================================================================
+// CONFIRMED sdk-core v15.4.1 BUG — wrong receiver.
+// ----------------------------------------------------------------------------
+// createTransactionForPausing / Unpausing / Freezing / Unfreezing / Wiping
+// all build the transaction with `receiver: sender` (the caller's own
+// address). Every real on-chain pause/freeze/wipe is instead addressed to the
+// ESDT system contract erd1qqqq...zllls8a5w6u (verified via the mainnet API),
+// which is the SAME receiver the SDK correctly uses for issue and
+// setSpecialRole. A transaction sent to the caller's own address will NOT
+// perform the operation. This recipe builds via the factory and overrides the
+// receiver before signing — see withCorrectReceiver below.
+//
+// Confirmed in both the installed build and the v15.4.1 source tag. Contrast:
+// issue/setSpecialRole correctly target the ESDT contract; ESDTLocalMint/Burn
+// and ESDTNFTCreate correctly target the sender. Only these five are wrong.
+// ============================================================================
+
+import { Address } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+/**
+ * The ESDT system contract — the correct receiver for pause/freeze/wipe.
+ * The documented ESDT system contract address; verified on-chain as the
+ * receiver of every real freeze/pause transaction.
+ */
+export const ESDT_SYSTEM_CONTRACT = Address.newFromBech32(
+  'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u',
+);
+
+/** Build a pause (or unpause) transaction. Factory path, unsigned. */
+export async function buildPause(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  tokenIdentifier: string,
+  unpause: boolean,
+): Promise<Transaction> {
+  const factory = entrypoint.createTokenManagementTransactionsFactory();
+  return unpause
+    ? factory.createTransactionForUnpausing(sender.address, { tokenIdentifier })
+    : factory.createTransactionForPausing(sender.address, { tokenIdentifier });
+}
+
+/** Build a freeze (or unfreeze) transaction for one user's holding. */
+export async function buildFreeze(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  tokenIdentifier: string,
+  user: Address,
+  unfreeze: boolean,
+): Promise<Transaction> {
+  const factory = entrypoint.createTokenManagementTransactionsFactory();
+  // Factory: createTransactionForUnfreezing (lowercase "f"). The controller
+  // spells the same method createTransactionForUnFreezing (capital "F").
+  return unfreeze
+    ? factory.createTransactionForUnfreezing(sender.address, { user, tokenIdentifier })
+    : factory.createTransactionForFreezing(sender.address, { user, tokenIdentifier });
+}
+
+/** Build a wipe transaction — removes a frozen account's holding. */
+export async function buildWipe(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  tokenIdentifier: string,
+  user: Address,
+): Promise<Transaction> {
+  const factory = entrypoint.createTokenManagementTransactionsFactory();
+  return factory.createTransactionForWiping(sender.address, { user, tokenIdentifier });
+}
+
+/**
+ * The v15.4.1 workaround: if the SDK addressed this lifecycle transaction to
+ * the caller instead of the ESDT system contract, fix it. Returns true if a
+ * correction was applied. Call this BEFORE setting the nonce and signing, so
+ * the signature covers the corrected receiver.
+ */
+export function withCorrectReceiver(transaction: Transaction): boolean {
+  if (transaction.receiver.toBech32() === ESDT_SYSTEM_CONTRACT.toBech32()) {
+    return false;
+  }
+  transaction.receiver = ESDT_SYSTEM_CONTRACT;
+  return true;
+}
+
+/** Decode a lifecycle transaction's `data` field. */
+export function describeLifecyclePayload(transaction: Transaction): {
+  function: string;
+  receiver: string;
+  args: string[];
+} {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    args: parts.slice(1),
+  };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> <tokenIdentifier> [--user <bech32>]
+```
+
+A real captured run (unfunded wallet):
+
+```text
+As the SDK builds them in v15.4.1 (note the receiver):
+PAUSE:  function: pause   receiver: erd18l2c...z3jscaqd4dl3k  <- SENDER (bug)
+FREEZE: function: freeze  receiver: erd18l2c...z3jscaqd4dl3k  <- SENDER (bug)
+WIPE:   function: wipe    receiver: erd18l2c...z3jscaqd4dl3k  <- SENDER (bug)
+
+Corrected freeze receiver -> ESDT system contract (patched: true):
+FREEZE (corrected):
+  function: freeze
+  receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u  <- ESDT contract
+
+Broadcasting the corrected freeze...
+Rejected (expected for an unfunded wallet): ... insufficient funds for address erd18l2c...
+```
+
+## How it works
+
+**The v15.4.1 bug: wrong receiver.** `createTransactionForPausing`, `Unpausing`,
+`Freezing`, `Unfreezing`, and `Wiping` all build the transaction with
+`receiver: sender`, the caller's own address. But every real on-chain
+pause/freeze/wipe is addressed to the **ESDT system contract**
+(`erd1qqqq…zllls8a5w6u`), the same receiver the SDK correctly uses for `issue` and
+`setSpecialRole`. This was verified two ways: the decoded run above shows
+`receiver = SENDER`, and a lookup of real mainnet `pause` and `freeze`
+transactions shows `receiver = the ESDT contract`. A lifecycle transaction sent to
+the caller's own address will not perform the operation. Confirmed in both the
+installed build and the tagged v15.4.1 source.
+
+**The fix.** `withCorrectReceiver()` overrides `transaction.receiver` to the ESDT
+system contract. Because this recipe builds via the **factory** (which does not
+sign), the override happens *before* the nonce is set and the transaction is
+signed, so the signature covers the corrected receiver. The corrected `freeze`
+above is a genuine, well-formed transaction: it is rejected only for insufficient
+funds, keyed to the sender.
+
+**Argument shapes.** `pause`/`unPause` take only `<tokenIdentifier>`.
+`freeze`/`unFreeze`/`wipe` take `<tokenIdentifier>@<userAddress>` (the account
+whose holding is affected). On the wire the unfreeze function is spelled
+`UnFreeze` (capital "F").
+
+## Pitfalls
+
+:::danger[Pitfall 1: v15.4.1 addresses pause/freeze/wipe to the sender, not the ESDT contract]
+As shipped, these transactions will not take effect. Override
+`transaction.receiver` to
+`erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` before signing
+(build via the factory so the signature covers the fix), exactly as
+`withCorrectReceiver()` does.
+:::
+
+:::warning[Pitfall 2: createTransactionForUnFreezing (Controller) vs ...Unfreezing (Factory)]
+The controller capitalizes the "F" (`UnFreezing`); the factory does not
+(`Unfreezing`). Another instance of this SDK's Controller/Factory casing drift.
+:::
+
+:::note[Pitfall 3: wipe only works on a frozen account]
+You must `freeze` an account's holding before you can `wipe` it. Freeze/wipe also
+require the token to have been issued with `canFreeze` / `canWipe`, see
+[Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token).
+:::
+
+:::note[Pitfall 4: pause is global, freeze is per-account]
+`pause` halts every transfer of the token for everyone; `freeze` targets one
+address. Do not reach for `pause` when you mean to restrict a single account.
+:::
+
+## See also
+
+- [Set and unset special roles](/sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles)
+  is the other manager-side surface; grants operational roles rather than
+  restricting holders.
+- [Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token)
+  sets `canFreeze` / `canWipe` / `canPause` at issuance so these operations are
+  permitted.
+- [Local mint and burn](/sdk-and-tools/sdk-js/cookbook/tokens/local-mint-burn-supply)
+  covers the builtin self-calls whose `receiver: sender` is correct, for contrast
+  with this recipe's bug.

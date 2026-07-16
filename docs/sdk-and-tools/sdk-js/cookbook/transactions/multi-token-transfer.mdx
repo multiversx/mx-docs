@@ -1,0 +1,233 @@
+---
+title: Multi-token transfer in one tx
+description: Send EGLD plus two or more ESDT/NFT/SFT tokens in one transaction with sdk-core's TransfersController, every field decoded against real devnet.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - transaction
+  - esdt
+  - nft
+  - gas
+  - devnet
+  - typescript
+---
+
+Send native EGLD plus two (or more) ESDT/NFT/SFT tokens in a **single**
+transaction, via sdk-core's `TransfersController.createTransactionForTransfer`.
+
+Sibling recipe to
+[Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt) (one
+fungible token) and
+[Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+(native only), this one combines native EGLD with 2+ token transfers in the exact
+same call.
+
+If instead you are building a browser dApp where the end user's own wallet should
+sign, see
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send).
+This recipe is for when **your own code holds the private key**.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet with some devnet EGLD (for gas), see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for how to generate a throwaway one.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/multi-token-transfer
+npm install
+npm run build
+npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+```
+
+`TEST-abcdef` and `TESTNFT-abcdef` are illustrative placeholder identifiers, same
+convention as
+[Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)'s
+`TEST-abcdef` example.
+
+## Sending
+
+```ts title="src/multiTransfer.ts"
+// src/multiTransfer.ts — the actual subject of this recipe: sending
+// native EGLD plus two (or more) ESDT/NFT/SFT tokens in a SINGLE
+// transaction, via `TransfersController.createTransactionForTransfer`.
+//
+// Confirmed from node_modules/@multiversx/sdk-core/out/transfers/resources.d.ts:
+//
+//   export declare type CreateTransferTransactionInput = {
+//       receiver: Address;
+//       nativeAmount?: bigint;
+//       tokenTransfers?: TokenTransfer[];
+//       data?: Uint8Array;
+//   };
+//
+// Unlike the ESDT-transfer casing trap this Cookbook's `send-esdt` recipe
+// flags (`createTransactionForEsdtTokenTransfer` vs
+// `createTransactionForESDTTokenTransfer`), `createTransactionForTransfer`
+// is spelled identically on both `TransfersController` and
+// `TransferTransactionsFactory` — no casing trap here, confirmed by
+// reading both .d.ts files.
+//
+// Sibling recipe to `send-esdt` (a single fungible token) and `send-egld`
+// (native only) — this one combines native EGLD with 2+ token transfers
+// in the exact same call.
+
+import { Address, Token, TokenTransfer } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export interface TokenTransferInput {
+  /** Token identifier, e.g. "TICKER-abcdef" (fungible) or "TICKER-abcdef-0a" broken apart into identifier + nonce. */
+  identifier: string;
+  /** 0 for a fungible token; > 0 for an NFT/SFT. */
+  nonce: bigint;
+  /** Amount in the token's own smallest denomination. */
+  amount: bigint;
+}
+
+export interface MultiTransferInput {
+  receiver: string;
+  /** Optional native EGLD to send alongside the token transfers, in smallest denomination. */
+  nativeAmountInSmallestDenomination?: bigint;
+  tokenTransfers: TokenTransferInput[];
+}
+
+export interface MultiTransferOutput {
+  txHash: string;
+}
+
+/**
+ * Sends native EGLD (optional) plus 2+ token transfers in a single
+ * transaction. `sender.nonce` must already reflect the network's current
+ * nonce — see src/account.ts's loadDevnetAccount.
+ */
+export async function sendMultiTokenTransfer(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: MultiTransferInput,
+): Promise<MultiTransferOutput> {
+  const controller = entrypoint.createTransfersController();
+
+  const tokenTransfers = input.tokenTransfers.map(
+    (t) =>
+      new TokenTransfer({
+        token: new Token({ identifier: t.identifier, nonce: t.nonce }),
+        amount: t.amount,
+      }),
+  );
+
+  const transaction = await controller.createTransactionForTransfer(
+    sender,
+    sender.getNonceThenIncrement(),
+    {
+      receiver: Address.newFromBech32(input.receiver),
+      ...(input.nativeAmountInSmallestDenomination !== undefined
+        ? { nativeAmount: input.nativeAmountInSmallestDenomination }
+        : {}),
+      tokenTransfers,
+    },
+  );
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> <receiverBech32>
+```
+
+Expected output:
+
+```text
+Sender:   erd1... (nonce 0)
+Receiver: erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+Sending in ONE transaction:
+  - 0.001 EGLD (native)
+  - 2.5 TEST-abcdef      (fungible, 6 decimals)
+  - 1 TESTNFT-abcdef-01  (NFT, nonce 1)
+
+Sent. Transaction hash: <64-char hex hash>
+```
+
+## How it works
+
+**`createTransactionForTransfer` is spelled identically on both API levels**,
+confirmed from `resources.d.ts` and both
+`TransfersController`/`TransferTransactionsFactory` `.d.ts` files. Unlike the
+ESDT-transfer casing trap that `send-esdt` documents, there is no
+Controller-vs-Factory naming mismatch here.
+
+**Two genuinely surprising, hand-verified facts about the transaction this
+produces:**
+
+1. **The transaction's outer `receiver` is the SENDER'S OWN address, not the real
+   destination.** A request built for receiver `erd1qyu5...` logged
+   `"receiver":"erd1ayggn..."`, the sender's own address. The real destination is
+   instead the **first argument** inside `data`, hex-encoded, decoding it back to
+   bech32 gives exactly the intended receiver. If you inspect a built
+   transaction's `.receiver` or `.value` directly expecting the real recipient or
+   EGLD amount, you will be looking at the wrong fields for this transaction type.
+2. **Combining `nativeAmount` with `tokenTransfers` folds the EGLD into a THIRD
+   synthetic token-transfer entry**, using the special identifier `EGLD-000000`,
+   not carried in `value` (which is `"0"` here). 2 real token transfers plus 1
+   native amount produced a decoded data field starting
+   `MultiESDTNFTTransfer@<addressHex>@03@...`, count `03`, not `02`.
+
+**The full decoded payload, field by field** (from a real run of this recipe):
+
+```text
+MultiESDTNFTTransfer
+@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1  (destination address)
+@03                              (3 transfers: 2 real tokens + 1 synthetic EGLD)
+@544553542d616263646566          ("TEST-abcdef")
+@                                (nonce 0 — fungible, encoded as an EMPTY argument)
+@2625a0                          (2,500,000 = 2.5 units at 6 decimals)
+@544553544e46542d616263646566    ("TESTNFT-abcdef")
+@01                              (nonce 1 — NFT)
+@01                              (amount 1)
+@45474c442d303030303030          ("EGLD-000000" — the synthetic native-EGLD entry)
+@                                (nonce 0, empty again)
+@038d7ea4c68000                  (1,000,000,000,000,000 = 0.001 EGLD)
+```
+
+`2625a0` = 2,500,000 matches the same hex `send-esdt` independently verified for
+"2.5 units of a 6-decimal token", confirming consistent encoding across both
+recipes.
+
+## Pitfalls
+
+:::danger[Pitfall 1: do not read tx.receiver or tx.value expecting the real destination/amount]
+Both point at the sender's own address / zero, by protocol design, for this
+transaction shape. The real information is encoded in `tx.data`.
+:::
+
+:::warning[Pitfall 2: a zero nonce encodes as an empty argument, not a literal 00 byte]
+This recipe's own decoded output shows an empty string between the two `@`
+separators for both zero-nonce entries, worth knowing if you are hand-parsing a
+`MultiESDTNFTTransfer` payload instead of trusting the SDK's decoder.
+:::
+
+:::note[Pitfall 3: this recipe deliberately never succeeds against a real balance or token holdings]
+It proves the payload is well-formed via a clean "insufficient funds" rejection
+(gas is always paid in EGLD, independent of which tokens move), not a confirmed
+on-chain transfer.
+:::
+
+## See also
+
+- [Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)
+  is the single-token case this recipe generalizes.
+- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+  is the native-only case.
+- [Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  covers the fetch-then-increment pattern this recipe relies on.

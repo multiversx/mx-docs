@@ -1,0 +1,242 @@
+---
+title: Create a governance proposal
+description: Create a MultiversX governance proposal with sdk-core's GovernanceController and factory, reading the live proposal fee from getConfig first.
+difficulty: advanced
+est_minutes: 9
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - governance
+  - transaction
+  - devnet
+---
+
+A governance proposal points at a Git commit (its `commitHash`) and opens a voting
+window between two epochs. Creating one costs a proposal fee in EGLD, held by the
+governance system contract until the proposal closes. This recipe reads the live
+fee and config with `getConfig()`, then creates a proposal both ways, the
+controller and the factory, against the real governance contract.
+
+The default `npm start` reads the live governance config (fee, thresholds, last
+proposal nonce), so you see real output without a funded wallet, and you learn the
+fee you would need before spending it.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- For the default config read and `payload` demos: devnet network access only.
+- For an actual proposal: a devnet PEM holding at least the proposal fee (500 EGLD
+  on devnet at time of writing) plus gas.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/governance-create-proposal
+npm install
+npm run build
+```
+
+## Creating a proposal
+
+```ts title="src/proposal.ts"
+// src/proposal.ts - the subject of this recipe: creating a MultiversX
+// governance proposal with the GovernanceController and its factory.
+//
+// A governance proposal points at a Git commit (its `commitHash`) and opens a
+// voting window between two epochs. Creating one costs a proposal fee in EGLD,
+// which the governance system contract holds until the proposal closes. The
+// fee is not a constant - read it from the live config with `getConfig()`
+// rather than hard-coding it.
+//
+// The proposal is sent to the governance system contract (a protocol contract
+// at a fixed address the SDK knows), not to a contract you deploy. Unlike the
+// multisig writes, governance transactions set their own gas limit from the
+// SDK's config defaults, so you do not pass one.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+export interface GovernanceConfigView {
+  proposalFeeWei: bigint;
+  lostProposalFeeWei: bigint;
+  minQuorum: number;
+  minPassThreshold: number;
+  minVetoThreshold: number;
+  lastProposalNonce: number;
+}
+
+/** Read the live governance config, including the current proposal fee. */
+export async function readGovernanceConfig(entrypoint: DevnetEntrypoint): Promise<GovernanceConfigView> {
+  const controller = entrypoint.createGovernanceController();
+  const config = await controller.getConfig();
+  return {
+    proposalFeeWei: config.proposalFee,
+    lostProposalFeeWei: config.lostProposalFee,
+    minQuorum: config.minQuorum,
+    minPassThreshold: config.minPassThreshold,
+    minVetoThreshold: config.minVetoThreshold,
+    lastProposalNonce: config.lastProposalNonce,
+  };
+}
+
+export interface ProposalInput {
+  commitHash: string;
+  startVoteEpoch: number;
+  endVoteEpoch: number;
+  feeWei: bigint;
+}
+
+/**
+ * Create a proposal, path 1 - the controller. `createTransactionForNewProposal`
+ * builds, sets the nonce, and signs in one call. The fee travels in the
+ * transaction's `value`.
+ */
+export async function createProposalViaController(
+  entrypoint: DevnetEntrypoint,
+  proposer: Account,
+  input: ProposalInput,
+): Promise<Transaction> {
+  const controller = entrypoint.createGovernanceController();
+  return controller.createTransactionForNewProposal(proposer, proposer.getNonceThenIncrement(), {
+    commitHash: input.commitHash,
+    startVoteEpoch: input.startVoteEpoch,
+    endVoteEpoch: input.endVoteEpoch,
+    nativeTokenAmount: input.feeWei,
+  });
+}
+
+/**
+ * Create a proposal, path 2 - the factory. Builds the unsigned transaction
+ * only; the caller sets the nonce and signs.
+ */
+export async function createProposalViaFactory(
+  entrypoint: DevnetEntrypoint,
+  proposer: Account,
+  input: ProposalInput,
+): Promise<Transaction> {
+  const factory = entrypoint.createGovernanceTransactionsFactory();
+  const transaction = await factory.createTransactionForNewProposal(proposer.address, {
+    commitHash: input.commitHash,
+    startVoteEpoch: input.startVoteEpoch,
+    endVoteEpoch: input.endVoteEpoch,
+    nativeTokenAmount: input.feeWei,
+  });
+  transaction.nonce = proposer.getNonceThenIncrement();
+  transaction.signature = await proposer.signTransaction(transaction);
+  return transaction;
+}
+
+export interface ProposalPayload {
+  function: string;
+  commitHashHex: string;
+  startEpochHex: string;
+  endEpochHex: string;
+  receiver: string;
+  feeWei: bigint;
+  gasLimit: bigint;
+}
+
+/** Decode a proposal transaction's wire fields. */
+export function describeProposalPayload(transaction: Transaction): ProposalPayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    commitHashHex: parts[1] ?? '',
+    startEpochHex: parts[2] ?? '',
+    endEpochHex: parts[3] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    feeWei: transaction.value,
+    gasLimit: transaction.gasLimit,
+  };
+}
+```
+
+## Run it
+
+```bash
+# Read the live governance config (fee, thresholds) - no wallet, no funds:
+npm start
+
+# Inspect the proposal wire payload offline:
+npm start -- payload
+
+# Actually create a proposal (needs a devnet PEM holding the fee); add --factory:
+npm start -- propose ./wallet.pem
+```
+
+Output of the default config read, and of `payload`:
+
+```text
+Governance config (live devnet):
+  proposal fee:        500000000000000000000 wei (500 EGLD)
+  lost-proposal fee:   10000000000000000000 wei (10 EGLD)
+  min quorum:          0.2
+  min pass threshold:  0.6667
+  min veto threshold:  0.33
+  last proposal nonce: 138
+
+function:    proposal
+commitHash:  616263...363738396162636465663031  (hex of the 40-char commit string)
+startEpoch:  0x1850 = 6224
+endEpoch:    0x1855 = 6229
+receiver:    erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla  (the governance system contract)
+value (fee): 500000000000000000000 wei (500 EGLD)
+gasLimit:    50198500  (set automatically by the SDK)
+```
+
+## How it works
+
+**Controller vs factory.**
+`controller.createTransactionForNewProposal(account, nonce, { commitHash, startVoteEpoch, endVoteEpoch, nativeTokenAmount })`
+builds, sets the nonce, and signs. The factory form only builds; you set `nonce`
+and `signature`. The governance controller and factory take no ABI, the governance
+contract's interface is baked into the SDK.
+
+**Read the fee, do not hard-code it.** `nativeTokenAmount` is the proposal fee and
+travels in the transaction's `value`. The fee is a network parameter, so the
+recipe reads it from `getConfig().proposalFee` (500 EGLD on devnet) rather than
+assuming a constant that could drift.
+
+**The receiver is a system contract.** Proposals go to `erd1qqq...rlllsrujgla`, the
+governance system contract, whose address the SDK derives from its own constants
+(`GOVERNANCE_CONTRACT_ADDRESS_HEX`). You never pass it. The wire payload is
+`proposal@<commitHash hex>@<startEpoch>@<endEpoch>`.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the commit hash must be exactly 40 characters]
+Governance expects a full 40-character Git commit hash (a SHA-1). The SDK encodes
+whatever string you pass as-is (`StringValue`), so a wrong length is not caught
+when building, it is rejected on-chain. Pass the real 40-char commit of the change
+you are proposing.
+:::
+
+:::note[Pitfall 2: governance sets its own gas; multisig does not]
+Unlike the multisig writes (which require an explicit `gasLimit`), governance
+transactions set their gas limit automatically from the SDK config
+(`gasLimitForProposal`, 50,000,000 plus data). Do not pass a `gasLimit`, there is
+no parameter for it here.
+:::
+
+:::note[Pitfall 3: the fee is at stake, not just a deposit]
+The proposal fee travels in `value` and is held by the contract. If the proposal
+fails to pass, part of it is kept as the `lostProposalFee` (10 EGLD on devnet);
+only the rest is returned when the proposal is closed. Proposing is not free even
+when it works.
+:::
+
+:::note[Pitfall 4: vote epochs must be in the future]
+`startVoteEpoch` / `endVoteEpoch` open the window; a window in the past is rejected
+on-chain. This recipe reads the current epoch from the network and offsets from it,
+rather than hard-coding epoch numbers that go stale.
+:::
+
+## See also
+
+- [Vote and close a proposal](/sdk-and-tools/sdk-js/cookbook/governance/vote-close-proposal)
+  covers the next steps for the proposal this recipe creates.
+- Staking is what gives an address the voting power to back a proposal, covered in
+  the delegation recipes.

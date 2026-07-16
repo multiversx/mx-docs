@@ -1,0 +1,221 @@
+---
+title: Send an ESDT
+description: Send a fungible ESDT token using sdk-core's TransfersController and the Token/TokenTransfer classes against DevnetEntrypoint, no browser required.
+difficulty: beginner
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - transaction
+  - esdt
+  - typescript
+  - devnet
+---
+
+Send a fungible ESDT token using sdk-core's `TransfersController` and the `Token` /
+`TokenTransfer` classes, directly against `DevnetEntrypoint`. Sibling recipe to
+[Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld);
+same Controller pattern, this time for a custom token instead of the native one.
+
+If instead you are building a browser dApp where the end user's own wallet should
+sign, see
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send).
+This recipe is for when **your own code holds the private key**.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet with some devnet EGLD (for gas), see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for how to generate and fund a throwaway one.
+- A devnet ESDT token identifier you (or your test wallet) already hold a balance
+  of, plus **its exact decimal count**, see Pitfall 1.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/send-esdt
+npm install
+npm run build
+npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th TEST-abcdef 2.5 6
+```
+
+(2.5 units of a 6-decimal token, adjust the last argument to match the token you
+are actually sending.)
+
+## Converting the amount
+
+```ts title="src/amount.ts"
+// src/amount.ts — decimal token-amount string <-> smallest-denomination
+// bigint, for a token with an arbitrary (not fixed-18) number of decimals.
+//
+// Unlike EGLD (always 18 decimals), an ESDT's decimal count is per-token —
+// set at issuance (the `numDecimals` argument) and readable from the token's
+// properties on-chain. This recipe takes it as an explicit parameter rather
+// than assuming 18, since assuming EGLD's decimals for an arbitrary ESDT
+// would silently send the wrong amount by orders of magnitude.
+
+import BigNumber from 'bignumber.js';
+
+/**
+ * Converts a decimal token amount (e.g. "2.5") to the smallest-denomination
+ * bigint the network expects, given the token's own decimal count.
+ *
+ * Throws if the input has more precision than `numDecimals` supports.
+ */
+export function toSmallestDenomination(amount: string, numDecimals: number): bigint {
+  const value = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(numDecimals));
+  if (!value.isFinite() || value.isNegative()) {
+    throw new Error(`"${amount}" is not a valid non-negative token amount.`);
+  }
+  if (!value.isInteger()) {
+    throw new Error(
+      `"${amount}" has more precision than this token supports (${numDecimals} decimals).`,
+    );
+  }
+  return BigInt(value.toFixed(0));
+}
+```
+
+## Sending
+
+```ts title="src/sendEsdt.ts"
+// src/sendEsdt.ts — the actual subject of this recipe: sending a fungible
+// ESDT via sdk-core's TransfersController and the Token/TokenTransfer
+// classes.
+//
+// Sibling recipe to "Send EGLD to an address" — same Controller pattern,
+// same "your own code holds the keys" scope (see that recipe for the
+// contrast with the browser + connected-wallet flow). The only structural
+// difference is which factory method builds the transaction and what
+// `resources` input shape it takes.
+//
+// One easy-to-miss, source-verified naming gotcha this recipe deliberately
+// gets right: the CONTROLLER method is
+// `createTransactionForEsdtTokenTransfer` (lowercase "sdt"), while the
+// underlying FACTORY method it wraps is
+// `createTransactionForESDTTokenTransfer` (uppercase "ESDT") — confirmed
+// from node_modules/@multiversx/sdk-core/out/transfers/transfersControllers.d.ts
+// vs .../transferTransactionsFactory.d.ts. Copying the Factory's casing
+// onto a Controller call (or vice versa) is a real `tsc --strict` error,
+// not a style nit — TypeScript's property-name matching is exact.
+
+import { Address, Token, TokenTransfer } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export interface SendEsdtInput {
+  /** Bech32 address of the recipient. */
+  receiver: string;
+  /** Token identifier, e.g. "TICKER-abcdef" (fungible — no nonce). */
+  tokenIdentifier: string;
+  /** Amount in the token's own smallest denomination — see src/amount.ts. */
+  amountInSmallestDenomination: bigint;
+}
+
+export interface SendEsdtOutput {
+  txHash: string;
+}
+
+/**
+ * Builds, signs (via TransfersController), and sends a single fungible ESDT
+ * transfer. `sender.nonce` must already reflect the network's current
+ * nonce — see src/account.ts's loadDevnetAccount.
+ */
+export async function sendEsdt(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: SendEsdtInput,
+): Promise<SendEsdtOutput> {
+  const controller = entrypoint.createTransfersController();
+
+  const token = new Token({ identifier: input.tokenIdentifier });
+  const transfer = new TokenTransfer({ token, amount: input.amountInSmallestDenomination });
+
+  const transaction = await controller.createTransactionForEsdtTokenTransfer(
+    sender,
+    sender.getNonceThenIncrement(),
+    {
+      receiver: Address.newFromBech32(input.receiver),
+      tokenTransfers: [transfer],
+    },
+  );
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+```
+
+## Run it
+
+```bash
+npm start -- ./wallet.pem <receiverBech32> <tokenIdentifier> <amount> <numDecimals>
+```
+
+Expected output:
+
+```text
+Sender:   erd1... (nonce 42)
+Receiver: erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+Token:    TEST-abcdef
+Amount:   2.5 (6 decimals)
+
+Sent. Transaction hash: <64-char hex hash>
+Explorer: https://devnet-explorer.multiversx.com/transactions/<hash>
+Status: success (successful: true)
+```
+
+## How it works
+
+**`Token` + `TokenTransfer` describe what to send; `TransfersController` builds
+and signs the transaction.** `new Token({ identifier })` for a fungible token
+needs no `nonce` field (that is only for NFTs/SFTs).
+`controller.createTransactionForEsdtTokenTransfer(sender, nonce, { receiver, tokenTransfers: [transfer] })`
+builds the ESDT payload, computes gas, sets the nonce, and signs, the same
+Controller pattern as
+[Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld).
+
+**Gas for an ESDT transfer is higher than a plain EGLD one, computed for you.**
+The factory underneath adds `gasLimitESDTTransfer` (200,000) plus a fixed 100,000
+on top of the base data-movement gas. Verified against a real devnet request:
+sending 2.5 units of a 6-decimal token produced a payload
+`ESDTTransfer@544553542d616263646566@2625a0` (decodes to `ESDTTransfer` +
+hex("TEST-abcdef") + hex(2,500,000)) with `gasLimit: 413000`, exactly
+`(50,000 + 1,500 x 42 bytes) + 200,000 + 100,000`.
+
+## Pitfalls
+
+:::danger[Pitfall 1: guessing a token's decimal count is a real footgun]
+EGLD is always 18 decimals; an ESDT's decimal count is chosen by whoever issued
+it and varies token to token, 6, 8, and 18 are all common. Sending
+`amount * 10^18` to a 6-decimal token would be off by 10^12. This recipe requires
+`numDecimals` as an explicit argument rather than defaulting it, look the real
+value up before running this against a token you do not already know the decimals
+for.
+:::
+
+:::warning[Pitfall 2: the Controller method's casing does not match the Factory it wraps]
+It is `createTransactionForEsdtTokenTransfer` (lowercase "sdt") on
+`TransfersController`, but `createTransactionForESDTTokenTransfer` (uppercase
+"ESDT") on the underlying `TransferTransactionsFactory`, confirmed from both
+`.d.ts` files directly. Using the wrong casing for the pattern you are using is a
+`tsc --strict` error, not a lint nit.
+:::
+
+:::note[Pitfall 3: this sends a single fungible token in one transaction]
+For NFTs or SFTs, `Token` needs a non-zero `nonce`; for more than one token
+transfer in the same transaction, pass multiple entries in `tokenTransfers` (see
+[Multi-token transfer in one tx](/sdk-and-tools/sdk-js/cookbook/transactions/multi-token-transfer)).
+:::
+
+## See also
+
+- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+  is the native-transfer sibling to this recipe; same Controller pattern.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the browser, connected-wallet equivalent of this recipe.
+- [Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  covers the fetch-then-increment pattern in depth, for sending more than one
+  transaction per process run.

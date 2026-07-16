@@ -1,0 +1,292 @@
+---
+title: Set and unset special roles on a fungible ESDT
+description: Set and unset the local-mint, local-burn, and ESDT-transfer roles on a fungible ESDT with sdk-core, including a confirmed v15.4.1 unset-role bug.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - esdt
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+A freshly issued fungible ESDT can carry three special roles, each granted to a
+specific address via the ESDT system contract:
+
+- **`ESDTRoleLocalMint`**, the holder may mint more supply (see
+  [Local mint and burn](/sdk-and-tools/sdk-js/cookbook/tokens/local-mint-burn-supply)).
+- **`ESDTRoleLocalBurn`**, the holder may burn its own supply.
+- **`ESDTTransferRole`**, transfers of the token must route through the holder.
+
+This recipe sets and unsets those roles with sdk-core's
+`TokenManagementController` (and the matching `TokenManagementTransactionsFactory`).
+The method name is identical on both API levels, the only difference is the usual
+one: the controller sets the nonce and signs, the factory only builds.
+
+If instead you are building a browser dApp where the token owner's own wallet
+should sign, wire the factory method through a connected-wallet flow instead of a
+PEM-holding script.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for a throwaway one. **No devnet EGLD required** to verify the
+  payload, see "How it works".
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/set-special-roles
+npm install
+npm run build
+npm start -- ./wallet.pem COOK-123456
+```
+
+## The code
+
+```ts title="src/roles.ts"
+// src/roles.ts — the subject of this recipe: setting and unsetting the
+// three special roles a fungible ESDT can carry, both ways (controller and
+// factory).
+//
+//   - ESDTRoleLocalMint  — the holder may mint more supply locally
+//   - ESDTRoleLocalBurn  — the holder may burn its own supply locally
+//   - ESDTTransferRole   — transfers of the token must go through the holder
+//
+// Both `createTransactionForSettingSpecialRoleOnFungibleToken` and its
+// unset sibling live on BOTH the controller and the factory under the SAME
+// name (unlike Nft/NFT and Loca/Local elsewhere in this class — see the
+// local-mint-burn-supply and token-lifecycle-operations recipes). The only
+// difference is the usual one: the controller sets the nonce and signs; the
+// factory only builds.
+//
+// A CONFIRMED sdk-core v15.4.1 BUG lives in the unset builder — see
+// unsetFungibleRoles below and the recipe page's Pitfalls. It is verified
+// here by decoding the real wire payload, not asserted from reading types.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+/** Which of the three fungible roles to add. */
+export interface SetRolesInput {
+  tokenIdentifier: string;
+  /** The address to grant the roles to (often the contract or an operator). */
+  user: Address;
+  localMint: boolean;
+  localBurn: boolean;
+  esdtTransfer: boolean;
+}
+
+/** Which of the three fungible roles to remove. */
+export interface UnsetRolesInput {
+  tokenIdentifier: string;
+  user: Address;
+  localMint: boolean;
+  localBurn: boolean;
+  esdtTransfer: boolean;
+}
+
+/**
+ * Build a "set special role" transaction.
+ *
+ * Controller path: `createTransactionForSettingSpecialRoleOnFungibleToken`
+ * sets the nonce and signs (it takes the whole Account). Factory path: it
+ * only builds — the caller owns nonce + signature. Same method name on both.
+ */
+export async function setFungibleRoles(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: SetRolesInput,
+  useFactory: boolean,
+): Promise<Transaction> {
+  const options = {
+    user: input.user,
+    tokenIdentifier: input.tokenIdentifier,
+    addRoleLocalMint: input.localMint,
+    addRoleLocalBurn: input.localBurn,
+    addRoleESDTTransferRole: input.esdtTransfer,
+  };
+
+  if (useFactory) {
+    const factory = entrypoint.createTokenManagementTransactionsFactory();
+    const transaction = await factory.createTransactionForSettingSpecialRoleOnFungibleToken(
+      sender.address,
+      options,
+    );
+    transaction.nonce = sender.getNonceThenIncrement();
+    transaction.signature = await sender.signTransaction(transaction);
+    return transaction;
+  }
+
+  const controller = entrypoint.createTokenManagementController();
+  return controller.createTransactionForSettingSpecialRoleOnFungibleToken(
+    sender,
+    sender.getNonceThenIncrement(),
+    options,
+  );
+}
+
+/**
+ * Build an "unset special role" transaction.
+ *
+ * WARNING — sdk-core v15.4.1 bug (confirmed in the installed build and in
+ * the v15.4.1 source tag): the unset builder reads the wrong flags.
+ * `removeRoleLocalBurn` is NEVER consulted, and `removeRoleESDTTransferRole`
+ * gates BOTH the `ESDTRoleLocalBurn` and the `ESDTTransferRole` wire parts.
+ * See describeRolesPayload's output in the recipe page — this function
+ * passes the input through faithfully; the SDK mis-wires it downstream.
+ */
+export async function unsetFungibleRoles(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: UnsetRolesInput,
+  useFactory: boolean,
+): Promise<Transaction> {
+  const options = {
+    user: input.user,
+    tokenIdentifier: input.tokenIdentifier,
+    removeRoleLocalMint: input.localMint,
+    removeRoleLocalBurn: input.localBurn,
+    removeRoleESDTTransferRole: input.esdtTransfer,
+  };
+
+  if (useFactory) {
+    const factory = entrypoint.createTokenManagementTransactionsFactory();
+    const transaction = await factory.createTransactionForUnsettingSpecialRoleOnFungibleToken(
+      sender.address,
+      options,
+    );
+    transaction.nonce = sender.getNonceThenIncrement();
+    transaction.signature = await sender.signTransaction(transaction);
+    return transaction;
+  }
+
+  const controller = entrypoint.createTokenManagementController();
+  return controller.createTransactionForUnsettingSpecialRoleOnFungibleToken(
+    sender,
+    sender.getNonceThenIncrement(),
+    options,
+  );
+}
+
+/** A fully decoded role transaction, straight from its `data` field. */
+export interface DecodedRolesPayload {
+  function: string;
+  receiver: string;
+  tokenIdentifier: string;
+  user: string;
+  roles: string[];
+}
+
+/**
+ * Decode a set/unset-role transaction's `data` field into its parts:
+ * `<function>@<tokenIdentifier>@<userAddress>@<role>@<role>...`. Every part
+ * after the function name is hex; the first two are an ASCII token
+ * identifier and a 32-byte address, the rest are ASCII role names.
+ */
+export function describeRolesPayload(transaction: Transaction): DecodedRolesPayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  const tokenHex = parts[1] ?? '';
+  const userHex = parts[2] ?? '';
+  const roleHexes = parts.slice(3);
+
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    tokenIdentifier: Buffer.from(tokenHex, 'hex').toString(),
+    user: userHex ? Address.newFromHex(userHex).toBech32() : '(none)',
+    roles: roleHexes.map((hex) => Buffer.from(hex, 'hex').toString()),
+  };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> <tokenIdentifier> [--user <bech32>] [--factory]
+```
+
+A real captured run (unfunded wallet):
+
+```text
+SET (localMint + localBurn + esdtTransfer):
+  function:        setSpecialRole
+  receiver:        erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+  tokenIdentifier: COOK-123456
+  roles on wire:   [ESDTRoleLocalMint, ESDTRoleLocalBurn, ESDTTransferRole]
+
+UNSET requested { localBurn: true } ONLY (expect ESDTRoleLocalBurn):
+  function:        unSetSpecialRole
+  roles on wire:   []
+
+UNSET requested { esdtTransfer: true } ONLY (expect ESDTTransferRole):
+  function:        unSetSpecialRole
+  roles on wire:   [ESDTRoleLocalBurn, ESDTTransferRole]
+
+Broadcasting the SET transaction...
+Rejected (expected for an unfunded wallet): ... insufficient funds for address erd18l2cww3g3g6uc35wy60efd87ss85xdqj9gh9qn6ga6halz3jscaqd4dl3k
+```
+
+## How it works
+
+**The set path is correct and hand-verified.** The SET transaction is addressed to
+the ESDT system contract (`erd1qqqq…zllls8a5w6u`, the documented ESDT system
+contract address), with data `setSpecialRole@<tokenId>@<userAddress>@<roleName>…`.
+The role names travel as ASCII on the wire
+(`45534454526f6c654c6f63616c4d696e74` = `ESDTRoleLocalMint`). Gas for a three-role
+set on `COOK-123456` was `60357500`, matching
+`50,000 + 1,500 x 205 (data bytes) + 60,000,000` to the unit. The unfunded
+broadcast is rejected with a clean `insufficient funds` keyed to the exact sender,
+the payload is well-formed; only the balance is missing.
+
+**The unset path has a confirmed sdk-core v15.4.1 bug.** The two UNSET lines above
+are the proof, decoded from real transactions this recipe built:
+
+- Requesting **`localBurn` only** produces an **empty** role list, the local-burn
+  role is silently *not* removed.
+- Requesting **`esdtTransfer` only** removes **both** `ESDTRoleLocalBurn` *and*
+  `ESDTTransferRole`.
+
+The cause is in `createTransactionForUnsettingSpecialRoleOnFungibleToken`: the
+`ESDTRoleLocalBurn` wire part is gated on `removeRoleESDTTransferRole` instead of
+`removeRoleLocalBurn`, and `removeRoleLocalBurn` is never read. Confirmed in both
+the installed build and the tagged v15.4.1 source. (The **set** builder is fine,
+this is specific to unsetting fungible roles.)
+
+## Pitfalls
+
+:::danger[Pitfall 1: unsetting a fungible role is broken in v15.4.1]
+`removeRoleLocalBurn` is ignored, and `removeRoleESDTTransferRole` removes the
+local-burn role too. Until it is fixed upstream, verify the decoded
+`unSetSpecialRole` payload before broadcasting, or build the
+`unSetSpecialRole@<tokenId>@<user>@ESDTRoleLocalBurn` data by hand for a burn-only
+removal.
+:::
+
+:::note[Pitfall 2: roles are granted per address, not globally]
+Each set/unset targets one `user` address. Granting `ESDTRoleLocalMint` to a
+contract does not grant it to you, pass the right `--user`.
+:::
+
+:::warning[Pitfall 3: the token must exist and canAddSpecialRoles must be true]
+Roles are set through the ESDT system contract against an already-issued token
+whose `canAddSpecialRoles` flag was set at issuance. See
+[Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token).
+:::
+
+## See also
+
+- [Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token)
+  issues the token you then grant roles on (set `canAddSpecialRoles`).
+- [Local mint and burn](/sdk-and-tools/sdk-js/cookbook/tokens/local-mint-burn-supply)
+  uses the `ESDTRoleLocalMint` / `ESDTRoleLocalBurn` roles this recipe grants.
+- [Token lifecycle operations](/sdk-and-tools/sdk-js/cookbook/tokens/token-lifecycle-operations)
+  covers freeze, pause, and wipe, the manager-side counterpart to roles.

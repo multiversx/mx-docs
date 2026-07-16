@@ -291,6 +291,23 @@ const sidebars = {
                         label: "Transactions",
                         items: [
                           "sdk-and-tools/sdk-js/cookbook/transactions/send-egld",
+                          "sdk-and-tools/sdk-js/cookbook/transactions/send-esdt",
+                          "sdk-and-tools/sdk-js/cookbook/transactions/multi-token-transfer",
+                          "sdk-and-tools/sdk-js/cookbook/transactions/track-transaction-status",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Tokens (ESDT / NFT / SFT)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/issue-sft-collection",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/local-mint-burn-supply",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/token-lifecycle-operations",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/fetch-token-metadata",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/fetch-account-token-balances",
                         ]
                       },
                       {
@@ -313,6 +330,14 @@ const sidebars = {
                           "sdk-and-tools/sdk-js/cookbook/migration/dapp-provider-to-initapp",
                           "sdk-and-tools/sdk-js/cookbook/migration/get-account-info-v4-vs-v5",
                           "sdk-and-tools/sdk-js/cookbook/migration/send-transactions-to-transaction-manager",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Governance",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/governance/create-proposal",
+                          "sdk-and-tools/sdk-js/cookbook/governance/vote-close-proposal",
                         ]
                       },
                     ]

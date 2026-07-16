@@ -1,0 +1,244 @@
+---
+title: Fetch an account's token balances
+description: Read the tokens an account holds, all fungible ESDTs, all NFTs and SFTs, and one specific token balance, via a network provider. Verified live.
+difficulty: intermediate
+est_minutes: 8
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - network-provider
+  - esdt
+  - nft
+  - typescript
+---
+
+Read the tokens an account holds, EGLD's ESDT siblings. Three reads, all on
+`INetworkProvider`:
+
+- `getFungibleTokensOfAccount(address, pagination?)` returns every fungible ESDT.
+- `getNonFungibleTokensOfAccount(address, pagination?)` returns every NFT / SFT /
+  meta-ESDT.
+- `getTokenOfAccount(address, token)` returns one specific token's balance.
+
+All read-only. This recipe reads a liquidity-pool contract (which reliably holds
+several fungibles) and a known NFT-holding address, so every call returns real,
+non-empty data.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/fetch-account-token-balances
+npm install
+npm run build
+npm start
+```
+
+## Reading the balances
+
+```ts title="src/tokenBalances.ts"
+// src/tokenBalances.ts — the subject of this recipe: reading the tokens an
+// account holds. Three reads, all on INetworkProvider:
+//
+//   - getFungibleTokensOfAccount(address, pagination?)    → every fungible ESDT
+//   - getNonFungibleTokensOfAccount(address, pagination?) → every NFT / SFT / meta-ESDT
+//   - getTokenOfAccount(address, token)                   → one token's balance
+//
+// getTokenOfAccount has a sharp edge for NFTs — see fetchNftBalance below.
+
+import { Token, TokenComputer } from '@multiversx/sdk-core';
+import type {
+  INetworkProvider,
+  TokenAmountOnNetwork,
+  Address,
+  IPagination,
+} from '@multiversx/sdk-core';
+
+/** All fungible ESDTs the account holds. Pagination is honored by the Api
+ *  provider; the Proxy provider ignores it and returns everything. */
+export async function fetchFungibleTokens(
+  provider: INetworkProvider,
+  address: Address,
+  pagination?: IPagination,
+): Promise<TokenAmountOnNetwork[]> {
+  return pagination === undefined
+    ? provider.getFungibleTokensOfAccount(address)
+    : provider.getFungibleTokensOfAccount(address, pagination);
+}
+
+/** All non-fungible tokens (NFT / SFT / meta-ESDT) the account holds. */
+export async function fetchNonFungibleTokens(
+  provider: INetworkProvider,
+  address: Address,
+  pagination?: IPagination,
+): Promise<TokenAmountOnNetwork[]> {
+  return pagination === undefined
+    ? provider.getNonFungibleTokensOfAccount(address)
+    : provider.getNonFungibleTokensOfAccount(address, pagination);
+}
+
+/** One fungible token's balance for the account. */
+export async function fetchFungibleBalance(
+  provider: INetworkProvider,
+  address: Address,
+  identifier: string,
+): Promise<TokenAmountOnNetwork> {
+  return provider.getTokenOfAccount(address, new Token({ identifier }));
+}
+
+/**
+ * One NFT's balance. getTokenOfAccount for an NFT wants the BASE collection
+ * identifier plus the nonce — it appends the nonce hex itself. Passing the
+ * already-extended identifier (e.g. "XPASS-423274-04") double-appends the nonce
+ * and the API rejects it as an invalid NFT identifier. Since
+ * getNonFungibleTokensOfAccount returns the EXTENDED identifier, strip it back
+ * to the base with TokenComputer first.
+ */
+export async function fetchNftBalance(
+  provider: INetworkProvider,
+  address: Address,
+  extendedIdentifier: string,
+  nonce: bigint,
+): Promise<TokenAmountOnNetwork> {
+  const baseIdentifier = new TokenComputer().extractIdentifierFromExtendedIdentifier(extendedIdentifier);
+  return provider.getTokenOfAccount(address, new Token({ identifier: baseIdentifier, nonce }));
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — read the fungible tokens of a liquidity-pool contract (which
+// reliably holds several) and the NFTs of a known NFT-holding address. No
+// wallet, no gas — these are public balances.
+//
+// Usage:
+//   npm run build && npm start
+
+import { ApiNetworkProvider, Address } from '@multiversx/sdk-core';
+import {
+  fetchFungibleTokens,
+  fetchNonFungibleTokens,
+  fetchFungibleBalance,
+  fetchNftBalance,
+} from './tokenBalances';
+
+const MAINNET_API = 'https://api.multiversx.com';
+// An xExchange WEGLD/USDC pair contract — reliably holds fungible ESDTs.
+const FUNGIBLE_HOLDER = 'erd1qqqqqqqqqqqqqpgqeel2kumf0r8ffyhth7pqdujjat9nx0862jpsg2pqaq';
+// A known address that holds an NFT.
+const NFT_HOLDER = 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
+
+async function main(): Promise<void> {
+  const provider = new ApiNetworkProvider(MAINNET_API, { clientName: 'mvx-cookbook' });
+
+  // Fungible tokens (paginated).
+  const fungibleHolder = Address.newFromBech32(FUNGIBLE_HOLDER);
+  const fungibles = await fetchFungibleTokens(provider, fungibleHolder, { from: 0, size: 5 });
+  console.log(`Fungible tokens of ${FUNGIBLE_HOLDER} (up to 5):`);
+  for (const t of fungibles) {
+    console.log(`  ${t.token.identifier}: ${t.amount}`);
+  }
+
+  // One specific fungible balance.
+  const wegld = await fetchFungibleBalance(provider, fungibleHolder, 'WEGLD-bd4d79');
+  console.log(`getTokenOfAccount('WEGLD-bd4d79'): ${wegld.amount}`);
+
+  // Non-fungible tokens.
+  const nftHolder = Address.newFromBech32(NFT_HOLDER);
+  const nfts = await fetchNonFungibleTokens(provider, nftHolder, { from: 0, size: 5 });
+  console.log(`\nNon-fungible tokens of ${NFT_HOLDER} (up to 5):`);
+  for (const t of nfts) {
+    console.log(`  ${t.token.identifier} (nonce ${t.token.nonce}): amount ${t.amount}`);
+  }
+
+  // One specific NFT balance — showing the base-identifier + nonce requirement.
+  const [firstNft] = nfts;
+  if (firstNft !== undefined) {
+    const back = await fetchNftBalance(provider, nftHolder, firstNft.token.identifier, firstNft.token.nonce);
+    console.log(`getTokenOfAccount(base id + nonce) for ${firstNft.token.identifier}: amount ${back.amount}`);
+  } else {
+    console.log('(no NFTs on this address right now — pass another address to see the NFT path)');
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start
+```
+
+Expected output (balances are live and will differ):
+
+```text
+Fungible tokens of erd1qqqqqqqqqqqqqpgqeel2kumf0r8ffyhth7pqdujjat9nx0862jpsg2pqaq (up to 5):
+  USDC-c76f1f: 733827376705
+  EGLDUSDC-594e5e: 1000
+  WEGLD-bd4d79: 223980465825062238009362
+getTokenOfAccount('WEGLD-bd4d79'): 223980465825062238009362
+
+Non-fungible tokens of erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th (up to 5):
+  XPASS-423274-04 (nonce 4): amount 1
+getTokenOfAccount(base id + nonce) for XPASS-423274-04: amount 1
+```
+
+## How it works
+
+**Fungible and non-fungible are separate calls.** A wallet's USDC and its NFTs
+come from two different endpoints. Both return `TokenAmountOnNetwork[]`, each
+element a `token` (identifier + nonce) plus an `amount` (bigint, in the token's
+own smallest denomination). The single-token `getTokenOfAccount('WEGLD-bd4d79')`
+matches the amount from the list, one balance, two ways to reach it.
+
+**Amounts are raw bigints.** `733827376705` for USDC is `733,827.376705` after
+USDC's 6 decimals; `223980465825062238009362` for WEGLD is ~223,980 after 18
+decimals. Divide by `10 ** decimals` (from
+[Fetch token metadata](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-token-metadata))
+to display, never hard-code 18.
+
+## Pitfalls
+
+:::danger[Pitfall 1: getTokenOfAccount for an NFT wants the BASE identifier + nonce]
+`getTokenOfAccount` appends the nonce hex to the identifier itself.
+`getNonFungibleTokensOfAccount` returns the already-EXTENDED identifier
+(`XPASS-423274-04`), so passing that back in double-appends the nonce (`...-04-04`)
+and the API rejects it with "Invalid NFT identifier". Strip it to the base first
+with `TokenComputer.extractIdentifierFromExtendedIdentifier()`, then pass
+`{ identifier: base, nonce }`, reproduced and fixed against the live API.
+:::
+
+:::warning[Pitfall 2: pagination is Api-only]
+`{ from, size }` is honored by `ApiNetworkProvider` and silently ignored by
+`ProxyNetworkProvider`, whose `getFungibleTokensOfAccount(address)` signature has
+no pagination parameter at all. On the proxy you get everything back regardless,
+page in application code if the account holds a lot.
+:::
+
+:::note[Pitfall 3: an empty list is normal, not an error]
+An account with no ESDTs returns `[]`, and `getTokenOfAccount` for a token the
+account does not hold throws "Token for given account not found" rather than
+returning zero. Treat "not held" as a caught error or an empty array, not an
+exception you forgot to handle.
+:::
+
+## See also
+
+- [Fetch token metadata](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-token-metadata)
+  supplies the `decimals` you need to turn these raw amounts into human numbers.
+- [Fetch an account's on-chain state](/sdk-and-tools/sdk-js/cookbook/accounts/fetch-account-state)
+  is the EGLD balance and nonce side of the same account.
+- [Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)
+  moves one of the tokens you just read.

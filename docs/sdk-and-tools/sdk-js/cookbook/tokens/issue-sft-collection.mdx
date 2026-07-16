@@ -1,0 +1,270 @@
+---
+title: Issue an SFT collection + create, add, and burn quantity
+description: Issue a semi-fungible (SFT) collection, create an SFT batch, then add and burn quantity with sdk-core's TokenManagementController on devnet.
+difficulty: intermediate
+est_minutes: 9
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - sft
+  - esdt
+  - nft
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+A semi-fungible token (SFT) is a fungible **quantity** living at an NFT-style
+nonce inside a collection: 100 identical festival tickets, 50 copies of an in-game
+item. This recipe walks the full lifecycle with sdk-core's
+`TokenManagementController`:
+
+1. **Issue** the collection (`issueSemiFungible`, costs 0.05 EGLD).
+2. **Create** the first batch (`ESDTNFTCreate` with quantity > 1).
+3. **Add quantity** to that batch (`ESDTNFTAddQuantity`).
+4. **Burn quantity** from it (`ESDTNFTBurn`).
+
+An SFT collection is issued with the *same* input shape as an NFT collection (both
+carry `canTransferNFTCreateRole`), and an SFT is created with the *same*
+`ESDTNFTCreate` builtin as an NFT, only the quantity differs. Contrast the
+single-unit case in
+[Issue an NFT collection](/sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection).
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites. **No devnet EGLD required** to verify the payloads, see "How it
+  works".
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/issue-sft-collection
+npm install
+npm run build
+npm start -- ./wallet.pem CookbookSFT CSFT
+```
+
+## The code
+
+```ts title="src/sft.ts"
+// src/sft.ts — the subject of this recipe: the full semi-fungible (SFT)
+// lifecycle via sdk-core's TokenManagementController.
+//
+//   1. issueSemiFungibleCollection — register the collection (costs 0.05 EGLD)
+//   2. createSft                    — mint the first batch (quantity > 1)
+//   3. addSftQuantity               — increase an existing batch's supply
+//   4. burnSftQuantity              — destroy some of a batch's supply
+//
+// An SFT is a fungible quantity that lives at a specific NFT-style nonce
+// inside a collection. Its issuance has the SAME shape as an NFT collection
+// (IssueSemiFungibleInput === IssueNonFungibleInput — both carry
+// `canTransferNFTCreateRole`, all-caps NFT), and creation reuses the exact
+// same `ESDTNFTCreate` builtin as an NFT, only with an initialQuantity above
+// 1. See issue-nft-collection for the quantity-1 case.
+//
+// Two casing facts baked in (see the recipe page's Pitfalls):
+//   - Controller: createTransactionForCreatingNft (lowercase "Nft").
+//     Factory: createTransactionForCreatingNFT (all-caps "NFT").
+//   - royalties is a plain number, not a bigint.
+
+import type { Account, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+export interface IssueSftInput {
+  tokenName: string;
+  tokenTicker: string;
+}
+
+export interface CreateSftInput {
+  tokenIdentifier: string;
+  /** How many units of this new batch to mint — the point of an SFT (> 1). */
+  initialQuantity: bigint;
+  name: string;
+  /** Basis points, e.g. 500 = 5%. A plain number, NOT a bigint. */
+  royalties: number;
+  uris: string[];
+}
+
+export interface QuantityInput {
+  tokenIdentifier: string;
+  /** The nonce of the batch to change (from the create step's outcome). */
+  tokenNonce: bigint;
+  quantity: bigint;
+}
+
+/** Step 1 — register the SFT collection. Costs a fixed 0.05 EGLD + gas. */
+export async function issueSemiFungibleCollection(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: IssueSftInput,
+): Promise<Transaction> {
+  const controller = entrypoint.createTokenManagementController();
+  return controller.createTransactionForIssuingSemiFungible(sender, sender.getNonceThenIncrement(), {
+    tokenName: input.tokenName,
+    tokenTicker: input.tokenTicker,
+    canFreeze: true,
+    canWipe: true,
+    canPause: true,
+    // All-caps "NFT" — the field exists for SFT/NFT issuance, unlike
+    // fungible issuance where it does not exist at all.
+    canTransferNFTCreateRole: true,
+    canChangeOwner: true,
+    canUpgrade: true,
+    canAddSpecialRoles: true,
+  });
+}
+
+/** Step 2 — create (mint) the first batch. Needs the ESDTRoleNFTCreate role. */
+export async function createSft(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: CreateSftInput,
+): Promise<Transaction> {
+  const controller = entrypoint.createTokenManagementController();
+  // createTransactionForCreatingNft — lowercase "Nft" on the controller.
+  return controller.createTransactionForCreatingNft(sender, sender.getNonceThenIncrement(), {
+    tokenIdentifier: input.tokenIdentifier,
+    initialQuantity: input.initialQuantity,
+    name: input.name,
+    royalties: input.royalties, // plain number
+    hash: '',
+    attributes: new Uint8Array(),
+    uris: input.uris,
+  });
+}
+
+/** Step 3 — add supply to an existing batch. Needs the ESDTRoleNFTAddQuantity role. */
+export async function addSftQuantity(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: QuantityInput,
+): Promise<Transaction> {
+  const controller = entrypoint.createTokenManagementController();
+  return controller.createTransactionForAddingQuantity(sender, sender.getNonceThenIncrement(), {
+    tokenIdentifier: input.tokenIdentifier,
+    tokenNonce: input.tokenNonce,
+    quantity: input.quantity,
+  });
+}
+
+/** Step 4 — destroy supply from a batch. Needs the ESDTRoleNFTBurn role. */
+export async function burnSftQuantity(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: QuantityInput,
+): Promise<Transaction> {
+  const controller = entrypoint.createTokenManagementController();
+  return controller.createTransactionForBurningQuantity(sender, sender.getNonceThenIncrement(), {
+    tokenIdentifier: input.tokenIdentifier,
+    tokenNonce: input.tokenNonce,
+    quantity: input.quantity,
+  });
+}
+
+/** Decode a transaction's `data` field into `<function>` + hex `<args>`. */
+export function describePayload(transaction: Transaction): {
+  function: string;
+  receiver: string;
+  value: string;
+  args: string[];
+} {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    value: transaction.value.toString(),
+    args: parts.slice(1),
+  };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> <tokenName> <tokenTicker>
+```
+
+A real captured run (unfunded wallet), abbreviated:
+
+```text
+ISSUE semi-fungible collection:
+  function: issueSemiFungible
+  receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
+  value:    50000000000000000
+
+CREATE SFT (CSFT-000000, quantity 100):
+  function: ESDTNFTCreate
+  receiver: erd18l2cww3g3g6uc35wy60efd87ss85xdqj9gh9qn6ga6halz3jscaqd4dl3k
+  args:     [435346542d303030303030, 64, 4261746368202331, 01f4, , , 6874747073...]
+
+ADD quantity (nonce 1, +50):   ESDTNFTAddQuantity ... [CSFT..., 01, 32]
+BURN quantity (nonce 1, -10):  ESDTNFTBurn        ... [CSFT..., 01, 0a]
+
+Broadcasting the issuance...
+Rejected (expected for an unfunded wallet): ... insufficient funds for address erd18l2c...
+```
+
+## Two independently-verified steps, not a real end-to-end mint
+
+An unfunded wallet's issuance never lands on-chain, so there is no real collection
+identifier to mint into, the create/add/burn steps use a **placeholder**
+(`CSFT-000000`). In real usage: send the issuance, parse the identifier from its
+outcome (`awaitCompletedIssueSemiFungible(txHash)` returns `[{ tokenIdentifier }]`),
+then feed that into the create step.
+
+## How it works
+
+**Issuance** is addressed to the ESDT system contract with
+`value: 50000000000000000` (exactly 0.05 EGLD), and its flags include
+`canTransferNFTCreateRole` (all-caps "NFT", same as NFT issuance).
+
+**Create/add/burn** are builtin functions executed in the creator's own account,
+so their receiver is the **sender**, not a contract, hand-verified against the
+decoded payloads above:
+
+- `ESDTNFTCreate@<tokenId>@<quantity>@<name>@<royalties>@<hash>@<attributes>@<uris…>`.
+  The quantity `64` is hex for 100, the whole point of an SFT. Royalties `01f4` is
+  hex for 500 (a plain **number**, not a bigint, `500n` fails `tsc --strict`
+  against `MintInput.royalties: number`).
+- `ESDTNFTAddQuantity@<tokenId>@<nonce>@<quantity>` and
+  `ESDTNFTBurn@<tokenId>@<nonce>@<quantity>` both take the batch's **nonce** (from
+  the create outcome) plus an amount.
+
+## Pitfalls
+
+:::warning[Pitfall 1: createTransactionForCreatingNft (Controller) vs ...CreatingNFT (Factory)]
+The controller spells it lowercase `Nft`; the factory spells it all-caps `NFT`.
+Mixing them up is a `tsc --strict` error. This recipe uses the controller. See
+[Issue an NFT collection](/sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection)'s
+Pitfall 2.
+:::
+
+:::danger[Pitfall 2: royalties is a plain number, not a bigint]
+`royalties: 500n` fails `tsc --strict` against `MintInput.royalties: number`. Use
+`500`.
+:::
+
+:::note[Pitfall 3: add/burn quantity need the matching roles]
+`ESDTNFTAddQuantity` needs `ESDTRoleNFTAddQuantity` and `ESDTNFTBurn` needs
+`ESDTRoleNFTBurn` on the creator address. Grant them like any special role, see
+[Set and unset special roles](/sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles)
+(the SFT role setter is
+`createTransactionForSettingSpecialRoleOnSemiFungibleToken`).
+:::
+
+## See also
+
+- [Issue an NFT collection + mint an NFT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection)
+  is the single-unit sibling; same issuance and `ESDTNFTCreate` shape with quantity
+  1.
+- [Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token)
+  is the fully fungible case, and why `canTransferNFTCreateRole` does not apply
+  there.
+- [Set and unset special roles](/sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles)
+  grants the create / add-quantity / burn roles this recipe relies on.
