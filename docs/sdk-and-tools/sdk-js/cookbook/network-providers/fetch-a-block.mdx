@@ -1,0 +1,201 @@
+---
+title: Fetch a block
+description: Fetch the latest block and a block by hash via ApiNetworkProvider, and a block by shard and nonce via ProxyNetworkProvider. Verified live against mainnet.
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - network-provider
+  - api
+  - proxy
+  - typescript
+---
+
+Fetching a block is the read where the Api and Proxy providers diverge the most,
+so it is worth doing deliberately.
+
+- **`ApiNetworkProvider`** addresses a block by **hash**: `getBlock(blockHash)`
+  and `getLatestBlock()`.
+- **`ProxyNetworkProvider`** addresses a block by **shard + nonce**:
+  `getBlock({ shard, blockNonce })` and `getLatestBlock(shard)`.
+
+The API is a cross-shard index, so a hash is a global key. The proxy talks to
+observers of one shard at a time, so it needs the shard plus a coordinate within
+it. The block methods are **not** on the shared `INetworkProvider` interface, so
+the functions in this recipe are typed against the concrete provider classes.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/fetch-a-block
+npm install
+npm run build
+npm start
+```
+
+## Fetching blocks
+
+```ts title="src/blocks.ts"
+// src/blocks.ts — the subject of this recipe: fetching a block. This is where
+// the Api and Proxy providers diverge the most, so the functions below are
+// typed against the concrete provider classes, not INetworkProvider (the block
+// methods are NOT on the shared interface).
+//
+//   - ApiNetworkProvider identifies a block by HASH:
+//       getBlock(blockHash) / getLatestBlock()
+//   - ProxyNetworkProvider identifies a block by SHARD + NONCE:
+//       getBlock({ shard, blockNonce }) / getLatestBlock(shard)
+//
+// Why the difference: the API is a cross-shard index, so a hash is a global
+// key. The proxy talks to observers of one shard at a time, so it needs the
+// shard plus a coordinate (hash or nonce) within it.
+
+import type { ApiNetworkProvider, ProxyNetworkProvider, BlockOnNetwork } from '@multiversx/sdk-core';
+
+/** API: the most recent block the index has seen. */
+export async function fetchLatestBlockApi(api: ApiNetworkProvider): Promise<BlockOnNetwork> {
+  return api.getLatestBlock();
+}
+
+/** API: any block, addressed by its hash. */
+export async function fetchBlockByHashApi(
+  api: ApiNetworkProvider,
+  blockHash: string,
+): Promise<BlockOnNetwork> {
+  return api.getBlock(blockHash);
+}
+
+/**
+ * Proxy: a block addressed by shard + nonce. Get the nonce from
+ * `getNetworkStatus(shard)` (use `highestFinalNonce` so the block is final).
+ */
+export async function fetchBlockByNonceProxy(
+  proxy: ProxyNetworkProvider,
+  shard: number,
+  blockNonce: bigint,
+): Promise<BlockOnNetwork> {
+  return proxy.getBlock({ shard, blockNonce });
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — fetch the latest block by hash (API), re-fetch that exact
+// block by its hash to prove round-trip, then fetch a final block by shard +
+// nonce (Proxy). No wallet, no gas.
+//
+// Usage:
+//   npm run build && npm start
+
+import { ApiNetworkProvider, ProxyNetworkProvider } from '@multiversx/sdk-core';
+import { fetchLatestBlockApi, fetchBlockByHashApi, fetchBlockByNonceProxy } from './blocks';
+
+const MAINNET_API = 'https://api.multiversx.com';
+const MAINNET_GATEWAY = 'https://gateway.multiversx.com';
+
+async function main(): Promise<void> {
+  const api = new ApiNetworkProvider(MAINNET_API, { clientName: 'mvx-cookbook' });
+  const proxy = new ProxyNetworkProvider(MAINNET_GATEWAY, { clientName: 'mvx-cookbook' });
+
+  // API — latest block, then the same block re-fetched by its hash.
+  const latest = await fetchLatestBlockApi(api);
+  console.log('API getLatestBlock():');
+  console.log(`  shard ${latest.shard}, nonce ${latest.nonce}, epoch ${latest.epoch}`);
+  console.log(`  hash ${latest.hash}`);
+
+  const byHash = await fetchBlockByHashApi(api, latest.hash);
+  console.log('API getBlock(hash) — round-trip:');
+  console.log(`  shard ${byHash.shard}, nonce ${byHash.nonce} (same block: ${byHash.hash === latest.hash})`);
+
+  // Proxy — a final block on shard 1, addressed by nonce.
+  const shard = 1;
+  const status = await proxy.getNetworkStatus(shard);
+  const finalNonce = status.highestFinalNonce;
+  const byNonce = await fetchBlockByNonceProxy(proxy, shard, finalNonce);
+  console.log(`\nProxy getBlock({ shard: ${shard}, blockNonce: ${finalNonce} }):`);
+  console.log(`  shard ${byNonce.shard}, nonce ${byNonce.nonce}, epoch ${byNonce.epoch}`);
+  console.log(`  hash ${byNonce.hash}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start
+```
+
+Expected output (live values, so nonces and hashes will differ when you run it):
+
+```text
+API getLatestBlock():
+  shard 0, nonce 31313292, epoch 2175
+  hash 5a3d6c018a5aa443ea558c0cd9c4e23738d1184bbbda3fbe072fda931c50458e
+API getBlock(hash) — round-trip:
+  shard 0, nonce 31313292 (same block: true)
+
+Proxy getBlock({ shard: 1, blockNonce: 31302554 }):
+  shard 1, nonce 31302554, epoch 2175
+  hash daf493760526846b1d0d571ce801573ddfe1383866b9338ee56afe611fbb1462
+```
+
+## How it works
+
+**Latest, then round-trip by hash.** The recipe calls `getLatestBlock()` on the
+Api provider, then feeds that block's `hash` straight back into `getBlock(hash)`
+and asserts the two are the same block, a live proof that both API paths agree.
+
+**Proxy needs a nonce, so read the status first.** For the proxy's by-nonce
+lookup, the recipe reads `getNetworkStatus(shard).highestFinalNonce` and requests
+that block, so it always asks for a **final** (irreversible) block rather than a
+tip that might still reorg.
+
+**`BlockOnNetwork` fields.** Both paths return the same shape: `shard`, `nonce`
+(bigint), `hash`, `previousHash`, `timestamp`, `round`, `epoch`.
+
+## Pitfalls
+
+:::danger[Pitfall 1: ProxyNetworkProvider.getLatestBlock() is broken (sdk-core v15.4.1)]
+It returns an empty block (`shard: NaN, nonce: 0n, hash: ''`) because it does not
+unwrap the gateway's `response.block` envelope, unlike `getBlock()` which does.
+Workaround: use `getBlock({ shard, blockNonce })` with a nonce from
+`getNetworkStatus(shard)`, which is exactly what this recipe does. The **Api**
+provider's `getLatestBlock()` works correctly.
+:::
+
+:::warning[Pitfall 2: ProxyNetworkProvider.getBlock rejects the genesis nonce]
+The internal guard is `else if (args.blockNonce)`, and `0n` is falsy, so
+requesting block nonce `0` throws `Block hash or block nonce not provided.` If you
+genuinely need the genesis block from the proxy, query it by hash instead of
+nonce.
+:::
+
+:::note[Pitfall 3: block methods are not on INetworkProvider]
+`getBlock` / `getLatestBlock` exist only on the concrete `ApiNetworkProvider` and
+`ProxyNetworkProvider` classes, and with different signatures. A variable typed as
+`INetworkProvider` cannot call them at all. Type against the concrete provider, as
+this recipe does.
+:::
+
+## See also
+
+- [Fetch network config and status](/sdk-and-tools/sdk-js/cookbook/network-providers/fetch-network-config-status)
+  is where the `blockNonce` this recipe queries comes from.
+- [Configure a network provider](/sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider)
+  covers Api vs Proxy, the distinction this recipe leans on hardest.
+- [Custom API/Proxy request](/sdk-and-tools/sdk-js/cookbook/network-providers/custom-api-request)
+  reaches block sub-resources the typed methods do not model yet.

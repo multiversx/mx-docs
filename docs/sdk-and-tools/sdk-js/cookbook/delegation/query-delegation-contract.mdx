@@ -1,0 +1,257 @@
+---
+title: Read a delegation contract's state
+description: "Read a MultiversX staking-provider contract state with read-only queries: total stake, service fee, a delegator active stake and claimable rewards."
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - delegation
+  - network-provider
+  - devnet
+  - typescript
+---
+
+A delegation contract is a normal smart contract, so you read its state with the
+same read-only VM queries as any other, no wallet, no nonce, no gas. This recipe
+queries a live devnet staking provider for its config (owner, service fee), its
+total active stake and delegator count, and one delegator's active stake and
+claimable rewards, decoding the raw return bytes by hand because the delegation
+system contract does not ship an ABI with sdk-core.
+
+The whole recipe runs against real devnet data out of the box, `npm start` needs
+nothing but network access.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Devnet network access. No wallet, no funds.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/query-delegation-contract
+npm install
+npm run build
+```
+
+## Querying
+
+```ts title="src/queryDelegation.ts"
+// src/queryDelegation.ts - the actual subject of this recipe: reading a
+// staking-provider (delegation) contract's state with read-only VM queries.
+// No wallet, no nonce, no gas, no signing - every function here is a plain
+// query against a live devnet delegation contract. A view function does not
+// modify contract state, so there is no transaction to send.
+//
+// A delegation contract is a normal smart contract that happens to be
+// created by the delegation manager. Its views are queried exactly like any
+// other contract's, through `SmartContractController.query()`. We construct
+// the controller WITHOUT an ABI (the delegation system contract does not
+// ship one with sdk-core), so:
+//   - query results come back as RAW `Uint8Array[]` return-data parts, which
+//     we decode by hand (a top-level BigUint is just big-endian bytes;
+//     an empty part is zero);
+//   - address arguments must be passed as `TypedValue`s (an `AddressValue`),
+//     because without an ABI there is no NativeSerializer to convert a plain
+//     bech32 string. See the Pitfalls in the recipe page.
+//
+// The example contract and delegator below are real and live on devnet; the
+// recipe page shows the actual values they returned.
+
+import { Address, AddressValue } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/** A real, live devnet staking-provider contract (666 delegators at the time of writing). */
+export const EXAMPLE_DELEGATION_CONTRACT =
+  'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww';
+
+/** A real delegator with active stake in the contract above (its owner). */
+export const EXAMPLE_DELEGATOR =
+  'erd1kv5mkar6fvt6vhqj7evfqr9jnmmlqps3q9dp0t0gr9tcpqupyrsshlnvd0';
+
+/**
+ * Decode a top-level `BigUint` returned by a view. On MultiversX a top-level
+ * (top-encoded) BigUint is its minimal big-endian byte string, and an empty
+ * return part means zero - so `[]` decodes to `0n`, not an error.
+ */
+export function decodeBigUint(part: Uint8Array): bigint {
+  if (part.length === 0) {
+    return 0n;
+  }
+  return BigInt('0x' + Buffer.from(part).toString('hex'));
+}
+
+/** Query a zero-argument view that returns a single BigUint. */
+async function queryBigUintView(
+  entrypoint: DevnetEntrypoint,
+  contract: string,
+  functionName: string,
+): Promise<bigint> {
+  const controller = entrypoint.createSmartContractController(); // no ABI
+  const parts = (await controller.query({
+    contract: Address.newFromBech32(contract),
+    function: functionName,
+    arguments: [],
+  })) as Uint8Array[];
+  return decodeBigUint(parts[0] ?? new Uint8Array());
+}
+
+/** Query a view that takes one delegator address and returns a single BigUint. */
+async function queryDelegatorView(
+  entrypoint: DevnetEntrypoint,
+  contract: string,
+  functionName: string,
+  delegator: string,
+): Promise<bigint> {
+  const controller = entrypoint.createSmartContractController(); // no ABI
+  const parts = (await controller.query({
+    contract: Address.newFromBech32(contract),
+    function: functionName,
+    // Without an ABI, arguments must be TypedValues (or raw buffers), never a
+    // plain bech32 string. An AddressValue encodes to the 32-byte public key.
+    arguments: [new AddressValue(Address.newFromBech32(delegator))],
+  })) as Uint8Array[];
+  return decodeBigUint(parts[0] ?? new Uint8Array());
+}
+
+/** Total EGLD actively staked into this contract (all delegators). */
+export async function queryTotalActiveStake(
+  entrypoint: DevnetEntrypoint,
+  contract: string,
+): Promise<bigint> {
+  return queryBigUintView(entrypoint, contract, 'getTotalActiveStake');
+}
+
+/** Number of distinct delegators in this contract. */
+export async function queryNumUsers(entrypoint: DevnetEntrypoint, contract: string): Promise<bigint> {
+  return queryBigUintView(entrypoint, contract, 'getNumUsers');
+}
+
+/** One delegator's currently-active (staked) amount, in wei. */
+export async function queryUserActiveStake(
+  entrypoint: DevnetEntrypoint,
+  contract: string,
+  delegator: string,
+): Promise<bigint> {
+  return queryDelegatorView(entrypoint, contract, 'getUserActiveStake', delegator);
+}
+
+/** One delegator's unclaimed rewards, in wei. */
+export async function queryClaimableRewards(
+  entrypoint: DevnetEntrypoint,
+  contract: string,
+  delegator: string,
+): Promise<bigint> {
+  return queryDelegatorView(entrypoint, contract, 'getClaimableRewards', delegator);
+}
+
+export interface DelegationConfig {
+  /** The contract owner (the staking provider operator). */
+  owner: string;
+  /** Service fee in basis points of 10,000 (e.g. 1000 = 10%). */
+  serviceFeePerTenThousand: number;
+}
+
+/**
+ * Read the contract's configuration. `getContractConfig` returns many parts;
+ * the first is the owner's 32-byte public key and the second is the service
+ * fee as a BigUint over 10,000. We decode just those two here; the remaining
+ * parts (delegation cap, activation flags, etc.) decode the same way.
+ */
+export async function queryContractConfig(
+  entrypoint: DevnetEntrypoint,
+  contract: string,
+): Promise<DelegationConfig> {
+  const controller = entrypoint.createSmartContractController(); // no ABI
+  const parts = (await controller.query({
+    contract: Address.newFromBech32(contract),
+    function: 'getContractConfig',
+    arguments: [],
+  })) as Uint8Array[];
+
+  const ownerBytes = parts[0] ?? new Uint8Array();
+  const serviceFeeBytes = parts[1] ?? new Uint8Array();
+  return {
+    owner: new Address(ownerBytes).toBech32(),
+    serviceFeePerTenThousand: Number(decodeBigUint(serviceFeeBytes)),
+  };
+}
+```
+
+## Run it
+
+```bash
+# Query the built-in example contract + delegator:
+npm start
+
+# Or point it at any delegation contract and delegator:
+npm start -- erd1qqq...delegationContract erd1...delegator
+```
+
+Real output against the example contract (values move as the chain lives):
+
+```text
+Delegation contract: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww
+  owner:              erd1kv5mkar6fvt6vhqj7evfqr9jnmmlqps3q9dp0t0gr9tcpqupyrsshlnvd0
+  service fee:        10%
+  total active stake: 162444.3154 EGLD (162444315455774609992988 wei)
+  delegators:         666
+
+Delegator: erd1kv5mkar6fvt6vhqj7evfqr9jnmmlqps3q9dp0t0gr9tcpqupyrsshlnvd0
+  active stake:       10000.0000 EGLD (10000000000000000000000 wei)
+  claimable rewards:  19559.2005 EGLD (19559200521796778772671 wei)
+```
+
+## How it works
+
+**No ABI, so decode by hand.** `entrypoint.createSmartContractController()` with
+no ABI makes `query()` return the raw `Uint8Array[]` return-data parts. A top-level
+`BigUint` is just its big-endian bytes, and an empty part is zero, so
+`getUserActiveStake` and friends decode with a one-line `BigInt('0x' + hex)` (or
+`0n` when empty).
+
+**Address arguments must be TypedValues.** Without an ABI there is no
+NativeSerializer, so a delegator argument cannot be a plain bech32 string. Wrap it
+as `new AddressValue(Address.newFromBech32(...))`, which encodes to the 32-byte
+public key the view expects.
+
+**The views used.** `getContractConfig` returns many parts (part 0 is the owner's
+public key, part 1 is the service fee over 10,000); `getTotalActiveStake` and
+`getNumUsers` take no arguments; `getUserActiveStake` and `getClaimableRewards`
+take one delegator address.
+
+For the same pattern with an ABI that auto-decodes results, see the
+query-contract-view recipe.
+
+## Pitfalls
+
+:::warning[Pitfall 1: without an ABI you get bytes, and address args must be typed]
+`query()` with no ABI returns `Uint8Array[]`, not decoded values, and rejects
+plain-string arguments with "cannot encode arguments: when ABI is not available,
+they must be either typed values or buffers." Pass an `AddressValue` (or a raw
+buffer) and decode the results yourself.
+:::
+
+:::note[Pitfall 2: an empty return part means zero, not an error]
+A delegator with no stake or no rewards makes the contract return an empty part for
+that view. Decode it as `0n`; do not treat the empty `Uint8Array` as a failure.
+:::
+
+:::note[Pitfall 3: service fee is over 10,000]
+`getContractConfig` returns the service fee as an integer over 10,000 (e.g. `1000`
+= 10%), matching the value you pass when creating a contract. Divide by 100 for a
+percentage.
+:::
+
+## See also
+
+- [Delegate (stake) EGLD](/sdk-and-tools/sdk-js/cookbook/delegation/delegate-stake)
+  acts on the state you just read.
+- [Claim and re-delegate rewards](/sdk-and-tools/sdk-js/cookbook/delegation/claim-and-redelegate-rewards)
+  uses the claimable rewards this recipe reads.
+- Querying a contract view with an ABI decodes results automatically, covered in
+  the smart-contracts recipes.

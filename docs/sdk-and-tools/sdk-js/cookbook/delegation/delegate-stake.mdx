@@ -1,0 +1,200 @@
+---
+title: Delegate (stake) EGLD
+description: Delegate (stake) EGLD to an existing MultiversX delegation contract with sdk-core DelegationController and factory, then parse the staked amount.
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - delegation
+  - transaction
+  - devnet
+  - typescript
+---
+
+Delegating is the everyday delegation write: you send EGLD to a staking
+provider's contract and it stakes on your behalf. The wire payload is just
+`delegate` with no arguments, the amount you stake travels in the transaction's
+`value`. This recipe builds that transaction both ways (controller and factory)
+and parses a completed one for the staked amount.
+
+The default `npm start` parses a real, already-completed devnet delegate, so you
+see the parse work without a funded wallet.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- For the default `parse` and `payload` demos: devnet network access only.
+- For an actual stake: a devnet PEM wallet with the EGLD you want to delegate plus
+  gas.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/delegate-stake
+npm install
+npm run build
+```
+
+## Delegating
+
+```ts title="src/delegate.ts"
+// src/delegate.ts - the subject of this recipe: delegating (staking) EGLD to
+// an existing delegation contract with `delegate`, two ways (controller and
+// factory), then parsing the outcome for the staked amount.
+//
+// `delegate` is the simplest delegation write: you send EGLD to a staking
+// provider's contract and it stakes it on your behalf. The wire payload is
+// just the function name `delegate` with NO arguments - the amount you stake
+// travels in the transaction's `value`, not in the data. The receiver is the
+// delegation contract itself (not the delegation manager - that is only for
+// creating a contract; see the create-delegation-contract recipe).
+
+import { Account, Address, DelegationTransactionsOutcomeParser } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+/**
+ * Delegate path 1 - the controller. `createTransactionForDelegating` builds,
+ * sets the nonce, and signs in one call.
+ */
+export async function delegateViaController(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+  amount: bigint,
+): Promise<Transaction> {
+  const controller = entrypoint.createDelegationController();
+  return controller.createTransactionForDelegating(sender, sender.getNonceThenIncrement(), {
+    delegationContract: Address.newFromBech32(delegationContract),
+    amount,
+  });
+}
+
+/**
+ * Delegate path 2 - the factory. Builds the unsigned transaction only; the
+ * caller sets the nonce and signs.
+ */
+export async function delegateViaFactory(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+  amount: bigint,
+): Promise<Transaction> {
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const transaction = await factory.createTransactionForDelegating(sender.address, {
+    delegationContract: Address.newFromBech32(delegationContract),
+    amount,
+  });
+  transaction.nonce = sender.getNonceThenIncrement();
+  transaction.signature = await sender.signTransaction(transaction);
+  return transaction;
+}
+
+export interface DelegatePayload {
+  function: string;
+  receiver: string;
+  valueWei: bigint;
+  gasLimit: bigint;
+}
+
+/** Decode a delegate transaction's wire fields. `delegate` carries no args. */
+export function describeDelegatePayload(transaction: Transaction): DelegatePayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    valueWei: transaction.value,
+    gasLimit: transaction.gasLimit,
+  };
+}
+
+/**
+ * Parse a completed delegate transaction for the staked amount. The parser
+ * reads the `delegate` log event emitted by the contract.
+ */
+export async function parseDelegatedAmount(
+  entrypoint: DevnetEntrypoint,
+  txHash: string,
+): Promise<bigint> {
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const parser = new DelegationTransactionsOutcomeParser();
+  const outcome = parser.parseDelegate(transactionOnNetwork);
+  return outcome[0]?.amount ?? 0n;
+}
+```
+
+## Run it
+
+```bash
+# Parse a real completed devnet delegate - no wallet, no funds:
+npm start
+
+# Inspect the delegate wire payload offline:
+npm start -- payload
+
+# Actually stake (needs a funded devnet PEM); add --factory for the factory path:
+npm start -- send ./wallet.pem
+```
+
+Output of the default `parse` mode, and of `payload`:
+
+```text
+Parsing completed delegate e706916a...06fefda98 ...
+  staked amount: 10000000000000000000 wei (10 EGLD)
+
+function:  delegate  (no arguments - amount travels in value)
+value:     1000000000000000000 wei (1 EGLD)
+receiver:  erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww  (the delegation contract)
+gasLimit:  11062000
+```
+
+## How it works
+
+**Controller vs factory.**
+`controller.createTransactionForDelegating(account, nonce, input)` builds, sets
+the nonce, and signs in one call.
+`factory.createTransactionForDelegating(address, input)` only builds the unsigned
+transaction; you set `nonce` and `signature`. The input is
+`{ delegationContract, amount }`, where `delegationContract` is an `Address` and
+`amount` is wei.
+
+**The amount is the value, not an argument.** Unlike `unDelegate`, `delegate` puts
+nothing in the data beyond the function name. The staked amount is the
+transaction's `value`, sent to the delegation contract.
+
+**Parsing the outcome.**
+`DelegationTransactionsOutcomeParser.parseDelegate(transactionOnNetwork)` reads the
+`delegate` log event and returns the staked amount. The default `npm start` runs
+it against a historical delegate, which is why it needs no funds.
+
+## Pitfalls
+
+:::warning[Pitfall 1: delegate goes to the contract, not the manager]
+The receiver is the delegation contract itself (`erd1qqq...scktaww` above), not the
+delegation manager. The manager address is only for `createNewDelegationContract`.
+Sending `delegate` to the manager fails.
+:::
+
+:::note[Pitfall 2: each provider sets its own minimum]
+There is no single protocol-wide minimum to delegate; a staking provider can set a
+per-delegation minimum in its own contract. A too-small `delegate` will be rejected
+by the contract, not by the SDK. Read the provider's config first (see the query
+recipe).
+:::
+
+:::note[Pitfall 3: the amount is in wei (10^18 per EGLD)]
+`amount: 1_000_000_000_000_000_000n` is 1 EGLD. Passing `1n` delegates one wei.
+Always scale by 10^18, and keep amounts as `bigint`.
+:::
+
+## See also
+
+- [Create a delegation contract](/sdk-and-tools/sdk-js/cookbook/delegation/create-delegation-contract)
+  makes the contract you delegate into.
+- [Claim and re-delegate rewards](/sdk-and-tools/sdk-js/cookbook/delegation/claim-and-redelegate-rewards)
+  handles the rewards this stake earns.
+- [Read a delegation contract's state](/sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract)
+  checks your active stake after delegating.

@@ -1,0 +1,214 @@
+---
+title: Read a multisig's state
+description: Read a MultiversX multisig's quorum, board members, and pending actions with their signers using sdk-core's MultisigController, no wallet needed.
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - multisig
+  - smart-contract
+  - devnet
+---
+
+Before you sign or perform anything on a multisig, you read it: who is on the
+board, how many signatures the quorum needs, and what is currently pending. This
+recipe reads all of that with the `MultisigController`'s view helpers. None of it
+needs a wallet, it is read-only `queryContract` under the hood, decoded through the
+multisig ABI.
+
+The reads split in two: the **board configuration** (quorum, board members,
+proposers) and the **pending actions** (what has been proposed but not performed,
+and for each, its signers and whether it has reached quorum). The default
+`npm start` reads a real devnet multisig, so it shows live output out of the box.
+
+## Prerequisites
+
+- Node.js >= 20.13.1 and devnet network access. No wallet, ever.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/multisig-read-state
+npm install
+npm run build
+```
+
+## Reading
+
+```ts title="src/read.ts"
+// src/read.ts - the subject of this recipe: reading a multisig contract's
+// state with the MultisigController's view helpers. None of this needs a
+// wallet - it is all read-only `queryContract` under the hood, decoded through
+// the multisig ABI.
+//
+// What you can read splits into two groups:
+//   - the board configuration: quorum, board members, proposers;
+//   - the pending actions: what has been proposed but not yet performed, and
+//     for each, who has signed and whether it has reached quorum.
+//
+// Together these answer "who controls this multisig, and what is it about to
+// do?" - the questions you ask before you sign or perform anything.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export interface MultisigBoard {
+  quorum: number;
+  numBoardMembers: number;
+  numProposers: number;
+  actionLastIndex: number;
+  boardMembers: string[];
+  proposers: string[];
+}
+
+/** Read the board configuration: quorum and membership. */
+export async function readBoard(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  multisigAddress: string,
+): Promise<MultisigBoard> {
+  const controller = entrypoint.createMultisigController(abi);
+  const [quorum, numBoardMembers, numProposers, actionLastIndex, boardMembers, proposers] = await Promise.all([
+    controller.getQuorum({ multisigAddress }),
+    controller.getNumBoardMembers({ multisigAddress }),
+    controller.getNumProposers({ multisigAddress }),
+    controller.getActionLastIndex({ multisigAddress }),
+    controller.getAllBoardMembers({ multisigAddress }),
+    controller.getAllProposers({ multisigAddress }),
+  ]);
+  return { quorum, numBoardMembers, numProposers, actionLastIndex, boardMembers, proposers };
+}
+
+export interface PendingAction {
+  actionId: number;
+  groupId: number;
+  type: string;
+  signers: string[];
+  quorumReached: boolean;
+}
+
+/**
+ * Read every pending action, and for each, its signers and whether it has
+ * reached quorum. `getPendingActionFullInfo` returns the action id, group id,
+ * decoded action data (its `type` names what it will do), and the raw signer
+ * list; `quorumReached` tells you if it can be performed now.
+ */
+export async function readPendingActions(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  multisigAddress: string,
+): Promise<PendingAction[]> {
+  const controller = entrypoint.createMultisigController(abi);
+  const pending = await controller.getPendingActionFullInfo({ multisigAddress });
+
+  const result: PendingAction[] = [];
+  for (const action of pending) {
+    const quorumReached = await controller.quorumReached({ multisigAddress, actionId: action.actionId });
+    result.push({
+      actionId: action.actionId,
+      groupId: action.groupId,
+      type: action.actionData.type,
+      // `signers` here is `Address[]` (from FullMultisigAction), unlike the
+      // `getActionSigners` helper whose declared type is wrong - see Pitfalls.
+      signers: action.signers.map((address: Address) => address.toBech32()),
+      quorumReached,
+    });
+  }
+  return result;
+}
+
+/** Look up one user's role on the multisig: None, Proposer, or BoardMember. */
+export async function readUserRole(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  multisigAddress: string,
+  userAddress: string,
+): Promise<string> {
+  const controller = entrypoint.createMultisigController(abi);
+  const role = await controller.getUserRole({ multisigAddress, userAddress });
+  return role.valueOf();
+}
+```
+
+## Run it
+
+```bash
+# Read the bundled example multisig - live, no wallet:
+npm start
+
+# Read any multisig you pass:
+npm start -- erd1qqqqqqqqqqqqqpgq...
+```
+
+Expected output (a live snapshot, the pending action changes as the board acts):
+
+```text
+Multisig: erd1qqqqqqqqqqqqqpgqvjcswsav2rw4ccvguyuk0f0u6qycpsuvu3dq9rse9w
+
+Board configuration:
+  quorum:             2 of 2 board members
+  proposers (non-board): 0
+  actions ever created:  5
+  board[0]: erd1d4q9a3qx5695gwd02rap2qqad3hv7lga7s06y5e6m3shuy6pu3dqagj7qe
+  board[1]: erd1c8fjemhv646hwlladfna6ce4m85y5hr4esqlysceelqgl987y92sp248zr
+  role of board[0]:   BoardMember
+
+Pending actions: 1
+  action 4 (group 0): SendTransferExecuteEgld
+    signers: erd1d4q9a3qx5695gwd02rap2qqad3hv7lga7s06y5e6m3shuy6pu3dqagj7qe
+    quorum reached: false
+```
+
+## How it works
+
+**One controller, many views.** `entrypoint.createMultisigController(abi)` gives
+you `getQuorum`, `getNumBoardMembers`, `getAllBoardMembers`, `getAllProposers`,
+`getActionLastIndex`, `getUserRole`, `getPendingActionFullInfo`, `quorumReached`,
+and more, all read-only queries. The ABI is required so the controller can decode
+the raw query responses into numbers, addresses, and typed action data.
+
+**Pending actions carry decoded action data.** `getPendingActionFullInfo` returns
+each pending action's id, group id, signer list (`Address[]`), and an `actionData`
+whose `type` names what it will do (`SendTransferExecuteEgld`, `AddBoardMember`,
+`ChangeQuorum`, ...). That `type` is how you tell a spend proposal from a board
+change before you sign.
+
+**Roles gate everything.** `getUserRole` returns `None`, `Proposer`, or
+`BoardMember`. Only proposers and board members may propose; only board members'
+signatures count toward quorum.
+
+## Pitfalls
+
+:::note[Pitfall 1: the ABI is required even for reads]
+`createMultisigController(abi)` needs the multisig ABI to decode query responses.
+Without it, the controller cannot turn raw returned bytes into the board list or the
+pending `actionData`. Each recipe bundles `multisig-full.abi.json`; ship the ABI
+with your app too.
+:::
+
+:::warning[Pitfall 2: getActionSigners returns Address objects, not strings]
+If you reach for `getActionSigners(...)` (used in the sign-and-perform recipe)
+rather than `getPendingActionFullInfo(...).signers`, note it is declared
+`Promise<string[]>` but actually returns `Address[]` at runtime (sdk-core v15.4.1).
+The `signers` on a `FullMultisigAction` here is correctly typed `Address[]`.
+:::
+
+:::note[Pitfall 3: the output is a live snapshot]
+Quorum and board membership are stable, but pending actions come and go as the board
+signs, performs, and discards. The example's `action 4` may be gone by the time you
+run this; pass your own multisig address as an argument to read a contract you
+control.
+:::
+
+## See also
+
+- [Propose a multisig action](/sdk-and-tools/sdk-js/cookbook/multisig/propose-action)
+  creates a pending action to read here.
+- [Sign and perform a multisig action](/sdk-and-tools/sdk-js/cookbook/multisig/sign-perform-action)
+  acts on what you read.
+- [Read a delegation contract's state](/sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract)
+  is the same read-only, no-wallet pattern for delegation.

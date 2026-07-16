@@ -1,0 +1,220 @@
+---
+title: Custom API/Proxy request
+description: Call any API or Proxy endpoint the typed provider methods do not cover, via doGetGeneric and doPostGeneric, for economics, stats, and a raw VM query.
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - network-provider
+  - api
+  - proxy
+  - typescript
+---
+
+The typed provider methods (`getAccount`, `getNetworkConfig`,
+`getTokenOfAccount`, ...) cover the common endpoints. The API and gateway expose
+many more. When you need one the SDK does not model, call it raw, both escape
+hatches are on `INetworkProvider`:
+
+- `doGetGeneric(resourceUrl)`, a GET, path relative to the provider's base URL.
+- `doPostGeneric(resourceUrl, payload)`, a POST.
+
+Both return `any`, so **you** own the shape of the result. This recipe wraps
+three raw calls, the `economics` and `stats` GETs, and a raw VM query POST, in
+typed functions.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Network access to devnet. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/custom-api-request
+npm install
+npm run build
+npm start
+```
+
+## The raw calls
+
+```ts title="src/customRequest.ts"
+// src/customRequest.ts — the subject of this recipe: the escape hatch. When a
+// provider has no typed method for the endpoint you need, call it raw:
+//
+//   doGetGeneric(resourceUrl)          → any    (a GET, path relative to the base URL)
+//   doPostGeneric(resourceUrl, payload) → any   (a POST)
+//
+// Both are on INetworkProvider. They return `any`, so YOU own the shape of the
+// result — the SDK does not validate it. This file wraps three raw calls in
+// typed functions so the rest of the app gets real types back.
+
+import type { INetworkProvider } from '@multiversx/sdk-core';
+
+/**
+ * The API's `/economics` endpoint — total/circulating supply, staked, price,
+ * market cap, APR. There is NO typed provider method for it; raw is the only
+ * way. This interface is the shape you assert (you are responsible for it).
+ */
+export interface Economics {
+  totalSupply: number;
+  circulatingSupply: number;
+  staked: number;
+  price: number;
+  marketCap: number;
+  apr: number;
+}
+
+export async function getEconomics(provider: INetworkProvider): Promise<Economics> {
+  return (await provider.doGetGeneric('economics')) as Economics;
+}
+
+/** The API's `/stats` endpoint — another untyped GET. */
+export interface NetworkStats {
+  shards: number;
+  blocks: number;
+  accounts: number;
+  transactions: number;
+}
+
+export async function getStats(provider: INetworkProvider): Promise<NetworkStats> {
+  return (await provider.doGetGeneric('stats')) as NetworkStats;
+}
+
+/**
+ * A raw VM query via POST — the same read `SmartContractController.query`
+ * wraps, shown at the HTTP level. `returnData` comes back as base64-encoded,
+ * big-endian bytes; this decodes the first return value to a bigint.
+ */
+export async function rawQuery(
+  provider: INetworkProvider,
+  scAddress: string,
+  funcName: string,
+): Promise<bigint> {
+  const result = (await provider.doPostGeneric('query', {
+    scAddress,
+    funcName,
+    args: [],
+  })) as { returnCode: string; returnData: string[] };
+
+  const [first] = result.returnData;
+  if (first === undefined || first === '') {
+    return 0n;
+  }
+  const bytes = Buffer.from(first, 'base64');
+  return bytes.length === 0 ? 0n : BigInt(`0x${bytes.toString('hex')}`);
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — three raw calls against devnet: two GETs the typed methods do
+// not model (economics, stats) and one POST (a VM query) that they DO, to show
+// the raw layer underneath. No wallet, no gas.
+//
+// Usage:
+//   npm run build && npm start
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { getEconomics, getStats, rawQuery } from './customRequest';
+
+// The adder contract on devnet — the same stable fixture the query recipe uses.
+const ADDER = 'erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug';
+
+async function main(): Promise<void> {
+  const provider = new DevnetEntrypoint().createNetworkProvider();
+
+  const econ = await getEconomics(provider);
+  console.log('GET economics (no typed provider method exists):');
+  console.log(`  price $${econ.price}, marketCap ${econ.marketCap}, staked ${econ.staked}`);
+
+  const stats = await getStats(provider);
+  console.log('GET stats:');
+  console.log(`  shards ${stats.shards}, accounts ${stats.accounts}, transactions ${stats.transactions}`);
+
+  const sum = await rawQuery(provider, ADDER, 'getSum');
+  console.log('POST query — adder.getSum() at the raw HTTP level:');
+  console.log(`  decoded returnData: ${sum}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start
+```
+
+Expected output (economics and the adder sum are live, so they move):
+
+```text
+GET economics (no typed provider method exists):
+  price $3.26, marketCap 84056590, staked 2406394
+GET stats:
+  shards 3, accounts 18, transactions 25902940
+POST query — adder.getSum() at the raw HTTP level:
+  decoded returnData: 84
+```
+
+## How it works
+
+**`economics` is the flagship raw GET.** Total supply, price, market cap, APR,
+there is no typed provider method for it, so `doGetGeneric('economics')` is the
+only way. `stats` is another. This is exactly what the escape hatch is for:
+endpoints that exist on the network but not (yet) in the SDK's typed surface.
+
+**`doPostGeneric('query', ...)` is `SmartContractController.query` at the HTTP
+level.** The raw VM query returns `returnData` as base64-encoded, big-endian
+bytes; the recipe decodes the first value to a bigint, adder's `getSum()`, the
+same `84` the typed query-contract-view recipe returns. Use the typed controller
+in real code; this shows the raw layer underneath, and the shape you would reuse
+for any unwrapped POST endpoint.
+
+**Query params go in the path string.** `doGetGeneric` takes the whole resource
+path, so pagination and filters ride along as a query string, e.g.
+`doGetGeneric('accounts/erd1.../tokens?from=0&size=10')`. There is no separate
+params argument.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the response is any; you assert the shape]
+`doGetGeneric` / `doPostGeneric` return `any`. Casting to an interface (as this
+recipe does) gives your code real types, but nothing validates the cast at
+runtime. Treat these responses like any other untrusted input, a renamed field
+will not be a compile error, it will be `undefined` at runtime.
+:::
+
+:::note[Pitfall 2: the path is relative and provider-specific]
+`doGetGeneric` prepends the provider's base URL, so pass `economics`, not
+`/economics` or a full URL. And the Api and Proxy expose different paths,
+`economics` and `stats` are API routes; a gateway (Proxy) has its own
+`network/...` and `address/...` routes. The escape hatch does not paper over that
+difference.
+:::
+
+:::note[Pitfall 3: prefer the typed method when one exists]
+If a typed method covers your need, use it, you get decoding, types, and stability
+across SDK versions for free. Reach for `doGetGeneric` / `doPostGeneric` only for
+endpoints the SDK does not model yet, and consider filing an issue so it gets a
+typed method.
+:::
+
+## See also
+
+- [Configure a network provider](/sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider)
+  is the provider whose `doGetGeneric` / `doPostGeneric` this recipe uses.
+- [Fetch an account's token balances](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-account-token-balances)
+  has typed methods for the token endpoints, so you rarely need the raw layer
+  there.
+- [Fetch token metadata](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-token-metadata)
+  is another place a typed method saves you from a raw request.

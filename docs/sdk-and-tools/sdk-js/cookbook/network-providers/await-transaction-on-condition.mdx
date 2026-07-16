@@ -1,0 +1,221 @@
+---
+title: Await a transaction on a custom condition
+description: Block until a transaction matches a predicate you write with awaitTransactionOnCondition, tuning the poll interval and timeout via AwaitingOptions.
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - network-provider
+  - transaction
+  - typescript
+---
+
+You broadcast a transaction. Now you need to block until it reaches a state you
+care about, not just "completed", but maybe "completed **and** produced a
+smart-contract result", or "reached a specific status". That is
+`awaitTransactionOnCondition`.
+
+The provider gives you two awaiters, both on `INetworkProvider`:
+
+- `awaitTransactionCompleted(hash, options?)`, the common case, a fixed condition.
+- `awaitTransactionOnCondition(hash, predicate, options?)`, **any** predicate you
+  write against the live `TransactionOnNetwork`.
+
+Both poll the network on an interval until the predicate holds or the timeout
+elapses. You would normally call these right after sending a transaction; this
+recipe points them at an already-final historical transaction so the whole thing
+runs read-only.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/await-transaction-on-condition
+npm install
+npm run build
+npm start
+```
+
+## The awaiters
+
+```ts title="src/awaitTransaction.ts"
+// src/awaitTransaction.ts — the subject of this recipe: blocking until a
+// transaction reaches a state YOU define, not just "completed".
+//
+// The provider gives you two awaiters:
+//   - awaitTransactionCompleted(hash, options?)          — the common case
+//   - awaitTransactionOnCondition(hash, predicate, options?) — any predicate
+//
+// Both poll the network on an interval until the predicate holds or the timeout
+// elapses. Both are on INetworkProvider, so an Api or a Proxy provider works.
+//
+// You normally call these right after broadcasting a transaction, to block your
+// script until the tx reaches a state you care about. This recipe instead
+// points them at an already-final historical transaction so the whole thing
+// runs read-only — no wallet, no funds, no broadcast.
+
+import type { INetworkProvider, TransactionOnNetwork, AwaitingOptions } from '@multiversx/sdk-core';
+
+/** Block until `condition(tx)` is true, using the SDK's default poll/timeout. */
+export async function awaitTransaction(
+  provider: INetworkProvider,
+  txHash: string,
+  condition: (tx: TransactionOnNetwork) => boolean,
+): Promise<TransactionOnNetwork> {
+  return provider.awaitTransactionOnCondition(txHash, condition);
+}
+
+/**
+ * The same, but with your own `AwaitingOptions` — poll faster/slower, or fail
+ * sooner. On timeout the promise REJECTS (it does not resolve with a partial
+ * result), so wrap it in try/catch if a timeout is expected.
+ */
+export async function awaitTransactionWithOptions(
+  provider: INetworkProvider,
+  txHash: string,
+  condition: (tx: TransactionOnNetwork) => boolean,
+  options: AwaitingOptions,
+): Promise<TransactionOnNetwork> {
+  return provider.awaitTransactionOnCondition(txHash, condition, options);
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — three awaits against one already-final mainnet transaction:
+//   1. a plain "is it completed" condition (returns on the first poll),
+//   2. a custom condition ("has smart-contract results"),
+//   3. a condition that is never true, with a short timeout, to show the
+//      reject path.
+// No wallet, no gas.
+//
+// Usage:
+//   npm run build && npm start [txHash]
+
+import { ApiNetworkProvider, AwaitingOptions } from '@multiversx/sdk-core';
+import { awaitTransaction, awaitTransactionWithOptions } from './awaitTransaction';
+
+const MAINNET_API = 'https://api.multiversx.com';
+// A real, final, permanent mainnet transaction (a successful call with
+// smart-contract results). Override with your own hash as argv[2].
+const DEFAULT_TX = 'd537da3f347191cf906602a83bcf3207b0c7d55e6b120649d224b7ee255bfbbb';
+
+async function main(): Promise<void> {
+  const txHash = process.argv[2] ?? DEFAULT_TX;
+  const provider = new ApiNetworkProvider(MAINNET_API, { clientName: 'mvx-cookbook' });
+
+  // 1. Default awaiter — block until the tx is completed.
+  const completed = await awaitTransaction(provider, txHash, (tx) => tx.status.isCompleted());
+  console.log('1. awaited status.isCompleted():');
+  console.log(`   status ${completed.status.toString()}, nonce ${completed.nonce}, scResults ${completed.smartContractResults.length}`);
+
+  // 2. Custom predicate — block until the tx has produced smart-contract results.
+  const withResults = await awaitTransaction(
+    provider,
+    txHash,
+    (tx) => tx.smartContractResults.length > 0,
+  );
+  console.log('2. awaited a custom predicate (smartContractResults.length > 0):');
+  console.log(`   resolved with ${withResults.smartContractResults.length} smart-contract results`);
+
+  // 3. A condition that can never be true for this successful tx, with a short
+  //    timeout — demonstrates the reject-on-timeout path and AwaitingOptions.
+  const options = new AwaitingOptions();
+  options.pollingIntervalInMilliseconds = 500;
+  options.timeoutInMilliseconds = 3000;
+  const startedAt = Date.now();
+  try {
+    await awaitTransactionWithOptions(provider, txHash, (tx) => tx.status.isInvalid(), options);
+    console.log('3. unexpected: condition matched');
+  } catch {
+    console.log(`3. never-true condition timed out after ~${Math.round((Date.now() - startedAt) / 1000)}s (rejected, as expected)`);
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start                 # uses a known permanent mainnet tx
+npm start <yourTxHash>    # await any transaction you like
+```
+
+Expected output:
+
+```text
+1. awaited status.isCompleted():
+   status success, nonce 20052, scResults 3
+2. awaited a custom predicate (smartContractResults.length > 0):
+   resolved with 3 smart-contract results
+3. never-true condition timed out after ~4s (rejected, as expected)
+```
+
+## How it works
+
+**A predicate is just `(tx) => boolean`.** The SDK re-fetches the transaction on
+each poll and hands your predicate the fresh `TransactionOnNetwork`. Return `true`
+to resolve. `tx.status` exposes `isCompleted()`, `isSuccessful()`, `isPending()`,
+`isFailed()`, `isInvalid()`, `isNotExecutableInBlock()`; and
+`tx.smartContractResults`, `tx.logs`, `tx.nonce` and the rest are all fair game
+for a condition.
+
+**`AwaitingOptions` tunes the loop.** Three fields:
+`pollingIntervalInMilliseconds`, `timeoutInMilliseconds`,
+`patienceInMilliseconds`. The SDK defaults (confirmed at runtime) are `600` /
+`9000` / `0`. This recipe sets a 500ms poll and a 3s timeout for the demo.
+
+**When to reach for the custom condition over `awaitTransactionCompleted`.** Use
+the plain completed-awaiter for "did my tx land". Use
+`awaitTransactionOnCondition` when "done" for your app means more than the
+protocol's notion of completed, e.g. a specific event was logged, or a cross-shard
+smart-contract result arrived. For the browser/dApp equivalent (WebSocket-driven
+status, no polling loop of your own), see
+[Track a transaction](/sdk-and-tools/sdk-js/cookbook/transactions/track-transaction-status).
+
+## Pitfalls
+
+:::danger[Pitfall 1: timeout REJECTS, it does not resolve]
+If your predicate never holds within `timeoutInMilliseconds`, the promise rejects,
+it does not resolve with a partial/last-seen transaction. Any code path where a
+timeout is realistic must wrap the await in try/catch, as step 3 of this recipe
+does.
+:::
+
+:::note[Pitfall 2: the thrown error is status-specific, not the documented one]
+The `INetworkProvider` doc comment says these throw `ErrAwaitConditionNotReached`,
+but the transaction awaiter actually throws
+`ErrExpectedTransactionStatusNotReached`. Catch broadly (`catch (e: unknown)`)
+rather than matching one class name.
+:::
+
+:::warning[Pitfall 3: a slow poll can miss short-lived states]
+The predicate only sees the transaction at each poll boundary. A transient status
+that appears and disappears between two polls will be missed. For "did it ever
+pass through state X" you need the transaction's logs/results after the fact, not
+a live poll.
+:::
+
+## See also
+
+- [Track a transaction (WebSocket + polling fallback)](/sdk-and-tools/sdk-js/cookbook/transactions/track-transaction-status)
+  is the sdk-dapp, browser-side way to watch a transaction, without writing your
+  own poll loop.
+- [Await an account on a custom condition](/sdk-and-tools/sdk-js/cookbook/network-providers/await-account-on-condition)
+  applies the same poll-until-predicate pattern to an account instead of a
+  transaction.
+- [Simulate and estimate a transaction](/sdk-and-tools/sdk-js/cookbook/network-providers/simulate-estimate-transaction)
+  checks what a transaction will do before you send and await it.

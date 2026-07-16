@@ -284,6 +284,12 @@ const sidebars = {
                         label: "Network providers",
                         items: [
                           "sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/fetch-network-config-status",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/fetch-a-block",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/await-account-on-condition",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/await-transaction-on-condition",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/simulate-estimate-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/custom-api-request",
                         ]
                       },
                       {
@@ -338,6 +344,26 @@ const sidebars = {
                         items: [
                           "sdk-and-tools/sdk-js/cookbook/governance/create-proposal",
                           "sdk-and-tools/sdk-js/cookbook/governance/vote-close-proposal",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Delegation",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/delegation/create-delegation-contract",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/delegate-stake",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/claim-and-redelegate-rewards",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/undelegate-and-withdraw",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Multisig",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/multisig/propose-action",
+                          "sdk-and-tools/sdk-js/cookbook/multisig/sign-perform-action",
+                          "sdk-and-tools/sdk-js/cookbook/multisig/read-multisig-state",
                         ]
                       },
                     ]

@@ -1,0 +1,247 @@
+---
+title: Create a delegation contract
+description: Create a new MultiversX delegation (staking-provider) contract with sdk-core DelegationController and factory, then parse the outcome for its address.
+difficulty: advanced
+est_minutes: 9
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - delegation
+  - transaction
+  - devnet
+  - typescript
+---
+
+A delegation contract is a staking provider: it pools EGLD from many delegators
+and stakes it across validator nodes, sharing rewards. You register one by
+sending a `createNewDelegationContract` transaction to the delegation **manager**
+system contract, carrying an initial stake (at least 1,250 EGLD) plus two
+arguments, the total delegation cap and the service fee. This recipe builds that
+transaction both ways (controller and factory) and parses the completed
+transaction for the new contract's address.
+
+The default `npm start` parses a real, already-completed devnet create, so you
+see the new-address parse work without a funded wallet.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- For the default `parse` and `payload` demos: devnet network access only.
+- For an actual create: a devnet PEM wallet holding at least 1,250 EGLD (the
+  protocol minimum) plus gas.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/create-delegation-contract
+npm install
+npm run build
+```
+
+## Creating
+
+```ts title="src/createDelegation.ts"
+// src/createDelegation.ts - the subject of this recipe: creating a brand-new
+// delegation (staking-provider) contract with `createNewDelegationContract`,
+// two ways (controller and factory), then parsing the outcome to recover the
+// new contract's address.
+//
+// A "delegation contract" is a staking provider: it collects EGLD from many
+// delegators and stakes it across validator nodes. You create one by sending
+// a `createNewDelegationContract` transaction to the DELEGATION MANAGER system
+// contract, carrying an initial stake (>= 1250 EGLD) plus two arguments:
+//   - totalDelegationCap: the max EGLD the contract may accept (0 = uncapped);
+//   - serviceFee: the operator's cut, as an integer over 10,000 (1000 = 10%).
+//
+// Two verified SDK facts baked into this recipe (see the recipe page Pitfalls):
+//   1. The receiver is the delegation manager, whose address the factory
+//      derives itself as
+//      `erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`.
+//      Do not hardcode it from memory - a hand-copied value can carry a
+//      typo that fails the bech32 checksum.
+//   2. The wire payload is `createNewDelegationContract@<capHex>@<feeHex>`,
+//      with the initial stake carried in the transaction's `value`, not the
+//      data.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+/** The protocol minimum initial stake to create a delegation contract: 1250 EGLD. */
+export const MIN_DELEGATION_STAKE_WEI = 1250n * 10n ** 18n;
+
+export interface CreateDelegationInput {
+  /** Max EGLD the contract may accept, in wei. 0n = uncapped. */
+  totalDelegationCap: bigint;
+  /** Operator fee as an integer over 10,000 (1000 = 10%). */
+  serviceFee: bigint;
+  /** Initial stake to seed the contract with, in wei (>= 1250 EGLD). */
+  amount: bigint;
+}
+
+/**
+ * Create path 1 - the controller. `createTransactionForNewDelegationContract`
+ * builds the transaction, sets the nonce, AND signs it (it takes the whole
+ * `Account`). Use this for scripts.
+ */
+export async function createViaController(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: CreateDelegationInput,
+): Promise<Transaction> {
+  const controller = entrypoint.createDelegationController();
+  return controller.createTransactionForNewDelegationContract(sender, sender.getNonceThenIncrement(), input);
+}
+
+/**
+ * Create path 2 - the factory. The factory only BUILDS the unsigned
+ * transaction; the caller sets the nonce and signs. Use this when a wallet or
+ * hardware device signs.
+ */
+export async function createViaFactory(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: CreateDelegationInput,
+): Promise<Transaction> {
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const transaction = await factory.createTransactionForNewDelegationContract(sender.address, input);
+  transaction.nonce = sender.getNonceThenIncrement();
+  transaction.signature = await sender.signTransaction(transaction);
+  return transaction;
+}
+
+export interface CreatePayload {
+  function: string;
+  totalDelegationCap: bigint;
+  serviceFee: bigint;
+  receiver: string;
+  valueWei: bigint;
+  gasLimit: bigint;
+}
+
+/** Decode a create transaction's wire fields, for inspection before sending. */
+export function describeCreatePayload(transaction: Transaction): CreatePayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  const capHex = parts[1] ?? '';
+  const feeHex = parts[2] ?? '';
+  return {
+    function: parts[0] ?? '',
+    totalDelegationCap: capHex ? BigInt('0x' + capHex) : 0n,
+    serviceFee: feeHex ? BigInt('0x' + feeHex) : 0n,
+    receiver: transaction.receiver.toBech32(),
+    valueWei: transaction.value,
+    gasLimit: transaction.gasLimit,
+  };
+}
+
+/**
+ * Parse a completed create transaction for the new contract's address.
+ * `awaitCompletedCreateNewDelegationContract` waits and parses in one call;
+ * `parseCreateNewDelegationContract` parses a transaction you already fetched
+ * (used by this recipe's default mode against a historical create, so it
+ * needs no funded wallet).
+ */
+export async function parseNewContractAddress(
+  entrypoint: DevnetEntrypoint,
+  txHash: string,
+): Promise<string> {
+  const controller = entrypoint.createDelegationController();
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const outcome = controller.parseCreateNewDelegationContract(transactionOnNetwork);
+  const first = outcome[0];
+  if (!first) {
+    throw new Error(`Transaction ${txHash} created no delegation contract.`);
+  }
+  return first.contractAddress;
+}
+
+// The delegation manager system contract (hex 0000...0004ffff) - the receiver
+// of every `createNewDelegationContract`. This is the exact bech32 the factory
+// derives internally; the CLI asserts the built transaction's receiver equals
+// it. A hand-copied value (`...ylllslmq4y`) can carry a typo that fails the
+// bech32 checksum; the correct value is below.
+export const DELEGATION_MANAGER_ADDRESS =
+  'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6';
+```
+
+## Run it
+
+```bash
+# Parse a real completed devnet create - no wallet, no funds:
+npm start
+
+# Inspect the create wire payload offline:
+npm start -- payload
+
+# Actually create (needs a funded devnet PEM >= 1,250 EGLD); add --factory:
+npm start -- send ./wallet.pem
+```
+
+Output of the default `parse` mode, and of `payload`:
+
+```text
+Parsing completed create d615857f...aab9278c ...
+  new delegation contract: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqdhllllsfymgpz
+
+function:            createNewDelegationContract
+totalDelegationCap:  7500000000000000000000 wei (7500 EGLD)
+serviceFee:          1000 (10%)
+value (initial):     1250000000000000000000 wei (1250 EGLD)
+receiver:            erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6
+receiver is manager: true
+gasLimit:            60129500
+```
+
+## How it works
+
+**Controller vs factory.**
+`controller.createTransactionForNewDelegationContract(account, nonce, input)`
+builds, sets the nonce, and signs in one call.
+`factory.createTransactionForNewDelegationContract(address, input)` only builds
+the unsigned transaction; you set `nonce` and `signature`. Both are async and take
+the same `{ totalDelegationCap, serviceFee, amount }` input.
+
+**The three inputs.** `amount` is the initial stake, carried in the transaction's
+`value` (>= 1,250 EGLD). `totalDelegationCap` is the maximum EGLD the contract may
+later accept, in wei (`0n` = uncapped). `serviceFee` is the operator's cut as an
+integer over 10,000 (so `1000` = 10%).
+
+**Parsing the new address.**
+`controller.awaitCompletedCreateNewDelegationContract(txHash)` waits and parses in
+one call; `parseCreateNewDelegationContract(transactionOnNetwork)` parses a
+transaction you already fetched. The default `npm start` uses the second form
+against a historical create, which is why it needs no funds. Both read the
+`SCDeploy` event the manager emits.
+
+## Pitfalls
+
+:::warning[Pitfall 1: do not hardcode the delegation manager address from memory]
+Every create is addressed to the delegation manager, hex `0000...0004ffff`, which
+the SDK renders as
+`erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6`. The factory
+derives this itself. A hand-copied value (`...ylllslmq4y`) is a typo that fails
+bech32 checksum, so the recipe asserts the built transaction's receiver equals the
+correct address instead of trusting a copied constant.
+:::
+
+:::warning[Pitfall 2: the 1,250 EGLD minimum is the initial value, not an argument]
+The initial stake travels in the transaction's `value`, not the data. The wire
+payload is only `createNewDelegationContract@<capHex>@<feeHex>`. Send less than
+1,250 EGLD and the manager rejects it; the SDK will not catch that for you.
+:::
+
+:::note[Pitfall 3: service fee is over 10,000, not a percentage or basis points of 100]
+`serviceFee: 1000` means 10%, because the protocol expresses it as parts per
+10,000. Passing `10` for "10%" would set a 0.1% fee.
+:::
+
+## See also
+
+- [Delegate (stake) EGLD](/sdk-and-tools/sdk-js/cookbook/delegation/delegate-stake)
+  stakes into the contract once it exists.
+- [Read a delegation contract's state](/sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract)
+  confirms the new contract's config and stake.
+- Deploying an ordinary smart contract follows the same predict-then-parse shape,
+  covered in the smart-contracts recipes.

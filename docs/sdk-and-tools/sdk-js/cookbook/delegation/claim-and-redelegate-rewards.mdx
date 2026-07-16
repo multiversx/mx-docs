@@ -1,0 +1,237 @@
+---
+title: Claim and re-delegate rewards
+description: Claim delegation rewards to your wallet or re-delegate (compound) them into the same MultiversX staking contract, with sdk-core DelegationController.
+difficulty: intermediate
+est_minutes: 6
+last_validated: "2026-07-16"
+sdk_versions:
+  sdk-core: "^15.4.0"
+tags:
+  - sdk-core
+  - delegation
+  - transaction
+  - devnet
+  - typescript
+---
+
+Once a delegation accrues rewards you have two choices, and they are the same
+transaction shape with opposite destinations: `claimRewards` pays your pending
+rewards out to your wallet as EGLD, while `reDelegateRewards` re-stakes them into
+the same contract to compound. Both are addressed to the delegation contract,
+carry no value and no arguments, and differ only in the function name on the wire.
+This recipe builds both, both ways (controller and factory), and parses completed
+ones.
+
+The default `npm start` parses a real claim and a real re-delegate on devnet, so
+you see the parse work without a funded wallet.
+
+## Prerequisites
+
+- Node.js >= 20.13.1.
+- For the default `parse` and `payload` demos: devnet network access only.
+- For an actual claim or re-delegate: a devnet PEM wallet that has an active
+  delegation with pending rewards, plus gas.
+
+## Install
+
+```bash
+git clone https://github.com/multiversx/cookbook.git
+cd cookbook/recipes/claim-and-redelegate-rewards
+npm install
+npm run build
+```
+
+## Claiming and re-delegating
+
+```ts title="src/rewards.ts"
+// src/rewards.ts - the subject of this recipe: what to do with accrued
+// delegation rewards. Two operations, same shape, opposite destinations:
+//   - claimRewards      -> withdraw pending rewards to your wallet as EGLD;
+//   - reDelegateRewards -> re-stake pending rewards into the same contract,
+//                          compounding, without them ever hitting your wallet.
+// Both are addressed to the delegation contract, carry NO value and NO
+// arguments (the contract computes what you are owed), and differ only in the
+// function name on the wire (`claimRewards` vs `reDelegateRewards`).
+
+import { Account, Address, DelegationTransactionsOutcomeParser } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+function contractInput(delegationContract: string): { delegationContract: Address } {
+  return { delegationContract: Address.newFromBech32(delegationContract) };
+}
+
+/** Claim rewards - controller path (build, nonce, sign in one call). */
+export async function claimRewardsViaController(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+): Promise<Transaction> {
+  const controller = entrypoint.createDelegationController();
+  return controller.createTransactionForClaimingRewards(
+    sender,
+    sender.getNonceThenIncrement(),
+    contractInput(delegationContract),
+  );
+}
+
+/** Claim rewards - factory path (build only; caller signs). */
+export async function claimRewardsViaFactory(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+): Promise<Transaction> {
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const transaction = await factory.createTransactionForClaimingRewards(
+    sender.address,
+    contractInput(delegationContract),
+  );
+  transaction.nonce = sender.getNonceThenIncrement();
+  transaction.signature = await sender.signTransaction(transaction);
+  return transaction;
+}
+
+/** Re-delegate (compound) rewards - controller path. */
+export async function redelegateRewardsViaController(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+): Promise<Transaction> {
+  const controller = entrypoint.createDelegationController();
+  return controller.createTransactionForRedelegatingRewards(
+    sender,
+    sender.getNonceThenIncrement(),
+    contractInput(delegationContract),
+  );
+}
+
+/** Re-delegate (compound) rewards - factory path. */
+export async function redelegateRewardsViaFactory(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+): Promise<Transaction> {
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const transaction = await factory.createTransactionForRedelegatingRewards(
+    sender.address,
+    contractInput(delegationContract),
+  );
+  transaction.nonce = sender.getNonceThenIncrement();
+  transaction.signature = await sender.signTransaction(transaction);
+  return transaction;
+}
+
+export interface RewardsPayload {
+  function: string;
+  receiver: string;
+  valueWei: bigint;
+  gasLimit: bigint;
+}
+
+/** Decode a claim / re-delegate transaction's wire fields (neither has args). */
+export function describeRewardsPayload(transaction: Transaction): RewardsPayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    valueWei: transaction.value,
+    gasLimit: transaction.gasLimit,
+  };
+}
+
+/**
+ * Parse a completed claim transaction. The parser reads the `claimRewards`
+ * log event's first topic. Note: the claimed EGLD is delivered as a separate
+ * smart-contract result, and that first topic is frequently empty - so this
+ * often returns 0n even when rewards were paid out. See the recipe Pitfalls.
+ */
+export async function parseClaimedAmount(entrypoint: DevnetEntrypoint, txHash: string): Promise<bigint> {
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const parser = new DelegationTransactionsOutcomeParser();
+  return parser.parseClaimRewards(transactionOnNetwork)[0]?.amount ?? 0n;
+}
+
+/**
+ * Parse a completed re-delegate transaction for the re-staked amount.
+ * Re-delegation emits a `delegate` event, so the parser reports the amount
+ * that was compounded back into the contract.
+ */
+export async function parseRedelegatedAmount(entrypoint: DevnetEntrypoint, txHash: string): Promise<bigint> {
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const parser = new DelegationTransactionsOutcomeParser();
+  return parser.parseRedelegateRewards(transactionOnNetwork)[0]?.amount ?? 0n;
+}
+```
+
+## Run it
+
+```bash
+# Parse a real completed claim and re-delegate - no wallet, no funds:
+npm start
+
+# Inspect both wire payloads offline:
+npm start -- payload
+
+# Actually claim (needs a funded devnet PEM with active delegation):
+npm start -- send ./wallet.pem
+# ...or compound instead of claiming:
+npm start -- send ./wallet.pem --redelegate
+```
+
+Output of the default `parse` mode, and of `payload`:
+
+```text
+Parsing completed claim 058c9440...178a2a72 ...
+  parsed claimed amount:      0 wei (see Pitfalls: often 0)
+
+Parsing completed re-delegate 5dd41134...246ed694 ...
+  parsed re-staked amount:    397533231571055684 wei (0.397533 EGLD)
+
+claim: function=claimRewards  value=0  receiver=erd1qqq...scktaww  gasLimit=11068000
+re-delegate: function=reDelegateRewards  value=0  receiver=erd1qqq...scktaww  gasLimit=11075500
+```
+
+## How it works
+
+**Controller vs factory.** `controller.createTransactionForClaimingRewards` /
+`createTransactionForRedelegatingRewards` build, set the nonce, and sign in one
+call. The factory equivalents build only. Both take just `{ delegationContract }`,
+the contract computes what you are owed, so you never pass an amount.
+
+**Same shape, opposite destination.** `claimRewards` moves your rewards to your
+wallet; `reDelegateRewards` stakes them back into the contract. Neither carries a
+`value`, they act on rewards the contract already holds for you.
+
+**Parsing.** `parseRedelegateRewards` internally parses the `delegate` event
+(re-delegation is a delegation), so it reports the compounded amount.
+`parseClaimRewards` reads the `claimRewards` event, see the pitfall below.
+
+## Pitfalls
+
+:::warning[Pitfall 1: parseClaimRewards often returns 0]
+The claimed EGLD is delivered as a separate smart-contract result, and the
+`claimRewards` log event's first topic (which the parser reads) is frequently
+empty, so `parseClaimRewards` returns `0n` even when rewards were paid. To read the
+actual amount received, inspect the value-bearing smart-contract result or the
+account balance delta. `parseRedelegateRewards` does not have this issue because it
+reads the `delegate` event.
+:::
+
+:::note[Pitfall 2: re-delegating may be gated by the contract's cap check]
+If the provider enabled "check cap on re-delegate," compounding is refused once the
+contract hits its total delegation cap. The transaction is well-formed; the
+contract rejects it at execution. Read the contract config first.
+:::
+
+:::note[Pitfall 3: claiming with zero pending rewards is a successful no-op]
+`claimRewards` never fails just because you have nothing to claim; it completes and
+moves 0 EGLD. Do not treat a successful claim as proof that rewards existed.
+:::
+
+## See also
+
+- [Delegate (stake) EGLD](/sdk-and-tools/sdk-js/cookbook/delegation/delegate-stake)
+  is the stake that earns these rewards.
+- [Undelegate and withdraw](/sdk-and-tools/sdk-js/cookbook/delegation/undelegate-and-withdraw)
+  is the exit path, when you want the principal back too.
+- [Read a delegation contract's state](/sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract)
+  reads your claimable rewards before claiming.
