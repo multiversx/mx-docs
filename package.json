@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "docusaurus": "docusaurus",
+    "prestart": "npm run prebuild",
     "start": "docusaurus start",
     "prebuild": "node scripts/generate-cookbook-manifest.js && node scripts/generate-llms-txt.js && node scripts/generate-md-urls.js",
     "build": "docusaurus build",
