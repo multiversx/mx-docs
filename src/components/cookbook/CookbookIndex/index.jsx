@@ -1,10 +1,10 @@
 import React from "react";
-import RecipeGrid from "@site/src/components/cookbook/RecipeGrid";
+import RecipeCard from "@site/src/components/cookbook/RecipeCard";
 import styles from "./styles.module.css";
 
 // The browsable front door for the cookbook. Given the build-time manifest
 // (src/data/cookbook-manifest.json, generated from each recipe's real
-// frontmatter), it renders a jump-nav plus one RecipeGrid per section. Nothing
+// frontmatter), it renders a jump-nav plus one recipe-card grid per section. Nothing
 // here is hand-maintained: sections and their order come straight from the
 // manifest, which mirrors the curated sidebar order.
 export default function CookbookIndex({ sections = [] }) {
@@ -29,7 +29,11 @@ export default function CookbookIndex({ sections = [] }) {
               {s.recipes.length} {s.recipes.length === 1 ? "recipe" : "recipes"}
             </span>
           </h2>
-          <RecipeGrid recipes={s.recipes} />
+          <div className={styles.grid}>
+            {s.recipes.map((recipe) => (
+              <RecipeCard key={recipe.href || recipe.title} recipe={recipe} />
+            ))}
+          </div>
         </section>
       ))}
 

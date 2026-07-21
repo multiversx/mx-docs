@@ -17,8 +17,6 @@
 
 :root {
   /* MvX brand tokens. */
-  --cookbook-teal: #23f7dd;
-  --cookbook-green: #4ade80;
   --cookbook-yellow: #facc15;
 
   /* Accent is theme-aware: mint collapses to ~1.2:1 on light grounds and is
