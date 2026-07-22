@@ -21,6 +21,27 @@ function isExactVersion(version) {
   return /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version);
 }
 
+function dependencySignature(manifest) {
+  const sorted = (dependencies = {}) =>
+    Object.fromEntries(
+      Object.entries(dependencies).sort(([left], [right]) => left.localeCompare(right)),
+    );
+
+  return JSON.stringify({
+    dependencies: sorted(manifest.dependencies),
+    devDependencies: sorted(manifest.devDependencies),
+  });
+}
+
+function requireDirectDependencies(slug, manifest, dependencies) {
+  const declared = manifest.dependencies ?? {};
+  for (const dependency of dependencies) {
+    if (!declared[dependency]) {
+      fail(`${slug}: dependencies.${dependency} must be declared directly`);
+    }
+  }
+}
+
 function run(command, args, options = {}) {
   const rendered = [command, ...args].join(' ');
   console.log(`\n$ ${rendered}`);
@@ -105,6 +126,22 @@ for (const slug of fs.readdirSync(extractedRoot).sort()) {
       }
     }
   }
+
+  if (manifest.dependencies?.['@multiversx/sdk-core']) {
+    requireDirectDependencies(slug, manifest, ['bignumber.js', 'protobufjs']);
+  }
+  if (manifest.dependencies?.['@multiversx/sdk-dapp']) {
+    requireDirectDependencies(slug, manifest, [
+      '@multiversx/sdk-core',
+      '@multiversx/sdk-dapp-ui',
+      '@multiversx/sdk-dapp-utils',
+      'axios',
+      'bignumber.js',
+      'protobufjs',
+      'react',
+      'react-dom',
+    ]);
+  }
   recipes.push({ slug, sourceDirectory, manifest });
 }
 
@@ -118,52 +155,79 @@ for (const recipe of recipes) {
   names.add(recipe.manifest.name);
 }
 
+const environments = new Map();
+for (const recipe of recipes) {
+  const signature = dependencySignature(recipe.manifest);
+  const environment = environments.get(signature) ?? [];
+  environment.push(recipe);
+  environments.set(signature, environment);
+}
+
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cookbook-projects-'));
-const workspaceRoot = path.join(temporaryRoot, 'workspace');
-const workspacesRoot = path.join(workspaceRoot, 'recipes');
-fs.mkdirSync(workspacesRoot, { recursive: true });
 
 let succeeded = false;
 try {
-  for (const recipe of recipes) {
-    fs.cpSync(recipe.sourceDirectory, path.join(workspacesRoot, recipe.slug), {
-      recursive: true,
-      dereference: false,
-    });
-  }
-  fs.writeFileSync(
-    path.join(workspaceRoot, 'package.json'),
-    `${JSON.stringify({
-      name: 'cookbook-project-verification',
-      private: true,
-      version: '0.0.0',
-      workspaces: ['recipes/*'],
-      engines: { node: REQUIRED_NODE_RANGE },
-    }, null, 2)}\n`,
-  );
-
   console.log(
     `Validated ${recipes.length} project and ${artifactCounts.reference} reference labels; ` +
-      `installing one clean workspace at ${temporaryRoot}`,
+      `installing ${environments.size} isolated dependency environments at ${temporaryRoot}`,
   );
-  run('npm', [
-    'install',
-    '--ignore-scripts',
-    '--no-audit',
-    '--no-fund',
-    '--package-lock=false',
-  ], { cwd: workspaceRoot });
 
-  for (const { slug, manifest } of recipes) {
-    console.log(`\n=== Building ${slug} (${manifest.scripts.build}) ===`);
-    run('npm', ['run', 'build', '--workspace', manifest.name], { cwd: workspaceRoot });
+  let environmentIndex = 0;
+  for (const group of environments.values()) {
+    environmentIndex += 1;
+    const environmentRoot = path.join(
+      temporaryRoot,
+      `${String(environmentIndex).padStart(2, '0')}-${group[0].slug}`,
+    );
+    const projectsRoot = path.join(environmentRoot, 'projects');
+    fs.mkdirSync(projectsRoot, { recursive: true });
+
+    for (const recipe of group) {
+      fs.cpSync(recipe.sourceDirectory, path.join(projectsRoot, recipe.slug), {
+        recursive: true,
+        dereference: false,
+      });
+    }
+
+    fs.writeFileSync(
+      path.join(environmentRoot, 'package.json'),
+      `${JSON.stringify({
+        name: `cookbook-project-verification-${environmentIndex}`,
+        private: true,
+        version: '0.0.0',
+        engines: { node: REQUIRED_NODE_RANGE },
+        dependencies: group[0].manifest.dependencies ?? {},
+        devDependencies: group[0].manifest.devDependencies ?? {},
+      }, null, 2)}\n`,
+    );
+
+    console.log(
+      `\n=== Environment ${environmentIndex}/${environments.size}: ` +
+        `${group.length} project${group.length === 1 ? '' : 's'} ===`,
+    );
+    run('npm', [
+      'install',
+      '--ignore-scripts',
+      '--no-audit',
+      '--no-fund',
+      '--package-lock=false',
+    ], { cwd: environmentRoot });
+
+    for (const { slug, manifest } of group) {
+      const projectRoot = path.join(projectsRoot, slug);
+      console.log(`\n=== Building ${slug} (${manifest.scripts.build}) ===`);
+      run('npm', ['run', 'build'], { cwd: projectRoot });
+    }
   }
   succeeded = true;
-  console.log(`\nBuilt all ${recipes.length} cookbook projects from a clean workspace.`);
+  console.log(
+    `\nBuilt all ${recipes.length} cookbook projects across ` +
+      `${environments.size} isolated dependency environments.`,
+  );
 } finally {
   if (succeeded || process.env.COOKBOOK_KEEP_TEMP !== '1') {
     fs.rmSync(temporaryRoot, { recursive: true, force: true });
   } else {
-    console.error(`Preserved failed workspace: ${temporaryRoot}`);
+    console.error(`Preserved failed environments: ${temporaryRoot}`);
   }
 }

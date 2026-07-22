@@ -4,10 +4,10 @@ This is the TypeScript counterpart of the repo's Rust tutorial CI
 (`testing/rust-tutorial-ci.sh` + `testing/extract-tutorial-code/`). The Rust CI
 extracts the code from a tutorial's fenced blocks into a real crate and runs
 `cargo test`. This one materializes titled files from cookbook pages, runs a
-shared strict TypeScript check, and reconstructs every standalone recipe in a
-clean npm workspace to run its own build. The **Project build checked** badge
-describes that complete project artifact; **Reference** pages make no standalone
-project claim.
+shared strict TypeScript check, and reconstructs every standalone recipe in one
+of five isolated npm dependency environments to run its own build. The
+**Project build checked** badge describes that complete project artifact;
+**Reference** pages make no standalone project claim.
 
 The one rule to remember: **what is shown is what is checked.** Every titled
 fence is materialized at its displayed path. Titled `ts`/`tsx` files are checked
@@ -115,7 +115,9 @@ The whole pipeline is one script, mirroring `rust-tutorial-ci.sh`:
 
 It runs extractor tests, materializes every titled file, executes the shared
 strict TypeScript check, then installs and builds all 61 project recipes in a
-clean npm workspace. The GitHub workflow runs the same script on Node 20.19.0
+one of five isolated dependency environments. Recipes only share an environment
+when their exact dependency and dev-dependency sets match. The GitHub workflow
+runs the same script on Node 20.19.0
 on push / PR.
 
 To iterate on a single recipe faster, once dependencies are installed:
