@@ -3,9 +3,9 @@ title: "Migrate sdk-dapp v4 to v5: hook-by-hook diffs"
 description: Side-by-side v4 vs v5 diffs for every removed hook, component, and import path. The shortest viable upgrade path for an existing v4 dApp.
 difficulty: intermediate
 est_minutes: 12
-last_validated: "2026-07-16"
+artifact: reference
 sdk_versions:
-  sdk-dapp: "^5.6.0"
+  sdk-dapp: "5.7.1"
 tags:
   - sdk-dapp
   - migration
@@ -56,8 +56,14 @@ rendering.
 import { DappProvider } from '@multiversx/sdk-dapp/wrappers';
 import { EnvironmentsEnum } from '@multiversx/sdk-dapp/types';
 
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
 const customNetworkConfig = {
-  walletConnectV2ProjectId: 'multiversx-cookbook-demo',
+  walletConnectV2ProjectId: walletConnectProjectId,
 };
 
 export function App() {
@@ -92,6 +98,12 @@ import type { ReactNode } from 'react';
 import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
 import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
 
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
 const dappConfig = {
   storage: {
     getStorageCallback: (): Storage => sessionStorage,
@@ -100,35 +112,59 @@ const dappConfig = {
     environment: EnvironmentsEnum.devnet,
     providers: {
       walletConnect: {
-        walletConnectV2ProjectId: 'multiversx-cookbook-demo',
+        walletConnectV2ProjectId: walletConnectProjectId,
       },
     },
   },
 };
 
-let initStarted = false;
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
 
 export function Providers({ children }: { children: ReactNode }): JSX.Element {
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (initStarted) {
-      setReady(true);
-      return;
-    }
-    initStarted = true;
-
-    let cancelled = false;
-    void initApp(dappConfig).then(() => {
-      if (cancelled) return;
-      setReady(true);
-    });
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
 
     return () => {
-      cancelled = true;
+      subscribed = false;
     };
   }, []);
 
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
   if (!ready) {
     return <div>Initializing…</div>;
   }

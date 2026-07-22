@@ -3,9 +3,9 @@ title: Sign + verify a transaction (offline)
 description: Sign a transaction offline with a raw secret key and verify it three ways with sdk-core, including tamper checks. No devnet, no broadcast.
 difficulty: intermediate
 est_minutes: 8
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - typescript
@@ -22,19 +22,80 @@ no devnet, no broadcast, pure local Ed25519.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - Nothing else. This recipe generates its own throwaway keys and never touches
   the network.
 
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/sign-verify-transaction
+mkdir sign-verify-transaction
+cd sign-verify-transaction
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-sign-verify-transaction",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — sign a transaction offline with a raw secret key and verify it three ways, plus tamper checks. Fully offline: no devnet, no broadcast.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
 
 ## The code
 

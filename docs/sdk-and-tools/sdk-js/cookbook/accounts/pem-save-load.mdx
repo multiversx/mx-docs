@@ -3,9 +3,9 @@ title: Save and load a PEM (dev only)
 description: Save a wallet to a PEM file and load it back via Account and UserPem with sdk-core. PEM is unencrypted and dev-only; fully offline, no network.
 difficulty: beginner
 est_minutes: 5
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - typescript
@@ -25,19 +25,80 @@ PEM. For anything real, use an
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - Nothing else. This recipe generates its own throwaway key and writes to a temp
   directory it cleans up.
 
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/pem-save-load
+mkdir pem-save-load
+cd pem-save-load
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-pem-save-load",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — save a wallet to a PEM file (dev only, unencrypted) and load it back via Account and UserPem. Fully offline: local file I/O only.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
 
 ## The code
 

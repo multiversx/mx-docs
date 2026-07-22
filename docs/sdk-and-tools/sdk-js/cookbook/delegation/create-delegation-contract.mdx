@@ -3,9 +3,9 @@ title: Create a delegation contract
 description: Create a new MultiversX delegation (staking-provider) contract with sdk-core DelegationController and factory, then parse the outcome for its address.
 difficulty: advanced
 est_minutes: 9
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - delegation
@@ -27,7 +27,7 @@ see the new-address parse work without a funded wallet.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - For the default `parse` and `payload` demos: devnet network access only.
 - For an actual create: a devnet PEM wallet holding at least 1,250 EGLD (the
   protocol minimum) plus gas.
@@ -35,11 +35,188 @@ see the new-address parse work without a funded wallet.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/create-delegation-contract
+mkdir create-delegation-contract
+cd create-delegation-contract
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-create-delegation-contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — create a new delegation (staking-provider) contract with createNewDelegationContract (controller and factory), then parse the new address.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the create-delegation-contract recipe.
+//
+// Three modes:
+//   npm start                    -> "parse" a real historical devnet create
+//                                   (no wallet, no funds needed)
+//   npm start -- payload         -> build (do not send) a create and print its
+//                                   decoded wire payload, offline
+//   npm start -- send <pem>      -> actually create (needs a funded devnet PEM
+//                                   with >= 1250 EGLD); add --factory for the
+//                                   factory path
+//
+// With an unfunded wallet, `send` fails cleanly with "insufficient funds",
+// proving the payload and signature are well-formed - the verification level
+// this recipe was authored at.
+
+import { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  createViaController,
+  createViaFactory,
+  describeCreatePayload,
+  parseNewContractAddress,
+  DELEGATION_MANAGER_ADDRESS,
+  MIN_DELEGATION_STAKE_WEI,
+  type CreateDelegationInput,
+} from './createDelegation';
+
+// A real, completed createNewDelegationContract on devnet, used by the default
+// "parse" demo. If devnet pruned it, pass your own: `npm start -- parse <txHash>`.
+const EXAMPLE_CREATE_TX = 'd615857f80f1244c1f90fa9c7aa5abb02c4ffc136fbbdd2b4d10bb09aab9278c';
+
+// Example inputs for the offline payload demo: 7500 EGLD cap, 10% fee, seed
+// with the 1250 EGLD minimum.
+const EXAMPLE_INPUT: CreateDelegationInput = {
+  totalDelegationCap: 7500n * 10n ** 18n,
+  serviceFee: 1000n,
+  amount: MIN_DELEGATION_STAKE_WEI,
+};
+
+async function runParse(txHash: string): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  console.log(`Parsing completed create ${txHash} ...`);
+  const contractAddress = await parseNewContractAddress(entrypoint, txHash);
+  console.log(`  new delegation contract: ${contractAddress}`);
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const throwaway = await entrypoint.createAccount();
+  const tx = await factory.createTransactionForNewDelegationContract(throwaway.address, EXAMPLE_INPUT);
+  const p = describeCreatePayload(tx);
+  console.log(`function:            ${p.function}`);
+  console.log(`totalDelegationCap:  ${p.totalDelegationCap} wei (${p.totalDelegationCap / 10n ** 18n} EGLD)`);
+  console.log(`serviceFee:          ${p.serviceFee} (${Number(p.serviceFee) / 100}%)`);
+  console.log(`value (initial):     ${p.valueWei} wei (${p.valueWei / 10n ** 18n} EGLD)`);
+  console.log(`receiver:            ${p.receiver}`);
+  console.log(`receiver is manager: ${p.receiver === DELEGATION_MANAGER_ADDRESS}`);
+  console.log(`gasLimit:            ${p.gasLimit}`);
+}
+
+async function runSend(pemPath: string, useFactory: boolean): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await Account.newFromPem(pemPath);
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+  console.log(`Creator: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Path:    ${useFactory ? 'factory' : 'controller'}`);
+
+  const create = useFactory ? createViaFactory : createViaController;
+  const tx = await create(entrypoint, sender, EXAMPLE_INPUT);
+  console.log(`  receiver (manager): ${tx.receiver.toBech32()}`);
+  console.log(`  value:              ${tx.value} wei`);
+
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash:   ${txHash}`);
+  const contractAddress = await parseNewContractAddress(entrypoint, txHash);
+  console.log(`  new contract:       ${contractAddress}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'send') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- send <pemPath> [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      await runSend(pemPath, rest.includes('--factory'));
+    } catch (err) {
+      console.error(`Create rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  const txHash = mode === 'parse' && rest[0] ? rest[0] : EXAMPLE_CREATE_TX;
+  await runParse(txHash);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## Creating
 

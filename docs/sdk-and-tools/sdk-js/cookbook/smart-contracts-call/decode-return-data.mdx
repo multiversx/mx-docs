@@ -3,9 +3,9 @@ title: Decode contract return data (ABI codec)
 description: Decode raw contract return data and encode or decode custom struct and enum types with sdk-core's BinaryCodec, getStruct, and getEnum, fully offline.
 difficulty: advanced
 est_minutes: 8
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - smart-contract
@@ -25,18 +25,393 @@ Three real demonstrations: decode `getPingAmount`'s raw return data into a
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - No wallet, no gas, no network.
 
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/decode-return-data
+mkdir decode-return-data
+cd decode-return-data
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-decode-return-data",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — decode raw contract return data and encode/decode custom struct and enum types with sdk-core's BinaryCodec, getStruct, and getEnum.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the ABI-codec recipe. Runs three
+// offline, deterministic demonstrations and prints the results. No wallet,
+// no gas, no network.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi } from '@multiversx/sdk-core';
+import { decodeReturnValue, encodeEsdtTokenPayment, decodeAction } from './decodeReturnData';
+
+// A real Action, exactly as the mx-sdk-js-core cookbook decodes it.
+const ACTION_HEX =
+  '0500000000000000000500d006f73c4221216fa679bc559005584c4f1160e569e1000000012a0000000003616464000000010000000107';
+
+// getPingAmount's real return data: 1 EGLD as a BigUint.
+const PING_AMOUNT_RETURN_HEX = '0de0b6b3a7640000';
+
+// Expected encoding of EsdtTokenPayment(TEST-8b028f, nonce 0, amount 10000).
+const EXPECTED_PAYMENT_HEX = '0000000b544553542d3862303238660000000000000000000000022710';
+
+function loadAbi(fileName: string): Abi {
+  const json = fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+  return Abi.create(JSON.parse(json) as Record<string, unknown>);
+}
+
+function main(): void {
+  const pingPongAbi = loadAbi('ping-pong.abi.json');
+  const multisigAbi = loadAbi('multisig.abi.json');
+
+  console.log('1) Decode raw return data (ping-pong getPingAmount -> BigUint):');
+  const pingAmount = decodeReturnValue(pingPongAbi, 'getPingAmount', PING_AMOUNT_RETURN_HEX);
+  console.log(`   ${PING_AMOUNT_RETURN_HEX} -> ${pingAmount}`);
+  console.log(`   equals 1 EGLD (1e18): ${pingAmount === '1000000000000000000'}`);
+
+  console.log('\n2) Encode a struct (multisig EsdtTokenPayment):');
+  const encoded = encodeEsdtTokenPayment(multisigAbi, 'TEST-8b028f', 0n, 10000n);
+  console.log(`   encoded: ${encoded}`);
+  console.log(`   matches expected: ${encoded === EXPECTED_PAYMENT_HEX}`);
+
+  console.log('\n3) Decode an enum (multisig Action):');
+  const action = decodeAction(multisigAbi, ACTION_HEX);
+  console.log(`   variant: ${action.name}`);
+}
+
+main();
+```
+
+```json title="src/multisig.abi.json"
+{
+  "name": "Multisig",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "quorum",
+        "type": "u32"
+      },
+      {
+        "name": "board",
+        "type": "variadic<Address>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [],
+  "events": [],
+  "hasCallback": false,
+  "types": {
+    "Action": {
+      "type": "enum",
+      "variants": [
+        {
+          "name": "Nothing",
+          "discriminant": 0
+        },
+        {
+          "name": "AddBoardMember",
+          "discriminant": 1,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "AddProposer",
+          "discriminant": 2,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "RemoveUser",
+          "discriminant": 3,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "ChangeQuorum",
+          "discriminant": 4,
+          "fields": [
+            {
+              "name": "0",
+              "type": "u32"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEgld",
+          "discriminant": 5,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEsdt",
+          "discriminant": 6,
+          "fields": [
+            {
+              "name": "0",
+              "type": "EsdtTransferExecuteData"
+            }
+          ]
+        },
+        {
+          "name": "SendAsyncCall",
+          "discriminant": 7,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SCDeployFromSource",
+          "discriminant": 8,
+          "fields": [
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        },
+        {
+          "name": "SCUpgradeFromSource",
+          "discriminant": 9,
+          "fields": [
+            {
+              "name": "sc_address",
+              "type": "Address"
+            },
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        }
+      ]
+    },
+    "CallActionData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "egld_amount",
+          "type": "BigUint"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    },
+    "EsdtTokenPayment": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "token_identifier",
+          "type": "TokenIdentifier"
+        },
+        {
+          "name": "token_nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "BigUint"
+        }
+      ]
+    },
+    "EsdtTransferExecuteData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "tokens",
+          "type": "List<EsdtTokenPayment>"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    }
+  }
+}
+```
+
+```json title="src/ping-pong.abi.json"
+{
+  "name": "PingPong",
+  "constructor": {
+    "docs": [
+      "Necessary configuration when deploying:",
+      "`ping_amount` - the exact amount that needs to be sent when `ping`-ing.  ",
+      "`duration_in_seconds` - how much time (in seconds) until `pong` can be called after the initial `ping` call  ",
+      "`token_id` - Optional. The Token Identifier of the token that is going to be used. Default is \"EGLD\"."
+    ],
+    "inputs": [
+      {
+        "name": "ping_amount",
+        "type": "BigUint"
+      },
+      {
+        "name": "duration_in_seconds",
+        "type": "u64"
+      },
+      {
+        "name": "opt_token_id",
+        "type": "optional<EgldOrEsdtTokenIdentifier>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "name": "getPingAmount",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "BigUint"
+        }
+      ]
+    }
+  ],
+  "events": [],
+  "hasCallback": false,
+  "types": {}
+}
+```
+
+</details>
 
 ## Decoding and encoding
 

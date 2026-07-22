@@ -3,9 +3,9 @@ title: Read a delegation contract's state
 description: "Read a MultiversX staking-provider contract state with read-only queries: total stake, service fee, a delegator active stake and claimable rewards."
 difficulty: intermediate
 est_minutes: 6
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - delegation
@@ -26,17 +26,142 @@ nothing but network access.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - Devnet network access. No wallet, no funds.
 
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/query-delegation-contract
+mkdir query-delegation-contract
+cd query-delegation-contract
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-query-delegation-contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — read a staking-provider (delegation) contract's state (config, total stake, a delegator's active stake and claimable rewards) with read-only VM queries.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the query-delegation recipe.
+//
+// Every call below is a read-only VM query against a live devnet delegation
+// contract - no wallet, no PEM, no gas.
+//
+// Usage:
+//   npm run build && npm start [contractAddress] [delegatorAddress]
+//
+// Both arguments default to the real example contract + delegator this recipe
+// was authored against.
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  queryTotalActiveStake,
+  queryNumUsers,
+  queryUserActiveStake,
+  queryClaimableRewards,
+  queryContractConfig,
+  EXAMPLE_DELEGATION_CONTRACT,
+  EXAMPLE_DELEGATOR,
+} from './queryDelegation';
+
+/** Format a wei amount as an approximate EGLD string for human reading. */
+function toEgld(wei: bigint): string {
+  const whole = wei / 10n ** 18n;
+  const frac = (wei % 10n ** 18n).toString().padStart(18, '0').slice(0, 4);
+  return `${whole.toString()}.${frac}`;
+}
+
+async function main(): Promise<void> {
+  const contract = process.argv[2] ?? EXAMPLE_DELEGATION_CONTRACT;
+  const delegator = process.argv[3] ?? EXAMPLE_DELEGATOR;
+
+  const entrypoint = new DevnetEntrypoint();
+
+  console.log(`Delegation contract: ${contract}`);
+  const config = await queryContractConfig(entrypoint, contract);
+  console.log(`  owner:              ${config.owner}`);
+  console.log(`  service fee:        ${config.serviceFeePerTenThousand / 100}%`);
+
+  const totalActive = await queryTotalActiveStake(entrypoint, contract);
+  console.log(`  total active stake: ${toEgld(totalActive)} EGLD (${totalActive} wei)`);
+
+  const numUsers = await queryNumUsers(entrypoint, contract);
+  console.log(`  delegators:         ${numUsers}`);
+
+  console.log(`\nDelegator: ${delegator}`);
+  const active = await queryUserActiveStake(entrypoint, contract, delegator);
+  console.log(`  active stake:       ${toEgld(active)} EGLD (${active} wei)`);
+
+  const rewards = await queryClaimableRewards(entrypoint, contract, delegator);
+  console.log(`  claimable rewards:  ${toEgld(rewards)} EGLD (${rewards} wei)`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## Querying
 

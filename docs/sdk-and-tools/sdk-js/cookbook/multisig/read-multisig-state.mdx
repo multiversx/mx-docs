@@ -3,9 +3,9 @@ title: Read a multisig's state
 description: Read a MultiversX multisig's quorum, board members, and pending actions with their signers using sdk-core's MultisigController, no wallet needed.
 difficulty: intermediate
 est_minutes: 6
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - multisig
@@ -26,16 +26,568 @@ and for each, its signers and whether it has reached quorum). The default
 
 ## Prerequisites
 
-- Node.js >= 20.13.1 and devnet network access. No wallet, ever.
+- Node.js >= 20.19.0 and devnet network access. No wallet, ever.
 
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/multisig-read-state
+mkdir multisig-read-state
+cd multisig-read-state
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-multisig-read-state",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — read a multisig contract's state (quorum, board members, pending actions, and per-action signers) with MultisigController, no wallet.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the multisig-read-state recipe.
+//
+// Two modes, both read-only (no wallet, no funds, ever):
+//   npm start                 -> read a real devnet multisig's board and
+//                                pending actions
+//   npm start -- <bech32>     -> read any multisig contract you pass
+//
+// This is the read side that the propose / sign / perform recipes call before
+// they act.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+import { readBoard, readPendingActions, readUserRole } from './read';
+
+// A real multisig contract on devnet (quorum 2, a 2-member board, at least one
+// pending action at the time of writing).
+const EXAMPLE_MULTISIG = 'erd1qqqqqqqqqqqqqpgqvjcswsav2rw4ccvguyuk0f0u6qycpsuvu3dq9rse9w';
+
+function loadAbi(fileName: string): Abi {
+  const raw = fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+  return Abi.create(JSON.parse(raw) as Record<string, unknown>);
+}
+
+function makeEntrypoint(): DevnetEntrypoint {
+  return new DevnetEntrypoint({
+    clientName: 'cookbook-multisig-read-state',
+    networkProviderConfig: { timeout: 15_000 },
+  });
+}
+
+async function main(): Promise<void> {
+  const multisigAddress = process.argv[2] ?? EXAMPLE_MULTISIG;
+  const entrypoint = makeEntrypoint();
+  const abi = loadAbi('multisig.abi.json');
+
+  console.log(`Multisig: ${multisigAddress}\n`);
+
+  const board = await readBoard(entrypoint, abi, multisigAddress);
+  console.log('Board configuration:');
+  console.log(`  quorum:             ${board.quorum} of ${board.numBoardMembers} board members`);
+  console.log(`  proposers (non-board): ${board.numProposers}`);
+  console.log(`  actions ever created:  ${board.actionLastIndex}`);
+  board.boardMembers.forEach((member, i) => console.log(`  board[${i}]: ${member}`));
+  board.proposers.forEach((proposer, i) => console.log(`  proposer[${i}]: ${proposer}`));
+
+  // Show the role of the first board member (a self-check of getUserRole).
+  if (board.boardMembers[0]) {
+    const role = await readUserRole(entrypoint, abi, multisigAddress, board.boardMembers[0]);
+    console.log(`  role of board[0]:   ${role}`);
+  }
+
+  const pending = await readPendingActions(entrypoint, abi, multisigAddress);
+  console.log(`\nPending actions: ${pending.length}`);
+  for (const action of pending) {
+    console.log(`  action ${action.actionId} (group ${action.groupId}): ${action.type}`);
+    console.log(`    signers: ${action.signers.join(', ') || '(none)'}`);
+    console.log(`    quorum reached: ${action.quorumReached}`);
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+```json title="src/multisig.abi.json"
+{
+  "name": "Multisig",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "quorum",
+        "type": "u32"
+      },
+      {
+        "name": "board",
+        "type": "variadic<Address>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "docs": [
+        "Minimum number of signatures needed to perform any action."
+      ],
+      "name": "getQuorum",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Denormalized board member count.",
+        "It is kept in sync with the user list by the contract."
+      ],
+      "name": "getNumBoardMembers",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Denormalized proposer count.",
+        "It is kept in sync with the user list by the contract."
+      ],
+      "name": "getNumProposers",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "The index of the last proposed action.",
+        "0 means that no action was ever proposed yet."
+      ],
+      "name": "getActionLastIndex",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Returns `true` (`1`) if `getActionValidSignerCount >= getQuorum`."
+      ],
+      "name": "quorumReached",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Iterates through all actions and retrieves those that are still pending.",
+        "Serialized full action data:",
+        "- the action id",
+        "- the serialized action data",
+        "- (number of signers followed by) list of signer addresses."
+      ],
+      "name": "getPendingActionFullInfo",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "opt_range",
+          "type": "optional<tuple<u32,u32>>",
+          "multi_arg": true
+        }
+      ],
+      "outputs": [
+        {
+          "type": "variadic<ActionFullInfo>",
+          "multi_result": true
+        }
+      ],
+      "labels": [
+        "multisig-external-view"
+      ],
+      "allow_multiple_var_args": true
+    },
+    {
+      "docs": [
+        "Indicates user rights.",
+        "`0` = no rights,",
+        "`1` = can propose, but not sign,",
+        "`2` = can propose and sign."
+      ],
+      "name": "userRole",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "UserRole"
+        }
+      ],
+      "labels": [
+        "multisig-external-view"
+      ]
+    },
+    {
+      "docs": [
+        "Lists all users that can sign actions."
+      ],
+      "name": "getAllBoardMembers",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "variadic<Address>",
+          "multi_result": true
+        }
+      ],
+      "labels": [
+        "multisig-external-view"
+      ]
+    },
+    {
+      "docs": [
+        "Lists all proposers that are not board members."
+      ],
+      "name": "getAllProposers",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "variadic<Address>",
+          "multi_result": true
+        }
+      ],
+      "labels": [
+        "multisig-external-view"
+      ]
+    }
+  ],
+  "events": [],
+  "hasCallback": false,
+  "types": {
+    "Action": {
+      "type": "enum",
+      "variants": [
+        {
+          "name": "Nothing",
+          "discriminant": 0
+        },
+        {
+          "name": "AddBoardMember",
+          "discriminant": 1,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "AddProposer",
+          "discriminant": 2,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "RemoveUser",
+          "discriminant": 3,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "ChangeQuorum",
+          "discriminant": 4,
+          "fields": [
+            {
+              "name": "0",
+              "type": "u32"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEgld",
+          "discriminant": 5,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEsdt",
+          "discriminant": 6,
+          "fields": [
+            {
+              "name": "0",
+              "type": "EsdtTransferExecuteData"
+            }
+          ]
+        },
+        {
+          "name": "SendAsyncCall",
+          "discriminant": 7,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SCDeployFromSource",
+          "discriminant": 8,
+          "fields": [
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        },
+        {
+          "name": "SCUpgradeFromSource",
+          "discriminant": 9,
+          "fields": [
+            {
+              "name": "sc_address",
+              "type": "Address"
+            },
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        }
+      ]
+    },
+    "ActionFullInfo": {
+      "type": "struct",
+      "docs": [
+        "Not used internally, just to retrieve results via endpoint."
+      ],
+      "fields": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        },
+        {
+          "name": "group_id",
+          "type": "u32"
+        },
+        {
+          "name": "action_data",
+          "type": "Action"
+        },
+        {
+          "name": "signers",
+          "type": "List<Address>"
+        }
+      ]
+    },
+    "CallActionData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "egld_amount",
+          "type": "BigUint"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    },
+    "EsdtTokenPayment": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "token_identifier",
+          "type": "TokenIdentifier"
+        },
+        {
+          "name": "token_nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "BigUint"
+        }
+      ]
+    },
+    "EsdtTransferExecuteData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "tokens",
+          "type": "List<EsdtTokenPayment>"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    },
+    "UserRole": {
+      "type": "enum",
+      "variants": [
+        {
+          "name": "None",
+          "discriminant": 0
+        },
+        {
+          "name": "Proposer",
+          "discriminant": 1
+        },
+        {
+          "name": "BoardMember",
+          "discriminant": 2
+        }
+      ]
+    }
+  }
+}
+```
+
+</details>
 
 ## Reading
 
@@ -186,7 +738,7 @@ signatures count toward quorum.
 :::note[Pitfall 1: the ABI is required even for reads]
 `createMultisigController(abi)` needs the multisig ABI to decode query responses.
 Without it, the controller cannot turn raw returned bytes into the board list or the
-pending `actionData`. Each recipe bundles `multisig-full.abi.json`; ship the ABI
+pending `actionData`. Each recipe bundles the recipe-specific `multisig.abi.json` subset; ship the ABI
 with your app too.
 :::
 

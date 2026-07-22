@@ -3,9 +3,9 @@ title: Create a governance proposal
 description: Create a MultiversX governance proposal with sdk-core's GovernanceController and factory, reading the live proposal fee from getConfig first.
 difficulty: advanced
 est_minutes: 9
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - governance
@@ -25,7 +25,7 @@ fee you would need before spending it.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - For the default config read and `payload` demos: devnet network access only.
 - For an actual proposal: a devnet PEM holding at least the proposal fee (500 EGLD
   on devnet at time of writing) plus gas.
@@ -33,11 +33,210 @@ fee you would need before spending it.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/governance-create-proposal
+mkdir governance-create-proposal
+cd governance-create-proposal
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-governance-create-proposal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — create a MultiversX governance proposal with GovernanceController and factory, reading the live proposal fee and config first.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the governance-create-proposal recipe.
+//
+// Three modes:
+//   npm start                 -> read the live governance config (proposal fee,
+//                                thresholds, last proposal nonce) - no wallet
+//   npm start -- payload      -> build (do not send) a proposal and print its
+//                                wire payload offline
+//   npm start -- propose <pem> -> actually create a proposal (needs a funded
+//                                devnet PEM holding the proposal fee). Add
+//                                --factory for the factory path.
+//
+// With an unfunded wallet, `propose` fails cleanly with "insufficient funds"
+// (the fee is 500 EGLD on devnet), proving the payload and signature are
+// well-formed - the verification level this recipe was authored at.
+
+import { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  readGovernanceConfig,
+  createProposalViaController,
+  createProposalViaFactory,
+  describeProposalPayload,
+} from './proposal';
+
+// A 40-character Git commit hash the proposal points at. Governance requires
+// exactly 40 chars (a full SHA-1) - see Pitfalls.
+const EXAMPLE_COMMIT_HASH = 'abcdef0123456789abcdef0123456789abcdef01';
+
+function egld(wei: bigint): string {
+  return `${wei / 10n ** 18n} EGLD`;
+}
+
+function makeEntrypoint(): DevnetEntrypoint {
+  return new DevnetEntrypoint({
+    clientName: 'cookbook-governance-create-proposal',
+    networkProviderConfig: { timeout: 15_000 },
+  });
+}
+
+/** Read the current epoch so proposals open a window in the future. */
+async function currentEpoch(entrypoint: DevnetEntrypoint): Promise<number> {
+  const status = await entrypoint.createNetworkProvider().getNetworkStatus();
+  return status.currentEpoch;
+}
+
+async function runConfig(): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const config = await readGovernanceConfig(entrypoint);
+  console.log('Governance config (live devnet):');
+  console.log(`  proposal fee:        ${config.proposalFeeWei} wei (${egld(config.proposalFeeWei)})`);
+  console.log(`  lost-proposal fee:   ${config.lostProposalFeeWei} wei (${egld(config.lostProposalFeeWei)})`);
+  console.log(`  min quorum:          ${config.minQuorum}`);
+  console.log(`  min pass threshold:  ${config.minPassThreshold}`);
+  console.log(`  min veto threshold:  ${config.minVetoThreshold}`);
+  console.log(`  last proposal nonce: ${config.lastProposalNonce}`);
+  console.log('\nCreating a proposal needs the proposal fee above in your wallet.');
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const [config, epoch, throwaway] = await Promise.all([
+    readGovernanceConfig(entrypoint),
+    currentEpoch(entrypoint),
+    entrypoint.createAccount(),
+  ]);
+  const tx = await createProposalViaFactory(entrypoint, throwaway, {
+    commitHash: EXAMPLE_COMMIT_HASH,
+    startVoteEpoch: epoch + 1,
+    endVoteEpoch: epoch + 6,
+    feeWei: config.proposalFeeWei,
+  });
+  const p = describeProposalPayload(tx);
+  console.log(`function:    ${p.function}`);
+  console.log(`commitHash:  ${p.commitHashHex}  (hex of the 40-char commit string)`);
+  console.log(`startEpoch:  0x${p.startEpochHex} = ${parseInt(p.startEpochHex || '0', 16)}`);
+  console.log(`endEpoch:    0x${p.endEpochHex} = ${parseInt(p.endEpochHex || '0', 16)}`);
+  console.log(`receiver:    ${p.receiver}  (the governance system contract)`);
+  console.log(`value (fee): ${p.feeWei} wei (${egld(p.feeWei)})`);
+  console.log(`gasLimit:    ${p.gasLimit}  (set automatically by the SDK)`);
+}
+
+async function runPropose(pemPath: string, useFactory: boolean): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const [config, epoch] = await Promise.all([readGovernanceConfig(entrypoint), currentEpoch(entrypoint)]);
+
+  const proposer = await Account.newFromPem(pemPath);
+  proposer.nonce = await entrypoint.recallAccountNonce(proposer.address);
+  console.log(`Proposer: ${proposer.address.toBech32()} (nonce ${proposer.nonce})`);
+  console.log(`Path:     ${useFactory ? 'factory' : 'controller'}`);
+  console.log(`Fee:      ${egld(config.proposalFeeWei)}, voting epochs ${epoch + 1}..${epoch + 6}`);
+
+  const create = useFactory ? createProposalViaFactory : createProposalViaController;
+  const tx = await create(entrypoint, proposer, {
+    commitHash: EXAMPLE_COMMIT_HASH,
+    startVoteEpoch: epoch + 1,
+    endVoteEpoch: epoch + 6,
+    feeWei: config.proposalFeeWei,
+  });
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash: ${txHash}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'propose') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- propose <pemPath> [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      await runPropose(pemPath, rest.includes('--factory'));
+    } catch (err) {
+      console.error(`Proposal rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  await runConfig();
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## Creating a proposal
 

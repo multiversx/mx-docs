@@ -3,9 +3,9 @@ title: Set a guardian on an account
 description: Nominate a guardian for an account with SetGuardian via sdk-core's AccountController and AccountTransactionsFactory, payload verified on devnet.
 difficulty: intermediate
 est_minutes: 8
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - guardian
@@ -28,7 +28,7 @@ payload, and broadcasts it.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet, see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites. **No devnet EGLD required**, see "How it works".
@@ -36,12 +36,171 @@ payload, and broadcasts it.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/set-guardian
+mkdir set-guardian
+cd set-guardian
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th MyGuardianService
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-set-guardian",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — set a guardian on an account with SetGuardian via sdk-core's AccountController and AccountTransactionsFactory, payload verified on devnet.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Identical to the helper used by issue-fungible-token / send-egld /
+// manage-nonces. Fetch the account nonce from the network first, then
+// increment locally with getNonceThenIncrement().
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half).
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point for the SetGuardian recipe.
+//
+// Usage:
+//   npm run build
+//   npm start -- <pemPath> <guardianBech32> [serviceID] [--factory]
+//
+// Example:
+//   npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th MyGuardianService
+//
+// It decodes the SetGuardian payload, then broadcasts it. An unfunded wallet
+// is rejected for insufficient funds, proving the payload is well-formed
+// without spending real EGLD. `serviceID` is illustrative — the real value
+// depends on the guardian service you use.
+
+import { Address, DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { setGuardian, describeSetGuardianPayload } from './guardian';
+
+async function main(): Promise<void> {
+  const args = process.argv.slice(2);
+  const [pemPath, guardianArg] = args;
+  const useFactory = args.includes('--factory');
+  // The third positional (if not a flag) is the serviceID.
+  const serviceID = args[2] && !args[2].startsWith('--') ? args[2] : 'MyGuardianService';
+
+  if (!pemPath || !guardianArg) {
+    console.error('Usage: npm start -- <pemPath> <guardianBech32> [serviceID] [--factory]');
+    process.exitCode = 1;
+    return;
+  }
+
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+  const guardianAddress = Address.newFromBech32(guardianArg);
+
+  console.log(`Sender:   ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Guardian: ${guardianAddress.toBech32()}`);
+  console.log(`serviceID: ${serviceID} (illustrative)`);
+  console.log(`API level: ${useFactory ? 'factory' : 'controller'}\n`);
+
+  const tx = await setGuardian(entrypoint, sender, { guardianAddress, serviceID }, useFactory);
+  const decoded = describeSetGuardianPayload(tx);
+  console.log('SetGuardian payload:');
+  console.log(`  function:  ${decoded.function}`);
+  console.log(`  receiver:  ${decoded.receiver}`);
+  console.log(`  guardian:  ${decoded.guardian}`);
+  console.log(`  serviceID: ${decoded.serviceID}`);
+  console.log(`  gasLimit:  ${decoded.gasLimit}`);
+
+  console.log('\nBroadcasting...');
+  try {
+    const txHash = await entrypoint.sendTransaction(tx);
+    console.log(`Sent. Transaction hash: ${txHash}`);
+    console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+  } catch (err) {
+    console.error(`Rejected (expected for an unfunded wallet): ${(err as Error).message}`);
+    process.exitCode = 1;
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## The code
 

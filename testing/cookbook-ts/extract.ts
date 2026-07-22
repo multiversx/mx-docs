@@ -35,9 +35,8 @@ const COOKBOOK_DIR = resolve(
   "docs/sdk-and-tools/sdk-js/cookbook",
 );
 const RECIPES_OUT = resolve(HERE, "project", "src", "recipes");
-const COMPILE_LANGUAGES = new Set(["ts", "tsx"]);
 const SAFE_RELATIVE_PATH =
-  /^[A-Za-z0-9][A-Za-z0-9._-]*(?:\/[A-Za-z0-9][A-Za-z0-9._-]*)*$/;
+  /^(?:[A-Za-z0-9][A-Za-z0-9._-]*|\.[A-Za-z0-9][A-Za-z0-9._-]*)(?:\/(?:[A-Za-z0-9][A-Za-z0-9._-]*|\.[A-Za-z0-9][A-Za-z0-9._-]*))*$/;
 
 function escapesRoot(relativePath: string): boolean {
   return (
@@ -244,19 +243,14 @@ export async function assembleCookbook({
     const slug = slugFor(mdxPath);
     const markdown = await readFile(mdxPath, "utf-8");
     const blocks = extractCodeBlocksFromMarkdown(markdown);
-    const compilable = blocks.filter(
-      (block) =>
-        block.title !== undefined &&
-        block.language !== undefined &&
-        COMPILE_LANGUAGES.has(block.language),
-    );
-    if (compilable.length === 0) {
+    const projectFiles = blocks.filter((block) => block.title !== undefined);
+    if (projectFiles.length === 0) {
       continue;
     }
 
     const recipeRoot = resolveRecipeRoot(resolvedRecipesOut, slug);
     const seen = new Set<string>();
-    for (const block of compilable) {
+    for (const block of projectFiles) {
       const title = block.title!;
       const outPath = resolveRecipeOutputPath(recipeRoot, title);
       const outputKey = outPath.toLowerCase();
@@ -270,9 +264,8 @@ export async function assembleCookbook({
 
       await writeRecipeFile(recipeRoot, title, block.content);
       fileCount += 1;
-      log(
-        `Extracted ${relative(resolvedRepoRoot, mdxPath)} :: ${title} (${block.language})`,
-      );
+      const language = block.language ? ` (${block.language})` : "";
+      log(`Extracted ${relative(resolvedRepoRoot, mdxPath)} :: ${title}${language}`);
     }
     recipeCount += 1;
   }
@@ -284,7 +277,7 @@ export async function assembleCookbook({
 
   if (fileCount === 0) {
     throw new Error(
-      "No compilable fences found. Expected titled ```ts / ```tsx fences in " +
+      "No project files found. Expected titled code fences in " +
         `${relative(resolvedRepoRoot, resolvedCookbookDir)}.`,
     );
   }

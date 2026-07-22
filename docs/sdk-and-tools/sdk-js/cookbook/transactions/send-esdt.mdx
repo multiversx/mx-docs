@@ -3,9 +3,9 @@ title: Send an ESDT
 description: Send a fungible ESDT token using sdk-core's TransfersController and the Token/TokenTransfer classes against DevnetEntrypoint, no browser required.
 difficulty: beginner
 est_minutes: 6
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - transaction
@@ -26,7 +26,7 @@ This recipe is for when **your own code holds the private key**.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet with some devnet EGLD (for gas), see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites for how to generate and fund a throwaway one.
@@ -36,12 +36,174 @@ This recipe is for when **your own code holds the private key**.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/send-esdt
+mkdir send-esdt
+cd send-esdt
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th TEST-abcdef 2.5 6
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-send-esdt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — send an ESDT (fungible token) to an address using sdk-core's TransfersController and the Token/TokenTransfer classes, directly against DevnetEntrypoint.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Fetch the account nonce from the network before sending, then increment
+// locally with getNonceThenIncrement(). This helper implements the fetch half;
+// see the manage-nonces recipe for the increment half in depth.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half across a
+ * batch of sends).
+ *
+ * `entrypoint.recallAccountNonce(address)` is a thin convenience wrapper
+ * around `networkProvider.getAccount(address).nonce`
+ * (node_modules/@multiversx/sdk-core/out/entrypoints/entrypoints.js) — used
+ * here instead of constructing a network provider by hand.
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point. Wires together account.ts, amount.ts,
+// and sendEsdt.ts into a single runnable command.
+//
+// Usage:
+//   npm run build && npm start -- <pemPath> <receiverBech32> <tokenIdentifier> <amount> <numDecimals>
+//
+// Example (a devnet token with 6 decimals, sending 2.5 units):
+//   npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th TEST-abcdef 2.5 6
+//
+// `numDecimals` is required because guessing a token's precision is
+// unsafe. See the prerequisites above for a devnet PEM wallet and test token.
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { toSmallestDenomination } from './amount';
+import { sendEsdt } from './sendEsdt';
+
+async function main(): Promise<void> {
+  const [pemPath, receiver, tokenIdentifier, amountArg, numDecimalsArg] = process.argv.slice(2);
+
+  if (!pemPath || !receiver || !tokenIdentifier || !amountArg || !numDecimalsArg) {
+    console.error(
+      'Usage: npm start -- <pemPath> <receiverBech32> <tokenIdentifier> <amount> <numDecimals>',
+    );
+    process.exitCode = 1;
+    return;
+  }
+
+  const numDecimals = Number(numDecimalsArg);
+  if (!Number.isInteger(numDecimals) || numDecimals < 0) {
+    console.error(`numDecimals must be a non-negative integer, got "${numDecimalsArg}".`);
+    process.exitCode = 1;
+    return;
+  }
+
+  // DevnetEntrypoint() with no options targets the devnet API and chain "D".
+  const entrypoint = new DevnetEntrypoint();
+
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+  console.log(`Sender:   ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Receiver: ${receiver}`);
+  console.log(`Token:    ${tokenIdentifier}`);
+  console.log(`Amount:   ${amountArg} (${numDecimals} decimals)`);
+
+  const { txHash } = await sendEsdt(entrypoint, sender, {
+    receiver,
+    tokenIdentifier,
+    amountInSmallestDenomination: toSmallestDenomination(amountArg, numDecimals),
+  });
+
+  console.log(`\nSent. Transaction hash: ${txHash}`);
+  console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+
+  const outcome = await entrypoint.awaitCompletedTransaction(txHash);
+  console.log(`Status: ${outcome.status.status} (successful: ${outcome.status.isSuccessful()})`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 (2.5 units of a 6-decimal token, adjust the last argument to match the token you
 are actually sending.)

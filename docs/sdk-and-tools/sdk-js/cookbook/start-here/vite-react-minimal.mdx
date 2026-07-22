@@ -3,10 +3,10 @@ title: Minimal sdk-dapp v5 app in Vite + React
 description: The smallest working sdk-dapp v5 setup in a fresh Vite + React + TypeScript project. Compiles strict on the first try, with HTTPS dev built in.
 difficulty: beginner
 est_minutes: 10
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
-  sdk-dapp: "^5.6.0"
+  sdk-core: "15.4.1"
+  sdk-dapp: "5.7.1"
 tags:
   - sdk-dapp
   - vite
@@ -17,8 +17,8 @@ tags:
 ---
 
 This recipe gives you the smallest working sdk-dapp v5 setup in a fresh Vite +
-React + TypeScript app. Use this if you are scaffolding a new dApp on Vite: clone
-the `recipes/vite-react-minimal` directory and rename it.
+React + TypeScript app. Use this if you are scaffolding a new dApp on Vite:
+create a directory and copy the complete project files from this page.
 
 This recipe is **not** the right starting point if you are on Next.js (use
 [Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
@@ -27,12 +27,12 @@ you have an existing v4 codebase to upgrade (use
 [Migrate v4 to v5](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)).
 
 The Vite path is simpler than the Next.js path because there is no SSR.
-`initApp()` could run at module scope; we keep it in a `useEffect` only so the
-React Strict Mode double-mount does not trigger redundant work in dev.
+`initApp()` could run at module scope; this version memoizes one initialization
+promise so both React Strict Mode effect subscriptions await the same work.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1 (sdk-dapp's stated minimum).
+- Node.js >= 20.19.0 (required by the explicit sdk-dapp UI dependency).
 - pnpm or npm.
 - A devnet wallet, either the DeFi browser extension or xPortal (mobile via
   WalletConnect).
@@ -40,59 +40,99 @@ React Strict Mode double-mount does not trigger redundant work in dev.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/vite-react-minimal
+mkdir vite-react-minimal
+cd vite-react-minimal
+# Create the project files shown below, then set your WalletConnect project ID.
+cp .env.example .env
 npm install
+npm run build
 npm run dev
 # open https://localhost:5173  (note the s, see Pitfall 2)
 ```
 
-## package.json: pin the SDK and peer deps
+## Project setup
+
+<details>
+<summary>Package, TypeScript, environment, Vite, and HTML files</summary>
+
+### package.json: pin the SDK and peer dependencies
 
 `bignumber.js` and `protobufjs` are peer dependencies of sdk-core and must be
 installed explicitly. The `@vitejs/plugin-basic-ssl` plugin is the simplest way
 to get HTTPS on the Vite dev server.
 
-```json
+```json title="package.json"
 {
   "name": "cookbook-recipe-vite-react-minimal",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Cookbook recipe — minimal sdk-dapp v5 in Vite + React + TypeScript. Compiles strict.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit --strict",
-    "lint": "eslint . --max-warnings=0"
+    "typecheck": "tsc --noEmit --strict"
   },
   "dependencies": {
-    "@multiversx/sdk-core": "^15.4.0",
-    "@multiversx/sdk-dapp": "^5.6.0",
-    "bignumber.js": "^9.1.2",
-    "protobufjs": "^7.4.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-basic-ssl": "^1.2.0",
-    "@vitejs/plugin-react": "^4.3.3",
-    "eslint": "^8.57.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.14",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.13.0",
-    "vite": "^5.4.10"
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "5.4.21"
   },
   "engines": {
-    "node": ">=20.13.1"
+    "node": ">=20.19.0"
   }
 }
 ```
 
-## vite.config.ts: HTTPS and CommonJS interop
+### tsconfig.json: complete strict configuration
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src", "vite.config.ts"]
+}
+```
+
+### .env.example: required WalletConnect configuration
+
+```text title=".env.example"
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+Create a WalletConnect project ID, copy this file to `.env`, and set the value.
+The application fails with a direct configuration error when it is absent.
+
+### vite.config.ts: HTTPS and CommonJS interop
 
 Two things matter: `basicSsl()` for HTTPS dev, and `optimizeDeps` for sdk-dapp's
 CommonJS transitive packages. This exact config was arrived at by actually
@@ -100,7 +140,7 @@ running `npm run dev` and `npm run build` and fixing two real failures, not by
 reasoning from the docs alone. See Pitfalls 5 and 6 before you trim this file
 down for your own project.
 
-```ts
+```ts title="vite.config.ts"
 // vite.config.ts — sdk-dapp v5 + Vite + React.
 //
 // Two things matter for sdk-dapp to work cleanly under Vite:
@@ -114,7 +154,7 @@ down for your own project.
 //   2. The CommonJS interop plumbing for sdk-dapp's transitive WalletConnect
 //      and Ledger deps. Unlike Next.js, Vite's default resolver is
 //      ESM-clean for sdk-dapp 5.x and we don't need the `externals` array
-//      that recipes/nextjs-minimal/next.config.js carries. If you hit
+//      that the nextjs-minimal recipe's next.config.js carries. If you hit
 //      "Unexpected token 'export'" or "Cannot use import statement outside
 //      a module" errors at runtime, narrow the offending package and add
 //      it to optimizeDeps.include — but see the comment on optimizeDeps
@@ -190,11 +230,11 @@ export default defineConfig({
 });
 ```
 
-## index.html: the Vite entry
+### index.html: the Vite entry
 
 Single root div plus an ESM script tag. Vite injects the bundle.
 
-```html
+```html title="index.html"
 <!doctype html>
 <html lang="en">
   <head>
@@ -209,6 +249,8 @@ Single root div plus an ESM script tag. Vite injects the bundle.
 </html>
 ```
 
+</details>
+
 ## src/main.tsx: bootstrap
 
 Classic React 18 `createRoot` plus `StrictMode`. `<Providers>` wraps the app, the
@@ -222,9 +264,8 @@ same pattern as Next.js, just without the layout/page split.
 // split that the App Router imposes.
 //
 // Why StrictMode? It double-mounts components in dev to flush out unsafe
-// side effects. The `initStarted` module-scope flag in providers.tsx
-// handles the double-mount cleanly; if you remove that flag, you'll see
-// initApp() invoked twice in dev.
+// side effects. providers.tsx shares one initialization promise, so both
+// effect subscriptions await the same work before rendering the app.
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -253,16 +294,15 @@ The body is identical to the Next.js recipe's `app/providers.tsx`, minus the
 ```tsx title="src/providers.tsx"
 // src/providers.tsx — sdk-dapp v5 init wrapper for Vite.
 //
-// Same conceptual job as recipes/nextjs-minimal/app/providers.tsx, simpler
+// Same conceptual job as the nextjs-minimal recipe's app/providers.tsx, simpler
 // implementation:
 //
 //   - No "use client" needed. Vite has no SSR; the entire app is a CSR
 //     bundle that hydrates in the browser. sessionStorage is always
 //     defined by the time React mounts.
-//   - We can call initApp() at module scope if we want, but we keep it in
-//     a useEffect so the React-Strict-Mode double-mount in dev doesn't
-//     throw a warning. The module-scope `initStarted` flag matches the
-//     Next.js recipe exactly.
+//   - We can call initApp() at module scope if we want, but the effect keeps
+//     readiness and error rendering inside React. Both Strict Mode effect
+//     subscriptions await one shared initialization promise.
 //
 // IMPORTANT: the OnCloseUnlockPanelType requires Promise<void>. The docs
 // example uses sync `() => navigate(...)`
@@ -274,37 +314,15 @@ import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
 import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
 import { dappConfig } from './lib/multiversx';
 
-// Module-scope flag prevents double-init under React Strict Mode (which
-// deliberately mounts useEffect twice in dev to surface unsafe side
-// effects). initApp is idempotent in v5 but skipping the second call
-// avoids redundant network round-trips.
-let initStarted = false;
+let initializationPromise: Promise<void> | undefined;
 
-export function Providers({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (initStarted) {
-      setReady(true);
-      return;
-    }
-    initStarted = true;
-
-    let cancelled = false;
-    void initApp(dappConfig).then(() => {
-      if (cancelled) return;
-
-      // UnlockPanelManager.init must be called AFTER initApp resolves.
-      // Both callbacks return Promise<void> — see Pitfall 1.
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+      // UnlockPanelManager.init must run only after initApp resolves.
       UnlockPanelManager.init({
         loginHandler: async (): Promise<void> => {
-          // Replace with your post-login navigation (e.g. a router push).
-          // For this minimal recipe we just leave the user on the home
-          // page — useGetIsLoggedIn() will flip and the UI re-renders.
+          // Replace with your post-login navigation.
           // eslint-disable-next-line no-console
           console.log('Logged in.');
         },
@@ -313,14 +331,53 @@ export function Providers({
           console.log('Unlock panel closed.');
         },
       });
-
-      setReady(true);
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
     });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
 
     return () => {
-      cancelled = true;
+      subscribed = false;
     };
   }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
 
   if (!ready) {
     return (
@@ -460,11 +517,14 @@ Pitfall 4).
 import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
 import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
 
-// Read from import.meta.env (Vite's runtime environment object).
-// Fallback is the demo project ID — works in dev but rate-limited;
-// register your own at https://cloud.walletconnect.com.
 const WALLET_CONNECT_PROJECT_ID =
-  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? 'multiversx-cookbook-demo';
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
 
 export const dappConfig = {
   storage: {
@@ -507,10 +567,9 @@ This recipe is the Vite parallel to the
 Three observations on the differences:
 
 **No `"use client"` needed.** Vite has no SSR; the entire app is CSR.
-`sessionStorage` is always defined by the time React mounts, so we do not have to
-defer `initApp()` to `useEffect` for SSR-safety reasons. We *do* still keep it in
-`useEffect`, but only so the module-scope `initStarted` guard can protect against
-React Strict Mode's double-mount in dev.
+`sessionStorage` is defined by the time React mounts. The shared initialization
+promise makes the Strict Mode double-invoke safe: neither effect subscription
+marks the application ready until the same `initApp()` call has resolved.
 
 **HTTPS via plugin, not flag.** Next.js 14 has `next dev --experimental-https`.
 Vite uses a plugin (`@vitejs/plugin-basic-ssl`). Both produce the same outcome, a
@@ -538,11 +597,11 @@ Ledger refuse to connect over HTTP. WalletConnect (xPortal) works over HTTP
 because the auth happens off-origin.
 :::
 
-:::warning[Pitfall 3: HMR can re-run initApp]
-Vite's hot-module-replacement re-runs modules without a full page reload. Without
-the `initStarted` module-scope flag in `src/providers.tsx`, every save triggers
-another `initApp()` invocation. The flag in this recipe matches the Next.js one,
-keep it.
+:::warning[Pitfall 3: share the initialization promise, not a boolean]
+A boolean only records that initialization started. Under Strict Mode, the second
+effect can see that boolean and render children before `initApp()` resolves. The
+module-level promise in `src/providers.tsx` represents completion, so every
+subscriber awaits it and handles rejection.
 :::
 
 :::warning[Pitfall 4: environment variables are import.meta.env, NOT process.env]

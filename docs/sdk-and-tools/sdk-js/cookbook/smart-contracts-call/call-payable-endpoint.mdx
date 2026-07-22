@@ -3,9 +3,9 @@ title: Call a payable endpoint with EGLD
 description: Call a payable contract endpoint, attaching EGLD via nativeTransferAmount, against a real live devnet contract with sdk-core's controller pattern.
 difficulty: intermediate
 est_minutes: 7
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - smart-contract
@@ -39,7 +39,7 @@ for when **your own code holds the private key**.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet, see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites for how to generate a throwaway one. **No devnet EGLD required**,
@@ -48,12 +48,346 @@ for when **your own code holds the private key**.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/call-payable-endpoint
+mkdir call-payable-endpoint
+cd call-payable-endpoint
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-call-payable-endpoint",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — call a payable smart contract endpoint, attaching EGLD via nativeTransferAmount, against a live devnet contract with sdk-core's SmartContractController.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Fetch the account nonce from the network before sending, then increment
+// locally with getNonceThenIncrement(). This helper implements the fetch half;
+// see the manage-nonces recipe for the increment half in depth.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half across a
+ * batch of sends).
+ *
+ * `entrypoint.recallAccountNonce(address)` is a thin convenience wrapper
+ * around `networkProvider.getAccount(address).nonce`
+ * (node_modules/@multiversx/sdk-core/out/entrypoints/entrypoints.js) — used
+ * here instead of constructing a network provider by hand.
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point. Queries the required ping amount, then
+// calls `ping()` attaching exactly that much EGLD.
+//
+// Usage:
+//   npm run build && npm start -- <pemPath>
+//
+// See the prerequisites above for a devnet PEM wallet. The offline build
+// checks do not require devnet EGLD; broadcasting this call does.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { queryPingAmount, callPing, PING_PONG_CONTRACT_ADDRESS } from './callPing';
+
+async function main(): Promise<void> {
+  const [pemPath] = process.argv.slice(2);
+
+  if (!pemPath) {
+    console.error('Usage: npm start -- <pemPath>');
+    process.exitCode = 1;
+    return;
+  }
+
+  const abiJson = fs.readFileSync(path.join(__dirname, '..', 'src', 'ping-pong.abi.json'), {
+    encoding: 'utf8',
+  });
+  const abi = Abi.create(JSON.parse(abiJson) as Record<string, unknown>);
+
+  const entrypoint = new DevnetEntrypoint();
+
+  console.log(`Contract: ${PING_PONG_CONTRACT_ADDRESS} (ping-pong, live devnet)`);
+  const pingAmount = await queryPingAmount(entrypoint, abi);
+  console.log(`Required ping amount (from getPingAmount()): ${pingAmount} (smallest denomination)`);
+
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+  console.log(`Sender:   ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Calling:  ping()  <- payable, attaching ${pingAmount} EGLD via nativeTransferAmount`);
+
+  const { txHash } = await callPing(entrypoint, abi, sender, pingAmount);
+
+  console.log(`\nSent. Transaction hash: ${txHash}`);
+  console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+```json title="src/ping-pong.abi.json"
+{
+  "buildInfo": {
+    "rustc": {
+      "version": "1.61.0-nightly",
+      "commitHash": "1d9c262eea411ec5230f8a4c9ba50b3647064da4",
+      "commitDate": "2022-03-26",
+      "channel": "Nightly",
+      "short": "rustc 1.61.0-nightly (1d9c262ee 2022-03-26)"
+    },
+    "contractCrate": {
+      "name": "ping-pong",
+      "version": "0.0.2",
+      "git_version": "23ff9bd"
+    },
+    "framework": {
+      "name": "elrond-wasm",
+      "version": "0.34.1"
+    }
+  },
+  "docs": [
+    "A contract that allows anyone to send a fixed sum, locks it for a while and then allows users to take it back.",
+    "Sending funds to the contract is called \"ping\".",
+    "Taking the same funds back is called \"pong\".",
+    "",
+    "Restrictions:",
+    "- Only the set amount can be `ping`-ed, no more, no less.",
+    "- `pong` can only be called after a certain period after `ping`."
+  ],
+  "name": "PingPong",
+  "constructor": {
+    "docs": [
+      "Necessary configuration when deploying:",
+      "`ping_amount` - the exact amount that needs to be sent when `ping`-ing.  ",
+      "`duration_in_seconds` - how much time (in seconds) until `pong` can be called after the initial `ping` call  ",
+      "`token_id` - Optional. The Token Identifier of the token that is going to be used. Default is \"EGLD\"."
+    ],
+    "inputs": [
+      {
+        "name": "ping_amount",
+        "type": "BigUint"
+      },
+      {
+        "name": "duration_in_seconds",
+        "type": "u64"
+      },
+      {
+        "name": "opt_token_id",
+        "type": "optional<EgldOrEsdtTokenIdentifier>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "docs": [
+        "User sends some tokens to be locked in the contract for a period of time."
+      ],
+      "name": "ping",
+      "mutability": "mutable",
+      "payableInTokens": ["*"],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "docs": [
+        "User can take back funds from the contract.",
+        "Can only be called after expiration."
+      ],
+      "name": "pong",
+      "mutability": "mutable",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "name": "didUserPing",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "getPongEnableTimestamp",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "getTimeToPong",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "optional<u64>",
+          "multi_result": true
+        }
+      ]
+    },
+    {
+      "name": "getAcceptedPaymentToken",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "EgldOrEsdtTokenIdentifier"
+        }
+      ]
+    },
+    {
+      "name": "getPingAmount",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "BigUint"
+        }
+      ]
+    },
+    {
+      "name": "getDurationTimestamp",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "getUserPingTimestamp",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "identifier": "pongEvent",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "Address",
+          "indexed": true
+        }
+      ]
+    }
+  ],
+  "hasCallback": false,
+  "types": []
+}
+```
+
+</details>
 
 ## Calling the payable endpoint
 

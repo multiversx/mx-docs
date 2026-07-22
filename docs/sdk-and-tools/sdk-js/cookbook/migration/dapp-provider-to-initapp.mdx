@@ -3,9 +3,9 @@ title: "Migration: DappProvider to initApp, side-by-side"
 description: The full-app version of the DappProvider removal, every file that touches it, including the session-restore state v4 quietly handled for you.
 difficulty: intermediate
 est_minutes: 8
-last_validated: "2026-07-16"
+artifact: reference
 sdk_versions:
-  sdk-dapp: "^5.6.0"
+  sdk-dapp: "5.7.1"
 tags:
   - sdk-dapp
   - migration
@@ -68,9 +68,15 @@ import { EnvironmentsEnum } from '@multiversx/sdk-dapp/types';
 import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/hooks';
 import { ExtensionLoginButton } from '@multiversx/sdk-dapp/UI';
 
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
 const customNetworkConfig = {
   name: 'customConfig',
-  walletConnectV2ProjectId: 'multiversx-cookbook-demo',
+  walletConnectV2ProjectId: walletConnectProjectId,
 };
 
 function Dashboard() {
@@ -138,7 +144,7 @@ These three files compile against the installed v5 SDK.
 ```tsx title="after/Providers.tsx"
 // after/Providers.tsx — v5 imperative init, side-by-side with before/App.tsx.
 //
-// Same verified pattern as recipes/vite-react-minimal/src/providers.tsx —
+// Same verified pattern as the vite-react-minimal recipe's src/providers.tsx —
 // copied here (not cross-imported; each Cookbook recipe is self-contained)
 // because the WHOLE POINT of this recipe is to show this file existing at
 // all, where v4 had no equivalent. Read this alongside before/App.tsx:
@@ -171,6 +177,12 @@ import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
 import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
 import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
 
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
 const dappConfig = {
   storage: {
     getStorageCallback: (): Storage => sessionStorage,
@@ -186,16 +198,24 @@ const dappConfig = {
     theme: ThemesEnum.dark,
     providers: {
       walletConnect: {
-        walletConnectV2ProjectId: 'multiversx-cookbook-demo',
+        walletConnectV2ProjectId: walletConnectProjectId,
       },
     },
   },
 };
 
-// Module-scope flag prevents double-init under React Strict Mode, which
-// deliberately double-invokes effects in dev. v4 needed no equivalent
-// because <DappProvider> was a component, not an effect.
-let initStarted = false;
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
 
 export function Providers({
   children,
@@ -203,25 +223,38 @@ export function Providers({
   children: ReactNode;
 }): JSX.Element {
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (initStarted) {
-      setReady(true);
-      return;
-    }
-    initStarted = true;
-
-    let cancelled = false;
-    void initApp(dappConfig).then(() => {
-      if (cancelled) return;
-      setReady(true);
-    });
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
 
     return () => {
-      cancelled = true;
+      subscribed = false;
     };
   }, []);
 
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
   if (!ready) {
     return <div>Initializing…</div>;
   }
@@ -330,7 +363,7 @@ Pitfall 3 for the `"use client"` plus `useEffect` fix.
 :::
 
 :::warning[Pitfall 2: React Strict Mode double-invokes useEffect in dev]
-Without the module-scope `initStarted` guard, `initApp()` fires twice on first
+Without a module-scope initialization promise, `initApp()` fires twice on first
 mount in development. `initApp()` is idempotent, but the guard avoids a redundant
 round of session-restore work.
 :::

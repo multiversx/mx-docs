@@ -3,9 +3,9 @@ title: Upgrade a smart contract
 description: Upgrade a deployed smart contract to new WASM bytecode with sdk-core's controller and factory, and read the upgradeContract builtin wire payload.
 difficulty: intermediate
 est_minutes: 7
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - smart-contract
@@ -26,7 +26,7 @@ sending anything, so you can see the exact shape offline.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - For the default payload demo: nothing (it builds offline).
 - For an actual upgrade: a devnet PEM wallet that **owns** the target contract
   and has a little EGLD for gas.
@@ -34,11 +34,273 @@ sending anything, so you can see the exact shape offline.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/upgrade-contract
+mkdir upgrade-contract
+cd upgrade-contract
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-upgrade-contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — upgrade a deployed smart contract to new WASM bytecode with sdk-core's controller and factory, and read the upgradeContract wire payload.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```json title="src/adder.abi.json"
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.76.0-nightly",
+            "commitHash": "d86d65bbc19b928387f68427fcc3a0da498d8a19",
+            "commitDate": "2023-12-10",
+            "channel": "Nightly",
+            "short": "rustc 1.76.0-nightly (d86d65bbc 2023-12-10)"
+        },
+        "contractCrate": {
+            "name": "adder",
+            "version": "0.0.0",
+            "gitVersion": "v0.50.1-3-gbed74682a"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.50.1"
+        }
+    },
+    "docs": [
+        "One of the simplest smart contracts possible,",
+        "it holds a single variable in storage, which anyone can increment."
+    ],
+    "name": "Adder",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getSum",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Add desired amount to the storage variable."
+            ],
+            "name": "add",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {}
+}
+```
+
+The compiled `.wasm` is a binary build artifact, so it is not embedded in this text page. The broadcast command below accepts the path to the contract WASM you built; the default offline demonstration uses a minimal valid WASM module created in code.
+
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the upgrade recipe.
+//
+// Two modes:
+//   npm start                            -> build (do not send) an upgrade
+//                                           and print its wire payload. No
+//                                           wallet, no funds, offline.
+//   npm start -- upgrade <pem> <addr> <wasm> [n] [--factory]
+//                                        -> actually upgrade the contract at
+//                                           <addr> to the adder bytecode with
+//                                           init value n (default 42). Needs a
+//                                           funded devnet PEM that OWNS <addr>.
+//
+// With an unfunded wallet the upgrade mode fails cleanly with "insufficient
+// funds" (payload + signature well-formed), the level this recipe was
+// authored at.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, Account, Address, DevnetEntrypoint } from '@multiversx/sdk-core';
+import { upgradeViaController, upgradeViaFactory, describeUpgradePayload } from './upgrade';
+
+// The real adder contract on devnet, used only as the target address in the
+// offline payload demo (the demo never sends anything).
+const EXAMPLE_CONTRACT = 'erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug';
+
+function readSrc(fileName: string): string {
+  return fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+}
+
+function loadAbi(fileName: string): Abi {
+  return Abi.create(JSON.parse(readSrc(fileName)) as Record<string, unknown>);
+}
+
+function loadBytecode(filePath: string): Uint8Array {
+  return new Uint8Array(fs.readFileSync(path.resolve(filePath)));
+}
+
+// The 8-byte header of an otherwise-empty, valid WebAssembly module. It is
+// sufficient for demonstrating payload encoding; do not broadcast it.
+const MINIMAL_WASM_MODULE = Uint8Array.from([0x00, 0x61, 0x73, 0x6d, 0x01, 0, 0, 0]);
+
+async function runPayloadDemo(contractBech32: string): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const abi = loadAbi('adder.abi.json');
+  const bytecode = MINIMAL_WASM_MODULE;
+  const factory = entrypoint.createSmartContractTransactionsFactory(abi);
+
+  const transaction = await factory.createTransactionForUpgrade(
+    Address.newFromBech32('erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th'),
+    { contract: Address.newFromBech32(contractBech32), bytecode, gasLimit: 6_000_000n, arguments: [42] },
+  );
+
+  const p = describeUpgradePayload(transaction);
+  console.log(`Upgrade transaction wire payload (built, not sent):`);
+  console.log(`  receiver:        ${p.receiver}  (the contract itself)`);
+  console.log(`  builtinFunction: ${p.builtinFunction}`);
+  console.log(`  code === wasm:   ${p.codeHex === Buffer.from(bytecode).toString('hex')}`);
+  console.log(`  codeMetadata:    ${p.codeMetadata}  (0504 = Upgradeable + Readable + PayableBySmartContract)`);
+  console.log(`  args:            ${p.args.join(', ')}  (2a = 42)`);
+}
+
+async function runUpgrade(
+  pemPath: string,
+  contractBech32: string,
+  wasmPath: string,
+  initialValue: number,
+  useFactory: boolean,
+): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const abi = loadAbi('adder.abi.json');
+  const bytecode = loadBytecode(wasmPath);
+
+  const sender = await Account.newFromPem(pemPath);
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+  const contract = Address.newFromBech32(contractBech32);
+  console.log(`Owner:    ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Contract: ${contract.toBech32()}`);
+  console.log(`Path:     ${useFactory ? 'factory' : 'controller'}, upgrade to init(${initialValue})`);
+
+  const upgrade = useFactory ? upgradeViaFactory : upgradeViaController;
+  const txHash = await upgrade(entrypoint, abi, sender, contract, bytecode, initialValue);
+  console.log(`  broadcast txHash: ${txHash}`);
+  const completed = await entrypoint.awaitCompletedTransaction(txHash);
+  console.log(`  status:           ${completed.status.toString()}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'upgrade') {
+    const pemPath = rest[0];
+    const contractBech32 = rest[1];
+    const wasmPath = rest[2];
+    if (!pemPath || !contractBech32 || !wasmPath) {
+      console.error('Usage: npm start -- upgrade <pemPath> <contractBech32> <wasmPath> [initialValue] [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    const initialValue = rest[3] && !rest[3].startsWith('--') ? Number(rest[3]) : 42;
+    const useFactory = rest.includes('--factory');
+    try {
+      await runUpgrade(pemPath, contractBech32, wasmPath, initialValue, useFactory);
+    } catch (err) {
+      console.error(`Upgrade rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  // Default: offline payload demo.
+  await runPayloadDemo(rest[0] ?? EXAMPLE_CONTRACT);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## Upgrading
 
@@ -56,8 +318,8 @@ npm run build
 // execution time. The default deploy code metadata `0504` DOES set the
 // Upgradeable bit (see the deploy recipe).
 //
-// Targets the real **adder** contract fixtures (adder.wasm + adder.abi.json).
-// Adder declares a dedicated `upgradeConstructor` in its ABI, also taking
+// Targets the **adder** contract ABI bundled with this recipe; the caller
+// supplies the compiled WASM path. Adder declares an `upgradeConstructor` taking
 // `initial_value: BigUint`, which is what the upgrade arguments feed.
 
 import type { Abi, Account, Address, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
@@ -140,7 +402,7 @@ export function describeUpgradePayload(transaction: Transaction): {
 npm start
 
 # Actually upgrade a contract you own; add --factory for the factory path:
-npm start -- upgrade ./wallet.pem erd1qqqqqqqqqqqqqpgq...your-contract 42
+npm start -- upgrade ./wallet.pem erd1qqqqqqqqqqqqqpgq...your-contract ./output/adder.wasm 42
 ```
 
 Expected output of the default payload demo:

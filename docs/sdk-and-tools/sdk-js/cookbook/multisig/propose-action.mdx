@@ -3,9 +3,9 @@ title: Propose a multisig action
 description: Propose a multisig action, a transfer-execute or an add-board-member, with sdk-core's MultisigController and factory, then parse the new action id.
 difficulty: advanced
 est_minutes: 9
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - multisig
@@ -29,7 +29,7 @@ action id, so you see parsing work without a funded wallet.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - For the default `parse` and `payload` demos: devnet network access only.
 - For an actual propose: a devnet PEM whose address is a proposer or board member
   on the target multisig, with a little EGLD for gas.
@@ -37,11 +37,309 @@ action id, so you see parsing work without a funded wallet.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/multisig-propose-action
+mkdir multisig-propose-action
+cd multisig-propose-action
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-multisig-propose-action",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — propose a multisig action (transfer-execute and add-board-member) with MultisigController and factory, then parse the new action id.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the multisig-propose-action recipe.
+//
+// Four modes:
+//   npm start                     -> "parse" a real historical devnet propose
+//                                    (no wallet, no funds needed) for its
+//                                    action id
+//   npm start -- parse [txHash]   -> parse any completed propose transaction
+//   npm start -- payload          -> build (do not send) both a transfer and an
+//                                    add-board-member proposal, print the wire
+//                                    payloads offline
+//   npm start -- propose <pem>    -> actually propose (needs a funded devnet
+//                                    PEM that is a proposer/board member on the
+//                                    multisig). Add --factory for the factory
+//                                    path, --add-board-member for that action.
+//
+// With an unfunded wallet, `propose` fails cleanly with "insufficient funds",
+// proving the payload and signature are well-formed - the verification level
+// this recipe was authored at.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  proposeTransferViaController,
+  proposeTransferViaFactory,
+  proposeAddBoardMemberViaController,
+  describeProposePayload,
+  parseProposedActionId,
+} from './propose';
+
+// A real multisig contract on devnet (quorum 2, a 2-member board).
+const EXAMPLE_MULTISIG = 'erd1qqqqqqqqqqqqqpgqvjcswsav2rw4ccvguyuk0f0u6qycpsuvu3dq9rse9w';
+
+// A real, completed `proposeTransferExecute` on that multisig (it created
+// action id 4). If devnet prunes it, pass your own: npm start -- parse <hash>.
+const EXAMPLE_PROPOSE_TX = '6f4992b6fe87adcc377e6f1dec36658623851e67cf75446ae07ca05a83cfc437';
+
+// Where a transfer proposal would send funds, and who a board proposal adds.
+const EXAMPLE_RECEIVER = 'erd1d4q9a3qx5695gwd02rap2qqad3hv7lga7s06y5e6m3shuy6pu3dqagj7qe';
+const TRANSFER_AMOUNT_WEI = 1n * 10n ** 18n; // 1 EGLD
+
+function loadAbi(fileName: string): Abi {
+  const raw = fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+  return Abi.create(JSON.parse(raw) as Record<string, unknown>);
+}
+
+// Give the API a `clientName` (recommended) and a longer request timeout - the
+// devnet `getTransaction` endpoint returns full logs and can be slow, and the
+// SDK default is a tight 5s.
+function makeEntrypoint(): DevnetEntrypoint {
+  return new DevnetEntrypoint({
+    clientName: 'cookbook-multisig-propose-action',
+    networkProviderConfig: { timeout: 15_000 },
+  });
+}
+
+async function runParse(txHash: string): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const abi = loadAbi('multisig.abi.json');
+  console.log(`Parsing completed propose ${txHash} ...`);
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const actionId = parseProposedActionId(entrypoint, abi, transactionOnNetwork);
+  console.log(`  proposed action id: ${actionId}`);
+  console.log('  (board members now sign this id; then someone performs it)');
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const abi = loadAbi('multisig.abi.json');
+  const throwaway = await entrypoint.createAccount();
+
+  const transfer = await proposeTransferViaFactory(
+    entrypoint,
+    abi,
+    throwaway,
+    EXAMPLE_MULTISIG,
+    EXAMPLE_RECEIVER,
+    TRANSFER_AMOUNT_WEI,
+  );
+  const t = describeProposePayload(transfer);
+  console.log('proposeTransferExecute:');
+  console.log(`  function: ${t.function}`);
+  console.log(`  args:     ${t.args.join(' | ')}  (to hex | amount hex | empty gas option)`);
+  console.log(`  receiver: ${t.receiver}  (the multisig contract)`);
+  console.log(`  value:    ${t.valueWei} wei  (0 - the moved EGLD is an argument, paid later on perform)`);
+  console.log(`  gasLimit: ${t.gasLimit}`);
+
+  const addMember = await proposeAddBoardMemberViaController(
+    entrypoint,
+    abi,
+    throwaway,
+    EXAMPLE_MULTISIG,
+    EXAMPLE_RECEIVER,
+  );
+  const a = describeProposePayload(addMember);
+  console.log('proposeAddBoardMember:');
+  console.log(`  function: ${a.function}`);
+  console.log(`  args:     ${a.args.join(' | ')}  (the new board member's public key)`);
+}
+
+async function runPropose(pemPath: string, useFactory: boolean, addBoardMember: boolean): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const abi = loadAbi('multisig.abi.json');
+  const proposer = await Account.newFromPem(pemPath);
+  proposer.nonce = await entrypoint.recallAccountNonce(proposer.address);
+  console.log(`Proposer: ${proposer.address.toBech32()} (nonce ${proposer.nonce})`);
+  console.log(`Action:   ${addBoardMember ? 'proposeAddBoardMember' : 'proposeTransferExecute'}`);
+  console.log(`Path:     ${useFactory ? 'factory' : 'controller'}`);
+
+  let tx;
+  if (addBoardMember) {
+    tx = await proposeAddBoardMemberViaController(entrypoint, abi, proposer, EXAMPLE_MULTISIG, EXAMPLE_RECEIVER);
+  } else {
+    const propose = useFactory ? proposeTransferViaFactory : proposeTransferViaController;
+    tx = await propose(entrypoint, abi, proposer, EXAMPLE_MULTISIG, EXAMPLE_RECEIVER, TRANSFER_AMOUNT_WEI);
+  }
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash: ${txHash}`);
+  console.log('  (parse it with: npm start -- parse ' + txHash + ')');
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'propose') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- propose <pemPath> [--factory] [--add-board-member]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      await runPropose(pemPath, rest.includes('--factory'), rest.includes('--add-board-member'));
+    } catch (err) {
+      console.error(`Propose rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  const txHash = mode === 'parse' && rest[0] ? rest[0] : EXAMPLE_PROPOSE_TX;
+  await runParse(txHash);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+```json title="src/multisig.abi.json"
+{
+  "name": "Multisig",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "quorum",
+        "type": "u32"
+      },
+      {
+        "name": "board",
+        "type": "variadic<Address>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "docs": [
+        "Initiates board member addition process.",
+        "Can also be used to promote a proposer to board member."
+      ],
+      "name": "proposeAddBoardMember",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "board_member_address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Propose a transaction in which the contract will perform a transfer-execute call.",
+        "Can send EGLD without calling anything.",
+        "Can call smart contract endpoints directly.",
+        "Doesn't really work with builtin functions."
+      ],
+      "name": "proposeTransferExecute",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "egld_amount",
+          "type": "BigUint"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "function_call",
+          "type": "variadic<bytes>",
+          "multi_arg": true
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ]
+    }
+  ],
+  "events": [],
+  "hasCallback": false,
+  "types": {}
+}
+```
+
+</details>
 
 ## Proposing
 

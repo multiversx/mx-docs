@@ -3,9 +3,9 @@ title: Issue an SFT collection + create, add, and burn quantity
 description: Issue a semi-fungible (SFT) collection, create an SFT batch, then add and burn quantity with sdk-core's TokenManagementController on devnet.
 difficulty: intermediate
 est_minutes: 9
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - sft
@@ -35,7 +35,7 @@ single-unit case in
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet, see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites. **No devnet EGLD required** to verify the payloads, see "How it
@@ -44,12 +44,206 @@ single-unit case in
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/issue-sft-collection
+mkdir issue-sft-collection
+cd issue-sft-collection
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem CookbookSFT CSFT
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-issue-sft-collection",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — issue a semi-fungible (SFT) collection, create an SFT, add quantity, and burn quantity with sdk-core's TokenManagementController.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Identical to the helper used by issue-fungible-token / send-egld /
+// manage-nonces. Fetch the account nonce from the network first, then
+// increment locally with getNonceThenIncrement().
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half).
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point for the SFT lifecycle recipe.
+//
+// Usage:
+//   npm run build
+//   npm start -- <pemPath> <tokenName> <tokenTicker>
+//
+// Example:
+//   npm start -- ./wallet.pem CookbookSFT CSFT
+//
+// It broadcasts the issuance (an unfunded wallet is rejected for insufficient
+// funds — proving that payload is well-formed), then builds and decodes the
+// create / add-quantity / burn-quantity steps offline against a PLACEHOLDER
+// identifier. An unfunded issuance never lands on-chain, so there is no real
+// collection identifier to mint into here — see the recipe page for the
+// real-usage sequence (parse the identifier from the issuance outcome first).
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import {
+  issueSemiFungibleCollection,
+  createSft,
+  addSftQuantity,
+  burnSftQuantity,
+  describePayload,
+} from './sft';
+
+// Stand-in identifier for the offline create/add/burn decode. In real usage
+// this comes from awaitCompletedIssueSemiFungible(txHash)[0].tokenIdentifier.
+const PLACEHOLDER_IDENTIFIER = 'CSFT-000000';
+
+function printPayload(label: string, decoded: ReturnType<typeof describePayload>): void {
+  console.log(`${label}`);
+  console.log(`  function: ${decoded.function}`);
+  console.log(`  receiver: ${decoded.receiver}`);
+  console.log(`  value:    ${decoded.value}`);
+  console.log(`  args:     [${decoded.args.join(', ')}]`);
+}
+
+async function main(): Promise<void> {
+  const [pemPath, tokenName, tokenTicker] = process.argv.slice(2);
+  if (!pemPath || !tokenName || !tokenTicker) {
+    console.error('Usage: npm start -- <pemPath> <tokenName> <tokenTicker>');
+    process.exitCode = 1;
+    return;
+  }
+
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+  console.log(`Sender: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Collection: ${tokenName} (${tokenTicker})`);
+  console.log('Issue cost: 0.05 EGLD + gas\n');
+
+  // Step 1 — issue the collection, then broadcast it.
+  const issueTx = await issueSemiFungibleCollection(entrypoint, sender, { tokenName, tokenTicker });
+  printPayload('ISSUE semi-fungible collection:', describePayload(issueTx));
+
+  // Steps 2-4 — decoded offline against a placeholder identifier.
+  const createTx = await createSft(entrypoint, sender, {
+    tokenIdentifier: PLACEHOLDER_IDENTIFIER,
+    initialQuantity: 100n,
+    name: 'Batch #1',
+    royalties: 500,
+    uris: ['https://ipfs.io/ipfs/CID/1.json'],
+  });
+  console.log('');
+  printPayload(`CREATE SFT (${PLACEHOLDER_IDENTIFIER}, quantity 100):`, describePayload(createTx));
+
+  const addTx = await addSftQuantity(entrypoint, sender, {
+    tokenIdentifier: PLACEHOLDER_IDENTIFIER,
+    tokenNonce: 1n,
+    quantity: 50n,
+  });
+  console.log('');
+  printPayload('ADD quantity (nonce 1, +50):', describePayload(addTx));
+
+  const burnTx = await burnSftQuantity(entrypoint, sender, {
+    tokenIdentifier: PLACEHOLDER_IDENTIFIER,
+    tokenNonce: 1n,
+    quantity: 10n,
+  });
+  console.log('');
+  printPayload('BURN quantity (nonce 1, -10):', describePayload(burnTx));
+
+  // Broadcast the issuance.
+  console.log('\nBroadcasting the issuance...');
+  try {
+    const txHash = await entrypoint.sendTransaction(issueTx);
+    console.log(`Sent. Transaction hash: ${txHash}`);
+    console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+  } catch (err) {
+    console.error(`Rejected (expected for an unfunded wallet): ${(err as Error).message}`);
+    process.exitCode = 1;
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## The code
 

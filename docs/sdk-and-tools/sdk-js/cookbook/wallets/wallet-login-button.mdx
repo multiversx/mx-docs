@@ -3,9 +3,9 @@ title: Add a wallet login button
 description: Configure UnlockPanelManager once at startup, then add a reusable connect and disconnect button that works with every registered wallet provider.
 difficulty: beginner
 est_minutes: 6
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-dapp: "^5.6.0"
+  sdk-dapp: "5.7.1"
 tags:
   - sdk-dapp
   - wallet
@@ -39,12 +39,194 @@ instead, which use the lower-level `ProviderFactory` directly.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/wallet-login-button
+mkdir wallet-login-button
+cd wallet-login-button
+# Create the project files shown on this page.
+cp .env.example .env
 npm install
 npm run dev
 # open https://localhost:5173
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-wallet-login-button",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — a reusable wallet login button backed by UnlockPanelManager. Compiles strict.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "5.4.21"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```text title=".env.example"
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+```ts title="vite.config.ts"
+// vite.config.ts — sdk-dapp v5 + Vite + React.
+//
+// Identical, verified configuration to the vite-react-minimal recipe's vite.config.ts
+// — see that recipe's Pitfalls 5–6 for the full story on why each
+// entry here is necessary. Short version:
+//
+//   1. @vitejs/plugin-basic-ssl for HTTPS dev (most wallet providers refuse
+//      http://localhost).
+//   2. optimizeDeps.include lists the CJS transitive deps that need
+//      pre-bundling — but NEVER '@multiversx/sdk-dapp' itself. That package
+//      has no "main"/"module"/"exports" field (every import is a deep
+//      out/... path), so asking Vite to resolve it as a bare specifier
+//      crashes the dev server outright.
+//   3. optimizeDeps.exclude / build.rollupOptions.external work around an
+//      upstream bug: three Ledger transport packages
+//      (hw-transport-webusb/-webhid/-web-ble) each bundle their own nested
+//      @ledgerhq/devices@8.16.0, which is missing files their sibling
+//      modules import. Verified by actually running `npm run dev` and
+//      `npm run build` against @multiversx/sdk-dapp@5.6.23.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    // Do NOT set `https` here yourself — basicSsl() injects the cert into
+    // server.https via its own Vite `config` hook, and Vite's type for this
+    // option is `https.ServerOptions | undefined`, never a bare `boolean`.
+    port: 5173,
+  },
+  optimizeDeps: {
+    include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
+    exclude: [
+      '@ledgerhq/devices/hid-framing',
+      '@ledgerhq/devices/ble/sendAPDU',
+      '@ledgerhq/devices/ble/receiveAPDU',
+    ],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        '@ledgerhq/devices/hid-framing',
+        '@ledgerhq/devices/ble/sendAPDU',
+        '@ledgerhq/devices/ble/receiveAPDU',
+      ],
+    },
+  },
+});
+```
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook recipe — Wallet login button</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+```tsx title="src/main.tsx"
+// src/main.tsx — Vite entry point. Same pattern as the vite-react-minimal recipe.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+```ts title="src/vite-env.d.ts"
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_WALLETCONNECT_PROJECT_ID?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+</details>
 
 ## The reusable button
 
@@ -147,7 +329,7 @@ export function App(): JSX.Element {
       {isLoggedIn && (
         <p style={{ marginTop: '1rem' }}>
           Connected as <code>{account.address}</code>. See{' '}
-          <a href="https://cookbook.multiversx.com/wallets/read-connected-account/">
+          <a href="/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account">
             Reading the connected account
           </a>{' '}
           for the full field breakdown.
@@ -194,29 +376,11 @@ import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
 import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
 import { dappConfig } from './lib/multiversx';
 
-// Module-scope flag prevents double-init under React Strict Mode (which
-// deliberately mounts effects twice in dev). Matches every other recipe in
-// this Cookbook — see Pitfall 3.
-let initStarted = false;
+let initializationPromise: Promise<void> | undefined;
 
-export function Providers({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (initStarted) {
-      setReady(true);
-      return;
-    }
-    initStarted = true;
-
-    let cancelled = false;
-    void initApp(dappConfig).then(() => {
-      if (cancelled) return;
-
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
       UnlockPanelManager.init({
         // loginHandler accepts TWO different shapes (both documented in
         // node_modules/@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager.types.d.ts):
@@ -253,15 +417,53 @@ export function Providers({
         // JSDoc: `allowedProviders: [ProviderTypeEnum.walletConnect, 'inMemoryProvider']`.
         // allowedProviders: [ProviderTypeEnum.extension, ProviderTypeEnum.walletConnect],
       });
-
-      setReady(true);
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
     });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
 
     return () => {
-      cancelled = true;
+      subscribed = false;
     };
   }, []);
 
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
   if (!ready) {
     return (
       <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
@@ -287,10 +489,16 @@ import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
 import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
 
 // Read from import.meta.env (Vite's runtime environment object) — NOT
-// process.env, which does not exist in the browser bundle. Fallback is the
-// demo project ID; register your own at https://cloud.walletconnect.com.
+// process.env, which does not exist in the browser bundle. Register a
+// project ID at https://cloud.walletconnect.com and set it in .env.
 const WALLET_CONNECT_PROJECT_ID =
-  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? 'multiversx-cookbook-demo';
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
 
 export const dappConfig = {
   storage: {

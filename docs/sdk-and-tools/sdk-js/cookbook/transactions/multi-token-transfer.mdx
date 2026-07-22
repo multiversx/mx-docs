@@ -3,9 +3,9 @@ title: Multi-token transfer in one tx
 description: Send EGLD plus two or more ESDT/NFT/SFT tokens in one transaction with sdk-core's TransfersController, every field decoded against real devnet.
 difficulty: intermediate
 est_minutes: 8
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - transaction
@@ -33,7 +33,7 @@ This recipe is for when **your own code holds the private key**.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet with some devnet EGLD (for gas), see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites for how to generate a throwaway one.
@@ -41,12 +41,203 @@ This recipe is for when **your own code holds the private key**.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/multi-token-transfer
+mkdir multi-token-transfer
+cd multi-token-transfer
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-multi-token-transfer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — send EGLD plus two or more ESDT/NFT/SFT tokens in a single transaction using sdk-core's TransfersController.createTransactionForTransfer, against DevnetEntrypoint.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Fetch the account nonce from the network before sending, then increment
+// locally with getNonceThenIncrement(). This helper implements the fetch half;
+// see the manage-nonces recipe for the increment half in depth.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half across a
+ * batch of sends).
+ *
+ * `entrypoint.recallAccountNonce(address)` is a thin convenience wrapper
+ * around `networkProvider.getAccount(address).nonce`
+ * (node_modules/@multiversx/sdk-core/out/entrypoints/entrypoints.js) — used
+ * here instead of constructing a network provider by hand.
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/amount.ts"
+// src/amount.ts — decimal token-amount string <-> smallest-denomination
+// bigint, for a token with an arbitrary (not fixed-18) number of decimals.
+//
+// Unlike EGLD, which always has 18 decimals, an ESDT's decimal count is
+// set per token at issuance and is readable from
+// the token's properties on-chain. This recipe takes it as an explicit
+// parameter rather than assuming 18, since assuming EGLD's decimals for an
+// arbitrary ESDT would silently send the wrong amount by orders of
+// magnitude.
+
+import BigNumber from 'bignumber.js';
+
+/**
+ * Converts a decimal token amount (e.g. "2.5") to the smallest-denomination
+ * bigint the network expects, given the token's own decimal count.
+ *
+ * Throws if the input has more precision than `numDecimals` supports.
+ */
+export function toSmallestDenomination(amount: string, numDecimals: number): bigint {
+  const value = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(numDecimals));
+  if (!value.isFinite() || value.isNegative()) {
+    throw new Error(`"${amount}" is not a valid non-negative token amount.`);
+  }
+  if (!value.isInteger()) {
+    throw new Error(
+      `"${amount}" has more precision than this token supports (${numDecimals} decimals).`,
+    );
+  }
+  return BigInt(value.toFixed(0));
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point. Sends a small native EGLD amount plus
+// two illustrative token transfers (one fungible, one NFT-shaped) in a
+// single transaction.
+//
+// Usage:
+//   npm run build && npm start -- <pemPath> <receiverBech32>
+//
+// Example:
+//   npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+//
+// The token identifiers below (TEST-abcdef, TESTNFT-abcdef) are
+// illustrative placeholders — same convention as the `send-esdt` recipe's
+// TEST-abcdef example. This recipe proves the multi-transfer payload is
+// well-formed; its offline verification does not require the sender to actually
+// hold these tokens.
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { toSmallestDenomination } from './amount';
+import { sendMultiTokenTransfer } from './multiTransfer';
+
+async function main(): Promise<void> {
+  const [pemPath, receiver] = process.argv.slice(2);
+
+  if (!pemPath || !receiver) {
+    console.error('Usage: npm start -- <pemPath> <receiverBech32>');
+    process.exitCode = 1;
+    return;
+  }
+
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+
+  console.log(`Sender:   ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Receiver: ${receiver}`);
+  console.log('Sending in ONE transaction:');
+  console.log('  - 0.001 EGLD (native)');
+  console.log('  - 2.5 TEST-abcdef      (fungible, 6 decimals)');
+  console.log('  - 1 TESTNFT-abcdef-01  (NFT, nonce 1)');
+
+  const { txHash } = await sendMultiTokenTransfer(entrypoint, sender, {
+    receiver,
+    nativeAmountInSmallestDenomination: toSmallestDenomination('0.001', 18),
+    tokenTransfers: [
+      { identifier: 'TEST-abcdef', nonce: 0n, amount: toSmallestDenomination('2.5', 6) },
+      { identifier: 'TESTNFT-abcdef', nonce: 1n, amount: 1n },
+    ],
+  });
+
+  console.log(`\nSent. Transaction hash: ${txHash}`);
+  console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 `TEST-abcdef` and `TESTNFT-abcdef` are illustrative placeholder identifiers, same
 convention as

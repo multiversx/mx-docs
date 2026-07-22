@@ -3,9 +3,9 @@ title: Claim and re-delegate rewards
 description: Claim delegation rewards to your wallet or re-delegate (compound) them into the same MultiversX staking contract, with sdk-core DelegationController.
 difficulty: intermediate
 est_minutes: 6
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - delegation
@@ -27,7 +27,7 @@ you see the parse work without a funded wallet.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - For the default `parse` and `payload` demos: devnet network access only.
 - For an actual claim or re-delegate: a devnet PEM wallet that has an active
   delegation with pending rewards, plus gas.
@@ -35,11 +35,195 @@ you see the parse work without a funded wallet.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/claim-and-redelegate-rewards
+mkdir claim-and-redelegate-rewards
+cd claim-and-redelegate-rewards
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-claim-and-redelegate-rewards",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — claim delegation rewards to your wallet or re-delegate (compound) them, with the DelegationController and factory.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the claim-and-redelegate-rewards recipe.
+//
+// Modes:
+//   npm start                         -> "parse" real historical devnet claim
+//                                        and re-delegate txs (no wallet needed)
+//   npm start -- payload              -> build (do not send) both txs and print
+//                                        their decoded wire payloads, offline
+//   npm start -- send <pem>           -> actually claim (needs a funded PEM);
+//                                        add --redelegate to compound instead;
+//                                        add --factory for the factory path
+//
+// With an unfunded wallet, `send` fails cleanly with "insufficient funds".
+
+import { Account, Address, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  claimRewardsViaController,
+  claimRewardsViaFactory,
+  redelegateRewardsViaController,
+  redelegateRewardsViaFactory,
+  describeRewardsPayload,
+  parseClaimedAmount,
+  parseRedelegatedAmount,
+} from './rewards';
+
+const EXAMPLE_DELEGATION_CONTRACT = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww';
+
+/** Format a wei amount as an approximate EGLD string (rewards are often sub-EGLD). */
+function toEgld(wei: bigint): string {
+  const whole = wei / 10n ** 18n;
+  const frac = (wei % 10n ** 18n).toString().padStart(18, '0').slice(0, 6);
+  return `${whole.toString()}.${frac}`;
+}
+
+// Real, completed devnet transactions for the default parse demo.
+const EXAMPLE_CLAIM_TX = '058c94408349866e6df91b49637b39a49409eabb1ae58b07f12100ea178a2a72';
+const EXAMPLE_REDELEGATE_TX = '5dd411346ef6029946abf24746fbebef0df770423bd56d54cb6a5a22246ed694';
+
+async function runParse(): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  console.log(`Parsing completed claim ${EXAMPLE_CLAIM_TX} ...`);
+  const claimed = await parseClaimedAmount(entrypoint, EXAMPLE_CLAIM_TX);
+  console.log(`  parsed claimed amount:      ${claimed} wei (see Pitfalls: often 0)`);
+
+  console.log(`\nParsing completed re-delegate ${EXAMPLE_REDELEGATE_TX} ...`);
+  const redelegated = await parseRedelegatedAmount(entrypoint, EXAMPLE_REDELEGATE_TX);
+  console.log(`  parsed re-staked amount:    ${redelegated} wei (${toEgld(redelegated)} EGLD)`);
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const throwaway = await entrypoint.createAccount();
+  const input = { delegationContract: Address.newFromBech32(EXAMPLE_DELEGATION_CONTRACT) };
+
+  const claimTx = await factory.createTransactionForClaimingRewards(throwaway.address, input);
+  const redelegateTx = await factory.createTransactionForRedelegatingRewards(throwaway.address, input);
+  for (const [label, tx] of [
+    ['claim', claimTx],
+    ['re-delegate', redelegateTx],
+  ] as const) {
+    const p = describeRewardsPayload(tx);
+    console.log(`${label}: function=${p.function}  value=${p.valueWei}  receiver=${p.receiver}  gasLimit=${p.gasLimit}`);
+  }
+}
+
+async function runSend(pemPath: string, redelegate: boolean, useFactory: boolean): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await Account.newFromPem(pemPath);
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+  const op = redelegate ? 're-delegate' : 'claim';
+  console.log(`Delegator: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Operation: ${op}, path ${useFactory ? 'factory' : 'controller'}`);
+
+  const build = redelegate
+    ? useFactory
+      ? redelegateRewardsViaFactory
+      : redelegateRewardsViaController
+    : useFactory
+      ? claimRewardsViaFactory
+      : claimRewardsViaController;
+
+  const tx = await build(entrypoint, sender, EXAMPLE_DELEGATION_CONTRACT);
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash: ${txHash}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'send') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- send <pemPath> [--redelegate] [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      await runSend(pemPath, rest.includes('--redelegate'), rest.includes('--factory'));
+    } catch (err) {
+      console.error(`Rewards tx rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  await runParse();
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## Claiming and re-delegating
 

@@ -3,9 +3,9 @@ title: Local mint and burn (change a fungible token's supply)
 description: Increase and decrease a fungible ESDT's circulating supply with ESDTLocalMint and ESDTLocalBurn via sdk-core, plus a real SDK method-name typo.
 difficulty: intermediate
 est_minutes: 7
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - esdt
@@ -26,7 +26,7 @@ walks straight into a real sdk-core method-name trap.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet, see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites. **No devnet EGLD required**, see "How it works".
@@ -34,12 +34,175 @@ walks straight into a real sdk-core method-name trap.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/local-mint-burn-supply
+mkdir local-mint-burn-supply
+cd local-mint-burn-supply
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem COOK-123456 1000
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-local-mint-burn-supply",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — increase and decrease a fungible ESDT's circulating supply with ESDTLocalMint / ESDTLocalBurn via sdk-core, controller and factory.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Identical to the helper used by issue-fungible-token / send-egld /
+// manage-nonces. Fetch the account nonce from the network first, then
+// increment locally with getNonceThenIncrement().
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half).
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point for the local mint/burn recipe.
+//
+// Usage:
+//   npm run build
+//   npm start -- <pemPath> <tokenIdentifier> <amount> [--factory]
+//
+// Example (mint/burn 1000 base units of COOK-123456):
+//   npm start -- ./wallet.pem COOK-123456 1000
+//
+// It decodes both the local-mint and local-burn payloads, then broadcasts the
+// mint. An unfunded wallet is rejected for insufficient funds, proving the
+// payload is well-formed without spending real EGLD or needing the token to
+// exist. (A real mint/burn also needs the matching local role — see
+// set-special-roles.)
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { localMint, localBurn, describeSupplyPayload } from './supply';
+
+function printPayload(label: string, decoded: ReturnType<typeof describeSupplyPayload>): void {
+  console.log(`${label}`);
+  console.log(`  function:        ${decoded.function}`);
+  console.log(`  receiver:        ${decoded.receiver}`);
+  console.log(`  tokenIdentifier: ${decoded.tokenIdentifier}`);
+  console.log(`  amount (hex):    ${decoded.amountHex}`);
+}
+
+async function main(): Promise<void> {
+  const args = process.argv.slice(2);
+  const [pemPath, tokenIdentifier, amountArg] = args;
+  const useFactory = args.includes('--factory');
+
+  if (!pemPath || !tokenIdentifier || !amountArg) {
+    console.error('Usage: npm start -- <pemPath> <tokenIdentifier> <amount> [--factory]');
+    process.exitCode = 1;
+    return;
+  }
+
+  const amount = BigInt(amountArg);
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+
+  console.log(`Sender: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Token:  ${tokenIdentifier}, amount ${amount}`);
+  console.log(`API level: ${useFactory ? 'factory' : 'controller'}\n`);
+
+  const mintTx = await localMint(entrypoint, sender, { tokenIdentifier, amount }, useFactory);
+  printPayload('LOCAL MINT (ESDTLocalMint):', describeSupplyPayload(mintTx));
+
+  const burnTx = await localBurn(entrypoint, sender, { tokenIdentifier, amount }, useFactory);
+  console.log('');
+  printPayload('LOCAL BURN (ESDTLocalBurn):', describeSupplyPayload(burnTx));
+
+  console.log('\nBroadcasting the mint...');
+  try {
+    const txHash = await entrypoint.sendTransaction(mintTx);
+    console.log(`Sent. Transaction hash: ${txHash}`);
+    console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+  } catch (err) {
+    console.error(`Rejected (expected for an unfunded wallet): ${(err as Error).message}`);
+    process.exitCode = 1;
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## The code
 

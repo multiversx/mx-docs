@@ -3,9 +3,9 @@ title: Create an Account from a KeyPair, secret key, or mnemonic
 description: Build an sdk-core Account from a KeyPair, a raw secret key, or a mnemonic, fully offline, and learn which named constructors are sync versus async.
 difficulty: beginner
 est_minutes: 6
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - typescript
@@ -19,18 +19,68 @@ constructors: one of them is asynchronous while the rest are not.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - Nothing else. This recipe generates its own throwaway keys.
 
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/account-from-keys
+mkdir account-from-keys
+cd account-from-keys
+# Create package.json, tsconfig.json, and src/index.ts from the files below.
 npm install
 npm run build
 npm start
 ```
+
+<details>
+<summary>Project setup files</summary>
+
+```json title="package.json"
+{
+  "name": "multiversx-recipe-account-from-keys",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+</details>
 
 ## The code
 

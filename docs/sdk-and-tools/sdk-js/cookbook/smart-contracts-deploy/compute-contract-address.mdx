@@ -3,9 +3,9 @@ title: Compute a contract address before deploy
 description: Predict a smart contract's address before deploying it from the deployer address and deployment nonce with sdk-core's AddressComputer, fully offline.
 difficulty: beginner
 est_minutes: 5
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - smart-contract
@@ -27,18 +27,119 @@ does exactly that).
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - Nothing else. This recipe is pure computation and runs fully offline.
 
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/compute-contract-address
+mkdir compute-contract-address
+cd compute-contract-address
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-compute-contract-address",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — predict a smart contract's address before deploying it, from the deployer address and deployment nonce, with sdk-core's AddressComputer.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point. Predicts the address of a contract for a
+// few (deployer, nonce) pairs and prints each with its shard. Pure
+// computation: no network, no wallet, no gas. Runs offline.
+//
+// Usage:
+//   npm run build && npm start [deployerBech32] [nonce]
+//
+// With no arguments it uses the well-known example deployer this Cookbook
+// uses elsewhere and nonces 0, 1, 42.
+
+import { Address } from '@multiversx/sdk-core';
+import { predictContractAddress, shardOf } from './computeAddress';
+
+const DEFAULT_DEPLOYER = 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
+
+function main(): void {
+  const deployerArg = process.argv[2] ?? DEFAULT_DEPLOYER;
+  const deployer = Address.newFromBech32(deployerArg);
+
+  console.log(`Deployer: ${deployer.toBech32()} (shard ${shardOf(deployer)})`);
+
+  const nonceArg = process.argv[3];
+  const nonces = nonceArg !== undefined ? [BigInt(nonceArg)] : [0n, 1n, 42n];
+
+  for (const nonce of nonces) {
+    const contract = predictContractAddress(deployer, nonce);
+    console.log(
+      `  nonce ${nonce.toString().padStart(3)} -> ${contract.toBech32()}  ` +
+        `(shard ${shardOf(contract)}, isSmartContract=${contract.isSmartContract()})`,
+    );
+  }
+}
+
+main();
+```
+
+</details>
 
 ## Computing
 

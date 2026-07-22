@@ -3,9 +3,9 @@ title: Issue a fungible ESDT
 description: Issue a fungible ESDT token with sdk-core's TokenManagementController against DevnetEntrypoint, payload hand-verified against real devnet.
 difficulty: intermediate
 est_minutes: 8
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - esdt
@@ -25,7 +25,7 @@ for when **your own code holds the private key**.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet, see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites for how to generate a throwaway one. **No devnet EGLD required**
@@ -35,12 +35,124 @@ for when **your own code holds the private key**.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/issue-fungible-token
+mkdir issue-fungible-token
+cd issue-fungible-token
+# Create the four files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem CookbookToken COOK 1000000000000 6
 ```
+
+<details>
+<summary>Project setup, account loader, and CLI entrypoint</summary>
+
+```json title="package.json"
+{
+  "name": "multiversx-recipe-issue-fungible-token",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+```ts title="src/account.ts"
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { issueFungibleToken } from './issueToken';
+
+async function main(): Promise<void> {
+  const [pemPath, tokenName, tokenTicker, supplyArg, decimalsArg] =
+    process.argv.slice(2);
+
+  if (!pemPath || !tokenName || !tokenTicker || !supplyArg || !decimalsArg) {
+    console.error(
+      'Usage: npm start -- <pemPath> <tokenName> <tokenTicker> <initialSupply> <numDecimals>',
+    );
+    process.exitCode = 1;
+    return;
+  }
+  if (!/^\d+$/.test(supplyArg) || !/^\d+$/.test(decimalsArg)) {
+    throw new Error('initialSupply and numDecimals must be non-negative integers.');
+  }
+
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+  const initialSupply = BigInt(supplyArg);
+  const numDecimals = BigInt(decimalsArg);
+
+  console.log(`Sender:         ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Token name:     ${tokenName}`);
+  console.log(`Token ticker:   ${tokenTicker}`);
+  console.log(`Initial supply: ${initialSupply} (${numDecimals} decimals)`);
+  console.log('Issue cost:     0.05 EGLD + gas');
+
+  const { txHash } = await issueFungibleToken(entrypoint, sender, {
+    tokenName,
+    tokenTicker,
+    initialSupply,
+    numDecimals,
+  });
+
+  console.log(`Transaction hash: ${txHash}`);
+  console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+}
+
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## Issuing
 

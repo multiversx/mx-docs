@@ -70,6 +70,7 @@ test("rejects absolute, empty, dotted, and non-portable paths", () => {
     assert.throws(() => validateRelativeFileTitle(title));
   }
   assert.doesNotThrow(() => validateRelativeFileTitle("src/vite-env.d.ts"));
+  assert.doesNotThrow(() => validateRelativeFileTitle(".env.example"));
 });
 
 test("resolved output remains beneath the resolved recipe root", () => {

@@ -3,9 +3,9 @@ title: Delegate (stake) EGLD
 description: Delegate (stake) EGLD to an existing MultiversX delegation contract with sdk-core DelegationController and factory, then parse the staked amount.
 difficulty: intermediate
 est_minutes: 6
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - delegation
@@ -25,7 +25,7 @@ see the parse work without a funded wallet.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - For the default `parse` and `payload` demos: devnet network access only.
 - For an actual stake: a devnet PEM wallet with the EGLD you want to delegate plus
   gas.
@@ -33,11 +33,176 @@ see the parse work without a funded wallet.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/delegate-stake
+mkdir delegate-stake
+cd delegate-stake
+# Create the project files shown on this page.
 npm install
 npm run build
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-delegate-stake",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — delegate (stake) EGLD to an existing delegation contract with delegate (controller and factory), then parse the staked amount.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the delegate-stake recipe.
+//
+// Three modes:
+//   npm start                    -> "parse" a real historical devnet delegate
+//                                   (no wallet, no funds needed)
+//   npm start -- payload         -> build (do not send) a delegate and print
+//                                   its decoded wire payload, offline
+//   npm start -- send <pem>      -> actually delegate (needs a funded devnet
+//                                   PEM); add --factory for the factory path
+//
+// With an unfunded wallet, `send` fails cleanly with "insufficient funds",
+// proving the payload and signature are well-formed.
+
+import { Account, Address, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  delegateViaController,
+  delegateViaFactory,
+  describeDelegatePayload,
+  parseDelegatedAmount,
+} from './delegate';
+
+// A real, live devnet staking-provider contract to delegate to.
+const EXAMPLE_DELEGATION_CONTRACT = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww';
+
+// A real, completed `delegate` transaction on devnet (10 EGLD staked).
+const EXAMPLE_DELEGATE_TX = 'e706916a8349331e1d5b03d6741d3f967df09fb336cc5b80b50c65906fefda98';
+
+// Stake 1 EGLD in the demos.
+const STAKE_AMOUNT_WEI = 1n * 10n ** 18n;
+
+async function runParse(txHash: string): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  console.log(`Parsing completed delegate ${txHash} ...`);
+  const amount = await parseDelegatedAmount(entrypoint, txHash);
+  console.log(`  staked amount: ${amount} wei (${amount / 10n ** 18n} EGLD)`);
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const throwaway = await entrypoint.createAccount();
+  const tx = await factory.createTransactionForDelegating(throwaway.address, {
+    delegationContract: Address.newFromBech32(EXAMPLE_DELEGATION_CONTRACT),
+    amount: STAKE_AMOUNT_WEI,
+  });
+  const p = describeDelegatePayload(tx);
+  console.log(`function:  ${p.function}  (no arguments - amount travels in value)`);
+  console.log(`value:     ${p.valueWei} wei (${p.valueWei / 10n ** 18n} EGLD)`);
+  console.log(`receiver:  ${p.receiver}  (the delegation contract)`);
+  console.log(`gasLimit:  ${p.gasLimit}`);
+}
+
+async function runSend(pemPath: string, useFactory: boolean): Promise<void> {
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await Account.newFromPem(pemPath);
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+  console.log(`Delegator: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Path:      ${useFactory ? 'factory' : 'controller'}`);
+
+  const delegate = useFactory ? delegateViaFactory : delegateViaController;
+  const tx = await delegate(entrypoint, sender, EXAMPLE_DELEGATION_CONTRACT, STAKE_AMOUNT_WEI);
+  console.log(`  value:            ${tx.value} wei`);
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash: ${txHash}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'send') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- send <pemPath> [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      await runSend(pemPath, rest.includes('--factory'));
+    } catch (err) {
+      console.error(`Delegate rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  const txHash = mode === 'parse' && rest[0] ? rest[0] : EXAMPLE_DELEGATE_TX;
+  await runParse(txHash);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## Delegating
 

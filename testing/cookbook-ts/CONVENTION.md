@@ -3,13 +3,16 @@
 This is the TypeScript counterpart of the repo's Rust tutorial CI
 (`testing/rust-tutorial-ci.sh` + `testing/extract-tutorial-code/`). The Rust CI
 extracts the code from a tutorial's fenced blocks into a real crate and runs
-`cargo test`. This one extracts the code from cookbook recipe pages into a real
-TypeScript project and runs `tsc --noEmit --strict`. Same idea, for TS: the
-"Verified" badge on a recipe page means its code actually compiles in CI.
+`cargo test`. This one materializes titled files from cookbook pages, runs a
+shared strict TypeScript check, and reconstructs every standalone recipe in a
+clean npm workspace to run its own build. The **Project build checked** badge
+describes that complete project artifact; **Reference** pages make no standalone
+project claim.
 
-The one rule to remember: **what is shown is what is compiled.** Every titled
-`ts`/`tsx` code fence a reader sees on a recipe page is pulled out and
-type-checked. If it compiles, the page is verified; if it does not, CI fails.
+The one rule to remember: **what is shown is what is checked.** Every titled
+fence is materialized at its displayed path. Titled `ts`/`tsx` files are checked
+together with `tsc --noEmit --strict`; project pages are then installed and
+built from their own package and configuration files.
 
 ## Where recipes live
 
@@ -46,22 +49,23 @@ A recipe's runnable code is authored as **titled** fenced code blocks:
   separated by `/`. Absolute paths, empty paths, `.` / `..` segments,
   backslashes, duplicate paths, and symbolic links are rejected. Every resolved
   output must remain inside its resolved recipe root.
-- The fence language must be **`ts`** or **`tsx`**. Only those two are compiled.
+- The fence language describes the file contents (`ts`, `tsx`, `json`, `html`,
+  `text`, and so on). Every titled fence is materialized; TypeScript files are
+  additionally compiled by the shared strict harness.
 - A recipe with several files is several titled fences on the page. The
   extractor writes each to its path, so relative imports between them
   (`import { x } from './providers'`) resolve exactly as they do in the real
   recipe project.
 
-Fences **without** a `title=` (or in any other language: `bash`, `text`, `json`,
-an untitled `ts` snippet) are treated as illustrative only. They are shown to the
-reader but never extracted or compiled. Use an untitled `ts` fence for a throwaway
+Fences **without** a `title=` are treated as illustrative only. They are shown to
+the reader but never extracted or compiled. Use an untitled `ts` fence for a throwaway
 snippet you do not want type-checked (for example a one-off "generate a wallet"
 aside), and a `text` fence for expected program output.
 
 `filename="..."` and the bare `` ```foo.ts `` shorthand are also accepted, matching
 the Rust parser, but `title="..."` is the house style because Docusaurus renders it.
 
-### What is shown is what is compiled
+### What is shown is what is checked
 
 Because only titled fences compile, a recipe must show **every** file needed for
 its code to type-check as a closed unit. If `App.tsx` imports `./providers`, then
@@ -85,20 +89,21 @@ title: Send EGLD to an address
 description: One-sentence summary shown in search and social cards.
 difficulty: beginner        # beginner | intermediate | advanced
 est_minutes: 6              # optional: renders the "EST n min" chip
-last_validated: "2026-07-16" # date CI last verified this page (the badge date)
+artifact: project           # project | reference; CI checks this against files
 sdk_versions:               # object; each entry renders a version chip
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - transaction
   - typescript
-# stale: true               # optional: flips the badge to "Needs recheck"
 ---
 ```
 
 `difficulty` + `sdk_versions` are required for the strip to render at all.
-`title`, `description`, `last_validated`, and `tags` are expected on every recipe.
-`est_minutes` and `stale` are optional.
+`title`, `description`, `artifact`, and `tags` are expected on every recipe.
+`artifact: project` requires a complete titled `package.json`, `tsconfig.json`,
+and runnable entrypoint; the generator and CI reject a mismatched label.
+`est_minutes` is optional.
 
 ## Running the check
 
@@ -108,9 +113,10 @@ The whole pipeline is one script, mirroring `rust-tutorial-ci.sh`:
 ./testing/cookbook-ts-ci.sh
 ```
 
-It runs `npm ci` + extract in `testing/cookbook-ts/`, then `npm ci` + `tsc
---noEmit --strict` in `testing/cookbook-ts/project/`. The GitHub workflow
-`.github/workflows/cookbook-ts-ci.yml` runs the same script on push / PR.
+It runs extractor tests, materializes every titled file, executes the shared
+strict TypeScript check, then installs and builds all 61 project recipes in a
+clean npm workspace. The GitHub workflow runs the same script on Node 20.19.0
+on push / PR.
 
 To iterate on a single recipe faster, once dependencies are installed:
 
@@ -128,6 +134,7 @@ testing/
     parser.ts                    # fence parser (mirror of parser.rs)
     extract.ts                   # assembler   (mirror of extract_code.rs)
     package.json                 # tsx + typescript
+    verify-projects.mjs          # clean install + individual project builds
     project/                     # the compiled unit (mirror of the crowdfunding crate)
       package.json               # pinned SDK deps: sdk-core, sdk-dapp, react, ...
       tsconfig.json              # one strict config for every recipe
@@ -165,22 +172,22 @@ the environment.
 To convert one runnable recipe project into a compliant Docusaurus page:
 
 1. Create `docs/sdk-and-tools/sdk-js/cookbook/<section>/<slug>.mdx`.
-2. Write the frontmatter above. Set `last_validated` to the date you verify it,
-   and `sdk_versions` to the versions the recipe's `package.json` actually uses.
+2. Write the frontmatter above. Set `artifact` to `project` only for a complete
+   standalone project, and keep `sdk_versions` identical to its package file.
 3. Convert prose to Docusaurus: paragraphs stay as Markdown; callouts become
    admonitions (`:::note[Title]`, `:::warning[Title]`, `:::danger[Title]`), never
    raw HTML.
-4. Inline each source file the recipe needs as a titled fence
-   (` ```ts title="src/foo.ts" `), verbatim from the validated source. Include
-   every file required to compile, even boilerplate. Give command blocks the
-   `bash` language and expected-output blocks the `text` language.
+4. Inline every project file as a titled fence, including package/configuration,
+   entrypoint, helpers, and text assets. Put boilerplate in a collapsed
+   `<details>` disclosure so the main recipe stays skimmable. Give command
+   blocks the `bash` language and expected-output blocks the `text` language.
 5. Scrub any internal-only references from comments and prose (these are public
    docs). Fix cross-links to real pages (or drop them); `onBrokenLinks` is `log`,
    so broken links will not fail the build but should still be avoided.
 6. Keep em-dashes sparing.
 7. Add the page to `sidebars.js` under "Cookbook (recipes)".
 8. Verify:
-   - `./testing/cookbook-ts-ci.sh` is green (the code compiles).
+   - `./testing/cookbook-ts-ci.sh` is green (strict check plus project builds).
    - `npm run build` is green and the page appears with its meta strip.
    - markdownlint (`.markdownlint.jsonc`) and codespell (`.codespell`) pass on
      the new file.

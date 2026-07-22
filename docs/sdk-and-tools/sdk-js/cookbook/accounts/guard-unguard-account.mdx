@@ -3,9 +3,9 @@ title: Guard and unguard an account
 description: Activate guardianship with GuardAccount and remove it with UnGuardAccount via sdk-core, including the guardian co-sign requirement, verified on devnet.
 difficulty: intermediate
 est_minutes: 8
-last_validated: "2026-07-16"
+artifact: project
 sdk_versions:
-  sdk-core: "^15.4.0"
+  sdk-core: "15.4.1"
 tags:
   - sdk-core
   - guardian
@@ -30,7 +30,7 @@ the payloads, and shows the guarded flag being set on the unguard.
 
 ## Prerequisites
 
-- Node.js >= 20.13.1.
+- Node.js >= 20.19.0.
 - A devnet wallet, see
   [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
   Prerequisites. **No devnet EGLD required**, see "How it works".
@@ -38,12 +38,182 @@ the payloads, and shows the guarded flag being set on the unguard.
 ## Install
 
 ```bash
-git clone https://github.com/multiversx/cookbook.git
-cd cookbook/recipes/guard-unguard-account
+mkdir guard-unguard-account
+cd guard-unguard-account
+# Create the project files shown on this page.
 npm install
 npm run build
 npm start -- ./wallet.pem --guardian erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
 ```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-guard-unguard-account",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — activate guardianship with GuardAccount and remove it with UnGuardAccount via sdk-core, including the guardian co-sign requirement.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Identical to the helper used by issue-fungible-token / send-egld /
+// manage-nonces. Fetch the account nonce from the network first, then
+// increment locally with getNonceThenIncrement().
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half).
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point for the guard/unguard recipe.
+//
+// Usage:
+//   npm run build
+//   npm start -- <pemPath> [--guardian <bech32>] [--factory]
+//
+// Example:
+//   npm start -- ./wallet.pem --guardian erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+//
+// It decodes a GuardAccount payload and an UnGuardAccount payload. When a
+// --guardian is supplied, the unguard is marked as guarded (options bit set,
+// guardian field populated) — the co-sign requirement. It then broadcasts the
+// GuardAccount; an unfunded wallet is rejected for insufficient funds,
+// proving the payload is well-formed without spending real EGLD.
+
+import { Address, DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { guardAccount, unguardAccount, describeGuardPayload } from './guard';
+
+function printPayload(label: string, decoded: ReturnType<typeof describeGuardPayload>): void {
+  console.log(`${label}`);
+  console.log(`  function:        ${decoded.function}`);
+  console.log(`  receiver:        ${decoded.receiver}`);
+  console.log(`  options:         ${decoded.options} (guarded bit set: ${decoded.isGuardedBitSet})`);
+  console.log(`  guardian:        ${decoded.guardian}`);
+  console.log(`  gasLimit:        ${decoded.gasLimit}`);
+}
+
+async function main(): Promise<void> {
+  const args = process.argv.slice(2);
+  const pemPath = args[0];
+  const useFactory = args.includes('--factory');
+  const guardianFlagIndex = args.indexOf('--guardian');
+  const guardianArg = guardianFlagIndex >= 0 ? args[guardianFlagIndex + 1] : undefined;
+  const guardian = guardianArg ? Address.newFromBech32(guardianArg) : undefined;
+
+  if (!pemPath) {
+    console.error('Usage: npm start -- <pemPath> [--guardian <bech32>] [--factory]');
+    process.exitCode = 1;
+    return;
+  }
+
+  const entrypoint = new DevnetEntrypoint();
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+
+  console.log(`Sender: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`API level: ${useFactory ? 'factory' : 'controller'}\n`);
+
+  const guardTx = await guardAccount(entrypoint, sender, useFactory);
+  printPayload('GUARD ACCOUNT (activate):', describeGuardPayload(guardTx));
+
+  const unguardTx = await unguardAccount(entrypoint, sender, guardian, useFactory);
+  console.log('');
+  printPayload(
+    guardian
+      ? 'UNGUARD ACCOUNT (co-signed by current guardian):'
+      : 'UNGUARD ACCOUNT (no guardian supplied — not marked guarded):',
+    describeGuardPayload(unguardTx),
+  );
+
+  console.log('\nBroadcasting the GuardAccount transaction...');
+  try {
+    const txHash = await entrypoint.sendTransaction(guardTx);
+    console.log(`Sent. Transaction hash: ${txHash}`);
+    console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+  } catch (err) {
+    console.error(`Rejected (expected for an unfunded wallet): ${(err as Error).message}`);
+    process.exitCode = 1;
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
 
 ## The code
 
