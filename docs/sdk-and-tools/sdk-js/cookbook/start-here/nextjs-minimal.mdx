@@ -1,6 +1,6 @@
 ---
 title: Minimal sdk-dapp v5 app in Next.js (App Router)
-description: A working Next.js 14 App Router starter with sdk-dapp v5. Client-only init wrapper, the real next.config.js, login button, account hook, compiles strict.
+description: A working Next.js 15 App Router starter with sdk-dapp v5. Client-only init wrapper, the real next.config.js, login button, account hook, compiles strict.
 difficulty: beginner
 est_minutes: 10
 artifact: project
@@ -16,7 +16,7 @@ tags:
   - devnet
 ---
 
-This recipe gives you the smallest working sdk-dapp v5 setup in a Next.js 14 App
+This recipe gives you the smallest working sdk-dapp v5 setup in a Next.js 15 App
 Router app. It is the path the official sdk-dapp docs describe in passing without
 ever showing a complete working file. Use this as your starting point if you are
 scaffolding a new dApp on Next.js: create a directory and copy the complete
@@ -64,7 +64,7 @@ the same.
   "name": "cookbook-recipe-nextjs-minimal",
   "version": "1.0.0",
   "private": true,
-  "description": "Cookbook recipe — minimal sdk-dapp v5 in Next.js 14 App Router. Compiles strict.",
+  "description": "Cookbook recipe — minimal sdk-dapp v5 in Next.js 15 App Router. Compiles strict.",
   "scripts": {
     "dev": "next dev --experimental-https",
     "build": "next build",
@@ -78,7 +78,7 @@ the same.
     "@multiversx/sdk-dapp-utils": "3.1.0",
     "axios": "1.18.1",
     "bignumber.js": "9.3.1",
-    "next": "14.2.35",
+    "next": "15.5.18",
     "protobufjs": "7.6.5",
     "react": "18.3.1",
     "react-dom": "18.3.1"
@@ -149,7 +149,7 @@ pulled in via the WalletConnect transitive chain); and the `bufferutil` /
 `utf-8-validate` externals (optional WebSocket performance binaries).
 
 ```js title="next.config.js"
-// next.config.js — sdk-dapp v5 + Next.js 14 App Router
+// next.config.js — sdk-dapp v5 + Next.js 15 App Router
 //
 // This file mirrors the actual configuration shipped in
 // https://github.com/multiversx/mx-template-dapp-nextjs/blob/main/next.config.js
@@ -194,7 +194,7 @@ module.exports = nextConfig;
 which is the client-only wrapper.
 
 ```tsx title="app/layout.tsx"
-// app/layout.tsx — Next.js 14 App Router root layout.
+// app/layout.tsx — Next.js 15 App Router root layout.
 //
 // This is a server component (no "use client" directive). It does nothing
 // blockchain-related — it only renders the html/body shell and delegates
@@ -212,7 +212,7 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'Cookbook recipe — Minimal sdk-dapp v5 in Next.js',
   description:
-    'A working sdk-dapp v5 + Next.js 14 App Router setup that compiles under TypeScript strict mode.',
+    'A working sdk-dapp v5 + Next.js 15 App Router setup that compiles under TypeScript strict mode.',
 };
 
 export const viewport: Viewport = {

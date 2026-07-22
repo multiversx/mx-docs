@@ -218,7 +218,7 @@ npm install --save-dev @vitejs/plugin-basic-ssl
 //   1. Vite's `server.https` type is `https.ServerOptions | undefined`
 //      (node_modules/vite/dist/node/index.d.ts) — it has never accepted a
 //      bare `boolean`. `https: true` fails `tsc --strict` with "no overload
-//      matches this call" on the actually-installed vite@5.4.21.
+//      matches this call" on the actually-installed vite@6.4.3.
 //   2. The plugin's own README (node_modules/@vitejs/plugin-basic-ssl/README.md)
 //      shows usage as `plugins: [basicSsl()]` with no `server.https` at all —
 //      the plugin injects the generated cert into `server.https` itself via

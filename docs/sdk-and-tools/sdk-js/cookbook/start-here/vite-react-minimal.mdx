@@ -90,7 +90,7 @@ to get HTTPS on the Vite dev server.
     "@vitejs/plugin-basic-ssl": "1.2.0",
     "@vitejs/plugin-react": "4.7.0",
     "typescript": "5.9.3",
-    "vite": "5.4.21"
+    "vite": "6.4.3"
   },
   "engines": {
     "node": ">=20.19.0"
@@ -571,7 +571,7 @@ Three observations on the differences:
 promise makes the Strict Mode double-invoke safe: neither effect subscription
 marks the application ready until the same `initApp()` call has resolved.
 
-**HTTPS via plugin, not flag.** Next.js 14 has `next dev --experimental-https`.
+**HTTPS via plugin, not flag.** Next.js 15 has `next dev --experimental-https`.
 Vite uses a plugin (`@vitejs/plugin-basic-ssl`). Both produce the same outcome, a
 self-signed cert with the browser warning the first time. For a fully trusted
 cert with no warning, see

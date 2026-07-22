@@ -13,7 +13,7 @@
     "@multiversx/sdk-dapp-utils": "3.1.0",
     "axios": "1.18.1",
     "bignumber.js": "9.3.1",
-    "next": "14.2.35",
+    "next": "15.5.18",
     "protobufjs": "7.6.5",
     "react": "18.3.1",
     "react-dom": "18.3.1"
@@ -25,7 +25,7 @@
     "@vitejs/plugin-basic-ssl": "1.2.0",
     "@vitejs/plugin-react": "4.7.0",
     "typescript": "5.9.3",
-    "vite": "5.4.21"
+    "vite": "6.4.3"
   },
   "engines": {
     "node": ">=20.19.0"
