@@ -22,8 +22,9 @@ docs/sdk-and-tools/sdk-js/cookbook/<section>/<slug>.mdx
 - `<section>` is a grouping folder (`network-providers`, `transactions`,
   `wallets`, `tokens`, ...). It also drives the sidebar sub-category.
 - `<slug>` is the recipe id and the folder the extractor assembles code into.
-  Keep slugs unique across the whole cookbook (the extractor namespaces by slug,
-  not by section).
+  Slugs must be unique across the whole cookbook (the extractor namespaces by
+  slug, not by section). The extractor checks this globally and fails before
+  extraction if a second page reuses a slug.
 
 The extractor only scans this directory, so nothing else in `docs/` is affected.
 
@@ -41,6 +42,10 @@ A recipe's runnable code is authored as **titled** fenced code blocks:
   recipe root (for example `src/index.ts`, `src/lib/multiversx.ts`). This is the
   same `title=` attribute Docusaurus already renders as the code-block filename
   label, so the reader sees exactly the file that gets compiled.
+- Paths use portable ASCII segments (`A-Z`, `a-z`, digits, `.`, `_`, and `-`)
+  separated by `/`. Absolute paths, empty paths, `.` / `..` segments,
+  backslashes, duplicate paths, and symbolic links are rejected. Every resolved
+  output must remain inside its resolved recipe root.
 - The fence language must be **`ts`** or **`tsx`**. Only those two are compiled.
 - A recipe with several files is several titled fences on the page. The
   extractor writes each to its path, so relative imports between them

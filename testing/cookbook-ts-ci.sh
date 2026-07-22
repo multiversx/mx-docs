@@ -11,6 +11,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # 1. Extract: titled ts/tsx fences from the recipe MDX -> project/src/recipes/.
 cd "$SCRIPT_DIR/cookbook-ts" || exit 1
 npm ci || exit 1
+npm test || exit 1
+npm run typecheck || exit 1
 npm run extract || exit 1
 
 # 2. Type-check: strict, no emit, across every extracted recipe at once.

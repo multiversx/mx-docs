@@ -3,7 +3,8 @@ name: Cookbook TS verification
 on:
   push:
     branches:
-      - master
+      - main
+      - development
   pull_request:
 
 jobs:
@@ -15,5 +16,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Extract cookbook recipes and type-check
+      - name: Test extractor, extract cookbook recipes, and type-check
         run: ./testing/cookbook-ts-ci.sh

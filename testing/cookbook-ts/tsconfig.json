@@ -12,5 +12,5 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"]
   },
-  "include": ["extract.ts", "parser.ts"]
+  "include": ["*.ts"]
 }

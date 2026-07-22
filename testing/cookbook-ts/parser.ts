@@ -65,6 +65,14 @@ export function extractCodeBlocksFromMarkdown(markdown: string): CodeBlock[] {
       i += 1;
     }
 
+    if (i >= lines.length) {
+      throw new Error(
+        `Unclosed ${fenceChar.repeat(fenceLen)} code fence opened on line ${
+          i - contentLines.length
+        }.`,
+      );
+    }
+
     const { language, title } = parseCodeBlockInfo(info);
     blocks.push({
       ...(title !== undefined ? { title } : {}),
@@ -93,8 +101,9 @@ export function parseCodeBlockInfo(info: string): {
     return {};
   }
 
-  const parts = info.split(/\s+/);
-  const first = parts[0]!;
+  const firstWhitespace = info.search(/\s/);
+  const first = firstWhitespace === -1 ? info : info.slice(0, firstWhitespace);
+  const attributes = firstWhitespace === -1 ? "" : info.slice(firstWhitespace).trim();
 
   let language: string | undefined;
   let title: string | undefined;
@@ -115,11 +124,25 @@ export function parseCodeBlockInfo(info: string): {
     language = first;
   }
 
-  for (const part of parts.slice(1)) {
-    if (part.startsWith("title=")) {
-      title = stripQuotes(part.slice("title=".length));
-    } else if (part.startsWith("filename=")) {
-      title = stripQuotes(part.slice("filename=".length));
+  if (attributes !== "") {
+    const attributePattern =
+      /(?:^|\s+)(title|filename)=(?:"([^"]*)"|'([^']*)'|([^\s"']*))/gy;
+    let cursor = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = attributePattern.exec(attributes)) !== null) {
+      if (match.index !== cursor) {
+        throw new Error(`Malformed code fence info string: ${info}`);
+      }
+      if (title !== undefined) {
+        throw new Error(`Multiple file titles in code fence info string: ${info}`);
+      }
+      title = match[2] ?? match[3] ?? match[4] ?? "";
+      cursor = attributePattern.lastIndex;
+    }
+
+    if (cursor !== attributes.length) {
+      throw new Error(`Malformed code fence info string: ${info}`);
     }
   }
 
@@ -127,11 +150,6 @@ export function parseCodeBlockInfo(info: string): {
     ...(language !== undefined ? { language } : {}),
     ...(title !== undefined ? { title } : {}),
   };
-}
-
-/** Remove a single leading `"`/`'` pair, matching parser.rs's strip_quotes. */
-function stripQuotes(s: string): string {
-  return s.replace(/^["']/, "").replace(/["']$/, "");
 }
 
 /** Drop a leading YAML frontmatter block (`---` … `---`) if present. */

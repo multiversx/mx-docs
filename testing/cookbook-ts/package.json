@@ -5,7 +5,9 @@
   "type": "module",
   "description": "Extracts titled ts/tsx fences from the cookbook recipe MDX into the harness project (TypeScript counterpart of extract-tutorial-code).",
   "scripts": {
-    "extract": "tsx extract.ts"
+    "extract": "tsx extract.ts",
+    "test": "tsx --test *.test.ts",
+    "typecheck": "tsc"
   },
   "devDependencies": {
     "@types/node": "^20.17.6",
