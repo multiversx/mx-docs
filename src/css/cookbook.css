@@ -11,8 +11,8 @@
  * Tokens are the canonical MvX values (design-reference/MVX-DESIGN-LANGUAGE.md):
  * accent teal #23f7dd, near-black grounds, Roobert + JetBrains Mono. Structure
  * is driven by Infima neutral variables so components track the light/dark
- * toggle automatically; the teal accent is reserved for the single load-bearing
- * idea — "this recipe is verified" — never to tint structure.
+ * toggle automatically; the teal accent is reserved for the load-bearing
+ * "standalone project built in CI" label, never to tint structure.
  */
 
 :root {

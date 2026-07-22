@@ -1,6 +1,6 @@
 /* Front-door layout for the cookbook index. Structure only — hairline borders
    on Infima neutrals so it tracks the light/dark toggle; the teal accent stays
-   reserved for the verified badge inside each card, never spent on chrome. */
+   reserved for the build-checked project badge, never spent on chrome. */
 
 .index {
   margin-top: 1rem;

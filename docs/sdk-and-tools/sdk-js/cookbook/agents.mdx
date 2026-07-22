@@ -1,12 +1,12 @@
 ---
 title: Agent or agentic engineer? Start here
 sidebar_label: Agent? Start here
-description: Two ways into the MultiversX cookbook. Developers copy recipes by hand; coding agents read the same CI-verified recipes from a machine-readable surface.
+description: Two ways into the MultiversX cookbook. Developers and coding agents can distinguish complete build-checked projects from focused reference pages.
 slug: /sdk-and-tools/sdk-js/cookbook/agents
 ---
 
-Two ways in: copy the recipes by hand, or point a coding agent at them. Same
-verified recipes either way.
+Two ways in: copy the recipes by hand, or point a coding agent at them. The same
+project/reference boundary is visible either way.
 
 ## If you are a developer
 
@@ -19,21 +19,22 @@ a common starting point:
 - [Call a contract endpoint](./smart-contracts-call/call-contract-endpoint.mdx): invoke a contract with typed arguments.
 - [Issue a fungible token](./tokens/issue-fungible-token.mdx): mint your own ESDT.
 
-Each recipe shows every file it needs and states the SDK versions it was verified
-against. The teal badge on a page means its code compiled green in CI on the date
-shown.
+Pages labeled **Project build checked** show a complete standalone project and
+state the exact SDK versions it uses. CI reconstructs, installs, and builds all
+61 on Node 20.19.0. Pages labeled **Reference** intentionally provide focused
+migration, setup, or Rust material rather than a complete project.
 
 ## If you are a coding agent (or wiring one up)
 
-Point your coding agent at these docs. Each recipe is self-contained and
-version-pinned, so the code it lifts runs against the SDKs the page names.
+Point your coding agent at these docs. Project recipes are self-contained and
+version-pinned; reference pages should be applied to an existing project.
 
 ### The machine-readable surface
 
 MultiversX publishes the whole documentation set in the
 [`llms.txt`](https://llmstxt.org) format, so a model can load it as context:
 
-- [`https://docs.multiversx.com/llms.txt`](https://docs.multiversx.com/llms.txt): the index. Every page as a titled, described link; cookbook recipes carry an inline `[difficulty, verified DATE]` tag, so an agent sees each recipe's difficulty and its last green CI date without opening the page.
+- [`https://docs.multiversx.com/llms.txt`](https://docs.multiversx.com/llms.txt): the index. Every page appears as a titled, described link; cookbook recipes carry an inline `[difficulty, build checked]` or `[difficulty, reference]` tag so an agent sees the artifact boundary without opening the page.
 - [`https://docs.multiversx.com/llms-full.txt`](https://docs.multiversx.com/llms-full.txt): the same set with full page content inlined, for one-shot ingestion.
 
 ### The wider MultiversX agent stack

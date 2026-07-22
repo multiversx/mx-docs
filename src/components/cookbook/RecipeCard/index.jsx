@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "@docusaurus/Link";
 import DifficultyDots from "@site/src/components/cookbook/DifficultyDots";
-import VerifiedBadge from "@site/src/components/cookbook/VerifiedBadge";
+import ArtifactBadge from "@site/src/components/cookbook/ArtifactBadge";
 import styles from "./styles.module.css";
 
 // One recipe as a card in the browsable index. Props map to the same recipe
@@ -12,8 +12,7 @@ export default function RecipeCard({ recipe = {} }) {
     description,
     href = "#",
     difficulty,
-    lastValidated,
-    stale,
+    artifact,
     tags = [],
     sdkVersions,
   } = recipe;
@@ -27,7 +26,7 @@ export default function RecipeCard({ recipe = {} }) {
     <Link className={styles.card} to={href}>
       <div className={styles.head}>
         {difficulty && <DifficultyDots difficulty={difficulty} />}
-        <VerifiedBadge date={lastValidated} stale={Boolean(stale)} compact />
+        <ArtifactBadge artifact={artifact} compact />
       </div>
 
       <div className={styles.title}>{title}</div>

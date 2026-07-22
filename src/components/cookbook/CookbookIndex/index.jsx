@@ -38,9 +38,9 @@ export default function CookbookIndex({ sections = [] }) {
       ))}
 
       <p className={styles.footNote}>
-        {total} recipes across {sections.length} sections. Every card links to a
-        page whose code is extracted and type-checked in CI; the teal badge means
-        that check is currently green.
+        {total} recipes across {sections.length} sections: 61 standalone projects
+        reconstructed and built in CI, plus 8 focused reference pages. Card badges
+        state which artifact the page contains.
       </p>
     </div>
   );

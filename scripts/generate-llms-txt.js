@@ -197,17 +197,16 @@ function parseFrontmatter(mdContent) {
     slug: block.match(/^\s*slug:\s*(["']?)(.+?)\1\s*$/m),
     description: block.match(/^\s*description:\s*(["']?)([\s\S]*?)\1\s*$/m),
     // Cookbook recipe frontmatter — surfaced in the agent-ingestible llms.txt
-    // so a coding agent sees difficulty + CI-verified date alongside each
-    // recipe. Optional: only cookbook pages declare these fields.
+    // so a coding agent can distinguish standalone projects from references.
     difficulty: block.match(/^\s*difficulty:\s*(["']?)(.+?)\1\s*$/m),
-    last_validated: block.match(/^\s*last_validated:\s*(["']?)(.+?)\1\s*$/m),
+    artifact: block.match(/^\s*artifact:\s*(["']?)(.+?)\1\s*$/m),
   };
   if (pairs.id) meta.id = pairs.id[2].trim();
   if (pairs.title) meta.title = pairs.title[2].trim();
   if (pairs.slug) meta.slug = pairs.slug[2].trim();
   if (pairs.description) meta.description = pairs.description[2].trim();
   if (pairs.difficulty) meta.difficulty = pairs.difficulty[2].trim();
-  if (pairs.last_validated) meta.lastValidated = pairs.last_validated[2].trim();
+  if (pairs.artifact) meta.artifact = pairs.artifact[2].trim();
   meta._fmEnd = end + '\n---'.length;
   return meta;
 }
@@ -309,7 +308,7 @@ async function getDocMeta(docId) {
         title = `${humanizeSegmentForTitle(parent)} ${title}`;
       }
     }
-    meta = { ...meta, title, description, filePath, source: fromFm ? 'frontmatter' : (description ? 'content' : 'none'), difficulty: fm.difficulty, lastValidated: fm.lastValidated };
+    meta = { ...meta, title, description, filePath, source: fromFm ? 'frontmatter' : (description ? 'content' : 'none'), difficulty: fm.difficulty, artifact: fm.artifact };
   } catch {
     // ignore
   }
@@ -400,7 +399,7 @@ async function main() {
       const meta = await getDocMeta(id);
       // eslint-disable-next-line no-await-in-loop
       const url = await computeUrlForDoc(id, siteUrl);
-      all.push({ id, title: meta.title, description: meta.description, url, source: meta.source, filePath: meta.filePath, difficulty: meta.difficulty, lastValidated: meta.lastValidated });
+      all.push({ id, title: meta.title, description: meta.description, url, source: meta.source, filePath: meta.filePath, difficulty: meta.difficulty, artifact: meta.artifact });
     }
     all.sort((a, b) => a.title.localeCompare(b.title));
     for (const e of all) {
@@ -410,13 +409,13 @@ async function main() {
       }
       const clipped = desc.length > 400 ? `${desc.slice(0, 397)}...` : desc;
       // Cookbook pages append a compact, machine-parseable metadata tag so the
-      // agent surface carries difficulty + CI-verified date. Only pages that
-      // declare `difficulty` frontmatter are affected; all other entries are
-      // byte-for-byte unchanged.
+      // agent surface carries difficulty + artifact type. Only pages that
+      // declare `difficulty` frontmatter are affected.
       let recipeTag = '';
       if (e.difficulty) {
         const bits = [e.difficulty];
-        if (e.lastValidated) bits.push(`verified ${e.lastValidated}`);
+        if (e.artifact === 'project') bits.push('build checked');
+        if (e.artifact === 'reference') bits.push('reference');
         recipeTag = ` [${bits.join(', ')}]`;
       }
       outputLines.push(`- [${e.title}](${e.url})${clipped ? `: ${clipped}` : ''}${recipeTag}`);

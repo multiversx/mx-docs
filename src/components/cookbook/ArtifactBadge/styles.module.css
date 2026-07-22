@@ -13,28 +13,24 @@
   white-space: nowrap;
 }
 
-.ok {
+.project {
   color: var(--cookbook-accent);
   border-color: color-mix(in srgb, var(--cookbook-accent) 40%, transparent);
   background: var(--cookbook-accent-soft);
 }
 
-.stale {
-  color: #8a6d00;
-  border-color: color-mix(in srgb, var(--cookbook-yellow) 55%, transparent);
-  background: color-mix(in srgb, var(--cookbook-yellow) 12%, transparent);
+.reference {
+  color: var(--ifm-color-emphasis-700);
+  border-color: var(--ifm-color-emphasis-300);
+  background: var(--ifm-color-emphasis-100);
 }
 
-html[data-theme="dark"] .stale {
-  color: var(--cookbook-yellow);
-}
-
-.icon {
+.icon,
+.referenceIcon {
   display: inline-flex;
 }
 
-.bang {
-  display: inline-flex;
+.referenceIcon {
   align-items: center;
   justify-content: center;
   width: 12px;

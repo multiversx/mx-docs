@@ -64,19 +64,28 @@ function resolveDocFile(docId) {
 // Map one recipe's frontmatter to the shape <RecipeCard> reads. Field names are
 // deliberately the card's camelCase props so index.mdx can pass records straight
 // through with no transform.
-function recipeRecord(docId, data) {
+function recipeRecord(docId, data, source) {
   const sdkVersions =
     data.sdk_versions && typeof data.sdk_versions === "object"
       ? data.sdk_versions
       : undefined;
+
+  const artifact = /```json\s+title=["']package\.json["']/.test(source)
+    ? "project"
+    : "reference";
+  if (data.artifact !== artifact) {
+    throw new Error(
+      `${docId}: frontmatter artifact=${data.artifact || "<missing>"}, ` +
+        `but the page content derives artifact=${artifact}`
+    );
+  }
 
   return {
     title: data.title || docId,
     description: data.description || "",
     href: `/${docId}`,
     difficulty: data.difficulty || undefined,
-    lastValidated: data.last_validated || undefined,
-    stale: Boolean(data.stale),
+    artifact,
     tags: Array.isArray(data.tags) ? data.tags : [],
     sdkVersions,
   };
@@ -114,8 +123,9 @@ function main() {
         console.error(`  ! missing file for recipe id: ${docId}`);
         process.exit(1);
       }
-      const { data } = matter(fs.readFileSync(file, "utf8"));
-      recipes.push(recipeRecord(docId, data));
+      const source = fs.readFileSync(file, "utf8");
+      const { data } = matter(source);
+      recipes.push(recipeRecord(docId, data, source));
     }
 
     // Anchor id for in-page section links: the shared <section> folder segment

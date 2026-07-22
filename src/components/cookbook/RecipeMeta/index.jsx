@@ -1,20 +1,19 @@
 import React from "react";
 import DifficultyDots from "@site/src/components/cookbook/DifficultyDots";
-import VerifiedBadge from "@site/src/components/cookbook/VerifiedBadge";
+import ArtifactBadge from "@site/src/components/cookbook/ArtifactBadge";
 import MetaChip from "@site/src/components/cookbook/MetaChip";
 import styles from "./styles.module.css";
 
 // The metadata strip rendered above every recipe title by the DocItem/Content
 // swizzle. Every item maps to a real frontmatter field — difficulty,
-// est_minutes, sdk_versions, last_validated, stale — so the strip reflects the
-// product (CI-verified recipes), never decoration. Each field renders only when
-// present, so partial frontmatter degrades gracefully.
+// est_minutes, sdk_versions, and artifact — so the strip distinguishes complete
+// projects from focused reference pages. CI validates that the artifact label
+// agrees with the files the page contains.
 export default function RecipeMeta({ frontMatter = {} }) {
   const {
     difficulty,
     est_minutes: estMinutes,
-    last_validated: lastValidated,
-    stale,
+    artifact,
     sdk_versions: sdkVersions,
   } = frontMatter;
 
@@ -40,9 +39,9 @@ export default function RecipeMeta({ frontMatter = {} }) {
         <MetaChip key={name} label={name} value={range} mono />
       ))}
 
-      {(lastValidated || stale) && (
+      {artifact && (
         <span className={styles.trailing}>
-          <VerifiedBadge date={lastValidated} stale={Boolean(stale)} />
+          <ArtifactBadge artifact={artifact} />
         </span>
       )}
     </div>
