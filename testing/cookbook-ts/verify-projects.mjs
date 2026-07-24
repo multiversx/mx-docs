@@ -205,6 +205,8 @@ try {
       `\n=== Environment ${environmentIndex}/${environments.size}: ` +
         `${group.length} project${group.length === 1 ? '' : 's'} ===`,
     );
+    // This matrix is a build verifier, so installs skip npm's non-gating audit
+    // output. The workflow gates the canonical lockfile via audit-project.mjs.
     run('npm', [
       'install',
       '--ignore-scripts',

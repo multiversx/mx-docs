@@ -16,5 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20.19.0
+      - name: Gate cookbook dependencies against high-severity advisories
+        run: node ./testing/cookbook-ts/audit-project.mjs
       - name: Test extractor, type-check snippets, and build recipe projects
         run: ./testing/cookbook-ts-ci.sh

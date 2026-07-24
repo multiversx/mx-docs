@@ -1,6 +1,6 @@
 ---
 title: "Storage mappers: which to pick, when"
-description: A working, tested contract exercising six storage mappers side by side, with a decision table grounded in the real multiversx-sc crate source.
+description: A contract exercising six storage mappers side by side, manually verified when written but not continuously built in CI, with a source-grounded decision table.
 difficulty: intermediate
 est_minutes: 9
 artifact: reference
@@ -12,10 +12,12 @@ tags:
   - smart-contract
 ---
 
-A working, tested contract exercising six storage mappers side by side, plus a
-decision table built from the real `multiversx-sc` crate source doc comments. Two
-easy-to-get-wrong entries (a mapper's `contains()` complexity and its storage
-cost) are called out below in "Two clarifications from the crate source".
+A contract exercising six storage mappers side by side, plus a decision table
+built from the real `multiversx-sc` crate source doc comments. The contract was
+manually built and tested at authoring time; this reference page is not compiled
+continuously by the cookbook CI. Two easy-to-get-wrong entries (a mapper's
+`contains()` complexity and its storage cost) are called out below in "Two
+clarifications from the crate source".
 
 ## Prerequisites
 
@@ -34,9 +36,10 @@ use multiversx_sc::imports::*;
 
 pub mod storage_mappers_proxy;
 
-/// One endpoint pair per mapper type this recipe covers with working, tested
-/// code. Method names and complexity claims below are taken directly from the
-/// real `multiversx-sc` crate source doc comments
+/// One endpoint pair per mapper type this recipe covers. This code was manually
+/// verified at authoring time, not continuously in CI. Method names and
+/// complexity claims below are taken directly from the real `multiversx-sc`
+/// crate source doc comments
 /// (`~/.cargo/registry/.../multiversx-sc-0.64.2/src/storage/mappers/*.rs`).
 #[multiversx_sc::contract]
 pub trait StorageMappers {
@@ -485,8 +488,8 @@ get wrong by assuming symmetry.
 ## Pitfalls
 
 :::danger[Pitfall 1: VecMapper is 1-indexed]
-Index 0 is invalid and panics. Confirmed directly: this recipe's test pushes two
-items and reads back index 1 as the first one pushed.
+Index 0 is invalid and panics. In the authoring-time manual test, the recipe
+pushed two items and read back index 1 as the first one pushed.
 :::
 
 :::warning[Pitfall 2: MapMapper.get() returning a default value looks identical to a real stored zero]
@@ -514,9 +517,9 @@ the exact mapper's own method names rather than assuming consistency.
 ## What this recipe did not test
 
 `LinkedListMapper`, `QueueMapper`, `UserMapper`, `UniqueIdMapper`, and `BiDiMapper`
-are real, exported mapper types, but this recipe does not ship working code
-exercising them: six mappers with real, tested endpoints was already substantial
-scope. `FungibleTokenMapper` / `NonFungibleTokenMapper` / `TokenAttributesMapper`
+are real, exported mapper types, but this recipe does not include code exercising
+them: six manually verified mapper examples were already substantial scope.
+`FungibleTokenMapper` / `NonFungibleTokenMapper` / `TokenAttributesMapper`
 need real ESDT system contract interaction to demonstrate meaningfully, which
 belongs in a token-issuance-from-a-contract recipe, not a storage-mapper
 comparison.
