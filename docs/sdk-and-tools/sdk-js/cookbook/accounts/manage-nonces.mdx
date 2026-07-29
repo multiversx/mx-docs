@@ -208,7 +208,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
 
   // ONE fetch for the whole batch — this is the pattern this recipe is
   // about. See src/batchSend.ts for why fetching again inside the loop

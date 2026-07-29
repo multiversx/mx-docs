@@ -136,14 +136,14 @@ const EXAMPLE_UNDELEGATE_TX = 'f1f50870263d7ca6d11b9e4ad79d605e08e39597fe8334e4c
 const UNSTAKE_AMOUNT_WEI = 2n * 10n ** 18n;
 
 async function runParse(txHash: string): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   console.log(`Parsing completed unDelegate ${txHash} ...`);
   const amount = await parseUndelegatedAmount(entrypoint, txHash);
   console.log(`  unbonding amount: ${amount} wei (${amount / 10n ** 18n} EGLD)`);
 }
 
 async function runPayload(): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const factory = entrypoint.createDelegationTransactionsFactory();
   const throwaway = await entrypoint.createAccount();
   const contract = Address.newFromBech32(EXAMPLE_DELEGATION_CONTRACT);
@@ -164,7 +164,7 @@ async function runPayload(): Promise<void> {
 }
 
 async function runSend(pemPath: string, withdraw: boolean, useFactory: boolean): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const sender = await Account.newFromPem(pemPath);
   sender.nonce = await entrypoint.recallAccountNonce(sender.address);
   console.log(`Delegator: ${sender.address.toBech32()} (nonce ${sender.nonce})`);

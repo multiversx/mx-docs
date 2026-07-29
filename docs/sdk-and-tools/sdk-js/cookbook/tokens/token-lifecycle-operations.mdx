@@ -183,7 +183,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const sender: Account = await loadDevnetAccount(entrypoint, pemPath);
   const user = userArg ? Address.newFromBech32(userArg) : sender.address;
 

@@ -136,7 +136,7 @@ async function main(): Promise<void> {
 
   if (mode === 'live') {
     const txHash = txArg ?? PONG_EVENT_TX_HASH;
-    const entrypoint = new DevnetEntrypoint();
+    const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
     console.log(`Fetching ${txHash} and decoding pongEvent(s) live...`);
     const decoded = await decodePongEventsFromTransaction(entrypoint, abi, txHash);
     decoded.forEach((d, i) => console.log(`  event[${i}].user: ${d.user}`));

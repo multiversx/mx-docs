@@ -5,8 +5,9 @@
   "type": "module",
   "description": "Materializes titled cookbook files for strict TypeScript and clean project-build verification.",
   "scripts": {
-    "extract": "tsx extract.ts",
-    "test": "tsx --test *.test.ts",
+    "extract": "node --import tsx extract.ts",
+    "test": "node --import tsx --test *.test.ts",
+    "test:lifecycle": "node --import tsx --test sign-and-send-lifecycle.runtime.ts",
     "typecheck": "tsc"
   },
   "devDependencies": {

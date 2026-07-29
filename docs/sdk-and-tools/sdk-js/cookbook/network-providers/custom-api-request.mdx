@@ -192,7 +192,7 @@ import { getEconomics, getStats, rawQuery } from './customRequest';
 const ADDER = 'erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug';
 
 async function main(): Promise<void> {
-  const provider = new DevnetEntrypoint().createNetworkProvider();
+  const provider = new DevnetEntrypoint({ clientName: 'mvx-cookbook' }).createNetworkProvider();
 
   const econ = await getEconomics(provider);
   console.log('GET economics (no typed provider method exists):');

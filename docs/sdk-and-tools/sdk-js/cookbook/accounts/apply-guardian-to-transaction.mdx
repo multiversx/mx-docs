@@ -126,7 +126,7 @@ const RECEIVER = Address.newFromBech32(
 );
 
 async function main(): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const { sender, guardian } = await generateSenderAndGuardian();
 
   // Only the sender's nonce is needed (the guardian merely co-signs).

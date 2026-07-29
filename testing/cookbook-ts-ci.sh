@@ -15,6 +15,7 @@ npm ci || exit 1
 npm test || exit 1
 npm run typecheck || exit 1
 npm run extract || exit 1
+npm run test:lifecycle || exit 1
 
 # 2. Type-check: strict, no emit, across every extracted recipe at once.
 cd "$SCRIPT_DIR/cookbook-ts/project" || exit 1

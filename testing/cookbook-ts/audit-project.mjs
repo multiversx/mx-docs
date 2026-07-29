@@ -25,6 +25,17 @@ function extractAdvisoryId(advisory) {
   return match?.[0].toUpperCase();
 }
 
+function auditDirectoryFromArguments() {
+  const directoryIndex = process.argv.indexOf('--directory');
+  if (directoryIndex === -1) return projectDirectory;
+
+  const value = process.argv[directoryIndex + 1];
+  if (!value || value.startsWith('--')) {
+    throw new Error('--directory requires a path');
+  }
+  return path.resolve(process.cwd(), value);
+}
+
 function terminalHighAdvisories(packageName, vulnerabilities, seen = new Set()) {
   if (seen.has(packageName)) return [];
   const vulnerability = vulnerabilities[packageName];
@@ -54,11 +65,12 @@ function loadAuditReport() {
     return fs.readFileSync(0, 'utf8');
   }
 
+  const auditDirectory = auditDirectoryFromArguments();
   const result = spawnSync(
     'npm',
     ['audit', '--package-lock-only', '--json'],
     {
-      cwd: projectDirectory,
+      cwd: auditDirectory,
       encoding: 'utf8',
       maxBuffer: 20 * 1024 * 1024,
     },
@@ -67,6 +79,7 @@ function loadAuditReport() {
   if (!result.stdout.trim()) {
     throw new Error(`npm audit returned no JSON: ${result.stderr.trim()}`);
   }
+  console.log(`Audited dependency tree: ${auditDirectory}`);
   return result.stdout;
 }
 

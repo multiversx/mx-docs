@@ -172,7 +172,7 @@ export function createApiProviderWithConfig(url: string): INetworkProvider {
  * `DevnetEntrypoint()` gives you an `ApiNetworkProvider` for devnet.
  */
 export function providerFromEntrypoint(): INetworkProvider {
-  return new DevnetEntrypoint().createNetworkProvider();
+  return new DevnetEntrypoint({ clientName: 'mvx-cookbook' }).createNetworkProvider();
 }
 
 /**
@@ -180,7 +180,11 @@ export function providerFromEntrypoint(): INetworkProvider {
  * gateway URL. Everything else about the entrypoint stays the same.
  */
 export function proxyProviderFromEntrypoint(gatewayUrl: string): INetworkProvider {
-  return new DevnetEntrypoint({ url: gatewayUrl, kind: 'proxy' }).createNetworkProvider();
+  return new DevnetEntrypoint({
+    url: gatewayUrl,
+    kind: 'proxy',
+    clientName: 'mvx-cookbook',
+  }).createNetworkProvider();
 }
 ```
 

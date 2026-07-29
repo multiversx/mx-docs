@@ -142,7 +142,7 @@ const EXAMPLE_CLAIM_TX = '058c94408349866e6df91b49637b39a49409eabb1ae58b07f12100
 const EXAMPLE_REDELEGATE_TX = '5dd411346ef6029946abf24746fbebef0df770423bd56d54cb6a5a22246ed694';
 
 async function runParse(): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   console.log(`Parsing completed claim ${EXAMPLE_CLAIM_TX} ...`);
   const claimed = await parseClaimedAmount(entrypoint, EXAMPLE_CLAIM_TX);
   console.log(`  parsed claimed amount:      ${claimed} wei (see Pitfalls: often 0)`);
@@ -153,7 +153,7 @@ async function runParse(): Promise<void> {
 }
 
 async function runPayload(): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const factory = entrypoint.createDelegationTransactionsFactory();
   const throwaway = await entrypoint.createAccount();
   const input = { delegationContract: Address.newFromBech32(EXAMPLE_DELEGATION_CONTRACT) };
@@ -170,7 +170,7 @@ async function runPayload(): Promise<void> {
 }
 
 async function runSend(pemPath: string, redelegate: boolean, useFactory: boolean): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const sender = await Account.newFromPem(pemPath);
   sender.nonce = await entrypoint.recallAccountNonce(sender.address);
   const op = redelegate ? 're-delegate' : 'claim';

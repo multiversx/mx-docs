@@ -83,11 +83,18 @@ npm run dev
     "@types/react-dom": "18.3.1",
     "typescript": "5.9.3"
   },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.8"
+  },
   "engines": {
     "node": ">=20.19.0"
   }
 }
 ```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS and brace-expansion transitives used by Next and sdk-dapp.
 
 ```json title="tsconfig.json"
 {
@@ -338,8 +345,11 @@ export { EnvironmentsEnum };
 </details>
 
 The recipe is a Next.js app, but the load-bearing file (`lib/transactions.ts`) is
-framework-agnostic. Copy it into a Vite app, a Remix loader, a CLI script, or
-anywhere the sdk-dapp store has been initialized.
+React-independent, browser-side sdk-dapp code. You can reuse it in another
+browser app after `initApp()` has resolved and a wallet is connected. For a
+server action, Remix loader, or CLI, use sdk-core with a server-side signer and
+network provider instead; those contexts do not have sdk-dapp's browser store,
+storage, or connected-wallet provider.
 
 ## The three-step pattern
 
@@ -361,11 +371,13 @@ transaction pattern.
 //      semantic change documented in the v5 changelog.
 //   3. SEND + TRACK with TransactionManager.
 //      The returned sessionId is the React-hook key for
-//      useGetPendingTransactions(sessionId).
+//      the session-aware pending/successful/failed hooks.
 //
-// The function below is intentionally framework-agnostic. It reads from the
-// sdk-dapp store directly (no hooks), so you can call it from a React
-// onClick, a server action, a CLI script, or anywhere else.
+// The function below is React-independent browser code. It reads the
+// initialized sdk-dapp store and connected wallet provider directly (without
+// hooks), so call it only after initApp() and browser-wallet login have
+// completed. Server and CLI code should use sdk-core with its own signer and
+// network provider.
 
 import { Address, Transaction } from '@multiversx/sdk-core';
 import { GAS_PRICE, GAS_LIMIT } from '@multiversx/sdk-dapp/out/constants/mvx.constants';
@@ -400,6 +412,11 @@ export interface SendEgldOutput {
   transactionHash: string;
 }
 
+export interface SendEgldCallbacks {
+  onSuccess: (sessionId: string) => Promise<void>;
+  onFail: (sessionId: string) => Promise<void>;
+}
+
 /**
  * Build, sign, send, and start tracking an EGLD transfer.
  *
@@ -407,7 +424,10 @@ export interface SendEgldOutput {
  * useGetIsLoggedIn() is true before invoking — the function does not
  * gracefully wait for login.
  */
-export async function sendEgld(input: SendEgldInput): Promise<SendEgldOutput> {
+export async function sendEgld(
+  input: SendEgldInput,
+  callbacks: SendEgldCallbacks,
+): Promise<SendEgldOutput> {
   const account = getAccount();
   const { network } = getNetworkConfig();
 
@@ -483,6 +503,8 @@ export async function sendEgld(input: SendEgldInput): Promise<SendEgldOutput> {
       successMessage: 'Transfer complete.',
       errorMessage: 'Transfer failed.',
     },
+    onSuccess: callbacks.onSuccess,
+    onFail: callbacks.onFail,
   });
 
   // `SignedTransactionType` already carries `hash: string` (see
@@ -554,77 +576,210 @@ The three steps:
 
 ## The React hook
 
-A thin wrapper around `sendEgld()` with status / error state for `onClick` use:
+A small lifecycle controller owns the in-flight lock and terminal callbacks.
+Because it is independent of React, the verification harness can execute the
+same state machine the UI uses:
 
-```ts title="lib/useSendEgld.ts"
-// lib/useSendEgld.ts — React hook around the framework-agnostic sendEgld().
-//
-// Wraps lib/transactions.ts in a stateful hook so a component can render a
-// "Send" button, drive it from local state, and surface in-flight / success /
-// error UI.
-//
-// Why a hook? sendEgld() is callable from anywhere, but most UI calls want:
-//   - a loading flag while the wallet popup is open
-//   - the sessionId, so other parts of the page can use
-//     useGetPendingTransactions(sessionId) to render per-tx state
-//   - a stable reference to the send function for use in onClick
+```ts title="lib/sendEgldLifecycle.ts"
+import type {
+  SendEgldCallbacks,
+  SendEgldInput,
+  SendEgldOutput,
+} from './transactions';
 
-import { useCallback, useState } from 'react';
-import { sendEgld, type SendEgldInput, type SendEgldOutput } from './transactions';
-
-export interface UseSendEgldState {
-  status: 'idle' | 'signing' | 'sending' | 'tracking' | 'done' | 'error';
+export interface SendEgldState {
+  status: 'idle' | 'signing' | 'tracking' | 'done' | 'error';
   sessionId: string | null;
   transactionHash: string | null;
   error: string | null;
 }
 
-const initialState: UseSendEgldState = {
+export const initialSendEgldState: SendEgldState = {
   status: 'idle',
   sessionId: null,
   transactionHash: null,
   error: null,
 };
 
+export type SendEgldOperation = (
+  input: SendEgldInput,
+  callbacks: SendEgldCallbacks,
+) => Promise<SendEgldOutput>;
+
+type TerminalState = {
+  status: 'done' | 'error';
+  sessionId: string;
+  error: string | null;
+};
+
+export class SendEgldLifecycle {
+  private state = initialSendEgldState;
+  private busy = false;
+  private output: SendEgldOutput | null = null;
+  private earlyTerminal: TerminalState | null = null;
+
+  public constructor(
+    private readonly onChange: (state: SendEgldState) => void,
+  ) {}
+
+  public getState(): SendEgldState {
+    return this.state;
+  }
+
+  /**
+   * Starts one submission. A second call returns null synchronously at the
+   * first await boundary while signing or tracking is still active.
+   */
+  public async send(
+    input: SendEgldInput,
+    operation: SendEgldOperation,
+  ): Promise<SendEgldOutput | null> {
+    if (this.busy) {
+      return null;
+    }
+
+    this.busy = true;
+    this.output = null;
+    this.earlyTerminal = null;
+    this.transition({ ...initialSendEgldState, status: 'signing' });
+
+    const callbacks: SendEgldCallbacks = {
+      onSuccess: async (sessionId) => {
+        this.finish({
+          status: 'done',
+          sessionId,
+          error: null,
+        });
+      },
+      onFail: async (sessionId) => {
+        this.finish({
+          status: 'error',
+          sessionId,
+          error: 'Transaction failed on-chain.',
+        });
+      },
+    };
+
+    try {
+      const output = await operation(input, callbacks);
+      this.output = output;
+      const terminal = this.consumeEarlyTerminal(output.sessionId);
+
+      if (terminal) {
+        this.applyTerminal(terminal);
+      } else {
+        this.transition({
+          status: 'tracking',
+          sessionId: output.sessionId,
+          transactionHash: output.transactionHash,
+          error: null,
+        });
+      }
+
+      return output;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.busy = false;
+      this.transition({
+        status: 'error',
+        sessionId: null,
+        transactionHash: null,
+        error: message,
+      });
+      return null;
+    }
+  }
+
+  /**
+   * Reset is deliberately ignored while a submission is active. Clearing the
+   * visible state must never release the nonce guard before confirmation.
+   */
+  public reset(): void {
+    if (!this.busy) {
+      this.transition(initialSendEgldState);
+    }
+  }
+
+  private finish(terminal: TerminalState): void {
+    if (!this.busy) {
+      return;
+    }
+    if (!this.output) {
+      this.earlyTerminal = terminal;
+      return;
+    }
+    if (terminal.sessionId === this.output.sessionId) {
+      this.applyTerminal(terminal);
+    }
+  }
+
+  private consumeEarlyTerminal(sessionId: string): TerminalState | null {
+    if (this.earlyTerminal?.sessionId !== sessionId) {
+      return null;
+    }
+    const terminal = this.earlyTerminal;
+    this.earlyTerminal = null;
+    return terminal;
+  }
+
+  private applyTerminal(terminal: TerminalState): void {
+    if (!this.output) {
+      return;
+    }
+    this.busy = false;
+    this.transition({
+      status: terminal.status,
+      sessionId: this.output.sessionId,
+      transactionHash: this.output.transactionHash,
+      error: terminal.error,
+    });
+  }
+
+  private transition(state: SendEgldState): void {
+    this.state = state;
+    this.onChange(state);
+  }
+}
+```
+
+The React hook is now a thin adapter around that controller:
+
+```ts title="lib/useSendEgld.ts"
+// lib/useSendEgld.ts — React adapter for the tested transaction lifecycle.
+//
+// The controller sets its busy flag before the first await. That closes the
+// same-tick double-click race even before React has rendered disabled=true.
+
+import { useCallback, useRef, useState } from 'react';
+import { sendEgld, type SendEgldInput, type SendEgldOutput } from './transactions';
+import {
+  initialSendEgldState,
+  SendEgldLifecycle,
+  type SendEgldState,
+} from './sendEgldLifecycle';
+
 export interface UseSendEgld {
-  state: UseSendEgldState;
+  state: SendEgldState;
   send: (input: SendEgldInput) => Promise<SendEgldOutput | null>;
   reset: () => void;
 }
 
 export function useSendEgld(): UseSendEgld {
-  const [state, setState] = useState<UseSendEgldState>(initialState);
+  const [state, setState] = useState<SendEgldState>(initialSendEgldState);
+  const lifecycleRef = useRef<SendEgldLifecycle | null>(null);
 
-  const send = useCallback(
-    async (input: SendEgldInput): Promise<SendEgldOutput | null> => {
-      setState({ ...initialState, status: 'signing' });
-      try {
-        // The status doesn't get a chance to update between signing and
-        // sending in any visually meaningful way; we keep it simple.
-        const out = await sendEgld(input);
-        setState({
-          status: 'done',
-          sessionId: out.sessionId,
-          transactionHash: out.transactionHash,
-          error: null,
-        });
-        return out;
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        setState({
-          status: 'error',
-          sessionId: null,
-          transactionHash: null,
-          error: message,
-        });
-        return null;
-      }
-    },
-    [],
-  );
+  if (!lifecycleRef.current) {
+    lifecycleRef.current = new SendEgldLifecycle(setState);
+  }
+
+  const send = useCallback(async (
+    input: SendEgldInput,
+  ): Promise<SendEgldOutput | null> => {
+    return lifecycleRef.current?.send(input, sendEgld) ?? null;
+  }, []);
 
   const reset = useCallback((): void => {
-    setState(initialState);
+    lifecycleRef.current?.reset();
   }, []);
 
   return { state, send, reset };
@@ -678,6 +833,8 @@ export default function SendPage(): JSX.Element {
 
   const [receiver, setReceiver] = useState('');
   const [amountEgld, setAmountEgld] = useState('0.001');
+  const isSubmissionPending =
+    state.status === 'signing' || state.status === 'tracking';
 
   const handleConnect = (): void => {
     // openUnlockPanel() returns Promise<void> (see
@@ -771,12 +928,14 @@ export default function SendPage(): JSX.Element {
             </label>
             <button
               type="submit"
-              disabled={state.status === 'signing' || state.status === 'sending'}
+              disabled={isSubmissionPending}
               style={buttonStyle}
             >
-              {state.status === 'signing' || state.status === 'sending'
-                ? 'Sending…'
-                : 'Send'}
+              {state.status === 'signing'
+                ? 'Waiting for signature…'
+                : state.status === 'tracking'
+                  ? 'Tracking confirmation…'
+                  : 'Send'}
             </button>
           </form>
 
@@ -819,7 +978,12 @@ function Result({ state, reset, pending }: ResultProps): JSX.Element | null {
           Error: <code>{state.error}</code>
         </p>
       )}
-      <button type="button" onClick={reset} style={buttonStyle}>
+      <button
+        type="button"
+        onClick={reset}
+        disabled={state.status === 'signing' || state.status === 'tracking'}
+        style={buttonStyle}
+      >
         Reset
       </button>
     </section>

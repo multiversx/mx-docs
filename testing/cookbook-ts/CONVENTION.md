@@ -5,7 +5,8 @@ This is the TypeScript counterpart of the repo's Rust tutorial CI
 extracts the code from a tutorial's fenced blocks into a real crate and runs
 `cargo test`. This one materializes titled files from cookbook pages, runs a
 shared strict TypeScript check, and reconstructs every standalone recipe in one
-of five isolated npm dependency environments to run its own build. The
+of five isolated npm dependency environments to audit its freshly resolved
+dependency tree and run its own build. The
 **Project build checked** badge describes that complete project artifact;
 **Reference** pages make no standalone project claim.
 
@@ -113,12 +114,20 @@ The whole pipeline is one script, mirroring `rust-tutorial-ci.sh`:
 ./testing/cookbook-ts-ci.sh
 ```
 
-It runs extractor tests, materializes every titled file, executes the shared
-strict TypeScript check, then installs and builds all 61 project recipes in a
-one of five isolated dependency environments. Recipes only share an environment
-when their exact dependency and dev-dependency sets match. The GitHub workflow
-runs the same script on Node 20.19.0
-on push / PR.
+It runs extractor tests, materializes every titled file, executes the
+sign-and-send lifecycle runtime test and shared strict TypeScript check, then
+installs and builds all 61 project recipes in one of five isolated npm
+dependency environments. Recipes only share an environment when their exact
+dependencies, dev dependencies, and overrides match. Each environment gets an
+ephemeral lockfile and passes the same high/critical advisory gate before its
+projects build. The GitHub workflow runs the same script on Node 20.19.0 on
+push / PR.
+
+The isolated installs use `--ignore-scripts` because pull-request dependencies
+are untrusted CI input. This deliberately avoids package lifecycle hooks, so the
+matrix does not reproduce every side effect of a reader's ordinary `npm
+install`; it verifies and audits the resolved tree, strict types, and production
+builds without executing dependency install scripts.
 
 To iterate on a single recipe faster, once dependencies are installed:
 
@@ -135,7 +144,9 @@ testing/
   cookbook-ts/                   # the extractor (mirror of extract-tutorial-code/)
     parser.ts                    # fence parser (mirror of parser.rs)
     extract.ts                   # assembler   (mirror of extract_code.rs)
+    sign-and-send-lifecycle.runtime.ts # pending/success/fail + rapid-submit test
     package.json                 # tsx + typescript
+    audit-project.mjs            # high/critical gate for any supplied lockfile
     verify-projects.mjs          # clean install + individual project builds
     project/                     # the compiled unit (mirror of the crowdfunding crate)
       package.json               # pinned SDK deps: sdk-core, sdk-dapp, react, ...

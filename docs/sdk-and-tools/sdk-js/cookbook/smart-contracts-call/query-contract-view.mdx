@@ -211,7 +211,7 @@ async function main(): Promise<void> {
   const addressToCheck =
     process.argv[2] ?? 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
 
   const adderAbi = loadAbi('adder.abi.json');
   console.log(`Querying getSum() on adder (${ADDER_CONTRACT_ADDRESS})...`);

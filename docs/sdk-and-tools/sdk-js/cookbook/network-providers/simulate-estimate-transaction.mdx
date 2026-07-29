@@ -162,7 +162,7 @@ import { DevnetEntrypoint, Account, Mnemonic, Transaction } from '@multiversx/sd
 import { estimateGas, simulate } from './simulateEstimate';
 
 async function main(): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const provider = entrypoint.createNetworkProvider();
 
   // A throwaway account: generated in-process, never funded, never broadcast.

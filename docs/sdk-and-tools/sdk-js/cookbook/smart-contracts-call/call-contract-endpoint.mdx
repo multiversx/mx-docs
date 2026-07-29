@@ -262,7 +262,7 @@ async function main(): Promise<void> {
   });
   const abi = Abi.create(JSON.parse(abiJson) as Record<string, unknown>);
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const sender = await loadDevnetAccount(entrypoint, pemPath);
 
   console.log(`Sender:   ${sender.address.toBech32()} (nonce ${sender.nonce})`);

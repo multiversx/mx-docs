@@ -232,7 +232,7 @@ function loadBytecode(filePath: string): Uint8Array {
 const MINIMAL_WASM_MODULE = Uint8Array.from([0x00, 0x61, 0x73, 0x6d, 0x01, 0, 0, 0]);
 
 async function runParse(txHash: string): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   console.log(`Parsing completed deploy ${txHash} ...`);
   const parsed = await parseDeployFromHash(entrypoint, txHash);
   console.log(`  returnCode:     ${parsed.returnCode}`);
@@ -247,7 +247,7 @@ async function runDeploy(
   initialValue: number,
   useFactory: boolean,
 ): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const abi = loadAbi('adder.abi.json');
   const bytecode = loadBytecode(wasmPath);
 
@@ -292,7 +292,7 @@ async function main(): Promise<void> {
 
   if (mode === 'payload') {
     // Offline helper: build (do not send) a deploy and print its wire parts.
-    const entrypoint = new DevnetEntrypoint();
+    const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
     const abi = loadAbi('adder.abi.json');
     const bytecode = MINIMAL_WASM_MODULE;
     const factory = entrypoint.createSmartContractTransactionsFactory(abi);

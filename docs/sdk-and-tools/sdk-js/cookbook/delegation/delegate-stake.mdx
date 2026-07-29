@@ -133,14 +133,14 @@ const EXAMPLE_DELEGATE_TX = 'e706916a8349331e1d5b03d6741d3f967df09fb336cc5b80b50
 const STAKE_AMOUNT_WEI = 1n * 10n ** 18n;
 
 async function runParse(txHash: string): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   console.log(`Parsing completed delegate ${txHash} ...`);
   const amount = await parseDelegatedAmount(entrypoint, txHash);
   console.log(`  staked amount: ${amount} wei (${amount / 10n ** 18n} EGLD)`);
 }
 
 async function runPayload(): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const factory = entrypoint.createDelegationTransactionsFactory();
   const throwaway = await entrypoint.createAccount();
   const tx = await factory.createTransactionForDelegating(throwaway.address, {
@@ -155,7 +155,7 @@ async function runPayload(): Promise<void> {
 }
 
 async function runSend(pemPath: string, useFactory: boolean): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const sender = await Account.newFromPem(pemPath);
   sender.nonce = await entrypoint.recallAccountNonce(sender.address);
   console.log(`Delegator: ${sender.address.toBech32()} (nonce ${sender.nonce})`);

@@ -181,7 +181,7 @@ async function main(): Promise<void> {
   });
   const abi = Abi.create(JSON.parse(abiJson) as Record<string, unknown>);
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
 
   console.log(`Contract: ${PING_PONG_CONTRACT_ADDRESS} (ping-pong, live devnet)`);
   const pingAmount = await queryPingAmount(entrypoint, abi);

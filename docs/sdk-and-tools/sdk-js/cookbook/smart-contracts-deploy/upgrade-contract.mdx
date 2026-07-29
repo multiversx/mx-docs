@@ -223,7 +223,7 @@ function loadBytecode(filePath: string): Uint8Array {
 const MINIMAL_WASM_MODULE = Uint8Array.from([0x00, 0x61, 0x73, 0x6d, 0x01, 0, 0, 0]);
 
 async function runPayloadDemo(contractBech32: string): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const abi = loadAbi('adder.abi.json');
   const bytecode = MINIMAL_WASM_MODULE;
   const factory = entrypoint.createSmartContractTransactionsFactory(abi);
@@ -249,7 +249,7 @@ async function runUpgrade(
   initialValue: number,
   useFactory: boolean,
 ): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const abi = loadAbi('adder.abi.json');
   const bytecode = loadBytecode(wasmPath);
 

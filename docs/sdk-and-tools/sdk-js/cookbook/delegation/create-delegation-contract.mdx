@@ -143,14 +143,14 @@ const EXAMPLE_INPUT: CreateDelegationInput = {
 };
 
 async function runParse(txHash: string): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   console.log(`Parsing completed create ${txHash} ...`);
   const contractAddress = await parseNewContractAddress(entrypoint, txHash);
   console.log(`  new delegation contract: ${contractAddress}`);
 }
 
 async function runPayload(): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const factory = entrypoint.createDelegationTransactionsFactory();
   const throwaway = await entrypoint.createAccount();
   const tx = await factory.createTransactionForNewDelegationContract(throwaway.address, EXAMPLE_INPUT);
@@ -165,7 +165,7 @@ async function runPayload(): Promise<void> {
 }
 
 async function runSend(pemPath: string, useFactory: boolean): Promise<void> {
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const sender = await Account.newFromPem(pemPath);
   sender.nonce = await entrypoint.recallAccountNonce(sender.address);
   console.log(`Creator: ${sender.address.toBech32()} (nonce ${sender.nonce})`);

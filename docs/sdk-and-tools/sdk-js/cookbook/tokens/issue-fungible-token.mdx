@@ -124,7 +124,7 @@ async function main(): Promise<void> {
     throw new Error('initialSupply and numDecimals must be non-negative integers.');
   }
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
   const sender = await loadDevnetAccount(entrypoint, pemPath);
   const initialSupply = BigInt(supplyArg);
   const numDecimals = BigInt(decimalsArg);

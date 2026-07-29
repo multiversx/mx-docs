@@ -12,6 +12,10 @@ const REQUIRED_NODE_RANGE = '>=20.19.0';
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const extractedRoot = path.join(scriptDirectory, 'project', 'src', 'recipes');
 const cookbookRoot = path.resolve(scriptDirectory, '../../docs/sdk-and-tools/sdk-js/cookbook');
+const requiredSecurityOverrides = {
+  postcss: '^8.5.18',
+  'brace-expansion': '^5.0.8',
+};
 
 function fail(message) {
   throw new Error(message);
@@ -30,6 +34,7 @@ function dependencySignature(manifest) {
   return JSON.stringify({
     dependencies: sorted(manifest.dependencies),
     devDependencies: sorted(manifest.devDependencies),
+    overrides: sorted(manifest.overrides),
   });
 }
 
@@ -142,6 +147,24 @@ for (const slug of fs.readdirSync(extractedRoot).sort()) {
       'react-dom',
     ]);
   }
+
+  const needsSecurityOverrides =
+    manifest.dependencies?.['@multiversx/sdk-dapp'] ||
+    manifest.dependencies?.next ||
+    manifest.devDependencies?.vite;
+  const overrides = manifest.overrides ?? {};
+  if (
+    needsSecurityOverrides &&
+    (
+      overrides.postcss !== requiredSecurityOverrides.postcss ||
+      overrides['brace-expansion'] !== requiredSecurityOverrides['brace-expansion'] ||
+      Object.keys(overrides).length !== Object.keys(requiredSecurityOverrides).length
+    )
+  ) {
+    fail(
+      `${slug}: overrides must pin patched postcss and brace-expansion transitives`,
+    );
+  }
   recipes.push({ slug, sourceDirectory, manifest });
 }
 
@@ -198,6 +221,7 @@ try {
         engines: { node: REQUIRED_NODE_RANGE },
         dependencies: group[0].manifest.dependencies ?? {},
         devDependencies: group[0].manifest.devDependencies ?? {},
+        overrides: group[0].manifest.overrides ?? {},
       }, null, 2)}\n`,
     );
 
@@ -205,15 +229,22 @@ try {
       `\n=== Environment ${environmentIndex}/${environments.size}: ` +
         `${group.length} project${group.length === 1 ? '' : 's'} ===`,
     );
-    // This matrix is a build verifier, so installs skip npm's non-gating audit
-    // output. The workflow gates the canonical lockfile via audit-project.mjs.
+    // Lifecycle scripts stay disabled because this runs untrusted pull-request
+    // dependencies in CI. That safety choice means the matrix does not fully
+    // reproduce a reader's ordinary `npm install`; builds and the explicit
+    // audit below cover the resulting dependency tree without running package
+    // install hooks.
     run('npm', [
       'install',
       '--ignore-scripts',
       '--no-audit',
       '--no-fund',
-      '--package-lock=false',
     ], { cwd: environmentRoot });
+    run(process.execPath, [
+      path.join(scriptDirectory, 'audit-project.mjs'),
+      '--directory',
+      environmentRoot,
+    ], { cwd: scriptDirectory });
 
     for (const { slug, manifest } of group) {
       const projectRoot = path.join(projectsRoot, slug);

@@ -243,7 +243,7 @@ async function main(): Promise<void> {
   console.log(`Relayer:  ${relayer.address.toBech32()} (shard ${shard})`);
   console.log(`Receiver: ${RECEIVER}`);
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
 
   // Fetch the sender's real nonce — the one genuine network call before
   // signing. The relayer does not need its own nonce fetched: only the

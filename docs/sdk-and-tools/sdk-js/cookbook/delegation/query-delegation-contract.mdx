@@ -134,7 +134,7 @@ async function main(): Promise<void> {
   const contract = process.argv[2] ?? EXAMPLE_DELEGATION_CONTRACT;
   const delegator = process.argv[3] ?? EXAMPLE_DELEGATOR;
 
-  const entrypoint = new DevnetEntrypoint();
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
 
   console.log(`Delegation contract: ${contract}`);
   const config = await queryContractConfig(entrypoint, contract);
