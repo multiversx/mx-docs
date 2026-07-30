@@ -107,3 +107,65 @@ test("rejects a second rapid submission until the first session is terminal", as
   await callbacks?.onSuccess(output.sessionId);
   assert.equal(lifecycle.getState().status, "done");
 });
+
+test("logout while tracking releases the guard and a later send is accepted", async () => {
+  const states: SendEgldState[] = [];
+  const lifecycle = new SendEgldLifecycle((next) => states.push(next));
+  const sent = deferred<SendEgldOutput>();
+  let callbacks: SendEgldCallbacks | undefined;
+  let operationCalls = 0;
+
+  const operation = async (
+    _input: SendEgldInput,
+    registered: SendEgldCallbacks,
+  ): Promise<SendEgldOutput> => {
+    operationCalls += 1;
+    callbacks = registered;
+    return sent.promise;
+  };
+
+  const first = lifecycle.send(input, operation);
+  sent.resolve(output);
+  assert.deepEqual(await first, output);
+  assert.equal(lifecycle.getState().status, "tracking");
+  assert.equal(lifecycle.isBusy, true);
+
+  // Logging out drops the tracked session inside sdk-dapp: the terminal
+  // callbacks registered for it can never fire again. Without abandon() the
+  // guard would stay held and the page would be permanently locked.
+  lifecycle.abandon("Disconnected.");
+
+  assert.equal(lifecycle.isBusy, false);
+  assert.equal(lifecycle.getState().status, "error");
+  assert.equal(lifecycle.getState().error, "Disconnected.");
+  assert.equal(lifecycle.getState().sessionId, null);
+
+  // The stale session's callback must not resurrect the abandoned submission.
+  await callbacks?.onSuccess(output.sessionId);
+  assert.equal(lifecycle.getState().status, "error");
+
+  // After reconnecting, the page works again.
+  const afterLogin = deferred<SendEgldOutput>();
+  const secondOutput: SendEgldOutput = {
+    sessionId: "session-2",
+    transactionHash: "hash-2",
+  };
+  const secondOperation = async (
+    _input: SendEgldInput,
+    registered: SendEgldCallbacks,
+  ): Promise<SendEgldOutput> => {
+    operationCalls += 1;
+    callbacks = registered;
+    return afterLogin.promise;
+  };
+
+  const second = lifecycle.send(input, secondOperation);
+  afterLogin.resolve(secondOutput);
+  assert.deepEqual(await second, secondOutput);
+  assert.equal(operationCalls, 2);
+  assert.equal(lifecycle.getState().status, "tracking");
+
+  await callbacks?.onSuccess(secondOutput.sessionId);
+  assert.equal(lifecycle.getState().status, "done");
+  assert.ok(states.length > 0);
+});

@@ -404,8 +404,10 @@ export interface SendEgldInput {
 }
 
 /**
- * Output of a successful sign + send + track call. The sessionId is the key
- * the React hooks (useGetPendingTransactions, etc.) use to render UI state.
+ * Output of a successful sign + send + track call. The sessionId keys the
+ * ...TransactionsSessions() maps and identifies the per-session success and
+ * failure callbacks. The flat hooks (useGetPendingTransactions and friends)
+ * take no session id and return global arrays.
  */
 export interface SendEgldOutput {
   sessionId: string;
@@ -700,6 +702,34 @@ export class SendEgldLifecycle {
     }
   }
 
+  /** True while a submission holds the nonce guard. */
+  public get isBusy(): boolean {
+    return this.busy;
+  }
+
+  /**
+   * Release the guard when the tracked session can no longer reach a terminal
+   * state, which is what happens on logout: sdk-dapp resets its store, drops
+   * the session, and the success and failure callbacks registered for it can
+   * never fire again.
+   *
+   * The broadcast transaction may still be pending on the network, so the
+   * caller MUST refresh the account nonce from the network before submitting
+   * anything else. Releasing the guard without that refresh is exactly how the
+   * stale-nonce bug returns.
+   */
+  public abandon(reason: string): void {
+    this.busy = false;
+    this.output = null;
+    this.earlyTerminal = null;
+    this.transition({
+      status: 'error',
+      sessionId: null,
+      transactionHash: null,
+      error: reason,
+    });
+  }
+
   private finish(terminal: TerminalState): void {
     if (!this.busy) {
       return;
@@ -762,6 +792,8 @@ export interface UseSendEgld {
   state: SendEgldState;
   send: (input: SendEgldInput) => Promise<SendEgldOutput | null>;
   reset: () => void;
+  /** Release the nonce guard when the tracked session is gone (logout). */
+  abandon: (reason: string) => void;
 }
 
 export function useSendEgld(): UseSendEgld {
@@ -782,7 +814,11 @@ export function useSendEgld(): UseSendEgld {
     lifecycleRef.current?.reset();
   }, []);
 
-  return { state, send, reset };
+  const abandon = useCallback((reason: string): void => {
+    lifecycleRef.current?.abandon(reason);
+  }, []);
+
+  return { state, send, reset, abandon };
 }
 ```
 
@@ -820,7 +856,7 @@ export default function SendPage(): JSX.Element {
   const isLoggedIn = useGetIsLoggedIn();
   const account = useGetAccount();
   const { network } = useGetNetworkConfig();
-  const { state, send, reset } = useSendEgld();
+  const { state, send, reset, abandon } = useSendEgld();
 
   // useGetPendingTransactions() returns SignedTransactionType[] — a flat
   // array of currently-pending transactions, NOT a sessionId-keyed map (see
@@ -845,8 +881,19 @@ export default function SendPage(): JSX.Element {
   };
 
   const handleLogout = async (): Promise<void> => {
+    // Logging out mid-submission drops the tracked session inside sdk-dapp, so
+    // the terminal callbacks can never fire and the nonce guard would stay
+    // held forever. Refuse while a submission is active; the button is
+    // disabled too, but a programmatic caller must not get past this either.
+    if (isSubmissionPending) {
+      return;
+    }
     const provider = getAccountProvider();
     await provider.logout();
+    // Nothing is in flight here, so releasing the guard is safe. If you add a
+    // force-disconnect path later, call abandon() and then refresh the account
+    // nonce from the network before allowing another send.
+    abandon('Disconnected.');
   };
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -893,6 +940,12 @@ export default function SendPage(): JSX.Element {
             onClick={() => {
               void handleLogout();
             }}
+            disabled={isSubmissionPending}
+            title={
+              isSubmissionPending
+                ? 'Wait for the current transaction to settle before disconnecting.'
+                : undefined
+            }
             style={{ ...buttonStyle, marginBottom: '1.5rem' }}
           >
             Disconnect
