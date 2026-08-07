@@ -1,0 +1,19 @@
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.trailing {
+  margin-left: auto;
+}
+
+@media (max-width: 600px) {
+  .trailing {
+    margin-left: 0;
+  }
+}

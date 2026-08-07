@@ -1,0 +1,866 @@
+---
+title: Sign and perform a multisig action
+description: Sign a proposed multisig action to quorum and perform it with sdk-core's MultisigController and factory, reading its live signer state first.
+difficulty: advanced
+est_minutes: 9
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - multisig
+  - smart-contract
+  - transaction
+  - devnet
+---
+
+Once an action is proposed (see
+[Propose a multisig action](/sdk-and-tools/sdk-js/cookbook/multisig/propose-action)),
+it sits pending until board members **sign** it up to the contract's **quorum**,
+and then anyone can **perform** it, the moment it actually executes and funds move
+or the board changes. Both `sign` and `performAction` take only the action id.
+You get each via the controller and factory, plus the read helpers you
+use to decide whether an action is ready.
+
+The default `npm start` reads the live signer-versus-quorum state of a real devnet
+multisig's first pending action, so you see the readiness check work without a
+funded wallet.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- For the default read and `payload` demos: devnet network access only.
+- For an actual sign or perform: a devnet PEM whose address is a board member on
+  the target multisig, with a little EGLD for gas.
+
+## Install
+
+```bash
+mkdir multisig-sign-perform-action
+cd multisig-sign-perform-action
+# Create the project files shown on this page.
+npm install
+npm run build
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-multisig-sign-perform-action",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — sign (approve) and perform (execute) a multisig action with MultisigController and factory, and read an action's signer state.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the multisig-sign-perform-action recipe.
+//
+// Three modes:
+//   npm start                    -> read the live readiness of the first
+//                                   pending action on a real devnet multisig
+//                                   (signers vs quorum) - no wallet, no funds
+//   npm start -- payload         -> build (do not send) a sign and a perform,
+//                                   print their wire payloads offline
+//   npm start -- sign <pem>      -> actually sign action id 4 (needs a funded
+//                                   board-member PEM). Add --perform to perform
+//                                   instead, --factory for the factory path.
+//
+// With an unfunded wallet, `sign` fails cleanly with "insufficient funds",
+// proving the payload and signature are well-formed - the verification level
+// this recipe was authored at.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  signViaController,
+  signViaFactory,
+  performViaController,
+  performViaFactory,
+  describeSignPerformPayload,
+  readActionReadiness,
+} from './signPerform';
+
+// A real multisig contract on devnet (quorum 2, a 2-member board).
+const EXAMPLE_MULTISIG = 'erd1qqqqqqqqqqqqqpgqvjcswsav2rw4ccvguyuk0f0u6qycpsuvu3dq9rse9w';
+
+// A pending action on that multisig used by the `sign`/`payload` demos.
+const EXAMPLE_ACTION_ID = 4;
+
+function loadAbi(fileName: string): Abi {
+  const raw = fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+  return Abi.create(JSON.parse(raw) as Record<string, unknown>);
+}
+
+// A longer request timeout + a clientName (the SDK default is a tight 5s and
+// recommends naming your client).
+function makeEntrypoint(): DevnetEntrypoint {
+  return new DevnetEntrypoint({
+    clientName: 'cookbook-multisig-sign-perform',
+    networkProviderConfig: { timeout: 15_000 },
+  });
+}
+
+async function runRead(): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const abi = loadAbi('multisig.abi.json');
+  const controller = entrypoint.createMultisigController(abi);
+
+  console.log(`Reading pending actions of ${EXAMPLE_MULTISIG} ...`);
+  const pending = await controller.getPendingActionFullInfo({ multisigAddress: EXAMPLE_MULTISIG });
+  if (pending.length === 0) {
+    console.log('  no pending actions right now (all performed or discarded).');
+    return;
+  }
+  const first = pending[0]!;
+  console.log(`  first pending action: id ${first.actionId} (${first.actionData.type})`);
+  const readiness = await readActionReadiness(entrypoint, abi, EXAMPLE_MULTISIG, first.actionId);
+  console.log(`  valid signers / quorum: ${readiness.validSigners} / ${readiness.quorum}`);
+  console.log(`  quorum reached (ready to perform): ${readiness.quorumReached}`);
+  console.log(`  signers so far: ${readiness.signers.join(', ') || '(none)'}`);
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const abi = loadAbi('multisig.abi.json');
+  const throwaway = await entrypoint.createAccount();
+
+  const sign = await signViaFactory(entrypoint, abi, throwaway, EXAMPLE_MULTISIG, EXAMPLE_ACTION_ID);
+  const s = describeSignPerformPayload(sign);
+  console.log(`sign:          ${s.function}@${s.actionIdHex}  (actionId ${EXAMPLE_ACTION_ID} = 0x${s.actionIdHex})  gasLimit ${s.gasLimit}`);
+
+  const perform = await performViaFactory(entrypoint, abi, throwaway, EXAMPLE_MULTISIG, EXAMPLE_ACTION_ID);
+  const p = describeSignPerformPayload(perform);
+  console.log(`performAction: ${p.function}@${p.actionIdHex}  (actionId ${EXAMPLE_ACTION_ID} = 0x${p.actionIdHex})  gasLimit ${p.gasLimit}`);
+  console.log(`receiver:      ${p.receiver}  (the multisig contract, for both)`);
+}
+
+async function runSignOrPerform(pemPath: string, doPerform: boolean, useFactory: boolean): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const abi = loadAbi('multisig.abi.json');
+  const board = await Account.newFromPem(pemPath);
+  board.nonce = await entrypoint.recallAccountNonce(board.address);
+  console.log(`Board member: ${board.address.toBech32()} (nonce ${board.nonce})`);
+  console.log(`Operation:    ${doPerform ? 'performAction' : 'sign'} on action ${EXAMPLE_ACTION_ID}`);
+  console.log(`Path:         ${useFactory ? 'factory' : 'controller'}`);
+
+  let tx;
+  if (doPerform) {
+    const perform = useFactory ? performViaFactory : performViaController;
+    tx = await perform(entrypoint, abi, board, EXAMPLE_MULTISIG, EXAMPLE_ACTION_ID);
+  } else {
+    const sign = useFactory ? signViaFactory : signViaController;
+    tx = await sign(entrypoint, abi, board, EXAMPLE_MULTISIG, EXAMPLE_ACTION_ID);
+  }
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash: ${txHash}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'sign' || mode === 'perform') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- sign <pemPath> [--perform] [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      const doPerform = mode === 'perform' || rest.includes('--perform');
+      await runSignOrPerform(pemPath, doPerform, rest.includes('--factory'));
+    } catch (err) {
+      console.error(`Rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  await runRead();
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+```json title="src/multisig.abi.json"
+{
+  "name": "Multisig",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "quorum",
+        "type": "u32"
+      },
+      {
+        "name": "board",
+        "type": "variadic<Address>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "docs": [
+        "Minimum number of signatures needed to perform any action."
+      ],
+      "name": "getQuorum",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Used by board members to sign actions."
+      ],
+      "name": "sign",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "docs": [
+        "Returns `true` (`1`) if `getActionValidSignerCount >= getQuorum`."
+      ],
+      "name": "quorumReached",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Proposers and board members use this to launch signed actions."
+      ],
+      "name": "performAction",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "optional<Address>",
+          "multi_result": true
+        }
+      ]
+    },
+    {
+      "docs": [
+        "Iterates through all actions and retrieves those that are still pending.",
+        "Serialized full action data:",
+        "- the action id",
+        "- the serialized action data",
+        "- (number of signers followed by) list of signer addresses."
+      ],
+      "name": "getPendingActionFullInfo",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "opt_range",
+          "type": "optional<tuple<u32,u32>>",
+          "multi_arg": true
+        }
+      ],
+      "outputs": [
+        {
+          "type": "variadic<ActionFullInfo>",
+          "multi_result": true
+        }
+      ],
+      "labels": [
+        "multisig-external-view"
+      ],
+      "allow_multiple_var_args": true
+    },
+    {
+      "docs": [
+        "Gets addresses of all users who signed an action.",
+        "Does not check if those users are still board members or not,",
+        "so the result may contain invalid signers."
+      ],
+      "name": "getActionSigners",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "List<Address>"
+        }
+      ],
+      "labels": [
+        "multisig-external-view"
+      ]
+    },
+    {
+      "docs": [
+        "It is possible for board members to lose their role.",
+        "They are not automatically removed from all actions when doing so,",
+        "therefore the contract needs to re-check every time when actions are performed.",
+        "This function is used to validate the signers before performing an action.",
+        "It also makes it easy to check before performing an action."
+      ],
+      "name": "getActionValidSignerCount",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u32"
+        }
+      ],
+      "labels": [
+        "multisig-external-view"
+      ]
+    }
+  ],
+  "events": [],
+  "hasCallback": false,
+  "types": {
+    "Action": {
+      "type": "enum",
+      "variants": [
+        {
+          "name": "Nothing",
+          "discriminant": 0
+        },
+        {
+          "name": "AddBoardMember",
+          "discriminant": 1,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "AddProposer",
+          "discriminant": 2,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "RemoveUser",
+          "discriminant": 3,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "ChangeQuorum",
+          "discriminant": 4,
+          "fields": [
+            {
+              "name": "0",
+              "type": "u32"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEgld",
+          "discriminant": 5,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEsdt",
+          "discriminant": 6,
+          "fields": [
+            {
+              "name": "0",
+              "type": "EsdtTransferExecuteData"
+            }
+          ]
+        },
+        {
+          "name": "SendAsyncCall",
+          "discriminant": 7,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SCDeployFromSource",
+          "discriminant": 8,
+          "fields": [
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        },
+        {
+          "name": "SCUpgradeFromSource",
+          "discriminant": 9,
+          "fields": [
+            {
+              "name": "sc_address",
+              "type": "Address"
+            },
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        }
+      ]
+    },
+    "ActionFullInfo": {
+      "type": "struct",
+      "docs": [
+        "Not used internally, just to retrieve results via endpoint."
+      ],
+      "fields": [
+        {
+          "name": "action_id",
+          "type": "u32"
+        },
+        {
+          "name": "group_id",
+          "type": "u32"
+        },
+        {
+          "name": "action_data",
+          "type": "Action"
+        },
+        {
+          "name": "signers",
+          "type": "List<Address>"
+        }
+      ]
+    },
+    "CallActionData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "egld_amount",
+          "type": "BigUint"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    },
+    "EsdtTokenPayment": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "token_identifier",
+          "type": "TokenIdentifier"
+        },
+        {
+          "name": "token_nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "BigUint"
+        }
+      ]
+    },
+    "EsdtTransferExecuteData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "tokens",
+          "type": "List<EsdtTokenPayment>"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    }
+  }
+}
+```
+
+</details>
+
+## Signing and performing
+
+```ts title="src/signPerform.ts"
+// src/signPerform.ts - the subject of this recipe: the second half of the
+// multisig lifecycle. Once an action has been proposed (see the propose
+// recipe), board members must SIGN it until it reaches quorum, and then anyone
+// can PERFORM it - which is the moment it actually executes.
+//
+//   propose  -> action id N created, 1 signer (the proposer, if a board member)
+//   sign     -> each board member adds their signature to id N
+//   perform  -> once signers >= quorum, execute id N (the funds move / the
+//               board changes / the call fires)
+//
+// Both `sign` and `performAction` take just the action id. This file shows
+// each via the controller and the factory, plus the read helpers you use to
+// decide whether an action is ready to perform.
+
+import { Account, Address } from '@multiversx/sdk-core';
+import type { Abi, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+// Signing is cheap; performing must also fund the wrapped call, so give it
+// more. Gas is REQUIRED for both (see Pitfalls) - never rely on a default.
+const SIGN_GAS_LIMIT = 8_000_000n;
+const PERFORM_GAS_LIMIT = 12_000_000n;
+
+/** Sign (approve) an action, path 1 - the controller. */
+export async function signViaController(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  signer: Account,
+  multisigContract: string,
+  actionId: number,
+): Promise<Transaction> {
+  const controller = entrypoint.createMultisigController(abi);
+  return controller.createTransactionForSignAction(signer, signer.getNonceThenIncrement(), {
+    multisigContract: Address.newFromBech32(multisigContract),
+    actionId,
+    gasLimit: SIGN_GAS_LIMIT,
+  });
+}
+
+/** Sign (approve) an action, path 2 - the factory (you set nonce + signature). */
+export async function signViaFactory(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  signer: Account,
+  multisigContract: string,
+  actionId: number,
+): Promise<Transaction> {
+  const factory = entrypoint.createMultisigTransactionsFactory(abi);
+  const transaction = await factory.createTransactionForSignAction(signer.address, {
+    multisigContract: Address.newFromBech32(multisigContract),
+    actionId,
+    gasLimit: SIGN_GAS_LIMIT,
+  });
+  transaction.nonce = signer.getNonceThenIncrement();
+  transaction.signature = await signer.signTransaction(transaction);
+  return transaction;
+}
+
+/** Perform (execute) an action that has reached quorum, path 1 - the controller. */
+export async function performViaController(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  performer: Account,
+  multisigContract: string,
+  actionId: number,
+): Promise<Transaction> {
+  const controller = entrypoint.createMultisigController(abi);
+  return controller.createTransactionForPerformAction(performer, performer.getNonceThenIncrement(), {
+    multisigContract: Address.newFromBech32(multisigContract),
+    actionId,
+    gasLimit: PERFORM_GAS_LIMIT,
+  });
+}
+
+/** Perform (execute) an action that has reached quorum, path 2 - the factory. */
+export async function performViaFactory(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  performer: Account,
+  multisigContract: string,
+  actionId: number,
+): Promise<Transaction> {
+  const factory = entrypoint.createMultisigTransactionsFactory(abi);
+  const transaction = await factory.createTransactionForPerformAction(performer.address, {
+    multisigContract: Address.newFromBech32(multisigContract),
+    actionId,
+    gasLimit: PERFORM_GAS_LIMIT,
+  });
+  transaction.nonce = performer.getNonceThenIncrement();
+  transaction.signature = await performer.signTransaction(transaction);
+  return transaction;
+}
+
+export interface SignPerformPayload {
+  function: string;
+  actionIdHex: string;
+  receiver: string;
+  gasLimit: bigint;
+}
+
+/** Decode a sign/perform transaction: the function name plus the action id. */
+export function describeSignPerformPayload(transaction: Transaction): SignPerformPayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    actionIdHex: parts[1] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    gasLimit: transaction.gasLimit,
+  };
+}
+
+export interface ActionReadiness {
+  quorum: number;
+  validSigners: number;
+  signers: string[];
+  quorumReached: boolean;
+}
+
+/**
+ * Read whether an action is ready to perform: how many valid board-member
+ * signatures it has versus the quorum. This is exactly what you check before
+ * spending gas on a perform that would revert.
+ */
+export async function readActionReadiness(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  multisigAddress: string,
+  actionId: number,
+): Promise<ActionReadiness> {
+  const controller = entrypoint.createMultisigController(abi);
+  const [quorum, validSigners, signers, quorumReached] = await Promise.all([
+    controller.getQuorum({ multisigAddress }),
+    controller.getActionValidSignerCount({ multisigAddress, actionId }),
+    controller.getActionSigners({ multisigAddress, actionId }),
+    controller.quorumReached({ multisigAddress, actionId }),
+  ]);
+  // SDK trap: getActionSigners is declared `Promise<string[]>` but actually
+  // returns `Address[]` at runtime (v15.4.1). Handle both so this stays correct
+  // whichever way the SDK settles it. See Pitfalls on the recipe page.
+  const signerAddresses = signers as Array<string | Address>;
+  return {
+    quorum,
+    validSigners,
+    signers: signerAddresses.map((address) => (typeof address === 'string' ? address : address.toBech32())),
+    quorumReached,
+  };
+}
+```
+
+## Run it
+
+```bash
+# Read the first pending action's signers vs quorum - no wallet, no funds:
+npm start
+
+# Inspect the sign and perform wire payloads offline:
+npm start -- payload
+
+# Actually sign action 4 (needs a board-member devnet PEM); --perform to perform,
+# --factory for the factory path:
+npm start -- sign ./wallet.pem
+```
+
+Output of the default read mode, and of `payload`:
+
+```text
+Reading pending actions of erd1qqqqqqqqqqqqqpgqvjcswsav2rw4ccvguyuk0f0u6qycpsuvu3dq9rse9w ...
+  first pending action: id 4 (SendTransferExecuteEgld)
+  valid signers / quorum: 1 / 2
+  quorum reached (ready to perform): false
+  signers so far: erd1d4q9a3qx5695gwd02rap2qqad3hv7lga7s06y5e6m3shuy6pu3dqagj7qe
+
+sign:          sign@04  (actionId 4 = 0x04)  gasLimit 8000000
+performAction: performAction@04  (actionId 4 = 0x04)  gasLimit 12000000
+receiver:      erd1qqqqqqqqqqqqqpgqvjcswsav2rw4ccvguyuk0f0u6qycpsuvu3dq9rse9w  (the multisig contract, for both)
+```
+
+## How it works
+
+**Controller vs factory.**
+`controller.createTransactionForSignAction(account, nonce, { multisigContract, actionId, gasLimit })`
+builds, sets the nonce, and signs; the factory form only builds and you sign.
+`performAction` is identical in shape. Both need the multisig ABI at construction.
+
+**Check readiness before performing.** `getActionValidSignerCount` and
+`quorumReached` tell you whether an action can be performed. Performing below quorum
+reverts and wastes gas, so the recipe reads `validSigners / quorum` first. Note the
+proposer's own signature usually counts as the first one when they are a board
+member.
+
+**Perform is the moment of execution.** Signing only records approval;
+`performAction` is what fires the wrapped call, moves the EGLD, or applies the board
+change. Give perform enough gas to also run whatever it wraps (this recipe uses
+12M).
+
+## Pitfalls
+
+:::warning[Pitfall 1: getActionSigners is typed as a string array but returns Address objects]
+`MultisigController.getActionSigners` is declared `Promise<string[]>`, but at
+runtime (sdk-core v15.4.1) it returns an array of `Address` objects, not bech32
+strings. TypeScript will let you write `.length` and index it, then `String(x)`
+yields `[object Object]`. The recipe handles both forms defensively.
+`getPendingActionFullInfo(...).signers`, by contrast, is correctly typed
+`Address[]`.
+:::
+
+:::warning[Pitfall 2: gas is required; the controller does NOT protect you]
+As with proposing, both `sign` and `performAction` need an explicit `gasLimit`. The
+factory throws without one; the **controller silently coerces a missing gasLimit to
+`0n`** and builds a `gasLimit: 0` transaction the network rejects. Confirmed against
+sdk-core v15.4.1. Always pass `gasLimit`.
+:::
+
+:::note[Pitfall 3: performing below quorum reverts]
+`performAction` succeeds only when valid signers >= quorum. Calling it early reverts
+on-chain (the SDK builds it happily). Read `quorumReached` first. For the final
+signer, `createTransactionForSignAndPerform` signs and performs in one transaction,
+saving a round trip.
+:::
+
+:::note[Pitfall 4: only current board members' signatures count]
+`getActionValidSignerCount` counts only signers who are still board members; a
+signer removed from the board no longer counts toward quorum. That is why it can be
+lower than the raw `getActionSigners` length.
+:::
+
+## See also
+
+- [Propose a multisig action](/sdk-and-tools/sdk-js/cookbook/multisig/propose-action)
+  creates the action id this recipe signs and performs.
+- [Read a multisig's state](/sdk-and-tools/sdk-js/cookbook/multisig/read-multisig-state)
+  is the full read surface behind the readiness check here.
+- [Delegate (stake) EGLD](/sdk-and-tools/sdk-js/cookbook/delegation/delegate-stake)
+  is another sdk-core controller/factory write, for comparison.

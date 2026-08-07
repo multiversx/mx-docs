@@ -1,0 +1,611 @@
+---
+title: Add a wallet login button
+description: Configure UnlockPanelManager once at startup, then add a reusable connect and disconnect button that works with every registered wallet provider.
+difficulty: beginner
+est_minutes: 6
+artifact: project
+sdk_versions:
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - wallet
+  - vite
+  - react
+  - typescript
+  - devnet
+---
+
+Every dApp needs a "Connect wallet" button. In sdk-dapp v5 that button does not
+render a picker itself. It calls `UnlockPanelManager.getInstance().openUnlockPanel()`,
+and a pre-built web component, configured once at app startup, does the rest.
+Here is the full pattern: configure the panel, build one reusable
+button component, and see what each `UnlockPanelManager.init()` option does.
+
+This recipe assumes you already have a working sdk-dapp v5 + Vite setup. If not,
+start with
+[Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+first. If you want a login button for one *specific* provider (skip the picker
+entirely, e.g. a "Connect DeFi Wallet" button with no other options shown), see
+[Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login)
+or
+[Login via xPortal / WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login)
+instead, which use the lower-level `ProviderFactory` directly.
+
+## Prerequisites
+
+- A working sdk-dapp v5 setup (Next.js or Vite, see the start-here recipes).
+- A devnet wallet to test with (DeFi extension or xPortal).
+
+## Install
+
+```bash
+mkdir wallet-login-button
+cd wallet-login-button
+# Create the project files shown on this page.
+cp .env.example .env
+npm install
+npm run dev
+# open https://localhost:5173
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-wallet-login-button",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — a reusable wallet login button backed by UnlockPanelManager. Compiles strict.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.8"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS and brace-expansion transitives used by Vite and sdk-dapp.
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```text title=".env.example"
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+```ts title="vite.config.ts"
+// vite.config.ts — sdk-dapp v5 + Vite + React.
+//
+// Identical, verified configuration to the vite-react-minimal recipe's vite.config.ts
+// — see that recipe's Pitfalls 5–6 for the full story on why each
+// entry here is necessary. Short version:
+//
+//   1. @vitejs/plugin-basic-ssl for HTTPS dev (most wallet providers refuse
+//      http://localhost).
+//   2. optimizeDeps.include lists the CJS transitive deps that need
+//      pre-bundling — but NEVER '@multiversx/sdk-dapp' itself. That package
+//      has no "main"/"module"/"exports" field (every import is a deep
+//      out/... path), so asking Vite to resolve it as a bare specifier
+//      crashes the dev server outright.
+//   3. optimizeDeps.exclude / build.rollupOptions.external work around an
+//      upstream bug: three Ledger transport packages
+//      (hw-transport-webusb/-webhid/-web-ble) each bundle their own nested
+//      @ledgerhq/devices@8.16.0, which is missing files their sibling
+//      modules import. Verified by actually running `npm run dev` and
+//      `npm run build` against @multiversx/sdk-dapp@5.6.23.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    // Do NOT set `https` here yourself — basicSsl() injects the cert into
+    // server.https via its own Vite `config` hook, and Vite's type for this
+    // option is `https.ServerOptions | undefined`, never a bare `boolean`.
+    port: 5173,
+  },
+  optimizeDeps: {
+    include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
+    exclude: [
+      '@ledgerhq/devices/hid-framing',
+      '@ledgerhq/devices/ble/sendAPDU',
+      '@ledgerhq/devices/ble/receiveAPDU',
+    ],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        '@ledgerhq/devices/hid-framing',
+        '@ledgerhq/devices/ble/sendAPDU',
+        '@ledgerhq/devices/ble/receiveAPDU',
+      ],
+    },
+  },
+});
+```
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook recipe — Wallet login button</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+```tsx title="src/main.tsx"
+// src/main.tsx — Vite entry point. Same pattern as the vite-react-minimal recipe.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+```ts title="src/vite-env.d.ts"
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_WALLETCONNECT_PROJECT_ID?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+</details>
+
+## The reusable button
+
+Zero props. Every instance reads the same sdk-dapp store, so dropping
+`<LoginButton />` in five different places in your tree keeps all five in sync
+automatically:
+
+```tsx title="src/LoginButton.tsx"
+// src/LoginButton.tsx — the reusable connect/disconnect button.
+//
+// This is the piece you copy into your own dApp: a single component that
+// renders "Connect wallet" when logged out and "Disconnect" when logged in.
+// It has zero props because it reads everything it needs from the sdk-dapp
+// store (via hooks) and the UnlockPanelManager / provider singletons — drop
+// it anywhere in the tree, as many times as you want, and every instance
+// stays in sync automatically.
+
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+
+export function LoginButton(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+
+  const handleConnect = (): void => {
+    // The panel singleton was configured once in <Providers> (src/providers.tsx).
+    // openUnlockPanel() returns Promise<void>; this is a sync onClick, so we
+    // discard it explicitly with `void` (eslint no-floating-promises).
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  const handleDisconnect = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  if (isLoggedIn) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          void handleDisconnect();
+        }}
+        style={buttonStyle}
+      >
+        Disconnect
+      </button>
+    );
+  }
+
+  return (
+    <button type="button" onClick={handleConnect} style={buttonStyle}>
+      Connect wallet
+    </button>
+  );
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+```
+
+## The demo page
+
+```tsx title="src/App.tsx"
+// src/App.tsx — demo page for the LoginButton component.
+//
+// Deliberately thin: this recipe's job is the button + the UnlockPanelManager
+// setup behind it, not the full account display (see the "Reading the
+// connected account" recipe for the useGetAccount() deep dive).
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { LoginButton } from './LoginButton';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const account = useGetAccount();
+  const { network } = useGetNetworkConfig();
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Wallet login button</h1>
+      <p>
+        Network: <code>{network.chainId}</code>
+      </p>
+
+      <LoginButton />
+
+      {isLoggedIn && (
+        <p style={{ marginTop: '1rem' }}>
+          Connected as <code>{account.address}</code>. See{' '}
+          <a href="/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account">
+            Reading the connected account
+          </a>{' '}
+          for the full field breakdown.
+        </p>
+      )}
+
+      <p style={{ marginTop: '2rem', color: '#666' }}>
+        Drop <code>&lt;LoginButton /&gt;</code> anywhere in your component
+        tree — it needs no props and stays in sync with every other instance
+        automatically, because all of them read the same sdk-dapp store.
+      </p>
+    </main>
+  );
+}
+```
+
+## The panel setup
+
+`UnlockPanelManager.init()` runs exactly once, at app startup, in the same
+wrapper that calls `initApp()`. `loginHandler` and `onClose` both return
+`Promise<void>`, not `void`. The SDK's own type declarations require it (see
+Pitfall 1), even though some example code you will find floating around uses a
+sync arrow function.
+
+```tsx title="src/providers.tsx"
+// src/providers.tsx — sdk-dapp v5 init wrapper + UnlockPanelManager setup.
+//
+// This file is the actual subject of this recipe. Two things happen here,
+// in order:
+//
+//   1. initApp(dappConfig) — boots the SDK (store, network config, native
+//      auth, provider factory). Must resolve before anything else touches
+//      the store.
+//   2. UnlockPanelManager.init({...}) — configures the (singleton) unlock
+//      panel: which callback runs after login, which runs if the user
+//      closes the panel without logging in, and which providers to show.
+//      This call happens ONCE, here, at app startup — not per-button. Every
+//      "Connect wallet" button anywhere in the app just calls
+//      UnlockPanelManager.getInstance().openUnlockPanel().
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { dappConfig } from './lib/multiversx';
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+      UnlockPanelManager.init({
+        // loginHandler accepts TWO different shapes (both documented in
+        // node_modules/@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager.types.d.ts):
+        //
+        //   1) A zero-arg callback — the SDK has already run the full
+        //      provider-create + login sequence for you; you just react to
+        //      "login succeeded" (e.g. navigate away). This is what almost
+        //      every dApp wants, and what this recipe uses.
+        //
+        //   2) A `({ type, anchor }) => Promise<void>` function — you take
+        //      over the ENTIRE login sequence yourself, including calling
+        //      ProviderFactory.create({ type, anchor }) and provider.login()
+        //      by hand. Use this only if you need to intercept or customize
+        //      that sequence (custom loading UI per provider, analytics
+        //      hooks, etc.) — see the "Login via the DeFi extension" and
+        //      "Login via xPortal / WalletConnect" recipes for the
+        //      lower-level ProviderFactory pattern this shape wraps.
+        //
+        // IMPORTANT: both shapes must return Promise<void>, not void — the
+        // docs' own sync example fails strict-mode compile. See Pitfall 1.
+        loginHandler: async (): Promise<void> => {
+          // Replace with your post-login navigation (e.g. router.push).
+          // eslint-disable-next-line no-console
+          console.log('Logged in.');
+        },
+        // Called if the user dismisses the panel without completing login.
+        onClose: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Unlock panel closed without logging in.');
+        },
+        // Optional: restrict + reorder which providers the panel shows.
+        // Omit this key entirely to show every registered provider (the
+        // default, and what this recipe does). Example from the SDK's own
+        // JSDoc: `allowedProviders: [ProviderTypeEnum.walletConnect, 'inMemoryProvider']`.
+        // allowedProviders: [ProviderTypeEnum.extension, ProviderTypeEnum.walletConnect],
+      });
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+`providers.tsx` imports the shared environment config that every recipe in this
+Cookbook passes to `initApp()`:
+
+```ts title="src/lib/multiversx.ts"
+// src/lib/multiversx.ts — environment configuration for sdk-dapp's initApp.
+//
+// The full dAppConfig shape accepts more keys than this; we only set the
+// keys this recipe actually uses.
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+// Read from import.meta.env (Vite's runtime environment object) — NOT
+// process.env, which does not exist in the browser bundle. Register a
+// project ID at https://cloud.walletconnect.com and set it in .env.
+const WALLET_CONNECT_PROJECT_ID =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
+
+export const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    nativeAuth: true,
+    // `theme` takes one of the enum's string values (e.g. 'mvx:dark-theme'); the
+    // short `'dark'` fails — see node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts.
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+  },
+};
+
+export { EnvironmentsEnum };
+```
+
+## How it works
+
+**Configure once, use everywhere.** `UnlockPanelManager` is a singleton.
+`.init({...})` sets its `loginHandler`, `onClose`, and (optionally)
+`allowedProviders`. Call it once, at startup. Every button anywhere in the app
+calls `.getInstance().openUnlockPanel()`, which just raises the
+already-configured panel.
+
+**`loginHandler` has two shapes.** Per
+`node_modules/@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager.types.d.ts`:
+
+```ts
+// 1) Zero-arg callback: the SDK already ran the full login sequence.
+loginHandler: () => { navigate('/dashboard'); };
+
+// 2) Full control: you run the login sequence yourself.
+loginHandler: async ({ type, anchor }) => {
+  const provider = await ProviderFactory.create({ type, anchor });
+  await provider?.login();
+  navigate('/dashboard');
+};
+```
+
+This recipe uses shape 1, the common case. Shape 2 is the same `ProviderFactory`
+pattern the dedicated single-provider recipes
+([DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login),
+[xPortal/WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login))
+use directly, without going through the panel at all.
+
+**`allowedProviders` restricts and reorders the picker.** Omit it to show every
+registered provider (this recipe's default). Pass
+`[ProviderTypeEnum.extension, ProviderTypeEnum.walletConnect]` to show only those
+two, in that order. Its type also accepts custom provider-name strings, for apps
+that registered a custom `IProvider`.
+
+## Pitfalls
+
+:::warning[Pitfall 1: loginHandler and onClose must return Promise&lt;void&gt;]
+A sync callback fails under TypeScript strict mode:
+
+```text
+error TS2322: Type '() => void' is not assignable to type 'OnCloseUnlockPanelType'.
+  Type 'void' is not assignable to type 'Promise<void>'.
+```
+
+Use `async () => { ... }` for both callbacks. `src/providers.tsx` does this
+correctly.
+:::
+
+:::warning[Pitfall 2: UnlockPanelManager.init() runs once, not per button]
+Calling `.init()` a second time from another component overwrites the first
+configuration (last call wins). It does not merge or stack. Configure it exactly
+once, in the same wrapper that calls `initApp()`. Every button elsewhere only
+ever calls `.getInstance().openUnlockPanel()`.
+:::
+
+:::warning[Pitfall 3: don't render login buttons before init resolves]
+`UnlockPanelManager.getInstance()` before `.init()` has run returns a panel with
+no configured `loginHandler`. This recipe's `ready` gate in `src/providers.tsx`
+prevents children, and therefore any `<LoginButton />`, from rendering until
+`initApp()` and `UnlockPanelManager.init()` have both completed. Don't remove
+that gate.
+:::
+
+:::warning[Pitfall 4: HTTPS required for most wallets]
+The DeFi extension and Ledger refuse `http://localhost`. This recipe's dev server
+uses `@vitejs/plugin-basic-ssl`. See
+[Local HTTPS for dApp dev](/sdk-and-tools/sdk-js/cookbook/start-here/local-https-setup)
+for a fully trusted mkcert alternative.
+:::
+
+## See also
+
+- [Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login)
+  is a dedicated single-provider button using `ProviderFactory` directly, no picker.
+- [Login via xPortal / WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login)
+  is the same lower-level pattern, for the mobile-QR provider.
+- [Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  is what to do with `useGetAccount()` once a user is connected.
+- [Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+  is the base setup this recipe builds on.

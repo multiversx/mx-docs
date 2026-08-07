@@ -1,0 +1,292 @@
+---
+title: Fetch network config and status
+description: Read the static network config (gas costs, shard count, round duration) and the live per-shard status (block nonce, epoch, round) via a network provider.
+difficulty: beginner
+est_minutes: 5
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - network-provider
+  - api
+  - gas
+  - typescript
+---
+
+Two "about the network itself" reads, side by side. They look similar but answer
+different questions and have different lifetimes:
+
+- **`getNetworkConfig()`** returns the **static** protocol parameters: chain ID,
+  gas costs (`minGasLimit`, `minGasPrice`, `gasPerDataByte`, `gasPriceModifier`),
+  shard count, round duration. These change only across protocol upgrades, so you
+  fetch them once and cache them. Any fee calculation needs them.
+- **`getNetworkStatus(shard)`** returns the **live** chain tip: current block
+  nonce, epoch, round, highest final nonce. This moves every round (~6s on
+  mainnet), so you re-fetch it whenever you need "where is the chain right now".
+
+Both are read-only, with no wallet and no gas. You need a provider first; see
+[Configure a network provider](/sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider).
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+mkdir fetch-network-config-status
+cd fetch-network-config-status
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-fetch-network-config-status",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — fetch the static network config (gas costs, shard count, round duration) and the live network status (block nonce, epoch, round) via a network provider.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## Reading config and status
+
+```ts title="src/networkInfo.ts"
+// src/networkInfo.ts — the subject of this recipe: reading the two "about the
+// network itself" endpoints. They answer different questions and have
+// different lifetimes:
+//
+//   - getNetworkConfig() → the STATIC protocol parameters: chain ID, gas costs,
+//     shard count, round duration. These change only across protocol upgrades,
+//     so you fetch them once and cache them (a transaction builder needs
+//     minGasLimit / gasPerDataByte to compute fees).
+//   - getNetworkStatus(shard) → the LIVE chain tip: current block nonce, epoch,
+//     round, highest final nonce. This moves every round (~6s on mainnet), so
+//     you re-fetch it whenever you need "where is the chain right now".
+
+import type {
+  INetworkProvider,
+  ApiNetworkProvider,
+  ProxyNetworkProvider,
+  NetworkConfig,
+  NetworkStatus,
+} from '@multiversx/sdk-core';
+
+/**
+ * Static protocol parameters — safe to fetch once and cache. `getNetworkConfig`
+ * takes no arguments and is on the `INetworkProvider` interface, so an
+ * ApiNetworkProvider or a ProxyNetworkProvider both work here.
+ */
+export async function fetchNetworkConfig(provider: INetworkProvider): Promise<NetworkConfig> {
+  return provider.getNetworkConfig();
+}
+
+/**
+ * The live chain tip for a given shard. `getNetworkStatus()` with no argument
+ * targets the metachain (shard 4294967295); pass a shard number (0, 1, 2) for a
+ * regular shard.
+ *
+ * Note the concrete-type parameter: the `INetworkProvider` interface declares
+ * `getNetworkStatus()` with NO shard argument, while both implementations
+ * (ApiNetworkProvider, ProxyNetworkProvider) accept `shard?`. To pass a shard
+ * under strict typing you must reference a concrete provider, not the
+ * interface. See the recipe's "Pitfalls".
+ */
+export async function fetchNetworkStatus(
+  provider: ApiNetworkProvider | ProxyNetworkProvider,
+  shard?: number,
+): Promise<NetworkStatus> {
+  return shard === undefined
+    ? provider.getNetworkStatus()
+    : provider.getNetworkStatus(shard);
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — fetches the network config once and the status for the
+// metachain plus each regular shard, then prints them. No wallet, no gas.
+//
+// Usage:
+//   npm run build && npm start [apiUrl]
+//
+// Defaults to mainnet; pass a devnet/testnet API URL to target another network.
+
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
+import { fetchNetworkConfig, fetchNetworkStatus } from './networkInfo';
+
+const DEFAULT_API = 'https://api.multiversx.com';
+
+async function main(): Promise<void> {
+  const apiUrl = process.argv[2] ?? DEFAULT_API;
+  const provider = new ApiNetworkProvider(apiUrl, { clientName: 'mvx-cookbook' });
+
+  const config = await fetchNetworkConfig(provider);
+  console.log(`Network config (${apiUrl}):`);
+  console.log(`  chainID:         ${config.chainID}`);
+  console.log(`  minGasLimit:     ${config.minGasLimit}`);
+  console.log(`  minGasPrice:     ${config.minGasPrice}`);
+  console.log(`  gasPerDataByte:  ${config.gasPerDataByte}`);
+  console.log(`  gasPriceModifier:${config.gasPriceModifier}`);
+  console.log(`  numShards:       ${config.numShards}`);
+  console.log(`  roundDuration:   ${config.roundDuration} ms`);
+
+  // Metachain status (default) then every regular shard.
+  const meta = await fetchNetworkStatus(provider);
+  console.log('\nNetwork status — metachain:');
+  console.log(`  blockNonce ${meta.blockNonce}, epoch ${meta.currentEpoch}, round ${meta.currentRound}`);
+
+  for (let shard = 0; shard < config.numShards; shard++) {
+    const status = await fetchNetworkStatus(provider, shard);
+    console.log(`Network status — shard ${shard}:`);
+    console.log(`  blockNonce ${status.blockNonce}, highestFinalNonce ${status.highestFinalNonce}, epoch ${status.currentEpoch}`);
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start                                     # mainnet
+npm start https://devnet-api.multiversx.com   # any other network
+```
+
+Expected output (mainnet; live values, so the nonces and epoch will differ when
+you run it):
+
+```text
+Network config (https://api.multiversx.com):
+  chainID:         1
+  minGasLimit:     50000
+  minGasPrice:     1000000000
+  gasPerDataByte:  1500
+  gasPriceModifier:0.5
+  numShards:       3
+  roundDuration:   6000 ms
+
+Network status — metachain:
+  blockNonce 31295127, epoch 2175, round 31333830
+Network status — shard 0:
+  blockNonce 31313271, highestFinalNonce 31313271, epoch 2175
+Network status — shard 1:
+  blockNonce 31302533, highestFinalNonce 31302533, epoch 2175
+Network status — shard 2:
+  blockNonce 31308060, highestFinalNonce 31308060, epoch 2175
+```
+
+## How it works
+
+**Config is static; status is live.** `getNetworkConfig()` returns numbers that
+only change at a protocol upgrade: `gasPerDataByte` `1500`, `minGasLimit` `50000`,
+`numShards` `3` on mainnet. Cache them. `getNetworkStatus()` returns the chain
+tip, stale within one round, so never cache it. These are exactly the two
+categories the SDK models as separate classes (`NetworkConfig` vs
+`NetworkStatus`).
+
+**Status is per-shard.** MultiversX is a sharded chain, so there is no single
+"current block". `getNetworkStatus()` with no argument targets the metachain
+(shard `4294967295`); pass `0`, `1`, or `2` for a regular shard. This recipe
+loops `0..numShards` to show all three plus the metachain.
+
+**`gasPerDataByte` and `minGasLimit` are the fee formula inputs.** A plain
+transfer's gas is `minGasLimit + gasPerDataByte * data.length`. That is why a
+fee-computing transaction builder reads `getNetworkConfig()` first. See
+[Simulate and estimate a transaction](/sdk-and-tools/sdk-js/cookbook/network-providers/simulate-estimate-transaction)
+for letting the network compute the cost for you instead.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the shard argument is missing from the interface type]
+`INetworkProvider.getNetworkStatus()` is declared with **no** parameter, but both
+`ApiNetworkProvider` and `ProxyNetworkProvider` implement
+`getNetworkStatus(shard?: number)`. If your variable is typed as
+`INetworkProvider`, TypeScript will reject the shard argument. Type it as the
+concrete provider (as `fetchNetworkStatus` does) to pass a shard. Verified against
+the installed `.d.ts` files in sdk-core v15.4.
+:::
+
+:::note[Pitfall 2: roundDuration is milliseconds, gasPriceModifier is a float]
+`roundDuration` is in milliseconds (`6000` = 6s), not seconds. `gasPriceModifier`
+is a plain `number` (`0.5`), the fraction of gas price actually charged on the
+non-data portion of gas, not a bigint like the other gas fields.
+:::
+
+:::note[Pitfall 3: blockNonce is a bigint]
+`blockNonce`, `highestFinalNonce`, and `currentRound` are `bigint`;
+`currentEpoch` is a plain `number`. Do not mix them in arithmetic without
+converting; TypeScript will stop you, which is the point.
+:::
+
+## See also
+
+- [Configure a network provider](/sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider)
+  builds the provider these calls run on.
+- [Fetch a block](/sdk-and-tools/sdk-js/cookbook/network-providers/fetch-a-block)
+  goes from the `blockNonce` in the status to the full block.
+- [Simulate and estimate a transaction](/sdk-and-tools/sdk-js/cookbook/network-providers/simulate-estimate-transaction)
+  lets the network compute a transaction's gas cost instead of applying the
+  config formula by hand.

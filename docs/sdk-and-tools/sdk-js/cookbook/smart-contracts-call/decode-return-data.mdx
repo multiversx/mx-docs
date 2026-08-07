@@ -1,0 +1,564 @@
+---
+title: Decode contract return data (ABI codec)
+description: Decode raw contract return data and encode or decode custom struct and enum types with sdk-core's BinaryCodec, getStruct, and getEnum, fully offline.
+difficulty: advanced
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - smart-contract
+  - abi
+  - codec
+  - typescript
+---
+
+Use an ABI plus the low-level `BinaryCodec` to decode raw contract bytes into
+typed values, and to encode typed values back into bytes. This is the layer
+beneath `controller.parseQueryResponse` / `parseExecute`: reach for it when you
+hold raw return data, a struct, or an enum and want to convert it by hand.
+
+Three real demonstrations: decode `getPingAmount`'s raw return data into a
+`BigUint`, encode the multisig `EsdtTokenPayment` struct, and decode the multisig
+`Action` enum. All offline and deterministic.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- No wallet, no gas, no network.
+
+## Install
+
+```bash
+mkdir decode-return-data
+cd decode-return-data
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-decode-return-data",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — decode raw contract return data and encode/decode custom struct and enum types with sdk-core's BinaryCodec, getStruct, and getEnum.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the ABI-codec recipe. Runs three
+// offline, deterministic demonstrations and prints the results. No wallet,
+// no gas, no network.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi } from '@multiversx/sdk-core';
+import { decodeReturnValue, encodeEsdtTokenPayment, decodeAction } from './decodeReturnData';
+
+// A real Action, exactly as the mx-sdk-js-core cookbook decodes it.
+const ACTION_HEX =
+  '0500000000000000000500d006f73c4221216fa679bc559005584c4f1160e569e1000000012a0000000003616464000000010000000107';
+
+// getPingAmount's real return data: 1 EGLD as a BigUint.
+const PING_AMOUNT_RETURN_HEX = '0de0b6b3a7640000';
+
+// Expected encoding of EsdtTokenPayment(TEST-8b028f, nonce 0, amount 10000).
+const EXPECTED_PAYMENT_HEX = '0000000b544553542d3862303238660000000000000000000000022710';
+
+function loadAbi(fileName: string): Abi {
+  const json = fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+  return Abi.create(JSON.parse(json) as Record<string, unknown>);
+}
+
+function main(): void {
+  const pingPongAbi = loadAbi('ping-pong.abi.json');
+  const multisigAbi = loadAbi('multisig.abi.json');
+
+  console.log('1) Decode raw return data (ping-pong getPingAmount -> BigUint):');
+  const pingAmount = decodeReturnValue(pingPongAbi, 'getPingAmount', PING_AMOUNT_RETURN_HEX);
+  console.log(`   ${PING_AMOUNT_RETURN_HEX} -> ${pingAmount}`);
+  console.log(`   equals 1 EGLD (1e18): ${pingAmount === '1000000000000000000'}`);
+
+  console.log('\n2) Encode a struct (multisig EsdtTokenPayment):');
+  const encoded = encodeEsdtTokenPayment(multisigAbi, 'TEST-8b028f', 0n, 10000n);
+  console.log(`   encoded: ${encoded}`);
+  console.log(`   matches expected: ${encoded === EXPECTED_PAYMENT_HEX}`);
+
+  console.log('\n3) Decode an enum (multisig Action):');
+  const action = decodeAction(multisigAbi, ACTION_HEX);
+  console.log(`   variant: ${action.name}`);
+}
+
+main();
+```
+
+```json title="src/multisig.abi.json"
+{
+  "name": "Multisig",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "quorum",
+        "type": "u32"
+      },
+      {
+        "name": "board",
+        "type": "variadic<Address>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [],
+  "events": [],
+  "hasCallback": false,
+  "types": {
+    "Action": {
+      "type": "enum",
+      "variants": [
+        {
+          "name": "Nothing",
+          "discriminant": 0
+        },
+        {
+          "name": "AddBoardMember",
+          "discriminant": 1,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "AddProposer",
+          "discriminant": 2,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "RemoveUser",
+          "discriminant": 3,
+          "fields": [
+            {
+              "name": "0",
+              "type": "Address"
+            }
+          ]
+        },
+        {
+          "name": "ChangeQuorum",
+          "discriminant": 4,
+          "fields": [
+            {
+              "name": "0",
+              "type": "u32"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEgld",
+          "discriminant": 5,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SendTransferExecuteEsdt",
+          "discriminant": 6,
+          "fields": [
+            {
+              "name": "0",
+              "type": "EsdtTransferExecuteData"
+            }
+          ]
+        },
+        {
+          "name": "SendAsyncCall",
+          "discriminant": 7,
+          "fields": [
+            {
+              "name": "0",
+              "type": "CallActionData"
+            }
+          ]
+        },
+        {
+          "name": "SCDeployFromSource",
+          "discriminant": 8,
+          "fields": [
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        },
+        {
+          "name": "SCUpgradeFromSource",
+          "discriminant": 9,
+          "fields": [
+            {
+              "name": "sc_address",
+              "type": "Address"
+            },
+            {
+              "name": "amount",
+              "type": "BigUint"
+            },
+            {
+              "name": "source",
+              "type": "Address"
+            },
+            {
+              "name": "code_metadata",
+              "type": "CodeMetadata"
+            },
+            {
+              "name": "arguments",
+              "type": "List<bytes>"
+            }
+          ]
+        }
+      ]
+    },
+    "CallActionData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "egld_amount",
+          "type": "BigUint"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    },
+    "EsdtTokenPayment": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "token_identifier",
+          "type": "TokenIdentifier"
+        },
+        {
+          "name": "token_nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "BigUint"
+        }
+      ]
+    },
+    "EsdtTransferExecuteData": {
+      "type": "struct",
+      "fields": [
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "tokens",
+          "type": "List<EsdtTokenPayment>"
+        },
+        {
+          "name": "opt_gas_limit",
+          "type": "Option<u64>"
+        },
+        {
+          "name": "endpoint_name",
+          "type": "bytes"
+        },
+        {
+          "name": "arguments",
+          "type": "List<bytes>"
+        }
+      ]
+    }
+  }
+}
+```
+
+```json title="src/ping-pong.abi.json"
+{
+  "name": "PingPong",
+  "constructor": {
+    "docs": [
+      "Necessary configuration when deploying:",
+      "`ping_amount` - the exact amount that needs to be sent when `ping`-ing.  ",
+      "`duration_in_seconds` - how much time (in seconds) until `pong` can be called after the initial `ping` call  ",
+      "`token_id` - Optional. The Token Identifier of the token that is going to be used. Default is \"EGLD\"."
+    ],
+    "inputs": [
+      {
+        "name": "ping_amount",
+        "type": "BigUint"
+      },
+      {
+        "name": "duration_in_seconds",
+        "type": "u64"
+      },
+      {
+        "name": "opt_token_id",
+        "type": "optional<EgldOrEsdtTokenIdentifier>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "name": "getPingAmount",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "BigUint"
+        }
+      ]
+    }
+  ],
+  "events": [],
+  "hasCallback": false,
+  "types": {}
+}
+```
+
+</details>
+
+## Decoding and encoding
+
+```ts title="src/decodeReturnData.ts"
+// src/decodeReturnData.ts - using an ABI plus the low-level `BinaryCodec` to
+// decode raw contract bytes into typed values, and to encode typed values back
+// into bytes. This is the layer beneath `controller.parseQueryResponse` /
+// `parseExecute`: reach for it when you hold raw return data, a struct, or an
+// enum and want to convert by hand.
+//
+// Three real, verified demonstrations:
+//   1. Decode raw RETURN DATA: ping-pong's getPingAmount returns a BigUint;
+//      the raw bytes 0de0b6b3a7640000 decode to 1000000000000000000 (1 EGLD),
+//      the same value the live query returns.
+//   2. Encode a STRUCT: the multisig contract's EsdtTokenPayment struct,
+//      via abi.getStruct(...) + Struct/Field + codec.encodeNested.
+//   3. Decode an ENUM: the multisig contract's Action enum, via
+//      abi.getEnum(...) + codec.decodeNested, from a real encoded action.
+
+import {
+  BinaryCodec,
+  Struct,
+  Field,
+  TokenIdentifierValue,
+  U64Value,
+  BigUIntValue,
+} from '@multiversx/sdk-core';
+import type { Abi } from '@multiversx/sdk-core';
+
+const codec = new BinaryCodec();
+
+/**
+ * Decode raw contract RETURN DATA into a value, using the output type the ABI
+ * declares for a given endpoint. `decodeTopLevel` is the top-level form (a whole
+ * return-data part); `decodeNested` is for values embedded inside a larger
+ * buffer.
+ *
+ * Returns the decimal string form, since a decoded BigUint is a BigNumber.
+ */
+export function decodeReturnValue(abi: Abi, endpointName: string, returnDataHex: string): string {
+  const endpoint = abi.getEndpoint(endpointName);
+  const outputType = endpoint.output[0]?.type;
+  if (!outputType) {
+    throw new Error(`Endpoint ${endpointName} declares no output type.`);
+  }
+  const decoded = codec.decodeTopLevel(Buffer.from(returnDataHex, 'hex'), outputType);
+  return String(decoded.valueOf());
+}
+
+/**
+ * Encode a custom STRUCT (EsdtTokenPayment) into binary, using the struct type
+ * looked up from the ABI. Each `Field` pairs a typed value with its field name.
+ * Returns the nested-encoding hex.
+ */
+export function encodeEsdtTokenPayment(
+  abi: Abi,
+  tokenIdentifier: string,
+  tokenNonce: bigint,
+  amount: bigint,
+): string {
+  const paymentType = abi.getStruct('EsdtTokenPayment');
+  const paymentStruct = new Struct(paymentType, [
+    new Field(new TokenIdentifierValue(tokenIdentifier), 'token_identifier'),
+    new Field(new U64Value(tokenNonce), 'token_nonce'),
+    new Field(new BigUIntValue(amount), 'amount'),
+  ]);
+  return codec.encodeNested(paymentStruct).toString('hex');
+}
+
+/**
+ * Decode a custom ENUM (Action) from binary, using the enum type looked up from
+ * the ABI. Returns the variant name and the decoded fields object.
+ */
+export function decodeAction(abi: Abi, dataHex: string): { name: string; value: unknown } {
+  const actionType = abi.getEnum('Action');
+  const [decoded] = codec.decodeNested(Buffer.from(dataHex, 'hex'), actionType);
+  const value = decoded.valueOf() as { name: string };
+  return { name: value.name, value };
+}
+```
+
+## Run it
+
+```bash
+npm start
+```
+
+Expected output:
+
+```text
+1) Decode raw return data (ping-pong getPingAmount -> BigUint):
+   0de0b6b3a7640000 -> 1000000000000000000
+   equals 1 EGLD (1e18): true
+
+2) Encode a struct (multisig EsdtTokenPayment):
+   encoded: 0000000b544553542d3862303238660000000000000000000000022710
+   matches expected: true
+
+3) Decode an enum (multisig Action):
+   variant: SendTransferExecuteEgld
+```
+
+## How it works
+
+**Decode raw return data with the ABI's declared output type.** A contract's
+return data is just bytes. `abi.getEndpoint("getPingAmount").output[0].type` is
+the type the ABI declares for that endpoint's result (`BigUint`), and
+`codec.decodeTopLevel(buffer, type)` turns raw bytes into a typed value.
+`0de0b6b3a7640000` decodes to `1000000000000000000` (1 EGLD), the same value the
+live [query recipe](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+returns.
+
+**Encode a struct.** `abi.getStruct("EsdtTokenPayment")` returns the struct type;
+build a `Struct` from `Field`s (each a typed value plus its field name) and call
+`codec.encodeNested(struct)`.
+
+**Decode an enum.** `abi.getEnum("Action")` returns the enum type;
+`codec.decodeNested(buffer, type)` returns the decoded value and the number of
+bytes consumed. The real `Action` bytes decode to the `SendTransferExecuteEgld`
+variant.
+
+## Pitfalls
+
+:::note[Pitfall 1: a decoded value's static type is TypedValue]
+Call `.valueOf()` and convert explicitly. A decoded `BigUint` is a `BigNumber`,
+so this recipe returns `String(decoded.valueOf())`. `strict` mode will not narrow
+the shape for you, the same caveat as query results.
+:::
+
+:::warning[Pitfall 2: decodeTopLevel vs decodeNested are not interchangeable]
+Top-level and nested encodings differ (nested values are length-prefixed where
+top-level ones are not). Decode return-data parts with `decodeTopLevel`; decode a
+value pulled from inside a larger buffer with `decodeNested`. Using the wrong one
+yields garbage or throws.
+:::
+
+:::note[Pitfall 3: getStruct / getEnum need a name that exists in the ABI]
+They throw if the type name is missing. `adder` and `ping-pong` declare no custom
+types, which is why this recipe uses the multisig ABI for the struct and enum
+demonstrations.
+:::
+
+## See also
+
+- [Decode contract events](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/decode-contract-events)
+  decodes event fields with the same codec.
+- [Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+  is the high-level `parseQueryResponse` that sits on top of this codec.
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is where `getStruct` / `getEnum` / `getEndpoint` come from.

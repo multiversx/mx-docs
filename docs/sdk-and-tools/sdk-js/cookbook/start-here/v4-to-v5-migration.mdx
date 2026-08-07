@@ -1,0 +1,676 @@
+---
+title: "Migrate sdk-dapp v4 to v5: hook-by-hook diffs"
+description: Side-by-side v4 vs v5 diffs for every removed hook, component, and import path. The shortest viable upgrade path for an existing v4 dApp.
+difficulty: intermediate
+est_minutes: 12
+artifact: reference
+sdk_versions:
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - migration
+  - v4-to-v5
+  - typescript
+  - react
+---
+
+Many teams have stayed on v4 because the migration cost was unclear. The official
+guide is a patch-notes-style doc that lists renames; here you get runnable
+diffs for the six load-bearing changes plus the rename table, so you can see the
+shape of your migration before you start.
+
+Effort estimate, very loosely:
+
+| Codebase size | Estimated effort |
+| --- | --- |
+| Small dApp: login plus a handful of transactions | Half a day |
+| Medium: 20+ pages, custom login UI, multi-step txs | 2 to 3 days |
+| Large: heavily customized provider tree, custom hooks | 1 to 2 weeks |
+
+Most of the time goes into hook renames and the `<DappProvider>` to `initApp()`
+restructure. The actual code shape is similar; the imports and the
+wrapper-vs-imperative shift are what take time.
+
+In each pair below, the "before (v4)" block is v4 code shown for contrast only. It
+imports v4-only paths and is not part of the compiled recipe; the "after (v5)"
+block compiles against the installed v5 SDK.
+
+## The structural change: `<DappProvider>` is gone
+
+v4 wrapped your app in a declarative React component; v5 calls a function before
+rendering.
+
+```tsx
+// before (v4): <DappProvider> wraps the app
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// migrations/01-dapp-provider/before.tsx — v4 declarative provider.
+//
+// In v4 you wrapped the entire app tree with <DappProvider>. The provider
+// component took the network environment as a prop and handled
+// initialisation under the hood. Hooks worked anywhere inside the tree.
+
+import { DappProvider } from '@multiversx/sdk-dapp/wrappers';
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/types';
+
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
+const customNetworkConfig = {
+  walletConnectV2ProjectId: walletConnectProjectId,
+};
+
+export function App() {
+  return (
+    <DappProvider
+      environment={EnvironmentsEnum.devnet}
+      customNetworkConfig={customNetworkConfig}
+    >
+      <YourApp />
+    </DappProvider>
+  );
+}
+```
+
+```tsx title="migrations/01-dapp-provider/after.tsx"
+// migrations/01-dapp-provider/after.tsx — v5 imperative init.
+//
+// v5 replaces <DappProvider> with an imperative initApp() call. The
+// component below mirrors the structure of the Next.js / Vite minimal
+// recipes' Providers wrapper: useEffect-driven init, ready-gate,
+// children pass-through.
+//
+// Key changes from v4:
+//   - <DappProvider> wrapping is gone — call initApp(config) instead.
+//   - The config shape is { storage, dAppConfig: { environment, providers, ... } }.
+//   - initApp must run AFTER the component mounts. In Next.js this means
+//     a "use client" component; in Vite there is no SSR concern.
+//   - Hooks still work, but only after init resolves.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
+const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: walletConnectProjectId,
+      },
+    },
+  },
+};
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({ children }: { children: ReactNode }): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return <div>Initializing…</div>;
+  }
+  return <>{children}</>;
+}
+```
+
+The mechanism changes (`<DappProvider>` becomes `await initApp(config)`), where it
+runs changes (client-side, in a `useEffect`, behind a `"use client"` directive and
+a re-init guard), and SSR behavior changes (v5's `initApp()` hits `sessionStorage`
+during rehydration and crashes server-side, so it must be gated). See
+[Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
+Pitfall 3 for the canonical workaround.
+
+## `useGetAccountInfo` to `useGetAccount` + `useGetIsLoggedIn` + `useGetLoginInfo`
+
+v5 splits the v4 monolith into three hooks. Login state and on-chain account state
+live in different store slices and have different update cadences.
+
+```tsx
+// before (v4): useGetAccountInfo returned everything
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// migrations/02-get-account-info/before.tsx — v4 useGetAccountInfo.
+//
+// In v4, useGetAccountInfo() returned everything: address, balance,
+// nonce, plus assorted "loginInfo" fields like isLoggedIn and the
+// auth token. One hook, one big object.
+
+import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks';
+
+export function AccountSummary() {
+  const {
+    address,
+    account: { balance, nonce },
+    isLoggedIn,
+    tokenLogin,
+  } = useGetAccountInfo();
+
+  if (!isLoggedIn) {
+    return <p>Not logged in.</p>;
+  }
+
+  return (
+    <div>
+      <p>Address: {address}</p>
+      <p>Balance: {balance}</p>
+      <p>Nonce: {nonce}</p>
+      <p>Token: {tokenLogin?.nativeAuthToken}</p>
+    </div>
+  );
+}
+```
+
+```tsx title="migrations/02-get-account-info/after.tsx"
+// migrations/02-get-account-info/after.tsx — v5 split: useGetAccount + useGetLoginInfo.
+//
+// v5 splits the v4 monolith. The login state and the on-chain account
+// state live in different store slices and have different update
+// cadences (login info changes rarely; account balance / nonce change
+// per transaction), so they got their own hooks.
+//
+// Migration rule of thumb:
+//   address, balance, nonce, shard, username      → useGetAccount()
+//   isLoggedIn                                     → useGetIsLoggedIn()
+//   tokenLogin, providerType, expires, loginMethod → useGetLoginInfo()
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetLoginInfo } from '@multiversx/sdk-dapp/out/react/loginInfo/useGetLoginInfo';
+
+export function AccountSummary(): JSX.Element {
+  const { address, balance, nonce } = useGetAccount();
+  const isLoggedIn = useGetIsLoggedIn();
+  const { tokenLogin } = useGetLoginInfo();
+
+  if (!isLoggedIn) {
+    return <p>Not logged in.</p>;
+  }
+
+  return (
+    <div>
+      <p>Address: {address}</p>
+      <p>Balance: {balance}</p>
+      <p>Nonce: {nonce}</p>
+      <p>Token: {tokenLogin?.nativeAuthToken}</p>
+    </div>
+  );
+}
+```
+
+Migration rule of thumb: `address`, `balance`, `nonce`, `shard`, `username` go to
+`useGetAccount()`; `isLoggedIn` goes to `useGetIsLoggedIn()`; `tokenLogin`,
+`providerType`, `expires`, `loginMethod` go to `useGetLoginInfo()`. See
+[Migration: useGetAccountInfo v4 vs v5](/sdk-and-tools/sdk-js/cookbook/migration/get-account-info-v4-vs-v5)
+for why the shim that survives the rename is the dangerous case.
+
+## `useSignTransactions` to `provider.signTransactions(txs)`
+
+In v5 signing is on the provider, not a hook. The signing call is fundamentally
+imperative ("user clicks Send, wallet pops up"); putting it on the provider makes
+the call site honest about that.
+
+```tsx
+// before (v4): useSignTransactions hook
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// migrations/03-sign-transactions/before.tsx — v4 useSignTransactions.
+//
+// In v4, signing was a hook. It returned a signTransactions function
+// plus a "signing state" object you could destructure to render
+// signing-pending UI.
+
+import { useSignTransactions } from '@multiversx/sdk-dapp/hooks';
+import { Transaction } from '@multiversx/sdk-core';
+
+export function useV4SignFlow() {
+  const { signTransactions } = useSignTransactions();
+
+  const handleSign = async (txs: Transaction[]) => {
+    const signedTransactions = await signTransactions(txs);
+    return signedTransactions;
+  };
+
+  return { handleSign };
+}
+```
+
+```tsx title="migrations/03-sign-transactions/after.tsx"
+// migrations/03-sign-transactions/after.tsx — v5 provider.signTransactions.
+//
+// v5 moves signing onto the provider. The signing call is fundamentally
+// imperative — "user clicks Send, wallet pops up". Putting it on the
+// provider makes the call site honest about that and avoids paying the
+// hook overhead (Rules of Hooks, render-phase identity, etc.) for a
+// call that doesn't benefit from being a hook.
+//
+// Migration: replace useSignTransactions() with getAccountProvider() +
+// .signTransactions(). The signature is the same — same input array,
+// same return-array shape.
+
+import { Transaction } from '@multiversx/sdk-core';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+
+// No more hook — the function below is callable from browser-side sdk-dapp
+// code outside a React component, after initApp() and wallet login.
+export async function signFlow(txs: Transaction[]): Promise<Transaction[]> {
+  const provider = getAccountProvider();
+  const signed = await provider.signTransactions(txs);
+  return signed;
+}
+```
+
+A side benefit: the v5 version is not tied to React. You can call
+`signFlow(txs)` from browser-side sdk-dapp code after `initApp()` and wallet
+login. Server actions and CLI scripts should instead use sdk-core with their own
+signer and network provider.
+
+## `sendTransactions` to `TransactionManager.send` + `.track`
+
+v5 splits the v4 monolithic `sendTransactions()` into three steps: sign, send,
+track. The split lets you do meaningful things between steps and lets you skip
+steps if you only need a subset.
+
+```tsx
+// before (v4): services.sendTransactions
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// migrations/04-send-transactions/before.tsx — v4 sendTransactions.
+//
+// In v4, sendTransactions() was a single function exported from the
+// services module. It sign+send+track in one shot, returning a
+// session id you could pass to other hooks.
+
+import { sendTransactions } from '@multiversx/sdk-dapp/services';
+import { Transaction } from '@multiversx/sdk-core';
+
+export async function v4Send(transactions: Transaction[]) {
+  const { sessionId, error } = await sendTransactions({
+    transactions,
+    transactionsDisplayInfo: {
+      processingMessage: 'Processing…',
+      successMessage: 'Done',
+      errorMessage: 'Failed',
+    },
+  });
+  if (error) {
+    throw new Error(error);
+  }
+  return sessionId;
+}
+```
+
+```tsx title="migrations/04-send-transactions/after.tsx"
+// migrations/04-send-transactions/after.tsx — v5 sign + TransactionManager.
+//
+// v5 splits the v4 monolithic sendTransactions() into three steps:
+//   1. provider.signTransactions(txs)       — opens the wallet UI
+//   2. TransactionManager.send(signed)      — POSTs to the network
+//   3. TransactionManager.track(sent, opts) — starts the WebSocket / polling tracker
+//
+// The split lets you do meaningful things between steps (e.g., show a
+// "preparing to send" UI while the wallet popup is open, or pre-flight
+// validate the signed transactions before posting). It also lets you
+// skip steps — e.g., if you sign now and send later from a different
+// session, you can do that.
+//
+// The returned sessionId from .track() is the same string the v4 call
+// returned. Use the session-aware pending/successful/failed hooks when
+// existing components need to look up that specific session.
+
+import { Transaction } from '@multiversx/sdk-core';
+import { TransactionManager } from '@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+
+export async function v5Send(transactions: Transaction[]): Promise<string> {
+  // 1. Sign on the provider.
+  const provider = getAccountProvider();
+  const signed = await provider.signTransactions(transactions);
+
+  // 2. Send.
+  const txManager = TransactionManager.getInstance();
+  const sent = await txManager.send(signed);
+
+  // 3. Track. The returned sessionId is the lookup key for the
+  //    useGetPendingTransactionsSessions() record and its terminal variants.
+  const sessionId = await txManager.track(sent, {
+    transactionsDisplayInfo: {
+      processingMessage: 'Processing…',
+      successMessage: 'Done',
+      errorMessage: 'Failed',
+    },
+  });
+
+  return sessionId;
+}
+```
+
+The returned `sessionId` from `.track()` is the same string the v4 call returned,
+so existing components that consume it keep working. For grouped/batch sends, see
+[Migration: useSendTransactions to TransactionManager.send](/sdk-and-tools/sdk-js/cookbook/migration/send-transactions-to-transaction-manager).
+
+## Per-provider login buttons to `UnlockPanelManager`
+
+v4 exported a button component per provider. v5 collapses all of them into a single
+panel and a single open call.
+
+```tsx
+// before (v4): <ExtensionLoginButton /> plus siblings
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// migrations/05-login-buttons/before.tsx — v4 per-provider login buttons.
+//
+// In v4 you imported a button component per provider and rendered them
+// all on your login page. Each one was tightly bound to a single
+// provider; choosing which to show meant rendering or not rendering
+// each component.
+
+import {
+  ExtensionLoginButton,
+  WalletConnectLoginButton,
+  LedgerLoginButton,
+  WebWalletLoginButton,
+} from '@multiversx/sdk-dapp/UI';
+
+export function LoginPage() {
+  const callbackRoute = '/dashboard';
+
+  return (
+    <div>
+      <h2>Login</h2>
+      <ExtensionLoginButton callbackRoute={callbackRoute}>
+        DeFi extension
+      </ExtensionLoginButton>
+      <WalletConnectLoginButton callbackRoute={callbackRoute}>
+        xPortal
+      </WalletConnectLoginButton>
+      <LedgerLoginButton callbackRoute={callbackRoute}>Ledger</LedgerLoginButton>
+      <WebWalletLoginButton callbackRoute={callbackRoute}>
+        Web Wallet
+      </WebWalletLoginButton>
+    </div>
+  );
+}
+```
+
+```tsx title="migrations/05-login-buttons/after.tsx"
+// migrations/05-login-buttons/after.tsx — v5 UnlockPanelManager.
+//
+// v5 collapses all per-provider buttons into a single UnlockPanelManager
+// that renders a panel listing every available provider. You configure
+// which providers to show via `allowedProviders`. The actual panel is a
+// web component from @multiversx/sdk-dapp-ui; you don't render it
+// yourself.
+//
+// Migration: replace N per-provider button components with one button
+// that calls UnlockPanelManager.openUnlockPanel(). The init() call —
+// configuring loginHandler / onClose — happens once at app startup,
+// inside the same wrapper as initApp().
+//
+// CRITICAL: loginHandler and onClose return Promise<void>. The docs
+// example uses sync callbacks; that fails strict-mode compile. Use
+// async or () => Promise.resolve().
+
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+
+// At app startup (inside the same Providers wrapper that calls initApp):
+export function setupUnlockPanel(): void {
+  UnlockPanelManager.init({
+    loginHandler: async (): Promise<void> => {
+      // Replace with your post-login navigation, e.g. router.push('/dashboard').
+    },
+    onClose: async (): Promise<void> => {
+      // Optional: handle the user dismissing the panel without logging in.
+    },
+    // Restrict which providers appear in the panel. Omit this to show all.
+    allowedProviders: ['extension', 'walletConnect', 'ledger', 'crossWindow'],
+  });
+}
+
+// Anywhere you'd previously have rendered a login button:
+export function LoginPage(): JSX.Element {
+  const handleConnect = (): void => {
+    // openUnlockPanel() returns Promise<void>; this handler is a sync
+    // onClick, so discard it explicitly with `void` (eslint
+    // no-floating-promises).
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  return (
+    <div>
+      <h2>Login</h2>
+      <button type="button" onClick={handleConnect}>
+        Connect wallet
+      </button>
+    </div>
+  );
+}
+```
+
+Filter which providers appear in the panel via `allowedProviders` on `init()`.
+Omit it to show all.
+
+## `useGetNotification` to `NotificationsFeedManager`
+
+v5 ships a pre-built notifications feed UI as a web component. You no longer render
+the list yourself.
+
+```tsx
+// before (v4): hook plus hand-rolled list
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed.
+//
+// migrations/06-notifications/before.tsx — v4 useGetNotification.
+//
+// In v4, you'd render notifications by hand using the data the hook
+// returned. The hook gave you the array; you styled and positioned the
+// list yourself.
+
+import { useGetNotification } from '@multiversx/sdk-dapp/hooks';
+
+export function NotificationsList() {
+  const notifications = useGetNotification();
+
+  return (
+    <ul>
+      {notifications.map((n) => (
+        <li key={n.id}>{n.message}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+```tsx title="migrations/06-notifications/after.tsx"
+// migrations/06-notifications/after.tsx — v5 NotificationsFeedManager.
+//
+// v5 ships a pre-built notifications feed UI as a web component. You no
+// longer render the list yourself; the manager + the
+// `<mvx-notifications-feed>` element handle it. You only need to call
+// .getInstance() to get a reference, and call .open() / .close() / etc.
+// to drive the UI.
+//
+// If you need fine-grained custom rendering (e.g. branding the
+// notification card differently), drop down to the store directly via
+// useSelector — the data is still there. The manager is the convenience
+// layer; bypass it when convenience isn't enough.
+
+import { NotificationsFeedManager } from '@multiversx/sdk-dapp/out/managers/NotificationsFeedManager/NotificationsFeedManager';
+
+export function NotificationsButton(): JSX.Element {
+  // The manager wires itself to the store automatically once initApp()
+  // has resolved; no per-component setup is required. If you want to
+  // register a custom on-notification handler at mount-time, do it in a
+  // useEffect here.
+
+  const open = (): void => {
+    // openNotificationsFeed() returns Promise<void> (see
+    // node_modules/@multiversx/sdk-dapp/out/managers/NotificationsFeedManager/NotificationsFeedManager.d.ts) —
+    // same floating-promise gate as UnlockPanelManager.openUnlockPanel().
+    void NotificationsFeedManager.getInstance().openNotificationsFeed();
+  };
+
+  return (
+    <button type="button" onClick={open}>
+      Open notifications
+    </button>
+  );
+}
+```
+
+If you need bespoke notification rendering, drop down to the store directly via
+`useSelector`; the data is still there. The manager is the convenience layer.
+
+## The import-path renames
+
+Most v4 to v5 changes are pure path renames:
+
+| v4 path | v5 path | Semantic change? |
+| --- | --- | --- |
+| `/hooks` | `/out/react/<slice>/...` | Path only |
+| `/services` | `/out/methods/...` and `/out/managers/...` | Path only, split |
+| `/UI` | `/out/managers/...` (web components) | **UI replaced** |
+| `/wrappers` | (gone, see `initApp()`) | **Replaced** |
+| `/utils` | `/out/utils/...` | Path only |
+| `/types` | `/out/types/...` | Path only |
+| `/providers` | `/out/providers/...` | Path only |
+
+Two semantic gotchas worth flagging loudly:
+
+1. **`getAccount` is a store read in both versions**, instant return, no network
+   call. There is **also** a new function called `getAccountFromApi` in v5 that
+   hits the API. Do not conflate them.
+2. **`useGetAccountInfo` is still exported** in v5 for back-compat, but it is a
+   thinner shim. The recommended v5 path is the three-way split shown above.
+
+## The smallest viable patch
+
+The shortest possible diff to make a v4 codebase compile under v5:
+
+1. Replace `<DappProvider>` with the `Providers` wrapper from the Next.js / Vite
+   minimal recipes. Move the environment plus walletConnect projectId props into
+   `dappConfig.dAppConfig`.
+2. Bulk find-and-replace import paths (`/hooks` to `/out/react/<slice>/...`,
+   `/services` to `/out/methods/...` or `/managers/...`, `/types` to
+   `/out/types/...`, delete `/wrappers` references).
+3. Replace `<ExtensionLoginButton>` et al. with one button that calls
+   `UnlockPanelManager.openUnlockPanel()`. Initialize the manager once at startup.
+4. Replace `useSignTransactions` and `sendTransactions` with
+   `provider.signTransactions(txs)` plus `TransactionManager.send(signed)` plus
+   `TransactionManager.track(sent, opts)`.
+5. Run `tsc --noEmit`. Fix what breaks. Most v4-vs-v5 bugs are caught at
+   compile-time once you are on v5 deps.
+
+## Pitfalls
+
+:::warning[Pitfall 1: getAccount vs getAccountFromApi]
+Same prefix, very different semantics. `getAccount()` is a store read (free,
+instant); `getAccountFromApi()` makes a network round-trip every call. Search your
+codebase for `getAccountFromApi`. If it is used inside a render loop or a
+frequently-fired event handler, you have added an unintended network call.
+:::
+
+:::warning[Pitfall 2: Redux DevTools is gone]
+v4 used Redux; v5 uses Zustand. Your existing Redux DevTools setup will not surface
+state changes. Zustand has its own devtools middleware, but sdk-dapp does not
+enable it by default.
+:::
+
+:::warning[Pitfall 3: sessionStorage layout changed]
+v4 sessions are not re-readable post-upgrade. Document this in your release notes,
+users will be silently logged out on first load after the upgrade.
+:::
+
+:::warning[Pitfall 4: OnCloseUnlockPanelType requires Promise&lt;void&gt;]
+The v5 docs example for `UnlockPanelManager.init` uses sync callbacks; that fails
+strict-mode compile. Use `async () => {}`.
+:::
+
+:::warning[Pitfall 5: 'use client' boundaries in Next.js]
+v4 was loose about SSR; v5 is strict. Any component that calls a sdk-dapp hook (or
+`getAccountProvider`, or `getAccount` from the methods directory) must be inside a
+`"use client"` tree.
+:::
+
+## See also
+
+- [Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
+  is the target shape for Next.js codebases.
+- [Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+  is the target shape for Vite codebases.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the new sign, send, track flow used by every transaction in v5.
+- [Migration: DappProvider to initApp](/sdk-and-tools/sdk-js/cookbook/migration/dapp-provider-to-initapp)
+  is the full-app version of the first change above.

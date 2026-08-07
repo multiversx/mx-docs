@@ -1,0 +1,52 @@
+/**
+ * cookbook.css — MultiversX Cookbook design layer (scoped, additive).
+ *
+ * SCOPE DISCIPLINE: every rule here is namespaced under `.cookbook-recipe`
+ * (added by the DocItem/Content swizzle only on recipe pages) or consumed by
+ * the CSS-module components under src/components/cookbook/. Nothing here
+ * restyles global docs chrome (navbar / sidebar / footer / search). The only
+ * top-level declarations are CSS custom properties, which are inert until
+ * referenced, so registering this file globally cannot regress other pages.
+ *
+ * Tokens are the canonical MvX values (design-reference/MVX-DESIGN-LANGUAGE.md):
+ * accent teal #23f7dd, near-black grounds, Roobert + JetBrains Mono. Structure
+ * is driven by Infima neutral variables so components track the light/dark
+ * toggle automatically; the teal accent is reserved for the load-bearing
+ * "standalone project built in CI" label, never to tint structure.
+ */
+
+:root {
+  /* MvX brand tokens. */
+  --cookbook-yellow: #facc15;
+
+  /* Accent is theme-aware: mint collapses to ~1.2:1 on light grounds and is
+     unreadable as text, so light mode uses the brand system's own accessible
+     deep-teal ink (5.3:1 AA), not a straight color-invert. */
+  --cookbook-accent: #0b6f63;
+  --cookbook-accent-soft: rgba(11, 111, 99, 0.1);
+
+  /* Roobert is already loaded site-wide (src/css/custom.css @font-face).
+     JetBrains Mono is not bundled here, so fall back cleanly to system mono. */
+  --cookbook-font-brand: "Roobert", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --cookbook-font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+}
+
+html[data-theme="dark"] {
+  --cookbook-accent: #23f7dd;
+  --cookbook-accent-soft: rgba(35, 247, 221, 0.1);
+}
+
+/* ---- Recipe article treatment (scoped: only present on recipe pages) ---- */
+.cookbook-recipe {
+  font-family: var(--cookbook-font-brand);
+}
+
+.cookbook-recipe code,
+.cookbook-recipe kbd,
+.cookbook-recipe pre {
+  font-family: var(--cookbook-font-mono);
+}
+
+.cookbook-recipe :is(h1, h2, h3) {
+  letter-spacing: -0.01em;
+}

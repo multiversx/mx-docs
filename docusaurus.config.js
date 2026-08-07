@@ -76,7 +76,7 @@ const config = {
         },
         blog: false,
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: ["./src/css/custom.css", "./src/css/cookbook.css"],
         },
         gtag: {
           trackingID: "G-TW3LCJ0LS7",
@@ -242,6 +242,10 @@ const config = {
       "@docusaurus/plugin-client-redirects",
       {
         redirects: [
+          {
+            from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
+            to: "/sdk-and-tools/sdk-js/cookbook",
+          },
           {
             from: "/technology/glossary",
             to: "/welcome/terminology",
@@ -421,10 +425,6 @@ const config = {
           {
             from: "/sdk-and-tools/sdk-py/sdk-py-cookbook-v0",
             to: "/sdk-and-tools/sdk-py",
-          },
-          {
-            from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
-            to: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
           },
           {
             from: "/sdk-and-tools/sdk-py/configuring-mxpy",

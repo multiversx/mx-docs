@@ -1,0 +1,385 @@
+---
+title: "Migration: DappProvider to initApp, side-by-side"
+description: The full-app version of the DappProvider removal, every file that touches it, including the session-restore state v4 quietly handled for you.
+difficulty: intermediate
+est_minutes: 8
+artifact: reference
+sdk_versions:
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - migration
+  - v4-to-v5
+  - react
+  - typescript
+---
+
+This Cookbook's
+[Migrate v4 to v5: hook-by-hook diffs](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
+shows the `<DappProvider>` to `initApp()` change as a single before/after
+component. That is the compressed version. Here is the same change at
+the scale it actually happens at, a whole entry point plus its provider tree,
+because that is where the real migration cost lives: not the line that changed,
+but everything that now has to be sequenced around it.
+
+Come here once you are actually doing the `<DappProvider>` removal and want to
+see every file that touches it. Start with the hook-by-hook overview first if you
+have not already.
+
+## Prerequisites
+
+- An existing sdk-dapp v4.x codebase using `<DappProvider>`.
+- Familiarity with React `useEffect` and component lifecycles.
+- Node.js >= 20.13.1.
+
+## Before (v4): what DappProvider did implicitly
+
+The v4 entry point wraps the app in a declarative component. These two files are
+v4 code and are shown for contrast only; they are not part of the compiled recipe.
+
+```tsx
+// before/App.tsx (v4)
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; v4 imports are not installed in this
+// recipe (we only install v5 packages — see package.json). This file is
+// reference material, not compiled or linted. Excluded via tsconfig.json
+// `exclude` and .eslintrc.cjs `ignorePatterns`.
+//
+// before/App.tsx — the entire v4 app tree, wrapped once at the root.
+//
+// <DappProvider> did five things under the hood that v5 makes explicit
+// (see after/Providers.tsx's header comment for the v5 side of each):
+//   1. Read `environment` and picked the matching network config.
+//   2. Restored a previous session from sessionStorage/localStorage, if any.
+//   3. Registered the WebSocket transaction-status listener.
+//   4. Made every hook in `hooks/` work anywhere inside the tree.
+//   5. Exposed `customNetworkConfig` for WalletConnect's project ID and any
+//      API-address overrides.
+//
+// None of this was awaited by the caller — <DappProvider> rendered
+// synchronously and hooks like useGetIsLoggedIn() simply returned `false`
+// (or stale-but-safe defaults) until the async restore finished, then
+// re-rendered. There was no explicit "not ready yet" state to handle.
+
+import { DappProvider } from '@multiversx/sdk-dapp/wrappers';
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/types';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/hooks';
+import { ExtensionLoginButton } from '@multiversx/sdk-dapp/UI';
+
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
+const customNetworkConfig = {
+  name: 'customConfig',
+  walletConnectV2ProjectId: walletConnectProjectId,
+};
+
+function Dashboard() {
+  // This hook "just works" here because it's rendered inside
+  // <DappProvider>, below in the tree. v4 didn't distinguish
+  // "provider mounted" from "session restore finished" — both
+  // logged-out and still-restoring render as isLoggedIn === false.
+  const isLoggedIn = useGetIsLoggedIn();
+
+  if (!isLoggedIn) {
+    return <ExtensionLoginButton callbackRoute="/dashboard" />;
+  }
+
+  return <p>Connected.</p>;
+}
+
+export function App() {
+  return (
+    <DappProvider
+      environment={EnvironmentsEnum.devnet}
+      customNetworkConfig={customNetworkConfig}
+    >
+      <Dashboard />
+    </DappProvider>
+  );
+}
+```
+
+```tsx
+// before/index.tsx (v4)
+```
+
+```tsx
+// @ts-nocheck — illustrative v4 code; see App.tsx's header comment.
+//
+// before/index.tsx — v4 entry point.
+//
+// Nothing app-specific happens here beyond the standard React root mount.
+// All of the SDK setup is inside <App> because it's a component
+// (<DappProvider>), not an imperative call — that's the whole point of
+// this recipe. Contrast with after/index.tsx, which is almost as short but
+// for a different reason: the setup moved into Providers.tsx instead.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
+```
+
+## After (v5): initApp made explicit
+
+The v5 entry point calls `initApp()` inside a `Providers` wrapper, then renders.
+These three files compile against the installed v5 SDK.
+
+```tsx title="after/Providers.tsx"
+// after/Providers.tsx — v5 imperative init, side-by-side with before/App.tsx.
+//
+// Same verified pattern as the vite-react-minimal recipe's src/providers.tsx —
+// copied here (not cross-imported; each Cookbook recipe is self-contained)
+// because the WHOLE POINT of this recipe is to show this file existing at
+// all, where v4 had no equivalent. Read this alongside before/App.tsx:
+// every one of <DappProvider>'s five under-the-hood jobs (listed in that
+// file's header comment) now has an explicit, visible line of code here:
+//
+//   1. Environment selection      -> dappConfig.dAppConfig.environment
+//   2. Session restore            -> awaited inside initApp(); ready gate
+//                                    below makes the "still restoring"
+//                                    state explicit, unlike v4.
+//   3. WebSocket listener         -> registered internally by initApp()
+//                                    when a restored session exists
+//                                    (during initApp() startup).
+//   4. Hooks work anywhere        -> still true, but only for descendants
+//                                    of <Providers>, and only after `ready`
+//                                    flips true.
+//   5. WalletConnect project ID   -> dappConfig.dAppConfig.providers.walletConnect
+//
+// The one thing v4 did NOT make you handle: an explicit "not ready yet"
+// render. v5's initApp() is a Promise; until it resolves, hooks return
+// defaults that are indistinguishable from "logged out" (same as v4 during
+// restore) — but now the developer decides whether to show a loading
+// state instead of silently rendering "logged out" for a few hundred ms.
+// This recipe chooses to show one (see the `!ready` branch below);
+// omitting it is also valid and matches v4's actual behavior more closely.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+const walletConnectProjectId =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+if (!walletConnectProjectId) {
+  throw new Error('Set VITE_WALLETCONNECT_PROJECT_ID before starting the app.');
+}
+
+const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    // theme takes one of the enum's string values; the short `'dark'` fails — see
+    // node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts.
+    // A `theme: 'dark' as const` cast (what the naive port of the v4 prop
+    // would look like) does not satisfy InitAppType; this was a real,
+    // confirmed tsc --strict failure found while verifying this Cookbook's
+    // start-here recipes.
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: walletConnectProjectId,
+      },
+    },
+  },
+};
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return <div>Initializing…</div>;
+  }
+  return <>{children}</>;
+}
+```
+
+```tsx title="after/App.tsx"
+// after/App.tsx — the v5 half of the side-by-side, structurally identical
+// to before/App.tsx's <Dashboard> child: read login state, render a login
+// button or a connected message. The difference this recipe is actually
+// about is entirely in Providers.tsx / index.tsx — this file is here to
+// prove the hook still "just works" once it's inside <Providers>, same
+// promise v4 made inside <DappProvider>.
+//
+// For the full connect/disconnect button and account-field walkthrough,
+// see the wallets/wallet-login-button and wallets/read-connected-account
+// recipes — this file stays intentionally minimal so the provider/init
+// contrast above isn't buried under unrelated UI code.
+
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+
+  const handleConnect = (): void => {
+    // openUnlockPanel() returns Promise<void>; this handler is a sync
+    // onClick, so the promise is explicitly discarded to satisfy
+    // @typescript-eslint/no-floating-promises.
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  if (!isLoggedIn) {
+    return (
+      <button type="button" onClick={handleConnect}>
+        Connect wallet
+      </button>
+    );
+  }
+
+  return <p>Connected.</p>;
+}
+```
+
+```tsx title="after/index.tsx"
+// after/index.tsx — v5 entry point. UnlockPanelManager also needs a one-
+// time init() call somewhere; the Next.js / Vite minimal recipes do this
+// inside Providers.tsx right after initApp() resolves. This recipe's
+// Providers.tsx keeps that out to stay focused purely on the initApp()
+// side of the story — see wallets/wallet-login-button for the
+// UnlockPanelManager.init({ loginHandler, onClose }) call this app would
+// need before openUnlockPanel() does anything useful in a real app.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './Providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+## What `<DappProvider>` actually did, made explicit
+
+`<DappProvider>` did five things implicitly that v5 makes explicit:
+
+| v4 (`<DappProvider>`, implicit) | v5 (`initApp()`, explicit) |
+| --- | --- |
+| Environment selection | `dappConfig.dAppConfig.environment` |
+| Session restore | Awaited inside `initApp()`; this recipe's `ready` gate makes the "still restoring" state visible |
+| WebSocket listener | Registered internally by `initApp()` when a restored session exists |
+| Hooks work anywhere | Still true, but only for descendants of `<Providers>`, and only after `ready` flips `true` |
+| WalletConnect project ID | `dappConfig.dAppConfig.providers.walletConnect.walletConnectV2ProjectId` |
+
+The one thing v4 never made you handle explicitly: a distinct "not ready yet"
+render. `initApp()` is a Promise; until it resolves, hooks return defaults
+indistinguishable from "logged out", same as v4 during restore, but v5 hands you
+the choice of showing a loading state instead of letting that ambiguous instant
+flash by.
+
+:::tip[Reused, not reinvented]
+`after/Providers.tsx` is copied from the already-verified
+[Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+pattern, not written fresh for this recipe. That pattern is proven to compile and run.
+:::
+
+## Pitfalls
+
+:::danger[Pitfall 1: module-scope initApp() calls crash under SSR]
+If you lift the `useEffect` body to module scope (or call `initApp()` directly in
+a Next.js Server Component), it crashes during server-side rendering. `initApp()`
+touches `sessionStorage`, which does not exist on the server. See
+[Minimal sdk-dapp v5 in Next.js](/sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal)
+Pitfall 3 for the `"use client"` plus `useEffect` fix.
+:::
+
+:::warning[Pitfall 2: React Strict Mode double-invokes useEffect in dev]
+Without a module-scope initialization promise, `initApp()` fires twice on first
+mount in development. `initApp()` is idempotent, but the guard avoids a redundant
+round of session-restore work.
+:::
+
+:::note[Pitfall 3: v4 hid that restore is async; v5 does not have to]
+The `ready` gate in `Providers.tsx` is optional. Skipping it means your app's
+first render always shows "logged out", then flips to "logged in" a moment later
+for a returning user. Decide deliberately whether that flash is acceptable, rather
+than inheriting v4's behavior by default.
+:::
+
+## See also
+
+- [Migrate v4 to v5: hook-by-hook diffs](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
+  is the compressed six-pair overview this recipe expands on.
+- [Migration: useGetAccountInfo v4 vs v5](/sdk-and-tools/sdk-js/cookbook/migration/get-account-info-v4-vs-v5)
+  is the next thing that breaks once your provider tree compiles.
+- [Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+  is the target shape `after/` is drawn from directly.

@@ -1,0 +1,777 @@
+---
+title: Track a transaction (WebSocket + polling fallback)
+description: Track a transaction's live status via sdk-dapp's WebSocket-with-polling-fallback tracker and the pending/successful/failed hooks.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-dapp: "5.7.1"
+  sdk-core: "15.4.1"
+tags:
+  - sdk-dapp
+  - transaction
+  - websocket
+  - vite
+  - react
+  - typescript
+  - devnet
+---
+
+Track a transaction's live status after sending it. sdk-dapp's
+`trackTransactions()` monitors status via WebSocket with a polling fallback,
+configured during `initApp` via `transactionTracking` callbacks. It has two
+halves: the `transactionTracking` config in `initApp`, and the flat
+React hooks (`useGetPendingTransactions`, `useGetSuccessfulTransactions`,
+`useGetFailedTransactions`) that re-render automatically as status changes, no
+polling code of your own anywhere in this recipe.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- A MultiversX wallet with devnet access, to click through the demo. **Not
+  required to verify this recipe.**
+
+## Install
+
+```bash
+mkdir track-transaction-status
+cd track-transaction-status
+# Create the project files shown on this page.
+cp .env.example .env
+npm install
+npm run dev
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-track-transaction-status",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — track a transaction's live status (WebSocket, with an interval-polling fallback) via sdk-dapp's TransactionManager and the pending/successful/failed hooks.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.8"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS and brace-expansion transitives used by Vite and sdk-dapp.
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```text title=".env.example"
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+```ts title="vite.config.ts"
+// vite.config.ts — sdk-dapp v5 + Vite + React.
+//
+// Identical, verified configuration to the vite-react-minimal recipe's vite.config.ts
+// — see that recipe's Pitfalls 5–6 for why each entry here exists.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    // Do NOT set `https` here yourself — basicSsl() injects the cert via
+    // its own Vite `config` hook (see @vitejs/plugin-basic-ssl's README).
+    port: 5173,
+  },
+  optimizeDeps: {
+    // NEVER add '@multiversx/sdk-dapp' itself here — it has no
+    // main/module/exports field and crashes the dev server if you do. See
+    // the vite-react-minimal recipe's Pitfall 5.
+    include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
+    // Upstream bug workaround (nested @ledgerhq/devices@8.16.0 is missing
+    // files) — see the vite-react-minimal recipe's Pitfall 6.
+    exclude: [
+      '@ledgerhq/devices/hid-framing',
+      '@ledgerhq/devices/ble/sendAPDU',
+      '@ledgerhq/devices/ble/receiveAPDU',
+    ],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        '@ledgerhq/devices/hid-framing',
+        '@ledgerhq/devices/ble/sendAPDU',
+        '@ledgerhq/devices/ble/receiveAPDU',
+      ],
+    },
+  },
+});
+```
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook recipe — Track a transaction's status</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+```tsx title="src/App.tsx"
+// src/App.tsx — demo page: connect, then send a trivial tracked
+// transaction and watch its status update live.
+
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import { TransactionTracker } from './TransactionTracker';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+
+  const handleConnect = (): void => {
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  const handleDisconnect = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '960px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Track a transaction (WebSocket + polling fallback)</h1>
+
+      {!isLoggedIn ? (
+        <button type="button" onClick={handleConnect} style={buttonStyle}>
+          Connect wallet
+        </button>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              void handleDisconnect();
+            }}
+            style={buttonStyle}
+          >
+            Disconnect
+          </button>
+          <TransactionTracker />
+        </>
+      )}
+    </main>
+  );
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+```
+
+```tsx title="src/main.tsx"
+// src/main.tsx — Vite entry point. Same pattern as every other recipe.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+```tsx title="src/providers.tsx"
+// src/providers.tsx — sdk-dapp v5 init wrapper.
+//
+// This recipe's subject is AccountCard.tsx, not this file — this is the
+// same login bootstrap every recipe in this Cookbook uses. See "Adding a
+// wallet login button" if you want the deep dive on UnlockPanelManager
+// itself.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { dappConfig } from './lib/multiversx';
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+      UnlockPanelManager.init({
+        loginHandler: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Logged in.');
+        },
+        onClose: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Unlock panel closed.');
+        },
+      });
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+```ts title="src/vite-env.d.ts"
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_WALLETCONNECT_PROJECT_ID?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+</details>
+
+Open the HTTPS URL Vite prints, accept the local dev certificate warning, connect
+a wallet, then send the demo transaction.
+
+## Configuring transactionTracking
+
+```ts title="src/lib/multiversx.ts"
+// src/lib/multiversx.ts — environment configuration for sdk-dapp's initApp,
+// PLUS the `transactionTracking` config block this recipe is actually
+// about.
+//
+// A confirmed, real discrepancy some docs get wrong: a snippet showing
+// `onFail: (sessionId, error) => { /* callback */ }` implies two
+// parameters. The real type, read directly from
+// node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts:
+//
+//   export type TransactionTrackingConfigType = {
+//     successfulToastLifetime?: number;
+//     onSuccess?: (sessionId: string) => Promise<void>;
+//     onFail?: (sessionId: string) => Promise<void>;
+//   };
+//
+// takes only `sessionId` — there is no `error` parameter. Confirmed again
+// at the actual call site
+// (out/methods/trackTransactions/helpers/checkTransactionStatus/helpers/checkBatch/helpers/runSessionCallbacks.cjs):
+// `onSuccess?.(sessionId)` / `onFail?.(sessionId)`, always exactly one
+// argument. Declaring `onFail: (sessionId, error) => {...}` as a two
+// -parameter function literal here is a real `tsc --strict` error (the
+// declared function requires 2 arguments; the type only ever supplies 1)
+// — not a style nit. This file uses the confirmed-correct one-parameter
+// signature.
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+const WALLET_CONNECT_PROJECT_ID =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
+
+// A tiny, page-scoped log the demo UI reads from — see TransactionTracker.tsx.
+// Not part of the sdk-dapp API surface; just how this recipe surfaces the
+// two callbacks' firing on screen instead of only in the console.
+export const trackingEvents: string[] = [];
+
+export const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    nativeAuth: true,
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+    // The actual subject of this recipe's config side. `onSuccess`/`onFail`
+    // fire once per tracked SESSION (a group of one or more transactions
+    // sent together via the same `.track()` call), not once per
+    // transaction — confirmed from runSessionCallbacks.cjs, which also
+    // shows `onFail` fires for FOUR terminal states, not just a generic
+    // "fail": TransactionBatchStatusesEnum.fail, .cancelled, .timedOut,
+    // and .invalid all route to the same onFail callback.
+    transactionTracking: {
+      successfulToastLifetime: 5000,
+      onSuccess: async (sessionId: string): Promise<void> => {
+        trackingEvents.push(`onSuccess(sessionId=${sessionId}) at ${new Date().toLocaleTimeString()}`);
+      },
+      onFail: async (sessionId: string): Promise<void> => {
+        trackingEvents.push(`onFail(sessionId=${sessionId}) at ${new Date().toLocaleTimeString()}`);
+      },
+    },
+  },
+};
+
+export { EnvironmentsEnum };
+```
+
+## Sending and handing off to the tracker
+
+```ts title="src/transactions.ts"
+// src/transactions.ts — the canonical sign / send / track flow (same
+// verified pattern as the sign-and-send recipe's lib/transactions.ts),
+// sending a trivial self-transfer of 0 EGLD purely as a vehicle to observe
+// tracked status change — this recipe is about what happens AFTER
+// `.track()` is called, not about the transaction itself.
+
+import { Address, Transaction } from '@multiversx/sdk-core';
+import { GAS_PRICE, GAS_LIMIT } from '@multiversx/sdk-dapp/out/constants/mvx.constants';
+import { TransactionManager } from '@multiversx/sdk-dapp/out/managers/TransactionManager/TransactionManager';
+import { getAccount } from '@multiversx/sdk-dapp/out/methods/account/getAccount';
+import { getNetworkConfig } from '@multiversx/sdk-dapp/out/methods/network/getNetworkConfig';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import type { SignedTransactionType } from '@multiversx/sdk-dapp/out/types/transactions.types';
+
+export interface SendTrackedTransactionOutput {
+  sessionId: string;
+  transactionHash: string;
+}
+
+/**
+ * Builds a zero-value self-transfer (sender === receiver), signs it via
+ * the connected provider, sends it, and starts tracking it —
+ * `TransactionManager.track()` is the call that hands the sent
+ * transaction over to sdk-dapp's WebSocket-with-polling-fallback tracker.
+ * Returns the sessionId the pending/successful/failed hooks key off of.
+ */
+export async function sendTrackedTransaction(): Promise<SendTrackedTransactionOutput> {
+  const account = getAccount();
+  const { network } = getNetworkConfig();
+
+  if (!account.address) {
+    throw new Error('No account connected. Call after a successful login.');
+  }
+
+  const selfAddress = Address.newFromBech32(account.address);
+
+  const tx = new Transaction({
+    sender: selfAddress,
+    receiver: selfAddress,
+    value: 0n,
+    gasLimit: BigInt(GAS_LIMIT),
+    gasPrice: BigInt(GAS_PRICE),
+    chainID: network.chainId,
+    nonce: BigInt(account.nonce),
+    version: 1,
+  });
+
+  const provider = getAccountProvider();
+  const [signed] = await provider.signTransactions([tx]);
+  if (!signed) {
+    throw new Error('User cancelled signing.');
+  }
+
+  const txManager = TransactionManager.getInstance();
+  const sentTransactions = await txManager.send([signed]);
+
+  if (!isFlatSentTransactions(sentTransactions)) {
+    throw new Error('Unexpected response shape from TransactionManager.send().');
+  }
+  const [sent] = sentTransactions;
+  if (!sent) {
+    throw new Error('Send failed: TransactionManager returned no transactions.');
+  }
+
+  // THE actual subject of this recipe: handing the sent transaction to the
+  // tracker. Everything that happens after this line — the WebSocket
+  // subscription, the polling-interval fallback, the pending/successful/
+  // failed hook updates, and the onSuccess/onFail callbacks configured in
+  // src/lib/multiversx.ts — runs on its own, with no further code needed
+  // here.
+  const sessionId = await txManager.track(sentTransactions, {
+    transactionsDisplayInfo: {
+      processingMessage: 'Tracking self-transfer…',
+      successMessage: 'Tracked transaction confirmed.',
+      errorMessage: 'Tracked transaction failed.',
+    },
+  });
+
+  return { sessionId, transactionHash: sent.hash };
+}
+
+function isFlatSentTransactions(
+  value: SignedTransactionType[] | SignedTransactionType[][],
+): value is SignedTransactionType[] {
+  return value.length === 0 || !Array.isArray(value[0]);
+}
+```
+
+## Reading live status
+
+```tsx title="src/TransactionTracker.tsx"
+// src/TransactionTracker.tsx — the actual subject of this recipe: reading
+// LIVE tracked-transaction status via sdk-dapp's flat React hooks, while a
+// transaction moves from "pending" to "successful" or "failed" — updated
+// by the WebSocket-with-polling-fallback tracker `sendTrackedTransaction()`
+// (src/transactions.ts) hands the transaction to, with no manual refresh
+// needed anywhere in this component.
+//
+// `useGetPendingTransactions()` / `useGetSuccessfulTransactions()` /
+// `useGetFailedTransactions()` ALL return a flat `SignedTransactionType[]`
+// — confirmed from their .d.ts files
+// (node_modules/@multiversx/sdk-dapp/out/react/transactions/*.d.ts), the
+// same shape the sign-and-send recipe already confirmed for the pending
+// case alone. This recipe confirms the successful/failed hooks share that
+// exact shape too. Each array reflects the WHOLE store's current state, not
+// scoped to one sessionId — fine here since this demo only ever tracks one
+// session at a time; for multiple concurrent sessions, the *Sessions
+// variants (useGetPendingTransactionsSessions(), returning
+// Record<sessionId, SessionTransactionType>) are the ones keyed by
+// sessionId — see this recipe's Pitfall 3.
+
+import { useState } from 'react';
+import { useGetPendingTransactions } from '@multiversx/sdk-dapp/out/react/transactions/useGetPendingTransactions';
+import { useGetSuccessfulTransactions } from '@multiversx/sdk-dapp/out/react/transactions/useGetSuccessfulTransactions';
+import { useGetFailedTransactions } from '@multiversx/sdk-dapp/out/react/transactions/useGetFailedTransactions';
+import { sendTrackedTransaction } from './transactions';
+import { trackingEvents } from './lib/multiversx';
+
+export function TransactionTracker(): JSX.Element {
+  const [status, setStatus] = useState<'idle' | 'signing' | 'error'>('idle');
+  const [error, setError] = useState<string | null>(null);
+  const [lastSessionId, setLastSessionId] = useState<string | null>(null);
+
+  // Flat arrays, re-rendered automatically as the store updates — no
+  // polling or WebSocket code anywhere in THIS component. That machinery
+  // lives entirely inside sdk-dapp, started the moment
+  // sendTrackedTransaction() calls TransactionManager.track().
+  const pending = useGetPendingTransactions();
+  const successful = useGetSuccessfulTransactions();
+  const failed = useGetFailedTransactions();
+
+  const handleSend = (): void => {
+    setStatus('signing');
+    setError(null);
+    sendTrackedTransaction()
+      .then(({ sessionId }) => {
+        setLastSessionId(sessionId);
+        setStatus('idle');
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : String(err));
+        setStatus('error');
+      });
+  };
+
+  return (
+    <div style={cardStyle}>
+      <h2>Track a transaction</h2>
+      <button type="button" onClick={handleSend} disabled={status === 'signing'} style={buttonStyle}>
+        {status === 'signing' ? 'Signing…' : 'Send a trivial self-transfer (0 EGLD) and track it'}
+      </button>
+
+      {lastSessionId && (
+        <p>
+          Last sessionId: <code>{lastSessionId}</code>
+        </p>
+      )}
+      {error && <p style={errorStyle}>Error: {error}</p>}
+
+      <div style={columnsStyle}>
+        <div>
+          <h3>useGetPendingTransactions()</h3>
+          <p>{pending.length} pending</p>
+          <ul>
+            {pending.map((tx) => (
+              <li key={tx.hash}>
+                <code>{tx.hash.slice(0, 12)}…</code> — {tx.status ?? 'unknown'}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>useGetSuccessfulTransactions()</h3>
+          <p>{successful.length} successful</p>
+          <ul>
+            {successful.map((tx) => (
+              <li key={tx.hash}>
+                <code>{tx.hash.slice(0, 12)}…</code> — {tx.status ?? 'unknown'}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>useGetFailedTransactions()</h3>
+          <p>{failed.length} failed</p>
+          <ul>
+            {failed.map((tx) => (
+              <li key={tx.hash}>
+                <code>{tx.hash.slice(0, 12)}…</code> — {tx.status ?? 'unknown'}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <h3>transactionTracking.onSuccess / onFail events (src/lib/multiversx.ts)</h3>
+      {trackingEvents.length === 0 ? (
+        <p style={rawStyle}>(none fired yet)</p>
+      ) : (
+        <ul>
+          {trackingEvents.map((event) => (
+            <li key={event} style={rawStyle}>
+              {event}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+const cardStyle: React.CSSProperties = {
+  border: '1px solid #444',
+  borderRadius: '8px',
+  padding: '1.25rem',
+  marginTop: '1rem',
+};
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+
+const columnsStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  gap: '1rem',
+  marginTop: '1rem',
+};
+
+const errorStyle: React.CSSProperties = {
+  color: '#e05d44',
+};
+
+const rawStyle: React.CSSProperties = {
+  color: '#888',
+  fontSize: '0.85em',
+};
+```
+
+## How it works
+
+**All three status hooks return a flat array, not a sessionId-keyed object.**
+Confirmed from the installed `.d.ts` files: `useGetPendingTransactions()`,
+`useGetSuccessfulTransactions()`, and `useGetFailedTransactions()` all return
+`SignedTransactionType[]`. This extends what
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+already confirmed for the pending case alone to the successful/failed hooks too.
+Each reflects the whole store's current tracked state, not scoped to one
+sessionId, the `*Sessions` variants are what you would use for multiple concurrent
+sessions (see Pitfall 3).
+
+**The actual WebSocket-vs-polling mechanism, read directly from the compiled
+source** (`trackTransactions.cjs`), not guessed from a one-line description:
+
+- `trackTransactions()` subscribes to the store's `websocketStatus` field.
+- While the WebSocket is `PENDING` or not yet initialized, it runs
+  `setInterval(checkTransactionStatus, pollingInterval)`, the polling fallback.
+- Once status flips to `COMPLETED`, it clears that interval and switches to
+  checking status only when a NEW `websocketEvent` arrives in the store, no
+  interval running while the socket is live.
+- `pollingInterval` is `max(1000, roundDuration / 2)` when the network's block
+  round duration is known, falling back to a fixed `90000` (90 seconds, confirmed
+  from `constants/transactions.constants.cjs`) only when it is not. This is a
+  different constant, and a more adaptive mechanism, than sdk-core's own
+  `TransactionWatcher` default (every 6000ms, timeout after 90000ms), that class
+  is a separate, backend-oriented poller used by
+  `entrypoint.awaitCompletedTransaction()`, not what powers these browser hooks.
+
+**A confirmed, real bug some docs get wrong in their `transactionTracking`
+snippet.** A snippet showing `onFail: (sessionId, error) => { }` implies two
+parameters. The real type:
+
+```ts
+export type TransactionTrackingConfigType = {
+  successfulToastLifetime?: number;
+  onSuccess?: (sessionId: string) => Promise<void>;
+  onFail?: (sessionId: string) => Promise<void>;
+};
+```
+
+Only `sessionId`, confirmed again at the actual call site
+(`onSuccess?.(sessionId)` / `onFail?.(sessionId)`, always one argument). Tested
+directly: declaring a two-parameter `onFail` fails `tsc --strict` with
+`Target signature provides too few arguments. Expected 2 or more, but got 1.`
+
+**`onSuccess`/`onFail` fire once per tracked SESSION, and `onFail` covers four
+terminal states**, `fail`, `cancelled`, `timedOut`, and `invalid` all route to the
+same callback, confirmed from source.
+
+## Pitfalls
+
+:::danger[Pitfall 1: a two-parameter onFail fails tsc --strict]
+Use a single-parameter `(sessionId: string) => Promise<void>`, see "How it works"
+above for the exact error message this produces.
+:::
+
+:::warning[Pitfall 2: do not assume a fixed polling interval]
+It adapts to the network's actual round duration when known; the 90-second
+constant is a fallback, not the steady-state behavior on a healthy connection to a
+live network.
+:::
+
+:::note[Pitfall 3: the flat hooks do not scope by sessionId]
+If your app tracks multiple independent sessions concurrently and needs each one's
+status separately, use the `*Sessions` variants
+(`useGetPendingTransactionsSessions()` and friends), keyed by sessionId, instead
+of filtering the flat arrays yourself.
+:::
+
+## See also
+
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  covers the build, sign, send steps this recipe's `transactions.ts` shares,
+  without the tracking focus.
+- [Read the connected account with useGetAccount](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  applies the same "flat hooks reflect live store state, no manual refresh"
+  pattern to account data.
+- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+  is the sdk-core-only equivalent for backend/script contexts, where a different
+  poller (`TransactionWatcher`) plays the analogous role.

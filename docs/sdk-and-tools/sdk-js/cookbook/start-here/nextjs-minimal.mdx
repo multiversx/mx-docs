@@ -1,0 +1,604 @@
+---
+title: Minimal sdk-dapp v5 app in Next.js (App Router)
+description: A working Next.js 15 App Router starter with sdk-dapp v5. Client-only init wrapper, the real next.config.js, login button, account hook, compiles strict.
+difficulty: beginner
+est_minutes: 10
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - nextjs
+  - react
+  - typescript
+  - wallet
+  - devnet
+---
+
+This recipe gives you the smallest working sdk-dapp v5 setup in a Next.js 15 App
+Router app. It is the path the official sdk-dapp docs describe in passing without
+ever showing a complete working file. Use this as your starting point if you are
+scaffolding a new dApp on Next.js: create a directory and copy the complete
+project files from this page.
+
+This recipe is **not** the right starting point if you are on Vite + React (use
+[Minimal sdk-dapp v5 in Vite](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal))
+or if you have an existing v4 codebase to upgrade (use
+[Migrate v4 to v5](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)).
+
+## Prerequisites
+
+- Node.js >= 20.19.0 (required by the explicit sdk-dapp UI dependency).
+- pnpm or npm.
+- A devnet wallet, either the DeFi browser extension or xPortal (mobile via
+  WalletConnect).
+- Familiarity with the Next.js App Router (`app/` directory).
+
+## Install
+
+```bash
+mkdir nextjs-minimal
+cd nextjs-minimal
+# Create the project files shown below, then set your WalletConnect project ID.
+cp .env.local.example .env.local
+npm install
+npm run build
+npm run dev
+# open https://localhost:3000  (note the s, see Pitfalls below)
+```
+
+## Project setup
+
+<details>
+<summary>Package, TypeScript, environment, Next.js, and layout files</summary>
+
+### package.json: pin the SDK and peer dependencies
+
+`bignumber.js` and `protobufjs` are peer dependencies of sdk-core and must be
+installed explicitly. The Next.js template installs them as direct deps; we do
+the same.
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-nextjs-minimal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — minimal sdk-dapp v5 in Next.js 15 App Router. Compiles strict.",
+  "scripts": {
+    "dev": "next dev --experimental-https",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "next": "15.5.21",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.8"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS and brace-expansion transitives used by Next and sdk-dapp.
+
+### tsconfig.json: complete strict App Router configuration
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+```text title=".env.local.example"
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=
+```
+
+```ts title="next-env.d.ts"
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+```
+
+Create a WalletConnect project ID, copy `.env.local.example` to `.env.local`,
+and set the value. The application reports a direct configuration error when it
+is absent.
+
+### next.config.js: the real config, not the README's
+
+This matches the actual `next.config.js` shipped in `mx-template-dapp-nextjs`, not
+the simplified version in that repo's README. The four entries do four things:
+`transpilePackages: ['@multiversx/sdk-dapp-ui']` (sdk-dapp-ui ships untranspiled
+web components); `webpack(config) { config.resolve.fallback = { fs: false } }`
+(silences the `fs` lookup in transitive deps that do not run server-side anyway);
+`config.externals.push('pino-pretty', 'lokijs', 'encoding', ...)` (Node-only code
+pulled in via the WalletConnect transitive chain); and the `bufferutil` /
+`utf-8-validate` externals (optional WebSocket performance binaries).
+
+```js title="next.config.js"
+// next.config.js — sdk-dapp v5 + Next.js 15 App Router
+//
+// This file mirrors the actual configuration shipped in
+// https://github.com/multiversx/mx-template-dapp-nextjs/blob/main/next.config.js
+// (NOT the simplified version shown in that repo's README).
+//
+// What each entry does:
+//   transpilePackages: sdk-dapp-ui ships ESM web components untranspiled.
+//     Without this, Next.js's default Babel pipeline rejects the syntax.
+//   webpack().resolve.fallback.fs: false: silences `fs` lookups in
+//     transitive deps that don't actually run server-side.
+//   externals: pino-pretty, lokijs, encoding pull in Node-only code via
+//     the WalletConnect transitive chain. Externalising them avoids
+//     bundling them and the warnings they produce.
+//   bufferutil / utf-8-validate: optional WebSocket native acceleration —
+//     graceful fallback if absent, but webpack tries to bundle them
+//     unless externalised.
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: ['@multiversx/sdk-dapp-ui'],
+  webpack: (config) => {
+    config.resolve.fallback = { ...(config.resolve.fallback || {}), fs: false };
+    config.externals.push(
+      'pino-pretty',
+      'lokijs',
+      'encoding',
+      {
+        bufferutil: 'bufferutil',
+        'utf-8-validate': 'utf-8-validate',
+      },
+    );
+    return config;
+  },
+};
+
+module.exports = nextConfig;
+```
+
+### app/layout.tsx: root layout, just the shell
+
+`layout.tsx` is a server component (no `"use client"`). It imports `<Providers>`,
+which is the client-only wrapper.
+
+```tsx title="app/layout.tsx"
+// app/layout.tsx — Next.js 15 App Router root layout.
+//
+// This is a server component (no "use client" directive). It does nothing
+// blockchain-related — it only renders the html/body shell and delegates
+// to <Providers /> which is the client-only sdk-dapp init wrapper.
+//
+// Why this split matters: sdk-dapp's initApp() touches sessionStorage,
+// which is undefined during SSR / build. Putting initApp in a server
+// component crashes the build. Putting it in a "use client" component that
+// runs in useEffect makes it safe.
+
+import type { Metadata, Viewport } from 'next';
+import type { ReactNode } from 'react';
+import { Providers } from './providers';
+
+export const metadata: Metadata = {
+  title: 'Cookbook recipe — Minimal sdk-dapp v5 in Next.js',
+  description:
+    'A working sdk-dapp v5 + Next.js 15 App Router setup that compiles under TypeScript strict mode.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+</details>
+
+## app/providers.tsx: the client-only init wrapper
+
+This is the file the docs leave you to invent. Three things happen here:
+`"use client"` keeps `initApp()` off the server (it touches `sessionStorage`,
+which crashes during SSR); `useEffect` runs `initApp(config)` once on mount and
+gates rendering on `ready`; `UnlockPanelManager.init()` sets up the wallet
+selection panel, with an **`async`** `onClose` handler (see Pitfall 1).
+
+```tsx title="app/providers.tsx"
+'use client';
+
+// app/providers.tsx — client-only sdk-dapp v5 init wrapper.
+//
+// This component is the file the official docs leave to the reader to
+// invent. It does three things:
+//
+//   1. Marks itself "use client" so it never runs on the server. sdk-dapp's
+//      initApp reads from sessionStorage, which is undefined during SSR.
+//   2. Calls initApp(config) once on mount inside useEffect. Renders a
+//      lightweight loader until init resolves; then renders children.
+//   3. Configures the UnlockPanelManager — the v5 replacement for the
+//      per-provider login button components from v4.
+//
+// IMPORTANT: the OnCloseUnlockPanelType requires Promise<void>. The docs
+// example uses sync `() => navigate(...)`
+// which fails strict-mode compile. We use `async` callbacks.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { dappConfig } from '../lib/multiversx';
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+      UnlockPanelManager.init({
+        loginHandler: async (): Promise<void> => {
+          // Replace with your post-login navigation.
+          // eslint-disable-next-line no-console
+          console.log('Logged in.');
+        },
+        onClose: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Unlock panel closed.');
+        },
+      });
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+## app/page.tsx: landing page with login and account info
+
+`useGetIsLoggedIn()` and `useGetAccount()` are sdk-dapp's React hooks. The
+component renders a connect button when logged out and the account address plus
+EGLD balance when logged in.
+
+```tsx title="app/page.tsx"
+'use client';
+
+// app/page.tsx — landing page.
+//
+// Two states:
+//   1. Logged out → "Connect wallet" button that opens the unlock panel.
+//   2. Logged in  → address (bech32) and EGLD balance.
+//
+// All blockchain state comes from sdk-dapp React hooks. These read from a Zustand store that initApp populates,
+// so they MUST run inside <Providers> — they return empty defaults until
+// init has resolved.
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import { formatAmount } from '@multiversx/sdk-dapp/out/lib/sdkDappUtils';
+
+export default function Home(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const account = useGetAccount();
+  const { network } = useGetNetworkConfig();
+
+  // The UnlockPanelManager is a singleton. .getInstance() works once it has
+  // been initialised inside <Providers>. Calling .openUnlockPanel() raises
+  // the wallet selector.
+  const handleConnect = (): void => {
+    // openUnlockPanel() returns Promise<void> (see
+    // node_modules/@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager.d.ts).
+    // This handler is a sync onClick, so we explicitly discard the promise —
+    // matching the eslint no-floating-promises gate.
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  const handleLogout = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Minimal sdk-dapp v5 in Next.js</h1>
+      <p>
+        Network: <code>{network.chainId}</code> · API: <code>{network.apiAddress}</code>
+      </p>
+
+      {!isLoggedIn ? (
+        <button
+          type="button"
+          onClick={handleConnect}
+          style={{
+            padding: '0.75rem 1.25rem',
+            fontSize: '1rem',
+            cursor: 'pointer',
+          }}
+        >
+          Connect wallet
+        </button>
+      ) : (
+        <div>
+          <h2>Connected</h2>
+          <p>
+            Address: <code>{account.address}</code>
+          </p>
+          <p>
+            Balance:{' '}
+            <code>
+              {formatAmount({
+                input: account.balance,
+                decimals: 18,
+                digits: 4,
+                showLastNonZeroDecimal: true,
+              })}{' '}
+              {network.egldLabel}
+            </code>
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              void handleLogout();
+            }}
+            style={{
+              padding: '0.5rem 1rem',
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+            }}
+          >
+            Disconnect
+          </button>
+        </div>
+      )}
+    </main>
+  );
+}
+```
+
+## lib/multiversx.ts: environment config
+
+Centralized config so swapping environments is a one-line change. Exports
+`dappConfig`, consumed by `<Providers>`.
+
+```ts title="lib/multiversx.ts"
+// lib/multiversx.ts — environment configuration for sdk-dapp's initApp.
+//
+// Centralising config here means that swapping environments
+// (devnet -> testnet -> mainnet) is a one-file change. It also lets us keep
+// secret-ish values (WalletConnect project IDs) in a single place and read
+// them from environment variables.
+//
+// The full `dAppConfig` shape accepts more keys than this. We
+// only set the keys we actually use; sdk-dapp fills the rest with defaults.
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+const WALLET_CONNECT_PROJECT_ID =
+  process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID in .env.local before starting the app.',
+  );
+}
+
+// `dappConfig` is consumed by `app/providers.tsx` -> `initApp(...)`.
+export const dappConfig = {
+  storage: {
+    // sessionStorage on the client. SSR-safe because <Providers> only calls
+    // initApp inside a useEffect.
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    // nativeAuth: true issues a JWT-shaped token on login that backends can
+    // verify. Set to false for the
+    // simplest possible flow.
+    nativeAuth: true,
+    // `theme` takes one of the enum's string values; the short `'dark'` fails,
+    // so use ThemesEnum. sdk-dapp's own
+    // InitAppType JSDoc example uses `theme: ThemesEnum.light` (see
+    // node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts).
+    // The runtime value is the literal 'mvx:dark-theme'; the web components
+    // key off that exact string.
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+  },
+};
+
+// Re-export EnvironmentsEnum so consumers don't need a deep import.
+export { EnvironmentsEnum };
+```
+
+## Run it
+
+```bash
+npm run dev
+```
+
+Then open `https://localhost:3000` (HTTPS, see Pitfall 2). You should see a
+"Connect wallet" button; after clicking, the sdk-dapp unlock panel listing your
+installed providers; after connecting, the account address (bech32) and the EGLD
+balance, formatted via `formatAmount`.
+
+## How it works
+
+Three sdk-dapp v5 concepts are in play here.
+
+**`initApp()` is imperative, not declarative.** Unlike wagmi or
+`@solana/wallet-adapter-react`, sdk-dapp's setup is a function call you must
+`await` once before any hook works. The `<Providers>` component wraps that call
+so React does not render until it resolves. This is the workaround for the
+SSR-unsafe init; the docs show a top-level `initApp(...).then(render)` which works
+in Vite but breaks in Next.js.
+
+**`UnlockPanelManager` replaces v4 login button components.** In v4 you imported
+`<ExtensionLoginButton>`, `<WalletConnectLoginButton>`, and so on, one component
+per provider. In v5 you call `UnlockPanelManager.init({ loginHandler })` and then
+`.openUnlockPanel()` from any button. The panel itself is a web component rendered
+by `@multiversx/sdk-dapp-ui`.
+
+**Hooks read from a Zustand store.** `useGetAccount()`, `useGetIsLoggedIn()`, and
+`useGetNetworkConfig()` are thin wrappers over `useSelector` against a Zustand
+store initialized inside `initApp()`. That is why they return empty/default values
+until init completes, and why `<Providers>` gates rendering on the `ready` flag.
+
+## Pitfalls
+
+:::warning[Pitfall 1: UnlockPanelManager.init's onClose must be async]
+The docs example uses sync callbacks. That fails under TypeScript strict mode with
+`error TS2322: Type '() => void' is not assignable to type 'OnCloseUnlockPanelType'`.
+The `OnCloseUnlockPanelType` requires `Promise<void>`. Use `async () => { ... }`
+or `() => Promise.resolve(...)`. The sample code in `app/providers.tsx` does this
+correctly.
+:::
+
+:::warning[Pitfall 2: wallet providers require HTTPS, even in dev]
+Stock `next dev` serves plain `http://localhost:3000`, and the DeFi extension and
+Ledger providers refuse to connect over HTTP. That is why this recipe's dev script
+adds `--experimental-https` to serve `https://localhost:3000`. WalletConnect
+(xPortal) **does** work over HTTP, since the connection runs over the WalletConnect
+relay rather than the dApp origin. See
+[Local HTTPS for dApp dev](/sdk-and-tools/sdk-js/cookbook/start-here/local-https-setup)
+for the mkcert workflow that makes the certificate *trusted*.
+:::
+
+:::warning[Pitfall 3: initApp() must run client-side only]
+`initApp()` reads from `sessionStorage` during rehydration. On the server (during
+Next.js SSR or build), `sessionStorage` is undefined and the call throws. The
+`"use client"` plus `useEffect` pattern in `app/providers.tsx` is mandatory; you
+cannot put `initApp()` at module scope.
+:::
+
+:::note[Pitfall 4: expect two build warnings]
+Building this recipe surfaces two non-blocking warnings:
+`Attempted import error: 'firstValueFrom' is not exported from 'rxjs'` and
+`Critical dependency: the request of a dependency is an expression`. The first is
+the `@ledgerhq/hw-transport-web-ble` package pulling an older `rxjs`; the second is
+`protobufjs/inquire` doing a runtime `require` lookup. Neither breaks the build.
+:::
+
+## See also
+
+- [Minimal sdk-dapp v5 in Vite + React](/sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal)
+  is the same recipe, Vite path, no SSR concerns.
+- [Local HTTPS for dApp dev](/sdk-and-tools/sdk-js/cookbook/start-here/local-https-setup)
+  is how to make `https://localhost:3000` work for both Next.js and Vite.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the next thing you will do once login works.
+- [Migrate v4 to v5](/sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration)
+  if you have an existing v4 Next.js codebase.

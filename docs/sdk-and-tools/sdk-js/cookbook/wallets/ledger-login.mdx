@@ -1,0 +1,634 @@
+---
+title: Log in with a Ledger hardware wallet
+description: A dedicated Ledger login button using ProviderFactory directly, including the anchor element the SDK renders its own device-connect and account-picker UI into.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - wallet
+  - ledger
+  - react
+  - typescript
+  - devnet
+---
+
+A dedicated, single-provider login button for a Ledger hardware wallet. It is the
+same `ProviderFactory` pattern as
+[Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login)
+and
+[Login via xPortal / WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login),
+this time for `ProviderTypeEnum.ledger`. Ledger needs the same real DOM anchor
+WalletConnect does, but for a different reason: instead of a QR code, the SDK
+renders its own device-connect screen, a paginated account picker, and a confirm
+screen into it.
+
+Use this when you want a dedicated "Connect Ledger" button, and when your users
+are expected to bring physical hardware wallets. This recipe cannot be exercised
+end to end without one, see Pitfall 1.
+
+## Prerequisites
+
+- A working sdk-dapp v5 setup (Next.js or Vite, see the start-here recipes).
+- A physical Ledger device with the MultiversX app installed and open on it.
+- A Chromium-based browser. WebHID/WebUSB, what `@multiversx/sdk-hw-provider`
+  uses to talk to the device, are not implemented in Firefox or Safari.
+
+## Install
+
+```bash
+mkdir ledger-login
+cd ledger-login
+# Create the project files shown on this page.
+cp .env.example .env
+npm install
+npm run dev
+# open https://localhost:5173
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-ledger-login",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — login via a Ledger hardware wallet through ProviderFactory, with the anchor DOM element the SDK renders its device/account UI into. Compiles strict.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.8"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS and brace-expansion transitives used by Vite and sdk-dapp.
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```text title=".env.example"
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+```ts title="vite.config.ts"
+// vite.config.ts — sdk-dapp v5 + Vite + React.
+//
+// Identical, verified configuration to the vite-react-minimal recipe's vite.config.ts
+// — see that recipe's Pitfalls 5–6 for why each entry here exists.
+// This recipe needs the Ledger-specific fix more than any of its siblings:
+// LedgerLoginButton.tsx exercises `@multiversx/sdk-hw-provider`'s HWProvider
+// directly (via ProviderFactory), which pulls in the three WebUSB/WebHID/WebBLE
+// transport packages for real — not just transitively through sdk-dapp's
+// module graph like the other wallet recipes.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    // Do NOT set `https` here yourself — basicSsl() injects the cert via
+    // its own Vite `config` hook (see @vitejs/plugin-basic-ssl's README).
+    port: 5173,
+  },
+  optimizeDeps: {
+    // NEVER add '@multiversx/sdk-dapp' itself here — it has no
+    // main/module/exports field and crashes the dev server if you do. See
+    // the vite-react-minimal recipe's Pitfall 5.
+    include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
+    // Upstream bug workaround (nested @ledgerhq/devices@8.16.0 is missing
+    // files) — see the vite-react-minimal recipe's Pitfall 6.
+    exclude: [
+      '@ledgerhq/devices/hid-framing',
+      '@ledgerhq/devices/ble/sendAPDU',
+      '@ledgerhq/devices/ble/receiveAPDU',
+    ],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        '@ledgerhq/devices/hid-framing',
+        '@ledgerhq/devices/ble/sendAPDU',
+        '@ledgerhq/devices/ble/receiveAPDU',
+      ],
+    },
+  },
+});
+```
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook recipe — Ledger login</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+```tsx title="src/main.tsx"
+// src/main.tsx — Vite entry point. Same pattern as every other recipe.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+```ts title="src/vite-env.d.ts"
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_WALLETCONNECT_PROJECT_ID?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+</details>
+
+## The button
+
+```tsx title="src/LedgerLoginButton.tsx"
+// src/LedgerLoginButton.tsx — a dedicated Ledger hardware-wallet login
+// button with an anchor element for the SDK's own device/account UI.
+//
+// Same overall pattern as "Login via the DeFi extension" and "Login via
+// xPortal / WalletConnect" — ProviderFactory.create() + provider.login() —
+// with the anchor requirement specific to Ledger:
+//
+//   ProviderFactory.create({ type: ProviderTypeEnum.ledger, anchor }) needs
+//   a real HTMLElement. The SDK renders a `<mvx-ledger-connect>` web
+//   component (from the optional @multiversx/sdk-dapp-ui package — it
+//   installs automatically as an npm optionalDependency of sdk-dapp, see
+//   the explanation below) into that anchor: first a "connecting" screen,
+//   then a paginated list of the accounts derived from the device (10 per
+//   page), then a confirm screen while you approve the login on the
+//   physical device itself.
+//
+// Everything below is verified against the actually-installed
+// @multiversx/sdk-dapp source (not just its .d.ts files), the same standard
+// this Cookbook's WalletConnect/DeFi-extension recipes were held to:
+//
+//   ProviderFactory.create({ type: ProviderTypeEnum.ledger, anchor })
+//     → constructs `new LedgerProviderStrategy({ anchor })`, then calls
+//       `LedgerIdleStateManager.getInstance().init()`
+//       (node_modules/@multiversx/sdk-dapp/out/providers/ProviderFactory.cjs)
+//     → internally calls setAccountProvider() for you, same as every other
+//       provider type — no separate call needed.
+//   strategy.init()
+//     → connects to the physical device via @multiversx/sdk-hw-provider's
+//       HWProvider (WebUSB/WebHID under the hood). Because no account is
+//       logged in yet, this happens eagerly, as part of create() itself —
+//       not deferred to login() — confirmed from
+//       .../LedgerProviderStrategy/helpers/getLedgerProvider/getLedgerProvider.cjs:
+//       `shouldInitProvider = options?.shouldInitProvider || !isLoggedIn`.
+//       Practically: clicking "Connect Ledger" immediately triggers the
+//       browser's native device-permission prompt, before any app UI shows.
+//   provider.login()
+//     → renders the account list + confirm screen into the anchor via
+//       LedgerConnectStateManager (confirmed from
+//       .../LedgerProviderStrategy/helpers/authenticateLedgerAccount/authenticateLedgerAccount.cjs).
+//       You do NOT pass an addressIndex yourself — the SDK's own UI collects
+//       it and feeds it back internally. Once the user approves on-device,
+//       login() resolves the same way it does for every other provider:
+//       useGetIsLoggedIn() / useGetAccount() are correct immediately after.
+
+import { useRef, useState } from 'react';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { ProviderFactory } from '@multiversx/sdk-dapp/out/providers/ProviderFactory';
+import { ProviderTypeEnum } from '@multiversx/sdk-dapp/out/providers/types/providerFactory.types';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+
+export function LedgerLoginButton(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const [status, setStatus] = useState<'idle' | 'connecting' | 'error'>('idle');
+  const [error, setError] = useState<string | null>(null);
+  // The device-connection status, account list, and confirm screen all
+  // render into this div via a web component the SDK defines at runtime.
+  // It must exist in the DOM before create() runs — rendered unconditionally
+  // below, so by the time a click handler fires, anchorRef.current is set.
+  const anchorRef = useRef<HTMLDivElement | null>(null);
+
+  const handleConnect = async (): Promise<void> => {
+    if (!anchorRef.current) {
+      // Should not happen — the anchor div always renders — but keeps the
+      // types honest under strict null checks rather than asserting `!`.
+      setError('Ledger anchor not mounted yet.');
+      setStatus('error');
+      return;
+    }
+
+    setStatus('connecting');
+    setError(null);
+    try {
+      // This call itself triggers the browser's WebHID/WebUSB device picker
+      // — it happens here, not inside login() — see the file header.
+      const provider = await ProviderFactory.create({
+        type: ProviderTypeEnum.ledger,
+        anchor: anchorRef.current,
+      });
+      // nativeAuth is enabled in this recipe's dappConfig, so login()
+      // generates its own native-auth token internally, same as every
+      // other provider.
+      await provider.login();
+      setStatus('idle');
+    } catch (err) {
+      // Two distinct failure classes reach this catch, and this recipe
+      // cannot tell them apart without a physical device to reproduce
+      // against — flagged honestly rather than guessed:
+      //   1. The device/transport layer failing (no device plugged in,
+      //      wrong app open, browser without WebHID/WebUSB support —
+      //      Firefox and Safari do not implement either API).
+      //   2. The user cancelling from the account list or confirm screen
+      //      rendered inside the anchor.
+      // sdk-dapp's own internal recovery path (rebuildProvider, used before
+      // signing) shows a toast reading "Unlock your device & open the
+      // MultiversX App" for case 1 — a reasonable model for what to tell
+      // the user here too, but this recipe surfaces the raw message rather
+      // than pattern-matching on it.
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      setStatus('error');
+    }
+  };
+
+  const handleDisconnect = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  if (isLoggedIn) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          void handleDisconnect();
+        }}
+        style={buttonStyle}
+      >
+        Disconnect
+      </button>
+    );
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        disabled={status === 'connecting'}
+        onClick={() => {
+          void handleConnect();
+        }}
+        style={buttonStyle}
+      >
+        {status === 'connecting' ? 'Check your Ledger…' : 'Connect Ledger'}
+      </button>
+
+      {/* The SDK renders its device-connect / account-picker / confirm UI
+          into this element once ProviderFactory.create() runs. Give it real
+          dimensions — an empty 0x0 div means that UI has nowhere visible to
+          draw, the same requirement as the WalletConnect recipe's QR anchor. */}
+      <div ref={anchorRef} style={anchorStyle} />
+
+      {status === 'error' && error && (
+        <p style={{ color: 'crimson', marginTop: '0.5rem' }}>
+          Connection failed: <code>{error}</code>
+        </p>
+      )}
+    </div>
+  );
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+
+const anchorStyle: React.CSSProperties = {
+  marginTop: '1rem',
+  minHeight: '280px',
+  minWidth: '280px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+```
+
+## The demo page
+
+```tsx title="src/App.tsx"
+// src/App.tsx — demo page for LedgerLoginButton.
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { LedgerLoginButton } from './LedgerLoginButton';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const account = useGetAccount();
+  const { network } = useGetNetworkConfig();
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Login via Ledger</h1>
+      <p>
+        Network: <code>{network.chainId}</code>
+      </p>
+      <p style={{ color: '#666' }}>
+        Requires a physical Ledger device with the MultiversX app installed
+        and open, plus a Chromium-based browser (Chrome, Edge) — WebHID/WebUSB
+        are not implemented in Firefox or Safari.
+      </p>
+
+      <LedgerLoginButton />
+
+      {isLoggedIn && (
+        <p style={{ marginTop: '1rem' }}>
+          Connected as <code>{account.address}</code>.
+        </p>
+      )}
+    </main>
+  );
+}
+```
+
+## Provider bootstrap
+
+`providers.tsx` calls `initApp()` once and gates rendering until the store is
+ready; `lib/multiversx.ts` holds the environment config it passes in.
+
+```tsx title="src/providers.tsx"
+// src/providers.tsx — sdk-dapp v5 init wrapper.
+//
+// Deliberately does NOT configure UnlockPanelManager — this recipe bypasses
+// the generic multi-provider picker and talks to ProviderFactory directly
+// for one specific provider. See src/LedgerLoginButton.tsx.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { dappConfig } from './lib/multiversx';
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+```ts title="src/lib/multiversx.ts"
+// src/lib/multiversx.ts — environment configuration for sdk-dapp's initApp.
+// Same shape as every other Vite recipe in this Cookbook — see
+// the vite-react-minimal recipe for why the fields are set this way.
+// walletConnectV2ProjectId isn't exercised by this recipe (LedgerLoginButton
+// talks to ProviderFactory with ProviderTypeEnum.ledger only) but is kept
+// here for copy-paste consistency with the rest of the corpus.
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+const WALLET_CONNECT_PROJECT_ID =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
+
+export const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    nativeAuth: true,
+    // `theme` takes one of the enum's string values (e.g. 'mvx:dark-theme'); the
+    // short `'dark'` fails — see node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts.
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+  },
+};
+
+export { EnvironmentsEnum };
+```
+
+## How it works
+
+**The anchor is not optional in practice, the same requirement as the
+WalletConnect QR code.** `ProviderFactory.create({ type: ProviderTypeEnum.ledger, anchor })`
+passes the anchor straight into `new LedgerProviderStrategy({ anchor })`
+(`node_modules/@multiversx/sdk-dapp/out/providers/ProviderFactory.cjs`). The SDK
+renders a `<mvx-ledger-connect>` web component into it, from the optional
+`@multiversx/sdk-dapp-ui` package, which installs automatically as an
+`optionalDependencies` entry of `@multiversx/sdk-dapp` itself; nothing extra to
+add to `package.json`.
+
+**Connecting to the device happens inside `create()`, before `login()` is ever
+called.** Because no account is logged in yet on a fresh page load,
+`getLedgerProvider()` computes
+`shouldInitProvider = options?.shouldInitProvider || !isLoggedIn`, which
+evaluates to `true`. That is what triggers the browser's native WebHID/WebUSB
+device-permission prompt, as soon as you click "Connect Ledger," before any
+account list appears.
+
+**No `addressIndex` is passed from this component.** The SDK's own UI (rendered
+into the anchor) lists the accounts derivable from the device and calls back into
+the login flow with the chosen index internally. This component only calls
+`provider.login()` with no arguments, the same call shape as every other provider
+in this Cookbook.
+
+## Pitfalls
+
+:::warning[Pitfall 1: this recipe cannot be verified end-to-end without physical hardware]
+Everything above the "physical device" line, the `ProviderFactory` dispatch, the
+anchor requirement, the `shouldInitProvider` timing, the account-list hand-off,
+is confirmed against the actually-installed `@multiversx/sdk-dapp` source. What a
+real device-pairing session looks like in detail (exact error messages on cancel,
+exact WebHID permission-prompt wording) is not independently reproduced here.
+Treat error messages as unstructured strings to display.
+:::
+
+:::danger[Pitfall 2: Firefox and Safari cannot run this recipe at all]
+WebHID and WebUSB are Chromium-only browser APIs. This is a platform limitation,
+not something the SDK or this recipe can work around.
+:::
+
+:::warning[Pitfall 3: the Ledger deep-import fix is load-bearing here, not dormant]
+The other wallet recipes in this Cookbook carry the same `vite.config.ts`
+`optimizeDeps.exclude` / `rollupOptions.external` fix for three `@ledgerhq/devices`
+deep-import paths, but only because `ProviderFactory` transitively references the
+Ledger strategy. This recipe actually calls into that code path, so dropping the
+fix here breaks both `npm run dev` and `npm run build`, not just a path you never
+exercise.
+:::
+
+:::note[Pitfall 4: the MultiversX app must be open on the device]
+If it is not, or the device goes idle mid-session, sdk-dapp's own recovery path
+(used before signing) shows a toast reading "Unlock your device & open the
+MultiversX App", confirmed from the compiled source's `rebuildProvider` catch block.
+:::
+
+## See also
+
+- [Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login)
+  is the same `ProviderFactory` pattern for the browser-extension provider.
+- [Login via xPortal / WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login)
+  is the same pattern, QR-code anchor instead of a device UI.
+- [Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)
+  is the multi-provider picker alternative to this dedicated button.
+- [Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  is what to do once `provider.login()` resolves.

@@ -1,0 +1,284 @@
+---
+title: Simulate and estimate a transaction
+description: Ask the network what a transaction would cost with estimateTransactionCost and what it would do with simulateTransaction, without ever broadcasting it.
+difficulty: intermediate
+est_minutes: 7
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - network-provider
+  - transaction
+  - gas
+  - typescript
+---
+
+Before you spend real gas, ask the network two questions about a transaction,
+without broadcasting it, without moving funds:
+
+- **`estimateTransactionCost(tx)`**, how much gas will this need? Returns
+  `{ gasLimit, status }`.
+- **`simulateTransaction(tx)`**, what would this actually do? Returns the full
+  `TransactionOnNetwork` it would produce: status, smart-contract results, logs,
+  and a `failReason` if it would fail.
+
+Both are read-only. This recipe builds a plain transfer from a **throwaway
+account** that is generated in-process and never funded or broadcast, so there is
+nothing to set up, no PEM, no faucet.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Network access to devnet. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+mkdir simulate-estimate-transaction
+cd simulate-estimate-transaction
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-simulate-estimate-transaction",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — ask the network what a transaction would cost (estimateTransactionCost) and what it would do (simulateTransaction), without broadcasting it.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## The two dry-run reads
+
+```ts title="src/simulateEstimate.ts"
+// src/simulateEstimate.ts — the subject of this recipe: two "dry run" reads
+// that ask the network about a transaction WITHOUT broadcasting it. Neither
+// changes state or spends funds.
+//
+//   - estimateTransactionCost(tx) → how much gas this transaction needs.
+//     Returns a TransactionCostResponse { gasLimit, status }. Works on an
+//     UNSIGNED transaction: the SDK fills in a dummy signature and fetches the
+//     sender nonce for you internally.
+//   - simulateTransaction(tx)    → what this transaction WOULD do: the full
+//     TransactionOnNetwork it would produce (status, smart-contract results,
+//     logs). Runs in a sandbox. Unlike estimate, it requires a signature to be
+//     PRESENT on the transaction (a throwaway one is fine — nothing is sent).
+//
+// Both are on INetworkProvider, so an Api or Proxy provider both work.
+
+import type {
+  INetworkProvider,
+  Transaction,
+  TransactionOnNetwork,
+  TransactionCostResponse,
+} from '@multiversx/sdk-core';
+
+/** How much gas will this cost? Works on an unsigned transaction. */
+export async function estimateGas(
+  provider: INetworkProvider,
+  tx: Transaction,
+): Promise<TransactionCostResponse> {
+  return provider.estimateTransactionCost(tx);
+}
+
+/** What would this transaction do? Requires a signature to be present. */
+export async function simulate(
+  provider: INetworkProvider,
+  tx: Transaction,
+): Promise<TransactionOnNetwork> {
+  return provider.simulateTransaction(tx);
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — build a plain EGLD transfer from a THROWAWAY account (no
+// funds, never broadcast), then ask devnet to estimate its gas and simulate its
+// execution. No real wallet, no real funds.
+//
+// Usage:
+//   npm run build && npm start
+
+import { DevnetEntrypoint, Account, Mnemonic, Transaction } from '@multiversx/sdk-core';
+import { estimateGas, simulate } from './simulateEstimate';
+
+async function main(): Promise<void> {
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  const provider = entrypoint.createNetworkProvider();
+
+  // A throwaway account: generated in-process, never funded, never broadcast.
+  // It only needs to be a valid sender address for the transaction we probe.
+  const account = Account.newFromMnemonic(Mnemonic.generate().toString());
+  const config = await provider.getNetworkConfig();
+
+  // Send to SELF so the sender and receiver are always in the same shard —
+  // simulate runs on the sender's shard, so a same-shard tx gives a definitive
+  // execution status every run (a cross-shard one would only report routing).
+  const tx = new Transaction({
+    sender: account.address,
+    receiver: account.address,
+    gasLimit: 50000n,
+    chainID: config.chainID,
+    value: 1000000000000000000n, // 1 EGLD — this account does NOT have it; that is the point of a dry run
+    nonce: 0n,
+  });
+
+  console.log(`Throwaway sender/receiver: ${account.address.toBech32()}`);
+
+  // ESTIMATE — runs against the UNSIGNED transaction.
+  const cost = await estimateGas(provider, tx);
+  console.log('\nestimateTransactionCost (unsigned):');
+  console.log(`  gasLimit ${cost.gasLimit}`);
+
+  // SIMULATE — needs a signature present. A throwaway signature from the
+  // ephemeral key is enough; nothing is broadcast.
+  tx.signature = await account.signTransaction(tx);
+  const simulated = await simulate(provider, tx);
+  const failReason = typeof simulated.raw.failReason === 'string' ? simulated.raw.failReason : '';
+  console.log('\nsimulateTransaction (signed with the throwaway key, not broadcast):');
+  console.log(`  status ${simulated.status.toString()}  (the sandbox execution outcome)`);
+  if (failReason) {
+    console.log(`  failReason: ${failReason}`);
+  }
+  console.log('  (an unfunded sender means "fail" here — simulate caught it for free, no gas spent)');
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start
+```
+
+Expected output (the throwaway address changes every run; everything else is
+stable):
+
+```text
+Throwaway sender/receiver: erd1u34zst7xxnkj2f097mw7j3xqx75mxnfd2tut5nyvl7usfewtjgps6yzv0d
+
+estimateTransactionCost (unsigned):
+  gasLimit 50000
+
+simulateTransaction (signed with the throwaway key, not broadcast):
+  status fail  (the sandbox execution outcome)
+  failReason: insufficient balance for fees, has: 0, wanted: 50000000000000
+  (an unfunded sender means "fail" here — simulate caught it for free, no gas spent)
+```
+
+## How it works
+
+**The failure is the point.** The throwaway sender has no funds, so simulate
+returns `status: fail` with `failReason: insufficient balance for fees`, the exact
+error you would otherwise have paid gas to discover on-chain. Simulate is how you
+catch that first. On a funded sender the same call would return `status: success`
+and the real smart-contract results.
+
+**Estimate needs no signature; simulate does.** `estimateTransactionCost` works on
+the raw, unsigned transaction, the SDK injects a dummy 64-byte signature and
+recalls the nonce for you internally (confirmed in
+`node_modules/@multiversx/sdk-core/out/networkProviders/proxyNetworkProvider.js`).
+`simulateTransaction` rejects a nil signature even though `checkSignature`
+defaults to `false`, so the transaction must carry one, and a throwaway key's
+signature is enough because nothing is broadcast.
+
+**Send to self to keep the simulation same-shard.** Simulate runs on the sender's
+shard. A cross-shard transaction's simulate reports only routing (`senderShard` /
+`receiverShard`) with no execution status; a same-shard one (sender === receiver
+here) always returns a definitive status. That is why `failReason` is populated on
+every run.
+
+## Pitfalls
+
+:::warning[Pitfall 1: simulate needs a signature, estimate does not]
+`simulateTransaction` throws `nil signature while trying to simulate` on a
+transaction with no signature, even with `checkSignature=false`. Sign it first (a
+throwaway key is fine, nothing is sent). `estimateTransactionCost` has no such
+requirement.
+:::
+
+:::note[Pitfall 2: a cross-shard simulate returns routing, not a status]
+Simulate executes on the sender's shard only. If sender and receiver are in
+different shards, the response is just `{ senderShard, receiverShard }` and
+`status` is empty — not a bug, just the limit of a single-shard sandbox. Send to
+self (or keep both endpoints in one shard) for a definitive status.
+:::
+
+:::note[Pitfall 3: estimate's status field is not the execution status]
+`TransactionCostResponse.status` is empty for a plain transfer, the `/cost`
+endpoint returns a `gasLimit`, not an execution outcome. For "would this succeed",
+use `simulateTransaction`, not the `status` on the estimate response.
+:::
+
+## See also
+
+- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+  is how you actually send it once simulate says it will succeed.
+- [Fetch network config and status](/sdk-and-tools/sdk-js/cookbook/network-providers/fetch-network-config-status)
+  provides the `gasPerDataByte` / `minGasLimit` formula that estimate spares you
+  from applying by hand.
+- [Configure a network provider](/sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider)
+  builds the provider both dry-run reads run on.

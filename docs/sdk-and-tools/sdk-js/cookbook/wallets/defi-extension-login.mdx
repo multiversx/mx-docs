@@ -1,0 +1,620 @@
+---
+title: Log in with the DeFi Wallet browser extension
+description: A dedicated single-provider login button using ProviderFactory directly, with real extension detection and no generic multi-provider picker UI.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - wallet
+  - wallet-extension
+  - react
+  - typescript
+  - devnet
+---
+
+[Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)
+covers the common case: one button, `UnlockPanelManager` picks the provider.
+This recipe is for the other case. You want a single, dedicated button for
+exactly one provider, the DeFi Wallet browser extension, with no picker in
+between. That means talking to `ProviderFactory` directly instead of
+`UnlockPanelManager`.
+
+Use this when your dApp only supports one wallet, or when you want
+provider-specific buttons side by side (a "Connect DeFi Wallet" next to a
+"Connect xPortal", see
+[Login via xPortal / WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login)
+for that sibling).
+
+## Prerequisites
+
+- A working sdk-dapp v5 setup (Next.js or Vite, see the start-here recipes).
+- The DeFi Wallet browser extension, to test the connected path. The recipe
+  handles its absence gracefully (see below) so you can also see that path
+  without installing anything.
+
+## Install
+
+```bash
+mkdir defi-extension-login
+cd defi-extension-login
+# Create the project files shown on this page.
+cp .env.example .env
+npm install
+npm run dev
+# open https://localhost:5173
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-defi-extension-login",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — a dedicated DeFi Wallet extension login button via ProviderFactory, no picker UI. Compiles strict.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.8"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS and brace-expansion transitives used by Vite and sdk-dapp.
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```text title=".env.example"
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+```ts title="vite.config.ts"
+// vite.config.ts — sdk-dapp v5 + Vite + React.
+//
+// Identical, verified configuration to the vite-react-minimal recipe's vite.config.ts
+// — see that recipe's Pitfalls 5–6 for why each entry here exists.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    // Do NOT set `https` here yourself — basicSsl() injects the cert via
+    // its own Vite `config` hook (see @vitejs/plugin-basic-ssl's README).
+    port: 5173,
+  },
+  optimizeDeps: {
+    // NEVER add '@multiversx/sdk-dapp' itself here — it has no
+    // main/module/exports field and crashes the dev server if you do. See
+    // the vite-react-minimal recipe's Pitfall 5.
+    include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
+    // Upstream bug workaround (nested @ledgerhq/devices@8.16.0 is missing
+    // files) — see the vite-react-minimal recipe's Pitfall 6.
+    exclude: [
+      '@ledgerhq/devices/hid-framing',
+      '@ledgerhq/devices/ble/sendAPDU',
+      '@ledgerhq/devices/ble/receiveAPDU',
+    ],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        '@ledgerhq/devices/hid-framing',
+        '@ledgerhq/devices/ble/sendAPDU',
+        '@ledgerhq/devices/ble/receiveAPDU',
+      ],
+    },
+  },
+});
+```
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook recipe — DeFi extension login</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+```tsx title="src/main.tsx"
+// src/main.tsx — Vite entry point. Same pattern as every other recipe.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+</details>
+
+## The button
+
+```tsx title="src/ExtensionLoginButton.tsx"
+// src/ExtensionLoginButton.tsx — a dedicated, single-provider login button.
+//
+// Unlike "Adding a wallet login button" (which opens a picker listing every
+// registered provider via UnlockPanelManager), this component talks to
+// ProviderFactory directly for exactly one provider: the DeFi Wallet
+// browser extension. Use this pattern when your dApp only supports one
+// wallet, or when you want a dedicated "Connect with DeFi Wallet" button
+// alongside (not inside) the generic picker.
+//
+// The full sequence — verified against the actual sdk-dapp source, not
+// just its .d.ts files, because the .d.ts alone doesn't say whether extra
+// steps are needed after provider.login():
+//
+//   ProviderFactory.create({ type: ProviderTypeEnum.extension })
+//     → internally calls setAccountProvider() for you (see
+//       node_modules/@multiversx/sdk-dapp/out/providers/ProviderFactory.cjs)
+//   provider.login()
+//     → internally dispatches BOTH the login-info store action and the
+//       account store action (see
+//       node_modules/@multiversx/sdk-dapp/out/providers/DappProvider/helpers/login/helpers/accountLogin.cjs)
+//
+// So after `await provider.login()` resolves, useGetIsLoggedIn() and
+// useGetAccount() already reflect the new session — no manual store
+// wiring needed beyond calling these two functions in order.
+
+import { useState } from 'react';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { ProviderFactory } from '@multiversx/sdk-dapp/out/providers/ProviderFactory';
+import { ProviderTypeEnum } from '@multiversx/sdk-dapp/out/providers/types/providerFactory.types';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+
+// The DeFi Wallet extension injects `window.multiversxWallet` once it's
+// installed and active (`window.elrondWallet` is the deprecated predecessor
+// — the SDK still checks both). This is the SAME check
+// ExtensionProviderStrategy performs internally
+// (node_modules/@multiversx/sdk-extension-provider/out/extensionProvider.js);
+// checking it here up-front lets us show an install link instead of a
+// cryptic error after the user clicks. The ambient `Window.multiversxWallet`
+// type comes from @multiversx/sdk-extension-provider's own `declare global`
+// block (its extensionProvider.d.ts) — a transitive dependency of sdk-dapp.
+function isExtensionInstalled(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    Boolean(window.multiversxWallet || window.elrondWallet)
+  );
+}
+
+export function ExtensionLoginButton(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const [status, setStatus] = useState<'idle' | 'connecting' | 'error'>('idle');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleConnect = async (): Promise<void> => {
+    setStatus('connecting');
+    setError(null);
+    try {
+      const provider = await ProviderFactory.create({
+        type: ProviderTypeEnum.extension,
+      });
+      // nativeAuth is enabled in this recipe's dappConfig, so login()
+      // generates its own native-auth token internally — no `token` arg
+      // needed here. Pass one only if you're supplying a custom token.
+      await provider.login();
+      setStatus('idle');
+    } catch (err) {
+      // ExtensionProviderStrategy throws "Extension provider is not
+      // initialised, call init() first" if the extension wasn't detected at
+      // provider-creation time (see
+      // node_modules/@multiversx/sdk-extension-provider/out/extensionProvider.js).
+      // The isExtensionInstalled() pre-check above should catch this case
+      // before we ever get here, but the catch stays as defense in depth —
+      // e.g. the user disables the extension between the check and the click.
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      setStatus('error');
+    }
+  };
+
+  const handleDisconnect = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  if (isLoggedIn) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          void handleDisconnect();
+        }}
+        style={buttonStyle}
+      >
+        Disconnect
+      </button>
+    );
+  }
+
+  if (!isExtensionInstalled()) {
+    return (
+      <a
+        href="https://chrome.google.com/webstore/detail/multiversx-defi-wallet/dngmlblcodfobpdpecaadgfbcggfjfnm"
+        target="_blank"
+        rel="noreferrer"
+        style={{ ...buttonStyle, textDecoration: 'none', display: 'inline-block' }}
+      >
+        Install DeFi Wallet extension
+      </a>
+    );
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        disabled={status === 'connecting'}
+        onClick={() => {
+          void handleConnect();
+        }}
+        style={buttonStyle}
+      >
+        {status === 'connecting' ? 'Connecting…' : 'Connect DeFi Wallet'}
+      </button>
+      {status === 'error' && error && (
+        <p style={{ color: 'crimson', marginTop: '0.5rem' }}>
+          Connection failed: <code>{error}</code>
+        </p>
+      )}
+    </>
+  );
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+```
+
+## The Window type declaration
+
+The extension injects `window.multiversxWallet`, but that global's type does not
+arrive through the deep `@multiversx/sdk-dapp/out/...` import paths this recipe
+uses. Declare it locally, or `tsc --strict` reports
+`Property 'multiversxWallet' does not exist on type 'Window'`:
+
+```ts title="src/vite-env.d.ts"
+// src/vite-env.d.ts — in a real Vite project this file also carries the line
+// `/// <reference types="vite/client" />` for import.meta.env typing. The
+// augmentation below is the part this recipe specifically needs.
+//
+// @multiversx/sdk-extension-provider declares this same augmentation in its
+// own extensionProvider.d.ts (a `declare global { interface Window { ... } }`
+// block), but that file only enters a project's compilation if something
+// imports a TYPE from that package directly. This project only imports deep
+// @multiversx/sdk-dapp/out/... paths, so the augmentation never gets pulled
+// in transitively — redeclared here with the identical shape so
+// `window.multiversxWallet` / `window.elrondWallet` type-check. Verified
+// against node_modules/@multiversx/sdk-extension-provider/out/extensionProvider.d.ts
+// on the actually-installed @multiversx/sdk-dapp v5's dependency tree.
+interface Window {
+  /** @deprecated Use `multiversxWallet` instead. */
+  elrondWallet?: {
+    extensionId: string;
+  };
+  multiversxWallet?: {
+    extensionId: string;
+  };
+}
+```
+
+## The demo page
+
+```tsx title="src/App.tsx"
+// src/App.tsx — demo page for ExtensionLoginButton.
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { ExtensionLoginButton } from './ExtensionLoginButton';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const account = useGetAccount();
+  const { network } = useGetNetworkConfig();
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Login via the DeFi Wallet extension</h1>
+      <p>
+        Network: <code>{network.chainId}</code>
+      </p>
+
+      <ExtensionLoginButton />
+
+      {isLoggedIn && (
+        <p style={{ marginTop: '1rem' }}>
+          Connected as <code>{account.address}</code>.
+        </p>
+      )}
+    </main>
+  );
+}
+```
+
+## Provider bootstrap
+
+`providers.tsx` calls `initApp()` once and gates rendering until the store is
+ready; `lib/multiversx.ts` holds the environment config it passes in. This
+recipe does not call `UnlockPanelManager.init()` in the bootstrap, because it
+never uses the panel.
+
+```tsx title="src/providers.tsx"
+// src/providers.tsx — sdk-dapp v5 init wrapper.
+//
+// Deliberately does NOT configure UnlockPanelManager. This recipe bypasses
+// the generic multi-provider picker entirely and talks to ProviderFactory
+// directly for one specific provider — see src/ExtensionLoginButton.tsx.
+// If you want the picker instead, see "Adding a wallet login button."
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { dappConfig } from './lib/multiversx';
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+```ts title="src/lib/multiversx.ts"
+// src/lib/multiversx.ts — environment configuration for sdk-dapp's initApp.
+// Same shape as every other Vite recipe in this Cookbook.
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+const WALLET_CONNECT_PROJECT_ID =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
+
+export const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    nativeAuth: true,
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+  },
+};
+
+export { EnvironmentsEnum };
+```
+
+## How it works
+
+**`ProviderFactory.create()` already registers the provider.** Verified against
+the actual sdk-dapp source
+(`node_modules/@multiversx/sdk-dapp/out/providers/ProviderFactory.cjs`), not
+inferred from the `.d.ts` alone: `create()`'s last step before returning is
+calling `setAccountProvider()` internally. You never call that yourself.
+
+**`provider.login()` already populates the whole store.** Also verified against
+source
+(`node_modules/@multiversx/sdk-dapp/out/providers/DappProvider/helpers/login/helpers/accountLogin.cjs`):
+it dispatches the login-info store action, fetches and dispatches the account,
+registers the websocket listener, and starts transaction tracking, all before
+the returned promise resolves. So this really is the complete sequence:
+
+```ts
+const provider = await ProviderFactory.create({ type: ProviderTypeEnum.extension });
+await provider.login();
+// useGetIsLoggedIn() / useGetAccount() already reflect the new session here.
+```
+
+**Detecting the extension before the click, not after.**
+`ExtensionProviderStrategy` checks `window.multiversxWallet || window.elrondWallet`
+internally
+(`node_modules/@multiversx/sdk-extension-provider/out/extensionProvider.js`). If
+neither is present it silently sets an internal flag rather than throwing, and
+the throw only happens later, on `login()`. This recipe runs the identical check
+in the UI layer first, so a user without the extension sees an install link
+instead of a button that is guaranteed to fail.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the not-installed error throws from login(), not create()]
+`ProviderFactory.create({ type: ProviderTypeEnum.extension })` calls the
+strategy's `init()` internally, which just sets a flag to `false` if the
+extension is not found. It does not throw, and `create()` still returns a
+provider object successfully. The actual throw
+(`"Extension provider is not initialised, call init() first"`) only happens on
+the next call, e.g. `login()`. Pre-check with `isExtensionInstalled()` (as this
+recipe does) rather than relying on `create()` to fail fast.
+:::
+
+:::warning[Pitfall 2: window.multiversxWallet needs a local type declaration]
+`@multiversx/sdk-extension-provider` declares this global itself, but that
+`.d.ts` only enters your compilation if something imports a *type* from that
+package directly. This recipe only imports deep `@multiversx/sdk-dapp/out/...`
+paths, so the augmentation never arrives transitively. `src/vite-env.d.ts`
+redeclares the identical shape locally.
+:::
+
+:::warning[Pitfall 3: this button only ever shows the extension option]
+It is provider-specific by design, but that means a mobile user, or a desktop
+user without the extension, hits a dead end unless you also offer another path.
+Pair it with
+[Login via xPortal / WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login),
+or use
+[Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)'s
+picker instead if you would rather the SDK decide which providers to surface.
+:::
+
+:::warning[Pitfall 4: HTTPS required]
+The DeFi extension refuses `http://localhost`. See
+[Local HTTPS for dApp dev](/sdk-and-tools/sdk-js/cookbook/start-here/local-https-setup)
+for a fully trusted mkcert alternative to this recipe's self-signed dev certificate.
+:::
+
+## See also
+
+- [Login via xPortal / WalletConnect](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login)
+  is the same `ProviderFactory` pattern, for the mobile-QR provider.
+- [Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)
+  is the multi-provider picker alternative to this dedicated single-provider button.
+- [Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  is what to do once `provider.login()` resolves.

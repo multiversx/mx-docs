@@ -1,0 +1,31 @@
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  padding: 0.22rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-800);
+  white-space: nowrap;
+}
+
+.label {
+  color: var(--ifm-color-emphasis-600);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.value {
+  font-weight: 500;
+}
+
+.valueMono {
+  font-family: var(--cookbook-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
