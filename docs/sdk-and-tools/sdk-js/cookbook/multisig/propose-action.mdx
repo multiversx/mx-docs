@@ -132,6 +132,7 @@ import {
   proposeTransferViaController,
   proposeTransferViaFactory,
   proposeAddBoardMemberViaController,
+  proposeAddBoardMemberViaFactory,
   describeProposePayload,
   parseProposedActionId,
 } from './propose';
@@ -217,7 +218,8 @@ async function runPropose(pemPath: string, useFactory: boolean, addBoardMember: 
 
   let tx;
   if (addBoardMember) {
-    tx = await proposeAddBoardMemberViaController(entrypoint, abi, proposer, EXAMPLE_MULTISIG, EXAMPLE_RECEIVER);
+    const propose = useFactory ? proposeAddBoardMemberViaFactory : proposeAddBoardMemberViaController;
+    tx = await propose(entrypoint, abi, proposer, EXAMPLE_MULTISIG, EXAMPLE_RECEIVER);
   } else {
     const propose = useFactory ? proposeTransferViaFactory : proposeTransferViaController;
     tx = await propose(entrypoint, abi, proposer, EXAMPLE_MULTISIG, EXAMPLE_RECEIVER, TRANSFER_AMOUNT_WEI);
@@ -437,6 +439,29 @@ export async function proposeAddBoardMemberViaController(
   });
 }
 
+/**
+ * Propose adding a board member (factory). Builds the unsigned transaction,
+ * then sets the nonce and signs it explicitly, matching the transfer factory
+ * path above.
+ */
+export async function proposeAddBoardMemberViaFactory(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  proposer: Account,
+  multisigContract: string,
+  newBoardMember: string,
+): Promise<Transaction> {
+  const factory = entrypoint.createMultisigTransactionsFactory(abi);
+  const transaction = await factory.createTransactionForProposeAddBoardMember(proposer.address, {
+    multisigContract: Address.newFromBech32(multisigContract),
+    boardMember: Address.newFromBech32(newBoardMember),
+    gasLimit: PROPOSE_GAS_LIMIT,
+  });
+  transaction.nonce = proposer.getNonceThenIncrement();
+  transaction.signature = await proposer.signTransaction(transaction);
+  return transaction;
+}
+
 export interface ProposePayload {
   function: string;
   args: string[];
@@ -513,6 +538,12 @@ builds, sets the nonce, and signs in one call.
 the unsigned transaction; you set `nonce` and `signature`. Both take
 `{ multisigContract, to, nativeTokenAmount, gasLimit }` and both need the multisig
 ABI at construction (`entrypoint.createMultisigController(abi)`).
+
+The same split applies to add-board-member proposals:
+`controller.createTransactionForProposeAddBoardMember(account, nonce, options)`
+builds and signs, while
+`factory.createTransactionForProposeAddBoardMember(address, options)` returns an
+unsigned transaction whose nonce and signature you set explicitly.
 
 **The moved amount is an argument, not the value.** `proposeTransferExecute` puts
 the receiver and the EGLD amount in the data; the proposing transaction's own

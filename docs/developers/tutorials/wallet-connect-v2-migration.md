@@ -12,7 +12,7 @@ Using `@multiversx/sdk-dapp` >= `2.2.8` or `@elrondnetwork/dapp-core` >= `2.0.0`
 
 WalletConnect 2.0 is already integrated, only not enabled by default.
 
-Follow [these steps](/sdk-and-tools/sdk-dapp/#walletconnect-setup) to generate and add a `walletConnectV2ProjectId`
+Follow [these steps](/sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login#configuring-the-project-id) to generate and add a `walletConnectV2ProjectId`
 
 ---
 

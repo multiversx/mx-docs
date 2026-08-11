@@ -243,10 +243,6 @@ const config = {
       {
         redirects: [
           {
-            from: "/sdk-and-tools/sdk-js/sdk-js-cookbook",
-            to: "/sdk-and-tools/sdk-js/cookbook",
-          },
-          {
             from: "/technology/glossary",
             to: "/welcome/terminology",
           },

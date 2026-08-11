@@ -252,6 +252,7 @@ const sidebars = {
                           "sdk-and-tools/sdk-js/cookbook/accounts/pem-save-load",
                           "sdk-and-tools/sdk-js/cookbook/accounts/address-utilities",
                           "sdk-and-tools/sdk-js/cookbook/accounts/fetch-account-state",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/save-key-value",
                           "sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces",
                           "sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message",
                           "sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-transaction",
@@ -273,6 +274,13 @@ const sidebars = {
                           "sdk-and-tools/sdk-js/cookbook/network-providers/await-transaction-on-condition",
                           "sdk-and-tools/sdk-js/cookbook/network-providers/simulate-estimate-transaction",
                           "sdk-and-tools/sdk-js/cookbook/network-providers/custom-api-request",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Fetching data from the network",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/fetching-data-from-network/reference",
                         ]
                       },
                       {
@@ -344,6 +352,7 @@ const sidebars = {
                         type: "category",
                         label: "Multisig",
                         items: [
+                          "sdk-and-tools/sdk-js/cookbook/multisig/deploy-multisig-contract",
                           "sdk-and-tools/sdk-js/cookbook/multisig/propose-action",
                           "sdk-and-tools/sdk-js/cookbook/multisig/sign-perform-action",
                           "sdk-and-tools/sdk-js/cookbook/multisig/read-multisig-state",
