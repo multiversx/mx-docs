@@ -13,7 +13,7 @@
     "docusaurus": "docusaurus",
     "prestart": "npm run prebuild",
     "start": "docusaurus start",
-    "prebuild": "node scripts/generate-cookbook-manifest.js && node scripts/generate-llms-txt.js && node scripts/generate-md-urls.js",
+    "prebuild": "node scripts/generate-cookbook-manifest.js && node scripts/generate-md-urls.js && node scripts/generate-llms-txt.js",
     "build": "docusaurus build",
     "predeploy": "npm run prebuild",
     "swizzle": "docusaurus swizzle",

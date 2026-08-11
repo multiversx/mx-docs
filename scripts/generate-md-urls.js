@@ -25,6 +25,13 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const DOCS_DIR = path.join(ROOT, 'docs');
 const STATIC_DIR = path.join(ROOT, 'static');
+const COOKBOOK_ROUTE = '/sdk-and-tools/sdk-js/cookbook';
+const COOKBOOK_MANIFEST = path.join(
+  ROOT,
+  'src',
+  'data',
+  'cookbook-manifest.json'
+);
 
 // ---------------------------------------------------------------------------
 // Sidebar parsing
@@ -148,7 +155,94 @@ async function computeUrlPath(docId) {
 // MDX → clean Markdown
 // ---------------------------------------------------------------------------
 
-function cleanMdxContent(content) {
+function renderCookbookIndex() {
+  const sections = JSON.parse(fs.readFileSync(COOKBOOK_MANIFEST, 'utf8'));
+
+  return sections
+    .map((section) => {
+      const recipes = section.recipes.map((recipe) => {
+        const description = (recipe.description || '').replace(/\s+/g, ' ').trim();
+        return `- [${recipe.title}](${recipe.href}.md)${description ? `: ${description}` : ''}`;
+      });
+      return [`## ${section.label}`, '', ...recipes].join('\n');
+    })
+    .join('\n\n');
+}
+
+function splitLinkTarget(target) {
+  const suffixAt = target.search(/[?#]/);
+  return suffixAt === -1
+    ? { pathname: target, suffix: '' }
+    : { pathname: target.slice(0, suffixAt), suffix: target.slice(suffixAt) };
+}
+
+function normalizeRoute(route) {
+  if (route.length > 1) return route.replace(/\/$/, '');
+  return route;
+}
+
+function findSourceRoute(targetPath, sourcePath, routeBySource) {
+  const resolved = path.resolve(path.dirname(sourcePath), targetPath);
+  const candidates = [resolved];
+
+  if (!/\.(md|mdx)$/i.test(resolved)) {
+    candidates.push(
+      `${resolved}.md`,
+      `${resolved}.mdx`,
+      path.join(resolved, 'index.md'),
+      path.join(resolved, 'index.mdx')
+    );
+  }
+
+  for (const candidate of candidates) {
+    const route = routeBySource.get(candidate);
+    if (route) return route;
+  }
+
+  return null;
+}
+
+function rewriteInternalDocLinks(content, sourcePath, routeBySource, routeByUrl) {
+  let fenceMarker = null;
+
+  return content
+    .split(/\r?\n/)
+    .map((line) => {
+      const fence = line.match(/^\s*(`{3,}|~{3,})/);
+      if (fence) {
+        const marker = fence[1][0];
+        if (!fenceMarker) fenceMarker = marker;
+        else if (fenceMarker === marker) fenceMarker = null;
+        return line;
+      }
+      if (fenceMarker) return line;
+
+      return line.replace(/(\]\(\s*)([^\s)]+)([^)]*\))/g, (match, start, target, end) => {
+        const wrapped = target.startsWith('<') && target.endsWith('>');
+        const rawTarget = wrapped ? target.slice(1, -1) : target;
+        if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(rawTarget)) return match;
+
+        const { pathname: targetPath, suffix } = splitLinkTarget(rawTarget);
+        let route = null;
+
+        if (targetPath.startsWith('/')) {
+          const routeTarget = normalizeRoute(
+            targetPath.replace(/\.(md|mdx)$/i, '')
+          );
+          route = routeByUrl.get(routeTarget) || null;
+        } else {
+          route = findSourceRoute(targetPath, sourcePath, routeBySource);
+        }
+
+        if (!route) return match;
+        const rewritten = `${route}.md${suffix}`;
+        return `${start}${wrapped ? `<${rewritten}>` : rewritten}${end}`;
+      });
+    })
+    .join('\n');
+}
+
+function cleanMdxContent(content, sourcePath, routeBySource, routeByUrl) {
   // Strip frontmatter — we'll prepend our own header
   if (content.startsWith('---')) {
     const end = content.indexOf('\n---', 3);
@@ -160,6 +254,13 @@ function cleanMdxContent(content) {
 
   // Remove standalone import statements
   content = content.replace(/^import\s+.+$/gm, '');
+
+  // The website renders this data-driven component. Render the same manifest
+  // as ordinary Markdown for the raw .md version of the cookbook index.
+  content = content.replace(
+    /^[ \t]*<CookbookIndex\s+sections=\{manifest\}\s*\/>[ \t]*$/gm,
+    renderCookbookIndex
+  );
 
   // Remove [comment]: # (...) lines
   content = content.replace(/^\[comment\]:\s*#\s*\(.*\)\s*$/gm, '');
@@ -180,7 +281,82 @@ function cleanMdxContent(content) {
   // Collapse 3+ consecutive blank lines into 2
   content = content.replace(/\n{3,}/g, '\n\n');
 
+  content = rewriteInternalDocLinks(
+    content,
+    sourcePath,
+    routeBySource,
+    routeByUrl
+  );
+
   return content.trim();
+}
+
+function validateCookbookMarkdown(generatedPaths, routeByUrl) {
+  const errors = [];
+
+  for (const generatedPath of generatedPaths) {
+    if (
+      generatedPath !== `${COOKBOOK_ROUTE}.md` &&
+      !generatedPath.startsWith(`${COOKBOOK_ROUTE}/`)
+    ) {
+      continue;
+    }
+
+    const filePath = path.join(STATIC_DIR, generatedPath.replace(/^\//, ''));
+    const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
+    let fenceMarker = null;
+
+    for (let index = 0; index < lines.length; index++) {
+      const line = lines[index];
+      const fence = line.match(/^\s*(`{3,}|~{3,})/);
+      if (fence) {
+        const marker = fence[1][0];
+        if (!fenceMarker) fenceMarker = marker;
+        else if (fenceMarker === marker) fenceMarker = null;
+        continue;
+      }
+      if (fenceMarker) continue;
+
+      if (/^\s*<[A-Z][A-Za-z\d.]*(?:\s|\/?>)/.test(line)) {
+        errors.push(`${generatedPath}:${index + 1}: unresolved MDX component`);
+      }
+
+      for (const match of line.matchAll(/\]\(\s*([^\s)]+)[^)]*\)/g)) {
+        const target = match[1].replace(/^<|>$/g, '');
+        if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(target)) continue;
+
+        const { pathname: targetPath } = splitLinkTarget(target);
+        if (/\.mdx$/i.test(targetPath)) {
+          errors.push(`${generatedPath}:${index + 1}: unresolved link ${target}`);
+          continue;
+        }
+
+        if (targetPath.startsWith('/')) {
+          const routeTarget = normalizeRoute(
+            targetPath.replace(/\.(md|mdx)$/i, '')
+          );
+          if (!/\.md$/i.test(targetPath) && routeByUrl.has(routeTarget)) {
+            errors.push(`${generatedPath}:${index + 1}: HTML documentation link ${target}`);
+            continue;
+          }
+        }
+
+        if (!/\.md$/i.test(targetPath)) continue;
+        const targetFile = targetPath.startsWith('/')
+          ? path.join(STATIC_DIR, targetPath.replace(/^\//, ''))
+          : path.resolve(path.dirname(filePath), targetPath);
+        if (!fs.existsSync(targetFile)) {
+          errors.push(`${generatedPath}:${index + 1}: missing link target ${target}`);
+        }
+      }
+    }
+  }
+
+  if (errors.length > 0) {
+    throw new Error(`Generated cookbook Markdown validation failed:\n- ${errors.join('\n- ')}`);
+  }
+
+  console.log('generate-md-urls: cookbook Markdown links validated');
 }
 
 // ---------------------------------------------------------------------------
@@ -203,6 +379,9 @@ async function main() {
   let written = 0;
   let skipped = 0;
   const generatedPaths = [];
+  const documents = [];
+  const routeBySource = new Map();
+  const routeByUrl = new Map();
 
   for (const docId of allIds) {
     const filePath = await resolveDocPath(docId);
@@ -212,9 +391,20 @@ async function main() {
     }
 
     const urlPath = await computeUrlPath(docId);
+    documents.push({ docId, filePath, urlPath });
+    routeBySource.set(path.resolve(filePath), urlPath);
+    routeByUrl.set(normalizeRoute(urlPath), urlPath);
+  }
+
+  for (const { filePath, urlPath } of documents) {
     const rawContent = await fsp.readFile(filePath, 'utf8');
     const fm = parseFrontmatter(rawContent);
-    const cleaned = cleanMdxContent(rawContent);
+    const cleaned = cleanMdxContent(
+      rawContent,
+      filePath,
+      routeBySource,
+      routeByUrl
+    );
 
     // Build a clean markdown file with a descriptive header
     const lines = [];
@@ -235,6 +425,7 @@ async function main() {
   console.log(
     `generate-md-urls: wrote ${written} files, skipped ${skipped} (unresolved)`
   );
+  validateCookbookMarkdown(generatedPaths, routeByUrl);
 
   return generatedPaths;
 }
