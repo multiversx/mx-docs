@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import fs from "node:fs";
+import { createRequire } from "node:module";
 import test from "node:test";
 import {
   COOKBOOK_PATH,
@@ -8,12 +8,29 @@ import {
   legacyCookbookRedirects,
 } from "../../src/components/cookbook/LegacyCookbookRedirect/legacyCookbookRedirects.mjs";
 
-const manifest = JSON.parse(
-  fs.readFileSync(
-    new URL("../../src/data/cookbook-manifest.json", import.meta.url),
-    "utf8",
-  ),
-);
+const require = createRequire(import.meta.url);
+const sidebars = require("../../sidebars.js");
+const recipePaths = new Set();
+const sectionPaths = new Set();
+
+function collectCookbookPaths(node) {
+  if (Array.isArray(node)) {
+    for (const child of node) collectCookbookPaths(child);
+  } else if (typeof node === "string") {
+    const route = node.startsWith("/") ? node : `/${node}`;
+    const match = route.match(
+      new RegExp(`^${COOKBOOK_PATH}/([^/]+)/[^/]+$`),
+    );
+    if (match) {
+      recipePaths.add(route);
+      sectionPaths.add(`${COOKBOOK_PATH}#${match[1]}`);
+    }
+  } else if (node && typeof node === "object") {
+    for (const value of Object.values(node)) collectCookbookPaths(value);
+  }
+}
+
+collectCookbookPaths(sidebars.docs);
 
 test("maps every legacy cookbook anchor exactly once", () => {
   const groupedAnchors = legacyCookbookRedirectGroups.flatMap(
@@ -26,13 +43,6 @@ test("maps every legacy cookbook anchor exactly once", () => {
 });
 
 test("points every legacy anchor at an existing recipe or cookbook section", () => {
-  const recipePaths = new Set(
-    manifest.flatMap(({ recipes }) => recipes.map(({ href }) => href)),
-  );
-  const sectionPaths = new Set(
-    manifest.map(({ id }) => `${COOKBOOK_PATH}#${id}`),
-  );
-
   for (const [anchor, target] of Object.entries(legacyCookbookRedirects)) {
     assert.ok(
       target === COOKBOOK_PATH ||

@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const EXPECTED_PROJECTS = 61;
-const EXPECTED_REFERENCES = 8;
+const EXPECTED_REFERENCES = 11;
 const REQUIRED_NODE_RANGE = '>=20.19.0';
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const extractedRoot = path.join(scriptDirectory, 'project', 'src', 'recipes');
