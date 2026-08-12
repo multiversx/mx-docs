@@ -24,9 +24,14 @@ These operations can be performed using both the **controller** and the **factor
 
 #### Deploying a Multisig Smart Contract using the controller
 ```js
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, Account, Address, DevnetEntrypoint } from '@multiversx/sdk-core';
+
 {
-    const abi = await loadAbiRegistry("src/testdata/multisig-full.abi.json");
-    const bytecode = await loadContractCode("src/testdata/multisig-full.wasm");
+    const abiJson = fs.readFileSync('src/testdata/multisig-full.abi.json', { encoding: 'utf8' });
+    const abi = Abi.create(JSON.parse(abiJson));
+    const bytecode = new Uint8Array(fs.readFileSync('src/testdata/multisig-full.wasm'));
 
     // create the entrypoint and the multisig controller
     const entrypoint = new DevnetEntrypoint();
@@ -44,7 +49,7 @@ These operations can be performed using both the **controller** and the **factor
             alice.address,
             Address.newFromBech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
         ],
-        bytecode: bytecode.valueOf(),
+        bytecode,
         gasLimit: 100000000n,
     });
 
@@ -54,15 +59,20 @@ These operations can be performed using both the **controller** and the **factor
     // wait for transaction completion, extract multisig contract's address
     const outcome = await controller.awaitCompletedDeploy(txHash);
 
-    const contractAddress = outcome[0].contractAddress;
+    const contractAddress = outcome.contracts[0].address;
 }
 ```
 
 #### Deploying a Multisig Smart Contract using the factory
 ```js
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, Account, Address, DevnetEntrypoint } from '@multiversx/sdk-core';
+
 {
-    const abi = await loadAbiRegistry("src/testdata/multisig-full.abi.json");
-    const bytecode = await loadContractCode("src/testdata/multisig-full.wasm");
+    const abiJson = fs.readFileSync('src/testdata/multisig-full.abi.json', { encoding: 'utf8' });
+    const abi = Abi.create(JSON.parse(abiJson));
+    const bytecode = new Uint8Array(fs.readFileSync('src/testdata/multisig-full.wasm'));
 
     // create the entrypoint and the multisig factory
     const entrypoint = new DevnetEntrypoint();
@@ -80,7 +90,7 @@ These operations can be performed using both the **controller** and the **factor
             alice.address,
             Address.newFromBech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
         ],
-        bytecode: bytecode.valueOf(),
+        bytecode,
         gasLimit: 100000000n,
     });
 
