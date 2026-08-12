@@ -84,7 +84,8 @@ npm run dev
   },
   "overrides": {
     "postcss": "^8.5.18",
-    "brace-expansion": "^5.0.8"
+    "brace-expansion": "^5.0.9",
+    "nanoid": "^3.3.17"
   },
   "engines": {
     "node": ">=20.19.0"
@@ -93,7 +94,8 @@ npm run dev
 ```
 
 Keep the `overrides` block when copying this starter. It deliberately pins
-patched PostCSS and brace-expansion transitives used by Vite and sdk-dapp.
+patched PostCSS, brace-expansion, and Nano ID transitives used by Vite and
+sdk-dapp.
 
 ```json title="tsconfig.json"
 {
@@ -128,7 +130,8 @@ patched PostCSS and brace-expansion transitives used by Vite and sdk-dapp.
 ```
 
 ```text title=".env.example"
-VITE_WALLETCONNECT_PROJECT_ID=
+# Shared example ID for local development only. Replace it before deploying.
+VITE_WALLETCONNECT_PROJECT_ID=9b1a9564f91cb659ffe21b73d5c4e2d8
 ```
 
 ```ts title="vite.config.ts"

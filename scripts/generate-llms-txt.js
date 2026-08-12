@@ -120,11 +120,13 @@ async function computeUrlForDoc(docId, siteUrl) {
       const content = await fsp.readFile(filePath, 'utf8');
       const slug = readFrontmatterSlug(content);
       if (slug && slug.startsWith('/')) {
-        return siteUrl ? `${siteUrl}${slug}` : slug;
+        const markdownPath = `${slug.replace(/\/$/, '')}.md`;
+        return siteUrl ? `${siteUrl}${markdownPath}` : markdownPath;
       }
     } catch {}
   }
-  return siteUrl ? `${siteUrl}${defaultPath}` : defaultPath;
+  const markdownPath = `${defaultPath.replace(/\/$/, '')}.md`;
+  return siteUrl ? `${siteUrl}${markdownPath}` : markdownPath;
 }
 
 function isString(x) {

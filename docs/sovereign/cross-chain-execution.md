@@ -60,7 +60,7 @@ The source for the smart contracts can be found at the official [MultiversX Sove
 ## Sovereign Bridge Service
 This feature facilitates the execution of outgoing operations. This service is an application that receives Sovereign operations. After that, it will call the `execute_operation` endpoint from the `Mvx-ESDT-Safe` smart contract. The registration and execution of operations looks like this:
 
-- For N operations there is only one [register transaction](mvx-esdt-safe.md#registering-a-set-of-operations) inside the Header-Verifier smart contract.
+- For N operations there is only one [register transaction](header-verifier.md#registering-a-set-of-operations) inside the Header-Verifier smart contract.
 - N transactions for the [execution](mvx-esdt-safe.md#executing-an-operation) of N operations inside the ESDT-Safe smart contract, one execution transaction per operation.
 
 > There can be one or more services deployed in the network at the same time.

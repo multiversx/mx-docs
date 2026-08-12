@@ -7,14 +7,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const EXPECTED_PROJECTS = 61;
-const EXPECTED_REFERENCES = 8;
+const EXPECTED_REFERENCES = 11;
 const REQUIRED_NODE_RANGE = '>=20.19.0';
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const extractedRoot = path.join(scriptDirectory, 'project', 'src', 'recipes');
 const cookbookRoot = path.resolve(scriptDirectory, '../../docs/sdk-and-tools/sdk-js/cookbook');
 const requiredSecurityOverrides = {
   postcss: '^8.5.18',
-  'brace-expansion': '^5.0.8',
+  'brace-expansion': '^5.0.9',
+  nanoid: '^3.3.17',
 };
 
 function fail(message) {
@@ -158,11 +159,12 @@ for (const slug of fs.readdirSync(extractedRoot).sort()) {
     (
       overrides.postcss !== requiredSecurityOverrides.postcss ||
       overrides['brace-expansion'] !== requiredSecurityOverrides['brace-expansion'] ||
+      overrides.nanoid !== requiredSecurityOverrides.nanoid ||
       Object.keys(overrides).length !== Object.keys(requiredSecurityOverrides).length
     )
   ) {
     fail(
-      `${slug}: overrides must pin patched postcss and brace-expansion transitives`,
+      `${slug}: overrides must pin patched postcss, brace-expansion, and nanoid transitives`,
     );
   }
   recipes.push({ slug, sourceDirectory, manifest });

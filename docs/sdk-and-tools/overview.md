@@ -52,7 +52,7 @@ You might also want to have a look over [**xSuite**](https://xsuite.dev), a tool
 
 | Name                                                         | Description                                                                                                                                            |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [sdk-py](/sdk-and-tools/sdk-py/#sdk-py-the-python-libraries) | Python SDK that can be used to create wallets, create and send transactions, interact with Smart Contracts and with the MultiversX Network in general. |
+| [sdk-py](/sdk-and-tools/sdk-py#overview) | Python SDK that can be used to create wallets, create and send transactions, interact with Smart Contracts and with the MultiversX Network in general. |
 
 [comment]: # (mx-context-auto)
 

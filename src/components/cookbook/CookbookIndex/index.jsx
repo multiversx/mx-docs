@@ -39,7 +39,7 @@ export default function CookbookIndex({ sections = [] }) {
 
       <p className={styles.footNote}>
         {total} recipes across {sections.length} sections: 61 standalone projects
-        reconstructed and built in CI, plus 8 focused reference pages. Card badges
+        reconstructed and built in CI, plus 11 focused reference pages. Card badges
         state which artifact the page contains.
       </p>
     </div>
