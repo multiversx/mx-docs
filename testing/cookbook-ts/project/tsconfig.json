@@ -1,0 +1,41 @@
+{
+  // Strict type-check config for every extracted cookbook recipe.
+  //
+  // It is a superset of the two tsconfig shapes the standalone recipe projects
+  // ship: the sdk-core "backend/script" recipes (module: commonjs, node types)
+  // and the sdk-dapp "React" recipes (jsx, DOM libs, bundler resolution). Since
+  // the harness only runs `tsc --noEmit` (never emits or executes), the emit
+  // module format is irrelevant — so ESNext + bundler resolution type-checks
+  // both families with one config. Every strict flag below is carried over
+  // verbatim from the recipe tsconfigs, so nothing is checked more loosely here
+  // than in the recipe's own repo.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+
+    "allowJs": false,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "skipLibCheck": true,
+
+    // Strictness — identical to the recipe projects' own tsconfig.
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  // src/recipes/** is filled in by the extractor; src/scaffold.d.ts is committed.
+  "include": ["src"]
+}

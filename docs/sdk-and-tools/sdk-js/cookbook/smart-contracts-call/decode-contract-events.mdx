@@ -1,0 +1,498 @@
+---
+title: Decode contract events
+description: Decode a smart contract's emitted events into named typed fields with sdk-core's TransactionEventsParser and an ABI, verified against a real event.
+difficulty: intermediate
+est_minutes: 7
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - smart-contract
+  - abi
+  - events
+  - typescript
+---
+
+Decode the events a smart contract emits into named, typed fields, using an ABI
+and `TransactionEventsParser`. A raw event is a bag of base64 topics and data
+bytes; the parser uses the ABI's event definition to turn those bytes into a
+usable object.
+
+This recipe decodes a **real** `pongEvent` from the ping-pong contract, captured
+verbatim from devnet transaction `922dbae7...`. The decoded `user` field must
+equal the real sender of that transaction, which is how the recipe verifies
+itself.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- For the default (offline) decode: nothing, the raw event is baked in.
+- For the `live` mode: devnet network access.
+
+## Install
+
+```bash
+mkdir decode-contract-events
+cd decode-contract-events
+# Create the project files shown on this page.
+npm install
+npm run build
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-decode-contract-events",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — decode a smart contract's emitted events into named typed fields with sdk-core's TransactionEventsParser, verified against a real event.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the decode-events recipe.
+//
+// Default: decode the real captured pongEvent (offline, deterministic) and
+// confirm the decoded `user` equals the real sender of the source
+// transaction.
+//
+// Optional live path:
+//   npm start -- live [txHash]   -> fetch a transaction and decode its
+//                                   pongEvent(s). Defaults to the same real
+//                                   tx; pass your own pong tx if devnet has
+//                                   pruned it.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  decodeCapturedPongEvent,
+  decodePongEventsFromTransaction,
+  PONG_EVENT_TX_HASH,
+} from './decodeEvents';
+
+const EXPECTED_USER = 'erd179ktm46cy3hvcg6r0c9khafgtlwxq3rswj578x7wl2ltkv6k5suq7mn47d';
+
+function loadAbi(fileName: string): Abi {
+  const json = fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+  return Abi.create(JSON.parse(json) as Record<string, unknown>);
+}
+
+async function main(): Promise<void> {
+  const abi = loadAbi('ping-pong.abi.json');
+  const [mode, txArg] = process.argv.slice(2);
+
+  if (mode === 'live') {
+    const txHash = txArg ?? PONG_EVENT_TX_HASH;
+    const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+    console.log(`Fetching ${txHash} and decoding pongEvent(s) live...`);
+    const decoded = await decodePongEventsFromTransaction(entrypoint, abi, txHash);
+    decoded.forEach((d, i) => console.log(`  event[${i}].user: ${d.user}`));
+    if (decoded.length === 0) console.log('  (no pongEvent found - is this a pong transaction?)');
+    return;
+  }
+
+  console.log(`Decoding the captured pongEvent (offline) from tx ${PONG_EVENT_TX_HASH}...`);
+  const { user } = decodeCapturedPongEvent(abi);
+  console.log(`  decoded user:  ${user}`);
+  console.log(`  expected user: ${EXPECTED_USER}`);
+  console.log(`  match:         ${user === EXPECTED_USER}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+```json title="src/ping-pong.abi.json"
+{
+  "buildInfo": {
+    "rustc": {
+      "version": "1.61.0-nightly",
+      "commitHash": "1d9c262eea411ec5230f8a4c9ba50b3647064da4",
+      "commitDate": "2022-03-26",
+      "channel": "Nightly",
+      "short": "rustc 1.61.0-nightly (1d9c262ee 2022-03-26)"
+    },
+    "contractCrate": {
+      "name": "ping-pong",
+      "version": "0.0.2",
+      "git_version": "23ff9bd"
+    },
+    "framework": {
+      "name": "elrond-wasm",
+      "version": "0.34.1"
+    }
+  },
+  "docs": [
+    "A contract that allows anyone to send a fixed sum, locks it for a while and then allows users to take it back.",
+    "Sending funds to the contract is called \"ping\".",
+    "Taking the same funds back is called \"pong\".",
+    "",
+    "Restrictions:",
+    "- Only the set amount can be `ping`-ed, no more, no less.",
+    "- `pong` can only be called after a certain period after `ping`."
+  ],
+  "name": "PingPong",
+  "constructor": {
+    "docs": [
+      "Necessary configuration when deploying:",
+      "`ping_amount` - the exact amount that needs to be sent when `ping`-ing.  ",
+      "`duration_in_seconds` - how much time (in seconds) until `pong` can be called after the initial `ping` call  ",
+      "`token_id` - Optional. The Token Identifier of the token that is going to be used. Default is \"EGLD\"."
+    ],
+    "inputs": [
+      {
+        "name": "ping_amount",
+        "type": "BigUint"
+      },
+      {
+        "name": "duration_in_seconds",
+        "type": "u64"
+      },
+      {
+        "name": "opt_token_id",
+        "type": "optional<EgldOrEsdtTokenIdentifier>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "docs": [
+        "User sends some tokens to be locked in the contract for a period of time."
+      ],
+      "name": "ping",
+      "mutability": "mutable",
+      "payableInTokens": ["*"],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "docs": [
+        "User can take back funds from the contract.",
+        "Can only be called after expiration."
+      ],
+      "name": "pong",
+      "mutability": "mutable",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "name": "didUserPing",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "getPongEnableTimestamp",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "getTimeToPong",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "optional<u64>",
+          "multi_result": true
+        }
+      ]
+    },
+    {
+      "name": "getAcceptedPaymentToken",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "EgldOrEsdtTokenIdentifier"
+        }
+      ]
+    },
+    {
+      "name": "getPingAmount",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "BigUint"
+        }
+      ]
+    },
+    {
+      "name": "getDurationTimestamp",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "getUserPingTimestamp",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "identifier": "pongEvent",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "Address",
+          "indexed": true
+        }
+      ]
+    }
+  ],
+  "hasCallback": false,
+  "types": []
+}
+```
+
+</details>
+
+## Decoding
+
+```ts title="src/decodeEvents.ts"
+// src/decodeEvents.ts - decoding the events a smart contract emits, using an
+// ABI and `TransactionEventsParser`. A raw event is a bag of base64 topics and
+// data bytes; the parser uses the ABI's event definition to turn those bytes
+// into named, typed fields.
+//
+// Target: the real **ping-pong** contract's `pongEvent`, which has one indexed
+// input `user: Address`. This recipe decodes a REAL pongEvent captured verbatim
+// from devnet transaction
+// 922dbae7f85c949add1c5971f7cb88ab2f806760851539e53cdf48e055d12740
+// (whose sender pong-ed the contract). The decoded `user` must equal that
+// sender: erd179ktm46cy3hvcg6r0c9khafgtlwxq3rswj578x7wl2ltkv6k5suq7mn47d.
+//
+// KEY DETAIL: the parser matches the event to the ABI by its FIRST TOPIC
+// ("pongEvent"), which is the ABI event's identifier. Note the log's own
+// `identifier` field here is "pong" (the endpoint name), which is different.
+// `firstTopicIsIdentifier` defaults to true, so the first topic wins.
+
+import {
+  TransactionEvent,
+  TransactionEventsParser,
+  findEventsByFirstTopic,
+} from '@multiversx/sdk-core';
+import type { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+// A real pongEvent, exactly as the devnet API returned it (base64 topics).
+// topics[0] "cG9uZ0V2ZW50" is base64 for "pongEvent" (the ABI event id);
+// topics[1] is the 32-byte pubkey of the indexed `user` field.
+export const CAPTURED_PONG_EVENT = {
+  address: 'erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq',
+  identifier: 'pong',
+  topics: ['cG9uZ0V2ZW50', '8Wy911gkbswjQ34La/UoX9xgRHB0qeObzvq+uzNWpDg='],
+  data: '',
+  additionalData: [''],
+} as const;
+
+export const PONG_EVENT_TX_HASH =
+  '922dbae7f85c949add1c5971f7cb88ab2f806760851539e53cdf48e055d12740';
+
+export interface DecodedPongEvent {
+  /** The bech32 address of the `user` who pong-ed. */
+  user: string;
+}
+
+/**
+ * Decodes the real captured pongEvent above. Fully offline and deterministic:
+ * the raw bytes are baked in, so this always produces the same result and never
+ * depends on the transaction still being retrievable from the network.
+ */
+export function decodeCapturedPongEvent(abi: Abi): DecodedPongEvent {
+  const event = TransactionEvent.fromHttpResponse({
+    address: CAPTURED_PONG_EVENT.address,
+    identifier: CAPTURED_PONG_EVENT.identifier,
+    topics: [...CAPTURED_PONG_EVENT.topics],
+    data: CAPTURED_PONG_EVENT.data,
+    additionalData: [...CAPTURED_PONG_EVENT.additionalData],
+  });
+
+  const parser = new TransactionEventsParser({ abi });
+  const decoded = parser.parseEvent({ event }) as { user: { toBech32(): string } };
+  return { user: decoded.user.toBech32() };
+}
+
+/**
+ * The production path: fetch a live transaction, gather its pongEvent(s), and
+ * decode them. `findEventsByFirstTopic(tx, "pongEvent")` pulls exactly the
+ * events whose first topic is the ABI event identifier, across the main log and
+ * every smart-contract-result log. Returns one decoded object per event.
+ *
+ * Devnet may prune old transactions, so this is the "how you'd do it against
+ * your own fresh transaction" path; the captured decode above is the durable
+ * one this recipe verifies against.
+ */
+export async function decodePongEventsFromTransaction(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  txHash: string,
+): Promise<DecodedPongEvent[]> {
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const events = findEventsByFirstTopic(transactionOnNetwork, 'pongEvent');
+
+  const parser = new TransactionEventsParser({ abi });
+  const decoded = parser.parseEvents({ events }) as Array<{ user: { toBech32(): string } }>;
+  return decoded.map((d) => ({ user: d.user.toBech32() }));
+}
+```
+
+## Run it
+
+```bash
+# Decode the captured real event - offline, deterministic:
+npm start
+
+# Fetch a live transaction and decode its pongEvent(s):
+npm start -- live
+```
+
+Expected output of the default mode:
+
+```text
+Decoding the captured pongEvent (offline) from tx 922dbae7f85c949add1c5971f7cb88ab2f806760851539e53cdf48e055d12740...
+  decoded user:  erd179ktm46cy3hvcg6r0c9khafgtlwxq3rswj578x7wl2ltkv6k5suq7mn47d
+  expected user: erd179ktm46cy3hvcg6r0c9khafgtlwxq3rswj578x7wl2ltkv6k5suq7mn47d
+  match:         true
+```
+
+## How it works
+
+**The ABI event definition drives the decode.** ping-pong's ABI declares
+`pongEvent` with one indexed input, `user: Address`.
+`new TransactionEventsParser({ abi }).parseEvent({ event })` reads the event's
+topics and returns `{ user }` as a real `Address`. The captured event is a
+verbatim copy of a real on-chain pongEvent, so decoding it offline is
+deterministic and genuine.
+
+**Getting events from a live transaction.** The `live` mode fetches with
+`entrypoint.getTransaction(txHash)`, then `findEventsByFirstTopic(tx,
+"pongEvent")` pulls matching events across the main log and every
+smart-contract-result log, and `parseEvents({ events })` decodes them.
+`gatherAllEvents(tx)` is the unfiltered version.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the parser matches on the FIRST TOPIC, not the log identifier]
+For `pongEvent`, the first topic is base64 `"cG9uZ0V2ZW50"` = `"pongEvent"`, the
+ABI event's identifier. The log's own `identifier` field is `"pong"` (the
+endpoint name), which is different. `firstTopicIsIdentifier` defaults to `true`,
+so the first topic wins. Load the ABI that actually declares the event, or there
+is nothing to match, and an ABI that lacks the event decodes nothing.
+:::
+
+:::note[Pitfall 2: topics and data are base64 on the wire]
+`TransactionEvent.fromHttpResponse({ topics, data, additionalData })`
+base64-decodes each into a `Buffer` for you. Pass the API's base64 strings
+straight through; do not decode them yourself first.
+:::
+
+:::note[Pitfall 3: devnet prunes old transactions]
+The `live` mode points at a real tx by hash; if devnet has pruned it, pass your
+own recent pong transaction. The captured offline decode never rots, which is why
+it is the default and the verification anchor.
+:::
+
+## See also
+
+- [Decode contract return data (ABI codec)](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/decode-return-data)
+  is the codec that also powers event field decoding.
+- [Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+  reads live state from the same ping-pong contract.
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is where the event definition comes from.

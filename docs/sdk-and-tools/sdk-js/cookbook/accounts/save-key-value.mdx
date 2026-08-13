@@ -1,0 +1,75 @@
+---
+title: Save key-value data to an account
+description: Save key-value pairs in an account's on-chain storage with sdk-core's AccountController or AccountTransactionsFactory.
+difficulty: intermediate
+est_minutes: 8
+artifact: reference
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - account
+  - account-storage
+  - transaction
+  - devnet
+---
+
+#### Saving a key-value pair to an account using the controller
+You can find more information [here](/developers/account-storage) regarding the account storage.
+
+```js
+{
+    // create the entrypoint and the account controller
+    const entrypoint = new DevnetEntrypoint();
+    const controller = entrypoint.createAccountController();
+
+    const filePath = path.join("../src", "testdata", "testwallets", "alice.pem");
+    const alice = await Account.newFromPem(filePath);
+
+    // creating the key-value pairs we want to save
+    const keyValuePairs = new Map([[Buffer.from("key0"), Buffer.from("value0")]]);
+
+    // fetch the nonce of the network
+    alice.nonce = await entrypoint.recallAccountNonce(alice.address);
+
+    const transaction = await controller.createTransactionForSavingKeyValue(alice, alice.getNonceThenIncrement(), {
+        keyValuePairs: keyValuePairs,
+    });
+
+    // sending the transaction
+    const txHash = await entrypoint.sendTransaction(transaction);
+}
+```
+
+#### Saving a key-value pair to an account using the factory
+```js
+{
+    // create the entrypoint and the account factory
+    const entrypoint = new DevnetEntrypoint();
+    const factory = entrypoint.createAccountTransactionsFactory();
+
+    // create the account to guard
+    const filePath = path.join("../src", "testdata", "testwallets", "alice.pem");
+    const alice = await Account.newFromPem(filePath);
+
+    // creating the key-value pairs we want to save
+    const keyValuePairs = new Map([[Buffer.from("key0"), Buffer.from("value0")]]);
+
+    const transaction = await factory.createTransactionForSavingKeyValue(alice.address, {
+        keyValuePairs: keyValuePairs,
+    });
+
+    // fetch the nonce of the network
+    alice.nonce = await entrypoint.recallAccountNonce(alice.address);
+
+    // set the nonce
+    transaction.nonce = alice.getNonceThenIncrement();
+
+    // sign the transaction
+    transaction.signature = await alice.signTransaction(transaction);
+
+    // sending the transaction
+    const txHash = await entrypoint.sendTransaction(transaction);
+}
+```
+

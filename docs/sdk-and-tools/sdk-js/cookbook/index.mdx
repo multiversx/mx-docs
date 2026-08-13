@@ -1,0 +1,31 @@
+---
+title: MultiversX SDK cookbook
+sidebar_label: Overview
+description: 61 self-contained projects and 11 focused references for building on MultiversX with the JavaScript, TypeScript, and Rust SDKs.
+slug: /sdk-and-tools/sdk-js/cookbook
+hide_table_of_contents: true
+---
+
+import CookbookIndex from "@site/src/components/cookbook/CookbookIndex";
+import manifest from "@site/src/data/cookbook-manifest.json";
+
+Recipes for building on MultiversX with the JavaScript, TypeScript, and Rust
+SDKs. The 61 **Project build checked** recipes show a complete standalone
+project: package, TypeScript configuration, entrypoint, helpers, and required
+text assets. Full project files are collapsed so the task itself stays easy to
+scan. The 11 **Reference** pages are focused migrations, setup guidance, or Rust
+examples; they intentionally do not claim to be standalone projects.
+
+CI reconstructs all 61 projects from the files on their pages, installs their
+exact dependencies, and runs each project's own build on Node 20.19.0. Titled
+TypeScript fences across the cookbook are also checked together in strict mode.
+The badges describe that artifact boundary; they are not hand-entered dated
+status claims.
+
+:::tip[Building with a coding agent?]
+Point your agent at the docs and let it read the recipes directly.
+[Agent or agentic engineer? Start here](./agents.mdx) covers the machine-readable
+surface (`llms.txt`) and how to wire the cookbook into an agentic workflow.
+:::
+
+<CookbookIndex sections={manifest} />

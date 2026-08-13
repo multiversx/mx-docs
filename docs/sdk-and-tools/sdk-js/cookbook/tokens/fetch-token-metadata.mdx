@@ -1,0 +1,266 @@
+---
+title: Fetch token metadata
+description: Read a token's definition, name, ticker, decimals, owner and property flags, for a fungible token and for an NFT or SFT collection. Verified live.
+difficulty: intermediate
+est_minutes: 6
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - network-provider
+  - esdt
+  - nft
+  - typescript
+---
+
+Read a token's **definition**, its metadata and property flags, as opposed to a
+balance. Two reads, both on `INetworkProvider`:
+
+- `getDefinitionOfFungibleToken(identifier)` returns a fungible token's `name`,
+  `ticker`, `decimals`, `owner`, `supply`, and the `can*` property flags.
+- `getDefinitionOfTokenCollection(collection)` returns an NFT / SFT / meta-ESDT
+  collection's `type`, `name`, `decimals`, `owner`, and property flags.
+
+The `decimals` this returns is exactly what you need to turn a raw balance from
+[Fetch an account's token balances](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-account-token-balances)
+into a human number.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+mkdir fetch-token-metadata
+cd fetch-token-metadata
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-fetch-token-metadata",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — fetch a token's definition/metadata: name, ticker, decimals, owner and property flags for a fungible token and for an NFT/SFT collection.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## Reading the definitions
+
+```ts title="src/tokenMetadata.ts"
+// src/tokenMetadata.ts — the subject of this recipe: reading a token's
+// DEFINITION (its metadata and property flags), as opposed to a balance.
+//
+//   - getDefinitionOfFungibleToken(identifier) → a fungible token's definition:
+//       name, ticker, decimals, owner, supply, and the can* property flags.
+//   - getDefinitionOfTokenCollection(collection) → an NFT / SFT / meta-ESDT
+//       collection's definition: type, name, decimals, owner, property flags.
+//
+// Both are on INetworkProvider. Note: pass the COLLECTION identifier
+// (e.g. "MEDAL-ae074f") to the collection call, not a single NFT's extended id.
+
+import type {
+  INetworkProvider,
+  DefinitionOfFungibleTokenOnNetwork,
+  DefinitionOfTokenCollectionOnNetwork,
+} from '@multiversx/sdk-core';
+
+/** A fungible token's definition (metadata + property flags). */
+export async function fetchFungibleDefinition(
+  provider: INetworkProvider,
+  identifier: string,
+): Promise<DefinitionOfFungibleTokenOnNetwork> {
+  return provider.getDefinitionOfFungibleToken(identifier);
+}
+
+/** An NFT / SFT / meta-ESDT collection's definition. */
+export async function fetchCollectionDefinition(
+  provider: INetworkProvider,
+  collection: string,
+): Promise<DefinitionOfTokenCollectionOnNetwork> {
+  return provider.getDefinitionOfTokenCollection(collection);
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — read the definition of a well-known fungible token (WEGLD) and
+// a well-known NFT collection (MEDAL). No wallet, no gas.
+//
+// Usage:
+//   npm run build && npm start [fungibleId] [collectionId]
+
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
+import { fetchFungibleDefinition, fetchCollectionDefinition } from './tokenMetadata';
+
+const MAINNET_API = 'https://api.multiversx.com';
+const DEFAULT_FUNGIBLE = 'WEGLD-bd4d79';
+const DEFAULT_COLLECTION = 'MEDAL-ae074f';
+
+async function main(): Promise<void> {
+  const fungibleId = process.argv[2] ?? DEFAULT_FUNGIBLE;
+  const collectionId = process.argv[3] ?? DEFAULT_COLLECTION;
+  const provider = new ApiNetworkProvider(MAINNET_API, { clientName: 'mvx-cookbook' });
+
+  const fungible = await fetchFungibleDefinition(provider, fungibleId);
+  console.log(`Fungible token ${fungible.identifier}`);
+  console.log(`  name:      ${fungible.name}`);
+  console.log(`  ticker:    ${fungible.ticker}`);
+  console.log(`  decimals:  ${fungible.decimals}`);
+  console.log(`  owner:     ${fungible.owner.toBech32()}`);
+  console.log(`  isPaused:  ${fungible.isPaused}`);
+  console.log(`  canFreeze: ${fungible.canFreeze}, canWipe: ${fungible.canWipe}, canUpgrade: ${fungible.canUpgrade}`);
+
+  const collection = await fetchCollectionDefinition(provider, collectionId);
+  console.log(`\nCollection ${collection.collection}`);
+  console.log(`  type:      ${collection.type}`);
+  console.log(`  name:      ${collection.name}`);
+  console.log(`  decimals:  ${collection.decimals}`);
+  console.log(`  owner:     ${collection.owner.toBech32()}`);
+  console.log(`  canFreeze: ${collection.canFreeze}, canWipe: ${collection.canWipe}, canTransferNftCreateRole: ${collection.canTransferNftCreateRole}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start                             # WEGLD-bd4d79 + MEDAL-ae074f
+npm start <fungibleId> <collectionId> # any token / collection
+```
+
+Expected output:
+
+```text
+Fungible token WEGLD-bd4d79
+  name:      WrappedEGLD
+  ticker:    WEGLD
+  decimals:  18
+  owner:     erd1ss6u80ruas2phpmr82r42xnkd6rxy40g9jl69frppl4qez9w2jpsqj8x97
+  isPaused:  false
+  canFreeze: true, canWipe: true, canUpgrade: true
+
+Collection MEDAL-ae074f
+  type:      NonFungibleESDT
+  name:      GLUMedals
+  decimals:  0
+  owner:     erd126y66ear20cdskrdky0kpzr9agjul7pcut7ktlr6p0eu8syxhvrq0gsqdj
+  canFreeze: false, canWipe: false, canTransferNftCreateRole: false
+```
+
+## How it works
+
+**Definition, not balance.** These endpoints describe the token itself, who owns
+it, how many decimals, whether it can be frozen or paused, independent of any
+holder. Pair `decimals` with the raw amounts from
+[Fetch an account's token balances](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-account-token-balances)
+to display real numbers.
+
+**Fungible vs collection are different calls.** A fungible identifier
+(`WEGLD-bd4d79`) goes to `getDefinitionOfFungibleToken`; a collection identifier
+(`MEDAL-ae074f`) goes to `getDefinitionOfTokenCollection`. The collection's `type`
+field (`NonFungibleESDT`, `SemiFungibleESDT`, `MetaESDT`) tells you which kind it
+is.
+
+**The `can*` flags mirror what you set at issuance.** `canFreeze`, `canWipe`,
+`canPause`, `canUpgrade`, `canAddSpecialRoles` are the same properties
+[Issue a fungible token](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token)
+and [Issue an NFT collection](/sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection)
+configure, this is how you read them back.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the collection call takes the collection id, not an NFT id]
+`getDefinitionOfTokenCollection` expects `MEDAL-ae074f`, the collection
+identifier, not `MEDAL-ae074f-01`, a single NFT's extended id. If you only have an
+NFT's extended identifier, strip the nonce suffix with
+`TokenComputer.extractIdentifierFromExtendedIdentifier()` first.
+:::
+
+:::note[Pitfall 2: the property flag is canTransferNftCreateRole (lowercase Nft)]
+On `DefinitionOfTokenCollectionOnNetwork` the flag is spelled
+`canTransferNftCreateRole`, lowercase "Nft". The issuance factory uses
+`canTransferNFTCreateRole` (all-caps "NFT") for the same property. Read-side and
+write-side disagree on casing; match whichever class you are actually touching
+(confirmed against the installed types).
+:::
+
+:::note[Pitfall 3: supply is a BigNumber, decimals is a number]
+On the fungible definition, `supply` is a bignumber.js `BigNumber` (call
+`.toString()`), while `decimals` is a plain `number`. Do not assume both are the
+same numeric type.
+:::
+
+## See also
+
+- [Fetch an account's token balances](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-account-token-balances)
+  holds the raw amounts whose `decimals` this recipe supplies.
+- [Issue a fungible token](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token)
+  is the write side; this recipe reads back what it configures.
+- [Issue an NFT collection](/sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection)
+  is the collection whose definition this recipe reads.

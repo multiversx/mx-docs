@@ -221,16 +221,172 @@ const sidebars = {
                 label: "Javascript SDK",
                 items: [
                   "sdk-and-tools/sdk-js/sdk-js",
+                  "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
                   {
                     type: "category",
-                    label: "Cookbook (versioned)",
+                    label: "Cookbook (recipes)",
                     link: {
                       type: "doc",
-                      id: "sdk-and-tools/sdk-js/sdk-js-cookbook"
+                      id: "sdk-and-tools/sdk-js/cookbook/index"
                     },
                     items: [
-                      "sdk-and-tools/sdk-js/sdk-js-cookbook-v14",
-                      "sdk-and-tools/sdk-js/sdk-js-cookbook",
+                      "sdk-and-tools/sdk-js/cookbook/agents",
+                      {
+                        type: "category",
+                        label: "Start here",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/start-here/vite-react-minimal",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/nextjs-minimal",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/local-https-setup",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send",
+                          "sdk-and-tools/sdk-js/cookbook/start-here/v4-to-v5-migration",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Accounts and signing",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/accounts/generate-mnemonic-derive-keys",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/account-from-keys",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/keystore-save-load",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/pem-save-load",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/address-utilities",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/fetch-account-state",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/save-key-value",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/hash-signing-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/set-guardian",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/guard-unguard-account",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/apply-guardian-to-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Network providers",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/fetch-network-config-status",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/fetch-a-block",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/await-account-on-condition",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/await-transaction-on-condition",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/simulate-estimate-transaction",
+                          "sdk-and-tools/sdk-js/cookbook/network-providers/custom-api-request",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Fetching data from the network",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/fetching-data-from-network/reference",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Transactions",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/transactions/send-egld",
+                          "sdk-and-tools/sdk-js/cookbook/transactions/send-esdt",
+                          "sdk-and-tools/sdk-js/cookbook/transactions/multi-token-transfer",
+                          "sdk-and-tools/sdk-js/cookbook/transactions/track-transaction-status",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Tokens (ESDT / NFT / SFT)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/issue-sft-collection",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/set-special-roles",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/local-mint-burn-supply",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/token-lifecycle-operations",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/fetch-token-metadata",
+                          "sdk-and-tools/sdk-js/cookbook/tokens/fetch-account-token-balances",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Wallets",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/walletconnect-login",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/ledger-login",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/native-auth",
+                          "sdk-and-tools/sdk-js/cookbook/wallets/typescript-strict-mode-checklist",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Migration",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/migration/dapp-provider-to-initapp",
+                          "sdk-and-tools/sdk-js/cookbook/migration/get-account-info-v4-vs-v5",
+                          "sdk-and-tools/sdk-js/cookbook/migration/send-transactions-to-transaction-manager",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Governance",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/governance/create-proposal",
+                          "sdk-and-tools/sdk-js/cookbook/governance/vote-close-proposal",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Delegation",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/delegation/create-delegation-contract",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/delegate-stake",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/claim-and-redelegate-rewards",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/undelegate-and-withdraw",
+                          "sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Multisig",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/multisig/deploy-multisig-contract",
+                          "sdk-and-tools/sdk-js/cookbook/multisig/propose-action",
+                          "sdk-and-tools/sdk-js/cookbook/multisig/sign-perform-action",
+                          "sdk-and-tools/sdk-js/cookbook/multisig/read-multisig-state",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Smart contracts (call & query)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-payable-endpoint",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/decode-return-data",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-call/decode-contract-events",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Smart contracts (deploy & upgrade)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/compute-contract-address",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/deploy-contract",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/upgrade-contract",
+                        ]
+                      },
+                      {
+                        type: "category",
+                        label: "Smart contracts (Rust authoring)",
+                        items: [
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-rust/new-contract-from-template",
+                          "sdk-and-tools/sdk-js/cookbook/smart-contracts-rust/storage-mapper-decision-table",
+                        ]
+                      },
                     ]
                   },
                   "sdk-and-tools/sdk-js/extending-sdk-js",

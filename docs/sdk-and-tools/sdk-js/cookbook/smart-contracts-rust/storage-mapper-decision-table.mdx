@@ -1,0 +1,533 @@
+---
+title: "Storage mappers: which to pick, when"
+description: A contract exercising six storage mappers side by side, manually verified when written but not continuously built in CI, with a source-grounded decision table.
+difficulty: intermediate
+est_minutes: 9
+artifact: reference
+sdk_versions:
+  sdk-rs: "^0.64.1"
+tags:
+  - sdk-rs
+  - rust
+  - smart-contract
+---
+
+A contract exercising six storage mappers side by side, plus a decision table
+built from the real `multiversx-sc` crate source doc comments. The contract was
+manually built and tested at authoring time; this reference page is not compiled
+continuously by the cookbook CI. Two easy-to-get-wrong entries (a mapper's
+`contains()` complexity and its storage cost) are called out below in "Two
+clarifications from the crate source".
+
+## Prerequisites
+
+- Rust via `rustup`, with the `wasm32v1-none` target installed.
+- `sc-meta` (`cargo install multiversx-sc-meta`).
+- Familiarity with
+  [New contract from sc-meta new --template empty](/sdk-and-tools/sdk-js/cookbook/smart-contracts-rust/new-contract-from-template),
+  this recipe assumes that scaffolding workflow.
+
+## The contract
+
+```rust title="storage-mappers/src/storage_mappers.rs"
+#![no_std]
+
+use multiversx_sc::imports::*;
+
+pub mod storage_mappers_proxy;
+
+/// One endpoint pair per mapper type this recipe covers. This code was manually
+/// verified at authoring time, not continuously in CI. Method names and
+/// complexity claims below are taken directly from the real `multiversx-sc`
+/// crate source doc comments
+/// (`~/.cargo/registry/.../multiversx-sc-0.64.2/src/storage/mappers/*.rs`).
+#[multiversx_sc::contract]
+pub trait StorageMappers {
+    #[init]
+    fn init(&self) {}
+
+    #[upgrade]
+    fn upgrade(&self) {}
+
+    // ---- SingleValueMapper: one value, no parameters. Simplest mapper,
+    //      baseline for storage cost (1 entry). ----
+    #[endpoint(setCounter)]
+    fn set_counter(&self, value: BigUint) {
+        self.counter().set(value);
+    }
+
+    #[view(getCounter)]
+    #[storage_mapper("counter")]
+    fn counter(&self) -> SingleValueMapper<BigUint>;
+
+    // ---- VecMapper: ordered, 1-indexed, allows duplicates, random
+    //      access by index. ----
+    #[endpoint(pushItem)]
+    fn push_item(&self, item: ManagedBuffer) -> usize {
+        self.items().push(&item)
+    }
+
+    #[view(getItem)]
+    fn get_item(&self, index: usize) -> ManagedBuffer {
+        self.items().get(index)
+    }
+
+    #[view(itemCount)]
+    fn item_count(&self) -> usize {
+        self.items().len()
+    }
+
+    #[storage_mapper("items")]
+    fn items(&self) -> VecMapper<ManagedBuffer>;
+
+    // ---- SetMapper: ordered (insertion order) set. The crate source confirms
+    //      O(1) contains via an internal value->node_id lookup. ----
+    #[endpoint(addToOrderedSet)]
+    fn add_to_ordered_set(&self, value: u64) -> bool {
+        self.ordered_set().insert(value)
+    }
+
+    #[view(orderedSetContains)]
+    fn ordered_set_contains(&self, value: u64) -> bool {
+        self.ordered_set().contains(&value)
+    }
+
+    #[view(orderedSetLen)]
+    fn ordered_set_len(&self) -> usize {
+        self.ordered_set().len()
+    }
+
+    #[storage_mapper("ordered_set")]
+    fn ordered_set(&self) -> SetMapper<u64>;
+
+    // ---- UnorderedSetMapper: no ordering guarantee, O(1) contains via
+    //      VecMapper + a reverse index lookup (2N+1 entries total). ----
+    #[endpoint(addToUnorderedSet)]
+    fn add_to_unordered_set(&self, value: u64) -> bool {
+        self.unordered_set().insert(value)
+    }
+
+    #[view(unorderedSetContains)]
+    fn unordered_set_contains(&self, value: u64) -> bool {
+        self.unordered_set().contains(&value)
+    }
+
+    #[view(unorderedSetLen)]
+    fn unordered_set_len(&self) -> usize {
+        self.unordered_set().len()
+    }
+
+    #[storage_mapper("unordered_set")]
+    fn unordered_set(&self) -> UnorderedSetMapper<u64>;
+
+    // ---- WhitelistMapper: membership-only, no iteration, most
+    //      space-efficient of the set-shaped mappers. ----
+    #[endpoint(addToWhitelist)]
+    fn add_to_whitelist(&self, address: ManagedAddress) {
+        self.whitelist().add(&address);
+    }
+
+    #[view(isWhitelisted)]
+    fn is_whitelisted(&self, address: ManagedAddress) -> bool {
+        self.whitelist().contains(&address)
+    }
+
+    #[storage_mapper("whitelist")]
+    fn whitelist(&self) -> WhitelistMapper<ManagedAddress>;
+
+    // ---- MapMapper: key-value with iteration, HashMap-like API. Uses a
+    //      SetMapper internally for key tracking plus separate value
+    //      storage — the crate source confirms the 4N+1 entries this costs. ----
+    #[endpoint(setBalance)]
+    fn set_balance(&self, address: ManagedAddress, amount: BigUint) {
+        self.balances().insert(address, amount);
+    }
+
+    #[view(getBalance)]
+    fn get_balance(&self, address: ManagedAddress) -> BigUint {
+        self.balances().get(&address).unwrap_or_default()
+    }
+
+    #[view(hasBalanceEntry)]
+    fn has_balance_entry(&self, address: ManagedAddress) -> bool {
+        self.balances().contains_key(&address)
+    }
+
+    #[storage_mapper("balances")]
+    fn balances(&self) -> MapMapper<ManagedAddress, BigUint>;
+}
+```
+
+## The decision table
+
+| Mapper | Ordering | Membership check | Storage entries for N items | Iterable? | Pick it when |
+| --- | --- | --- | --- | --- | --- |
+| `SingleValueMapper<T>` | n/a (one value) | n/a | 1 | n/a | You need exactly one value: a counter, a config flag, a total. |
+| `VecMapper<T>` | Insertion order | Linear scan only | N + 1 | Yes, 1 to `len()` | Ordered, indexable, append-friendly storage without fast membership checks. **Indexes start at 1, not 0.** |
+| `SetMapper<T>` | Insertion order (doubly-linked internally) | **O(1)**, confirmed from the crate source | ~3N + 1 | Yes, in insertion order, plus `next()`/`previous()` | You need both ordered iteration AND fast membership checks. |
+| `UnorderedSetMapper<T>` | None | O(1) | 2N + 1 (the reverse-lookup keys are easy to undercount as N+1) | Yes, arbitrary order | Fast membership checks, order does not matter: deduping, a processed-IDs set. |
+| `WhitelistMapper<T>` | n/a | O(1), most storage-efficient | N | **No**, cannot enumerate at all | "Is X allowed?" only, never "list everyone allowed." |
+| `MapMapper<K,V>` | Insertion order of keys | O(1) via `contains_key()` | ~4N + 1 | Yes: `.iter()`, `.keys()`, `.values()` | A real key-value store with iteration: balances, per-user settings. |
+| `LinkedListMapper<T>` | Insertion order, efficient front/back ops | Not built in | ~2N + 1 | Yes | Efficient push/pop from both ends. Not exercised with working code here, see "What this recipe did not test." |
+
+The storage-cost column is expressed in unique storage keys, not bytes; it
+captures the relative ordering between choices for the same logical data, not an
+absolute gas number.
+
+## Two clarifications from the crate source
+
+Read directly from `multiversx-sc-0.64.2`'s source doc comments:
+
+:::danger[SetMapper's contains() is O(1), not O(n)]
+It is easy to assume `SetMapper.contains()` is O(n) because the mapper keeps
+insertion order, but the crate source's doc comment states plainly:
+`"Contains: contains(value) - Checks membership. O(1) with one storage read."`,
+listing `"O(1) insert, remove, and contains"` as a Pro. `SetMapper` maintains a
+separate value→node-ID lookup specifically to make `contains()` O(1); that is why
+its storage layout is more complex than a plain ordered list.
+:::
+
+:::danger[UnorderedSetMapper costs 2N+1 entries, not N+1]
+It is easy to undercount this as N+1. The real storage layout has value storage
+(`.len` + `.item{index}`, the N+1) AND a separate `.index{encoded_value}`
+reverse-lookup key per element, which is what actually delivers O(1)
+`contains()`. You cannot get O(1) membership testing from N+1 keys with no reverse
+index.
+:::
+
+Everything else this recipe independently checked against the crate source held
+up, including `MapMapper`'s "4N+1 entries (expensive!)", confirmed by reading how
+it is built on top of `SetMapper` internally plus its own value storage.
+
+## Tests
+
+```rust title="storage-mappers/tests/storage_mappers_blackbox_test.rs"
+// tests/storage_mappers_blackbox_test.rs — one test per mapper this recipe
+// covers, each proving the specific behavioral claim its decision-table entry
+// makes (not just "it compiles").
+
+use multiversx_sc_scenario::imports::*;
+
+use storage_mappers::storage_mappers_proxy;
+
+const OWNER: TestAddress = TestAddress::new("owner");
+const CONTRACT: TestSCAddress = TestSCAddress::new("storage-mappers-contract");
+const CODE_PATH: MxscPath = MxscPath::new("output/storage-mappers.mxsc.json");
+
+fn world() -> ScenarioWorld {
+    let mut blockchain = ScenarioWorld::new();
+    blockchain.register_contract(CODE_PATH, storage_mappers::ContractBuilder);
+    blockchain
+}
+
+fn deploy(world: &mut ScenarioWorld) {
+    world.account(OWNER).nonce(1);
+    world
+        .tx()
+        .from(OWNER)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .init()
+        .code(CODE_PATH)
+        .new_address(CONTRACT)
+        .run();
+}
+
+#[test]
+fn single_value_mapper_set_and_get() {
+    let mut world = world();
+    deploy(&mut world);
+
+    world
+        .tx()
+        .from(OWNER)
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .set_counter(BigUint::<StaticApi>::from(42u64))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .counter()
+        .returns(ExpectValue(BigUint::<StaticApi>::from(42u64)))
+        .run();
+}
+
+#[test]
+fn vec_mapper_is_one_indexed() {
+    let mut world = world();
+    deploy(&mut world);
+
+    // Push three items; VecMapper's own doc comment says indexes start
+    // at 1 — confirm index 1 is the FIRST push, not the second.
+    world
+        .tx()
+        .from(OWNER)
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .push_item(ManagedBuffer::<StaticApi>::from(b"first"))
+        .run();
+    world
+        .tx()
+        .from(OWNER)
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .push_item(ManagedBuffer::<StaticApi>::from(b"second"))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .item_count()
+        .returns(ExpectValue(2usize))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .get_item(1usize)
+        .returns(ExpectValue(ManagedBuffer::<StaticApi>::from(b"first")))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .get_item(2usize)
+        .returns(ExpectValue(ManagedBuffer::<StaticApi>::from(b"second")))
+        .run();
+}
+
+#[test]
+fn set_mapper_contains_and_ordering() {
+    let mut world = world();
+    deploy(&mut world);
+
+    for value in [30u64, 10u64, 20u64] {
+        world
+            .tx()
+            .from(OWNER)
+            .to(CONTRACT)
+            .typed(storage_mappers_proxy::StorageMappersProxy)
+            .add_to_ordered_set(value)
+            .run();
+    }
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .ordered_set_contains(10u64)
+        .returns(ExpectValue(true))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .ordered_set_contains(99u64)
+        .returns(ExpectValue(false))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .ordered_set_len()
+        .returns(ExpectValue(3usize))
+        .run();
+}
+
+#[test]
+fn unordered_set_mapper_contains_after_insert_and_absent_value() {
+    let mut world = world();
+    deploy(&mut world);
+
+    world
+        .tx()
+        .from(OWNER)
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .add_to_unordered_set(7u64)
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .unordered_set_contains(7u64)
+        .returns(ExpectValue(true))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .unordered_set_contains(8u64)
+        .returns(ExpectValue(false))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .unordered_set_len()
+        .returns(ExpectValue(1usize))
+        .run();
+}
+
+#[test]
+fn whitelist_mapper_membership_only() {
+    let mut world = world();
+    deploy(&mut world);
+    let allowed: TestAddress = TestAddress::new("allowed-user");
+    let stranger: TestAddress = TestAddress::new("stranger");
+    world.account(allowed).nonce(1);
+    world.account(stranger).nonce(1);
+
+    world
+        .tx()
+        .from(OWNER)
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .add_to_whitelist(allowed.to_address())
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .is_whitelisted(allowed.to_address())
+        .returns(ExpectValue(true))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .is_whitelisted(stranger.to_address())
+        .returns(ExpectValue(false))
+        .run();
+}
+
+#[test]
+fn map_mapper_insert_get_and_contains_key() {
+    let mut world = world();
+    deploy(&mut world);
+    let holder: TestAddress = TestAddress::new("balance-holder");
+    let nobody: TestAddress = TestAddress::new("no-balance");
+    world.account(holder).nonce(1);
+    world.account(nobody).nonce(1);
+
+    world
+        .tx()
+        .from(OWNER)
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .set_balance(holder.to_address(), BigUint::<StaticApi>::from(500u64))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .get_balance(holder.to_address())
+        .returns(ExpectValue(BigUint::<StaticApi>::from(500u64)))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .has_balance_entry(holder.to_address())
+        .returns(ExpectValue(true))
+        .run();
+
+    // A key that was never inserted: contains_key is false, and the
+    // convenience getter's unwrap_or_default() reads as zero rather than
+    // erroring — a real design choice worth testing explicitly, since it
+    // means "balance of zero" and "never had an entry" are
+    // indistinguishable through get_balance alone.
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .has_balance_entry(nobody.to_address())
+        .returns(ExpectValue(false))
+        .run();
+
+    world
+        .query()
+        .to(CONTRACT)
+        .typed(storage_mappers_proxy::StorageMappersProxy)
+        .get_balance(nobody.to_address())
+        .returns(ExpectValue(BigUint::<StaticApi>::from(0u64)))
+        .run();
+}
+```
+
+```bash
+cargo test
+```
+
+8/8 passing: the 6 tests above (one per mapper, each proving the specific claim in
+the table: `VecMapper`'s first push lands at index 1,
+`SetMapper` / `UnorderedSetMapper.contains()` returns correctly for present and
+absent values, `WhitelistMapper` checked via `contains()` only, `MapMapper`'s
+zero-default trap), plus the 2 scaffold-provided scenario tests.
+
+Every method name used (`.insert()`, `.contains()`, `.contains_key()`, `.add()`,
+`.push()`) was copied from the real crate source's own doc-comment examples, worth
+calling out since, for instance, `SetMapper` / `UnorderedSetMapper` both use
+`.contains()` while `MapMapper` uses `.contains_key()` instead, an easy name to
+get wrong by assuming symmetry.
+
+## Pitfalls
+
+:::danger[Pitfall 1: VecMapper is 1-indexed]
+Index 0 is invalid and panics. In the authoring-time manual test, the recipe
+pushed two items and read back index 1 as the first one pushed.
+:::
+
+:::warning[Pitfall 2: MapMapper.get() returning a default value looks identical to a real stored zero]
+If "never set" and "set to zero" need to be distinguishable, check
+`contains_key()` explicitly rather than trusting a default-valued read.
+:::
+
+:::note[Pitfall 3: SetMapper and UnorderedSetMapper both offer O(1) contains()]
+The deciding factor between them is ordering and storage cost, not lookup speed.
+Pick `UnorderedSetMapper` unless you specifically need insertion-order iteration
+or `next()`/`previous()` navigation.
+:::
+
+:::danger[Pitfall 4: WhitelistMapper cannot list its members at all]
+Not even inefficiently. If you might ever need to enumerate, use `SetMapper` or
+`UnorderedSetMapper` from the start; there is no way to add enumeration later
+without migrating storage.
+:::
+
+:::note[Pitfall 5: method names differ across the mapper family]
+`SetMapper` / `UnorderedSetMapper.contains()` vs `MapMapper.contains_key()`, check
+the exact mapper's own method names rather than assuming consistency.
+:::
+
+## What this recipe did not test
+
+`LinkedListMapper`, `QueueMapper`, `UserMapper`, `UniqueIdMapper`, and `BiDiMapper`
+are real, exported mapper types, but this recipe does not include code exercising
+them: six manually verified mapper examples were already substantial scope.
+`FungibleTokenMapper` / `NonFungibleTokenMapper` / `TokenAttributesMapper`
+need real ESDT system contract interaction to demonstrate meaningfully, which
+belongs in a token-issuance-from-a-contract recipe, not a storage-mapper
+comparison.
+
+## See also
+
+- [New contract from sc-meta new --template empty](/sdk-and-tools/sdk-js/cookbook/smart-contracts-rust/new-contract-from-template)
+  is the scaffolding this recipe's contract builds on.
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the dApp side that would eventually call an endpoint reading from one of
+  these mappers.

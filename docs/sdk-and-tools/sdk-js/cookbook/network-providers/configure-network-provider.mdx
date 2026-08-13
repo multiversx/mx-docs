@@ -1,0 +1,320 @@
+---
+title: Configure a network provider (Api vs Proxy)
+description: Construct an ApiNetworkProvider or ProxyNetworkProvider, tune clientName and timeout, or get one from an entrypoint. Both share one INetworkProvider interface.
+difficulty: beginner
+est_minutes: 5
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - network-provider
+  - api
+  - proxy
+  - typescript
+---
+
+Every read-side call in sdk-core (fetching an account, a block, a token
+balance, network config) goes through an `INetworkProvider`. Before you can read
+anything, you need one. There are two implementations, and this recipe builds
+both.
+
+- **`ApiNetworkProvider`** talks to the MultiversX HTTP API (for example
+  `api.multiversx.com`), backed by Elasticsearch. It has the richest, indexed
+  endpoints: token lists per account, transaction history, token metadata. This
+  is the default choice for most apps and backends.
+- **`ProxyNetworkProvider`** talks to a gateway / observing-squad proxy (for
+  example `gateway.multiversx.com`). It sits closer to the protocol and exposes
+  a few endpoints the API does not, most notably block-by-nonce.
+
+Both implementations share one `INetworkProvider` interface, so your code should
+depend on `INetworkProvider`, not the concrete class. You can swap one for the
+other without touching a call site.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+mkdir configure-network-provider
+cd configure-network-provider
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-configure-network-provider",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — construct an ApiNetworkProvider vs a ProxyNetworkProvider (and get one from an entrypoint), with custom URL, clientName and timeout config, against live networks.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## Constructing the providers
+
+```ts title="src/providers.ts"
+// src/providers.ts — the subject of this recipe: how to construct a network
+// provider. Everything read-side in sdk-core goes through the same
+// `INetworkProvider` interface, and there are two implementations:
+//
+//   - ApiNetworkProvider  → the MultiversX HTTP API (e.g. api.multiversx.com),
+//     backed by Elasticsearch. Richer, indexed endpoints: token lists per
+//     account, transaction history, token metadata.
+//   - ProxyNetworkProvider → a gateway / observing-squad proxy (e.g.
+//     gateway.multiversx.com). Closer to the protocol; exposes a few
+//     endpoints the API does not (notably block-by-nonce).
+//
+// Both implement `INetworkProvider`, so application code should depend on the
+// interface, not the concrete class: you can swap Api for Proxy without
+// touching a call site.
+
+import {
+  ApiNetworkProvider,
+  ProxyNetworkProvider,
+  DevnetEntrypoint,
+} from '@multiversx/sdk-core';
+import type { INetworkProvider, NetworkProviderConfig } from '@multiversx/sdk-core';
+
+// A `clientName` is recommended on every provider — it identifies your app in
+// the network's request metrics. Omit it and the SDK logs a recommendation to
+// the console on every construction.
+const CLIENT_NAME = 'mvx-cookbook';
+
+/** The API provider — the default choice for most apps and backends. */
+export function createApiProvider(url: string): INetworkProvider {
+  const config: NetworkProviderConfig = { clientName: CLIENT_NAME };
+  return new ApiNetworkProvider(url, config);
+}
+
+/** The Proxy provider — same interface, different backend. */
+export function createProxyProvider(url: string): INetworkProvider {
+  const config: NetworkProviderConfig = { clientName: CLIENT_NAME };
+  return new ProxyNetworkProvider(url, config);
+}
+
+/**
+ * `NetworkProviderConfig` extends Axios's `AxiosRequestConfig`, so you set the
+ * request `timeout` (milliseconds), custom `headers`, proxy agents, etc. in the
+ * same object as `clientName`.
+ */
+export function createApiProviderWithConfig(url: string): INetworkProvider {
+  const config: NetworkProviderConfig = {
+    clientName: CLIENT_NAME,
+    timeout: 10_000,
+  };
+  return new ApiNetworkProvider(url, config);
+}
+
+/**
+ * You rarely construct a provider by hand in a script — an entrypoint already
+ * holds one. `createNetworkProvider()` hands you the exact same
+ * `INetworkProvider` the controllers and factories use internally. A default
+ * `DevnetEntrypoint()` gives you an `ApiNetworkProvider` for devnet.
+ */
+export function providerFromEntrypoint(): INetworkProvider {
+  return new DevnetEntrypoint({ clientName: 'mvx-cookbook' }).createNetworkProvider();
+}
+
+/**
+ * To get a Proxy-backed provider from an entrypoint, pass `kind: 'proxy'` and a
+ * gateway URL. Everything else about the entrypoint stays the same.
+ */
+export function proxyProviderFromEntrypoint(gatewayUrl: string): INetworkProvider {
+  return new DevnetEntrypoint({
+    url: gatewayUrl,
+    kind: 'proxy',
+    clientName: 'mvx-cookbook',
+  }).createNetworkProvider();
+}
+```
+
+## Proving each one is live
+
+```ts title="src/index.ts"
+// src/index.ts — constructs each kind of provider and proves it is live by
+// calling getNetworkConfig() on it. No wallet, no PEM, no gas — every call
+// below is a plain read.
+//
+// Usage:
+//   npm run build && npm start
+
+import {
+  createApiProvider,
+  createProxyProvider,
+  createApiProviderWithConfig,
+  providerFromEntrypoint,
+  proxyProviderFromEntrypoint,
+} from './providers';
+
+const MAINNET_API = 'https://api.multiversx.com';
+const MAINNET_GATEWAY = 'https://gateway.multiversx.com';
+const DEVNET_GATEWAY = 'https://devnet-gateway.multiversx.com';
+
+async function main(): Promise<void> {
+  const api = createApiProvider(MAINNET_API);
+  const apiConfig = await api.getNetworkConfig();
+  console.log(`ApiNetworkProvider   (${MAINNET_API})`);
+  console.log(`  live — chainID ${apiConfig.chainID}, minGasPrice ${apiConfig.minGasPrice}`);
+
+  const proxy = createProxyProvider(MAINNET_GATEWAY);
+  const proxyConfig = await proxy.getNetworkConfig();
+  console.log(`ProxyNetworkProvider (${MAINNET_GATEWAY})`);
+  console.log(`  live — chainID ${proxyConfig.chainID}, minGasPrice ${proxyConfig.minGasPrice}`);
+
+  const tuned = createApiProviderWithConfig(MAINNET_API);
+  const tunedConfig = await tuned.getNetworkConfig();
+  console.log('ApiNetworkProvider + custom timeout/config');
+  console.log(`  live — chainID ${tunedConfig.chainID}`);
+
+  const fromEntry = providerFromEntrypoint();
+  const entryConfig = await fromEntry.getNetworkConfig();
+  console.log('DevnetEntrypoint().createNetworkProvider()');
+  console.log(`  live — chainID ${entryConfig.chainID} (devnet)`);
+
+  const proxyFromEntry = proxyProviderFromEntrypoint(DEVNET_GATEWAY);
+  const proxyEntryConfig = await proxyFromEntry.getNetworkConfig();
+  console.log(`DevnetEntrypoint({ kind: 'proxy' }).createNetworkProvider()`);
+  console.log(`  live — chainID ${proxyEntryConfig.chainID} (devnet gateway)`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start
+```
+
+Expected output:
+
+```text
+ApiNetworkProvider   (https://api.multiversx.com)
+  live — chainID 1, minGasPrice 1000000000
+ProxyNetworkProvider (https://gateway.multiversx.com)
+  live — chainID 1, minGasPrice 1000000000
+ApiNetworkProvider + custom timeout/config
+  live — chainID 1
+DevnetEntrypoint().createNetworkProvider()
+  live — chainID D (devnet)
+DevnetEntrypoint({ kind: 'proxy' }).createNetworkProvider()
+  live — chainID D (devnet gateway)
+```
+
+## How it works
+
+**Depend on the interface, not the class.** Every function in `providers.ts` is
+typed to return `INetworkProvider`. `ApiNetworkProvider` and
+`ProxyNetworkProvider` both implement it, so a function that accepts an
+`INetworkProvider` takes either. This recipe proves it by running the identical
+`getNetworkConfig()` call against all five providers and getting the same
+`NetworkConfig` shape back.
+
+**`NetworkProviderConfig` extends Axios's `AxiosRequestConfig`.** The second
+constructor argument is where `clientName`, `timeout` (milliseconds), custom
+`headers`, and proxy agents all live. It is one object, typed as
+`interface NetworkProviderConfig extends AxiosRequestConfig { clientName?: string }`.
+
+**An entrypoint already holds a provider.** In a real script you rarely `new` a
+provider up by hand. `DevnetEntrypoint().createNetworkProvider()` hands you the
+exact same `INetworkProvider` the controllers and factories use internally. Pass
+`kind: 'proxy'` plus a gateway URL to get a proxy-backed one instead.
+
+## Pitfalls
+
+:::note[Pitfall 1: set clientName or the SDK nags you]
+Omit `clientName` and the SDK logs a recommendation to the console on every
+provider construction ("We recommend providing the `clientName`..."). It is used
+for the network's request metrics. This recipe always sets it; the
+entrypoint-created providers in `index.ts` do not, which is why you will see
+that log line when you run it.
+:::
+
+:::warning[Pitfall 2: Api and Proxy are NOT feature-identical]
+They share the `INetworkProvider` interface, but a handful of methods differ.
+`ApiNetworkProvider.getBlock(hash)` takes a hash; `ProxyNetworkProvider.getBlock({ shard, blockNonce })`
+takes a shard plus nonce. Pagination (`{ from, size }`) is honored by the Api
+provider but ignored by the Proxy provider's token methods. Pick the provider
+whose backend actually exposes what you need.
+:::
+
+:::note[Pitfall 3: the URL is the network, not a constructor flag]
+There is no `network: 'mainnet'` option. Mainnet vs devnet vs testnet is
+entirely the URL you pass (`api.multiversx.com` vs `devnet-api.multiversx.com`).
+The pre-configured `DevnetEntrypoint` / `MainnetEntrypoint` classes just bake the
+right URL and chain ID in for you.
+:::
+
+## See also
+
+- [Fetch network config and status](/sdk-and-tools/sdk-js/cookbook/network-providers/fetch-network-config-status)
+  is the first thing you read once you have a provider.
+- [Custom API/Proxy request](/sdk-and-tools/sdk-js/cookbook/network-providers/custom-api-request)
+  calls any endpoint the typed methods do not cover, via `doGetGeneric` /
+  `doPostGeneric`.
+- [Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+  uses `createSmartContractController()`, which wraps the same provider this
+  recipe builds.

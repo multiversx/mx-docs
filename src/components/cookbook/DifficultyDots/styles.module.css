@@ -1,0 +1,32 @@
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.dotOn,
+.dotOff {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dotOn {
+  background: var(--ifm-color-emphasis-800);
+}
+
+.dotOff {
+  background: var(--ifm-color-emphasis-300);
+}
+
+.label {
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 500;
+}

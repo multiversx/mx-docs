@@ -1,0 +1,578 @@
+---
+title: Query a read-only view
+description: Query a smart contract's read-only view with sdk-core's SmartContractController, no wallet, no gas, no transaction, verified against live devnet.
+difficulty: beginner
+est_minutes: 5
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - smart-contract
+  - abi
+  - devnet
+  - typescript
+---
+
+Query a smart contract's read-only view function. A view function does not
+modify the state of the contract, so there is no transaction to send: no wallet,
+no nonce, no gas, no signing, no devnet EGLD. This is the cheapest possible way
+to read on-chain state.
+
+This recipe queries two real, currently-deployed devnet contracts: **adder**
+(`getSum()`, zero arguments, the same contract as
+[Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi) and
+[Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint))
+and **ping-pong** (`didUserPing(address)`, which itself takes a native JS
+argument, the same contract as
+[Call a payable endpoint with EGLD](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-payable-endpoint)).
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Network access to devnet. No wallet, no PEM, no devnet EGLD.
+
+## Install
+
+```bash
+mkdir query-contract-view
+cd query-contract-view
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-query-contract-view",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — query a read-only smart contract view (no transaction, no gas, no wallet) with sdk-core's SmartContractController against a live devnet contract.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```json title="src/adder.abi.json"
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.76.0-nightly",
+            "commitHash": "d86d65bbc19b928387f68427fcc3a0da498d8a19",
+            "commitDate": "2023-12-10",
+            "channel": "Nightly",
+            "short": "rustc 1.76.0-nightly (d86d65bbc 2023-12-10)"
+        },
+        "contractCrate": {
+            "name": "adder",
+            "version": "0.0.0",
+            "gitVersion": "v0.50.1-3-gbed74682a"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.50.1"
+        }
+    },
+    "docs": [
+        "One of the simplest smart contracts possible,",
+        "it holds a single variable in storage, which anyone can increment."
+    ],
+    "name": "Adder",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getSum",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Add desired amount to the storage variable."
+            ],
+            "name": "add",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {}
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point. Queries both contracts' views and prints
+// the results. No wallet, no PEM, no gas — every query below is a plain
+// read against devnet.
+//
+// Usage:
+//   npm run build && npm start [addressToCheck]
+//
+// If omitted, addressToCheck defaults to the well-known example address
+// this Cookbook uses elsewhere (erd1qyu...), which also happens to be the
+// adder contract's owner.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  queryAdderSum,
+  queryAdderSumGranular,
+  queryDidUserPing,
+  ADDER_CONTRACT_ADDRESS,
+  PING_PONG_CONTRACT_ADDRESS,
+} from './queryView';
+
+function loadAbi(fileName: string): Abi {
+  const json = fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+  return Abi.create(JSON.parse(json) as Record<string, unknown>);
+}
+
+async function main(): Promise<void> {
+  const addressToCheck =
+    process.argv[2] ?? 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
+
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+
+  const adderAbi = loadAbi('adder.abi.json');
+  console.log(`Querying getSum() on adder (${ADDER_CONTRACT_ADDRESS})...`);
+  const sum = await queryAdderSum(entrypoint, adderAbi);
+  console.log(`  one-step  controller.query():                     ${sum}`);
+  const sumGranular = await queryAdderSumGranular(entrypoint, adderAbi);
+  console.log(`  three-step create/run/parseQueryResponse():       ${sumGranular}`);
+  console.log(`  (both queries hit the same live contract; equal:  ${sum === sumGranular})`);
+
+  const pingPongAbi = loadAbi('ping-pong.abi.json');
+  console.log(`\nQuerying didUserPing(${addressToCheck}) on ping-pong (${PING_PONG_CONTRACT_ADDRESS})...`);
+  const didPing = await queryDidUserPing(entrypoint, pingPongAbi, addressToCheck);
+  console.log(`  didUserPing: ${didPing}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+```json title="src/ping-pong.abi.json"
+{
+  "buildInfo": {
+    "rustc": {
+      "version": "1.61.0-nightly",
+      "commitHash": "1d9c262eea411ec5230f8a4c9ba50b3647064da4",
+      "commitDate": "2022-03-26",
+      "channel": "Nightly",
+      "short": "rustc 1.61.0-nightly (1d9c262ee 2022-03-26)"
+    },
+    "contractCrate": {
+      "name": "ping-pong",
+      "version": "0.0.2",
+      "git_version": "23ff9bd"
+    },
+    "framework": {
+      "name": "elrond-wasm",
+      "version": "0.34.1"
+    }
+  },
+  "docs": [
+    "A contract that allows anyone to send a fixed sum, locks it for a while and then allows users to take it back.",
+    "Sending funds to the contract is called \"ping\".",
+    "Taking the same funds back is called \"pong\".",
+    "",
+    "Restrictions:",
+    "- Only the set amount can be `ping`-ed, no more, no less.",
+    "- `pong` can only be called after a certain period after `ping`."
+  ],
+  "name": "PingPong",
+  "constructor": {
+    "docs": [
+      "Necessary configuration when deploying:",
+      "`ping_amount` - the exact amount that needs to be sent when `ping`-ing.  ",
+      "`duration_in_seconds` - how much time (in seconds) until `pong` can be called after the initial `ping` call  ",
+      "`token_id` - Optional. The Token Identifier of the token that is going to be used. Default is \"EGLD\"."
+    ],
+    "inputs": [
+      {
+        "name": "ping_amount",
+        "type": "BigUint"
+      },
+      {
+        "name": "duration_in_seconds",
+        "type": "u64"
+      },
+      {
+        "name": "opt_token_id",
+        "type": "optional<EgldOrEsdtTokenIdentifier>",
+        "multi_arg": true
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "docs": [
+        "User sends some tokens to be locked in the contract for a period of time."
+      ],
+      "name": "ping",
+      "mutability": "mutable",
+      "payableInTokens": ["*"],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "docs": [
+        "User can take back funds from the contract.",
+        "Can only be called after expiration."
+      ],
+      "name": "pong",
+      "mutability": "mutable",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "name": "didUserPing",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "getPongEnableTimestamp",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "getTimeToPong",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "optional<u64>",
+          "multi_result": true
+        }
+      ]
+    },
+    {
+      "name": "getAcceptedPaymentToken",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "EgldOrEsdtTokenIdentifier"
+        }
+      ]
+    },
+    {
+      "name": "getPingAmount",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "BigUint"
+        }
+      ]
+    },
+    {
+      "name": "getDurationTimestamp",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "getUserPingTimestamp",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "identifier": "pongEvent",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "Address",
+          "indexed": true
+        }
+      ]
+    }
+  ],
+  "hasCallback": false,
+  "types": []
+}
+```
+
+</details>
+
+## Querying
+
+```ts title="src/queryView.ts"
+// src/queryView.ts — querying a read-only view function. A view function does
+// not modify the state of the contract, so there is no transaction to send:
+// no wallet, no nonce, no gas, no signing.
+//
+// Targets two real, currently-deployed devnet contracts:
+//   - adder   (erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug)
+//     `getSum()` — zero-argument view, the mx-sdk-js-core cookbook's own example.
+//   - ping-pong (erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq)
+//     `didUserPing(address)` — a view that itself takes a native JS argument
+//     (an `Address`), to show query arguments go through the same
+//     NativeSerializer conversion as mutating-endpoint arguments do.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export const ADDER_CONTRACT_ADDRESS =
+  'erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug';
+export const PING_PONG_CONTRACT_ADDRESS =
+  'erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq';
+
+/**
+ * Queries adder's `getSum()` — the one-step way, via
+ * `SmartContractController.query()`. Returns already-decoded native values
+ * (each with a `.valueOf()`/`.toString()` you can read directly) because the
+ * controller was constructed with the ABI.
+ */
+export async function queryAdderSum(entrypoint: DevnetEntrypoint, abi: Abi): Promise<bigint> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const [sum] = await controller.query({
+    contract: Address.newFromBech32(ADDER_CONTRACT_ADDRESS),
+    function: 'getSum',
+    arguments: [],
+  });
+
+  return BigInt((sum as { toString(base: number): string }).toString(10));
+}
+
+/**
+ * The same query, split into its three granular steps — create, run, parse.
+ * Produces the same result; useful when you want to inspect or cache the raw
+ * `SmartContractQuery` / `SmartContractQueryResponse` in between.
+ */
+export async function queryAdderSumGranular(entrypoint: DevnetEntrypoint, abi: Abi): Promise<bigint> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const query = controller.createQuery({
+    contract: Address.newFromBech32(ADDER_CONTRACT_ADDRESS),
+    function: 'getSum',
+    arguments: [],
+  });
+  const response = await controller.runQuery(query);
+  const [sum] = controller.parseQueryResponse(response);
+
+  return BigInt((sum as { toString(base: number): string }).toString(10));
+}
+
+/**
+ * Queries ping-pong's `didUserPing(address)` — a view that takes a native JS
+ * argument (an `Address` instance, or equally a bech32 string, per
+ * NativeSerializer's `Address` conversion rule) instead of none.
+ */
+export async function queryDidUserPing(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  userAddress: string,
+): Promise<boolean> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const [didPing] = await controller.query({
+    contract: Address.newFromBech32(PING_PONG_CONTRACT_ADDRESS),
+    function: 'didUserPing',
+    arguments: [Address.newFromBech32(userAddress)],
+  });
+
+  return Boolean((didPing as { valueOf(): boolean }).valueOf());
+}
+```
+
+## Run it
+
+```bash
+npm start [addressToCheck]
+```
+
+Expected output:
+
+```text
+Querying getSum() on adder (erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug)...
+  one-step  controller.query():                     84
+  three-step create/run/parseQueryResponse():       84
+  (both queries hit the same live contract; equal:  true)
+
+Querying didUserPing(erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th) on ping-pong (erd1qqqqqqqqqqqqqpgqm6ad6xrsjvxlcdcffqe8w58trpec09ug9l5qde96pq)...
+  didUserPing: false
+```
+
+(The adder sum grows over time as other cookbook readers call `add()`; expect a
+different number, not necessarily `84`.)
+
+## How it works
+
+**Two ways to run the same query.**
+`controller.query({ contract, function, arguments })` creates the query, runs
+it, and parses the result in one call. The three-step form (`createQuery()`,
+`runQuery()`, `parseQueryResponse()`) does the same work, split apart for when
+you want to inspect or cache the raw `SmartContractQuery` /
+`SmartContractQueryResponse` in between. Both are verified here to return
+identical results against the real, live adder contract.
+
+**Query arguments use the exact same `NativeSerializer` conversion as
+mutating-endpoint arguments.** `didUserPing(address)` takes an `Address`; this
+recipe passes `Address.newFromBech32(userAddress)` directly in the `arguments`
+array.
+
+**No wallet is constructed anywhere in this recipe.** `SmartContractController`
+only needs a `chainID` and a network provider (both supplied internally by
+`DevnetEntrypoint`) plus the ABI: no `IAccount`, no nonce, no signing. Compare
+with [Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint),
+whose `createTransactionForExecute` takes a `sender: IAccount` because it builds
+a transaction that must be signed; `query()` never does.
+
+## Pitfalls
+
+:::note[Pitfall 1: a query result's static type is any]
+The SDK decodes the result using the ABI at runtime, but TypeScript's static
+type is not narrowed to `bigint` / `boolean` / etc. This recipe casts explicitly
+rather than trusting an implicit `any`, worth doing in your own code too, since
+`strict` mode will not catch a wrong assumption about a query result's shape for
+you.
+:::
+
+:::warning[Pitfall 2: a query reflects state at the moment it runs, not a fixed snapshot]
+Two calls to the same query moments apart can return different values if someone
+else's transaction lands in between. Nothing wrong with the code, that is what
+"live" state means. Neither query here waits for or depends on a particular
+block.
+:::
+
+:::note[Pitfall 3: this recipe reads from contracts it does not own]
+Both adder and ping-pong are used here only because they are real, stable,
+publicly queryable devnet fixtures, the same ones `mx-sdk-js-core`'s cookbook and
+`mx-template-dapp`'s default config already point at. This recipe never deploys
+or controls either one.
+:::
+
+## See also
+
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is the ABI-loading step this recipe builds on.
+- [Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint)
+  is the mutating-endpoint counterpart to this read-only recipe.
+- [Call a payable endpoint with EGLD](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-payable-endpoint)
+  uses this recipe's query pattern to discover how much EGLD to attach.

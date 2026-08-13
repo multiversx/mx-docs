@@ -1,0 +1,402 @@
+---
+title: Send EGLD to an address
+description: Send a native EGLD transfer with sdk-core's TransfersController against DevnetEntrypoint, the backend/script pattern for when your own code holds the key.
+difficulty: beginner
+est_minutes: 6
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - transaction
+  - typescript
+  - devnet
+---
+
+Send a native EGLD transfer using sdk-core's `TransfersController` directly
+against `DevnetEntrypoint`. No browser, no connected wallet, no sdk-dapp. This is
+the pattern for when **your own code holds the private key**: a script, a bot, a
+payout job, a backend service.
+
+If instead you are building a browser dApp where the end user's own wallet should
+sign, you want the sdk-dapp flow. Start with
+[Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account).
+This recipe and that flow build the same kind of transaction two structurally
+different ways, for two different trust models.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- A devnet wallet with some devnet EGLD. If you do not have one, generate a
+  disposable wallet with only sdk-core:
+
+```ts
+import { Mnemonic, Account } from '@multiversx/sdk-core';
+
+const mnemonic = Mnemonic.generate();
+const account = Account.newFromMnemonic(mnemonic.toString());
+account.saveToPem('./wallet.pem');
+console.log('Address:', account.address.toBech32());
+```
+
+Then fund the printed address at the [devnet faucet](https://r3d4.fr/faucet) or
+the [devnet web wallet](https://devnet-wallet.multiversx.com). `wallet.pem` is
+git-ignored, devnet-only, and throwaway. Never reuse a plain PEM like this for
+mainnet funds.
+
+## Install
+
+```bash
+mkdir send-egld
+cd send-egld
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th 0.01
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-send-egld",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — send EGLD to an address using sdk-core's TransfersController directly against DevnetEntrypoint. No wallet extension involved — this is the backend/script pattern, for when your own code holds the keys.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## Loading the account
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// The sdk-core nonce rule: fetch the account nonce from the network before
+// sending transactions, then increment it locally with
+// getNonceThenIncrement(). This helper does exactly the fetch half; the
+// increment half matters once you send more than one transaction per run.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern.
+ *
+ * `entrypoint.recallAccountNonce(address)` is a thin convenience wrapper
+ * around `networkProvider.getAccount(address).nonce`, used here instead of
+ * constructing a network provider by hand.
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+## Converting the amount
+
+```ts title="src/amount.ts"
+// src/amount.ts — decimal EGLD string <-> smallest-denomination bigint.
+//
+// EGLD's denomination is 10^18 (1 EGLD = 1000000000000000000). Getting this
+// conversion wrong, or doing it with plain JS `Number` math, is a common
+// source of bugs. Use BigNumber (already an sdk-core peer dependency) rather
+// than floating point, and reject non-integer results outright instead of
+// silently truncating them.
+
+import BigNumber from 'bignumber.js';
+
+export const EGLD_DECIMALS = 18;
+
+/**
+ * Converts a decimal EGLD amount (e.g. "0.5") to the smallest-denomination
+ * bigint the network expects (e.g. 500000000000000000n).
+ *
+ * Throws if the input has more precision than 18 decimals — silently
+ * rounding would mean sending a different amount than what was typed.
+ */
+export function toSmallestDenomination(amountInEgld: string): bigint {
+  const value = new BigNumber(amountInEgld).multipliedBy(
+    new BigNumber(10).pow(EGLD_DECIMALS),
+  );
+  if (!value.isFinite() || value.isNegative()) {
+    throw new Error(`"${amountInEgld}" is not a valid non-negative EGLD amount.`);
+  }
+  if (!value.isInteger()) {
+    throw new Error(
+      `"${amountInEgld}" EGLD has more precision than the network supports (${EGLD_DECIMALS} decimals).`,
+    );
+  }
+  return BigInt(value.toFixed(0));
+}
+```
+
+## Sending
+
+```ts title="src/sendEgld.ts"
+// src/sendEgld.ts — the actual subject of this recipe: sending EGLD via
+// sdk-core's TransfersController, not a hand-built Transaction.
+//
+// Use this pattern when YOUR code holds the private key directly (a script,
+// a bot, a backend payout job): sdk-core's purpose-built transfer
+// factory/controller does the gas-limit and payload construction for you.
+// When the END USER's own wallet should sign in a browser instead, that is
+// the sdk-dapp flow, not this one.
+//
+// How the pieces fit, verified against the installed @multiversx/sdk-core:
+//
+//   entrypoint.createTransfersController()
+//     -> TransfersController, a thin wrapper: it calls
+//        TransferTransactionsFactory.createTransactionForNativeTokenTransfer()
+//        to build the transaction (which computes a correct gasLimit
+//        itself — minGasLimit + gasLimitPerByte * data.length, per
+//        TransactionsFactoryConfig — you never need to hardcode 50000
+//        yourself), then BaseController.setupAndSignTransaction() sets the
+//        nonce and SIGNS it.
+//   controller.createTransactionForNativeTokenTransfer(sender, nonce, options)
+//     -> returns an ALREADY-SIGNED Transaction, ready for
+//        entrypoint.sendTransaction(tx). This is the Controller pattern;
+//        contrast with the Factory pattern, which returns an UNSIGNED
+//        transaction and leaves nonce/signing to the caller.
+//
+// One subtlety worth being explicit about: `Account.signTransaction(tx)`
+// returns the raw signature bytes (Promise<Uint8Array>); it does NOT mutate
+// `tx` in place. TransfersController assigns `tx.signature` internally, so it
+// is a non-issue here — but if you ever build and sign a transfer by hand
+// (for example with the Factory pattern), you must assign
+// `tx.signature = await account.signTransaction(tx)` yourself.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export interface SendEgldInput {
+  /** Bech32 address of the recipient. */
+  receiver: string;
+  /** Amount in the smallest denomination (10^18 = 1 EGLD) — see src/amount.ts. */
+  amountInSmallestDenomination: bigint;
+}
+
+export interface SendEgldOutput {
+  txHash: string;
+}
+
+/**
+ * Builds, signs (via TransfersController), and sends a native EGLD
+ * transfer. `sender.nonce` must already reflect the network's current
+ * nonce — see src/account.ts's loadDevnetAccount.
+ */
+export async function sendEgld(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: SendEgldInput,
+): Promise<SendEgldOutput> {
+  const controller = entrypoint.createTransfersController();
+
+  const transaction = await controller.createTransactionForNativeTokenTransfer(
+    sender,
+    sender.getNonceThenIncrement(),
+    {
+      receiver: Address.newFromBech32(input.receiver),
+      nativeAmount: input.amountInSmallestDenomination,
+    },
+  );
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+```
+
+## Wiring it together
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point. Wires together account.ts, amount.ts,
+// and sendEgld.ts into a single runnable command.
+//
+// Usage:
+//   npm run build && npm start -- <pemPath> <receiverBech32> [amountInEgld]
+//
+// Example:
+//   npm start -- ./wallet.pem erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th 0.01
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { toSmallestDenomination } from './amount';
+import { sendEgld } from './sendEgld';
+
+async function main(): Promise<void> {
+  const [pemPath, receiver, amountArg] = process.argv.slice(2);
+
+  if (!pemPath || !receiver) {
+    console.error('Usage: npm start -- <pemPath> <receiverBech32> [amountInEgld]');
+    process.exitCode = 1;
+    return;
+  }
+
+  const amountInEgld = amountArg ?? '0.001';
+
+  // DevnetEntrypoint() with no options defaults to
+  // https://devnet-api.multiversx.com, chain ID "D".
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+  console.log(`Sender:   ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Receiver: ${receiver}`);
+  console.log(`Amount:   ${amountInEgld} EGLD`);
+
+  const { txHash } = await sendEgld(entrypoint, sender, {
+    receiver,
+    amountInSmallestDenomination: toSmallestDenomination(amountInEgld),
+  });
+
+  console.log(`\nSent. Transaction hash: ${txHash}`);
+  console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+
+  // TransactionStatus wraps the raw string status plus boolean helpers.
+  const outcome = await entrypoint.awaitCompletedTransaction(txHash);
+  console.log(`Status: ${outcome.status.status} (successful: ${outcome.status.isSuccessful()})`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start -- ./wallet.pem <receiverBech32> 0.01
+```
+
+Expected output:
+
+```text
+Sender:   erd1... (nonce 42)
+Receiver: erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+Amount:   0.01 EGLD
+
+Sent. Transaction hash: <64-char hex hash>
+Explorer: https://devnet-explorer.multiversx.com/transactions/<hash>
+Status: success (successful: true)
+```
+
+## How it works
+
+**`TransfersController` computes gas for you.** Unlike hand-building a raw
+`Transaction`, where you duplicate the network's own gas formula by hand,
+`entrypoint.createTransfersController().createTransactionForNativeTokenTransfer(...)`
+sets `gasLimit` to `minGasLimit + gasLimitPerByte * data.length` (50,000 plus
+1,500 per byte) automatically, via `TransferTransactionsFactory` internally. That
+was confirmed against the installed sdk-core source and against a real devnet
+request logged while authoring this recipe (`"gasLimit":50000` for a plain,
+data-less transfer).
+
+**The Controller pattern returns an already-signed transaction.** `sender` (an
+`Account`) is passed straight into
+`createTransactionForNativeTokenTransfer(sender, nonce, options)`. Internally,
+`BaseController.setupAndSignTransaction()` sets the nonce and does
+`transaction.signature = await sender.signTransaction(transaction)` for you. That
+is what makes the transaction returned by the controller ready to send as-is,
+unlike the Factory pattern below.
+
+## Pitfalls
+
+:::danger[Pitfall 1: signTransaction returns bytes, it does not mutate the tx]
+`Account.signTransaction(transaction)` only computes and *returns* the raw
+signature bytes (`Promise<Uint8Array>`); it does not touch
+`transaction.signature` itself. The Controller pattern used in this recipe
+assigns it internally, so this does not bite here. But if you ever sign a
+transaction by hand, you need `tx.signature = await account.signTransaction(tx);`
+explicitly.
+:::
+
+:::warning[Pitfall 2: the Factory pattern returns an unsigned transaction]
+If you use
+`TransferTransactionsFactory.createTransactionForNativeTokenTransfer(senderAddress, options)`
+directly instead of `TransfersController`, you get back a transaction with
+`nonce: 0n` and no signature. You must set the nonce and sign it yourself before
+sending.
+:::
+
+:::warning[Pitfall 3: the nonce trap applies here too]
+This recipe's `loadDevnetAccount()` fetches the nonce once per process run, which
+is correct for a single send. Running two instances of this CLI back-to-back
+without waiting for the first to confirm produces a stale, duplicate nonce for
+the second. Use the fetch-once, increment-locally pattern across multiple sends.
+:::
+
+:::note[Pitfall 4: amounts beyond 18 decimals throw, on purpose]
+`toSmallestDenomination()` rejects (rather than silently rounds) an input with
+more precision than EGLD's 18 decimals can represent. Silently truncating would
+mean sending a different amount than what was typed.
+:::
+
+## See also
+
+- [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+  is the browser + connected-wallet equivalent of this recipe.
+- [Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)
+  is the token-transfer sibling to this native-transfer recipe.
+- [Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  is the fetch-then-increment pattern in depth, for sending more than one
+  transaction per process run.

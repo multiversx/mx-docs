@@ -1,0 +1,683 @@
+---
+title: Native auth, token issuance, expiry, auto-logout
+description: How nativeAuth issues a bearer token on login, why loginExpiresAt is not the token's real expiry, and how LogoutManager schedules the warning toast and logout.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - wallet
+  - native-auth
+  - react
+  - typescript
+  - devnet
+---
+
+What `nativeAuth` actually gives you once configured: a bearer token issued
+automatically on login, an automatic warning toast before it expires, and an
+automatic logout when it does, all scheduled by `LogoutManager`, none of it wired
+up by hand anywhere in this recipe.
+
+Use this recipe once you already have login working (see
+[Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button))
+and need to understand what to do with the resulting token, or need to control
+the auto-logout behavior. Do not use it if you have not enabled `nativeAuth` at
+all; the config itself is a one-line `initApp()` option, covered in "Configuring
+native auth" below.
+
+## Prerequisites
+
+- A working sdk-dapp v5 setup (Next.js or Vite, see the start-here recipes).
+- Any wallet provider to log in with. This recipe uses the generic
+  `UnlockPanelManager` picker.
+
+## Install
+
+```bash
+mkdir native-auth
+cd native-auth
+# Create the project files shown on this page.
+cp .env.example .env
+npm install
+npm run dev
+# open https://localhost:5173
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-native-auth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — native auth token issuance, reading login/expiry state, and the automatic auto-logout warning/logout LogoutManager schedules for you. Compiles strict.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.9",
+    "nanoid": "^3.3.17"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS, brace-expansion, and Nano ID transitives used by Vite and
+sdk-dapp.
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```text title=".env.example"
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+```ts title="vite.config.ts"
+// vite.config.ts — sdk-dapp v5 + Vite + React.
+//
+// Identical, verified configuration to the vite-react-minimal recipe's vite.config.ts
+// — see that recipe's Pitfalls 5–6 for why each entry here exists.
+// This recipe doesn't touch Ledger directly, but UnlockPanelManager's picker
+// registers every provider strategy (including Ledger's) up front, so the
+// same @ledgerhq/devices deep-import workaround is still required for
+// `npm run build` to succeed.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    // Do NOT set `https` here yourself — basicSsl() injects the cert via
+    // its own Vite `config` hook (see @vitejs/plugin-basic-ssl's README).
+    port: 5173,
+  },
+  optimizeDeps: {
+    // NEVER add '@multiversx/sdk-dapp' itself here — it has no
+    // main/module/exports field and crashes the dev server if you do. See
+    // the vite-react-minimal recipe's Pitfall 5.
+    include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
+    // Upstream bug workaround (nested @ledgerhq/devices@8.16.0 is missing
+    // files) — see the vite-react-minimal recipe's Pitfall 6.
+    exclude: [
+      '@ledgerhq/devices/hid-framing',
+      '@ledgerhq/devices/ble/sendAPDU',
+      '@ledgerhq/devices/ble/receiveAPDU',
+    ],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        '@ledgerhq/devices/hid-framing',
+        '@ledgerhq/devices/ble/sendAPDU',
+        '@ledgerhq/devices/ble/receiveAPDU',
+      ],
+    },
+  },
+});
+```
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook recipe — native auth</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+```tsx title="src/main.tsx"
+// src/main.tsx — Vite entry point. Same pattern as every other recipe.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+```ts title="src/vite-env.d.ts"
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_WALLETCONNECT_PROJECT_ID?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+</details>
+
+## Configuring native auth
+
+```ts title="src/lib/multiversx.ts"
+// src/lib/multiversx.ts — environment configuration for sdk-dapp's initApp,
+// with an explicit (not just `nativeAuth: true`) native auth config so every
+// field is visible and documented in one place.
+//
+// NativeAuthConfigType (node_modules/@multiversx/sdk-dapp/out/services/nativeAuth/nativeAuth.types.d.ts):
+// every field is optional; omitted fields fall back to
+// getDefaultNativeAuthConfig() (.../services/nativeAuth/methods/getDefaultNativeAuthConfig.cjs):
+//   origin                             -> window.location.origin
+//   apiAddress                         -> the configured network's API address
+//   expirySeconds                      -> 86400 (24h)
+//   tokenExpirationToastWarningSeconds -> 300 (5 min)
+//
+// This recipe deliberately overrides both time values to a couple of
+// minutes so the auto-logout warning toast and the actual auto-logout are
+// both observable within one `npm run dev` session, instead of requiring a
+// 24-hour wait. A real dApp should use the defaults (or its own security
+// policy's value) — do not ship NATIVE_AUTH_EXPIRY_SECONDS this short.
+export const NATIVE_AUTH_EXPIRY_SECONDS = 120;
+export const NATIVE_AUTH_WARNING_SECONDS = 30;
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+// This recipe uses UnlockPanelManager's generic picker (see providers.tsx),
+// which offers every registered provider including WalletConnect — so the
+// project ID is still needed here even though the recipe's own point is
+// native auth, not any one specific provider. Same demo ID used across the
+// rest of the corpus; register your own at https://cloud.walletconnect.com.
+const WALLET_CONNECT_PROJECT_ID =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
+
+export const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    nativeAuth: {
+      expirySeconds: NATIVE_AUTH_EXPIRY_SECONDS,
+      tokenExpirationToastWarningSeconds: NATIVE_AUTH_WARNING_SECONDS,
+    },
+    // `theme` takes one of the enum's string values (e.g. 'mvx:dark-theme'); the
+    // short `'dark'` fails — see node_modules/@multiversx/sdk-dapp/out/methods/initApp/initApp.types.d.ts.
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+  },
+};
+
+export { EnvironmentsEnum };
+```
+
+## Reading token and expiry state
+
+```tsx title="src/NativeAuthPanel.tsx"
+// src/NativeAuthPanel.tsx — the actual subject of this recipe: reading
+// native-auth token state, and the automatic expiry-warning/auto-logout
+// behavior that comes with `nativeAuth` for free.
+//
+// Three things this component demonstrates, all verified against the
+// actually-installed @multiversx/sdk-dapp source (not just its .d.ts files):
+//
+// 1. TOKEN ISSUANCE. Once nativeAuth is configured (src/lib/multiversx.ts)
+//    and the user logs in, `useGetLoginInfo().tokenLogin.nativeAuthToken`
+//    is populated automatically — no extra call needed. `TokenLoginType`
+//    (node_modules/@multiversx/sdk-dapp/out/types/login.types.d.ts) shows
+//    the field name; it's a bearer token, safe to attach to `Authorization:
+//    Bearer <token>` headers on your own backend's API calls.
+//
+// 2. EXPIRY IS AUTOMATIC, NOT SOMETHING YOU SCHEDULE YOURSELF.
+//    `DappProvider.login()` calls `LogoutManager.getInstance().init()` as
+//    its last step (.../providers/DappProvider/DappProvider.cjs). That
+//    schedules, purely from the values you passed as `nativeAuth` config:
+//      - a warning toast (`toastId: 'native-auth-expired'`) at
+//        `tokenExpirationToastWarningSeconds` before real expiry
+//      - a "Logging out" toast (`toastId: 'native-auth-logout'`) 3 seconds
+//        before the actual logout
+//      - the actual logout — `getAccountProvider().logout()` — at
+//        `expirySeconds` after login
+//    (.../managers/LogoutManager/LogoutManager.cjs). None of this is wired
+//    up in this component; it happens because nativeAuth was configured.
+//
+// 3. `LogoutManager.getInstance().stop()` is the ONLY public knob. It
+//    clears all three scheduled timers. There's no public "extend the
+//    session" call — re-arming means calling `.init()` again, which
+//    re-reads the CURRENT token's real expiry from the store and
+//    reschedules from there (it does not mint a new token or change
+//    `expirySeconds` itself).
+
+import { useGetLoginInfo } from '@multiversx/sdk-dapp/out/react/loginInfo/useGetLoginInfo';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { LogoutManager } from '@multiversx/sdk-dapp/out/managers/LogoutManager/LogoutManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import { NATIVE_AUTH_EXPIRY_SECONDS, NATIVE_AUTH_WARNING_SECONDS } from './lib/multiversx';
+
+export function NativeAuthPanel(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const { tokenLogin, providerType, loginExpiresAt } = useGetLoginInfo();
+
+  if (!isLoggedIn) {
+    return <p>Log in to see the issued native-auth token and its expiry state.</p>;
+  }
+
+  const token = tokenLogin?.nativeAuthToken;
+
+  const handleLogoutNow = async (): Promise<void> => {
+    await getAccountProvider().logout();
+  };
+
+  const handleStopAutoLogout = (): void => {
+    LogoutManager.getInstance().stop();
+  };
+
+  const handleRearmAutoLogout = (): void => {
+    void LogoutManager.getInstance().init();
+  };
+
+  return (
+    <section style={{ marginTop: '1.5rem' }}>
+      <h2>Native auth state</h2>
+      <dl style={dlStyle}>
+        <dt>providerType</dt>
+        <dd>
+          <code>{providerType ?? 'none'}</code>
+        </dd>
+
+        <dt>nativeAuthToken</dt>
+        <dd>{token ? <code>{truncate(token)}</code> : <em>not issued</em>}</dd>
+
+        <dt>configured expirySeconds</dt>
+        <dd>
+          <code>{NATIVE_AUTH_EXPIRY_SECONDS}</code> — real per-token TTL,
+          baked into the token before the wallet signs it
+          (`services/nativeAuth/nativeAuth.cjs`'s `initialize()` embeds it as
+          the token string's 3rd dot-separated segment).
+        </dd>
+
+        <dt>configured tokenExpirationToastWarningSeconds</dt>
+        <dd>
+          <code>{NATIVE_AUTH_WARNING_SECONDS}</code> — how long before real
+          expiry the automatic warning toast fires.
+        </dd>
+
+        <dt>loginExpiresAt (from useGetLoginInfo)</dt>
+        <dd>
+          <code>{loginExpiresAt ?? 'null'}</code>
+          {loginExpiresAt !== null && (
+            <>
+              {' '}
+              (<code>{new Date(loginExpiresAt).toISOString()}</code>)
+            </>
+          )}
+          <br />
+          <strong>Not the same thing as the token's real expiry above.</strong>{' '}
+          This is a separate, generic rolling session ceiling (defaults to
+          "24 hours from now", already in milliseconds — no ×1000 needed)
+          maintained by an internal store middleware, unrelated to the
+          `expirySeconds` value configured for nativeAuth. Confirmed from
+          `node_modules/@multiversx/sdk-dapp/out/store/middleware/logoutMiddleware.cjs`.
+          Don't use this field to display "your session expires at X" — it
+          will disagree with the LogoutManager-driven toasts above whenever
+          `expirySeconds` isn't ~24h.
+        </dd>
+      </dl>
+
+      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+        <button type="button" style={buttonStyle} onClick={handleStopAutoLogout}>
+          Disable auto-logout
+        </button>
+        <button type="button" style={buttonStyle} onClick={handleRearmAutoLogout}>
+          Re-arm auto-logout
+        </button>
+        <button
+          type="button"
+          style={buttonStyle}
+          onClick={() => {
+            void handleLogoutNow();
+          }}
+        >
+          Log out now
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function truncate(value: string): string {
+  return value.length > 24 ? `${value.slice(0, 12)}…${value.slice(-8)}` : value;
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.5rem 1rem',
+  fontSize: '0.9rem',
+  cursor: 'pointer',
+};
+
+const dlStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(140px, max-content) 1fr',
+  columnGap: '1rem',
+  rowGap: '0.75rem',
+  fontSize: '0.9rem',
+};
+```
+
+## The demo page
+
+```tsx title="src/App.tsx"
+// src/App.tsx — demo page. Login UI here is the generic picker (same as
+// "Adding a wallet login button") — the point of this recipe is what
+// NativeAuthPanel shows once you're in, not how you got there.
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+import { NativeAuthPanel } from './NativeAuthPanel';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const account = useGetAccount();
+  const { network } = useGetNetworkConfig();
+
+  const handleConnect = (): void => {
+    void UnlockPanelManager.getInstance().openUnlockPanel();
+  };
+
+  const handleDisconnect = async (): Promise<void> => {
+    await getAccountProvider().logout();
+  };
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Native auth: token issuance, expiry, auto-logout</h1>
+      <p>
+        Network: <code>{network.chainId}</code>
+      </p>
+
+      {isLoggedIn ? (
+        <>
+          <p>
+            Connected as <code>{account.address}</code>.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              void handleDisconnect();
+            }}
+            style={{ padding: '0.75rem 1.25rem', fontSize: '1rem', cursor: 'pointer' }}
+          >
+            Disconnect
+          </button>
+        </>
+      ) : (
+        <button
+          type="button"
+          onClick={handleConnect}
+          style={{ padding: '0.75rem 1.25rem', fontSize: '1rem', cursor: 'pointer' }}
+        >
+          Connect wallet
+        </button>
+      )}
+
+      <NativeAuthPanel />
+    </main>
+  );
+}
+```
+
+## Provider bootstrap
+
+`providers.tsx` calls `initApp()` (with the native-auth config above) once and
+gates rendering until the store is ready.
+
+```tsx title="src/providers.tsx"
+// src/providers.tsx — sdk-dapp v5 init wrapper + UnlockPanelManager setup.
+//
+// Same shape as the "Adding a wallet login button" recipe — this recipe is
+// about what happens AFTER login (the native-auth token and its automatic
+// expiry handling), not about which login UI you use, so it reuses the
+// generic picker rather than a dedicated single-provider button.
+//
+// initApp(dappConfig) is what actually turns on native auth — see
+// src/lib/multiversx.ts for the `nativeAuth` config object. Nothing in this
+// file configures LogoutManager directly: DappProvider.login() calls
+// `LogoutManager.getInstance().init()` for you as its last step
+// (node_modules/@multiversx/sdk-dapp/out/providers/DappProvider/DappProvider.cjs)
+// — confirmed from source, not assumed. See src/NativeAuthPanel.tsx for the
+// consumer-facing half of this recipe.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { UnlockPanelManager } from '@multiversx/sdk-dapp/out/managers/UnlockPanelManager/UnlockPanelManager';
+import { dappConfig } from './lib/multiversx';
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+      UnlockPanelManager.init({
+        loginHandler: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Logged in — native auth token issued.');
+        },
+        onClose: async (): Promise<void> => {
+          // eslint-disable-next-line no-console
+          console.log('Unlock panel closed without logging in.');
+        },
+      });
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+## How it works
+
+**`nativeAuth` accepts `true` (all defaults) or a full config object.** This
+recipe passes an explicit object so both timing fields are visible:
+`expirySeconds` (default 86400 / 24h) and `tokenExpirationToastWarningSeconds`
+(default 300 / 5 min), both confirmed from
+`node_modules/@multiversx/sdk-dapp/out/services/nativeAuth/methods/getDefaultNativeAuthConfig.cjs`.
+This recipe deliberately overrides both to a couple of minutes so the whole
+lifecycle is observable in one dev session. Ship the defaults, or your own
+policy's values, not these.
+
+**`expirySeconds` is a real, per-token TTL, signed by the wallet, not a
+client-only timer.** The login-token string sdk-dapp builds before the wallet
+signs it is `${origin}.${blockHash}.${expirySeconds}.${extraInfo}`
+(`node_modules/@multiversx/sdk-dapp/out/services/nativeAuth/nativeAuth.cjs`'s
+`initialize()`). The API validates the signed token against that same embedded
+value, so a short `expirySeconds` really does produce a short-lived token.
+
+**Auto-logout is wired up inside `provider.login()` itself — you never call it.**
+`DappProvider.login()`'s last step is `LogoutManager.getInstance().init()`.
+`LogoutManager.init()` reads the real token's remaining TTL and schedules a
+warning toast, a "Logging out" toast 3 seconds before expiry, and the actual
+`getAccountProvider().logout()` call. The only public methods this recipe calls
+directly are `.stop()` (cancel all three timers) and `.init()` again (re-arm from
+the token's current remaining TTL).
+
+## Pitfalls
+
+:::warning[Pitfall 1: the 120-second expirySeconds in this recipe is for demonstration only]
+It exists purely so the warning-toast then logout-toast then real-logout sequence
+is observable in one sitting. Ship a real value, the 86400-second default, or
+whatever your own security policy requires.
+:::
+
+:::danger[Pitfall 2: loginExpiresAt is NOT your native-auth token's expiry]
+`useGetLoginInfo().loginExpiresAt` is a separate, generic rolling ~24-hour
+session ceiling (already in milliseconds) maintained by an unrelated store
+middleware, not the `expirySeconds` you configure for nativeAuth. Displaying it
+as "your session expires at X" would be wrong whenever `expirySeconds` is not
+~24h. There is currently no public field that returns the real per-token TTL
+directly; this recipe shows the *configured* value instead of decoding the token
+client-side.
+:::
+
+:::warning[Pitfall 3: there is no public "extend my session" call]
+`LogoutManager` only exposes `.stop()` and `.init()`. Calling `.init()` again
+reschedules from the *current* token's remaining TTL. It does not mint a new token
+or push the expiry further out. Extending a session for real means logging in again.
+:::
+
+:::note[Pitfall 4: .stop() only cancels the client-side timers]
+The token still expires server-side at its real TTL. Any authenticated API call
+made after that point fails regardless of whether `LogoutManager` is running.
+`.stop()` just means the SDK will not proactively force a client-side logout for you.
+:::
+
+## See also
+
+- [Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)
+  is the generic picker this recipe's login UI reuses.
+- [Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  is the account-level counterpart to this recipe's login-info focus.
+- [Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login)
+  is a single-provider login flow that also issues a native-auth token the same way.

@@ -1,0 +1,561 @@
+---
+title: Deploy a smart contract
+description: Deploy a smart contract from WASM bytecode and constructor arguments with sdk-core's controller and factory, then parse the outcome for the new address.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - smart-contract
+  - deploy
+  - devnet
+  - typescript
+---
+
+Deploy a smart contract from its WASM bytecode plus constructor arguments, then
+parse the deploy outcome to recover the new contract's address. You get
+both the controller path (build, nonce, sign in one call) and the factory path
+(build only, you sign), using the **adder** example ABI
+(`init(initial_value: BigUint)`). Pass your compiled contract WASM when you
+broadcast; the offline payload mode uses a minimal valid WASM module.
+
+The default `npm start` parses a real, already-completed devnet deploy, so you
+can see deploy-outcome parsing work without a funded wallet.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- For the default `parse` demo: devnet network access only.
+- For an actual deploy: an adder-compatible compiled WASM artifact and a devnet
+  PEM wallet with a little EGLD for gas (see
+  [Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)).
+
+## Install
+
+```bash
+mkdir deploy-contract
+cd deploy-contract
+# Create the project files shown on this page.
+npm install
+npm run build
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-deploy-contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — deploy a smart contract from WASM bytecode and constructor args (controller and factory), then parse the deploy outcome for the new address.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```json title="src/adder.abi.json"
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.76.0-nightly",
+            "commitHash": "d86d65bbc19b928387f68427fcc3a0da498d8a19",
+            "commitDate": "2023-12-10",
+            "channel": "Nightly",
+            "short": "rustc 1.76.0-nightly (d86d65bbc 2023-12-10)"
+        },
+        "contractCrate": {
+            "name": "adder",
+            "version": "0.0.0",
+            "gitVersion": "v0.50.1-3-gbed74682a"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.50.1"
+        }
+    },
+    "docs": [
+        "One of the simplest smart contracts possible,",
+        "it holds a single variable in storage, which anyone can increment."
+    ],
+    "name": "Adder",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getSum",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Add desired amount to the storage variable."
+            ],
+            "name": "add",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {}
+}
+```
+
+The compiled `.wasm` is a binary build artifact, so it is not embedded in this text page. The broadcast command below accepts the path to the contract WASM you built; the default offline demonstration uses a minimal valid WASM module created in code.
+
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the deploy recipe.
+//
+// Three modes:
+//   npm start                       -> "parse" a real historical devnet
+//                                      deploy (no wallet, no funds needed)
+//   npm start -- parse [txHash]     -> parse any completed deploy transaction
+//   npm start -- deploy <pem> <wasm> [n]
+//                                   -> deploy your adder-compatible WASM
+//                                      (needs a funded devnet wallet); init
+//                                      value defaults to 42
+//
+// The default "parse" mode lets you see real deploy-outcome parsing out of
+// the box. The "deploy" mode does the full build -> sign -> send -> parse
+// round trip; with an unfunded wallet it fails cleanly with "insufficient
+// funds" (proving the payload and signature are well-formed), which is the
+// verification level this recipe was authored at.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+import {
+  deployViaController,
+  awaitDeployedAddress,
+  parseDeployFromHash,
+  describeDeployPayload,
+  deployViaFactory,
+} from './deploy';
+
+// A real, successful adder-style deploy on devnet, used by the default
+// "parse" demo. If devnet has pruned it by the time you run this, pass your
+// own completed deploy hash: `npm start -- parse <txHash>`.
+const EXAMPLE_DEPLOY_TX = 'a957cf3038a79517b1a11ee45094259989b0c7f67b61e1a39f3502ed041b964d';
+
+function readSrc(fileName: string): string {
+  return fs.readFileSync(path.join(__dirname, '..', 'src', fileName), { encoding: 'utf8' });
+}
+
+function loadAbi(fileName: string): Abi {
+  return Abi.create(JSON.parse(readSrc(fileName)) as Record<string, unknown>);
+}
+
+function loadBytecode(filePath: string): Uint8Array {
+  return new Uint8Array(fs.readFileSync(path.resolve(filePath)));
+}
+
+// The 8-byte header of an otherwise-empty, valid WebAssembly module. It is
+// sufficient for demonstrating payload encoding; do not broadcast it.
+const MINIMAL_WASM_MODULE = Uint8Array.from([0x00, 0x61, 0x73, 0x6d, 0x01, 0, 0, 0]);
+
+async function runParse(txHash: string): Promise<void> {
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  console.log(`Parsing completed deploy ${txHash} ...`);
+  const parsed = await parseDeployFromHash(entrypoint, txHash);
+  console.log(`  returnCode:     ${parsed.returnCode}`);
+  console.log(`  contract:       ${parsed.address}`);
+  console.log(`  owner:          ${parsed.owner}`);
+  console.log(`  codeHash (hex): ${parsed.codeHashHex}`);
+}
+
+async function runDeploy(
+  pemPath: string,
+  wasmPath: string,
+  initialValue: number,
+  useFactory: boolean,
+): Promise<void> {
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  const abi = loadAbi('adder.abi.json');
+  const bytecode = loadBytecode(wasmPath);
+
+  const sender = await Account.newFromPem(pemPath);
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+  console.log(`Deployer: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Path:     ${useFactory ? 'factory' : 'controller'}, init(${initialValue})`);
+
+  const deploy = useFactory ? deployViaFactory : deployViaController;
+  const { txHash, predictedAddress } = await deploy(entrypoint, abi, sender, bytecode, initialValue);
+  console.log(`  predicted contract address: ${predictedAddress}`);
+  console.log(`  broadcast txHash:           ${txHash}`);
+
+  const deployedAddress = await awaitDeployedAddress(entrypoint, abi, txHash);
+  console.log(`  deployed contract address:  ${deployedAddress}`);
+  console.log(`  predicted === deployed:     ${predictedAddress === deployedAddress}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'deploy') {
+    const pemPath = rest[0];
+    const wasmPath = rest[1];
+    if (!pemPath || !wasmPath) {
+      console.error('Usage: npm start -- deploy <pemPath> <wasmPath> [initialValue] [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    const initialValue = rest[2] && !rest[2].startsWith('--') ? Number(rest[2]) : 42;
+    const useFactory = rest.includes('--factory');
+    // Show the exact wire payload before broadcasting, so an "insufficient
+    // funds" rejection is easy to interpret: the payload was well-formed.
+    try {
+      await runDeploy(pemPath, wasmPath, initialValue, useFactory);
+    } catch (err) {
+      console.error(`Deploy rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    // Offline helper: build (do not send) a deploy and print its wire parts.
+    const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+    const abi = loadAbi('adder.abi.json');
+    const bytecode = MINIMAL_WASM_MODULE;
+    const factory = entrypoint.createSmartContractTransactionsFactory(abi);
+    const tx = await factory.createTransactionForDeploy(
+      (await entrypoint.createAccount()).address,
+      { bytecode, gasLimit: 6_000_000n, arguments: [42] },
+    );
+    const p = describeDeployPayload(tx);
+    console.log(`vmType:       ${p.vmType}`);
+    console.log(`codeMetadata: ${p.codeMetadata}  (0504 = Upgradeable + Readable + PayableBySmartContract)`);
+    console.log(`args:         ${p.args.join(', ')}  (2a = 42)`);
+    console.log(`code === supplied bytes: ${p.codeHex === Buffer.from(bytecode).toString('hex')}`);
+    return;
+  }
+
+  // Default + "parse" mode.
+  const txHash = mode === 'parse' && rest[0] ? rest[0] : EXAMPLE_DEPLOY_TX;
+  await runParse(txHash);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
+
+## Deploying
+
+```ts title="src/deploy.ts"
+// src/deploy.ts - deploying a smart contract from its WASM bytecode plus
+// constructor arguments, two ways (controller and factory), then parsing the
+// deploy outcome to recover the new contract's address.
+//
+// Target contract shape: the **adder** example, whose constructor is
+// `init(initial_value: BigUint)`. The ABI is included; the caller supplies the
+// compiled WASM path for a real deploy.
+//
+// Two verified SDK facts baked into this recipe (see the Pitfalls below for
+// detail):
+//   1. WITH an ABI, constructor arguments are plain JS values (`[42]`).
+//      WITHOUT an ABI, they must be TypedValue objects (`[new BigUIntValue(42)]`),
+//      or the factory throws "Can't convert args to TypedValues".
+//   2. The deploy transaction's `data` is `<codeHex>@<vmType>@<codeMetadata>@<args>`.
+//      The default codeMetadata built by the SDK is `0504` =
+//      Upgradeable + Readable + PayableBySmartContract.
+
+import {
+  Account,
+  Address,
+  AddressComputer,
+  SmartContractTransactionsOutcomeParser,
+} from '@multiversx/sdk-core';
+import type { Abi, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+export interface DeployResult {
+  txHash: string;
+  /** Address predicted BEFORE broadcasting, from (sender, nonce). */
+  predictedAddress: string;
+}
+
+/**
+ * Deploy path 1 - the controller. `createTransactionForDeploy` builds the
+ * transaction, sets the nonce, AND signs it (the controller takes the whole
+ * `Account`). We predict the contract address from the transaction's own sender
+ * and nonce before sending, so it lines up with whatever nonce the controller
+ * consumed.
+ */
+export async function deployViaController(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  sender: Account,
+  bytecode: Uint8Array,
+  initialValue: number,
+): Promise<DeployResult> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const transaction = await controller.createTransactionForDeploy(sender, sender.getNonceThenIncrement(), {
+    bytecode,
+    gasLimit: 6_000_000n,
+    arguments: [initialValue], // plain JS value - allowed because we passed the ABI
+  });
+
+  const predictedAddress = predictAddress(transaction);
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash, predictedAddress };
+}
+
+/**
+ * Deploy path 2 - the factory. The factory only BUILDS the transaction; the
+ * caller must set the nonce and sign it. Use this when the signing happens
+ * elsewhere (a wallet, a hardware device, a dApp).
+ */
+export async function deployViaFactory(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  sender: Account,
+  bytecode: Uint8Array,
+  initialValue: number,
+): Promise<DeployResult> {
+  const factory = entrypoint.createSmartContractTransactionsFactory(abi);
+
+  const transaction = await factory.createTransactionForDeploy(sender.address, {
+    bytecode,
+    gasLimit: 6_000_000n,
+    arguments: [initialValue],
+  });
+
+  // The developer owns nonce + signing with the factory.
+  transaction.nonce = sender.getNonceThenIncrement();
+  const predictedAddress = predictAddress(transaction);
+  transaction.signature = await sender.signTransaction(transaction);
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash, predictedAddress };
+}
+
+/** Predict the contract address from a built deploy transaction. */
+function predictAddress(transaction: Transaction): string {
+  const computer = new AddressComputer();
+  return computer.computeContractAddress(transaction.sender, transaction.nonce).toBech32();
+}
+
+/**
+ * Parse path 1 - the controller's one-liner. `awaitCompletedDeploy` waits for
+ * the transaction to complete and parses it, returning the deployed contract(s).
+ * Use this right after your own deploy.
+ */
+export async function awaitDeployedAddress(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  txHash: string,
+): Promise<string> {
+  const controller = entrypoint.createSmartContractController(abi);
+  const outcome = await controller.awaitCompletedDeploy(txHash);
+  return outcome.contracts[0]!.address.toBech32();
+}
+
+/**
+ * Parse path 2 - fetch the completed transaction yourself, then parse it with
+ * `SmartContractTransactionsOutcomeParser`. Works on ANY completed deploy
+ * transaction (yours or a historical one), which is why this recipe can show
+ * real parse output without needing a funded wallet.
+ */
+export async function parseDeployFromHash(
+  entrypoint: DevnetEntrypoint,
+  txHash: string,
+): Promise<{ address: string; owner: string; codeHashHex: string; returnCode: string }> {
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const parser = new SmartContractTransactionsOutcomeParser();
+  const outcome = parser.parseDeploy({ transactionOnNetwork });
+
+  const first = outcome.contracts[0];
+  if (!first) {
+    throw new Error(`Transaction ${txHash} deployed no contract (returnCode: ${outcome.returnCode}).`);
+  }
+  return {
+    address: first.address.toBech32(),
+    owner: first.ownerAddress.toBech32(),
+    codeHashHex: Buffer.from(first.codeHash).toString('hex'),
+    returnCode: outcome.returnCode,
+  };
+}
+
+/** Decode a deploy transaction's `data` field into its four wire parts. */
+export function describeDeployPayload(transaction: Transaction): {
+  codeHex: string;
+  vmType: string;
+  codeMetadata: string;
+  args: string[];
+} {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    codeHex: parts[0] ?? '',
+    vmType: parts[1] ?? '',
+    codeMetadata: parts[2] ?? '',
+    args: parts.slice(3),
+  };
+}
+
+/** Convenience: the system deploy address every deploy is addressed to. */
+export const SYSTEM_DEPLOY_ADDRESS = Address.newFromBech32(
+  'erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu',
+).toBech32();
+```
+
+## Run it
+
+```bash
+# Parse a real completed devnet deploy - no wallet, no funds:
+npm start
+
+# Inspect the deploy wire payload offline:
+npm start -- payload
+
+# Actually deploy your compiled adder-compatible WASM (needs a funded devnet
+# PEM); add --factory for the factory path:
+npm start -- deploy ./wallet.pem ./output/adder.wasm 42
+```
+
+Expected output of the default `parse` mode:
+
+```text
+Parsing completed deploy a957cf3038a79517b1a11ee45094259989b0c7f67b61e1a39f3502ed041b964d ...
+  returnCode:     ok
+  contract:       erd1qqqqqqqqqqqqqpgqs6reg0rjc7tmdcz65qg9namphcat5hvk8cfs4mfuj2
+  owner:          erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede
+  codeHash (hex): ...
+```
+
+## How it works
+
+**Controller vs factory.** `controller.createTransactionForDeploy(account,
+nonce, options)` builds, sets the nonce, and signs in one call.
+`factory.createTransactionForDeploy(address, options)` only builds the unsigned
+transaction; you set `nonce` and `signature`. Use the controller for scripts, the
+factory when a wallet or hardware device signs. Both are async.
+
+**Predict, then confirm.** Both paths compute the upcoming contract address with
+`AddressComputer.computeContractAddress(tx.sender, tx.nonce)` before sending, and
+this recipe asserts it equals the address the network reports after completion.
+See [Compute a contract address before deploy](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/compute-contract-address).
+
+**Parsing, two ways.** `controller.awaitCompletedDeploy(txHash)` waits and parses
+in one call; `SmartContractTransactionsOutcomeParser.parseDeploy({ transactionOnNetwork })`
+parses a transaction you already fetched. The default `npm start` uses the second
+form so it can show real output against a historical deploy without funds.
+
+## Pitfalls
+
+:::warning[Pitfall 1: without an ABI, arguments must be TypedValue objects]
+With the ABI passed to the controller or factory, `arguments: [42]` works.
+Without an ABI, the same call throws `Err: Can't convert args to TypedValues`;
+you must pass `arguments: [new BigUIntValue(42)]`.
+:::
+
+:::warning[Pitfall 2: the default code metadata is permissive]
+The SDK builds deploy/upgrade transactions with `codeMetadata = 0504` =
+Upgradeable + Readable + PayableBySmartContract. `isPayableBySmartContract`
+defaults to `true` in the factory. For a locked-down contract, pass
+`isUpgradeable: false` / `isPayableBySmartContract: false` explicitly. Run
+`npm start -- payload` to see the raw metadata bytes.
+:::
+
+:::note[Pitfall 3: the receiver is the system deploy address, not the contract]
+A deploy is addressed to
+`erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu`. The contract
+address only exists after the network assigns it. The `data` field is
+`<codeHex>@<vmType>@<codeMetadata>@<args>`, with vmType `0500` = WASM VM.
+:::
+
+:::note[Pitfall 4: the predicted address depends on the exact deploy nonce]
+If another transaction from the same account lands first, the deploy nonce shifts
+and the address changes. This recipe predicts from the transaction's own `nonce`
+after it is set.
+:::
+
+## See also
+
+- [Compute a contract address before deploy](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/compute-contract-address)
+  is the prediction this recipe confirms.
+- [Upgrade a smart contract](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/upgrade-contract)
+  is the same bytecode-plus-args shape, for an existing contract.
+- [Call a contract endpoint with native JS args](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint)
+  calls the contract once it is deployed.
