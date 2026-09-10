@@ -315,6 +315,10 @@ The `Redis` section includes the following parameters as described below:
     TTL = 30
 ```
 
+With Supernova (blocks with header version 3), deduplication is done per executed block hash, not per
+received block hash, and an additional lock is taken for the whole batch of execution results carried by
+a received block. See [Supernova: events pushed based on execution results](#supernova-events-pushed-based-on-execution-results).
+
 The `redis` service has to be configured separately.
 For more details on notifier service redis setup, please follow the **Install** and **Launching**
 sections from [README](https://github.com/multiversx/mx-chain-notifier-go) in the repository.
@@ -404,6 +408,12 @@ The WS event is defined as follows:
 |------------|--------------------------------------------------------------------------------|
 | Type       | The type field defines the event type, it can be one of the following: `all_events`, `revert_events`, `finalized_events`, `block_txs`, `block_scrs`, `block_events`, `block_state_accesses`. `all_events` refers to all logs and events. |
 | Data       | Serialized data corresponding to the event type. |
+
+:::info
+With the Supernova upgrade (async execution), these events are pushed based on the execution results carried by the
+received block. The payloads are the same.
+See [Supernova: events pushed based on execution results](#supernova-events-pushed-based-on-execution-results).
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -507,3 +517,30 @@ Read accesses are included only if `WithReadStateChanges` is enabled in the noti
 | timestampMs              | The timestampMs field represents the creation time of the block (in milliseconds).     |
 | nonce                    | The nonce field represents the sequence number of the block.                           |
 | stateAccessesPerAccounts | The stateAccessesPerAccounts field holds a map of state accesses, grouped by account, where the key is the hex encoded account address (not bech32).  |
+
+[comment]: # (mx-context-auto)
+
+### Supernova: events pushed based on execution results
+
+:::info
+This section describes the behaviour with the Supernova upgrade (async execution), for blocks with header
+version 3. There is nothing to change on the subscriber side: the event types and their payloads stay the same,
+and every event still refers to a block of the chain. What changes is **when** the events are pushed.
+:::
+
+With Supernova, consensus and execution are decoupled: a proposed block only fixes the order of the transactions,
+while the execution results of previously proposed blocks are attached to a subsequent block. The notifier pushes
+the events based on these execution results, so subscribers always receive events for blocks that were executed.
+
+The practical consequence is that the events do not follow the blockchain clock (the round time, 600ms after
+Supernova), but the pace at which the blocks are included as executed:
+
+- a received block can carry the execution results of several blocks, in which case a full set of events is pushed
+for each of them, in ascending order of the executed block nonce
+- a received block can also carry no execution result, in which case no events are pushed for it
+- there is a delay between the moment a block is proposed and the moment the events for it are pushed
+
+The fields of the events keep their meaning: `hash`, `nonce`, `timestamp`, `timestampMs`, together with the
+transactions, smart contract results, events and state accesses, all refer to the executed block.
+
+Revert and finalized events are not affected by this: they still refer to the block reported by the observer.
