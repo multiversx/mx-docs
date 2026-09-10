@@ -392,10 +392,10 @@ There are multiple event types:
 - `Finalized Block event`: when the block is finalized
 - `Block Txs event`: when the block is committed, it contains the transactions of the block
 - `Block Scrs event`: when the block is committed, it contains the smart contract results of the block
-- `Block Events`: when the block is committed, it contains the transactions, smart contract results, and events with their execution order
-- `Block State Accesses event`: when the block is committed, it contains the state accesses for the block
+- `Block Events`: when the block is committed, it contains the transactions and smart contract results with their execution order, together with the events of the block
+- `Block State Accesses event`: when the block is committed, it contains the state accesses for the block. Read accesses are included only if `WithReadStateChanges` is enabled in the notifier config (and if read state changes are enabled on the observer nodes)
 
-In RabbitMQ there is a separate exchange for each event type.
+In RabbitMQ there is a separate exchange for each event type. The exchange names match the event type names listed below, with one exception: the exchange for `block_state_accesses` is named `state_accesses`.
 In Websocket setup, there is a event type field in each message.
 
 The WS event is defined as follows:
@@ -427,7 +427,7 @@ Event structure
 | address     | The address field holds the address in bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction.   |
 | topics      | The topics field holds a list with extra information. They don't have a specific order because the smart contract is free to log anything that could be helpful.                          |
 | data        | The data field can contain information added by the smart contract that generated the event.                                                                                              |
-| order       | The order field represents the index of the event indicating the execution order.                                                                                                         |
+| txHash      | The txHash field represents the hash of the transaction that generated the event.                                                                                                         |
 
 [comment]: # (mx-context-auto)
 
@@ -480,7 +480,7 @@ When a block is committed on the chain, an event will be triggered containing th
 
 ### Block Events
 
-When a block is committed on the chain, an event will be triggered containing the block transactions, smart contract results, and events with their execution order.
+When a block is committed on the chain, an event will be triggered containing the block transactions and smart contract results with their execution order, together with the events of the block.
 
 | Field       | Description                                                                            |
 |-------------|----------------------------------------------------------------------------------------|
@@ -488,9 +488,9 @@ When a block is committed on the chain, an event will be triggered containing th
 | shardID     | The shardID field represents the shard ID of the committed block.                      |
 | timestamp   | The timestamp field represents the creation time of the block (in seconds).            |
 | timestampMs | The timestampMs field represents the creation time of the block (in milliseconds).     |
-| txs         | The txs field holds a map of transactions, where the key is the transaction hash.      |
-| scrs        | The scrs field holds a map of smart contract results, where the key is the smart contract results hash.   |
-| events      | The events field holds a list of events.                                               |
+| txs         | The txs field holds a map of transaction wrappers, where the key is the transaction hash. Unlike `block_txs`, each value is not the transaction itself, but an object with the `transaction`, `feeInfo` and `executionOrder` fields.  |
+| scrs        | The scrs field holds a map of smart contract result wrappers, where the key is the smart contract result hash. Unlike `block_scrs`, each value is not the smart contract result itself, but an object with the `smartContractResult`, `feeInfo` and `executionOrder` fields.  |
+| events      | The events field holds a list of events, in the `Event structure` format described above. The events themselves do not carry an execution order; the execution order is available only on the `txs` and `scrs` entries.  |
 
 [comment]: # (mx-context-auto)
 
@@ -498,10 +498,12 @@ When a block is committed on the chain, an event will be triggered containing th
 
 When a block is committed on the chain, an event will be triggered containing the state accesses.
 
+Read accesses are included only if `WithReadStateChanges` is enabled in the notifier config (it is disabled by default), and if read state changes are enabled on the observer nodes. Otherwise, only write accesses are published.
+
 | Field                    | Description                                                                            |
 |--------------------------|----------------------------------------------------------------------------------------|
 | hash                     | The hash field represents the hash of the committed block.                             |
 | shardID                  | The shardID field represents the shard ID of the committed block.                      |
 | timestampMs              | The timestampMs field represents the creation time of the block (in milliseconds).     |
 | nonce                    | The nonce field represents the sequence number of the block.                           |
-| stateAccessesPerAccounts | The stateAccessesPerAccounts field holds a map of state accesses, grouped by account.  |
+| stateAccessesPerAccounts | The stateAccessesPerAccounts field holds a map of state accesses, grouped by account, where the key is the hex encoded account address (not bech32).  |
