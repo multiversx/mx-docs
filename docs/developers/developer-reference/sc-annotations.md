@@ -12,7 +12,7 @@ Annotations (also known as Rust "attributes") are the bread and butter of the `m
 
 One of the main purposes of the framework is to make the code as readable and concise as possible, and annotations are the path to get there.
 
-For an introduction, check out [the Crowdfunding tutorial](/developers/tutorials/crowdfunding-p1). This page is supposed to be a complete index of all annotations that can be encountered in smart contracts.
+For an introduction, check out [the Crowdfunding tutorial](/developers/tutorials/crowdfunding/crowdfunding-p1). This page is supposed to be a complete index of all annotations that can be encountered in smart contracts.
 
 [comment]: # (mx-exclude-context)
 

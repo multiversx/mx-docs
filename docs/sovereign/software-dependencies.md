@@ -7,7 +7,7 @@ description: "Required software and tools to build and run a local Sovereign set
 Understanding and managing software dependencies is crucial for the successful deployment and maintenance of Sovereign Chains. Dependencies ensure that all components of your blockchain network work seamlessly together. This page outlines the key dependencies required for building and operating Sovereign Chains, including software libraries, frameworks, and tools.
 
 :::note
-Below is the list of software needed to deploy a local Sovereign Chain. All the software dependencies will be installed by scripts in [Setup Guide](/sovereign/setup).
+Below is the list of software needed to deploy a local Sovereign Chain. All the software dependencies will be installed by scripts in [Setup Guide](/sovereign/local-setup).
 :::
 
 ## Core Dependencies

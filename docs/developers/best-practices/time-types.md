@@ -75,7 +75,7 @@ All four types:
 * can be used in events and arguments
 * behave like `u64` for serialization
 
-This makes them safe to adopt even in existing contracts.
+This makes the types ABI-compatible with existing `u64` values, but it does not convert the unit of an existing value. For example, decoding a seconds value directly as `TimestampMillis` preserves the numeric value instead of multiplying it by `1000`. Existing storage, endpoint semantics, events, and token attributes must be converted explicitly if their unit changes.
 
 
 [comment]: # (mx-context-auto)
@@ -101,13 +101,13 @@ In blackbox tests, one can write:
 
     world
         .epoch_start_block()
-        .block_timestamp_ms(block_timestamp_ms)
+        .block_timestamp_millis(block_timestamp_ms)
         .block_nonce(15_000)
         .block_round(17_000);
 ```
 
 
-Mandos supports both `blockTimestamp` and the newer `blockTimestampMs`. Set both if they are used together for backward compatibility.
+Scenario files support both `blockTimestamp` (seconds) and `blockTimestampMs` (milliseconds). In RustVM, they update the same underlying timestamp. Set `blockTimestampMs` for sub-second tests; the seconds API returns the truncated value. A later seconds-only state update discards sub-second precision.
 
 
 [comment]: # (mx-context-auto)

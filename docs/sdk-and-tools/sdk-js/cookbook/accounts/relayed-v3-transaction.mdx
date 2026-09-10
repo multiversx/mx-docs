@@ -1,0 +1,399 @@
+---
+title: Build a relayed v3 transaction
+description: A sender who has no EGLD for gas, and a relayer who pays it, both signing the same transaction, devnet-verified, with V1/V2 deprecation flagged.
+difficulty: advanced
+est_minutes: 10
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - transaction
+  - relayed
+  - typescript
+  - devnet
+---
+
+A relayed transaction lets a **relayer** pay the gas fee for a transaction a
+**sender** builds and authorizes, the sender never needs any EGLD at all. V3 is
+the current, supported iteration; V1 and V2 are being deactivated and this recipe
+does not show them.
+
+Use this for any flow where you want users to interact on-chain without holding
+EGLD for gas: a dApp's backend sponsoring its users' first transactions, an
+onboarding flow, or a service that pays fees on behalf of its callers. If both
+parties are the same entity, you don't need relaying, just
+[send normally](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld).
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Nothing else. This recipe generates two fresh, unfunded accounts and only needs
+  devnet **read** access before proving the shape via a clean rejection. No devnet
+  EGLD required.
+
+## Install
+
+```bash
+mkdir relayed-v3-transaction
+cd relayed-v3-transaction
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-relayed-v3-transaction",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — build a relayed v3 transaction: a sender who has no EGLD for gas, and a relayer who pays it, both signing the same transaction.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## The code
+
+First, find a sender and relayer that share a shard, entirely offline:
+
+```ts title="src/keys.ts"
+// src/keys.ts — generate a sender and a relayer that share a shard.
+//
+// The mx-sdk-js-core cookbook (cookbook/relayed.ts) states the hard
+// constraint: "the sender and the relayer must be in the same network
+// shard." AddressComputer computes an address's shard purely locally (no
+// network call — `computer.getShardOfAddress(addr)`), so this search runs
+// entirely offline before this recipe ever touches devnet.
+//
+// With 3 non-meta shards, trying a handful of derivation indices from two
+// independent mnemonics is guaranteed to find a same-shard pair quickly
+// (pigeonhole: among any 4 addresses, at least two share one of 3 shards) —
+// this recipe searches up to 8 indices per side, far more than needed in
+// practice.
+
+import { Account, AddressComputer, Mnemonic } from '@multiversx/sdk-core';
+
+const MAX_INDICES_TO_TRY = 8;
+
+/**
+ * Derives up to `MAX_INDICES_TO_TRY` accounts from a mnemonic, paired
+ * with their shard number.
+ */
+async function candidatesFromMnemonic(
+  mnemonic: Mnemonic,
+  addressComputer: AddressComputer,
+): Promise<Array<{ account: Account; shard: number }>> {
+  const candidates: Array<{ account: Account; shard: number }> = [];
+  for (let index = 0; index < MAX_INDICES_TO_TRY; index += 1) {
+    const account = Account.newFromMnemonic(mnemonic.toString(), index);
+    const shard = addressComputer.getShardOfAddress(account.address);
+    candidates.push({ account, shard });
+  }
+  return candidates;
+}
+
+/**
+ * Generates two fresh, independent, intentionally-unfunded accounts — a
+ * sender and a relayer — guaranteed to be in the same shard. Two separate
+ * mnemonics are used (not two indices of one mnemonic) because a relayer
+ * is realistically a separate party (a dApp's backend, a sponsor
+ * service), not another account of the sender's own wallet.
+ */
+export async function generateSameShardPair(): Promise<{
+  sender: Account;
+  relayer: Account;
+  shard: number;
+}> {
+  const addressComputer = new AddressComputer();
+
+  const senderCandidates = await candidatesFromMnemonic(
+    Mnemonic.generate(),
+    addressComputer,
+  );
+  const relayerCandidates = await candidatesFromMnemonic(
+    Mnemonic.generate(),
+    addressComputer,
+  );
+
+  for (const senderCandidate of senderCandidates) {
+    const match = relayerCandidates.find(
+      (relayerCandidate) => relayerCandidate.shard === senderCandidate.shard,
+    );
+    if (match) {
+      return {
+        sender: senderCandidate.account,
+        relayer: match.account,
+        shard: senderCandidate.shard,
+      };
+    }
+  }
+
+  // Statistically shouldn't happen with 8x8=64 pairs across 3 shards, but
+  // fail loudly rather than silently returning a mismatched pair.
+  throw new Error(
+    `No same-shard pair found in ${MAX_INDICES_TO_TRY} tries per side — re-run.`,
+  );
+}
+```
+
+Then build, sign (both parties), and broadcast:
+
+```ts title="src/index.ts"
+// src/index.ts — build, sign, and broadcast a relayed v3 transaction.
+//
+// V1 and V2 relayed transactions existed in earlier protocol versions and
+// are being deactivated — the mx-sdk-js-core cookbook (cookbook/relayed.ts)
+// says so explicitly: "We are currently on the third iteration (V3) of
+// relayed transactions. V1 and V2 will be deactivated soon, so we'll focus
+// on V3." This recipe only shows V3 — there is no reason to write new code
+// against V1/V2 at this point, and the current cookbook does not document
+// their shapes in enough detail to reproduce responsibly.
+//
+// The four rules for V3, restated from both sources:
+//   1. Sender and relayer can sign in any order.
+//   2. The `relayer` field must be set on the transaction BEFORE either
+//      of them signs.
+//   3. Relayed transactions need an extra 50,000 gas on top of the usual
+//      minimum + per-byte cost.
+//   4. Sender and relayer must be in the same network shard.
+//
+// This recipe uses two freshly generated, intentionally UNFUNDED
+// accounts (see src/keys.ts) for both roles — like every devnet-touching
+// recipe in this Cookbook that doesn't need a funded wallet to prove its
+// point, a clean "insufficient funds" rejection from the real network is
+// the strongest available evidence that the whole shape (two signatures,
+// the relayer field, the gas math) was well-formed enough to reach
+// evaluation, without needing real devnet EGLD.
+
+import { Address, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+import { generateSameShardPair } from './keys';
+
+// Default gas limits: minimum gas limit 50,000, gas per data byte 1,500.
+// Relayed transactions need an extra 50,000 gas. This transaction's data is
+// the 5-byte string "hello" (the same payload mx-sdk-js-core's own
+// relayed.ts example uses), so:
+const DATA = 'hello';
+const MIN_GAS_LIMIT = 50_000n;
+const GAS_PER_DATA_BYTE = 1_500n;
+const RELAYED_V3_EXTRA_GAS = 50_000n;
+const GAS_LIMIT =
+  MIN_GAS_LIMIT + GAS_PER_DATA_BYTE * BigInt(DATA.length) + RELAYED_V3_EXTRA_GAS;
+
+// A fixed, well-known receiver — the same address this Cookbook's
+// manage-nonces recipe uses as a generic example destination. It doesn't
+// need to be in the same shard as the sender/relayer — only sender and
+// relayer share that constraint.
+const RECEIVER = 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
+
+async function main(): Promise<void> {
+  const { sender, relayer, shard } = await generateSameShardPair();
+  console.log(`Sender:   ${sender.address.toBech32()} (shard ${shard})`);
+  console.log(`Relayer:  ${relayer.address.toBech32()} (shard ${shard})`);
+  console.log(`Receiver: ${RECEIVER}`);
+
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+
+  // Fetch the sender's real nonce — the one genuine network call before
+  // signing. The relayer does not need its own nonce fetched: only the
+  // transaction's own sender/nonce pair matters for ordering; the
+  // relayer is only ever a co-signer, never advances its own nonce via
+  // this transaction.
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+  console.log(`Sender nonce from network: ${sender.nonce}`);
+
+  const transaction = new Transaction({
+    chainID: 'D',
+    sender: sender.address,
+    receiver: new Address(RECEIVER),
+    gasLimit: GAS_LIMIT,
+    data: new Uint8Array(Buffer.from(DATA)),
+    nonce: sender.getNonceThenIncrement(),
+  });
+
+  // Rule 2: set `relayer` BEFORE either party signs.
+  transaction.relayer = relayer.address;
+
+  // Rule 1: order between these two doesn't matter; sender-then-relayer
+  // here purely for readability.
+  transaction.signature = await sender.signTransaction(transaction);
+  transaction.relayerSignature = await relayer.signTransaction(transaction);
+
+  console.log(`\nGas limit: ${GAS_LIMIT} (${MIN_GAS_LIMIT} min + ${GAS_PER_DATA_BYTE}×${DATA.length} data bytes + ${RELAYED_V3_EXTRA_GAS} relayed v3 extra)`);
+  console.log(`Sender signature (hex):   ${Buffer.from(transaction.signature).toString('hex').slice(0, 24)}…`);
+  console.log(`Relayer signature (hex):  ${Buffer.from(transaction.relayerSignature).toString('hex').slice(0, 24)}…`);
+
+  try {
+    const txHash = await entrypoint.sendTransaction(transaction);
+    console.log(`\nBroadcast succeeded unexpectedly. Hash: ${txHash}`);
+    console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+  } catch (err) {
+    console.log('\nBroadcast rejected, as expected for two unfunded accounts:');
+    console.log(err instanceof Error ? err.message : err);
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+A real, captured run (addresses, shard, and signatures differ every run):
+
+```text
+Sender:   erd1k3v5vllugtnexmtpwqk57352gw6qcrzf0swnya8q4ssmmftf5xmshasf5f (shard 1)
+Relayer:  erd1s6l6jx6lfa67lnl925nwe8zn4ksqtywmlax5e8gj388nq3tqum5sswla9a (shard 1)
+Receiver: erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+
+Sender nonce from network: 0
+
+Gas limit: 107500 (50000 min + 1500×5 data bytes + 50000 relayed v3 extra)
+Sender signature (hex):   2afc2adc826cfcaae78687b6…
+Relayer signature (hex):  9e14bcda390b6cbf8ebbb130…
+
+Broadcast rejected, as expected for two unfunded accounts:
+Request error on url [transactions]: [transaction generation failed: insufficient funds for address erd1s6l6jx6lfa67lnl925nwe8zn4ksqtywmlax5e8gj388nq3tqum5sswla9a]
+```
+
+:::tip[The rejection names the relayer, not the sender]
+That's the network confirming the entire point of a relayed transaction: the
+*relayer* is who needs funds for gas. If the gas math, signature order, or
+`relayer` field were wrong, the network would reject with a generic
+malformed-transaction or bad-signature error instead of this specific,
+address-targeted message.
+:::
+
+## How it works
+
+`src/keys.ts` generates two fresh, **independent** mnemonics (a sender and a
+relayer are realistically separate parties, not two accounts of the same wallet)
+and derives a handful of indices from each until it finds a pair sharing a shard.
+Shard computation is a pure local calculation, so this whole search runs offline
+before the recipe ever touches devnet.
+
+`src/index.ts` then, following the mx-sdk-js-core cookbook (`cookbook/relayed.ts`):
+
+1. Fetches only the **sender's** nonce from devnet.
+2. Builds the transaction with `gasLimit` computed precisely: `50,000` minimum +
+   `1,500` per data byte + a flat `50,000` extra for relayed v3, `107,500` total,
+   matching the logged value exactly.
+3. Sets `transaction.relayer` **before** either party signs, required ordering.
+4. Signs with the sender (`transaction.signature`), then the relayer
+   (`transaction.relayerSignature`). The two can sign in either order.
+5. Broadcasts via `entrypoint.sendTransaction(transaction)`.
+
+## V1/V2 deprecation
+
+`cookbook/relayed.ts` states the current guidance directly: "We are currently on
+the third iteration (V3) of relayed transactions. V1 and V2 will be deactivated
+soon, so we'll focus on V3." This recipe only shows V3, there is no reason to
+write new code against V1/V2 at this point, and the current SDK cookbook does not
+document their shapes in enough detail to reproduce them responsibly.
+
+## Creating relayed transactions via Controllers and Factories
+
+The manual `new Transaction({...})` shape above is the most explicit, but every
+Controller in sdk-core also accepts a `relayer` argument directly:
+
+```ts
+const transaction = await controller.createTransactionForIssuingFungible(
+  alice, alice.getNonceThenIncrement(),
+  { tokenName: "NEWFNG", tokenTicker: "FNG", /* ... */, relayer: frank.address },
+);
+transaction.relayerSignature = await frank.signTransaction(transaction);
+```
+
+Factories, by contrast, have **no** `relayer` parameter at creation time, set
+`transaction.relayer` after the factory builds the transaction, then sign both
+parties.
+
+## Pitfalls
+
+:::danger[Pitfall 1: sender and relayer must share a shard]
+Or the transaction is rejected regardless of funds. This recipe searches for a
+matching pair entirely offline before ever calling devnet.
+:::
+
+:::warning[Pitfall 2: set relayer before either signature, not after]
+Signing before the relayer field is set produces a signature over the wrong
+bytes.
+:::
+
+:::note[Pitfall 3: the relayer pays gas, not the sender]
+Confirmed by this recipe's own devnet rejection naming the relayer's address
+specifically. Don't assume "insufficient funds" always points at the sender in a
+relayed flow.
+:::
+
+:::warning[Pitfall 4: relayed transactions cost an extra flat 50,000 gas]
+On top of the usual minimum + per-data-byte cost, easy to under-budget if you
+compute gas the same way you would for a non-relayed send.
+:::
+
+:::note[Pitfall 5: Controllers accept relayer at construction time; Factories do not]
+Set it on the built transaction afterward for the Factory path.
+:::
+
+## See also
+
+- [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)
+  is the non-relayed case, where sender and payer are the same account.
+- [Manage nonces (fetch-then-increment)](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  is the same nonce-fetch pattern this recipe uses for the sender only.
+- [Sign a message + verify a signature](/sdk-and-tools/sdk-js/cookbook/accounts/sign-verify-message)
+  is another accounts-and-signing recipe, fully offline instead of
+  devnet-verified.

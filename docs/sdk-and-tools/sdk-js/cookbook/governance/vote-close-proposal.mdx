@@ -1,0 +1,455 @@
+---
+title: Vote and close a proposal
+description: Vote on and close a MultiversX governance proposal with sdk-core's GovernanceController and factory, reading a live proposal's tallies first.
+difficulty: advanced
+est_minutes: 9
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - governance
+  - transaction
+  - devnet
+---
+
+After a proposal is created (see
+[Create a governance proposal](/sdk-and-tools/sdk-js/cookbook/governance/create-proposal)),
+it needs votes while its window is open, and closing once the window ends. This
+recipe **votes** (yes / no / abstain / veto, weighted by staked voting power) and
+**closes** a proposal, each via the controller and the factory, and reads a live
+proposal's tallies and status first.
+
+The default `npm start` reads the latest real proposal on devnet, its vote counts,
+whether it is closed, and whether it passed, so you see real governance data
+without a wallet.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- For the default read and `payload` demos: devnet network access only.
+- For an actual vote: a devnet PEM with staked or delegated EGLD (voting power). A
+  wallet with no stake has zero voting power and cannot vote.
+
+## Install
+
+```bash
+mkdir governance-vote-close-proposal
+cd governance-vote-close-proposal
+# Create the project files shown on this page.
+npm install
+npm run build
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-governance-vote-close-proposal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — vote on and close a MultiversX governance proposal with GovernanceController and factory, reading a live proposal's tallies first.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the governance-vote-close-proposal recipe.
+//
+// Three modes:
+//   npm start                  -> read the latest live proposal on devnet
+//                                 (tallies + status) - no wallet, no funds
+//   npm start -- payload       -> build (do not send) a vote and a close, print
+//                                 their wire payloads offline
+//   npm start -- vote <pem>    -> actually vote yes on the latest proposal
+//                                 (needs a funded, STAKED devnet PEM). Add
+//                                 --close to close instead, --factory for the
+//                                 factory path, --no/--abstain/--veto to change
+//                                 the vote.
+//
+// With an unfunded wallet, `vote` fails cleanly with "insufficient funds",
+// proving the payload and signature are well-formed - the verification level
+// this recipe was authored at.
+
+import { Account, DevnetEntrypoint, Vote } from '@multiversx/sdk-core';
+import {
+  readProposal,
+  voteViaController,
+  voteViaFactory,
+  closeViaController,
+  closeViaFactory,
+  describeGovernancePayload,
+} from './voteClose';
+
+function makeEntrypoint(): DevnetEntrypoint {
+  return new DevnetEntrypoint({
+    clientName: 'cookbook-governance-vote-close',
+    networkProviderConfig: { timeout: 15_000 },
+  });
+}
+
+/** The nonce of the most recent proposal on devnet. */
+async function latestProposalNonce(entrypoint: DevnetEntrypoint): Promise<number> {
+  const config = await entrypoint.createGovernanceController().getConfig();
+  return config.lastProposalNonce;
+}
+
+function pickVote(flags: string[]): Vote {
+  if (flags.includes('--no')) return Vote.NO;
+  if (flags.includes('--abstain')) return Vote.ABSTAIN;
+  if (flags.includes('--veto')) return Vote.VETO;
+  return Vote.YES;
+}
+
+async function runRead(): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const nonce = await latestProposalNonce(entrypoint);
+  if (nonce <= 0) {
+    console.log('No governance proposals on devnet yet.');
+    return;
+  }
+  console.log(`Latest proposal nonce: ${nonce}\n`);
+  const p = await readProposal(entrypoint, nonce);
+  console.log(`Proposal #${p.nonce}`);
+  console.log(`  commitHash:  ${p.commitHash}`);
+  console.log(`  issuer:      ${p.issuer}`);
+  console.log(`  vote window: epoch ${p.startVoteEpoch} .. ${p.endVoteEpoch}`);
+  console.log(`  yes:     ${p.numYesVotes}`);
+  console.log(`  no:      ${p.numNoVotes}`);
+  console.log(`  abstain: ${p.numAbstainVotes}`);
+  console.log(`  veto:    ${p.numVetoVotes}`);
+  console.log(`  closed:  ${p.isClosed}   passed: ${p.isPassed}`);
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const nonce = await latestProposalNonce(entrypoint);
+  const throwaway = await entrypoint.createAccount();
+
+  const vote = await voteViaFactory(entrypoint, throwaway, nonce, Vote.YES);
+  const v = describeGovernancePayload(vote);
+  console.log(`vote:          ${v.function}@${v.args.join('@')}  (nonce hex | vote string hex, "yes" = 796573)  gasLimit ${v.gasLimit}`);
+
+  const close = await closeViaFactory(entrypoint, throwaway, nonce);
+  const c = describeGovernancePayload(close);
+  console.log(`closeProposal: ${c.function}@${c.args.join('@')}  (nonce hex)  gasLimit ${c.gasLimit}`);
+  console.log(`receiver:      ${v.receiver}  (the governance system contract, for both)`);
+}
+
+async function runVoteOrClose(pemPath: string, doClose: boolean, useFactory: boolean, flags: string[]): Promise<void> {
+  const entrypoint = makeEntrypoint();
+  const nonce = await latestProposalNonce(entrypoint);
+
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  console.log(`Account:   ${account.address.toBech32()} (nonce ${account.nonce})`);
+  console.log(`Operation: ${doClose ? 'closeProposal' : `vote ${pickVote(flags)}`} on proposal ${nonce}`);
+  console.log(`Path:      ${useFactory ? 'factory' : 'controller'}`);
+
+  let tx;
+  if (doClose) {
+    const close = useFactory ? closeViaFactory : closeViaController;
+    tx = await close(entrypoint, account, nonce);
+  } else {
+    const vote = useFactory ? voteViaFactory : voteViaController;
+    tx = await vote(entrypoint, account, nonce, pickVote(flags));
+  }
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash: ${txHash}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'vote' || mode === 'close') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- vote <pemPath> [--close] [--factory] [--no|--abstain|--veto]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      const doClose = mode === 'close' || rest.includes('--close');
+      await runVoteOrClose(pemPath, doClose, rest.includes('--factory'), rest);
+    } catch (err) {
+      console.error(`Rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  await runRead();
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
+
+## Voting and closing
+
+```ts title="src/voteClose.ts"
+// src/voteClose.ts - the subject of this recipe: the rest of a governance
+// proposal's life after it is created (see the create-proposal recipe):
+// VOTING on it while its window is open, and CLOSING it once the window ends.
+//
+//   vote          -> cast yes / no / abstain / veto, weighted by your staked
+//                    voting power. One transaction per voter.
+//   closeProposal -> after the end epoch, settle the proposal and release the
+//                    fee back to the proposer (if it was not lost).
+//
+// Both go to the governance system contract and set their own gas limit from
+// the SDK config. Voting requires staked or delegated EGLD - a wallet with no
+// stake has zero voting power and its vote (and `getVotingPower`) is rejected.
+
+import { Account, Vote } from '@multiversx/sdk-core';
+import type { Address, DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+export interface ProposalView {
+  nonce: number;
+  commitHash: string;
+  issuer: string;
+  startVoteEpoch: number;
+  endVoteEpoch: number;
+  numYesVotes: bigint;
+  numNoVotes: bigint;
+  numAbstainVotes: bigint;
+  numVetoVotes: bigint;
+  isClosed: boolean;
+  isPassed: boolean;
+}
+
+/** Read one proposal's tallies and status by its nonce. */
+export async function readProposal(entrypoint: DevnetEntrypoint, proposalNonce: number): Promise<ProposalView> {
+  const controller = entrypoint.createGovernanceController();
+  const info = await controller.getProposal(proposalNonce);
+  return {
+    nonce: info.nonce,
+    commitHash: info.commitHash,
+    issuer: info.issuer.toBech32(),
+    startVoteEpoch: info.startVoteEpoch,
+    endVoteEpoch: info.endVoteEpoch,
+    numYesVotes: info.numYesVotes,
+    numNoVotes: info.numNoVotes,
+    numAbstainVotes: info.numAbstainVotes,
+    numVetoVotes: info.numVetoVotes,
+    isClosed: info.isClosed,
+    isPassed: info.isPassed,
+  };
+}
+
+/** The address's current governance voting power (needs staked/delegated EGLD). */
+export async function readVotingPower(entrypoint: DevnetEntrypoint, address: Address): Promise<bigint> {
+  const controller = entrypoint.createGovernanceController();
+  return controller.getVotingPower(address);
+}
+
+/** Vote on a proposal, path 1 - the controller. */
+export async function voteViaController(
+  entrypoint: DevnetEntrypoint,
+  voter: Account,
+  proposalNonce: number,
+  vote: Vote,
+): Promise<Transaction> {
+  const controller = entrypoint.createGovernanceController();
+  return controller.createTransactionForVoting(voter, voter.getNonceThenIncrement(), { proposalNonce, vote });
+}
+
+/** Vote on a proposal, path 2 - the factory (you set nonce + signature). */
+export async function voteViaFactory(
+  entrypoint: DevnetEntrypoint,
+  voter: Account,
+  proposalNonce: number,
+  vote: Vote,
+): Promise<Transaction> {
+  const factory = entrypoint.createGovernanceTransactionsFactory();
+  const transaction = await factory.createTransactionForVoting(voter.address, { proposalNonce, vote });
+  transaction.nonce = voter.getNonceThenIncrement();
+  transaction.signature = await voter.signTransaction(transaction);
+  return transaction;
+}
+
+/** Close a proposal whose window has ended, path 1 - the controller. */
+export async function closeViaController(
+  entrypoint: DevnetEntrypoint,
+  closer: Account,
+  proposalNonce: number,
+): Promise<Transaction> {
+  const controller = entrypoint.createGovernanceController();
+  return controller.createTransactionForClosingProposal(closer, closer.getNonceThenIncrement(), { proposalNonce });
+}
+
+/** Close a proposal whose window has ended, path 2 - the factory. */
+export async function closeViaFactory(
+  entrypoint: DevnetEntrypoint,
+  closer: Account,
+  proposalNonce: number,
+): Promise<Transaction> {
+  const factory = entrypoint.createGovernanceTransactionsFactory();
+  const transaction = await factory.createTransactionForClosingProposal(closer.address, { proposalNonce });
+  transaction.nonce = closer.getNonceThenIncrement();
+  transaction.signature = await closer.signTransaction(transaction);
+  return transaction;
+}
+
+export interface GovernancePayload {
+  function: string;
+  args: string[];
+  receiver: string;
+  gasLimit: bigint;
+}
+
+/** Decode a vote / closeProposal transaction's wire fields. */
+export function describeGovernancePayload(transaction: Transaction): GovernancePayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    args: parts.slice(1),
+    receiver: transaction.receiver.toBech32(),
+    gasLimit: transaction.gasLimit,
+  };
+}
+```
+
+## Run it
+
+```bash
+# Read the latest live proposal (tallies + status) - no wallet, no funds:
+npm start
+
+# Inspect the vote and close wire payloads offline:
+npm start -- payload
+
+# Actually vote yes on the latest proposal (needs a staked devnet PEM); --close
+# to close, --factory for the factory path, --no/--abstain/--veto to change vote:
+npm start -- vote ./wallet.pem
+```
+
+Output of the default read mode, and of `payload`:
+
+```text
+Latest proposal nonce: 138
+
+Proposal #138
+  commitHash:  c8b6f734c248d5620aa6a045b8975b6d5e119314
+  issuer:      erd107uaynrvf80g4zuym4fqqh5pqzvaczdryj49zr2qew57wqe3mvusupj8xh
+  vote window: epoch 5133 .. 5133
+  yes:     2633194709716022500000
+  no:      120000000000000000000000
+  abstain: 1349700998243378049064
+  veto:    0
+  closed:  true   passed: false
+
+vote:          vote@8a@796573  (nonce hex | vote string hex, "yes" = 796573)  gasLimit 5171000
+closeProposal: closeProposal@8a  (nonce hex)  gasLimit 50074000
+receiver:      erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla  (the governance system contract, for both)
+```
+
+## How it works
+
+**Controller vs factory.**
+`controller.createTransactionForVoting(account, nonce, { proposalNonce, vote })`
+builds, sets the nonce, and signs; the factory form only builds. `closeProposal`
+is the same shape with just `{ proposalNonce }`. Neither takes an ABI, and both set
+their own gas from the SDK config.
+
+**The vote is a typed enum.** Pass `Vote.YES` / `Vote.NO` / `Vote.ABSTAIN` /
+`Vote.VETO` (imported from `@multiversx/sdk-core`). On the wire it is the utf8
+string of that value, `vote@<nonce>@796573` is a yes vote (`796573` = "yes"). Your
+vote's weight is your staked voting power, not one-address-one-vote.
+
+**Reading a proposal.** `getProposal(nonce)` returns the issuer, commit hash, vote
+window, the four vote tallies, and `isClosed` / `isPassed`. The recipe reads
+`getConfig().lastProposalNonce` to find the latest proposal, then reads it.
+
+## Pitfalls
+
+:::warning[Pitfall 1: voting needs voting power, and getVotingPower throws without it]
+Governance votes are weighted by staked or delegated EGLD. An address with no stake
+has zero voting power, and its vote is rejected on-chain. Worse,
+`getVotingPower(address)` does not return `0` for such an address, it throws `not
+enough stake/delegate to vote` (sdk-core v15.4.1). Guard the call, and stake before
+voting.
+:::
+
+:::note[Pitfall 2: vote only while open, close only after the window ends]
+A vote lands only between `startVoteEpoch` and `endVoteEpoch`; `closeProposal`
+works only after `endVoteEpoch`. Reading the proposal (as this recipe does) tells
+you which phase it is in, `isClosed` and the vote window, before you spend gas.
+:::
+
+:::note[Pitfall 3: anyone can close, and closing releases the fee]
+Closing is not restricted to the proposer; any account can close a proposal whose
+window has ended. Closing settles the result and returns the proposal fee (minus
+the lost-proposal fee if it did not pass) to the issuer.
+:::
+
+:::note[Pitfall 4: governance sets its own gas]
+As with creating a proposal, `vote` and `closeProposal` set their gas limit
+automatically (`gasLimitForVote` + a voting extra, and
+`gasLimitForClosingProposal`). There is no `gasLimit` parameter to pass.
+:::
+
+## See also
+
+- [Create a governance proposal](/sdk-and-tools/sdk-js/cookbook/governance/create-proposal)
+  is where the proposal you vote on comes from.
+- [Read a delegation contract's state](/sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract)
+  reads the delegated stake that is one source of the voting power a vote needs.

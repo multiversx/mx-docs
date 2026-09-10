@@ -99,12 +99,18 @@ An API instance can be started with the following behavior:
 - subscription: used to manage subscriptions, fetch and broadcast data to subscribers
 [comment]: # (mx-context-auto)
 
-## Rate limiting
+### Rate Limits
 
-Public MultiversX APIs have a rate limit mechanism that brings the following limitations:
+Public MultiversX APIs utilize a protective rate-limiting mechanism to ensure network stability. The following limitations apply:
 
-- api.multiversx.com (_mainnet_): 2 requests / IP / second
-- devnet-api.multiversx.com (_devnet_): 5 requests / IP / second
+#### HTTP Requests (REST API)
+* **api.multiversx.com (_Mainnet_):** Maximum of **2 requests / IP / second**.
+* **devnet-api.multiversx.com (_Devnet_):** Maximum of **5 requests / IP / second**.
+
+---
+
+#### WebSocket Subscriptions
+* **Subscription Limit:** A single client can create a maximum of **10 different subscription variants** (active parallel subscriptions).
 
 [comment]: # (mx-context-auto)
 

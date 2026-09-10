@@ -1,0 +1,604 @@
+---
+title: Log in with xPortal via WalletConnect
+description: A dedicated xPortal login button using ProviderFactory and WalletConnect v2 directly, including the QR-code anchor element and project ID setup.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-dapp: "5.7.1"
+tags:
+  - sdk-dapp
+  - wallet
+  - walletconnect
+  - react
+  - typescript
+  - devnet
+---
+
+The sibling to
+[Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login):
+a dedicated, single-provider button, this time for xPortal via WalletConnect v2.
+Same `ProviderFactory` pattern, with two things specific to WalletConnect: a
+`walletConnectV2ProjectId` configured up front, and a real DOM anchor for the QR
+code to render into.
+
+Use this when you want a dedicated "Connect xPortal" button next to (or instead
+of)
+[Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)'s
+generic picker.
+
+## Prerequisites
+
+- A working sdk-dapp v5 setup (Next.js or Vite, see the start-here recipes).
+- A WalletConnect v2 project ID from
+  [cloud.walletconnect.com](https://cloud.walletconnect.com). The recipe ships
+  with a shared, rate-limited demo ID so it runs immediately, but replace it
+  before shipping.
+- The xPortal mobile app, to actually scan the QR code and test the connected path.
+
+## Install
+
+```bash
+mkdir walletconnect-login
+cd walletconnect-login
+# Create the project files shown on this page.
+cp .env.example .env
+npm install
+npm run dev
+# open https://localhost:5173
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-walletconnect-login",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — a dedicated xPortal / WalletConnect v2 login button via ProviderFactory, with a QR-code anchor. Compiles strict.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "@multiversx/sdk-dapp": "5.7.1",
+    "@multiversx/sdk-dapp-ui": "0.1.24",
+    "@multiversx/sdk-dapp-utils": "3.1.0",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.9",
+    "nanoid": "^3.3.17"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+Keep the `overrides` block when copying this starter. It deliberately pins
+patched PostCSS, brace-expansion, and Nano ID transitives used by Vite and
+sdk-dapp.
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```text title=".env.example"
+# Shared example ID for local development only. Replace it before deploying.
+VITE_WALLETCONNECT_PROJECT_ID=9b1a9564f91cb659ffe21b73d5c4e2d8
+```
+
+```ts title="vite.config.ts"
+// vite.config.ts — sdk-dapp v5 + Vite + React.
+//
+// Identical, verified configuration to the vite-react-minimal recipe's vite.config.ts
+// — see that recipe's Pitfalls 5–6 for why each entry here exists.
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+export default defineConfig({
+  plugins: [react(), basicSsl()],
+  server: {
+    // Do NOT set `https` here yourself — basicSsl() injects the cert via
+    // its own Vite `config` hook (see @vitejs/plugin-basic-ssl's README).
+    port: 5173,
+  },
+  optimizeDeps: {
+    // NEVER add '@multiversx/sdk-dapp' itself here — it has no
+    // main/module/exports field and crashes the dev server if you do. See
+    // the vite-react-minimal recipe's Pitfall 5.
+    include: ['@multiversx/sdk-core', 'bignumber.js', 'protobufjs'],
+    // Upstream bug workaround (nested @ledgerhq/devices@8.16.0 is missing
+    // files) — see the vite-react-minimal recipe's Pitfall 6.
+    exclude: [
+      '@ledgerhq/devices/hid-framing',
+      '@ledgerhq/devices/ble/sendAPDU',
+      '@ledgerhq/devices/ble/receiveAPDU',
+    ],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        '@ledgerhq/devices/hid-framing',
+        '@ledgerhq/devices/ble/sendAPDU',
+        '@ledgerhq/devices/ble/receiveAPDU',
+      ],
+    },
+  },
+});
+```
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook recipe — xPortal / WalletConnect login</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+```tsx title="src/main.tsx"
+// src/main.tsx — Vite entry point. Same pattern as every other recipe.
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { Providers } from './providers';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('No #root element found in index.html');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>,
+);
+```
+
+```ts title="src/vite-env.d.ts"
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_WALLETCONNECT_PROJECT_ID?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+</details>
+
+## Configuring the project ID
+
+```ts title="src/lib/multiversx.ts"
+// src/lib/multiversx.ts — environment configuration for sdk-dapp's initApp.
+//
+// walletConnectV2ProjectId here is not optional in practice: ProviderFactory
+// throws `WalletConnectV2Error.invalidConfig` ("Invalid WalletConnect
+// setup") if you try to create a walletConnect provider without one
+// configured (verified in
+// node_modules/@multiversx/sdk-dapp/out/providers/ProviderFactory.cjs).
+// Register a real project ID at https://cloud.walletconnect.com before
+// shipping — the demo one here is shared and rate-limited.
+
+import { EnvironmentsEnum } from '@multiversx/sdk-dapp/out/types/enums.types';
+import { ThemesEnum } from '@multiversx/sdk-dapp/out/types/theme.types';
+
+const WALLET_CONNECT_PROJECT_ID =
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID?.trim();
+
+if (!WALLET_CONNECT_PROJECT_ID) {
+  throw new Error(
+    'Set VITE_WALLETCONNECT_PROJECT_ID in .env before starting the app.',
+  );
+}
+
+export const dappConfig = {
+  storage: {
+    getStorageCallback: (): Storage => sessionStorage,
+  },
+  dAppConfig: {
+    environment: EnvironmentsEnum.devnet,
+    nativeAuth: true,
+    theme: ThemesEnum.dark,
+    providers: {
+      walletConnect: {
+        walletConnectV2ProjectId: WALLET_CONNECT_PROJECT_ID,
+      },
+    },
+  },
+};
+
+export { EnvironmentsEnum };
+```
+
+## The button
+
+```tsx title="src/WalletConnectLoginButton.tsx"
+// src/WalletConnectLoginButton.tsx — a dedicated xPortal / WalletConnect
+// login button with a QR-code anchor.
+//
+// Same overall pattern as the "Login via the DeFi extension" recipe —
+// ProviderFactory.create() + provider.login() — with two differences
+// specific to WalletConnect:
+//
+//   1. It needs an `anchor`: an HTMLElement the SDK renders the QR code
+//      (desktop) / deep-link prompt (mobile) into. Without one, there's
+//      nowhere for the user to actually see the code to scan.
+//   2. It needs `walletConnectV2ProjectId` configured in initApp()'s
+//      dAppConfig — see src/lib/multiversx.ts. Omitting it makes
+//      ProviderFactory.create() throw immediately (Pitfall 1).
+//
+// The rest of the sequence is identical to the DeFi extension recipe and
+// is verified the same way — against the actual sdk-dapp source, not just
+// its .d.ts files:
+//
+//   ProviderFactory.create({ type, anchor })
+//     → internally calls setAccountProvider() for you (see
+//       node_modules/@multiversx/sdk-dapp/out/providers/ProviderFactory.cjs)
+//   provider.login()
+//     → internally dispatches both the login-info and account store
+//       actions (see
+//       node_modules/@multiversx/sdk-dapp/out/providers/DappProvider/helpers/login/helpers/accountLogin.cjs)
+
+import { useRef, useState } from 'react';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { ProviderFactory } from '@multiversx/sdk-dapp/out/providers/ProviderFactory';
+import { ProviderTypeEnum } from '@multiversx/sdk-dapp/out/providers/types/providerFactory.types';
+import { getAccountProvider } from '@multiversx/sdk-dapp/out/providers/helpers/accountProvider';
+
+export function WalletConnectLoginButton(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const [status, setStatus] = useState<'idle' | 'connecting' | 'error'>('idle');
+  const [error, setError] = useState<string | null>(null);
+  // The QR code / deep-link UI renders into this div. It must exist in the
+  // DOM before ProviderFactory.create() runs — it's rendered unconditionally
+  // below, so by the time a click handler fires, anchorRef.current is set.
+  const anchorRef = useRef<HTMLDivElement | null>(null);
+
+  const handleConnect = async (): Promise<void> => {
+    if (!anchorRef.current) {
+      // Should not happen — the anchor div always renders — but keeps the
+      // types honest under strict null checks rather than asserting `!`.
+      setError('QR anchor not mounted yet.');
+      setStatus('error');
+      return;
+    }
+
+    setStatus('connecting');
+    setError(null);
+    try {
+      const provider = await ProviderFactory.create({
+        type: ProviderTypeEnum.walletConnect,
+        anchor: anchorRef.current,
+      });
+      // nativeAuth is enabled in this recipe's dappConfig, so login()
+      // generates its own native-auth token internally.
+      await provider.login();
+      setStatus('idle');
+    } catch (err) {
+      // If walletConnectV2ProjectId isn't configured, this throws
+      // "Invalid WalletConnect setup" (WalletConnectV2Error.invalidConfig,
+      // node_modules/@multiversx/sdk-dapp/out/providers/strategies/WalletConnectProviderStrategy/types/walletConnect.types.d.ts)
+      // — before the QR code ever renders. That specific case is confirmed
+      // from source. What happens if the user closes the QR modal without
+      // scanning is NOT independently confirmed here — the strategy's
+      // compiled source logs a `WalletConnectV2Error.userRejected` label in
+      // a catch block around the approval flow, but tracing exactly what
+      // (if anything) it re-throws to this call site would need a live
+      // WalletConnect session to observe, not just reading the bundle.
+      // Don't assume the caught message always matches one of the
+      // WalletConnectV2Error enum strings — display it, but treat it as
+      // unstructured for now.
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      setStatus('error');
+    }
+  };
+
+  const handleDisconnect = async (): Promise<void> => {
+    const provider = getAccountProvider();
+    await provider.logout();
+  };
+
+  if (isLoggedIn) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          void handleDisconnect();
+        }}
+        style={buttonStyle}
+      >
+        Disconnect
+      </button>
+    );
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        disabled={status === 'connecting'}
+        onClick={() => {
+          void handleConnect();
+        }}
+        style={buttonStyle}
+      >
+        {status === 'connecting' ? 'Waiting for scan…' : 'Connect xPortal'}
+      </button>
+
+      {/* The SDK renders the QR code / deep-link prompt into this element
+          once ProviderFactory.create() runs. Give it real dimensions —
+          an empty 0x0 div means the QR code has nowhere visible to draw. */}
+      <div ref={anchorRef} style={anchorStyle} />
+
+      {status === 'error' && error && (
+        <p style={{ color: 'crimson', marginTop: '0.5rem' }}>
+          Connection failed: <code>{error}</code>
+        </p>
+      )}
+    </div>
+  );
+}
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  fontSize: '1rem',
+  cursor: 'pointer',
+};
+
+const anchorStyle: React.CSSProperties = {
+  marginTop: '1rem',
+  minHeight: '280px',
+  minWidth: '280px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+```
+
+## The demo page
+
+```tsx title="src/App.tsx"
+// src/App.tsx — demo page for WalletConnectLoginButton.
+
+import { useGetAccount } from '@multiversx/sdk-dapp/out/react/account/useGetAccount';
+import { useGetIsLoggedIn } from '@multiversx/sdk-dapp/out/react/account/useGetIsLoggedIn';
+import { useGetNetworkConfig } from '@multiversx/sdk-dapp/out/react/network/useGetNetworkConfig';
+import { WalletConnectLoginButton } from './WalletConnectLoginButton';
+
+export function App(): JSX.Element {
+  const isLoggedIn = useGetIsLoggedIn();
+  const account = useGetAccount();
+  const { network } = useGetNetworkConfig();
+
+  return (
+    <main
+      style={{
+        padding: '2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        maxWidth: '720px',
+        margin: '0 auto',
+      }}
+    >
+      <h1>Login via xPortal / WalletConnect</h1>
+      <p>
+        Network: <code>{network.chainId}</code>
+      </p>
+
+      <WalletConnectLoginButton />
+
+      {isLoggedIn && (
+        <p style={{ marginTop: '1rem' }}>
+          Connected as <code>{account.address}</code>.
+        </p>
+      )}
+    </main>
+  );
+}
+```
+
+## Provider bootstrap
+
+`providers.tsx` calls `initApp()` once and gates rendering until the store is ready.
+
+```tsx title="src/providers.tsx"
+// src/providers.tsx — sdk-dapp v5 init wrapper.
+//
+// Deliberately does NOT configure UnlockPanelManager — this recipe bypasses
+// the generic multi-provider picker and talks to ProviderFactory directly
+// for one specific provider. See src/WalletConnectLoginButton.tsx.
+
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { initApp } from '@multiversx/sdk-dapp/out/methods/initApp/initApp';
+import { dappConfig } from './lib/multiversx';
+
+let initializationPromise: Promise<void> | undefined;
+
+function initializeDapp(): Promise<void> {
+  if (!initializationPromise) {
+    initializationPromise = initApp(dappConfig).then(() => {
+    }).catch((cause: unknown) => {
+      initializationPromise = undefined;
+      throw cause;
+    });
+  }
+
+  return initializationPromise;
+}
+
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let subscribed = true;
+    void initializeDapp()
+      .then(() => {
+        if (subscribed) setReady(true);
+      })
+      .catch((cause: unknown) => {
+        if (!subscribed) return;
+        setError(
+          cause instanceof Error
+            ? cause
+            : new Error('Wallet SDK initialization failed.'),
+        );
+      });
+
+    return () => {
+      subscribed = false;
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <main
+        role="alert"
+        style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}
+      >
+        Wallet SDK initialization failed: {error.message}
+      </main>
+    );
+  }
+  if (!ready) {
+    return (
+      <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+        Initializing wallet SDK…
+      </main>
+    );
+  }
+
+  return <>{children}</>;
+}
+```
+
+## How it works
+
+**The anchor is not optional in practice.**
+`ProviderFactory.create({ type: ProviderTypeEnum.walletConnect, anchor })` needs a
+real `HTMLElement` to draw the QR code (desktop) or deep-link prompt (mobile
+browser) into, verified from `WalletConnectProviderStrategyConfigType`, which
+extends `WalletConnectConfig` with `anchor?: HTMLElement`. This recipe uses a
+`useRef<HTMLDivElement>` div rendered unconditionally, so it exists before any
+click handler runs.
+
+**The project ID gate happens before the QR code ever renders.**
+`ProviderFactory.create()` reads `walletConnectV2ProjectId` from the store (the
+same config object passed to `initApp()`) and throws `"Invalid WalletConnect setup"`
+immediately if it is missing, confirmed directly from the compiled source
+(`node_modules/@multiversx/sdk-dapp/out/providers/ProviderFactory.cjs`):
+`if (!config?.walletConnectV2ProjectId) throw new Error(WalletConnectV2Error.invalidConfig)`.
+
+**Everything after `create()` matches the DeFi extension recipe exactly.**
+`ProviderFactory.create()` calls `setAccountProvider()` internally;
+`provider.login()` dispatches both the login-info and account store actions
+internally. Once `await provider.login()` resolves, `useGetIsLoggedIn()` and
+`useGetAccount()` already reflect the session.
+
+## Pitfalls
+
+:::danger[Pitfall 1: missing walletConnectV2ProjectId fails immediately]
+`ProviderFactory.create({ type: ProviderTypeEnum.walletConnect })` throws
+`"Invalid WalletConnect setup"` (`WalletConnectV2Error.invalidConfig`) if
+`dAppConfig.providers.walletConnect.walletConnectV2ProjectId` was not set in
+`initApp()`. Register a real project ID at
+[cloud.walletconnect.com](https://cloud.walletconnect.com) before shipping. The
+shared demo ID here is rate-limited and meant for local development only.
+:::
+
+:::warning[Pitfall 2: give the anchor real dimensions]
+An anchor `<div>` with no width or height renders a QR code with nowhere visible
+to draw. This recipe's anchor style sets an explicit `min-height`/`min-width`.
+Don't drop that when you copy the pattern into your own layout.
+:::
+
+:::warning[Pitfall 3: the closed-modal error path is not independently confirmed here]
+The compiled strategy source references a `WalletConnectV2Error.userRejected`
+label inside a `catch` block around its approval flow, but confirming exactly what
+(if anything) propagates to your own `catch` when the user closes the modal
+without scanning would need a live WalletConnect session to observe, not just
+reading the minified bundle. Display whatever you get, do not pattern-match on it.
+:::
+
+:::warning[Pitfall 4: this button only ever offers WalletConnect]
+Pair it with
+[Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login)
+for a desktop-first option, or use
+[Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)'s
+picker if you would rather let the SDK decide which providers to surface.
+:::
+
+## See also
+
+- [Login via the DeFi extension](/sdk-and-tools/sdk-js/cookbook/wallets/defi-extension-login)
+  is the same `ProviderFactory` pattern for the browser-extension provider.
+- [Add a wallet login button](/sdk-and-tools/sdk-js/cookbook/wallets/wallet-login-button)
+  is the multi-provider picker alternative to this dedicated button.
+- [Read the connected account](/sdk-and-tools/sdk-js/cookbook/wallets/read-connected-account)
+  is what to do once `provider.login()` resolves.

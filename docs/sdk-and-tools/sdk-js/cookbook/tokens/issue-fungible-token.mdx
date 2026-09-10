@@ -1,0 +1,328 @@
+---
+title: Issue a fungible ESDT
+description: Issue a fungible ESDT token with sdk-core's TokenManagementController against DevnetEntrypoint, payload hand-verified against real devnet.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - esdt
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+Issue a new fungible ESDT token using sdk-core's `TokenManagementController`
+directly against `DevnetEntrypoint`.
+
+If instead you are building a browser dApp where the end user's own wallet should
+sign the issuance, wire the same `TokenManagementTransactionsFactory` methods
+through a connected-wallet flow instead of a PEM-holding script. This recipe is
+for when **your own code holds the private key**.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for how to generate a throwaway one. **No devnet EGLD required**
+  to verify the payload, see "How it works" below. (Issuing for real costs a fixed
+  0.05 EGLD plus gas.)
+
+## Install
+
+```bash
+mkdir issue-fungible-token
+cd issue-fungible-token
+# Create the four files shown on this page.
+npm install
+npm run build
+npm start -- ./wallet.pem CookbookToken COOK 1000000000000 6
+```
+
+<details>
+<summary>Project setup, account loader, and CLI entrypoint</summary>
+
+```json title="package.json"
+{
+  "name": "multiversx-recipe-issue-fungible-token",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+```ts title="src/account.ts"
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { issueFungibleToken } from './issueToken';
+
+async function main(): Promise<void> {
+  const [pemPath, tokenName, tokenTicker, supplyArg, decimalsArg] =
+    process.argv.slice(2);
+
+  if (!pemPath || !tokenName || !tokenTicker || !supplyArg || !decimalsArg) {
+    console.error(
+      'Usage: npm start -- <pemPath> <tokenName> <tokenTicker> <initialSupply> <numDecimals>',
+    );
+    process.exitCode = 1;
+    return;
+  }
+  if (!/^\d+$/.test(supplyArg) || !/^\d+$/.test(decimalsArg)) {
+    throw new Error('initialSupply and numDecimals must be non-negative integers.');
+  }
+
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+  const initialSupply = BigInt(supplyArg);
+  const numDecimals = BigInt(decimalsArg);
+
+  console.log(`Sender:         ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Token name:     ${tokenName}`);
+  console.log(`Token ticker:   ${tokenTicker}`);
+  console.log(`Initial supply: ${initialSupply} (${numDecimals} decimals)`);
+  console.log('Issue cost:     0.05 EGLD + gas');
+
+  const { txHash } = await issueFungibleToken(entrypoint, sender, {
+    tokenName,
+    tokenTicker,
+    initialSupply,
+    numDecimals,
+  });
+
+  console.log(`Transaction hash: ${txHash}`);
+  console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+}
+
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+```
+
+</details>
+
+## Issuing
+
+```ts title="src/issueToken.ts"
+// src/issueToken.ts — the actual subject of this recipe: issuing a
+// fungible ESDT token via sdk-core's TokenManagementController.
+//
+// Three confirmed, real discrepancies between a commonly-copied issuance
+// snippet and the actually-installed SDK, found by reading
+// node_modules/@multiversx/sdk-core/out/tokenManagement/resources.d.ts
+// directly (all worth being explicit about, the same way other recipes
+// flag the ESDT-casing and Account.signTransaction() gaps):
+//
+//   1. A commonly-copied snippet includes
+//      `canTransferNftCreateRole: false`. The real type,
+//      `IssueFungibleInput = IssueInput & { initialSupply: bigint; numDecimals: bigint }`,
+//      has NO such field anywhere in `IssueInput` — it doesn't exist for
+//      fungible tokens at all (this makes sense: an NFT-create role is
+//      meaningless on a token with no NFT nonce). Including it is a
+//      `tsc --strict` "object literal may only specify known properties"
+//      error, not just a style nit. This recipe's options object omits it
+//      entirely, matching the real type and the real
+//      mx-sdk-js-core cookbook/tokens.ts example.
+//   2. (Relevant to the sibling "Issue an NFT collection" recipe, not this
+//      one — the field DOES exist for NFT/SFT issuance, spelled
+//      `canTransferNFTCreateRole`, all-caps "NFT".)
+//   3. (Also relevant to the sibling NFT recipe's mint step, not this
+//      one — `royalties` is a plain `number`, not `bigint`.)
+//
+// Issuing a token costs a fixed 0.05 EGLD PLUS gas — this recipe's own
+// devnet verification (an intentionally unfunded wallet) confirms the
+// network rejects for insufficient funds at that combined cost, proving
+// the issuance payload itself is well-formed without needing to actually
+// spend real EGLD.
+
+import type { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export interface IssueTokenInput {
+  tokenName: string;
+  tokenTicker: string;
+  /** Total supply in the token's own smallest denomination (see numDecimals). */
+  initialSupply: bigint;
+  /** This token's own decimal count — chosen by the issuer, not fixed like EGLD's 18. */
+  numDecimals: bigint;
+}
+
+export interface IssueTokenOutput {
+  txHash: string;
+}
+
+/**
+ * Issues a new fungible ESDT token. `sender.nonce` must already reflect
+ * the network's current nonce — see src/account.ts's loadDevnetAccount.
+ */
+export async function issueFungibleToken(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: IssueTokenInput,
+): Promise<IssueTokenOutput> {
+  const controller = entrypoint.createTokenManagementController();
+
+  const transaction = await controller.createTransactionForIssuingFungible(
+    sender,
+    sender.getNonceThenIncrement(),
+    {
+      tokenName: input.tokenName,
+      tokenTicker: input.tokenTicker,
+      initialSupply: input.initialSupply,
+      numDecimals: input.numDecimals,
+      canFreeze: false,
+      canWipe: true,
+      canPause: true,
+      canChangeOwner: true,
+      canUpgrade: true,
+      canAddSpecialRoles: false,
+      // No canTransferNftCreateRole field here — see the file header:
+      // it does not exist on IssueFungibleInput at all.
+    },
+  );
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> <tokenName> <tokenTicker> <initialSupply> <numDecimals>
+```
+
+Expected output:
+
+```text
+Sender:        erd1... (nonce 0)
+Token name:    CookbookToken
+Token ticker:  COOK
+Initial supply: 1000000000000 (6 decimals)
+Issue cost: 0.05 EGLD + gas
+
+==========
+IMPORTANT!
+==========
+You are about to issue (register) a new token. This will set the role "ESDTRoleBurnForAll" (globally).
+Once the token is registered, you can unset this role by calling "unsetBurnRoleGlobally" (in a separate transaction).
+```
+
+(An unfunded wallet gets a clean "insufficient funds" rejection after the notice,
+instead of a hash, see "How it works.")
+
+## How it works
+
+**Three confirmed, real discrepancies between a commonly-copied "Issue Fungible
+Token" snippet and the actually-installed SDK**, found by reading
+`node_modules/@multiversx/sdk-core/out/tokenManagement/resources.d.ts` directly:
+
+1. The naive snippet includes `canTransferNftCreateRole: false`. The real type,
+   `IssueFungibleInput = IssueInput & { initialSupply: bigint; numDecimals: bigint }`,
+   has **no such field anywhere** in `IssueInput` for fungible tokens, an
+   NFT-create role is meaningless on a token with no NFT nonce. Including it is a
+   `tsc --strict` excess-property error. Confirmed by hand-decoding the real,
+   logged issuance payload, the wire format has no such field either.
+2. The field DOES exist for NFT/SFT issuance, spelled `canTransferNFTCreateRole`
+   (all-caps "NFT"), see
+   [Issue an NFT collection + mint an NFT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection).
+3. `royalties` (used only in the NFT mint step) is a plain `number`, not a
+   `bigint`.
+
+**Issuance costs a fixed 0.05 EGLD, sent to the ESDT system contract, plus gas for
+the data payload.** Verified by hand-decoding a real logged issuance request:
+`value: "50000000000000000"` (exactly 0.05 EGLD),
+`receiver: erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u` (the
+ESDT system contract address), and `gasLimit: 60426500`, matching
+`50,000 + 1,500 x 251 (data bytes) + 60,000,000 (gasLimitIssue)` to the unit. The
+decoded `data` field (`issue@436f6f6b626f6f6b546f6b656e@434f4f4b@e8d4a51000@06@...`)
+confirms every flag encoded correctly, with no `canTransferNftCreateRole` anywhere
+in the wire payload.
+
+**The SDK itself prints an unconditional warning on every issuance call**, traced
+to `notifyAboutUnsettingBurnRoleGlobally()`, called at the start of all 5 issuance
+methods (fungible, semi-fungible, non-fungible, meta-ESDT, register-and-set-roles),
+not specific to this recipe's flag combination.
+`createTransactionForUnsettingBurnRoleGlobally(...)` is the escape hatch it
+mentions.
+
+## Pitfalls
+
+:::danger[Pitfall 1: canTransferNftCreateRole does not exist for fungible tokens]
+Copying a naive fungible-issuance snippet that includes it fails `tsc --strict`,
+see "How it works" above.
+:::
+
+:::note[Pitfall 2: the burn-role notice is informational only]
+It prints client-side and does not indicate anything went wrong, it appears even
+when this recipe's unfunded wallet then gets rejected for insufficient funds.
+Worth reading once, since unsetting the role later needs its own transaction.
+:::
+
+:::warning[Pitfall 3: numDecimals is chosen once, at issuance, and cannot change later]
+Unlike EGLD's fixed 18, an ESDT's decimal count is whatever you pass here, see
+[Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)'s Pitfall 1
+for why getting this wrong later is a real footgun.
+:::
+
+## See also
+
+- [Issue an NFT collection + mint an NFT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-nft-collection)
+  is the non-fungible sibling, including the `canTransferNFTCreateRole` casing this
+  recipe omits.
+- [Send an ESDT](/sdk-and-tools/sdk-js/cookbook/transactions/send-esdt)
+  spends a token once it is issued.
+- [Multi-token transfer in one tx](/sdk-and-tools/sdk-js/cookbook/transactions/multi-token-transfer)
+  sends several tokens together.

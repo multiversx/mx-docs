@@ -1,0 +1,426 @@
+---
+title: Undelegate and withdraw
+description: "Exit a MultiversX delegation: unDelegate an amount, wait out the unbonding period, then withdraw it, using sdk-core DelegationController and factory."
+difficulty: intermediate
+est_minutes: 7
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - delegation
+  - transaction
+  - devnet
+  - typescript
+---
+
+Exiting a delegation is a two-step flow with a mandatory wait in between. First
+`unDelegate(amount)` asks the contract to unstake a given amount, but the EGLD is
+not returned yet; it enters an unbonding period (10 epochs, about 10 days on
+mainnet). Then, after that period elapses, `withdraw()` pulls all matured EGLD
+back to your wallet. This recipe builds both, both ways (controller and factory),
+and parses a completed `unDelegate`.
+
+The default `npm start` parses a real, already-completed devnet `unDelegate`, so
+you see the parse work without a funded wallet.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- For the default `parse` and `payload` demos: devnet network access only.
+- For an actual exit: a devnet PEM wallet with an active delegation, plus gas.
+
+## Install
+
+```bash
+mkdir undelegate-and-withdraw
+cd undelegate-and-withdraw
+# Create the project files shown on this page.
+npm install
+npm run build
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-undelegate-and-withdraw",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — exit a delegation: unDelegate an amount, then withdraw it after the unbonding period, with the DelegationController and factory.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point for the undelegate-and-withdraw recipe.
+//
+// Modes:
+//   npm start                    -> "parse" a real historical devnet unDelegate
+//                                   (no wallet, no funds needed)
+//   npm start -- payload         -> build (do not send) unDelegate + withdraw
+//                                   and print their decoded wire payloads
+//   npm start -- send <pem>      -> actually undelegate (needs a funded PEM);
+//                                   add --withdraw to withdraw instead;
+//                                   add --factory for the factory path
+//
+// With an unfunded wallet, `send` fails cleanly with "insufficient funds".
+
+import { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+import { Address } from '@multiversx/sdk-core';
+import {
+  undelegateViaController,
+  undelegateViaFactory,
+  withdrawViaController,
+  withdrawViaFactory,
+  describeUndelegatePayload,
+  describeWithdrawPayload,
+  parseUndelegatedAmount,
+} from './exit';
+
+const EXAMPLE_DELEGATION_CONTRACT = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww';
+
+// A real, completed `unDelegate` transaction on devnet (5 EGLD unstaked).
+const EXAMPLE_UNDELEGATE_TX = 'f1f50870263d7ca6d11b9e4ad79d605e08e39597fe8334e4c9f228b83c0392b3';
+
+// Unstake 2 EGLD in the demos.
+const UNSTAKE_AMOUNT_WEI = 2n * 10n ** 18n;
+
+async function runParse(txHash: string): Promise<void> {
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  console.log(`Parsing completed unDelegate ${txHash} ...`);
+  const amount = await parseUndelegatedAmount(entrypoint, txHash);
+  console.log(`  unbonding amount: ${amount} wei (${amount / 10n ** 18n} EGLD)`);
+}
+
+async function runPayload(): Promise<void> {
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const throwaway = await entrypoint.createAccount();
+  const contract = Address.newFromBech32(EXAMPLE_DELEGATION_CONTRACT);
+
+  const undelegateTx = await factory.createTransactionForUndelegating(throwaway.address, {
+    delegationContract: contract,
+    amount: UNSTAKE_AMOUNT_WEI,
+  });
+  const u = describeUndelegatePayload(undelegateTx);
+  console.log(`unDelegate: function=${u.function}  amountArg=${u.amount} wei (${u.amount / 10n ** 18n} EGLD)`);
+  console.log(`            value=${u.valueWei}  receiver=${u.receiver}  gasLimit=${u.gasLimit}`);
+
+  const withdrawTx = await factory.createTransactionForWithdrawing(throwaway.address, {
+    delegationContract: contract,
+  });
+  const w = describeWithdrawPayload(withdrawTx);
+  console.log(`withdraw:   function=${w.function}  value=${w.valueWei}  receiver=${w.receiver}  gasLimit=${w.gasLimit}`);
+}
+
+async function runSend(pemPath: string, withdraw: boolean, useFactory: boolean): Promise<void> {
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  const sender = await Account.newFromPem(pemPath);
+  sender.nonce = await entrypoint.recallAccountNonce(sender.address);
+  console.log(`Delegator: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Operation: ${withdraw ? 'withdraw' : 'unDelegate'}, path ${useFactory ? 'factory' : 'controller'}`);
+
+  let tx;
+  if (withdraw) {
+    tx = await (useFactory ? withdrawViaFactory : withdrawViaController)(
+      entrypoint,
+      sender,
+      EXAMPLE_DELEGATION_CONTRACT,
+    );
+  } else {
+    tx = await (useFactory ? undelegateViaFactory : undelegateViaController)(
+      entrypoint,
+      sender,
+      EXAMPLE_DELEGATION_CONTRACT,
+      UNSTAKE_AMOUNT_WEI,
+    );
+  }
+  const txHash = await entrypoint.sendTransaction(tx);
+  console.log(`  broadcast txHash: ${txHash}`);
+}
+
+async function main(): Promise<void> {
+  const [mode, ...rest] = process.argv.slice(2);
+
+  if (mode === 'send') {
+    const pemPath = rest[0];
+    if (!pemPath) {
+      console.error('Usage: npm start -- send <pemPath> [--withdraw] [--factory]');
+      process.exitCode = 1;
+      return;
+    }
+    try {
+      await runSend(pemPath, rest.includes('--withdraw'), rest.includes('--factory'));
+    } catch (err) {
+      console.error(`Exit tx rejected: ${(err as Error).message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (mode === 'payload') {
+    await runPayload();
+    return;
+  }
+
+  const txHash = mode === 'parse' && rest[0] ? rest[0] : EXAMPLE_UNDELEGATE_TX;
+  await runParse(txHash);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
+
+## Undelegating and withdrawing
+
+```ts title="src/exit.ts"
+// src/exit.ts - the subject of this recipe: exiting a delegation, which is a
+// TWO-STEP flow with a mandatory unbonding wait in between:
+//   1. unDelegate(amount) -> ask the contract to unstake `amount`. The EGLD is
+//      not returned yet; it enters an unbonding period (10 epochs, ~10 days on
+//      mainnet). Unlike `delegate`, `unDelegate` DOES carry an argument (the
+//      amount) on the wire: `unDelegate@<amountHex>`, with no value.
+//   2. withdraw() -> after the unbonding period elapses, pull all matured
+//      unbonded EGLD back to your wallet. No arguments, no value; the contract
+//      pays out whatever has finished unbonding.
+// Calling `withdraw` before anything has matured is a no-op (nothing to pay).
+
+import { Account, Address, DelegationTransactionsOutcomeParser } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint, Transaction } from '@multiversx/sdk-core';
+
+/** Undelegate (unstake) `amount` - controller path. */
+export async function undelegateViaController(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+  amount: bigint,
+): Promise<Transaction> {
+  const controller = entrypoint.createDelegationController();
+  return controller.createTransactionForUndelegating(sender, sender.getNonceThenIncrement(), {
+    delegationContract: Address.newFromBech32(delegationContract),
+    amount,
+  });
+}
+
+/** Undelegate (unstake) `amount` - factory path. */
+export async function undelegateViaFactory(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+  amount: bigint,
+): Promise<Transaction> {
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const transaction = await factory.createTransactionForUndelegating(sender.address, {
+    delegationContract: Address.newFromBech32(delegationContract),
+    amount,
+  });
+  transaction.nonce = sender.getNonceThenIncrement();
+  transaction.signature = await sender.signTransaction(transaction);
+  return transaction;
+}
+
+/** Withdraw all matured unbonded EGLD - controller path. */
+export async function withdrawViaController(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+): Promise<Transaction> {
+  const controller = entrypoint.createDelegationController();
+  return controller.createTransactionForWithdrawing(sender, sender.getNonceThenIncrement(), {
+    delegationContract: Address.newFromBech32(delegationContract),
+  });
+}
+
+/** Withdraw all matured unbonded EGLD - factory path. */
+export async function withdrawViaFactory(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  delegationContract: string,
+): Promise<Transaction> {
+  const factory = entrypoint.createDelegationTransactionsFactory();
+  const transaction = await factory.createTransactionForWithdrawing(sender.address, {
+    delegationContract: Address.newFromBech32(delegationContract),
+  });
+  transaction.nonce = sender.getNonceThenIncrement();
+  transaction.signature = await sender.signTransaction(transaction);
+  return transaction;
+}
+
+export interface UndelegatePayload {
+  function: string;
+  /** The unstake amount, decoded from the wire argument. */
+  amount: bigint;
+  receiver: string;
+  valueWei: bigint;
+  gasLimit: bigint;
+}
+
+/** Decode an unDelegate transaction: `unDelegate@<amountHex>`. */
+export function describeUndelegatePayload(transaction: Transaction): UndelegatePayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  const amountHex = parts[1] ?? '';
+  return {
+    function: parts[0] ?? '',
+    amount: amountHex ? BigInt('0x' + amountHex) : 0n,
+    receiver: transaction.receiver.toBech32(),
+    valueWei: transaction.value,
+    gasLimit: transaction.gasLimit,
+  };
+}
+
+export interface WithdrawPayload {
+  function: string;
+  receiver: string;
+  valueWei: bigint;
+  gasLimit: bigint;
+}
+
+/** Decode a withdraw transaction (no arguments). */
+export function describeWithdrawPayload(transaction: Transaction): WithdrawPayload {
+  const parts = Buffer.from(transaction.data).toString().split('@');
+  return {
+    function: parts[0] ?? '',
+    receiver: transaction.receiver.toBech32(),
+    valueWei: transaction.value,
+    gasLimit: transaction.gasLimit,
+  };
+}
+
+/**
+ * Parse a completed unDelegate transaction for the amount that entered
+ * unbonding. Reads the `unDelegate` log event.
+ */
+export async function parseUndelegatedAmount(
+  entrypoint: DevnetEntrypoint,
+  txHash: string,
+): Promise<bigint> {
+  const transactionOnNetwork = await entrypoint.getTransaction(txHash);
+  const parser = new DelegationTransactionsOutcomeParser();
+  return parser.parseUndelegate(transactionOnNetwork)[0]?.amount ?? 0n;
+}
+```
+
+## Run it
+
+```bash
+# Parse a real completed devnet unDelegate - no wallet, no funds:
+npm start
+
+# Inspect both wire payloads offline:
+npm start -- payload
+
+# Actually undelegate (needs a funded devnet PEM with active delegation):
+npm start -- send ./wallet.pem
+# ...or withdraw matured funds instead:
+npm start -- send ./wallet.pem --withdraw
+```
+
+Output of the default `parse` mode, and of `payload`:
+
+```text
+Parsing completed unDelegate f1f50870...3c0392b3 ...
+  unbonding amount: 5000000000000000000 wei (5 EGLD)
+
+unDelegate: function=unDelegate  amountArg=2000000000000000000 wei (2 EGLD)
+            value=0  receiver=erd1qqq...scktaww  gasLimit=11090500
+withdraw:   function=withdraw  value=0  receiver=erd1qqq...scktaww  gasLimit=11062000
+```
+
+## How it works
+
+**Controller vs factory.** `controller.createTransactionForUndelegating` /
+`createTransactionForWithdrawing` build, set the nonce, and sign in one call; the
+factory equivalents build only. `unDelegate` takes `{ delegationContract, amount }`;
+`withdraw` takes just `{ delegationContract }`.
+
+**unDelegate carries an argument; withdraw does not.** The `unDelegate` wire is
+`unDelegate@<amountHex>` (the amount to unstake, with no `value`), while `withdraw`
+is bare. This is the one delegation write besides create that puts a real argument
+in the data.
+
+**Withdraw is settle-all, not per-request.** `withdraw()` pays out every unbonding
+entry that has matured; it takes no amount. Calling it before anything has matured
+is a successful no-op that moves 0 EGLD.
+
+## Pitfalls
+
+:::warning[Pitfall 1: withdraw does nothing until the unbonding period elapses]
+`unDelegate` starts a ~10-epoch unbonding timer per entry. A `withdraw` before any
+entry matures completes successfully but returns 0 EGLD. Sequencing the two
+back-to-back in one script will not return your funds.
+:::
+
+:::warning[Pitfall 2: unDelegate takes an amount; withdraw does not]
+`unDelegate` needs the amount to unstake in its input (`amount`), encoded on the
+wire as `unDelegate@<amountHex>`. `withdraw` takes no amount, it settles everything
+matured. Do not expect a per-request withdraw.
+:::
+
+:::note[Pitfall 3: partial exits must respect the provider's minimum]
+Undelegating part of your stake can leave a remainder below the provider's minimum
+delegation, which some contracts reject. If in doubt, undelegate the full active
+amount (read it first with the query recipe).
+:::
+
+## See also
+
+- [Delegate (stake) EGLD](/sdk-and-tools/sdk-js/cookbook/delegation/delegate-stake)
+  is the inverse operation.
+- [Claim and re-delegate rewards](/sdk-and-tools/sdk-js/cookbook/delegation/claim-and-redelegate-rewards)
+  handles rewards without exiting.
+- [Read a delegation contract's state](/sdk-and-tools/sdk-js/cookbook/delegation/query-delegation-contract)
+  reads your active stake to know how much to undelegate.

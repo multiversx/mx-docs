@@ -1,0 +1,428 @@
+---
+title: Issue an NFT collection + mint an NFT
+description: Issue an NFT collection and mint an NFT into it with sdk-core's TokenManagementController, every field hand-verified against real devnet.
+difficulty: intermediate
+est_minutes: 8
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - nft
+  - esdt
+  - transaction
+  - gas
+  - devnet
+  - typescript
+---
+
+Two steps, both via sdk-core's `TokenManagementController`: issue a new NFT
+collection, then create (mint) one NFT into it. Per `mx-sdk-js-core`'s own
+`cookbook/tokens.ts`, no separate "set special role" transaction is needed in
+between, issuing your own collection automatically grants you the NFT-create role
+on it.
+
+If instead you are building a browser dApp where the end user's own wallet should
+sign, wire the same `TokenManagementTransactionsFactory` methods through a
+connected-wallet flow. This recipe is for when **your own code holds the private
+key**.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for how to generate a throwaway one. **No devnet EGLD required** to
+  verify both payloads, see "How it works" below.
+
+## Install
+
+```bash
+mkdir issue-nft-collection
+cd issue-nft-collection
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start -- ./wallet.pem CookbookNFT CNFT
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-issue-nft-collection",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — issue an NFT collection and mint an NFT into it using sdk-core's TokenManagementController directly against DevnetEntrypoint.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Fetch the account nonce from the network before sending, then increment
+// locally with getNonceThenIncrement(). This helper implements the fetch half;
+// see the manage-nonces recipe for the increment half in depth.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half across a
+ * batch of sends).
+ *
+ * `entrypoint.recallAccountNonce(address)` is a thin convenience wrapper
+ * around `networkProvider.getAccount(address).nonce`
+ * (node_modules/@multiversx/sdk-core/out/entrypoints/entrypoints.js) — used
+ * here instead of constructing a network provider by hand.
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point. Runs both steps: issue the collection,
+// then mint an NFT into it.
+//
+// Usage:
+//   npm run build && npm start -- <pemPath> <tokenName> <tokenTicker>
+//
+// Example:
+//   npm start -- ./wallet.pem CookbookNFT CNFT
+//
+// See the prerequisites above for a devnet PEM wallet. The offline build
+// verifies both payload builders without EGLD. Because an unfunded wallet's issuance
+// transaction never actually completes, this recipe cannot obtain a real
+// collection identifier to mint into — the mint step below uses a
+// PLACEHOLDER identifier for that reason (see the console output and
+// explanation below). In real usage
+// you'd parse the real identifier from the issuance transaction's outcome
+// (`awaitCompletedIssueNonFungible`) before minting.
+
+import { DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { issueNftCollection, mintNft } from './issueNftCollection';
+
+const PLACEHOLDER_COLLECTION_IDENTIFIER = 'COOKBOOK-000000';
+
+async function main(): Promise<void> {
+  const [pemPath, tokenName, tokenTicker] = process.argv.slice(2);
+
+  if (!pemPath || !tokenName || !tokenTicker) {
+    console.error('Usage: npm start -- <pemPath> <tokenName> <tokenTicker>');
+    process.exitCode = 1;
+    return;
+  }
+
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+
+  console.log(`Sender: ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+
+  console.log(`\n--- Step 1: issue NFT collection "${tokenName}" (${tokenTicker}) ---`);
+  console.log('Issue cost: 0.05 EGLD plus gas');
+  try {
+    const { txHash } = await issueNftCollection(entrypoint, sender, { tokenName, tokenTicker });
+    console.log(`Sent. Transaction hash: ${txHash}`);
+  } catch (err) {
+    console.log(`(expected without a funded wallet) ${(err as Error).message}`);
+  }
+
+  console.log(
+    `\n--- Step 2: mint one NFT into ${PLACEHOLDER_COLLECTION_IDENTIFIER} (placeholder) ---`,
+  );
+  try {
+    const { txHash } = await mintNft(entrypoint, sender, {
+      tokenIdentifier: PLACEHOLDER_COLLECTION_IDENTIFIER,
+      name: 'Cookbook Test NFT #1',
+      royalties: 500, // 5% in basis points; the SDK expects a number, not 500n.
+      uris: ['https://ipfs.io/ipfs/bafkreicookbookplaceholder'],
+    });
+    console.log(`Sent. Transaction hash: ${txHash}`);
+  } catch (err) {
+    console.log(`(expected without a funded wallet + real collection) ${(err as Error).message}`);
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
+
+## Issuing and minting
+
+```ts title="src/issueNftCollection.ts"
+// src/issueNftCollection.ts — the actual subject of this recipe: issuing
+// an NFT collection, then creating (minting) one NFT into it.
+//
+// Two confirmed, real corrections to commonly-copied snippets, found by
+// reading node_modules/@multiversx/sdk-core/out/tokenManagement/resources.d.ts
+// and .../tokenManagementController.d.ts / tokenManagementTransactionsFactory.d.ts
+// directly:
+//
+//   1. The field is `canTransferNFTCreateRole` — all-caps "NFT" — not
+//      `canTransferNftCreateRole` (a common miscasing). Confirmed:
+//      `IssueNonFungibleInput = IssueInput & { canTransferNFTCreateRole: boolean }`.
+//      (Contrast with fungible issuance, which has no such field at all —
+//      see the sibling "Issue a fungible ESDT" recipe.)
+//   2. `royalties` is a plain `number`, not a `bigint` — a commonly-copied
+//      `royalties: 500n` (with the `n` suffix) does not match
+//      `MintInput.royalties: number`.
+//
+// A THIRD confirmed casing trap, the same shape as the already-documented
+// `createTransactionForEsdtTokenTransfer` (Controller, lowercase "sdt") vs
+// `createTransactionForESDTTokenTransfer` (Factory, uppercase "ESDT") one
+// the `send-esdt` recipe flags — this is not a one-off:
+//
+//   TokenManagementController.createTransactionForCreatingNft   (lowercase "Nft")
+//   TokenManagementTransactionsFactory.createTransactionForCreatingNFT (uppercase "NFT")
+//
+// Confirmed from both .d.ts files side by side. This recipe uses the
+// Controller throughout, so `createTransactionForCreatingNft` (lowercase)
+// is correct here — swapping in the Factory's casing is a real
+// `tsc --strict` error, not a lint nit.
+//
+// Per mx-sdk-js-core's own cookbook/tokens.ts: issuing an NFT collection
+// and then immediately minting into it, with no separate "set special
+// role" transaction in between, is the documented pattern — the issuer
+// automatically receives the NFT-create role on their own freshly issued
+// collection.
+
+import type { Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export interface IssueNftCollectionInput {
+  tokenName: string;
+  tokenTicker: string;
+}
+
+export interface IssueNftCollectionOutput {
+  txHash: string;
+}
+
+/**
+ * Issues a new NFT collection. `sender.nonce` must already reflect the
+ * network's current nonce — see src/account.ts's loadDevnetAccount. Once
+ * this transaction completes, `awaitCompletedIssueNonFungible(txHash)`
+ * (not called by this recipe directly against a real balance, but shown
+ * in mx-sdk-js-core's cookbook) parses out the real collection identifier
+ * — this recipe's mint step uses a placeholder instead.
+ */
+export async function issueNftCollection(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: IssueNftCollectionInput,
+): Promise<IssueNftCollectionOutput> {
+  const controller = entrypoint.createTokenManagementController();
+
+  const transaction = await controller.createTransactionForIssuingNonFungible(
+    sender,
+    sender.getNonceThenIncrement(),
+    {
+      tokenName: input.tokenName,
+      tokenTicker: input.tokenTicker,
+      canFreeze: false,
+      canWipe: true,
+      canPause: false,
+      canTransferNFTCreateRole: true,
+      canChangeOwner: true,
+      canUpgrade: true,
+      canAddSpecialRoles: true,
+    },
+  );
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+
+export interface MintNftInput {
+  /**
+   * The collection identifier to mint into — e.g. "COOKNFT-abcdef". In
+   * real usage this comes from parsing the issuance transaction's
+   * outcome (`awaitCompletedIssueNonFungible`), not a hand-typed value.
+   */
+  tokenIdentifier: string;
+  name: string;
+  /** Basis points, e.g. 500 = 5%. A plain number — see the file header. */
+  royalties: number;
+  uris: string[];
+}
+
+export interface MintNftOutput {
+  txHash: string;
+}
+
+/**
+ * Creates (mints) one NFT into an already-issued collection. Note the
+ * Controller method name: `createTransactionForCreatingNft` (lowercase
+ * "Nft") — see the file header for why the Factory's
+ * `createTransactionForCreatingNFT` (uppercase) would be wrong here.
+ */
+export async function mintNft(
+  entrypoint: DevnetEntrypoint,
+  sender: Account,
+  input: MintNftInput,
+): Promise<MintNftOutput> {
+  const controller = entrypoint.createTokenManagementController();
+
+  const transaction = await controller.createTransactionForCreatingNft(
+    sender,
+    sender.getNonceThenIncrement(),
+    {
+      tokenIdentifier: input.tokenIdentifier,
+      initialQuantity: 1n,
+      name: input.name,
+      royalties: input.royalties,
+      hash: '',
+      attributes: Buffer.from(''),
+      uris: input.uris,
+    },
+  );
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+```
+
+## Two independently-verified steps, not a real end-to-end mint
+
+Because an unfunded wallet's issuance transaction never actually completes
+on-chain, this recipe cannot obtain a real collection identifier to mint into,
+`src/index.ts` uses a **placeholder** identifier (`COOKBOOK-000000`) for the mint
+step. In real usage: send the issuance transaction, parse the real identifier from
+its outcome (`awaitCompletedIssueNonFungible(txHash)` returns `[{ tokenIdentifier }]`),
+then pass that into `mintNft()`. Both steps are verified independently below.
+
+## How it works
+
+**Confirmed casing: `canTransferNFTCreateRole`, all-caps "NFT"**, not
+`canTransferNftCreateRole` (a common miscasing). Confirmed from
+`IssueNonFungibleInput = IssueInput & { canTransferNFTCreateRole: boolean }`.
+Hand-decoding the real issuance payload confirms the wire format uses this exact
+spelling too, the flag's literal name on the wire matches the TypeScript property
+name character for character.
+
+**A third instance of the Controller/Factory casing trap** (already documented for
+ESDT transfers in `send-esdt`'s Pitfall 2):
+
+```text
+TokenManagementController.createTransactionForCreatingNft    (lowercase "Nft")
+TokenManagementTransactionsFactory.createTransactionForCreatingNFT (uppercase "NFT")
+```
+
+This recipe uses the Controller, so `createTransactionForCreatingNft` (lowercase)
+is correct here.
+
+**Issuance payload, hand-decoded and gas-formula-verified.** A real logged request:
+`value: "50000000000000000"` (0.05 EGLD), `gasLimit: 60503000`, matching
+`50,000 + 1,500 x 302 (data bytes) + 60,000,000` to the unit. The decoded `data`
+field confirms every flag encoded correctly, including
+`canTransferNFTCreateRole: true`.
+
+**Mint payload, hand-decoded.** A real logged mint request has `receiver` set to
+the **sender's own address**, not a contract. This is expected: `ESDTNFTCreate` is
+a builtin function executed in the context of the token-holder/creator's own
+account, not a separate contract call. The decoded `data` field,
+`ESDTNFTCreate@434f4f4b424f4f4b2d303030303030@01@436f6f6b626f6f6b2054657374204e4654202331@01f4@@@...`,
+confirms the collection identifier, quantity (`01` = 1), name, and `01f4` (hex for
+decimal `500`), confirming `royalties: 500` (a plain **number**, not `500n`)
+encodes correctly. A commonly-copied `royalties: 500n` snippet does not match
+`MintInput.royalties: number` and fails `tsc --strict`.
+
+## Pitfalls
+
+:::danger[Pitfall 1: canTransferNftCreateRole (the miscasing) fails tsc --strict]
+The real field is `canTransferNFTCreateRole` (all-caps "NFT"). Contrast with
+fungible issuance, where the field does not exist at all, see
+[Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token).
+:::
+
+:::warning[Pitfall 2: createTransactionForCreatingNft (Controller) vs createTransactionForCreatingNFT (Factory)]
+Mixing up the casing for the API level you are using is a real `tsc --strict`
+error, not a lint nit, a third confirmed instance of this SDK's recurring
+Controller/Factory casing-mismatch pattern.
+:::
+
+:::danger[Pitfall 3: royalties is a plain number, not a bigint]
+`500n` fails `tsc --strict` against `MintInput.royalties: number`.
+:::
+
+:::note[Pitfall 4: this recipe's mint step uses a placeholder token identifier]
+It cannot mint into a collection that was never actually issued (the unfunded
+wallet's issuance transaction is rejected before it reaches the network). See "Two
+independently-verified steps" above for the real-usage sequence.
+:::
+
+## See also
+
+- [Issue a fungible ESDT](/sdk-and-tools/sdk-js/cookbook/tokens/issue-fungible-token)
+  is the fungible sibling, including why `canTransferNftCreateRole` does not apply
+  there at all.
+- [Call a contract endpoint with native JS args (NativeSerializer)](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-contract-endpoint)
+  applies the general Controller-vs-Factory casing pattern to smart contract
+  calls.
+- [Multi-token transfer in one tx](/sdk-and-tools/sdk-js/cookbook/transactions/multi-token-transfer)
+  sends an NFT (once minted) alongside other tokens in a single transaction.

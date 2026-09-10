@@ -1,0 +1,81 @@
+/* Front-door layout for the cookbook index. Structure only — hairline borders
+   on Infima neutrals so it tracks the light/dark toggle; the teal accent stays
+   reserved for the build-checked project badge, never spent on chrome. */
+
+.index {
+  margin-top: 1rem;
+}
+
+/* ---- Jump-to-section nav ---- */
+.jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.jumpLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.6rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--ifm-color-content);
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.jumpLink:hover {
+  border-color: var(--cookbook-accent);
+  color: var(--ifm-color-content);
+  text-decoration: none;
+}
+
+.jumpCount {
+  font-family: var(--cookbook-font-mono);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* ---- Section heading ---- */
+.section {
+  margin-bottom: 2.25rem;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.35rem;
+  scroll-margin-top: 5rem;
+}
+
+.count {
+  font-family: var(--cookbook-font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--ifm-color-emphasis-600);
+  letter-spacing: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.footNote {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
+}

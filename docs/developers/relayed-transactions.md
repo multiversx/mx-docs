@@ -119,4 +119,4 @@ Here's an example of a relayed v3 transaction. Its intent is to call the `add` m
 The SDKs have built-in support for relayed transactions. Please follow:
  - [mxpy support](/sdk-and-tools/mxpy/mxpy-cli/#relayed-transactions-v3)
  - [sdk-py support](/sdk-and-tools/sdk-py/#relayed-transactions)
- - [sdk-js v15 support](/sdk-and-tools/sdk-js/sdk-js-cookbook#relayed-transactions)
+ - [sdk-js relayed transactions](/sdk-and-tools/sdk-js/cookbook/accounts/relayed-v3-transaction)

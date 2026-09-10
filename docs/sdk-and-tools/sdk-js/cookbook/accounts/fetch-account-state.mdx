@@ -1,0 +1,274 @@
+---
+title: Fetch an account's on-chain state
+description: Read any address's nonce, balance, username, and guarded flag, plus its key-value storage, through a network provider. Verified live against mainnet.
+difficulty: beginner
+est_minutes: 6
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - network-provider
+  - api
+  - typescript
+---
+
+Read any account's public on-chain state through a provider: its nonce, balance,
+username (herotag), guarded flag, and its key-value storage. This is the
+sdk-core, read-**any**-address counterpart to sdk-dapp's `useGetAccount()`, which
+only reads the connected wallet.
+
+Three reads, all on `INetworkProvider`:
+
+- `getAccount(address)` returns `nonce`, `balance`, `userName`, `isGuarded`, plus
+  the contract fields (`contractOwnerAddress`, `isContractUpgradable`, ...).
+- `getAccountStorage(address)` returns all key-value entries.
+- `getAccountStorageEntry(address, key)` returns one entry.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+mkdir fetch-account-state
+cd fetch-account-state
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-fetch-account-state",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — read an arbitrary account's on-chain state (nonce, balance, username, guarded flag) and its key-value storage via a network provider.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## Reading the account
+
+```ts title="src/accountState.ts"
+// src/accountState.ts — the subject of this recipe: reading an ARBITRARY
+// account's on-chain state through a provider. This is different from the
+// sdk-dapp `useGetAccount()` hook, which reads the CONNECTED wallet — here you
+// pass any address you like and read it directly.
+//
+// Three reads, all on INetworkProvider:
+//   - getAccount(address)                  → nonce, balance, username, guarded flag
+//   - getAccountStorage(address)           → ALL key-value storage entries
+//   - getAccountStorageEntry(address, key) → one entry
+
+import type {
+  INetworkProvider,
+  AccountOnNetwork,
+  AccountStorage,
+  AccountStorageEntry,
+  Address,
+} from '@multiversx/sdk-core';
+
+/** Core account state: nonce, balance, username, guarded flag, contract fields. */
+export async function fetchAccount(
+  provider: INetworkProvider,
+  address: Address,
+): Promise<AccountOnNetwork> {
+  return provider.getAccount(address);
+}
+
+/** Every key-value pair stored on the account. Values come back HEX-encoded. */
+export async function fetchAccountStorage(
+  provider: INetworkProvider,
+  address: Address,
+): Promise<AccountStorage> {
+  return provider.getAccountStorage(address);
+}
+
+/**
+ * A single storage entry by key. Unlike `getAccountStorage`, the single-entry
+ * endpoint returns the value already DECODED to a UTF-8 string.
+ */
+export async function fetchAccountStorageEntry(
+  provider: INetworkProvider,
+  address: Address,
+  key: string,
+): Promise<AccountStorageEntry> {
+  return provider.getAccountStorageEntry(address, key);
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — read a live mainnet account's state and storage. No wallet,
+// no gas — you are reading someone else's public on-chain state.
+//
+// Usage:
+//   npm run build && npm start [bech32Address] [storageKey]
+
+import { ApiNetworkProvider, Address } from '@multiversx/sdk-core';
+import { fetchAccount, fetchAccountStorage, fetchAccountStorageEntry } from './accountState';
+
+const MAINNET_API = 'https://api.multiversx.com';
+const DEFAULT_ADDRESS = 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
+const DEFAULT_KEY = 'btc';
+
+async function main(): Promise<void> {
+  const addressArg = process.argv[2] ?? DEFAULT_ADDRESS;
+  const key = process.argv[3] ?? DEFAULT_KEY;
+  const provider = new ApiNetworkProvider(MAINNET_API, { clientName: 'mvx-cookbook' });
+  const address = Address.newFromBech32(addressArg);
+
+  const account = await fetchAccount(provider, address);
+  console.log(`Account ${account.address.toBech32()}`);
+  console.log(`  nonce:     ${account.nonce}`);
+  console.log(`  balance:   ${account.balance}`);
+  console.log(`  username:  ${account.userName ? account.userName : '(none)'}`);
+  console.log(`  isGuarded: ${account.isGuarded}`);
+
+  const storage = await fetchAccountStorage(provider, address);
+  console.log(`\nStorage — ${storage.entries.length} entries. Values are HEX from getAccountStorage:`);
+  for (const entry of storage.entries.slice(0, 3)) {
+    console.log(`  ${entry.key} = ${entry.value}`);
+  }
+
+  const single = await fetchAccountStorageEntry(provider, address, key);
+  console.log(`\ngetAccountStorageEntry('${key}') — value is DECODED here:`);
+  console.log(`  ${single.key} = ${single.value}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start                              # a known mainnet account with storage
+npm start <bech32Address> <storageKey> # any account / key
+```
+
+Expected output (balance and nonce are live, they will differ):
+
+```text
+Account erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+  nonce:     89
+  balance:   1000010000000
+  username:  (none)
+  isGuarded: false
+
+Storage — 16 entries. Values are HEX from getAccountStorage:
+  btc = 626331716639747971736b3373333830713832673033686367346c637a677a7032373568617138326171
+  eth = 307838433739313643643332633037623164633730353465324365423233663964443538396642334336
+  ELRONDesdtBSK-baa025 = 12070001d1a94a4000
+
+getAccountStorageEntry('btc') — value is DECODED here:
+  btc = bc1qf9tyqsk3s380q82g03hcg4lczgzp275haq82aq
+```
+
+## How it works
+
+**`getAccount` reads an arbitrary address.** You pass the address; nothing is
+signed, no wallet is constructed. Contrast with `useGetAccount()` in sdk-dapp,
+which is bound to whoever is logged in, this reads any account on the network.
+
+**`balance` and `nonce` are `bigint`.** Balance is in the smallest denomination
+(10^18 = 1 EGLD). The `nonce` here is the same value
+[Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces) fetches
+before sending, one read, two uses.
+
+**Bulk storage is hex; a single entry is decoded.** `getAccountStorage` returns
+each value as a hex string; `getAccountStorageEntry` returns the same value
+decoded to UTF-8. Verified live in the output above: `btc` is `62633171...` in
+bulk and `bc1q...` as a single entry.
+
+## Pitfalls
+
+:::warning[Pitfall 1: userName is typed string but can be undefined]
+`AccountOnNetwork.userName` is declared `string`, but an account with no herotag
+returns `undefined` at runtime (confirmed above, the default account prints
+`(none)`). Guard it (`account.userName ? ... : ...`) rather than trusting the
+type.
+:::
+
+:::note[Pitfall 2: getAccountStorage values are hex, not text]
+Do not print `getAccountStorage` values as-is expecting readable strings, they
+are hex. Either decode them yourself (`Buffer.from(value, 'hex').toString()`) or
+use `getAccountStorageEntry`, which decodes for you. The two endpoints returning
+the same key in different encodings is a real inconsistency, not a bug in your
+code.
+:::
+
+:::note[Pitfall 3: contract fields are optional]
+For a plain wallet, `contractOwnerAddress`, `isContractUpgradable`,
+`contractCodeHash`, and friends are absent. They are populated only when the
+address is a smart contract. They are typed optional for exactly this reason.
+:::
+
+## See also
+
+- [Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  is what to do with the `nonce` this recipe reads before you send transactions.
+- [Configure a network provider](/sdk-and-tools/sdk-js/cookbook/network-providers/configure-network-provider)
+  is the provider all three reads run on.
+- [Fetch an account's token balances](/sdk-and-tools/sdk-js/cookbook/tokens/fetch-account-token-balances)
+  is the ESDT and NFT side of the same account.

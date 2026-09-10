@@ -1,0 +1,272 @@
+---
+title: Await an account on a custom condition
+description: Block until an account matches a predicate you write with awaitAccountOnCondition, tuning the poll interval and timeout via AwaitingOptions.
+difficulty: intermediate
+est_minutes: 6
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - network-provider
+  - typescript
+---
+
+Sometimes you need to wait on an **account**, not a transaction: block until a
+deposit lands (balance crosses a threshold), or until a batch of your own sends
+has confirmed (nonce reaches a target). That is `awaitAccountOnCondition`, the
+same poll-until-predicate machinery as
+[Await a transaction on a condition](/sdk-and-tools/sdk-js/cookbook/network-providers/await-transaction-on-condition),
+but the predicate receives an `AccountOnNetwork`.
+
+`awaitAccountOnCondition(address, predicate, options?)` is on `INetworkProvider`,
+so an Api or Proxy provider both work. This recipe reads a live, funded mainnet
+account, so every condition is checked against real state, with no wallet, no
+funds, and no broadcast.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Network access. No wallet, no PEM, no EGLD.
+
+## Install
+
+```bash
+mkdir await-account-on-condition
+cd await-account-on-condition
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-await-account-on-condition",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — block until an account matches a predicate (a nonce or balance threshold) with awaitAccountOnCondition, tuning the loop via AwaitingOptions.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+</details>
+
+## The awaiters
+
+```ts title="src/awaitAccount.ts"
+// src/awaitAccount.ts — the subject of this recipe: blocking until an ACCOUNT
+// reaches a state you define. Same poll-until-predicate shape as the
+// transaction awaiter, but the predicate receives an AccountOnNetwork.
+//
+// Real uses: wait for a deposit to land (balance crosses a threshold), or wait
+// for a sequence of your own transactions to confirm (nonce reaches a target).
+//
+// `awaitAccountOnCondition` is on INetworkProvider, so an Api or Proxy provider
+// both work. This recipe reads a live, funded mainnet account, so every
+// condition is checked against real state — no wallet, no funds, no broadcast.
+
+import type {
+  INetworkProvider,
+  AccountOnNetwork,
+  AwaitingOptions,
+  Address,
+} from '@multiversx/sdk-core';
+
+/** Block until `condition(account)` is true, using the SDK default poll/timeout. */
+export async function awaitAccount(
+  provider: INetworkProvider,
+  address: Address,
+  condition: (account: AccountOnNetwork) => boolean,
+): Promise<AccountOnNetwork> {
+  return provider.awaitAccountOnCondition(address, condition);
+}
+
+/**
+ * The same, with your own `AwaitingOptions`. On timeout the promise REJECTS
+ * (it does not resolve with the last-seen account), so wrap it in try/catch
+ * when a timeout is a realistic outcome.
+ */
+export async function awaitAccountWithOptions(
+  provider: INetworkProvider,
+  address: Address,
+  condition: (account: AccountOnNetwork) => boolean,
+  options: AwaitingOptions,
+): Promise<AccountOnNetwork> {
+  return provider.awaitAccountOnCondition(address, condition, options);
+}
+```
+
+## Wiring it up
+
+```ts title="src/index.ts"
+// src/index.ts — three awaits against one live, funded mainnet account:
+//   1. nonce reaches its current value (monotonic, so already true),
+//   2. balance is above zero (the "deposit landed" shape, already true),
+//   3. nonce reaches a value far in the future, with a short timeout, to show
+//      the reject path.
+// No wallet, no gas.
+//
+// Usage:
+//   npm run build && npm start [bech32Address]
+
+import { ApiNetworkProvider, Address, AwaitingOptions } from '@multiversx/sdk-core';
+import { awaitAccount, awaitAccountWithOptions } from './awaitAccount';
+
+const MAINNET_API = 'https://api.multiversx.com';
+const DEFAULT_ADDRESS = 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
+
+async function main(): Promise<void> {
+  const addressArg = process.argv[2] ?? DEFAULT_ADDRESS;
+  const provider = new ApiNetworkProvider(MAINNET_API, { clientName: 'mvx-cookbook' });
+  const address = Address.newFromBech32(addressArg);
+
+  const current = await provider.getAccount(address);
+  console.log(`Account ${address.toBech32()}`);
+  console.log(`  current nonce ${current.nonce}, balance ${current.balance}`);
+
+  // 1. Nonce is monotonic, so "reach the current nonce" holds on the first poll.
+  //    In real use this is how you wait for a batch of your sends to confirm.
+  const reached = await awaitAccount(provider, address, (a) => a.nonce >= current.nonce);
+  console.log(`1. awaited nonce >= ${current.nonce}: resolved at nonce ${reached.nonce}`);
+
+  // 2. The "deposit landed" shape — balance above a threshold.
+  const funded = await awaitAccount(provider, address, (a) => a.balance > 0n);
+  console.log(`2. awaited balance > 0: resolved with balance ${funded.balance}`);
+
+  // 3. A nonce far in the future the account will not reach in 3s — shows the
+  //    reject-on-timeout path and AwaitingOptions.
+  const target = current.nonce + 1_000_000n;
+  const options = new AwaitingOptions();
+  options.pollingIntervalInMilliseconds = 500;
+  options.timeoutInMilliseconds = 3000;
+  const startedAt = Date.now();
+  try {
+    await awaitAccountWithOptions(provider, address, (a) => a.nonce >= target, options);
+    console.log('3. unexpected: condition matched');
+  } catch {
+    console.log(`3. awaited nonce >= ${target} timed out after ~${Math.round((Date.now() - startedAt) / 1000)}s (rejected, as expected)`);
+  }
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+## Run it
+
+```bash
+npm start                  # a known funded mainnet account
+npm start <bech32Address>  # await any account you like
+```
+
+Expected output (live values, so nonce and balance will differ when you run it):
+
+```text
+Account erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th
+  current nonce 89, balance 1000010000000
+1. awaited nonce >= 89: resolved at nonce 89
+2. awaited balance > 0: resolved with balance 1000010000000
+3. awaited nonce >= 1000089 timed out after ~3s (rejected, as expected)
+```
+
+## How it works
+
+**A predicate is just `(account) => boolean`.** The SDK re-fetches the account on
+each poll and hands your predicate the fresh `AccountOnNetwork`: `nonce` (bigint),
+`balance` (bigint), `userName`, `isGuarded`, and the contract fields. Return
+`true` to resolve.
+
+**Nonce is monotonic; balance is not.** "Reach nonce N" is a safe, one-way
+condition, ideal for waiting on a sequence of your own transactions (see
+[Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)). A balance
+condition captures the "deposit landed" case, but a balance can also decrease, so
+write the condition for the direction you actually mean.
+
+**`AwaitingOptions` tunes the loop.** `pollingIntervalInMilliseconds`,
+`timeoutInMilliseconds`, `patienceInMilliseconds` (defaults `600` / `9000` / `0`).
+This recipe uses a 500ms poll and a 3s timeout for the demo.
+
+## Pitfalls
+
+:::danger[Pitfall 1: timeout REJECTS, it does not resolve]
+If the account never satisfies the predicate within `timeoutInMilliseconds`, the
+promise rejects — it does not hand you the last-seen account. Wrap the await in
+try/catch wherever a timeout is realistic, as step 3 does.
+:::
+
+:::warning[Pitfall 2: do not busy-poll a tiny interval against a public API]
+A 100ms poll against `api.multiversx.com` will get you rate-limited. Keep the
+interval realistic (the SDK default is 600ms), or run your own observing squad /
+gateway if you truly need tight polling.
+:::
+
+:::note[Pitfall 3: read the baseline before you await a relative condition]
+This recipe calls `getAccount()` once up front to capture the current
+nonce/balance, then writes conditions relative to that snapshot. If you hard-code
+an absolute threshold instead, make sure it reflects the account's real starting
+state or the await either returns instantly or never.
+:::
+
+## See also
+
+- [Await a transaction on a custom condition](/sdk-and-tools/sdk-js/cookbook/network-providers/await-transaction-on-condition)
+  is the transaction-shaped sibling of this recipe.
+- [Fetch an account's on-chain state](/sdk-and-tools/sdk-js/cookbook/accounts/fetch-account-state)
+  is the single-shot `getAccount` read the predicate here polls repeatedly.
+- [Manage nonces](/sdk-and-tools/sdk-js/cookbook/accounts/manage-nonces)
+  shows why "wait until nonce reaches N" is a natural way to sequence your own
+  sends.

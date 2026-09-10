@@ -25,7 +25,7 @@ This guide provides detailed instructions on setting up, deploying, and managing
 7. [Governance](/sovereign/governance)
 8. [Testing and Validation](/sovereign/testing)
 9. [Security Considerations](/sovereign/security)
-10. [VMs](/sovereign/vm)
+10. [VMs](/sovereign/vm-intro)
 11. [Interoperability](/sovereign/interoperability)
 12. [How to become a validator](/sovereign/validators)
 

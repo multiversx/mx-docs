@@ -1,0 +1,439 @@
+---
+title: Call a contract endpoint with native JS args (NativeSerializer)
+description: Call a mutable contract endpoint with plain JS arguments, auto-converted to typed values by sdk-core's NativeSerializer, verified against live devnet.
+difficulty: intermediate
+est_minutes: 7
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - smart-contract
+  - abi
+  - transaction
+  - typescript
+  - devnet
+---
+
+Call a smart contract's mutable endpoint, passing a **plain JS value** as the
+argument, with no manual `TypedValue` construction. The ABI (see
+[Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)) is
+what lets sdk-core's `NativeSerializer` do this conversion automatically.
+
+Target: the real, currently-deployed devnet **adder** contract,
+`erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug`, the same
+contract `mx-sdk-js-core`'s own cookbook uses as its running example, and the one
+[Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+reads from.
+
+**When NOT to use this recipe:** for a browser dApp where the *end user's own
+wallet* signs, see
+[Sign and send a transaction](/sdk-and-tools/sdk-js/cookbook/start-here/sign-and-send)
+and `mx-template-dapp`'s `PingPongAbi` widget (same ABI plus Factory pattern,
+driven from a connected wallet). This recipe is for when **your own code holds
+the private key**.
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- A devnet wallet, see
+  [Send EGLD to an address](/sdk-and-tools/sdk-js/cookbook/transactions/send-egld)'s
+  Prerequisites for how to generate a throwaway one. **No devnet EGLD required**,
+  see "How it works" below.
+
+## Install
+
+```bash
+mkdir call-contract-endpoint
+cd call-contract-endpoint
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start -- ./wallet.pem 7
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-call-contract-endpoint",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — call a smart contract endpoint with plain JS arguments, auto-converted to typed ABI values by sdk-core's NativeSerializer, against DevnetEntrypoint.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/account.ts"
+// src/account.ts — load a devnet Account from a PEM file and prime its
+// local nonce from the network. Framework-agnostic sdk-core, no sdk-dapp
+// involved — this is the "your own code holds the keys" pattern (a script,
+// a bot, a backend service), not a browser wallet-connected flow.
+//
+// Fetch the account nonce from the network before sending, then increment
+// locally with getNonceThenIncrement(). This helper implements the fetch half;
+// see the manage-nonces recipe for the increment half in depth.
+
+import { Account } from '@multiversx/sdk-core';
+import type { DevnetEntrypoint } from '@multiversx/sdk-core';
+
+/**
+ * Loads an Account from a PEM file and sets its local `nonce` from the
+ * network's current value — the "fetch" half of the fetch-then-increment
+ * pattern (see the manage-nonces recipe for the "increment" half across a
+ * batch of sends).
+ *
+ * `entrypoint.recallAccountNonce(address)` is a thin convenience wrapper
+ * around `networkProvider.getAccount(address).nonce`
+ * (node_modules/@multiversx/sdk-core/out/entrypoints/entrypoints.js) — used
+ * here instead of constructing a network provider by hand.
+ */
+export async function loadDevnetAccount(
+  entrypoint: DevnetEntrypoint,
+  pemPath: string,
+): Promise<Account> {
+  const account = await Account.newFromPem(pemPath);
+  account.nonce = await entrypoint.recallAccountNonce(account.address);
+  return account;
+}
+```
+
+```json title="src/adder.abi.json"
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.76.0-nightly",
+            "commitHash": "d86d65bbc19b928387f68427fcc3a0da498d8a19",
+            "commitDate": "2023-12-10",
+            "channel": "Nightly",
+            "short": "rustc 1.76.0-nightly (d86d65bbc 2023-12-10)"
+        },
+        "contractCrate": {
+            "name": "adder",
+            "version": "0.0.0",
+            "gitVersion": "v0.50.1-3-gbed74682a"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.50.1"
+        }
+    },
+    "docs": [
+        "One of the simplest smart contracts possible,",
+        "it holds a single variable in storage, which anyone can increment."
+    ],
+    "name": "Adder",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [
+            {
+                "name": "initial_value",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getSum",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Add desired amount to the storage variable."
+            ],
+            "name": "add",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {}
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts — CLI entry point. Loads the adder ABI, calls `add(value)`
+// with a plain JS number, and prints the resulting transaction hash.
+//
+// Usage:
+//   npm run build && npm start -- <pemPath> [amountToAdd]
+//
+// Example:
+//   npm start -- ./wallet.pem 7
+//
+// See the prerequisites above for a devnet PEM wallet. The offline build
+// checks do not require devnet EGLD; broadcasting this call does.
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Abi, DevnetEntrypoint } from '@multiversx/sdk-core';
+import { loadDevnetAccount } from './account';
+import { callAdd, ADDER_CONTRACT_ADDRESS } from './callAdd';
+
+async function main(): Promise<void> {
+  const [pemPath, amountArg] = process.argv.slice(2);
+
+  if (!pemPath) {
+    console.error('Usage: npm start -- <pemPath> [amountToAdd]');
+    process.exitCode = 1;
+    return;
+  }
+
+  const amountToAdd = amountArg ? Number(amountArg) : 7;
+  if (!Number.isInteger(amountToAdd) || amountToAdd < 0) {
+    console.error(`amountToAdd must be a non-negative integer, got "${amountArg}".`);
+    process.exitCode = 1;
+    return;
+  }
+
+  const abiJson = fs.readFileSync(path.join(__dirname, '..', 'src', 'adder.abi.json'), {
+    encoding: 'utf8',
+  });
+  const abi = Abi.create(JSON.parse(abiJson) as Record<string, unknown>);
+
+  const entrypoint = new DevnetEntrypoint({ clientName: 'mvx-cookbook' });
+  const sender = await loadDevnetAccount(entrypoint, pemPath);
+
+  console.log(`Sender:   ${sender.address.toBech32()} (nonce ${sender.nonce})`);
+  console.log(`Contract: ${ADDER_CONTRACT_ADDRESS} (adder, live devnet)`);
+  console.log(`Calling:  add(${amountToAdd})  <- plain JS number, converted to BigUint by NativeSerializer`);
+
+  const { txHash } = await callAdd(entrypoint, abi, sender, amountToAdd);
+
+  console.log(`\nSent. Transaction hash: ${txHash}`);
+  console.log(`Explorer: https://devnet-explorer.multiversx.com/transactions/${txHash}`);
+}
+
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+```
+
+</details>
+
+## Calling the endpoint
+
+```ts title="src/callAdd.ts"
+// src/callAdd.ts — calling a mutable endpoint with a plain JS value as the
+// argument, letting sdk-core's NativeSerializer convert it to the ABI's
+// declared type (`number` / `bigint` / `BigNumber` -> numerical types,
+// including BigUint).
+//
+// Target: the real, currently-deployed devnet **adder** contract
+// (erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug) — the same
+// contract mx-sdk-js-core's own cookbook uses as its running example for
+// "Calling a smart contract using the controller."
+//
+// One spelling detail worth being explicit about: the options shape for
+// `createTransactionForExecute` is `function` / `arguments`, NOT `functionName`
+// / `args`. The installed SDK's `ContractExecuteInput` type
+// (out/smartContracts/resources.d.ts) is:
+//
+//   export declare type ContractExecuteInput = {
+//       contract: Address;
+//       gasLimit?: bigint;
+//       function: string;       // NOT functionName
+//       arguments?: any[];      // NOT args
+//       nativeTransferAmount?: bigint;
+//       tokenTransfers?: TokenTransfer[];
+//   };
+//
+// This is the same shape used by both `SmartContractController` and
+// `SmartContractTransactionsFactory`, and matches the real mx-sdk-js-core
+// cookbook and mx-template-dapp's shipped `PingPongAbi` widget. The
+// `function` / `arguments` spelling is used throughout this recipe.
+
+import { Address } from '@multiversx/sdk-core';
+import type { Abi, Account, DevnetEntrypoint } from '@multiversx/sdk-core';
+
+export const ADDER_CONTRACT_ADDRESS =
+  'erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug';
+
+export interface CallAddOutput {
+  txHash: string;
+}
+
+/**
+ * Calls the adder contract's `add(value: BigUint)` endpoint, passing a plain
+ * JS `number` for `value`. The ABI (loaded by the caller) is what lets
+ * `NativeSerializer` convert that `number` into a `BigUint` typed value
+ * automatically. Without an ABI, you would have to pass a `BigUIntValue` (or
+ * similar `TypedValue`) instead.
+ */
+export async function callAdd(
+  entrypoint: DevnetEntrypoint,
+  abi: Abi,
+  sender: Account,
+  amountToAdd: number,
+): Promise<CallAddOutput> {
+  const controller = entrypoint.createSmartContractController(abi);
+
+  const transaction = await controller.createTransactionForExecute(sender, sender.getNonceThenIncrement(), {
+    contract: Address.newFromBech32(ADDER_CONTRACT_ADDRESS),
+    function: 'add',
+    arguments: [amountToAdd],
+    gasLimit: 5_000_000n,
+  });
+
+  const txHash = await entrypoint.sendTransaction(transaction);
+  return { txHash };
+}
+```
+
+## Run it
+
+```bash
+npm start -- <pemPath> [amountToAdd]
+```
+
+Expected output:
+
+```text
+Sender:   erd1... (nonce 0)
+Contract: erd1qqqqqqqqqqqqqpgq7cmfueefdqkjsnnjnwydw902v8pwjqy3d8ssd4meug (adder, live devnet)
+Calling:  add(7)  <- plain JS number, converted to BigUint by NativeSerializer
+
+Sent. Transaction hash: <64-char hex hash>
+```
+
+(An unfunded wallet gets a clean "insufficient funds" rejection here instead of
+a hash, see "How it works.")
+
+## How it works
+
+**A plain JS `number` becomes a `BigUint` typed value automatically.** Because
+the `SmartContractController` was constructed with the adder ABI,
+`NativeSerializer` looks up `add`'s declared input type (`BigUint`) and converts
+the plain number `7` into the right typed value before encoding it. Verified
+directly: sending this transaction logged a `data` field of base64 `YWRkQDA3`,
+which decodes byte-for-byte to `add@07`, the endpoint name, the `@` argument
+separator, and `07`, the hex encoding of `7`.
+
+**The options shape is `function` / `arguments`.** Reading the installed
+`out/smartContracts/resources.d.ts` shows the real type:
+
+```ts
+export declare type ContractExecuteInput = {
+    contract: Address;
+    gasLimit?: bigint;
+    function: string;       // NOT functionName
+    arguments?: any[];      // NOT args
+    nativeTransferAmount?: bigint;
+    tokenTransfers?: TokenTransfer[];
+};
+```
+
+It is identical on both `SmartContractController` and
+`SmartContractTransactionsFactory`, and matches the real `mx-sdk-js-core`
+cookbook and `mx-template-dapp`'s shipped `PingPongAbi` widget. Older snippets
+that show `functionName` / `args` will not compile against the installed SDK.
+
+**Why an unfunded wallet is enough to verify this end to end.** Sending this
+transaction from a freshly generated, intentionally unfunded devnet wallet was
+rejected with a clean, specific `insufficient funds` error, never a
+malformed-request or bad-signature error. That is the strongest proof available,
+without a funded wallet, that the whole pipeline (ABI loading, NativeSerializer
+conversion, nonce handling, signing, serialization) produced a well-formed,
+correctly-signed transaction.
+
+## Pitfalls
+
+:::danger[Pitfall 1: functionName/args will not compile]
+Use `function` / `arguments` instead, see "How it works" above. This is a real
+difference between older illustrative snippets and the installed SDK, not a style
+preference.
+:::
+
+:::warning[Pitfall 2: without an ABI, a plain-number argument would not work]
+`NativeSerializer` only knows how to convert a plain JS value because the ABI
+told it what type to convert it *to*. Calling the same endpoint without an ABI
+requires constructing a `BigUIntValue(7)` (or similar `TypedValue`) yourself.
+:::
+
+:::note[Pitfall 3: this recipe deliberately never succeeds against a real balance]
+It proves the request is well-formed via a clean "insufficient funds" rejection,
+not a confirmed on-chain state change. Fund the wallet first (real devnet EGLD)
+and the same code actually increments the adder's stored sum; nothing in
+`callAdd.ts` changes for that case.
+:::
+
+## See also
+
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is the ABI-loading step this recipe builds on.
+- [Query a read-only view](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/query-contract-view)
+  reads back the adder's stored sum, no wallet needed.
+- [Call a payable endpoint with EGLD](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/call-payable-endpoint)
+  is the same ABI-driven pattern, attaching a payment.

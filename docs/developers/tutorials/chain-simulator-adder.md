@@ -225,7 +225,7 @@ One of the best parts about using the Chain Simulator with your interactor is th
 Before you start writing tests, ensure that your `Cargo.toml` file includes the `chain-simulator-tests` feature flag, which is necessary to run them.
 :::
 
-In the initial template generated in [Step 1](./chain-simulator-adder.md#step-1-start-from-template), you’ll see that the `chain-simulator-tests` feature is already included. So, your interactor crate’s `Cargo.toml` file should look like this:
+In the initial template generated in [Step 1](./chain-simulator-adder.md#step-1-start-from-the-template), you’ll see that the `chain-simulator-tests` feature is already included. So, your interactor crate’s `Cargo.toml` file should look like this:
 
 ```toml
 [package]

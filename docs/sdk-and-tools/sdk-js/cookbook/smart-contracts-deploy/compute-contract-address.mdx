@@ -1,0 +1,244 @@
+---
+title: Compute a contract address before deploy
+description: Predict a smart contract's address before deploying it from the deployer address and deployment nonce with sdk-core's AddressComputer, fully offline.
+difficulty: beginner
+est_minutes: 5
+artifact: project
+sdk_versions:
+  sdk-core: "15.4.1"
+tags:
+  - sdk-core
+  - smart-contract
+  - address
+  - typescript
+---
+
+A smart contract's address is a deterministic function of two things: the
+deployer's address and the nonce of the deploy transaction. You can compute it
+**before** you broadcast the deploy, with no network call, no wallet, and no gas.
+`AddressComputer.computeContractAddress` reproduces the exact rule the protocol
+uses to assign the address on deploy.
+
+This is useful when you want to log or store the upcoming address, wire it into a
+follow-up transaction in the same batch, or assert after the fact that the
+address the network reports matches what you predicted (the
+[deploy recipe](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/deploy-contract)
+does exactly that).
+
+## Prerequisites
+
+- Node.js >= 20.19.0.
+- Nothing else. This recipe is pure computation and runs fully offline.
+
+## Install
+
+```bash
+mkdir compute-contract-address
+cd compute-contract-address
+# Create the project files shown on this page.
+npm install
+npm run build
+npm start
+```
+
+<details>
+<summary>Complete project files omitted from the main walkthrough</summary>
+
+```json title="package.json"
+{
+  "name": "cookbook-recipe-compute-contract-address",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cookbook recipe — predict a smart contract's address before deploying it, from the deployer address and deployment nonce, with sdk-core's AddressComputer.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit --strict"
+  },
+  "dependencies": {
+    "@multiversx/sdk-core": "15.4.1",
+    "axios": "1.18.1",
+    "bignumber.js": "9.3.1",
+    "protobufjs": "7.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+```ts title="src/index.ts"
+// src/index.ts - CLI entry point. Predicts the address of a contract for a
+// few (deployer, nonce) pairs and prints each with its shard. Pure
+// computation: no network, no wallet, no gas. Runs offline.
+//
+// Usage:
+//   npm run build && npm start [deployerBech32] [nonce]
+//
+// With no arguments it uses the well-known example deployer this Cookbook
+// uses elsewhere and nonces 0, 1, 42.
+
+import { Address } from '@multiversx/sdk-core';
+import { predictContractAddress, shardOf } from './computeAddress';
+
+const DEFAULT_DEPLOYER = 'erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th';
+
+function main(): void {
+  const deployerArg = process.argv[2] ?? DEFAULT_DEPLOYER;
+  const deployer = Address.newFromBech32(deployerArg);
+
+  console.log(`Deployer: ${deployer.toBech32()} (shard ${shardOf(deployer)})`);
+
+  const nonceArg = process.argv[3];
+  const nonces = nonceArg !== undefined ? [BigInt(nonceArg)] : [0n, 1n, 42n];
+
+  for (const nonce of nonces) {
+    const contract = predictContractAddress(deployer, nonce);
+    console.log(
+      `  nonce ${nonce.toString().padStart(3)} -> ${contract.toBech32()}  ` +
+        `(shard ${shardOf(contract)}, isSmartContract=${contract.isSmartContract()})`,
+    );
+  }
+}
+
+main();
+```
+
+</details>
+
+## Computing
+
+```ts title="src/computeAddress.ts"
+// src/computeAddress.ts - deriving a smart contract's address BEFORE you deploy
+// it. A contract's address is a pure function of (deployer address, deployment
+// nonce) - no network, no wallet, no signing, no gas.
+// `AddressComputer.computeContractAddress` reproduces the exact rule the
+// protocol uses when it assigns the address on deploy.
+//
+// Why you'd want this: you can log/store/print the upcoming contract address,
+// wire it into a follow-up transaction in the same batch, or (as the sibling
+// deploy recipe does) assert the address the network reports after deploy
+// matches what you predicted.
+//
+// CRITICAL: the address depends on the EXACT nonce the deploy transaction is
+// broadcast with. Compute it with the same nonce you will actually use, not a
+// stale or placeholder value. See the Pitfalls in the recipe page.
+
+import { Address, AddressComputer } from '@multiversx/sdk-core';
+
+/**
+ * Computes the (upcoming) address of a smart contract that `deployer` would
+ * create with a deploy transaction sent at `deploymentNonce`.
+ *
+ * `deploymentNonce` is a `bigint` because account nonces are `bigint`
+ * throughout sdk-core.
+ */
+export function predictContractAddress(deployer: Address, deploymentNonce: bigint): Address {
+  const computer = new AddressComputer();
+  return computer.computeContractAddress(deployer, deploymentNonce);
+}
+
+/**
+ * Returns the shard a given address lives in (0, 1, 2, or the metachain). A
+ * contract is created in the same shard as its deployer, so the predicted
+ * contract address and the deployer share a shard - this recipe prints both to
+ * show that.
+ */
+export function shardOf(address: Address): number {
+  const computer = new AddressComputer();
+  return computer.getShardOfAddress(address);
+}
+```
+
+## Run it
+
+```bash
+npm start [deployerBech32] [nonce]
+```
+
+Expected output (default deployer, shard 1):
+
+```text
+Deployer: erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th (shard 1)
+  nonce   0 -> erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3  (shard 1, isSmartContract=true)
+  nonce   1 -> erd1qqqqqqqqqqqqqpgq2j4t5v0lu0cvrwapl9z5zr88zfcepvjsd8ssc6sfq6  (shard 1, isSmartContract=true)
+  nonce  42 -> erd1qqqqqqqqqqqqqpgq3ytm9m8dpeud35v3us20vsafp77smqghd8ss4jtm0q  (shard 1, isSmartContract=true)
+```
+
+## How it works
+
+**The address is `(deployer, deploymentNonce)`, nothing else.**
+`computeContractAddress` returns the `Address` the network will assign to a
+contract that `deployer` creates with that exact nonce. Because it is
+deterministic, you can predict it, store it, or reference it before the deploy is
+even signed. Every result is a valid smart contract address, so
+`Address.isSmartContract()` returns `true`.
+
+**A contract lives in its deployer's shard.** `getShardOfAddress` on the
+predicted address returns the same shard as the deployer, which this recipe
+prints for both. That is why every address above is in shard 1: the deployer is
+in shard 1.
+
+## Pitfalls
+
+:::warning[Pitfall 1: the nonce must be the one you actually deploy with]
+The address changes with every nonce. If you predict at nonce 7 but the deploy
+transaction lands at nonce 8 (because another transaction from the same account
+went first), the real contract address will not match. A transaction built by
+`SmartContractTransactionsFactory` has `nonce = 0n` until you set it, so predict
+**after** you assign the intended nonce, not before.
+:::
+
+:::note[Pitfall 2: deploymentNonce is a bigint]
+Pass `7n`, not `7`. Account nonces are `bigint` throughout sdk-core.
+:::
+
+:::note[Pitfall 3: AddressComputer defaults to 3 shards]
+The constructor takes an optional `numberOfShardsWithoutMeta` (default `3`),
+which matches mainnet, devnet, and testnet. Only change it for a custom network
+with a different shard count.
+:::
+
+## See also
+
+- [Deploy a smart contract](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/deploy-contract)
+  uses this prediction and confirms it against the deployed address.
+- [Upgrade a smart contract](/sdk-and-tools/sdk-js/cookbook/smart-contracts-deploy/upgrade-contract)
+  is the other half of the contract lifecycle.
+- [Load an ABI](/sdk-and-tools/sdk-js/cookbook/smart-contracts-call/load-abi)
+  is the ABI you pass to the deploy factory or controller.

@@ -1,0 +1,39 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.28rem 0.5rem;
+  border-radius: 999px;
+  font-family: var(--cookbook-font-mono);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.project {
+  color: var(--cookbook-accent);
+  border-color: color-mix(in srgb, var(--cookbook-accent) 40%, transparent);
+  background: var(--cookbook-accent-soft);
+}
+
+.reference {
+  color: var(--ifm-color-emphasis-700);
+  border-color: var(--ifm-color-emphasis-300);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.icon,
+.referenceIcon {
+  display: inline-flex;
+}
+
+.referenceIcon {
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  font-weight: 700;
+}
