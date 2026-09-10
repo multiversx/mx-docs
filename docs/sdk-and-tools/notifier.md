@@ -315,6 +315,10 @@ The `Redis` section includes the following parameters as described below:
     TTL = 30
 ```
 
+With Supernova (blocks with header version 3), deduplication is done per executed block hash, not per
+received block hash, and an additional lock is taken for the whole batch of execution results carried by
+a received block. See [Supernova: events pushed based on execution results](#supernova-events-pushed-based-on-execution-results).
+
 The `redis` service has to be configured separately.
 For more details on notifier service redis setup, please follow the **Install** and **Launching**
 sections from [README](https://github.com/multiversx/mx-chain-notifier-go) in the repository.
@@ -390,16 +394,26 @@ There are multiple event types:
 - `Push Block event`: when the block is committed, it contains logs and events
 - `Revert Block event`: when the block is reverted
 - `Finalized Block event`: when the block is finalized
+- `Block Txs event`: when the block is committed, it contains the transactions of the block
+- `Block Scrs event`: when the block is committed, it contains the smart contract results of the block
+- `Block Events`: when the block is committed, it contains the transactions and smart contract results with their execution order, together with the events of the block
+- `Block State Accesses event`: when the block is committed, it contains the state accesses for the block. Read accesses are included only if `WithReadStateChanges` is enabled in the notifier config (and if read state changes are enabled on the observer nodes)
 
-In RabbitMQ there is a separate exchange for each event type.
+In RabbitMQ there is a separate exchange for each event type. The exchange names match the event type names listed below, with one exception: the exchange for `block_state_accesses` is named `state_accesses`.
 In Websocket setup, there is a event type field in each message.
 
 The WS event is defined as follows:
 
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
-| Type       | The type field defines the event type, it can be one of the following: `all_events`, `revert_events`, `finalized_events`. `all_events` refers to all logs and events. |
+| Type       | The type field defines the event type, it can be one of the following: `all_events`, `revert_events`, `finalized_events`, `block_txs`, `block_scrs`, `block_events`, `block_state_accesses`. `all_events` refers to all logs and events. |
 | Data       | Serialized data corresponding to the event type. |
+
+:::info
+With the Supernova upgrade (async execution), these events are pushed based on the execution results carried by the
+received block. The payloads are the same.
+See [Supernova: events pushed based on execution results](#supernova-events-pushed-based-on-execution-results).
+:::
 
 [comment]: # (mx-context-auto)
 
@@ -423,7 +437,7 @@ Event structure
 | address     | The address field holds the address in bech32 encoding. It can be the address of the smart contract that generated the event or the address of the receiver address of the transaction.   |
 | topics      | The topics field holds a list with extra information. They don't have a specific order because the smart contract is free to log anything that could be helpful.                          |
 | data        | The data field can contain information added by the smart contract that generated the event.                                                                                              |
-| order       | The order field represents the index of the event indicating the execution order.                                                                                                         |
+| txHash      | The txHash field represents the hash of the transaction that generated the event.                                                                                                         |
 
 [comment]: # (mx-context-auto)
 
@@ -449,3 +463,84 @@ be triggered containing the hash of the block.
 | Field      | Description                                                                    |
 |------------|--------------------------------------------------------------------------------|
 | hash       | The hash field represents the hash of the committed block.                      |
+
+[comment]: # (mx-context-auto)
+
+### Block Txs Event
+
+When a block is committed on the chain, an event will be triggered containing the transactions of the block.
+
+| Field      | Description                                                                    |
+|------------|--------------------------------------------------------------------------------|
+| hash       | The hash field represents the hash of the committed block.                      |
+| txs        | The txs field holds a map of transactions, where the key is the transaction hash. |
+
+[comment]: # (mx-context-auto)
+
+### Block Scrs Event
+
+When a block is committed on the chain, an event will be triggered containing the smart contract results of the block.
+
+| Field      | Description                                                                    |
+|------------|--------------------------------------------------------------------------------|
+| hash       | The hash field represents the hash of the committed block.                      |
+| scrs       | The scrs field holds a map of smart contract results, where the key is the smart contract result hash. |
+
+[comment]: # (mx-context-auto)
+
+### Block Events
+
+When a block is committed on the chain, an event will be triggered containing the block transactions and smart contract results with their execution order, together with the events of the block.
+
+| Field       | Description                                                                            |
+|-------------|----------------------------------------------------------------------------------------|
+| hash        | The hash field represents the hash of the committed block.                             |
+| shardID     | The shardID field represents the shard ID of the committed block.                      |
+| timestamp   | The timestamp field represents the creation time of the block (in seconds).            |
+| timestampMs | The timestampMs field represents the creation time of the block (in milliseconds).     |
+| txs         | The txs field holds a map of transaction wrappers, where the key is the transaction hash. Unlike `block_txs`, each value is not the transaction itself, but an object with the `transaction`, `feeInfo` and `executionOrder` fields.  |
+| scrs        | The scrs field holds a map of smart contract result wrappers, where the key is the smart contract result hash. Unlike `block_scrs`, each value is not the smart contract result itself, but an object with the `smartContractResult`, `feeInfo` and `executionOrder` fields.  |
+| events      | The events field holds a list of events, in the `Event structure` format described above. The events themselves do not carry an execution order; the execution order is available only on the `txs` and `scrs` entries.  |
+
+[comment]: # (mx-context-auto)
+
+### Block State Accesses Event
+
+When a block is committed on the chain, an event will be triggered containing the state accesses.
+
+Read accesses are included only if `WithReadStateChanges` is enabled in the notifier config (it is disabled by default), and if read state changes are enabled on the observer nodes. Otherwise, only write accesses are published.
+
+| Field                    | Description                                                                            |
+|--------------------------|----------------------------------------------------------------------------------------|
+| hash                     | The hash field represents the hash of the committed block.                             |
+| shardID                  | The shardID field represents the shard ID of the committed block.                      |
+| timestampMs              | The timestampMs field represents the creation time of the block (in milliseconds).     |
+| nonce                    | The nonce field represents the sequence number of the block.                           |
+| stateAccessesPerAccounts | The stateAccessesPerAccounts field holds a map of state accesses, grouped by account, where the key is the hex encoded account address (not bech32).  |
+
+[comment]: # (mx-context-auto)
+
+### Supernova: events pushed based on execution results
+
+:::info
+This section describes the behaviour with the Supernova upgrade (async execution), for blocks with header
+version 3. There is nothing to change on the subscriber side: the event types and their payloads stay the same,
+and every event still refers to a block of the chain. What changes is **when** the events are pushed.
+:::
+
+With Supernova, consensus and execution are decoupled: a proposed block only fixes the order of the transactions,
+while the execution results of previously proposed blocks are attached to a subsequent block. The notifier pushes
+the events based on these execution results, so subscribers always receive events for blocks that were executed.
+
+The practical consequence is that the events do not follow the blockchain clock (the round time, 600ms after
+Supernova), but the pace at which the blocks are included as executed:
+
+- a received block can carry the execution results of several blocks, in which case a full set of events is pushed
+for each of them, in ascending order of the executed block nonce
+- a received block can also carry no execution result, in which case no events are pushed for it
+- there is a delay between the moment a block is proposed and the moment the events for it are pushed
+
+The fields of the events keep their meaning: `hash`, `nonce`, `timestamp`, `timestampMs`, together with the
+transactions, smart contract results, events and state accesses, all refer to the executed block.
+
+Revert and finalized events are not affected by this: they still refer to the block reported by the observer.
