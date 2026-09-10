@@ -144,7 +144,7 @@ A smart contract call that runs out of gas will revert all operations, so this f
 ### get_block_timestamp_seconds
 
 ```rust
-get_block_timestamp_millis() -> TimestampSeconds
+get_block_timestamp_seconds() -> TimestampSeconds
 ```
 
 Returns the timestamp of the current block, in seconds (UNIX timestamp).
@@ -169,7 +169,7 @@ Returns the timestamp of the current block, in milliseconds (UNIX timestamp).
 get_block_nonce() -> u64
 ```
 
-Returns the unique nonce of the block that includes the current transaction.
+Returns the nonce of the block that includes the current transaction, unique within its shard. Off-chain consumers combining shards must retain the shard identifier as well.
 
 [comment]: # (mx-context-auto)
 
@@ -179,7 +179,7 @@ Returns the unique nonce of the block that includes the current transaction.
 get_block_round() -> u64
 ```
 
-Returns the round number of the current block. Each epoch consists of a fixed number of rounds. The round number resets to 1 at the start of every new epoch.
+Returns the round number of the current block. Round numbering continues across epoch boundaries; it does not reset at the start of an epoch. A round may pass without producing a block.
 
 [comment]: # (mx-context-auto)
 
@@ -267,7 +267,7 @@ get_prev_block_random_seed() -> ManagedByteArray<Self::Api, 48>
 get_block_round_time_millis(&self) -> DurationMillis
 ```
 
-The block round time, in milliseconds, i.e the time between consecutive blocks.
+Returns the configured protocol round duration in milliseconds. This is not the measured time between consecutive blocks: rounds may pass without a block. Use timestamp differences to measure elapsed time.
 
 
 [comment]: # (mx-context-auto)
