@@ -43,6 +43,12 @@ Affordable plans, high limits for API, Gateway, Elastic Search, Event Notifier, 
 
 [https://kepler.projectx.mx](https://kepler.projectx.mx)
 
+**node101**
+
+Managed dedicated MultiversX nodes with REST API and gRPC access, distributed infrastructure, 101 Dashboard monitoring, 24/7 technical support, and incident reports. Archive access, testnet endpoints, and dedicated deployments in Türkiye, Europe, and the United States are available on request. Access requires a paid plan; no free public endpoint or free tier is offered.
+
+[Explore node101 MultiversX plans and request an endpoint](https://node101.io/en/rpc/multiversx)
+
 [comment]: # (mx-context-auto)
 
 ## Dependencies
