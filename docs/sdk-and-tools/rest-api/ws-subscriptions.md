@@ -248,6 +248,7 @@ main().catch(console.error);
 
 ```json
 {
+  "status": "success",
   "pool": [
     {
       "txHash": "0b0cd3932689c6853e50ccc0f49feeb9c5f2a68858cbd213fd0825dd4bc0632b",
@@ -258,7 +259,27 @@ main().catch(console.error);
       "type": "Transaction"
     }
   ],
-      "poolCount": 1902
+  "poolCount": 1902
+}
+```
+
+#### Update fields
+
+| Field     | Type                       | Description                                                                                                                  |
+|-----------|----------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| status    | `"success" \| "tooLarge"` | `success` when `pool` holds the transactions, `tooLarge` when the pool is too large to be sent.                               |
+| pool      | array \| null             | The transactions in the pool for the requested page and type. `null` when `status` is `tooLarge`.                            |
+| poolCount | number                     | The number of transactions in the pool for the requested type. When `status` is `tooLarge`, the total count of the pool, regardless of `type`. |
+
+#### Pool too large
+
+When the pool is too large to be read, the update carries no transactions, only the total count of the pool. Clients should show that the pool is too large to be displayed instead of the list.
+
+```json
+{
+  "status": "tooLarge",
+  "pool": null,
+  "poolCount": 58213
 }
 ```
 
