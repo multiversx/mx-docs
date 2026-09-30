@@ -20,7 +20,7 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 
 - 4 x dedicated/physical CPUs, either Intel or AMD, **with `SSE4.1` and `SSE4.2` flags** (use [lscpu](https://manpages.ubuntu.com/manpages/trusty/man1/lscpu.1.html) to verify)
 - 8 GB RAM
-- 200 GB SSD
+- 200 GB SSD with DRAM or server grade SSD
 - 100 Mbit/s always-on internet connection, at least 4 TB/month data plan
 - Linux OS (Ubuntu 22.04/Debian 12 minimum) / MacOS
 
@@ -28,6 +28,7 @@ Nodes are computers running the MultiversX software, so they contribute to the M
 1. The CPUs must be `SSE4.1` and `SSE4.2` capable, otherwise the node won't be able to use the Wasmer 2 VM available through the VM 1.5 (and above) and the node will not be able to sync blocks from the network.
 2. If the system chosen to host the node is a VPS, the host must have dedicated CPUs. Using shared CPUs can hinder your node's performance that will result in a decrease of node's rating and eventually the node might get jailed.
 3. If you run multiple MultiversX Nodes on the same machine, the host running those nodes should have the specs at least equal to the minimum system requirements multiplied by the number of nodes running on that host.
+4. Starting with node version 2.0.0 (Supernova), ensure your SSD is equipped with a DRAM cache. The software performs continuous, high-IOPS database operations that exhaust the Flash Translation Layer (FTL) of DRAM-less drives, resulting in severe write stalls that could lead to node desynchronization.
 :::
 
 :::tip
