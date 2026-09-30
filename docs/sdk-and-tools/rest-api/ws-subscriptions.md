@@ -269,7 +269,7 @@ main().catch(console.error);
 |-----------|-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | status    | `"success" \| "tooLarge" \| "internalServerError"` | `success` when `pool` holds the transactions, `tooLarge` when the pool is too large to be sent, `internalServerError` when the pool could not be read. |
 | pool      | array \| null                                      | The transactions in the pool for the requested page and type. `null` when `status` is not `success`.                                             |
-| poolCount | number \| null                                     | The number of transactions in the pool for the requested type. When `status` is `tooLarge`, the total count of the pool, regardless of `type`. `null` when `status` is `internalServerError`. |
+| poolCount | number \| null                                     | The number of transactions in the pool for the requested type. When `status` is not `success`, the total count of the pool, regardless of `type`, or `null` when it could not be counted either. |
 
 #### Pool too large
 
@@ -285,13 +285,13 @@ When the pool is too large to be read, the update carries no transactions, only 
 
 #### Pool unavailable
 
-When the pool could not be read for any other reason, the update carries neither the transactions nor their count.
+When the pool could not be read for any other reason, the update carries no transactions, only the total count of the pool, or `null` when it could not be counted either.
 
 ```json
 {
   "status": "internalServerError",
   "pool": null,
-  "poolCount": null
+  "poolCount": 58213
 }
 ```
 
