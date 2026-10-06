@@ -30,6 +30,8 @@ Currently, authentication is not needed to access the API.
 
 [comment]: # (mx-context-auto)
 
+For live latency benchmarks across public MultiversX REST API endpoints, see [OpenChainBench](https://openchainbench.com/benchmarks/multiversx-rpc) — p50/p90/p99 measured every 60 seconds from US-East, EU-West and Singapore.
+
 ## **Rate Limits**
 
 The public Gateway endpoints use a rate-limiting mechanism to ensure infrastructure stability and fair resource distribution. The limitations are as follows:
