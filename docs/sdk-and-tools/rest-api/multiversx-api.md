@@ -45,6 +45,14 @@ Affordable plans, high limits for API, Gateway, Elastic Search, Event Notifier, 
 
 [comment]: # (mx-context-auto)
 
+**NOWNodes**
+
+NOWNodes provides API-key based access to MultiversX Gateway API for querying accounts, blocks, transactions, tokens, smart-contract state, and submitting transactions.
+
+Gateway API: [https://egld.nownodes.io](https://egld.nownodes.io).
+
+More details on how to get access can be found in the [NOWNodes MultiversX documentation](https://docs.nownodes.io/egld/).
+
 ## Dependencies
 
 [comment]: # (mx-context-auto)
