@@ -43,6 +43,16 @@ Affordable plans, high limits for API, Gateway, Elastic Search, Event Notifier, 
 
 [https://kepler.projectx.mx](https://kepler.projectx.mx)
 
+**Tatum**
+
+Mainnet: [https://multiversx-mainnet.gateway.tatum.io](https://multiversx-mainnet.gateway.tatum.io).
+
+Testnet: [https://multiversx-testnet.gateway.tatum.io](https://multiversx-testnet.gateway.tatum.io).
+
+Devnet: [https://multiversx-devnet.gateway.tatum.io](https://multiversx-devnet.gateway.tatum.io).
+
+These URLs work without an API key at 5 requests per minute, for development and testing. An API key raises the limit, see [Tatum for MultiversX](https://tatum.io/chain/multiversx). The free endpoints for each network are also listed on [freerpc.com/multiversx](https://freerpc.com/multiversx).
+
 [comment]: # (mx-context-auto)
 
 ## Dependencies
